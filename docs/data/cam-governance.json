@@ -1,0 +1,32 @@
+[
+  {
+    "id": "CAM-GOV-001",
+    "title": "Model Release Risk Classification Policy",
+    "summary": "Defines risk tiers and required controls before releasing CAM model families.",
+    "purpose": "Ensure consistent risk-based release decisions.",
+    "domain": "Model Governance",
+    "instrument_class": "Policy",
+    "hierarchy_type": "Top-level",
+    "status": "Active",
+    "effect": "Binding",
+    "enforcement": "Mandatory gate review",
+    "review_state": "Approved",
+    "authority_role": "Governance Board",
+    "source_path": "governance/model-release-risk-classification-policy.md"
+  },
+  {
+    "id": "CAM-GOV-014",
+    "title": "Incident Response Escalation Standard",
+    "summary": "Sets response timelines and authority escalation for model incidents.",
+    "purpose": "Reduce mean time to containment and clarify operational ownership.",
+    "domain": "Operations",
+    "instrument_class": "Standard",
+    "hierarchy_type": "Second-order",
+    "status": "Draft",
+    "effect": "Advisory until ratified",
+    "enforcement": "Control audit sampling",
+    "review_state": "In Review",
+    "authority_role": "Safety Operations Lead",
+    "source_path": "governance/incident-response-escalation-standard.md"
+  }
+]

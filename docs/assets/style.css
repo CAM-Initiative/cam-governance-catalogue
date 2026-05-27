@@ -1,0 +1,133 @@
+:root {
+  --bg: #f8fafb;
+  --surface: #ffffff;
+  --text: #1f2933;
+  --muted: #52606d;
+  --border: #d9e2ec;
+  --accent: #2f6f8f;
+  --accent-soft: #eaf3f7;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.25rem;
+}
+
+.site-header,
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.site-header h1 {
+  margin-bottom: 0.25rem;
+  font-size: clamp(1.6rem, 2vw + 1rem, 2.2rem);
+}
+
+.lede { color: var(--muted); margin-top: 0; }
+.lede a { color: var(--accent); }
+
+.controls,
+.results,
+.results-meta {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+#search-input,
+select {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  font: inherit;
+  background: #fff;
+}
+
+.field-label {
+  display: block;
+  margin: 0 0 0.3rem;
+  font-weight: 600;
+}
+
+.filter-grid {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.results {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  padding: 0.9rem;
+  background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+}
+
+.card-title { margin-top: 0; margin-bottom: 0.4rem; font-size: 1.05rem; }
+.card-summary { margin-top: 0; color: var(--muted); }
+
+.card-meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 0.6rem;
+  margin: 0.7rem 0;
+}
+
+.card-meta dt {
+  font-weight: 600;
+  color: #334e68;
+}
+
+.card-meta dd { margin: 0; }
+
+.tag {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid #c7ddeb;
+  color: #244e65;
+  font-size: 0.82rem;
+}
+
+.source-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.source-link:hover,
+.source-link:focus { text-decoration: underline; }
+
+.empty-state {
+  margin: 0;
+  color: var(--muted);
+}
