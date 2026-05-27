@@ -1,21 +1,35 @@
-# CAM Governance Catalogue (Static GitHub Pages)
+# CAM Runtime Atlas (Static GitHub Pages)
 
-This repository is a **public reader/search interface** over governance data exported from [CAM-Initiative/Caelestis](https://github.com/CAM-Initiative/Caelestis).
+This repository hosts an **explanatory runtime atlas** for Constitutional AI Mediation (CAM), using plain HTML/CSS/JavaScript.
 
-> **Canonical source notice:** This repository is not canonical. The canonical governance corpus remains in CAM-Initiative/Caelestis.
+> **Canonical source notice:** This repository/site is an explanatory interface, not the canonical corpus. Canonical governance documents remain in [CAM-Initiative/Caelestis](https://github.com/CAM-Initiative/Caelestis).
 
-## GitHub Pages configuration
+## What the site does
 
-To ensure the Governance Problem Explorer is served (instead of repository root/README content), configure GitHub Pages as:
+The `/docs` site provides three linked interfaces:
 
-- **Source:** Deploy from branch
-- **Branch:** `main`
+- **Landing page** introducing CAM runtime architecture.
+- **Runtime flow view** with phase-based interactive execution cards.
+- **Governance problem explorer** with curated pathways plus searchable/filterable instrument browsing.
+
+## GitHub Pages setup (/docs)
+
+Enable Pages in repository settings:
+
+- **Source:** Deploy from a branch
+- **Branch:** `main` (or your publishing branch)
 - **Folder:** `/docs`
 
-The published site expects this structure under `/docs`:
+Required deployed structure:
 
 - `/docs/index.html`
+- `/docs/runtime.html`
+- `/docs/explorer.html`
 - `/docs/assets/style.css`
-- `/docs/assets/search.js`
+- `/docs/assets/app.js`
+- `/docs/assets/runtime-map.js`
 - `/docs/data/cam-governance.json`
+- `/docs/data/runtime-flow.json`
+- `/docs/data/problem-pathways.json`
+- `/docs/images/`
 - `/docs/.nojekyll`

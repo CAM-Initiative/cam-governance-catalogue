@@ -3,54 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CAM Governance Problem Explorer</title>
+    <title>CAM Runtime Atlas</title>
     <link rel="stylesheet" href="assets/style.css" />
   </head>
-  <body>
-    <a class="skip-link" href="#results">Skip to results</a>
+  <body data-page="index">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header class="site-header">
-      <h1>Governance Problem Explorer</h1>
-      <p class="lede">A navigation interface for CAM runtime governance architecture.</p>
+      <p class="eyebrow">CAM Runtime Atlas</p>
+      <h1>Constitutional AI Mediation Runtime Atlas</h1>
+      <p class="lede">An explanatory interface for CAM runtime architecture and governance pathways. This site helps interpret runtime operations, while canonical instruments remain in CAM-Initiative/Caelestis.</p>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="runtime.html">Explore Runtime Flow</a>
+        <a href="explorer.html">Search Governance Problems</a>
+        <a href="explorer.html#browse">Browse Instruments</a>
+      </nav>
     </header>
 
-    <main class="container" id="main-content">
-      <section class="panel" aria-labelledby="search-heading">
-        <h2 id="search-heading">Search governance problems</h2>
-        <label for="search-input" class="field-label">Search governance problems</label>
-        <input id="search-input" type="search" placeholder="Search by id, title, summary, purpose, domain, status, effect, enforcement, review state, authority role" autocomplete="off" />
+    <main id="main-content" class="container">
+      <section class="hero panel">
+        <img id="hero-runtime-map" class="hero-map" alt="Aeon constitutional runtime map showing major mediation phases and dependencies." />
+      </section>
 
-        <div class="pathway-wrap" aria-label="Problem pathways" role="group" id="pathways"></div>
-
-        <div class="filter-grid" role="group" aria-label="Catalogue filters">
-          <div><label for="filter-domain" class="field-label">Domain</label><select id="filter-domain"><option value="">All</option></select></div>
-          <div><label for="filter-hierarchy-type" class="field-label">Hierarchy type</label><select id="filter-hierarchy-type"><option value="">All</option></select></div>
-          <div><label for="filter-status" class="field-label">Status</label><select id="filter-status"><option value="">All</option></select></div>
-          <div><label for="filter-effect" class="field-label">Effect</label><select id="filter-effect"><option value="">All</option></select></div>
-          <div><label for="filter-enforcement" class="field-label">Enforcement</label><select id="filter-enforcement"><option value="">All</option></select></div>
+      <section class="panel">
+        <h2>Choose an entry point</h2>
+        <div class="entry-grid">
+          <a class="entry-card" href="runtime.html"><h3>Explore Runtime Flow</h3><p>Walk through runtime phases from signal intake to observability, with linked governance instruments.</p></a>
+          <a class="entry-card" href="explorer.html"><h3>Search Governance Problems</h3><p>Navigate curated pathways for governance risks, legitimacy, identity, and arbitration pressures.</p></a>
+          <a class="entry-card" href="explorer.html#browse"><h3>Browse Instruments</h3><p>Filter and search the instrument catalogue by domain, hierarchy, enforcement, status, and effect.</p></a>
         </div>
       </section>
-
-      <section class="panel" aria-live="polite" aria-atomic="true">
-        <p id="result-count">Loading data…</p>
-      </section>
-
-      <section class="panel"><h2>Domain navigation</h2><div id="domain-cards" class="mini-grid"></div></section>
-      <section class="panel"><h2>Runtime architecture</h2><div id="hierarchy-cards" class="mini-grid"></div></section>
-
-      <section id="results" aria-label="Instrument results" class="results"></section>
     </main>
 
-    <template id="card-template">
-      <article class="card">
-        <h3 class="card-title"></h3>
-        <p class="card-summary"></p>
-        <dl class="card-meta"></dl>
-        <p class="related-title">Related instruments</p>
-        <ul class="related-list"></ul>
-        <p class="card-links"><a class="source-link" target="_blank" rel="noopener noreferrer">Canonical source</a></p>
-      </article>
-    </template>
-
-    <script src="assets/search.js" defer></script>
+    <script src="assets/app.js" defer></script>
   </body>
 </html>
