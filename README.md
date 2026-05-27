@@ -1,7 +1,7 @@
 # CAM Runtime Atlas (Static GitHub Pages)
 
 ![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19779351.svg)
-![Support](https://img.shields.io/badge/Support-Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=000)
+[![Support](https://img.shields.io/badge/Support-Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/cam_initiative)
 
 This repository hosts an **explanatory runtime atlas** for Constitutional AI Mediation (CAM), using plain HTML/CSS/JavaScript.
 
