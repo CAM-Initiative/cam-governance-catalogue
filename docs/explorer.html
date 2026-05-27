@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Governance Problem Explorer · CAM Runtime Atlas</title><link rel="stylesheet" href="assets/style.css" /></head>
+<body>
+<header class="shell"><h1>Governance Problem Explorer</h1><p class="lede">Navigate governance challenges through curated pathways and supporting instruments.</p><p><a href="index.html">← Back to Atlas</a> · <a href="runtime.html">Runtime Flow</a></p></header>
+<main class="shell">
+<section class="panel" id="pathways"><h2>Problem pathways</h2><div id="pathway-grid" class="nav-grid"></div></section>
+<section class="panel" id="instruments">
+<h2>Browse instruments</h2>
+<label class="field-label" for="search-input">Search governance problems</label>
+<input id="search-input" type="search" placeholder="Search by id, title, domain, summary, purpose, status, effect, enforcement, authority role" />
+<div class="filter-grid">
+<div><label class="field-label" for="filter-domain">Domain</label><select id="filter-domain"><option value="">All</option></select></div>
+<div><label class="field-label" for="filter-hierarchy-type">Hierarchy type</label><select id="filter-hierarchy-type"><option value="">All</option></select></div>
+<div><label class="field-label" for="filter-status">Status</label><select id="filter-status"><option value="">All</option></select></div>
+<div><label class="field-label" for="filter-effect">Effect</label><select id="filter-effect"><option value="">All</option></select></div>
+<div><label class="field-label" for="filter-enforcement">Enforcement</label><select id="filter-enforcement"><option value="">All</option></select></div>
+</div>
+<p id="result-count">Loading…</p>
+<div id="results" class="results"></div>
+</section>
+</main>
+<template id="instrument-card"><article class="card"><h3 class="card-title"></h3><p class="card-summary"></p><dl class="card-meta"></dl><p><a class="source-link" target="_blank" rel="noopener noreferrer">Canonical source</a></p></article></template>
+<script src="assets/app.js" defer></script>
+</body>
+</html>

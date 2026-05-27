@@ -1,133 +1,17 @@
-:root {
-  --bg: #f8fafb;
-  --surface: #ffffff;
-  --text: #1f2933;
-  --muted: #52606d;
-  --border: #d9e2ec;
-  --accent: #2f6f8f;
-  --accent-soft: #eaf3f7;
-}
-
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  color: var(--text);
-  background: var(--bg);
-}
-
-.skip-link {
-  position: absolute;
-  left: -9999px;
-}
-.skip-link:focus {
-  left: 1rem;
-  top: 1rem;
-  background: #fff;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--accent);
-  border-radius: 0.25rem;
-}
-
-.site-header,
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.site-header h1 {
-  margin-bottom: 0.25rem;
-  font-size: clamp(1.6rem, 2vw + 1rem, 2.2rem);
-}
-
-.lede { color: var(--muted); margin-top: 0; }
-.lede a { color: var(--accent); }
-
-.controls,
-.results,
-.results-meta {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-#search-input,
-select {
-  width: 100%;
-  padding: 0.6rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 0.35rem;
-  font: inherit;
-  background: #fff;
-}
-
-.field-label {
-  display: block;
-  margin: 0 0 0.3rem;
-  font-weight: 600;
-}
-
-.filter-grid {
-  margin-top: 1rem;
-  display: grid;
-  gap: 0.8rem;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
-.results {
-  display: grid;
-  gap: 0.9rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.card {
-  border: 1px solid var(--border);
-  border-radius: 0.45rem;
-  padding: 0.9rem;
-  background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
-}
-
-.card-title { margin-top: 0; margin-bottom: 0.4rem; font-size: 1.05rem; }
-.card-summary { margin-top: 0; color: var(--muted); }
-
-.card-meta {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.2rem 0.6rem;
-  margin: 0.7rem 0;
-}
-
-.card-meta dt {
-  font-weight: 600;
-  color: #334e68;
-}
-
-.card-meta dd { margin: 0; }
-
-.tag {
-  display: inline-block;
-  padding: 0.15rem 0.45rem;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  border: 1px solid #c7ddeb;
-  color: #244e65;
-  font-size: 0.82rem;
-}
-
-.source-link {
-  color: var(--accent);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.source-link:hover,
-.source-link:focus { text-decoration: underline; }
-
-.empty-state {
-  margin: 0;
-  color: var(--muted);
-}
+:root{--bg:#0f1618;--surface:#172225;--card:#1f2d31;--text:#e6ece6;--muted:#b9c6be;--green:#7fa88f;--copper:#b97d4c;--line:#2f4348}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+a{color:#c9e6d6}.shell{max-width:1100px;margin:0 auto;padding:1rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:.7rem;padding:1rem;margin-bottom:1rem}
+.lede{color:var(--muted)}.hero-image{width:100%;height:auto;border-radius:.6rem;border:1px solid var(--line)}
+.nav-grid,.results{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.entry-card,.card,.pathway{display:block;background:var(--card);border:1px solid var(--line);border-radius:.6rem;padding:.9rem;text-decoration:none;color:inherit}
+.entry-card h2,.card-title{margin:.1rem 0 .4rem}.field-label{display:block;margin:.5rem 0 .25rem;font-weight:600}
+input,select,button{font:inherit}input,select{width:100%;padding:.6rem .7rem;border:1px solid var(--line);border-radius:.4rem;background:#111a1d;color:var(--text)}
+.filter-grid{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-top:.8rem}
+.card-meta{display:grid;grid-template-columns:max-content 1fr;gap:.2rem .6rem} .card-meta dt{color:var(--green);font-weight:600}.card-meta dd{margin:0;color:var(--muted)}
+.source-link{color:#f0bc8d}.pill{display:inline-block;padding:.12rem .5rem;border:1px solid #537061;border-radius:999px;color:#cde6d7}
+.phase{margin-bottom:1rem}.phase h3{color:var(--green);margin:.2rem 0 .6rem}
+.step-card{background:var(--card);border:1px solid var(--line);border-radius:.6rem;padding:.8rem;margin-bottom:.5rem}
+.step-button{all:unset;display:block;width:100%;cursor:pointer}.step-button:focus{outline:2px solid var(--copper)}
+.step-details[hidden]{display:none}.error{color:#ffacac;font-weight:700}
+@media (max-width:700px){.shell{padding:.75rem}}

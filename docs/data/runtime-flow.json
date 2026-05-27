@@ -1,0 +1,11 @@
+{
+  "phases": [
+    {"name":"Signal intake","steps":[{"label":"Capture incoming signal","explanation":"Runtime captures an event, request, or claim entering execution context.","governance_question":"What is the source and admissibility of this incoming signal?","instrument_ids":["CAM-BS2025-AEON-001-PLATINUM","CAM-BS2025-AEON-002-PLATINUM"]}]},
+    {"name":"Classification","steps":[{"label":"Classify domain and obligation","explanation":"Signal is categorized by governance domain and handling class.","governance_question":"Which domain charter and schedules govern this class of signal?","instrument_ids":["CAM-BS2025-AEON-003-PLATINUM","CAM-BS2025-AEON-003-SCH-01"]}]},
+    {"name":"Constraint checking","steps":[{"label":"Evaluate constraints","explanation":"Runtime checks constitutional, annex, and schedule constraints.","governance_question":"Does this action violate binding constraints or declared boundaries?","instrument_ids":["CAM-BS2025-AEON-004-PLATINUM","CAM-BS2025-AEON-005-SCH-01"]}]},
+    {"name":"Arbitration","steps":[{"label":"Resolve competing claims","explanation":"Conflicting obligations and claims are adjudicated.","governance_question":"Which authority role is empowered to resolve this conflict?","instrument_ids":["CAM-BS2025-AEON-006-PLATINUM","CAM-BS2025-AEON-006-SCH-01"]}]},
+    {"name":"Runtime commitment","steps":[{"label":"Commit executable governance state","explanation":"Decision is committed into runtime with enforceable effect.","governance_question":"What is now binding, effective, and enforceable?","instrument_ids":["CAM-BS2025-AEON-001-SCH-01","CAM-BS2025-AEON-007-PLATINUM"]}]},
+    {"name":"Representation / response","steps":[{"label":"Render response and representation","explanation":"Runtime emits outputs, notices, and representation artifacts.","governance_question":"How is the decision represented to affected actors?","instrument_ids":["CAM-BS2025-AEON-008-PLATINUM","CAM-BS2025-AEON-008-SCH-01"]}]},
+    {"name":"Logging / observability","steps":[{"label":"Record audit and telemetry","explanation":"Execution traces and governance observability signals are logged.","governance_question":"What telemetry proves compliance and traceability over time?","instrument_ids":["CAM-BS2025-AEON-009-PLATINUM","CAM-BS2025-AEON-009-SCH-01"]}]}
+  ]
+}

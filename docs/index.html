@@ -3,79 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CAM Governance Catalogue</title>
+    <title>CAM Runtime Atlas</title>
     <link rel="stylesheet" href="assets/style.css" />
   </head>
   <body>
-    <a class="skip-link" href="#results">Skip to results</a>
-    <header class="site-header">
-      <h1>CAM Governance Catalogue</h1>
-      <p class="lede">
-        Public discovery interface for CAM governance instruments. This repository is
-        <strong>not canonical</strong>; the canonical corpus remains
-        <a href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noopener noreferrer">CAM-Initiative/Caelestis</a>.
-      </p>
+    <header class="shell">
+      <h1>CAM Runtime Atlas</h1>
+      <p class="lede">An explanatory navigation interface for CAM runtime governance architecture and decision pathways.</p>
     </header>
-
-    <main class="container" id="main-content">
-      <section class="controls" aria-labelledby="search-heading">
-        <h2 id="search-heading">Search and filter</h2>
-
-        <label for="search-input" class="field-label">Full text search</label>
-        <input
-          id="search-input"
-          name="search"
-          type="search"
-          placeholder="Search by id, title, summary, purpose, domain, status, effect, enforcement, review state, authority role"
-          autocomplete="off"
-        />
-
-        <div class="filter-grid" role="group" aria-label="Catalogue filters">
-          <div>
-            <label for="filter-domain" class="field-label">Domain</label>
-            <select id="filter-domain"><option value="">All</option></select>
-          </div>
-          <div>
-            <label for="filter-instrument-class" class="field-label">Instrument class</label>
-            <select id="filter-instrument-class"><option value="">All</option></select>
-          </div>
-          <div>
-            <label for="filter-hierarchy-type" class="field-label">Hierarchy type</label>
-            <select id="filter-hierarchy-type"><option value="">All</option></select>
-          </div>
-          <div>
-            <label for="filter-status" class="field-label">Status</label>
-            <select id="filter-status"><option value="">All</option></select>
-          </div>
-          <div>
-            <label for="filter-effect" class="field-label">Effect</label>
-            <select id="filter-effect"><option value="">All</option></select>
-          </div>
-          <div>
-            <label for="filter-enforcement" class="field-label">Enforcement</label>
-            <select id="filter-enforcement"><option value="">All</option></select>
-          </div>
-        </div>
+    <main class="shell">
+      <section class="panel hero">
+        <img id="hero-runtime-map" alt="CAM Aeon constitutional runtime map visual" class="hero-image" />
       </section>
-
-      <section class="results-meta" aria-live="polite" aria-atomic="true">
-        <p id="result-count">Loading data…</p>
+      <section class="panel nav-grid" aria-label="Primary navigation">
+        <a class="entry-card" href="runtime.html"><h2>Explore Runtime Flow</h2><p>Walk through runtime phases, questions, and linked governance instruments.</p></a>
+        <a class="entry-card" href="explorer.html#pathways"><h2>Search Governance Problems</h2><p>Start from curated governance problems and jump to relevant runtime contexts.</p></a>
+        <a class="entry-card" href="explorer.html#instruments"><h2>Browse Instruments</h2><p>Search and filter instruments by domain, hierarchy, status, effect, and enforcement.</p></a>
       </section>
-
-      <section id="results" aria-label="Catalogue results" class="results"></section>
     </main>
-
-    <template id="card-template">
-      <article class="card">
-        <h3 class="card-title"></h3>
-        <p class="card-summary"></p>
-        <dl class="card-meta"></dl>
-        <p class="card-links">
-          <a class="source-link" target="_blank" rel="noopener noreferrer">View canonical source</a>
-        </p>
-      </article>
-    </template>
-
-    <script src="assets/search.js" defer></script>
+    <script src="assets/app.js" defer></script>
   </body>
 </html>
