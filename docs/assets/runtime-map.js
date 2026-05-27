@@ -73,7 +73,7 @@
           return `<li><a href='https://github.com/CAM-Initiative/Caelestis/blob/main/${item.link}' target='_blank' rel='noopener'>${id}</a></li>`;
         }).join("");
 
-        card.innerHTML = `<button aria-expanded='false'><h3>${step.phase} · ${step.step_label}</h3><p>${step.explanation}</p><p><strong>Governance question:</strong> ${step.governance_question}</p></button><div class='step-details'><p><strong>Referenced instruments</strong></p><ul>${refs || "<li>None mapped</li>"}</ul><p class='muted'>Interpretive navigation layer — not canonical CAM text.</p><p class='muted'>Source: CAM-Initiative/Caelestis / Governance/CAM.Governance.JSON</p></div>`;
+        card.innerHTML = `<button aria-expanded='false'><h3>${step.phase} · ${step.step_label}</h3><p>${step.explanation}</p><p><strong>Governance question:</strong> ${step.governance_question}</p></button><div class='step-details'><p><strong>Referenced instruments</strong></p><ul>${refs || "<li>None mapped</li>"}</ul><p class='muted'>Interpretive navigation layer.</p><p class='muted'>Source: CAM-Initiative/Caelestis / Governance/CAM.Governance.JSON</p></div>`;
         const btn = card.querySelector("button");
         btn.onclick = () => {
           const active = card.classList.toggle("active");
