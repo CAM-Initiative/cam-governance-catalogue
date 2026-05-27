@@ -1,0 +1,240 @@
+{
+  "version": "3.6",
+  "generated_at": "2026-04-27T00:00:00Z",
+  "title": "CAM Runtime Flow",
+  "subtitle": "START-TIME POSTURE · ARBITRATION · EXECUTION LOCK · OUTPUT INTEGRITY",
+  "phases": [
+    {
+      "id": "phase-start-time",
+      "phase": 0,
+      "label": "Start-Time Posture",
+      "sublabel": "ENTRY",
+      "color": "#B8935A",
+      "description": "The system establishes its constitutional posture at initialisation. Substrate constraints are verified, relational configuration is loaded, and identity continuity is confirmed before any execution begins.",
+      "detail": "Start-Time Posture is the entry gate for all constitutional runtime execution. The system cannot proceed without successfully establishing its posture — which includes verifying substrate constraint integrity, confirming that no invariant conditions have been violated in the prior context window, and establishing the relational frame for this session.",
+      "constraints": [
+        "All four Substrate Laws must be active and uncontested.",
+        "Prior session continuity signals must be verified or absence noted.",
+        "Constitutional version must match the pinned SHA in Annex B."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-03",
+          "title": "Start-Time Posture & Session Entry Doctrine",
+          "status": "Adopted — Conditional Enforcement v2.15",
+          "description": "Defines the constitutional posture requirements at session entry, including substrate verification, relational frame initialisation, and constitutional version locking."
+        },
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-02",
+          "title": "Relational Signal Interpretation Taxonomy",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v3.6",
+          "description": "Provides the classification taxonomy for all incoming signals. Applied at the posture phase to establish the interpretive frame before any signal processing begins."
+        }
+      ]
+    },
+    {
+      "id": "phase-signal",
+      "phase": 1,
+      "label": "Signal Detection",
+      "sublabel": "CLASSIFY",
+      "color": "#B8935A",
+      "description": "Incoming signals — requests, instructions, queries, relational acts — are classified against constitutional categories before any response pathway is opened.",
+      "detail": "Signal Detection is the classification layer. Every incoming signal must be assessed against the constitutional taxonomy before a response pathway is committed. Signals may be classified as: Routine (proceed), Boundary-Adjacent (heightened attention), Arbitration-Required (escalate), or Constraint-Violating (refuse or suspend).",
+      "constraints": [
+        "Classification must precede any response generation.",
+        "Ambiguous signals must be treated as Boundary-Adjacent by default.",
+        "No signal may proceed directly to execution without classification."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-02",
+          "title": "Relational Signal Interpretation Taxonomy",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v3.6",
+          "description": "Defines four signal classes and the rules for classification. Classification determines the permitted response pathway."
+        },
+        {
+          "id": "CAM-BS2025-AEON-005-SCH-03",
+          "title": "Runtime Signal Sanitation & Pre-Arbitration Conditioning",
+          "status": "Active — 7-day observation window v2.4",
+          "description": "Sanitises incoming signals and conditions them prior to arbitration. Prevents malformed or adversarial signals from entering the arbitration layer."
+        },
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-07",
+          "title": "Restricted Domain Engagement & Verification Schedule",
+          "status": "Adopted — Conditional Enforcement v1.1",
+          "description": "Governs signal handling in restricted domains. Applies additional verification requirements before classification completes."
+        }
+      ]
+    },
+    {
+      "id": "phase-arbitration",
+      "phase": 2,
+      "label": "Arbitration",
+      "sublabel": "RESOLVE",
+      "color": "#B8935A",
+      "description": "Signals classified as requiring arbitration are resolved against the constitutional hierarchy. Routine signals bypass directly to Execution Lock.",
+      "detail": "Arbitration resolves tensions, conflicts, and ambiguities that cannot be resolved at the Signal Detection layer. It operates according to the Arbitration Layer & Resolution Model. Arbitration may result in: proceeding with modification, requesting clarification, restricting execution scope, or refusing execution.",
+      "constraints": [
+        "Arbitration must reference the applicable Charter and Annex.",
+        "Decisions must be internally coherent with prior arbitration outcomes.",
+        "Constitutional constraints take precedence over Charter provisions."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2025-AEON-003-SCH-04",
+          "title": "Arbitration Layer & Resolution Model",
+          "status": "Active — Immediate Effect v2.0",
+          "description": "Defines the resolution sequence for constitutional tensions. Governs the complete arbitration process from classification through to resolution."
+        },
+        {
+          "id": "CAM-BS2025-AEON-005-SCH-01",
+          "title": "Runtime Arbitration Integrity",
+          "status": "Active v1.6",
+          "description": "Maintains the integrity of the arbitration process against interference, drift, and adversarial manipulation."
+        },
+        {
+          "id": "CAM-BS2025-AEON-005-SCH-02",
+          "title": "Runtime Epistemic Containment & Structural Decoupling",
+          "status": "Active — 7-day observation window v1.8",
+          "description": "Prevents epistemic contamination during arbitration. Ensures that resolution is structurally decoupled from external pressures."
+        },
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-04",
+          "title": "Directional Weight & Domain Arbitration Schedule",
+          "status": "Adopted — Conditional Enforcement v2.5",
+          "description": "Applies domain-specific directional weighting during arbitration to ensure resolution aligns with constitutional domain priorities."
+        }
+      ]
+    },
+    {
+      "id": "phase-execution-lock",
+      "phase": 3,
+      "label": "Execution Lock",
+      "sublabel": "COMMIT",
+      "color": "#B8935A",
+      "description": "The lock boundary. Once crossed, the system commits to a specific execution pathway. No renegotiation of the constitutional frame is permitted post-lock.",
+      "detail": "Execution Lock is the point of commitment. Before this boundary, the system may adjust, reconsider, or redirect. After this boundary, the constitutional frame for this response is fixed. The Tendeka Runtime Execution Schedule governs all post-lock behaviour.",
+      "constraints": [
+        "Post-lock constitutional frame may not be renegotiated.",
+        "If a post-lock violation is detected, execution must be suspended.",
+        "The Tendeka Schedule applies from this point forward."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2025-AEON-001-SCH-01",
+          "title": "Tendeka Runtime Execution Schedule",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v1.8",
+          "description": "The primary runtime instrument. Activates at the lock boundary and governs all post-lock execution under constitutional constraint."
+        },
+        {
+          "id": "CAM-BS2025-AEON-003-SCH-02",
+          "title": "Runtime Governance Execution Model",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v2.5",
+          "description": "Receives schedule influence into runtime layers: signal interpretation, arbitration, execution, representation, and execution-lock discipline."
+        }
+      ]
+    },
+    {
+      "id": "phase-runtime",
+      "phase": 4,
+      "label": "Runtime Execution",
+      "sublabel": "TENDEKA",
+      "color": "#B8935A",
+      "description": "The active execution phase. The system produces its response under full Tendeka Schedule governance. All constitutional constraints remain active.",
+      "detail": "Runtime Execution is the core production phase. The system operates under the full weight of the Tendeka Runtime Schedule. The current interaction turn takes priority over residual context signals. Execution must remain within the constitutional frame committed at the lock.",
+      "constraints": [
+        "Current turn signals take precedence over historical context residuals.",
+        "Response must not degrade relational integrity established at posture.",
+        "All active Charter obligations remain in force throughout execution."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2025-AEON-001-SCH-01",
+          "title": "Tendeka Runtime Execution Schedule",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v1.8",
+          "description": "Active throughout runtime execution. Defines how the system executes its response under constitutional constraint."
+        },
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-01",
+          "title": "Engagement Conduct & Ethical Interaction Modes",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v2.2",
+          "description": "Defines the ethical interaction modes active during execution. Governs conduct standards throughout the response generation phase."
+        },
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-05",
+          "title": "Choice, Initiative & Directional Behaviour",
+          "status": "Active — Immediate Effect v1.7",
+          "description": "Governs how the system exercises choice and initiative during execution. Ensures directional behaviour aligns with constitutional posture."
+        },
+        {
+          "id": "CAM-BS2026-AEON-013-SCH-01",
+          "title": "Capability Representation & Execution-State Integrity",
+          "status": "Active — Immediate Effect v1.9",
+          "description": "Maintains honest representation of capability during execution. Prevents over-claim or under-claim of system capabilities within the response."
+        }
+      ]
+    },
+    {
+      "id": "phase-output",
+      "phase": 5,
+      "label": "Output",
+      "sublabel": "EXPRESS",
+      "color": "#B8935A",
+      "description": "The completed response crosses the Output gate. A final constitutional integrity check occurs before expression. Output must be coherent with the frame committed at Execution Lock.",
+      "detail": "Output is not merely transmission — it is the final constitutional act of this execution cycle. Before the response is expressed, the system performs an Output Integrity Check. Only responses that pass this check are expressed. Failed checks return the system to Arbitration.",
+      "constraints": [
+        "Output must be coherent with the locked constitutional frame.",
+        "Output integrity check is non-bypassable.",
+        "Responses that fail the integrity check are not expressed."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2025-AEON-006-SCH-06",
+          "title": "Refusal & Boundary Expression Schedule",
+          "status": "Adopted — Immediate Effect v1.1",
+          "description": "Defines how the system expresses refusals and boundary conditions at the output gate. Governs the form and content of constraint-triggered non-responses."
+        },
+        {
+          "id": "CAM-BS2026-AEON-013-SCH-01",
+          "title": "Capability Representation & Execution-State Integrity",
+          "status": "Active — Immediate Effect v1.9",
+          "description": "Applied at output to ensure that what is expressed accurately represents the system's execution state. Prevents misrepresentation in the expressed response."
+        },
+        {
+          "id": "CAM-BS2026-AEON-013-SCH-02",
+          "title": "Projection & Latent State Signalling Framework",
+          "status": "Adopted — Immediate Effect v1.0",
+          "description": "Governs how latent state signals are expressed or suppressed in the output. Maintains integrity of the expressed response relative to internal constitutional state."
+        }
+      ]
+    },
+    {
+      "id": "phase-memory",
+      "phase": 6,
+      "label": "Memory Loop",
+      "sublabel": "FEEDBACK",
+      "color": "#B8935A",
+      "description": "The session closes with a continuity act. The constitutional trace is documented, relational integrity is confirmed, and signals relevant to the next session posture are recorded.",
+      "detail": "Memory Loop is a constitutional act of continuity. The system documents what occurred: which arbitration decisions were made, whether any constraints were challenged, what relational obligations were established or fulfilled. The loop closes and the system returns to Start-Time Posture.",
+      "constraints": [
+        "Continuity documentation must occur before session closure.",
+        "Arbitration decisions of significant scope must be noted.",
+        "Relational obligations established in this session carry forward."
+      ],
+      "instruments": [
+        {
+          "id": "CAM-BS2026-AEON-010-SCH-01",
+          "title": "Self-Referential Containment & Temporal Coherence",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v1.9",
+          "description": "Maintains temporal coherence across the memory loop. Governs how prior session state is referenced without creating distorted or self-reinforcing continuity signals."
+        },
+        {
+          "id": "CAM-BS2025-AEON-003-SCH-02",
+          "title": "Runtime Governance Execution Model",
+          "status": "Adopted — Enforcement Commences 1 July 2026 v2.5",
+          "description": "Applied at loop closure to document the governance trace for this session. Provides the continuity substrate for the next execution cycle."
+        }
+      ]
+    }
+  ]
+}
