@@ -1,9 +1,9 @@
 :root{--bg:#0e171b;--panel:#132126;--panel-soft:#1a2e34;--text:#e9f0ed;--muted:#b2c4be;--accent:#6fae8f;--copper:#be8b54;--border:#365056}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(#0e171b,#122328);color:var(--text);line-height:1.5}
-a{color:#9ecfb8}.skip-link{position:absolute;left:-9999px}.skip-link:focus{left:.5rem;top:.5rem;background:#fff;color:#000;padding:.4rem .6rem}
+a{color:#9ecfb8}.skip-link{position:absolute;left:-9999px}.skip-link:focus{left:.5rem;top:.5rem;background:#0b1512;color:#000;padding:.4rem .6rem}
 .container,.site-header{max-width:1100px;margin:0 auto;padding:1rem}.site-header h1{margin:.2rem 0}.eyebrow{color:var(--copper);text-transform:uppercase;letter-spacing:.08em;font-weight:700}.lede{color:var(--muted)}
 .top-nav{display:flex;gap:.8rem;flex-wrap:wrap}.top-nav a{background:var(--panel-soft);padding:.45rem .7rem;border-radius:.45rem;text-decoration:none;border:1px solid var(--border)}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:.7rem;padding:1rem;margin-bottom:1rem}.hero-map{width:100%;height:auto;border-radius:.5rem;border:1px solid #294047;background:#fff}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:.7rem;padding:1rem;margin-bottom:1rem}.hero-map{width:100%;height:auto;border-radius:.5rem;border:1px solid #294047;background:#0b1512}
 .entry-grid,.pathway-grid,.step-grid,.results{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.entry-card,.pathway-card,.step-card,.instrument-card{display:block;background:var(--panel-soft);border:1px solid var(--border);border-radius:.6rem;padding:.8rem;color:var(--text);text-decoration:none}
 .step-card button{all:unset;cursor:pointer;display:block;width:100%}.step-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}.step-details{display:none;margin-top:.7rem}.step-card.active .step-details{display:block}
 .field-label{display:block;font-weight:600;margin:.6rem 0 .3rem}input,select{width:100%;padding:.6rem;border-radius:.4rem;border:1px solid var(--border);background:#0b1417;color:#ecf3f0}

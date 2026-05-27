@@ -1,5 +1,7 @@
 # CAM Runtime Atlas (Static GitHub Pages)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.0000000.svg)](https://doi.org/10.5281/zenodo.0000000) [![Support](https://img.shields.io/badge/Support-Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=000)]([PASTE BUY ME A COFFEE URL])
+
 This repository hosts an **explanatory runtime atlas** for Constitutional AI Mediation (CAM), using plain HTML/CSS/JavaScript.
 
 > **Canonical source notice:** This repository/site is an explanatory interface, not the canonical corpus. Canonical governance documents remain in [CAM-Initiative/Caelestis](https://github.com/CAM-Initiative/Caelestis).
@@ -33,3 +35,20 @@ Required deployed structure:
 - `/docs/data/problem-pathways.json`
 - `/docs/images/`
 - `/docs/.nojekyll`
+
+
+## Support
+
+CAM is an independent public governance and archival infrastructure project. Support helps sustain public archive stewardship, indexing, and governance research work.
+
+## Validation
+
+Run local catalogue validation before publishing:
+
+```bash
+node scripts/validate-catalogue-data.js
+```
+
+## Canonical and visual boundaries
+
+Visual assets are explanatory and non-canonical. Canonical governance meaning remains in the source instruments and validated JSON data.

@@ -1,6 +1,6 @@
 const ASSET_URLS = {
-  runtimeMap: "https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/README/images/aeon-constitutional-runtime-map.svg",
-  runtimeFlow: "https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/README/images/cam_runtime_flow_aeon_aesthetic.svg"
+  runtimeMap: "images/cam-runtime-flow-ecology-coding.svg",
+  runtimeFlow: "images/cam-runtime-flow-ecology-coding.svg"
 };
 
 const DATA = {
