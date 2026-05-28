@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import aeonLogo from "@assets/CAM-EQ2026-AEON-LAB-PROFILE_1777259394417.png";
+
 
 const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
@@ -185,7 +185,7 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="hidden md:flex items-center justify-center w-44 h-44 rounded-full overflow-hidden shrink-0"
               >
-                <img src={aeonLogo} alt="Aeon Governance Lab" className="w-full h-full object-cover" />
+                <img src={`${import.meta.env.BASE_URL}opengraph.jpg`} alt="Aeon Governance Lab" className="w-full h-full object-cover" />
               </motion.div>
             </div>
 
