@@ -11,7 +11,16 @@ export default function Catalogue() {
   const [filters, setFilters] = useState<Record<string,string>>({});
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/cam-governance.json`).then(r=>r.json()).then((d)=>setRows(Array.isArray(d)?d:[]));
+    fetch(`${import.meta.env.BASE_URL}data/cam-governance.json`)
+      .then((r) => r.json())
+      .then((data) => {
+        const items = Array.isArray(data)
+          ? data
+          : Array.isArray(data.items)
+            ? data.items
+            : [];
+        setRows(items);
+      });
   }, []);
 
   const options = useMemo(() => Object.fromEntries(filterFields.map((f)=>[f, [...new Set(rows.map(r=>r[f]).filter(Boolean))].sort()])), [rows]);
@@ -27,6 +36,6 @@ export default function Catalogue() {
     <h1 className="font-serif text-4xl mb-6">Instrument Catalogue</h1>
     <input className="w-full border rounded-lg p-3 mb-4" placeholder="Search instruments" value={query} onChange={(e)=>setQuery(e.target.value)} />
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">{filterFields.map((f)=><select key={f} className="border rounded-lg p-2" value={filters[f]||""} onChange={(e)=>setFilters(v=>({...v,[f]:e.target.value}))}><option value="">All {f}</option>{(options[f]||[]).map((v:string)=><option key={v} value={v}>{v}</option>)}</select>)}</div>
-    <div className="space-y-3">{filtered.map((it, i)=><article key={`${it.id}-${i}`} className="border rounded-xl p-4 bg-card/70"><div className="flex items-center justify-between gap-2"><h2 className="font-mono text-sm">{it.id || "Unresolved/source mapping required"}</h2>{it.link ? <a href={it.link} target="_blank" rel="noreferrer" className="text-primary text-xs">Source ↗</a> : <span className="text-xs text-red-700">Unresolved/source mapping required</span>}</div><p className="font-serif text-lg">{it.title}</p><p className="text-sm text-muted-foreground">{it.summary}</p></article>)}</div>
+    <div className="space-y-3">{filtered.map((it, i)=><article key={`${it.id}-${i}`} className="border rounded-xl p-4 bg-card/70"><div className="flex items-center justify-between gap-2"><h2 className="font-mono text-sm">{it.id || "Unresolved/source mapping required"}</h2>{it.link ? <a href={`https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/${it.link}`} target="_blank" rel="noreferrer" className="text-primary text-xs">Source ↗</a> : <span className="text-xs text-red-700">Unresolved/source mapping required</span>}</div><p className="font-serif text-lg">{it.title}</p><p className="text-sm text-muted-foreground">{it.summary}</p></article>)}</div>
   </div></Shell>;
 }
