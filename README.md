@@ -1,55 +1,37 @@
-# CAM Runtime Atlas (Static GitHub Pages)
+# CAM Governance Catalogue
 
-![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19779351.svg)
-[![Support](https://img.shields.io/badge/Support-Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=000)](https://buymeacoffee.com/cam_initiative)
+This repository hosts the Replit-origin CAM interface (Home, Constitution, Runtime) and an added **Instrument Catalogue** route integrated into the same navigation.
 
-This repository hosts an **explanatory runtime atlas** for Constitutional AI Mediation (CAM), using plain HTML/CSS/JavaScript.
+## Run locally
 
-> **Canonical source notice:** This repository/site is an explanatory interface, not the canonical corpus. Canonical governance documents remain in [CAM-Initiative/Caelestis](https://github.com/CAM-Initiative/Caelestis).
+```bash
+npm install
+npm run dev
+```
 
-## What the site does
+## Build for GitHub Pages
 
-The `/docs` site provides three linked interfaces:
+```bash
+npm run build
+```
 
-- **Landing page** introducing CAM runtime architecture.
-- **Runtime flow view** with phase-based interactive execution cards.
-- **Governance problem explorer** with curated pathways plus searchable/filterable instrument browsing.
+Build output is written to `/docs` for GitHub Pages publication.
 
-## GitHub Pages setup (/docs)
+## GitHub Pages settings
 
-Enable Pages in repository settings:
+- Branch: `main`
+- Folder: `/docs`
 
-- **Source:** Deploy from a branch
-- **Branch:** `main` (or your publishing branch)
-- **Folder:** `/docs`
+## Data sources
 
-Required deployed structure:
+Catalogue/runtime data is served from:
 
-- `/docs/index.html`
-- `/docs/runtime.html`
-- `/docs/explorer.html`
-- `/docs/assets/style.css`
-- `/docs/assets/app.js`
-- `/docs/assets/runtime-map.js`
 - `/docs/data/cam-governance.json`
 - `/docs/data/runtime-flow.json`
 - `/docs/data/problem-pathways.json`
-- `/docs/images/`
-- `/docs/.nojekyll`
 
-
-## Support
-
-CAM is an independent public governance and archival infrastructure project. Support helps sustain public archive stewardship, indexing, and governance research work.
-
-## Validation
-
-Run local catalogue validation before publishing:
+## Validate catalogue references
 
 ```bash
-node scripts/validate-catalogue-data.js
+npm run validate:catalogue
 ```
-
-## Canonical and visual boundaries
-
-Visual assets are explanatory and non-canonical. Canonical governance meaning remains in the source instruments and validated JSON data.

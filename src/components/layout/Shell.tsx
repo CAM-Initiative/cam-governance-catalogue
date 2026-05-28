@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import aeonLogo from "@assets/Tansparent_Corporate_Logo_remix_GOLD_small_1777270240613.png";
+
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -9,6 +9,7 @@ export function Shell({ children }: { children: ReactNode }) {
     { href: "/", label: "Home" },
     { href: "/constitution", label: "Constitution" },
     { href: "/runtime", label: "Runtime" },
+    { href: "/catalogue", label: "Catalogue" },
   ];
 
   return (
@@ -17,7 +18,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="container mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <img
-              src={aeonLogo}
+              src={`${import.meta.env.BASE_URL}favicon.svg`}
               alt="Aeon Governance Lab"
               className="w-7 h-7 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
               style={{ filter: "drop-shadow(0 0 1px rgba(184,147,90,0.3))" }}
