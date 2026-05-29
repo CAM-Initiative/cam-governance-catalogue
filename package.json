@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && touch docs/.nojekyll",
+    "build": "vite build && node scripts/prepare-github-pages.js",
     "deploy:docs": "npm run build",
     "validate:catalogue": "node scripts/validate-catalogue-data.js"
   },

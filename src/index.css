@@ -90,7 +90,9 @@
 
   --secondary: 38 30% 88%;
   --secondary-foreground: 28 25% 20%;
-
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
   --muted: 38 25% 88%;
   --muted-foreground: 30 14% 46%;
 
@@ -153,9 +155,10 @@
     @apply font-sans antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif font-normal tracking-tight;
-  }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--app-font-serif);
+  font-weight: 400;
+  letter-spacing: -0.025em;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
