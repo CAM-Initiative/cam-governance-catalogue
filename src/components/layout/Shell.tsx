@@ -7,8 +7,8 @@ export function Shell({ children }: { children: ReactNode }) {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/constitution", label: "Constitution" },
     { href: "/runtime", label: "Runtime" },
+    { href: "/constitution", label: "Constitution" },
     { href: "/catalogue", label: "Catalogue" },
   ];
 
