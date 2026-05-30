@@ -10,6 +10,7 @@ export function Shell({ children }: { children: ReactNode }) {
     { href: "/runtime", label: "Runtime" },
     { href: "/constitution", label: "Constitution" },
     { href: "/catalogue", label: "Catalogue" },
+    { href: "/vigil", label: "VIGIL" },
   ];
 
   return (
