@@ -178,6 +178,12 @@ h1, h2, h3, h4, h5, h6 {
   color: hsl(var(--primary));
 }
 
+.cam-parchment-card {
+  background: hsl(36 55% 98%);
+  border: 1px solid hsl(38 22% 83%);
+  box-shadow: 0 8px 24px rgba(80, 55, 20, 0.06);
+}
+
 a {
   color: hsl(var(--primary));
 }
