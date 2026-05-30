@@ -4,15 +4,17 @@ This repository hosts the Replit-origin CAM interface (Home, Constitution, Runti
 
 ## Run locally
 
+Use Node 20 (see `.nvmrc`) and pnpm.
+
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 ## Build for GitHub Pages
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Build output is written to `/docs` for GitHub Pages publication.
@@ -33,5 +35,5 @@ Catalogue/runtime data is served from:
 ## Validate catalogue references
 
 ```bash
-npm run validate:catalogue
+pnpm run validate:catalogue
 ```
