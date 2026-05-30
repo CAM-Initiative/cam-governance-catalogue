@@ -148,7 +148,7 @@ export default function Home() {
             </svg>
           </div>
 
-          <div className="relative z-10 container mx-auto px-6 md:px-10 pt-12 pb-0 max-w-3xl">
+          <div className="home-content relative z-10 container mx-auto px-6 md:px-8 pt-12 pb-0 max-w-5xl">
 
             <motion.div
               initial={{ opacity: 0 }}
@@ -201,7 +201,7 @@ export default function Home() {
             >
               <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-cam-gold mb-3">Vision</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Civilisational Readiness</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+              <p className="text-base text-muted-foreground leading-relaxed font-light">
                 This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
               </p>
             </motion.div>
@@ -216,7 +216,7 @@ export default function Home() {
             >
               <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-cam-gold mb-3">Mission</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Minimum Invariant Conditions</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+              <p className="text-base text-muted-foreground leading-relaxed font-light">
                 The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. The Caelestis Architecture Model is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
               </p>
             </motion.div>

@@ -147,6 +147,7 @@
 
   body {
     font-family: var(--app-font-sans);
+    font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -190,4 +191,20 @@ a {
 
 a:hover {
   color: hsl(38 62% 34%);
+}
+
+.home-content {
+  max-width: min(1024px, calc(100vw - 2rem));
+  margin-inline: auto;
+}
+
+.home-content p {
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  .home-content {
+    max-width: 100%;
+    padding-inline: 1rem;
+  }
 }

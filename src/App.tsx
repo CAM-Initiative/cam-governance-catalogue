@@ -4,6 +4,7 @@ import Home from "@/pages/home";
 import Runtime from "@/pages/runtime";
 import Constitution from "@/pages/constitution";
 import Catalogue from "@/pages/catalogue";
+import Vigil from "@/pages/vigil";
 
 function Router() {
   return (
@@ -12,6 +13,7 @@ function Router() {
       <Route path="/runtime" component={Runtime} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
+      <Route path="/vigil" component={Vigil} />
       <Route component={NotFound} />
     </Switch>
   );
