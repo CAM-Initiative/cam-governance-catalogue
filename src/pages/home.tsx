@@ -118,7 +118,7 @@ function SeedOfLifeSVG() {
       <circle cx={cx} cy={cy} r={r} fill={GOLD_BG} stroke={GOLD} strokeWidth="1" strokeOpacity="0.6" />
       <text x={cx} y={cy + 4} textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="9" fill={GOLD} fontStyle="italic">Dignity</text>
       {principleLabels.map((lbl) => (
-        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="7" fill="hsl(28 25% 28%)" letterSpacing="0.03em">{lbl.text}</text>
+        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="7" fill={GOLD} letterSpacing="0.03em">{lbl.text}</text>
       ))}
     </svg>
   );
@@ -167,7 +167,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
               >
-                <div className="font-mono text-[15px] md:text-[18px] tracking-[0.3em] uppercase text-primary mb-2 flex items-center gap-3">
+                <div className="font-mono text-[15px] md:text-[18px] tracking-[0.3em] uppercase text-cam-gold mb-2 flex items-center gap-3">
                   <span className="text-[25px]">C A E L E S T I S</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
                 </div>

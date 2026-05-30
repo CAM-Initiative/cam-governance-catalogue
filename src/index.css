@@ -171,3 +171,17 @@ h1, h2, h3, h4, h5, h6 {
   border-top: 1px solid hsl(38 62% 40% / 0.3);
 }
 }
+
+/* Targeted CAM accent utilities for markup that must not depend on generated Tailwind output. */
+.text-cam-gold,
+.cam-gold-accent {
+  color: hsl(var(--primary));
+}
+
+a {
+  color: hsl(var(--primary));
+}
+
+a:hover {
+  color: hsl(38 62% 34%);
+}

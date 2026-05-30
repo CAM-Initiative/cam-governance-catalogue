@@ -27,6 +27,7 @@ export default defineConfig(({ command }) => ({
   },
   build: {
     outDir: "docs",
-    emptyOutDir: true,
+    // Keep GitHub Pages static assets that intentionally live directly under docs/.
+    emptyOutDir: false,
   },
 }));
