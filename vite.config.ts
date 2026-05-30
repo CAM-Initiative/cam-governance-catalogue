@@ -13,7 +13,7 @@ function githubPagesBasePath() {
   const explicitBase = process.env.VITE_BASE_PATH || process.env.BASE_PATH;
   if (explicitBase) return normalizeBasePath(explicitBase);
 
-  const repositoryName = process.env.GITHUB_REPOSITORY?.split("/").filter(Boolean).pop() || "Caelestis-Interface";
+  const repositoryName = process.env.GITHUB_REPOSITORY?.split("/").filter(Boolean).pop() || "cam-governance-catalogue";
   return normalizeBasePath(repositoryName);
 }
 
