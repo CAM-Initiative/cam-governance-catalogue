@@ -1,0 +1,43 @@
+name: Sync VIGIL records
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Sync VIGIL records
+        run: pnpm run sync:vigil
+
+      - name: Validate synced VIGIL records
+        run: node -e "JSON.parse(require('fs').readFileSync('docs/vigil/VIGIL.Records.json','utf8')); console.log('VIGIL records JSON valid')"
+
+      - name: Commit changed VIGIL records
+        run: |
+          if git diff --quiet -- docs/vigil/VIGIL.Records.json; then
+            echo "No VIGIL record changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/vigil/VIGIL.Records.json
+          git commit -m "Sync VIGIL records into Pages deploy output"
+          git push
