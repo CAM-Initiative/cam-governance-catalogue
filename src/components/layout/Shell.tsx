@@ -1,16 +1,19 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 
+const constitutionLinks = [
+  { href: "/constitution", label: "Overview" },
+  { href: "/constitution/runtime", label: "Runtime Model" },
+  { href: "/constitution/relational", label: "Relational Governance" },
+];
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
 
   const links = [
-    { href: "/", label: "Home" },
-    { href: "/runtime", label: "Runtime" },
-    { href: "/constitution", label: "Constitution" },
-    { href: "/catalogue", label: "Catalogue" },
-    { href: "/vigil", label: "VIGIL" },
+    { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
+    { href: "/vigil", label: "Observatory", active: location === "/vigil" },
   ];
 
   return (
@@ -30,12 +33,51 @@ export function Shell({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
+            <Link
+              href="/"
+              className={`text-[11px] font-mono tracking-[0.15em] uppercase transition-colors ${
+                location === "/"
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Home
+            </Link>
+            <div className="group relative">
+              <Link
+                href="/constitution"
+                className={`text-[11px] font-mono tracking-[0.15em] uppercase transition-colors ${
+                  isConstitutionActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Constitution
+              </Link>
+              <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="rounded-xl border border-border/70 bg-background/95 p-2 shadow-lg backdrop-blur-sm">
+                  {constitutionLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`block rounded-lg px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors ${
+                        location === link.href
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-card hover:text-foreground"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`text-[11px] font-mono tracking-[0.15em] uppercase transition-colors ${
-                  location === link.href
+                  link.active
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 }`}

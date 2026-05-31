@@ -3,6 +3,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Runtime from "@/pages/runtime";
 import Constitution from "@/pages/constitution";
+import RelationalGovernance from "@/pages/relational-governance";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 
@@ -11,6 +12,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/runtime" component={Runtime} />
+      <Route path="/constitution/runtime" component={Runtime} />
+      <Route path="/constitution/relational" component={RelationalGovernance} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
       <Route path="/vigil" component={Vigil} />

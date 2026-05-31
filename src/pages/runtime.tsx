@@ -280,12 +280,11 @@ export default function Runtime() {
             transition={{ duration: 0.7 }}
             className="max-w-5xl"
           >
-            <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Aeon Governance Lab</p>
-            <h1 className="mb-3 font-serif text-4xl text-foreground">Runtime</h1>
+            <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Interface</p>
+            <h1 className="mb-3 font-serif text-4xl text-foreground">Runtime Governance Model</h1>
             <hr className="gold-rule mb-3 w-24" />
             <p className="max-w-3xl text-base leading-relaxed text-muted-foreground mb-4">
-              Seven runtime phases translate constitutional principles into executed action.
-              Constraint rather than optimisation. Stewardship rather than control.
+              The runtime model shows how CAM constitutional constraints move from doctrine into execution: layered governance, routing, arbitration, failure handling, and review pathways.
             </p>
 
             {/* Tab bar */}

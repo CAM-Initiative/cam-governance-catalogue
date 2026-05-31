@@ -28,9 +28,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Sync VIGIL records
-        run: pnpm run sync:vigil
-
       - name: Build CAM interface
         run: pnpm run build
 
