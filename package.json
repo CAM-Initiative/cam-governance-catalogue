@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm run sync:vigil && vite build && node scripts/prepare-github-pages.js",
+    "build": "pnpm run sync:vigil && rm -rf docs/assets && vite build && node scripts/prepare-github-pages.js",
     "deploy:docs": "pnpm run build",
     "validate:catalogue": "node scripts/validate-catalogue-data.js",
     "sync:vigil": "node scripts/sync-vigil-records.mjs"
