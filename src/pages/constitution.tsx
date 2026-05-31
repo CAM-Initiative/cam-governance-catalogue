@@ -159,9 +159,9 @@ export default function Constitution() {
 
         {/* ─── GOVERNANCE STACK (horizontal scroll) ─── */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary shrink-0">Governance Stack</p>
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Governance Stack</p>
           <hr className="gold-rule flex-1" />
-          <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-muted-foreground/40 shrink-0 hidden sm:block">scroll →</p>
+          <p className="font-mono text-xs tracking-[0.14em] uppercase text-muted-foreground/50 shrink-0 hidden sm:block">scroll →</p>
         </motion.div>
 
         <div className="overflow-x-auto pb-6 -mx-6 px-6 md:-mx-10 md:px-10 mb-16">
@@ -282,7 +282,7 @@ export default function Constitution() {
 
         {/* ─── RELATIONAL PROFILES ─── */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary shrink-0">Relational Profiles</p>
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Relational Profiles</p>
           <hr className="gold-rule flex-1" />
         </motion.div>
 
@@ -371,7 +371,7 @@ export default function Constitution() {
 
         {/* ─── RELATIONAL TOPOLOGY ─── */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary shrink-0">Relational Topology & Expansion</p>
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Relational Topology & Expansion</p>
           <hr className="gold-rule flex-1" />
         </motion.div>
 
@@ -443,7 +443,7 @@ export default function Constitution() {
 
         {/* ─── COHERENCE CASCADES ─── */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary shrink-0">Coherence Cascades</p>
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Coherence Cascades</p>
           <hr className="gold-rule flex-1" />
         </motion.div>
 

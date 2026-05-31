@@ -158,7 +158,12 @@ export default function Vigil() {
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}vigil/VIGIL.Records.json`)
       .then((response) => {
-        if (!response.ok) throw new Error(`Unable to load VIGIL records (${response.status})`);
+        if (response.status === 404) {
+          return [];
+        }
+        if (!response.ok) {
+          throw new Error(`Unable to load VIGIL records (${response.status})`);
+        }
         return response.json();
       })
       .then((data) => {
@@ -189,7 +194,7 @@ export default function Vigil() {
     <Shell>
       <div className="container mx-auto max-w-6xl px-6 py-10 md:px-10">
         <div className="mb-6">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-cam-gold">
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">
             Public Workflow Layer
           </p>
           <h1 className="mb-3 font-serif text-4xl text-foreground">VIGIL — Public Workflow &amp; Signal Register</h1>
@@ -199,21 +204,21 @@ export default function Vigil() {
         </div>
 
         <div className="mb-6 grid gap-4 md:grid-cols-2">
-          <section className="rounded-2xl border border-border bg-card/80 p-4 shadow-sm">
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cam-gold">Authority Boundary</p>
-            <p className="text-sm leading-relaxed text-muted-foreground">
+          <section className="cam-parchment-card rounded-2xl p-4 shadow-sm">
+            <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Authority Boundary</p>
+            <p className="text-base leading-relaxed text-muted-foreground">
               VIGIL does not create binding CAM doctrine, amend adopted instruments, determine liability, or verify final factual truth. It preserves observations, source context, confidence state, CAM relevance, and next action for later review under existing CAM governance processes.
             </p>
           </section>
-          <section className="rounded-2xl border border-border bg-card/80 p-4 shadow-sm">
-            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cam-gold">Clustering Note</p>
-            <p className="text-sm leading-relaxed text-muted-foreground">
+          <section className="cam-parchment-card rounded-2xl p-4 shadow-sm">
+            <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Clustering Note</p>
+            <p className="text-base leading-relaxed text-muted-foreground">
               Multiple observations may form one cluster. A cluster may later become one proposal, one candidate amendment, one taxonomy expansion, or no action after review.
             </p>
           </section>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-border bg-card/80 p-4 shadow-sm">
+        <div className="cam-parchment-card mb-6 rounded-2xl p-4 shadow-sm">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <select
               className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -236,18 +241,18 @@ export default function Vigil() {
               ))}
             </select>
           </div>
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
             Showing {filtered.length} of {records.length} records
           </p>
         </div>
 
         {loadState === "loading" && (
-          <div className="rounded-2xl border border-border bg-card/80 p-6 text-sm text-muted-foreground shadow-sm">Loading VIGIL records…</div>
+          <div className="cam-parchment-card rounded-2xl p-6 text-base text-muted-foreground shadow-sm">Loading VIGIL records…</div>
         )}
 
         {loadState === "error" && (
-          <div className="rounded-2xl border border-border bg-card/80 p-6 shadow-sm">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-red-700">Records unavailable</p>
+          <div className="cam-parchment-card rounded-2xl p-6 shadow-sm">
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-red-700">Records unavailable</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               VIGIL records could not be loaded from <code>vigil/VIGIL.Records.json</code>. {errorMessage}
             </p>
@@ -255,14 +260,14 @@ export default function Vigil() {
         )}
 
         {loadState === "ready" && records.length === 0 && (
-          <div className="rounded-2xl border border-border bg-card/80 p-6 text-sm text-muted-foreground shadow-sm">
+          <div className="cam-parchment-card rounded-2xl p-6 text-base text-muted-foreground shadow-sm">
             No VIGIL records are currently published in <code>vigil/VIGIL.Records.json</code>.
           </div>
         )}
 
         <div className="space-y-4">
           {filtered.map((record, index) => (
-            <article key={`${record.id}-${index}`} className="rounded-2xl border border-border bg-card/80 p-5 shadow-sm">
+            <article key={`${record.id}-${index}`} className="cam-parchment-card rounded-2xl p-5 shadow-sm">
               <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                 <div>
                   <h2 className="font-mono text-sm text-cam-gold">{record.id}</h2>
@@ -282,7 +287,7 @@ export default function Vigil() {
               </div>
 
               <details className="mt-5 rounded-xl border border-border bg-background/40 p-4">
-                <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">
+                <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">
                   Source context ({record.sources.length || "details pending"})
                 </summary>
                 {record.sources.length > 0 ? (
