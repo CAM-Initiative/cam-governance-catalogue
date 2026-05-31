@@ -3,17 +3,18 @@ import { Shell } from "@/components/layout/Shell";
 
 type UnknownRecord = Record<string, unknown>;
 
-type VigilRecord = {
-  raw: UnknownRecord;
+type VigilIndexRecord = {
   id: string;
-  summary: string;
-  recordType: string;
+  record_type: string;
   status: string;
-  evidenceConfidence: string;
-  dateRecorded: string;
-  possibleCamMapping: string;
-  nextAction: string;
-  sources: UnknownRecord[];
+  date_recorded: string;
+  affected_domains?: string[];
+  affected_instruments?: string[];
+  candidate_amendment_id?: string;
+  path?: string;
+  summary: string;
+  evidence_confidence?: string;
+  source_types?: string[];
 };
 
 const preferredStatuses = [
@@ -33,84 +34,66 @@ const preferredRecordTypes = [
   "cluster",
 ];
 
-const missingValue = "TODO";
-const missingSourceValue = "Source details pending";
+const sourceRecordBaseUrl = "https://github.com/CAM-Initiative/Vigil/blob/main/";
+const exportNotice = "Filtered VIGIL index export from the CAM Interface. Canonical records remain in CAM-Initiative/VIGIL.";
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
-function textFrom(value: unknown, fallback = missingValue): string {
-  if (value === null || value === undefined || value === "") return fallback;
+function textFrom(value: unknown): string | undefined {
+  if (value === null || value === undefined || value === "") return undefined;
   if (Array.isArray(value)) {
-    const values = value.map((item) => textFrom(item, "")).filter(Boolean);
-    return values.length ? values.join("; ") : fallback;
+    const values = value.map((item) => textFrom(item)).filter(Boolean);
+    return values.length ? values.join("; ") : undefined;
   }
   if (isObject(value)) {
     const values = Object.entries(value)
-      .map(([key, item]) => `${key}: ${textFrom(item, "")}`)
-      .filter((entry) => !entry.endsWith(": "));
-    return values.length ? values.join("; ") : fallback;
+      .map(([key, item]) => {
+        const text = textFrom(item);
+        return text ? `${key}: ${text}` : undefined;
+      })
+      .filter(Boolean);
+    return values.length ? values.join("; ") : undefined;
   }
   return String(value);
 }
 
-function getField(record: UnknownRecord, names: string[], fallback = missingValue): string {
+function getOptionalField(record: UnknownRecord, names: string[]): string | undefined {
   for (const name of names) {
-    if (record[name] !== undefined && record[name] !== null && record[name] !== "") {
-      return textFrom(record[name], fallback);
-    }
+    const value = textFrom(record[name]);
+    if (value) return value;
   }
-  return fallback;
-}
-
-function getNestedSourceField(source: UnknownRecord, names: string[]): string {
-  return getField(source, names, missingSourceValue);
-}
-
-function normalizeSources(record: UnknownRecord): UnknownRecord[] {
-  const sourceValues = [
-    record.sources,
-    record.source_records,
-    record.sourceRecords,
-    record.source_context,
-    record.sourceContext,
-    record.source,
-    record.evidence_sources,
-    record.evidenceSources,
-  ];
-
-  for (const value of sourceValues) {
-    if (Array.isArray(value)) {
-      return value.map((item) => (isObject(item) ? item : { title: item })).filter(isObject);
-    }
-    if (isObject(value)) return [value];
-    if (typeof value === "string" && value.trim()) return [{ title: value }];
-  }
-
-  return [];
+  return undefined;
 }
 
 function normalizeStatus(status: string): string {
-  return status.trim().toLowerCase() === "proposal" ? "open" : status;
+  return status.trim().toLowerCase() === "proposal" ? "open" : status.trim();
 }
 
-function normalizeRecord(record: UnknownRecord, index: number): VigilRecord {
+function stringArrayFrom(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const values = value.map((item) => textFrom(item)?.trim()).filter((item): item is string => Boolean(item));
+  return values.length ? values : undefined;
+}
+
+function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexRecord {
   return {
-    raw: record,
-    id: getField(record, ["id", "record_id", "recordId", "ID"], `VIGIL-${index + 1}`),
-    summary: getField(record, ["summary", "title", "description", "observation", "signal"]),
-    recordType: getField(record, ["record_type", "recordType", "type", "category"]),
-    status: normalizeStatus(getField(record, ["status", "state"])),
-    evidenceConfidence: getField(record, ["evidence_confidence", "evidenceConfidence", "confidence", "confidence_state"]),
-    dateRecorded: getField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
-    possibleCamMapping: getField(record, ["possible_CAM_mapping", "possible_cam_mapping", "possibleCamMapping", "cam_mapping", "camMapping", "CAM_mapping"]),
-    nextAction: getField(record, ["next_action", "nextAction", "action", "recommended_next_action"]),
-    sources: normalizeSources(record),
+    id: getOptionalField(record, ["id", "record_id", "recordId", "ID"]) ?? `VIGIL-${index + 1}`,
+    record_type: getOptionalField(record, ["record_type", "recordType", "type", "category"]) ?? "unclassified",
+    status: normalizeStatus(getOptionalField(record, ["status", "state"]) ?? "unclassified"),
+    date_recorded: getOptionalField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]) ?? "Date not recorded",
+    affected_domains: stringArrayFrom(record.affected_domains ?? record.affectedDomains),
+    affected_instruments: stringArrayFrom(record.affected_instruments ?? record.affectedInstruments),
+    candidate_amendment_id: getOptionalField(record, ["candidate_amendment_id", "candidateAmendmentId"]),
+    path: getOptionalField(record, ["path"]),
+    summary: getOptionalField(record, ["summary", "title", "description", "observation", "signal"]) ?? "Summary not provided.",
+    evidence_confidence: getOptionalField(record, ["evidence_confidence", "evidenceConfidence"]),
+    source_types: stringArrayFrom(record.source_types ?? record.sourceTypes),
   };
 }
 
-function normalizeRecords(data: unknown): VigilRecord[] {
+function normalizeRecords(data: unknown): VigilIndexRecord[] {
   const items = Array.isArray(data)
     ? data
     : isObject(data) && Array.isArray(data.records)
@@ -119,42 +102,49 @@ function normalizeRecords(data: unknown): VigilRecord[] {
         ? data.items
         : [];
 
-  return items.map((item, index) => normalizeRecord(isObject(item) ? item : { summary: item }, index));
+  return items.map((item, index) => normalizeIndexRecord(isObject(item) ? item : { summary: item }, index));
 }
 
-function uniqueWithPreferred(values: string[], preferred: string[]) {
+function uniqueWithPreferred(values: string[], preferred: string[] = []) {
   const present = new Set(values.filter(Boolean));
   return [...preferred.filter((value) => present.has(value)), ...[...present].filter((value) => !preferred.includes(value)).sort()];
 }
 
-function Field({ label, value }: { label: string; value: string }) {
+function Field({ label, value }: { label: string; value?: string }) {
+  if (!value) return null;
+
   return (
     <div>
       <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
-      <p className="mt-1 text-sm leading-relaxed text-foreground">{value || missingValue}</p>
+      <p className="mt-1 text-sm leading-relaxed text-foreground">{value}</p>
     </div>
   );
 }
 
-function SourceField({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
-      {value.startsWith("http://") || value.startsWith("https://") ? (
-        <a href={value} target="_blank" rel="noreferrer" className="mt-1 block break-words text-sm">
-          {value}
-        </a>
-      ) : (
-        <p className="mt-1 break-words text-sm text-foreground">{value || missingSourceValue}</p>
-      )}
-    </div>
-  );
+function RecordListField({ label, values }: { label: string; values?: string[] }) {
+  if (!values?.length) return null;
+
+  return <Field label={label} value={values.join("; ")} />;
+}
+
+function sourceRecordUrl(path: string) {
+  return `${sourceRecordBaseUrl}${path}`;
+}
+
+function exportFileName(status: string) {
+  const date = new Date().toISOString().slice(0, 10);
+  const statusPart = (status || "all").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "");
+  return `vigil-current-view-${statusPart}-${date}.json`;
 }
 
 export default function Vigil() {
-  const [records, setRecords] = useState<VigilRecord[]>([]);
+  const [records, setRecords] = useState<VigilIndexRecord[]>([]);
   const [status, setStatus] = useState("open");
   const [recordType, setRecordType] = useState("");
+  const [domain, setDomain] = useState("");
+  const [evidenceConfidence, setEvidenceConfidence] = useState("");
+  const [sourceType, setSourceType] = useState("");
+  const [search, setSearch] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -181,17 +171,81 @@ export default function Vigil() {
   }, []);
 
   const statusOptions = useMemo(() => uniqueWithPreferred(records.map((record) => record.status), preferredStatuses), [records]);
-  const typeOptions = useMemo(() => uniqueWithPreferred(records.map((record) => record.recordType), preferredRecordTypes), [records]);
+  const typeOptions = useMemo(() => uniqueWithPreferred(records.map((record) => record.record_type), preferredRecordTypes), [records]);
+  const domainOptions = useMemo(
+    () => uniqueWithPreferred(records.flatMap((record) => record.affected_domains ?? [])),
+    [records],
+  );
+  const evidenceOptions = useMemo(
+    () => uniqueWithPreferred(records.map((record) => record.evidence_confidence ?? "")),
+    [records],
+  );
+  const sourceTypeOptions = useMemo(
+    () => uniqueWithPreferred(records.flatMap((record) => record.source_types ?? [])),
+    [records],
+  );
+
+  const filters = useMemo(
+    () => ({
+      status,
+      record_type: recordType,
+      affected_domain: domain,
+      evidence_confidence: evidenceConfidence,
+      source_type: sourceType,
+      search,
+    }),
+    [domain, evidenceConfidence, recordType, search, sourceType, status],
+  );
 
   const filtered = useMemo(
     () =>
       records.filter((record) => {
+        const searchText = [
+          record.id,
+          record.status,
+          record.record_type,
+          record.date_recorded,
+          record.summary,
+          record.candidate_amendment_id,
+          record.path,
+          record.evidence_confidence,
+          ...(record.affected_domains ?? []),
+          ...(record.affected_instruments ?? []),
+          ...(record.source_types ?? []),
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        const searchOk = !search.trim() || searchText.includes(search.trim().toLowerCase());
         const statusOk = !status || record.status === status;
-        const typeOk = !recordType || record.recordType === recordType;
-        return statusOk && typeOk;
+        const typeOk = !recordType || record.record_type === recordType;
+        const domainOk = !domain || record.affected_domains?.includes(domain);
+        const evidenceOk = !evidenceConfidence || record.evidence_confidence === evidenceConfidence;
+        const sourceTypeOk = !sourceType || record.source_types?.includes(sourceType);
+        return statusOk && typeOk && domainOk && evidenceOk && sourceTypeOk && searchOk;
       }),
-    [records, recordType, status],
+    [domain, evidenceConfidence, recordType, records, search, sourceType, status],
   );
+
+  function exportCurrentView() {
+    const payload = {
+      export_notice: exportNotice,
+      exported_at_utc: new Date().toISOString(),
+      source: "VIGIL.Records.Index.json",
+      filters,
+      record_count: filtered.length,
+      records: filtered,
+    };
+    const blob = new Blob([`${JSON.stringify(payload, null, 2)}\n`], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = exportFileName(status);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <Shell>
@@ -222,8 +276,9 @@ export default function Vigil() {
         </details>
 
         <div className="cam-parchment-card mb-6 rounded-2xl p-4 shadow-sm">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             <select
+              aria-label="Filter by status"
               className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
               value={status}
               onChange={(event) => setStatus(event.target.value)}
@@ -234,6 +289,7 @@ export default function Vigil() {
               ))}
             </select>
             <select
+              aria-label="Filter by record type"
               className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
               value={recordType}
               onChange={(event) => setRecordType(event.target.value)}
@@ -243,10 +299,66 @@ export default function Vigil() {
                 <option key={value} value={value}>{value}</option>
               ))}
             </select>
+            <select
+              aria-label="Filter by affected domain"
+              className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              value={domain}
+              onChange={(event) => setDomain(event.target.value)}
+            >
+              <option value="">All affected domains</option>
+              {domainOptions.map((value) => (
+                <option key={value} value={value}>{value}</option>
+              ))}
+            </select>
+            <select
+              aria-label="Filter by evidence confidence"
+              className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              value={evidenceConfidence}
+              onChange={(event) => setEvidenceConfidence(event.target.value)}
+            >
+              <option value="">All evidence confidence values</option>
+              {evidenceOptions.map((value) => (
+                <option key={value} value={value}>{value}</option>
+              ))}
+            </select>
+            <select
+              aria-label="Filter by source type"
+              className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              value={sourceType}
+              onChange={(event) => setSourceType(event.target.value)}
+            >
+              <option value="">All source types</option>
+              {sourceTypeOptions.map((value) => (
+                <option key={value} value={value}>{value}</option>
+              ))}
+            </select>
+            <input
+              aria-label="Search VIGIL records"
+              className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search records"
+            />
           </div>
-          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
-            Showing {filtered.length} of {records.length} records
-          </p>
+          <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
+                Showing {filtered.length} of {records.length} records
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                Exports the filtered index view. Canonical records remain in the VIGIL repository.
+              </p>
+            </div>
+            <button
+              className="rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:bg-background/80 disabled:cursor-not-allowed disabled:opacity-50"
+              type="button"
+              onClick={exportCurrentView}
+              disabled={loadState !== "ready" || filtered.length === 0}
+            >
+              Export current view
+            </button>
+          </div>
         </div>
 
         {loadState === "loading" && (
@@ -278,49 +390,34 @@ export default function Vigil() {
                 </div>
                 <div className="flex flex-wrap gap-2 md:justify-end">
                   <span className="rounded-full border border-border bg-background/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{record.status}</span>
-                  <span className="rounded-full border border-border bg-background/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{record.recordType}</span>
+                  <span className="rounded-full border border-border bg-background/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{record.record_type}</span>
                 </div>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Field label="Evidence confidence" value={record.evidenceConfidence} />
-                <Field label="Date recorded" value={record.dateRecorded} />
-                <Field label="Possible CAM mapping" value={record.possibleCamMapping} />
-                <Field label="Next action" value={record.nextAction} />
+                <Field label="Date recorded" value={record.date_recorded} />
+                <RecordListField label="Affected domains" values={record.affected_domains} />
+                <RecordListField label="Affected instruments" values={record.affected_instruments} />
+                <Field label="Candidate amendment ID" value={record.candidate_amendment_id} />
+                <Field label="Evidence confidence" value={record.evidence_confidence} />
+                <RecordListField label="Source types" values={record.source_types} />
               </div>
 
-              <details className="mt-5 rounded-xl border border-border bg-background/40 p-4">
-                <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">
-                  Source context ({record.sources.length || "details pending"})
-                </summary>
-                {record.sources.length > 0 ? (
-                  <div className="mt-4 space-y-4">
-                    {record.sources.map((source, sourceIndex) => (
-                      <div key={sourceIndex} className="rounded-xl border border-border bg-card/70 p-4">
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                          <SourceField label="Title" value={getNestedSourceField(source, ["title", "name", "headline"])} />
-                          <SourceField label="Author or publisher" value={getNestedSourceField(source, ["author", "publisher", "author_or_publisher", "authorOrPublisher"])} />
-                          <SourceField label="Source date" value={getNestedSourceField(source, ["source_date", "sourceDate", "date", "published_date", "publishedDate"])} />
-                          <SourceField label="URL or retrieval path" value={getNestedSourceField(source, ["url", "URL", "retrieval_path", "retrievalPath", "path"])} />
-                          <SourceField label="Retrieved date" value={getNestedSourceField(source, ["retrieved_date", "retrievedDate", "retrieval_date", "retrievalDate"])} />
-                          <SourceField label="Relevance note" value={getNestedSourceField(source, ["relevance_note", "relevanceNote", "relevance", "note"])} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="mt-4 rounded-xl border border-border bg-card/70 p-4">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                      <SourceField label="Title" value={missingSourceValue} />
-                      <SourceField label="Author or publisher" value={missingSourceValue} />
-                      <SourceField label="Source date" value={missingSourceValue} />
-                      <SourceField label="URL or retrieval path" value={missingSourceValue} />
-                      <SourceField label="Retrieved date" value={missingSourceValue} />
-                      <SourceField label="Relevance note" value={missingSourceValue} />
-                    </div>
-                  </div>
-                )}
-              </details>
+              {record.path && (
+                <div className="mt-5 flex flex-col gap-2 rounded-xl border border-border bg-background/40 p-4 md:flex-row md:items-center md:justify-between">
+                  <p className="break-words font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
+                    Source record: {record.path}
+                  </p>
+                  <a
+                    className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:bg-background/80"
+                    href={sourceRecordUrl(record.path)}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open source record →
+                  </a>
+                </div>
+              )}
             </article>
           ))}
         </div>
