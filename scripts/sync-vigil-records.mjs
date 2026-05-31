@@ -4,10 +4,10 @@ import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const outputPath = resolve(repoRoot, "docs", "vigil", "VIGIL.Records.json");
-const defaultLocalSource = resolve(repoRoot, "..", "VIGIL", "vigil", "VIGIL.Records.json");
+const outputPath = resolve(repoRoot, "docs", "vigil", "VIGIL.Records.Index.json");
+const defaultLocalSource = resolve(repoRoot, "..", "VIGIL", "vigil", "VIGIL.Records.Index.json");
 const defaultRemoteSource =
-  "https://raw.githubusercontent.com/CAM-Initiative/VIGIL/main/vigil/VIGIL.Records.json";
+  "https://raw.githubusercontent.com/CAM-Initiative/VIGIL/main/vigil/VIGIL.Records.Index.json";
 
 function resolveSource() {
   if (process.env.VIGIL_RECORDS_SOURCE) {
@@ -62,7 +62,7 @@ async function loadSourceWithExistingOutputFallback(source) {
       throw error;
     }
 
-    console.warn(`Unable to fetch ${source}; using existing docs/vigil/VIGIL.Records.json`);
+    console.warn(`Unable to fetch ${source}; using existing docs/vigil/VIGIL.Records.Index.json`);
     console.warn(error instanceof Error ? error.message : error);
     return { source: outputPath, text: await readFile(outputPath, "utf8") };
   }
@@ -74,7 +74,7 @@ try {
   validateJson(sourceText, loadedSource);
   await writeFile(outputPath, sourceText.endsWith("\n") ? sourceText : `${sourceText}\n`);
   console.log(`Synced VIGIL records from ${loadedSource}`);
-  console.log("Wrote docs/vigil/VIGIL.Records.json");
+  console.log("Wrote docs/vigil/VIGIL.Records.Index.json");
 } catch (error) {
   console.error(`Failed to sync VIGIL records from ${source}`);
   console.error(error instanceof Error ? error.message : error);
