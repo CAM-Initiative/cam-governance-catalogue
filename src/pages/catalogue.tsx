@@ -63,16 +63,16 @@ export default function Catalogue() {
     <Shell>
       <div className="container mx-auto max-w-6xl px-6 py-10 md:px-10">
         <div className="mb-6">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-cam-gold">
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">
             Governance Registry
           </p>
           <h1 className="mb-3 font-serif text-4xl text-foreground">Instrument Catalogue</h1>
-          <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
             Search and filter the published CAM governance instruments without modifying the source corpus.
           </p>
         </div>
 
-        <div className="mb-6 rounded-2xl border border-border bg-card/80 p-4 shadow-sm">
+        <div className="cam-parchment-card mb-6 rounded-2xl p-5 shadow-sm">
           <input
             className="mb-4 w-full rounded-lg border border-border bg-card px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
             placeholder="Search instruments"
@@ -104,29 +104,29 @@ export default function Catalogue() {
             const metadata = metadataLine(it);
 
             return (
-              <article key={`${it.id}-${i}`} className="rounded-xl border border-border bg-card/80 p-4 shadow-sm">
+              <article key={`${it.id}-${i}`} className="cam-parchment-card rounded-xl p-5 shadow-sm">
                 <div className="mb-2 flex items-start justify-between gap-3">
                   <div>
                     <h2 className="font-mono text-sm text-cam-gold">
                       {it.id || "Unresolved/source mapping required"}
                     </h2>
-                    {metadata && <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{metadata}</p>}
+                    {metadata && <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">{metadata}</p>}
                   </div>
                   {it.link ? (
                     <a
                       href={`https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/${it.link}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="shrink-0 font-mono text-xs uppercase tracking-[0.12em] text-cam-gold transition-colors hover:text-primary/80"
+                      className="shrink-0 font-mono text-sm uppercase tracking-[0.12em] text-cam-gold transition-colors hover:text-primary/80"
                     >
                       Source ↗
                     </a>
                   ) : (
-                    <span className="shrink-0 text-xs text-red-700">Unresolved/source mapping required</span>
+                    <span className="shrink-0 text-sm text-red-700">Unresolved/source mapping required</span>
                   )}
                 </div>
-                <p className="mb-2 font-serif text-lg text-foreground">{it.title}</p>
-                <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+                <p className="mb-2 font-serif text-xl text-foreground">{it.title}</p>
+                <p className="text-base leading-relaxed text-muted-foreground">{description}</p>
               </article>
             );
           })}

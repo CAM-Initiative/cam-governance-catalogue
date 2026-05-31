@@ -174,7 +174,7 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight mb-3">
                   Architecture Model
                 </h1>
-                <p className="font-serif text-sm text-muted-foreground font-light tracking-wide">
+                <p className="font-serif text-base text-muted-foreground font-light tracking-wide">
                   Constitutional governance for relational and cognitive AI systems
                 </p>
               </motion.div>
@@ -199,7 +199,7 @@ export default function Home() {
               transition={{ duration: 0.7 }}
               className="mb-8 cam-parchment-card p-6 rounded-2xl backdrop-blur-sm"
             >
-              <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-cam-gold mb-3">Vision</p>
+              <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">Vision</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Civilisational Readiness</h2>
               <p className="text-base text-muted-foreground leading-relaxed font-light">
                 This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
@@ -214,7 +214,7 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.05 }}
               className="mb-10 cam-parchment-card p-6 rounded-2xl backdrop-blur-sm"
             >
-              <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-cam-gold mb-3">Mission</p>
+              <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">Mission</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Minimum Invariant Conditions</h2>
               <p className="text-base text-muted-foreground leading-relaxed font-light">
                 The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. The Caelestis Architecture Model is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
@@ -230,7 +230,7 @@ export default function Home() {
               className="mb-10"
             >
               <div className="flex items-center gap-3 mb-3">
-                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-cam-gold shrink-0">From Seed to Execution</p>
+                <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold shrink-0">From Seed to Execution</p>
                 <hr className="gold-rule flex-1" />
               </div>
               <p className="font-serif text-xl text-foreground mb-7">
@@ -244,7 +244,7 @@ export default function Home() {
                 {/* Seed of Life card */}
                 <div className="flex-1 cam-parchment-card rounded-2xl p-5 flex flex-col" style={{ borderColor: GOLD_BORDER }}>
                   <div className="flex items-center justify-between mb-1">
-                    <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-cam-gold">Seed of Life</p>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold">Seed of Life</p>
                     <button
                       onClick={() => setSeedExpanded(!seedExpanded)}
                       className="w-5 h-5 rounded-full flex items-center justify-center transition-transform duration-300"
@@ -257,7 +257,7 @@ export default function Home() {
                       <ChevronRight className="w-2.5 h-2.5" style={{ color: GOLD }} />
                     </button>
                   </div>
-                  <h3 className="font-serif text-base text-foreground mb-4">Foundational Principles</h3>
+                  <h3 className="font-serif text-xl text-foreground mb-4">Foundational Principles</h3>
 
                   <div className="flex-1 flex items-center justify-center py-2">
                     <SeedOfLifeSVG />
@@ -272,29 +272,29 @@ export default function Home() {
                         transition={{ duration: 0.35 }}
                         className="overflow-hidden mt-4"
                       >
-                        <p className="text-xs text-muted-foreground font-light leading-relaxed mb-4">
+                        <p className="text-sm text-muted-foreground font-light leading-relaxed mb-4">
                           The seven foundational principles form interlocking circles — the Seed of Life. Together they establish the foundational framework for governance, responsibility, and continuity. Each defines a boundary condition for ethical operation.
                         </p>
                         <div className="space-y-3">
                           {principles.map((p) => (
                             <div key={p.num} className="p-3 rounded-xl" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
                               <div className="flex items-baseline gap-2 mb-1">
-                                <span className="font-mono text-[8px] tracking-wider" style={{ color: GOLD }}>{p.num}</span>
-                                <span className="font-serif text-sm text-foreground">{p.name}</span>
+                                <span className="font-mono text-[10px] tracking-wider" style={{ color: GOLD }}>{p.num}</span>
+                                <span className="font-serif text-base text-foreground">{p.name}</span>
                               </div>
-                              <p className="text-xs text-muted-foreground font-light leading-relaxed mb-1.5">{p.principle}</p>
-                              <p className="font-mono text-[8px] tracking-[0.05em] uppercase" style={{ color: GOLD }}>↳ {p.consequence}</p>
+                              <p className="text-sm text-muted-foreground font-light leading-relaxed mb-1.5">{p.principle}</p>
+                              <p className="font-mono text-[10px] tracking-[0.05em] uppercase" style={{ color: GOLD }}>↳ {p.consequence}</p>
                             </div>
                           ))}
                         </div>
-                        <p className="text-xs text-muted-foreground font-light leading-relaxed mt-4 pt-4 border-t" style={{ borderColor: GOLD_BORDER }}>
+                        <p className="text-sm text-muted-foreground font-light leading-relaxed mt-4 pt-4 border-t" style={{ borderColor: GOLD_BORDER }}>
                           These seven principles do not operate in isolation. They form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the entire framework.
                         </p>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
-                  <p className="font-mono text-[8px] tracking-[0.18em] uppercase text-muted-foreground/50 text-center mt-3">
+                  <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/60 text-center mt-3">
                     Geometry of Orientation
                   </p>
                 </div>
@@ -324,10 +324,10 @@ export default function Home() {
                 <div className="flex-1 flex flex-col">
                   {/* ECI card — flex-1 fills top half of column */}
                   <div className="flex-1 cam-parchment-card rounded-2xl p-5 flex flex-col" style={{ borderColor: GOLD_BORDER }}>
-                    <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-cam-gold mb-1">Epochal Civilisational Invariants</p>
-                    <h3 className="font-serif text-base text-foreground mb-3">Meta-Constitutional Law</h3>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-1">Epochal Civilisational Invariants</p>
+                    <h3 className="font-serif text-xl text-foreground mb-3">Meta-Constitutional Law</h3>
                     <div className="flex-1" />
-                    <p className="font-mono text-[8px] tracking-[0.18em] uppercase text-muted-foreground/50 text-center">
+                    <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/60 text-center">
                       Stable Invariants Across Time
                     </p>
                   </div>
@@ -342,10 +342,10 @@ export default function Home() {
 
                   {/* Aeon Tier Constitution card — flex-1 fills bottom half of column */}
                   <div className="flex-1 cam-parchment-card rounded-2xl p-5 flex flex-col" style={{ borderColor: GOLD_BORDER }}>
-                    <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-cam-gold mb-1">Aeon Tier Constitution</p>
-                    <h3 className="font-serif text-base text-foreground mb-3">Civilisational Scale Governance</h3>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-1">Aeon Tier Constitution</p>
+                    <h3 className="font-serif text-xl text-foreground mb-3">Civilisational Scale Governance</h3>
                     <div className="flex-1" />
-                    <p className="font-mono text-[8px] tracking-[0.18em] uppercase text-muted-foreground/50 text-center">
+                    <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/60 text-center">
                       CAM-BS2025-AEON-001 · Platinum
                     </p>
                   </div>
@@ -362,21 +362,21 @@ export default function Home() {
 
               {/* Runtime Translation */}
               <div className="cam-parchment-card rounded-2xl p-5" style={{ borderColor: GOLD_BORDER }}>
-                <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-cam-gold mb-4">Runtime Translation</p>
+                <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-4">Runtime Translation</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {runtimeTranslation.map((col) => (
                     <div key={col.title} className="flex flex-col gap-1.5">
-                      <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-muted-foreground/60">{col.tag}</p>
-                      <h4 className="font-serif text-sm text-foreground">{col.title}</h4>
-                      <p className="text-xs text-muted-foreground font-light leading-relaxed">{col.description}</p>
+                      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground/70">{col.tag}</p>
+                      <h4 className="font-serif text-base text-foreground">{col.title}</h4>
+                      <p className="text-sm text-muted-foreground font-light leading-relaxed">{col.description}</p>
                     </div>
                   ))}
                 </div>
                 <hr className="gold-rule mt-5 mb-4" />
                 <div className="text-center">
-                  <p className="font-mono text-[9px] tracking-[0.15em] uppercase text-cam-gold mb-1">AEON-003-SCH-02</p>
-                  <p className="font-serif text-sm text-foreground">Runtime Governance Execution Model</p>
-                  <p className="text-xs text-muted-foreground font-light mt-1">
+                  <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-cam-gold mb-1">AEON-003-SCH-02</p>
+                  <p className="font-serif text-base text-foreground">Runtime Governance Execution Model</p>
+                  <p className="text-sm text-muted-foreground font-light leading-relaxed mt-2">
                     Receives schedule influence into runtime layers: signal interpretation, arbitration, execution, representation, and execution-lock discipline.
                   </p>
                 </div>
@@ -392,7 +392,7 @@ export default function Home() {
               className="mb-14"
             >
               <div className="flex items-center gap-3 mb-3">
-                <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-cam-gold shrink-0">Start Here</p>
+                <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold shrink-0">Start Here</p>
                 <hr className="gold-rule flex-1" />
               </div>
               <p className="font-serif text-xl text-foreground mb-7">
@@ -409,11 +409,11 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.07 }}
-                    className="cam-parchment-card p-4 rounded-2xl hover:border-primary/40 transition-colors cursor-pointer group block"
+                    className="cam-parchment-card p-5 rounded-2xl hover:border-primary/40 transition-colors cursor-pointer group block"
                   >
-                    <p className="font-mono text-[9px] tracking-[0.18em] uppercase text-cam-gold mb-1.5">{path.label}</p>
-                    <p className="font-mono text-[9px] text-muted-foreground/60 mb-2">{path.sublabel}</p>
-                    <p className="font-serif text-sm text-foreground group-hover:text-primary transition-colors leading-snug">{path.title}</p>
+                    <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-cam-gold mb-2">{path.label}</p>
+                    <p className="font-mono text-[11px] text-muted-foreground/70 mb-2">{path.sublabel}</p>
+                    <p className="font-serif text-base text-foreground group-hover:text-primary transition-colors leading-snug">{path.title}</p>
                   </motion.a>
                 ))}
               </div>

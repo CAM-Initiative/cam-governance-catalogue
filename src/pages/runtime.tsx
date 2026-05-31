@@ -9,15 +9,16 @@ const GOLD_LIGHT = "#D4AA72";
 const GOLD_BG = "rgba(184,147,90,0.08)";
 const GOLD_BORDER = "rgba(184,147,90,0.35)";
 
-const CARD_W = 160;
-const ARROW_W = 40;
+const CARD_W = 240;
+const CARD_W_EXPANDED = 560;
+const ARROW_W = 56;
 const PAD_X = 48;
 const N_CARDS = 7;
 const CONTENT_W = PAD_X + N_CARDS * CARD_W + (N_CARDS - 1) * ARROW_W + PAD_X;
 
 const PAD_TOP = 44;
-const CARD_H_COLLAPSED = 160;
-const CARD_CENTER_Y = PAD_TOP + CARD_H_COLLAPSED / 2; // 124
+const CARD_H_COLLAPSED = 230;
+const CARD_CENTER_Y = PAD_TOP + CARD_H_COLLAPSED / 2;
 
 function firstSentence(text: string): string {
   const match = text.match(/^[^.!?]+[.!?]/);
@@ -197,9 +198,7 @@ export default function Runtime() {
       if (el && scrollRef.current) {
         const container = scrollRef.current;
         const cardLeft = el.offsetLeft - container.offsetLeft;
-        container.scrollTo({ left: cardLeft - 48, behavior: "smooth" });
-        // Also scroll to top of card area
-        container.scrollTo({ top: 0, behavior: "smooth" });
+        container.scrollTo({ left: cardLeft - 48, top: 0, behavior: "smooth" });
       }
     }
   }, [expandedId]);
@@ -214,7 +213,7 @@ export default function Runtime() {
 
   return (
     <Shell>
-      <div className="flex flex-col">
+      <div className="relative flex flex-col">
         {/* ── Header: title + tabs + subheading ── */}
         <div className="shrink-0 pt-6 pb-0 px-6 md:px-10 border-b border-border/60">
           <motion.div
@@ -239,7 +238,7 @@ export default function Runtime() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className="relative px-4 pb-3 pt-1 font-mono text-[9px] tracking-[0.18em] uppercase transition-colors duration-200 shrink-0"
+                    className="relative px-4 pb-3 pt-1 font-mono text-xs tracking-[0.16em] uppercase transition-colors duration-200 shrink-0"
                     style={{
                       color: isActive ? GOLD : "hsl(28 20% 50%)",
                       borderBottom: isActive ? `2px solid ${GOLD}` : "2px solid transparent",
@@ -261,12 +260,12 @@ export default function Runtime() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="font-light text-xs leading-relaxed"
+                className="font-light text-sm leading-relaxed"
                 style={{ color: "hsl(28 20% 45%)" }}
               >
                 {activeExample
                   ? <>
-                      <span className="font-mono text-[9px] uppercase tracking-widest mr-2" style={{ color: GOLD }}>
+                      <span className="font-mono text-[11px] uppercase tracking-widest mr-2" style={{ color: GOLD }}>
                         {TABS[TABS.indexOf(activeTab)]}
                       </span>
                       {SUBHEADINGS[activeTab]}
@@ -280,7 +279,7 @@ export default function Runtime() {
         {/* ── Runtime Flow section divider ── */}
         <div className="shrink-0 px-6 md:px-10 pt-5 pb-2">
           <div className="flex items-center gap-3">
-            <p className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary shrink-0">Runtime Flow</p>
+            <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Runtime Flow</p>
             <hr className="gold-rule flex-1" />
           </div>
         </div>
@@ -288,12 +287,12 @@ export default function Runtime() {
         {/* ── Cards scroll area ── */}
         <div
           ref={scrollRef}
-          className="overflow-x-auto overflow-y-hidden hide-scrollbar relative"
-          style={{ minHeight: 320 }}
+          className="overflow-x-auto overflow-y-hidden relative pb-4"
+          style={{ minHeight: 420 }}
         >
           {/* Inner content row */}
           <div
-            className="flex items-start gap-0 relative z-10"
+            className="flex min-w-[2100px] items-start gap-0 relative z-10"
             style={{
               width: CONTENT_W,
               paddingLeft: PAD_X,
@@ -320,9 +319,9 @@ export default function Runtime() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.45, delay: index * 0.06 }}
                       onClick={() => setExpandedId(isExpanded ? null : phase.id)}
-                      className="cursor-pointer flex flex-col bg-card rounded-lg border transition-colors duration-200"
+                      className="cam-parchment-card cursor-pointer flex flex-col rounded-2xl border transition-colors duration-200"
                       style={{
-                        width: isExpanded ? 480 : CARD_W,
+                        width: isExpanded ? CARD_W_EXPANDED : CARD_W,
                         minHeight: CARD_H_COLLAPSED,
                         borderColor: isExpanded ? GOLD : GOLD_BORDER,
                         boxShadow: isExpanded
@@ -330,35 +329,35 @@ export default function Runtime() {
                           : `0 1px 4px rgba(120,80,20,0.07)`,
                       }}
                     >
-                      <div className="p-4 flex flex-col h-full">
+                      <div className="p-5 flex flex-col h-full">
                         {/* Sublabel row */}
                         <div className="flex items-center justify-between mb-2.5">
                           <span
-                            className="font-mono text-[8px] tracking-[0.2em] uppercase"
+                            className="font-mono text-[10px] tracking-[0.18em] uppercase"
                             style={{ color: GOLD }}
                           >
                             {exSublabel ?? phase.sublabel}
                           </span>
                           {!isExpanded && (
                             <div
-                              className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
                               style={{ border: `1px solid ${GOLD_BORDER}`, backgroundColor: GOLD_BG }}
                             >
-                              <ChevronRight className="w-2 h-2" style={{ color: GOLD }} />
+                              <ChevronRight className="w-3 h-3" style={{ color: GOLD }} />
                             </div>
                           )}
                         </div>
 
                         <h2
                           className="font-serif leading-snug text-foreground"
-                          style={{ fontSize: 15, fontWeight: 400 }}
+                          style={{ fontSize: 20, fontWeight: 400 }}
                         >
                           {phase.label}
                         </h2>
 
                         {!isExpanded && (
                           <p
-                            className="text-[10px] leading-relaxed font-light mt-1.5"
+                            className="text-sm leading-relaxed font-light mt-3"
                             style={{ color: "hsl(28 20% 50%)" }}
                           >
                             {firstSentence(exDetail ?? phase.detail)}
@@ -376,26 +375,26 @@ export default function Runtime() {
                               className="flex-1 flex flex-col mt-4 overflow-y-auto hide-scrollbar"
                             >
                               {/* Example context detail OR default detail */}
-                              <p className="text-sm text-muted-foreground leading-relaxed font-light mb-5">
+                              <p className="text-base text-muted-foreground leading-relaxed font-light mb-5">
                                 {exDetail ?? phase.detail}
                               </p>
 
                               {/* Example output (phase 5) */}
                               {exOutput && (
                                 <div
-                                  className="mb-5 p-3 rounded-md"
+                                  className="mb-5 p-4 rounded-xl"
                                   style={{
                                     backgroundColor: GOLD_BG,
                                     border: `1px solid ${GOLD}50`,
                                   }}
                                 >
                                   <p
-                                    className="font-mono text-[8px] tracking-[0.2em] uppercase mb-1.5"
+                                    className="font-mono text-[10px] tracking-[0.18em] uppercase mb-2"
                                     style={{ color: GOLD }}
                                   >
                                     Final Output
                                   </p>
-                                  <p className="font-serif text-xs text-foreground leading-relaxed italic">
+                                  <p className="font-serif text-base text-foreground leading-relaxed italic">
                                     {exOutput}
                                   </p>
                                 </div>
@@ -405,7 +404,7 @@ export default function Runtime() {
                               {phase.constraints && (
                                 <div className="mb-5">
                                   <p
-                                    className="font-mono text-[8px] tracking-[0.2em] uppercase mb-2.5"
+                                    className="font-mono text-[10px] tracking-[0.18em] uppercase mb-3"
                                     style={{ color: GOLD }}
                                   >
                                     Active Constraints
@@ -414,7 +413,7 @@ export default function Runtime() {
                                     {phase.constraints.map((c: string, ci: number) => (
                                       <li
                                         key={ci}
-                                        className="text-xs text-muted-foreground leading-relaxed pl-3 font-light"
+                                        className="text-sm text-muted-foreground leading-relaxed pl-3 font-light"
                                         style={{ borderLeft: `2px solid ${GOLD_BORDER}` }}
                                       >
                                         {c}
@@ -427,7 +426,7 @@ export default function Runtime() {
                               {/* Instruments — always from JSON */}
                               <div>
                                 <p
-                                  className="font-mono text-[8px] tracking-[0.2em] uppercase mb-2.5"
+                                  className="font-mono text-[10px] tracking-[0.18em] uppercase mb-3"
                                   style={{ color: GOLD }}
                                 >
                                   Instruments
@@ -436,23 +435,23 @@ export default function Runtime() {
                                   {phase.instruments.map((inst: any) => (
                                     <div
                                       key={inst.id}
-                                      className="p-3 rounded-sm"
+                                      className="p-4 rounded-xl"
                                       style={{
                                         backgroundColor: GOLD_BG,
                                         border: `1px solid ${GOLD_BORDER}`,
                                       }}
                                     >
-                                      <h4 className="font-serif text-[13px] text-foreground leading-snug mb-1">
+                                      <h4 className="font-serif text-base text-foreground leading-snug mb-1">
                                         {inst.title}
                                       </h4>
-                                      <p className="font-mono text-[8px] text-muted-foreground/50 mb-1">
+                                      <p className="font-mono text-[10px] text-muted-foreground/60 mb-2">
                                         {inst.id}
                                       </p>
-                                      <p className="text-xs text-muted-foreground leading-relaxed font-light">
+                                      <p className="text-sm text-muted-foreground leading-relaxed font-light">
                                         {inst.description}
                                       </p>
                                       <p
-                                        className="font-mono text-[8px] tracking-wider mt-2 uppercase"
+                                        className="font-mono text-[10px] tracking-wider mt-3 uppercase"
                                         style={{ color: GOLD }}
                                       >
                                         {inst.status}
@@ -506,18 +505,18 @@ export default function Runtime() {
                 strokeWidth="1"
               />
             </svg>
-            <span className="font-mono text-[8px] tracking-[0.15em] uppercase text-muted-foreground/50">
+            <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground/60">
               Select — Lock Boundary
             </span>
           </div>
-          <span className="font-mono text-[8px] tracking-[0.15em] uppercase text-muted-foreground/50">
+          <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-muted-foreground/60">
             Post-Lock Execution
           </span>
         </div>
 
         {/* Right edge fade */}
         <div
-          className="absolute right-0 top-0 bottom-0 w-16 pointer-events-none z-20"
+          className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 z-20"
           style={{
             background: "linear-gradient(to left, hsl(38 40% 93%), transparent)",
           }}
