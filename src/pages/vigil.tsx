@@ -159,7 +159,7 @@ export default function Vigil() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}vigil/VIGIL.Records.json`)
+    fetch(`${import.meta.env.BASE_URL}vigil/VIGIL.Records.Index.json`)
       .then((response) => {
         if (response.status === 404) {
           return [];
@@ -257,14 +257,14 @@ export default function Vigil() {
           <div className="cam-parchment-card rounded-2xl p-6 shadow-sm">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-red-700">Records unavailable</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              VIGIL records could not be loaded from <code>vigil/VIGIL.Records.json</code>. {errorMessage}
+              VIGIL records could not be loaded from <code>vigil/VIGIL.Records.Index.json</code>. {errorMessage}
             </p>
           </div>
         )}
 
         {loadState === "ready" && records.length === 0 && (
           <div className="cam-parchment-card rounded-2xl p-6 text-base text-muted-foreground shadow-sm">
-            No VIGIL records are currently published in <code>vigil/VIGIL.Records.json</code>.
+            No VIGIL records are currently published in <code>vigil/VIGIL.Records.Index.json</code>.
           </div>
         )}
 
