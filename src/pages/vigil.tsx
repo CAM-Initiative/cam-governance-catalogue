@@ -21,7 +21,6 @@ const preferredStatuses = [
   "watching",
   "clustered",
   "routed",
-  "proposal",
   "deferred",
   "closed-no-action",
   "closed-actioned",
@@ -92,13 +91,17 @@ function normalizeSources(record: UnknownRecord): UnknownRecord[] {
   return [];
 }
 
+function normalizeStatus(status: string): string {
+  return status.trim().toLowerCase() === "proposal" ? "open" : status;
+}
+
 function normalizeRecord(record: UnknownRecord, index: number): VigilRecord {
   return {
     raw: record,
     id: getField(record, ["id", "record_id", "recordId", "ID"], `VIGIL-${index + 1}`),
     summary: getField(record, ["summary", "title", "description", "observation", "signal"]),
     recordType: getField(record, ["record_type", "recordType", "type", "category"]),
-    status: getField(record, ["status", "state"]),
+    status: normalizeStatus(getField(record, ["status", "state"])),
     evidenceConfidence: getField(record, ["evidence_confidence", "evidenceConfidence", "confidence", "confidence_state"]),
     dateRecorded: getField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
     possibleCamMapping: getField(record, ["possible_CAM_mapping", "possible_cam_mapping", "possibleCamMapping", "cam_mapping", "camMapping", "CAM_mapping"]),
@@ -150,7 +153,7 @@ function SourceField({ label, value }: { label: string; value: string }) {
 
 export default function Vigil() {
   const [records, setRecords] = useState<VigilRecord[]>([]);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("open");
   const [recordType, setRecordType] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
@@ -195,28 +198,28 @@ export default function Vigil() {
       <div className="container mx-auto max-w-6xl px-6 py-10 md:px-10">
         <div className="mb-6">
           <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">
-            Public Workflow Layer
+            AI Governance Observatory
           </p>
-          <h1 className="mb-3 font-serif text-4xl text-foreground">VIGIL — Public Workflow &amp; Signal Register</h1>
+          <h1 className="mb-3 font-serif text-4xl text-foreground">VIGIL — Digital Ecosystem Health Register</h1>
           <p className="max-w-4xl text-base leading-relaxed text-muted-foreground">
-            VIGIL records emerging technology signals, failure-mode observations, observation clusters, and development proposals that may require CAM review. It is a public workflow layer, not a binding CAM instrument or incident-response authority.
+            VIGIL is CAM’s public AI governance observatory and digital ecosystem health register. It records emerging governance issues, failure-mode observations, unresolved questions, clusters, and development proposals across the digital ecosystem. It preserves what has been observed, why it may matter, how it is being classified, and what review pathway may follow.
           </p>
         </div>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-2">
-          <section className="cam-parchment-card rounded-2xl p-4 shadow-sm">
-            <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Authority Boundary</p>
-            <p className="text-base leading-relaxed text-muted-foreground">
-              VIGIL does not create binding CAM doctrine, amend adopted instruments, determine liability, or verify final factual truth. It preserves observations, source context, confidence state, CAM relevance, and next action for later review under existing CAM governance processes.
+        <details className="cam-parchment-card mb-6 rounded-2xl p-4 shadow-sm">
+          <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">About VIGIL</summary>
+          <div className="mt-4 space-y-3 text-base leading-relaxed text-muted-foreground">
+            <p>
+              VIGIL is a public observatory and routing layer for digital ecosystem health signals. It allows observations to be logged, searched, clustered, deferred, routed, actioned, or closed.
             </p>
-          </section>
-          <section className="cam-parchment-card rounded-2xl p-4 shadow-sm">
-            <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Clustering Note</p>
-            <p className="text-base leading-relaxed text-muted-foreground">
+            <p>
+              VIGIL does not create binding CAM doctrine, amend adopted instruments, determine liability, or verify final factual truth. It preserves observations, source context, confidence state, CAM relevance, clustering relationships, and next actions for later review under CAM governance processes.
+            </p>
+            <p>
               Multiple observations may form one cluster. A cluster may later become one proposal, one candidate amendment, one taxonomy expansion, or no action after review.
             </p>
-          </section>
-        </div>
+          </div>
+        </details>
 
         <div className="cam-parchment-card mb-6 rounded-2xl p-4 shadow-sm">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">

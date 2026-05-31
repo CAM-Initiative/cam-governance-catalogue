@@ -51,12 +51,29 @@ function validateJson(sourceText, source) {
 
 const source = resolveSource();
 
+async function loadSourceWithExistingOutputFallback(source) {
+  try {
+    return { source, text: await loadSource(source) };
+  } catch (error) {
+    const shouldUseExistingOutput =
+      source === defaultRemoteSource && existsSync(outputPath) && !process.env.VIGIL_RECORDS_SOURCE;
+
+    if (!shouldUseExistingOutput) {
+      throw error;
+    }
+
+    console.warn(`Unable to fetch ${source}; using existing docs/vigil/VIGIL.Records.json`);
+    console.warn(error instanceof Error ? error.message : error);
+    return { source: outputPath, text: await readFile(outputPath, "utf8") };
+  }
+}
+
 try {
   await mkdir(dirname(outputPath), { recursive: true });
-  const sourceText = await loadSource(source);
-  validateJson(sourceText, source);
+  const { source: loadedSource, text: sourceText } = await loadSourceWithExistingOutputFallback(source);
+  validateJson(sourceText, loadedSource);
   await writeFile(outputPath, sourceText.endsWith("\n") ? sourceText : `${sourceText}\n`);
-  console.log(`Synced VIGIL records from ${source}`);
+  console.log(`Synced VIGIL records from ${loadedSource}`);
   console.log("Wrote docs/vigil/VIGIL.Records.json");
 } catch (error) {
   console.error(`Failed to sync VIGIL records from ${source}`);
