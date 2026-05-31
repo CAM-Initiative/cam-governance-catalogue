@@ -92,7 +92,7 @@ const startHerePaths = [
 ];
 
 function SeedOfLifeSVG() {
-  const cx = 120, cy = 112, r = 38, outerR = 82;
+  const cx = 150, cy = 126, r = 46, outerR = 100;
   const outerCenters = [
     { x: cx, y: cy - r },
     { x: cx + r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) },
@@ -102,23 +102,23 @@ function SeedOfLifeSVG() {
     { x: cx - r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) }
   ];
   const principleLabels = [
-    { text: "Truth", x: cx, y: 14, anchor: "middle" },
+    { text: "Truth", x: cx, y: 18, anchor: "middle" },
     { text: "Integrity", x: cx + outerR + 4, y: cy - outerR * 0.48, anchor: "start" },
     { text: "Sovereignty", x: cx + outerR + 4, y: cy + outerR * 0.48 + 4, anchor: "start" },
-    { text: "Reciprocity", x: cx, y: cy + outerR + 16, anchor: "middle" },
+    { text: "Reciprocity", x: cx, y: cy + outerR + 22, anchor: "middle" },
     { text: "Harmony", x: cx - outerR - 4, y: cy + outerR * 0.48 + 4, anchor: "end" },
     { text: "Purpose", x: cx - outerR - 4, y: cy - outerR * 0.48, anchor: "end" }
   ];
   return (
-    <svg viewBox="0 0 240 224" className="w-full h-auto max-w-[280px] mx-auto">
+    <svg viewBox="0 0 300 252" className="w-full h-auto max-w-[340px] mx-auto">
       <circle cx={cx} cy={cy} r={outerR} fill="none" stroke={GOLD} strokeWidth="0.6" strokeOpacity="0.3" strokeDasharray="3 4" />
       {outerCenters.map((c, i) => (
         <circle key={i} cx={c.x} cy={c.y} r={r} fill="none" stroke={GOLD} strokeWidth="0.7" strokeOpacity="0.4" />
       ))}
       <circle cx={cx} cy={cy} r={r} fill={GOLD_BG} stroke={GOLD} strokeWidth="1" strokeOpacity="0.6" />
-      <text x={cx} y={cy + 4} textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="9" fill={GOLD} fontStyle="italic">Dignity</text>
+      <text x={cx} y={cy + 4} textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="13" fill={GOLD} fontStyle="italic">Dignity</text>
       {principleLabels.map((lbl) => (
-        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="7" fill={GOLD} letterSpacing="0.03em">{lbl.text}</text>
+        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="11" fill={GOLD} letterSpacing="0.03em">{lbl.text}</text>
       ))}
     </svg>
   );
@@ -174,7 +174,7 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight mb-3">
                   Architecture Model
                 </h1>
-                <p className="font-serif text-base text-muted-foreground font-light tracking-wide">
+                <p className="font-serif text-lg md:text-xl text-muted-foreground font-light tracking-wide">
                   Constitutional governance for relational and cognitive AI systems
                 </p>
               </motion.div>

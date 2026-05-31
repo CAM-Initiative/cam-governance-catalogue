@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/prepare-github-pages.js",
+    "build": "pnpm run sync:vigil && vite build && node scripts/prepare-github-pages.js",
     "deploy:docs": "pnpm run build",
-    "validate:catalogue": "node scripts/validate-catalogue-data.js"
+    "validate:catalogue": "node scripts/validate-catalogue-data.js",
+    "sync:vigil": "node scripts/sync-vigil-records.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",

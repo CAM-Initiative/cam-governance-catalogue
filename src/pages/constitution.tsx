@@ -147,11 +147,11 @@ export default function Constitution() {
       <div className="container mx-auto px-6 md:px-10 py-12 md:py-16 max-w-5xl">
 
         {/* Page header */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mb-14 max-w-2xl">
-          <p className="font-mono tracking-[0.25em] uppercase text-primary mb-4 text-[15px]">Aeon Tier Governance</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">The Constitution</h1>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mb-14 max-w-3xl">
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Aeon Tier Governance</p>
+          <h1 className="mb-3 font-serif text-4xl text-foreground">The Constitution</h1>
           <hr className="gold-rule mb-4 w-24" />
-          <p className="text-sm text-muted-foreground font-light leading-relaxed">
+          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
             The supreme governing instrument establishing constitutional authority for planetary-scale AI systems.
             Constraint rather than optimisation. Stewardship rather than control.
           </p>

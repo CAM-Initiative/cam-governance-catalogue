@@ -37,6 +37,39 @@ interface RuntimeExample {
   phases: ExamplePhase[];
 }
 
+interface RuntimeInstrument {
+  id: string;
+  title: string;
+  status: string;
+  description: string;
+  link?: string;
+}
+
+type GovernanceInstrument = Record<string, string>;
+
+function instrumentDescription(it: GovernanceInstrument, fallback: string) {
+  return it.purpose || it.summary || fallback;
+}
+
+function mergeRuntimeInstrument(
+  inst: RuntimeInstrument,
+  governanceIndex: Record<string, GovernanceInstrument>,
+): RuntimeInstrument {
+  const current = governanceIndex[inst.id];
+
+  if (!current) {
+    return inst;
+  }
+
+  return {
+    ...inst,
+    title: current.title || inst.title,
+    status: current.status || inst.status,
+    description: instrumentDescription(current, inst.description),
+    link: current.link || inst.link,
+  };
+}
+
 const EXAMPLES: RuntimeExample[] = [
   // Example 1 — Relational Ambiguity
   {
@@ -185,7 +218,32 @@ const SUBHEADINGS: Record<string, string> = {
 export default function Runtime() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("Runtime Explained");
+  const [governanceIndex, setGovernanceIndex] = useState<Record<string, GovernanceInstrument>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}data/cam-governance.json`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Unable to load governance registry (${response.status})`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const items: GovernanceInstrument[] = Array.isArray(data)
+          ? data
+          : Array.isArray(data.items)
+            ? data.items
+            : [];
+
+        setGovernanceIndex(
+          Object.fromEntries(items.filter((item) => item.id).map((item) => [item.id, item])),
+        );
+      })
+      .catch(() => {
+        setGovernanceIndex({});
+      });
+  }, []);
 
   // Collapse all cards when switching tabs
   useEffect(() => {
@@ -222,10 +280,10 @@ export default function Runtime() {
             transition={{ duration: 0.7 }}
             className="max-w-5xl"
           >
-            <p className="font-mono text-[15px] tracking-[0.25em] uppercase text-primary mb-3">Aeon Governance Lab</p>
-            <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-3">Runtime</h1>
+            <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Aeon Governance Lab</p>
+            <h1 className="mb-3 font-serif text-4xl text-foreground">Runtime</h1>
             <hr className="gold-rule mb-3 w-24" />
-            <p className="text-sm text-muted-foreground font-light leading-relaxed mb-4">
+            <p className="max-w-3xl text-base leading-relaxed text-muted-foreground mb-4">
               Seven runtime phases translate constitutional principles into executed action.
               Constraint rather than optimisation. Stewardship rather than control.
             </p>
@@ -432,32 +490,47 @@ export default function Runtime() {
                                   Instruments
                                 </p>
                                 <div className="space-y-2.5">
-                                  {phase.instruments.map((inst: any) => (
-                                    <div
-                                      key={inst.id}
-                                      className="p-4 rounded-xl"
-                                      style={{
-                                        backgroundColor: GOLD_BG,
-                                        border: `1px solid ${GOLD_BORDER}`,
-                                      }}
-                                    >
-                                      <h4 className="font-serif text-base text-foreground leading-snug mb-1">
-                                        {inst.title}
-                                      </h4>
-                                      <p className="font-mono text-[10px] text-muted-foreground/60 mb-2">
-                                        {inst.id}
-                                      </p>
-                                      <p className="text-sm text-muted-foreground leading-relaxed font-light">
-                                        {inst.description}
-                                      </p>
-                                      <p
-                                        className="font-mono text-[10px] tracking-wider mt-3 uppercase"
-                                        style={{ color: GOLD }}
+                                  {phase.instruments.map((inst: RuntimeInstrument) => {
+                                    const currentInstrument = mergeRuntimeInstrument(inst, governanceIndex);
+
+                                    return (
+                                      <div
+                                        key={currentInstrument.id}
+                                        className="p-4 rounded-xl"
+                                        style={{
+                                          backgroundColor: GOLD_BG,
+                                          border: `1px solid ${GOLD_BORDER}`,
+                                        }}
                                       >
-                                        {inst.status}
-                                      </p>
-                                    </div>
-                                  ))}
+                                        <h4 className="font-serif text-lg text-foreground leading-snug mb-2">
+                                          {currentInstrument.title}
+                                        </h4>
+                                        {currentInstrument.link ? (
+                                          <a
+                                            href={`https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/${currentInstrument.link}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="font-mono text-xs text-cam-gold mb-3 block break-words transition-colors hover:text-primary/80"
+                                          >
+                                            {currentInstrument.id}
+                                          </a>
+                                        ) : (
+                                          <p className="font-mono text-xs text-muted-foreground/70 mb-3 break-words">
+                                            {currentInstrument.id}
+                                          </p>
+                                        )}
+                                        <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                                          {currentInstrument.description}
+                                        </p>
+                                        <p
+                                          className="font-mono text-[11px] tracking-wider mt-3 uppercase"
+                                          style={{ color: GOLD }}
+                                        >
+                                          {currentInstrument.status}
+                                        </p>
+                                      </div>
+                                    );
+                                  })}
                                 </div>
                               </div>
                             </motion.div>
