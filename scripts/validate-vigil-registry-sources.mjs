@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const filesToScan = ["src/pages/vigil.tsx", "src/lib/vigilRegistry.ts", "README.md", "scripts/sync-vigil-records.mjs"];
+const filesToScan = ["src/pages/vigil.tsx", "src/lib/vigilRegistry.ts", "src/lib/vigilPresentation.ts", "README.md", "scripts/sync-vigil-records.mjs"];
 const deprecatedFileNames = [
   ["VIGIL", "Active" + "Records", "json"].join("."),
   ["VIGIL", "Closed" + "Records", "json"].join("."),
