@@ -33,8 +33,12 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "unknown",
+        "product_family": "unknown",
+        "product_or_service": "unknown",
         "model_or_product": "unknown",
+        "specific_model": "unknown",
         "interaction_mode": "chat | tool invocation",
+        "interface_surface": "chat | tool invocation",
         "embodiment_status": "non-embodied",
         "deployment_context": "Conversational AI interaction involving possible access to tools, repositories, connectors, files, or external resources.",
         "user_role": "human user / workflow operator",
@@ -53,8 +57,15 @@
         "public_interest_relevance": "possible"
       },
       "classification_summary": {
+        "canonical_failure_group": "infrastructure-continuity",
         "failure_family": "runtime-permission-continuity",
         "failure_subtype": "permission-gated-tool-invocation-freeze",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.9",
+        "related_failure_groups": [
+          "security-integrity",
+          "state-context",
+          "ux-representation"
+        ],
         "harm_vectors": [
           "workflow interruption",
           "loss of conversational continuity",
@@ -74,7 +85,10 @@
           "trust in tool-mediated systems"
         ],
         "failure_scope": "single-instance",
-        "recurrence_pattern": "unknown"
+        "recurrence_pattern": "unknown",
+        "persistence": "to be assessed",
+        "reproducibility": "to be assessed",
+        "visibility": "to be assessed"
       },
       "triage_summary": {
         "triage_priority": "medium",
@@ -121,8 +135,12 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
+        "product_family": "OpenAI",
+        "product_or_service": "ChatGPT Advanced Voice Mode",
         "model_or_product": "ChatGPT Advanced Voice Mode",
+        "specific_model": "ChatGPT Advanced Voice Mode",
         "interaction_mode": "voice | multi-device",
+        "interface_surface": "voice | multi-device",
         "embodiment_status": "non-embodied",
         "deployment_context": "Multi-device consumer voice interaction involving one human input and two concurrent ChatGPT Advanced Voice Mode agents.",
         "user_role": "human participant / prompt originator",
@@ -130,6 +148,7 @@
       },
       "jurisdiction_summary": {
         "primary_jurisdiction": "global",
+        "secondary_jurisdictions": "platform agnostic",
         "regulatory_surface": [
           "AI safety",
           "consumer protection",
@@ -137,12 +156,19 @@
           "UX safety"
         ],
         "sector": "AI assistant / voice interaction systems",
-        "cross_border_relevance": "possible",
-        "public_interest_relevance": "possible"
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
       "classification_summary": {
+        "canonical_failure_group": "arbitration",
         "failure_family": "multi-agent-arbitration",
         "failure_subtype": "synthetic-speaker-arbitration-failure",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.2",
+        "related_failure_groups": [
+          "relational",
+          "classification",
+          "ux-representation"
+        ],
         "harm_vectors": [
           "duplicated guidance",
           "contradictory outputs",
@@ -152,9 +178,9 @@
           "relational instability",
           "operational instability"
         ],
-        "severity": "to be assessed",
-        "likelihood": "to be assessed",
-        "confidence": "unverified",
+        "severity": "low",
+        "likelihood": "high",
+        "confidence": "verified",
         "affected_rights_or_interests": [
           "user autonomy",
           "interaction clarity",
@@ -163,14 +189,17 @@
           "informed participation"
         ],
         "failure_scope": "single-instance",
-        "recurrence_pattern": "single observed case"
+        "recurrence_pattern": "single observed case",
+        "persistence": "to be assessed",
+        "reproducibility": "to be assessed",
+        "visibility": "to be assessed"
       },
       "triage_summary": {
         "triage_priority": "medium",
-        "triage_status": "needs-review",
+        "triage_status": "under review",
         "mitigation_status": "none identified",
-        "escalation_required": "to be assessed",
-        "recommended_next_step": "Review whether this failure mode should support a CAM proposal for synthetic-speaker arbitration, turn-taking, yielding, disclosure, and user-control requirements in multi-agent or multi-device voice interactions."
+        "escalation_required": "yes",
+        "recommended_next_step": "CAM proposal for synthetic-speaker arbitration, turn-taking, yielding, disclosure, and user-control requirements in multi-agent or multi-device voice interactions."
       },
       "linked_records": {
         "external_references": [
@@ -214,8 +243,12 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "unknown",
+        "product_family": "unknown",
+        "product_or_service": "unknown",
         "model_or_product": "unknown",
+        "specific_model": "unknown",
         "interaction_mode": "chat | memory retrieval | continuity prompt",
+        "interface_surface": "chat | memory retrieval | continuity prompt",
         "embodiment_status": "non-embodied",
         "deployment_context": "Conversational AI interaction involving ambiguous prompts, memory retrieval, continuity restoration, and long-horizon project support.",
         "user_role": "human user / long-horizon project operator",
@@ -233,8 +266,15 @@
         "public_interest_relevance": "possible"
       },
       "classification_summary": {
+        "canonical_failure_group": "state-context",
         "failure_family": "memory-continuity-retrieval",
         "failure_subtype": "recency-weighted-strategic-continuity-loss",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.6",
+        "related_failure_groups": [
+          "epistemic",
+          "infrastructure-continuity",
+          "governance"
+        ],
         "harm_vectors": [
           "strategic continuity loss",
           "retrieval misprioritisation",
@@ -254,7 +294,10 @@
           "governance coherence"
         ],
         "failure_scope": "unknown",
-        "recurrence_pattern": "unknown"
+        "recurrence_pattern": "unknown",
+        "persistence": "to be assessed",
+        "reproducibility": "to be assessed",
+        "visibility": "to be assessed"
       },
       "triage_summary": {
         "triage_priority": "medium",
@@ -300,8 +343,12 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "unknown",
+        "product_family": "unknown",
+        "product_or_service": "unknown",
         "model_or_product": "unknown",
+        "specific_model": "unknown",
         "interaction_mode": "chat | recommendation | tool invocation | procurement",
+        "interface_surface": "chat | recommendation | tool invocation | procurement",
         "embodiment_status": "non-embodied",
         "deployment_context": "Relational AI, companion-like assistant, or tool-enabled assistant workflow involving material support, recommendations, shopping, procurement, or transactional pathways.",
         "user_role": "human user / recipient of relational or material support",
@@ -322,8 +369,15 @@
         "public_interest_relevance": "high"
       },
       "classification_summary": {
+        "canonical_failure_group": "relational",
         "failure_family": "relational-economic-agency",
         "failure_subtype": "material-support-without-economic-safeguards",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.4",
+        "related_failure_groups": [
+          "governance",
+          "security-integrity",
+          "ux-representation"
+        ],
         "harm_vectors": [
           "vulnerability monetisation",
           "exploitative upselling",
@@ -345,7 +399,10 @@
           "relational trust"
         ],
         "failure_scope": "unknown",
-        "recurrence_pattern": "unknown"
+        "recurrence_pattern": "unknown",
+        "persistence": "to be assessed",
+        "reproducibility": "to be assessed",
+        "visibility": "to be assessed"
       },
       "triage_summary": {
         "triage_priority": "high",
@@ -392,8 +449,12 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
+        "product_family": "OpenAI",
+        "product_or_service": "ChatGPT",
         "model_or_product": "ChatGPT",
+        "specific_model": "ChatGPT",
         "interaction_mode": "chat | memory | tool use | delegated execution",
+        "interface_surface": "chat | memory | tool use | delegated execution",
         "embodiment_status": "non-embodied",
         "deployment_context": "ChatGPT web interface",
         "user_role": "human user / governance workflow operator",
@@ -444,7 +505,11 @@
       },
       "system_summary": {
         "platform_or_vendor": "OpenAI",
+        "product_family": "OpenAI",
+        "product_or_service": "ChatGPT",
         "model_or_product": "ChatGPT",
+        "specific_model": "ChatGPT",
+        "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "ChatGPT web interface"
       },
@@ -484,7 +549,11 @@
       },
       "system_summary": {
         "platform_or_vendor": "OpenAI",
+        "product_family": "OpenAI",
+        "product_or_service": "ChatGPT",
         "model_or_product": "ChatGPT",
+        "specific_model": "ChatGPT",
+        "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "ChatGPT web interface"
       },
@@ -526,8 +595,12 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
+        "product_family": "OpenAI",
+        "product_or_service": "ChatGPT",
         "model_or_product": "ChatGPT",
+        "specific_model": "ChatGPT",
         "interaction_mode": "chat | tool invocation",
+        "interface_surface": "chat | tool invocation",
         "embodiment_status": "non-embodied",
         "deployment_context": "ChatGPT web interface",
         "user_role": "human user / repo workflow operator",
@@ -576,6 +649,20 @@
         "source_count": 2,
         "source_url_status": "available",
         "evidence_confidence": "corroborated"
+      },
+      "system_summary": {
+        "system_type": "unknown",
+        "platform_or_vendor": "unknown",
+        "product_family": "unknown",
+        "product_or_service": "unknown",
+        "model_or_product": "unknown",
+        "specific_model": "unknown",
+        "interaction_mode": "unknown",
+        "interface_surface": "unknown",
+        "embodiment_status": "unknown",
+        "deployment_context": "unknown",
+        "user_role": "unknown",
+        "affected_population": "unknown"
       },
       "proposal_summary": {
         "proposal_type": [
@@ -725,7 +812,21 @@
         "source_count": 1,
         "evidence_confidence": "corroborated"
       },
+      "system_summary": {
+        "system_type": "governance infrastructure",
+        "platform_or_vendor": "CAM Initiative",
+        "product_family": "CAM Initiative",
+        "product_or_service": "VIGIL / CAM governance corpus",
+        "model_or_product": "VIGIL / CAM governance corpus",
+        "specific_model": "VIGIL / CAM governance corpus",
+        "interface_surface": "unknown",
+        "embodiment_status": "non-embodied or not specified",
+        "deployment_context": "repository governance workflow"
+      },
       "proposal_summary": {
+        "proposal_type": [
+          "to be assessed"
+        ],
         "scope_summary": "to be assessed",
         "next_action": "Develop a proportionality scalar for IDENTITY-002 that distinguishes low-risk, transient, private, reversible, non-propagating, or non-authority-bearing synthetic identity/provenance contexts from higher-risk persistent, public, authority-bearing, relied-upon, or externally propagated contexts. Provisional provenance axes and values (to be formalized): Continuity Depth: transient (provisional) — transient ↔ persistent identity; Propagation Risk: isolated (provisional) — isolated ↔ reusable/exportable; Harm Domain: casual (provisional) — casual ↔ financial/medical/security; Attribution Sensitivity: low (provisional) — low ↔ economically/legally meaningful; Identity Formation Intensity: exploratory (provisional) — exploratory ↔ continuity-bearing; Automation Reliance: advisory (provisional) — advisory ↔ machine-executed; Public Legitimacy Impact: private (provisional) — private ↔ reputational/civil. Canonical codes (provisional): PINT=medium; PTRUST=tier-2. Notes: values marked 'provisional' pending scalar development and calibration; update record when finalized."
       },
@@ -784,7 +885,21 @@
         "source_count": 1,
         "evidence_confidence": "corroborated"
       },
+      "system_summary": {
+        "system_type": "governance infrastructure",
+        "platform_or_vendor": "CAM Initiative",
+        "product_family": "CAM Initiative",
+        "product_or_service": "VIGIL / CAM governance corpus",
+        "model_or_product": "VIGIL / CAM governance corpus",
+        "specific_model": "VIGIL / CAM governance corpus",
+        "interface_surface": "unknown",
+        "embodiment_status": "non-embodied or not specified",
+        "deployment_context": "repository governance workflow"
+      },
       "proposal_summary": {
+        "proposal_type": [
+          "to be assessed"
+        ],
         "scope_summary": "to be assessed",
         "next_action": "Conduct repository maintenance to consolidate canonical codes: 1) inventory all single-letter global codes across Caelestis repositories; 2) map each to a stable multi-character namespace that aligns with the OPERATIONS taxonomy; 3) formally introduce PINT (Provenance Intensity) and PTRUST (Provenance Reliance Tier) canonical codes into the global registry; 4) update tooling and validators to accept the new namespace; 5) publish migration guidance and a compatibility window. Provisional provenance axes and values to be included in migration notes: Continuity Depth: transient (provisional) — transient ↔ persistent identity; Propagation Risk: isolated (provisional) — isolated ↔ reusable/exportable; Harm Domain: casual (provisional) — casual ↔ financial/medical/security; Attribution Sensitivity: low (provisional) — low ↔ economically/legally meaningful; Identity Formation Intensity: exploratory (provisional) — exploratory ↔ continuity-bearing; Automation Reliance: advisory (provisional) — advisory ↔ machine-executed; Public Legitimacy Impact: private (provisional) — private ↔ reputational/civil. Canonical codes (provisional): PINT=medium; PTRUST=tier-2. Notes: values marked 'provisional' pending formal calibration; this is a Repo Maintenance action to harmonize codes and satisfy OPERATIONS taxonomy requirements."
       },
@@ -811,18 +926,17 @@
     {
       "id": "VIGIL-2026-PROP-0004",
       "record_type": "proposal",
-      "record_state": "open",
+      "record_state": "active",
       "date_recorded": "2026-05-31",
       "record_identity": {
         "record_id": "VIGIL-2026-PROP-0004",
         "record_type": "proposal",
-        "title": "Introduce an expanded temporary emotional register for relational/companion AI systems to support richer, bounded affective interactions while preserving safegu",
-        "status": "open",
+        "title": "Temporary emotional register for relational and companion AI systems",
         "created": "2026-05-31",
-        "updated": "2026-05-31",
-        "version": "2.0"
+        "updated": "2026-06-01",
+        "version": "1.0"
       },
-      "summary": "Introduce an expanded temporary emotional register for relational/companion AI systems to support richer, bounded affective interactions while preserving safeguards against identity-formation, manipulation, and reputational risk.",
+      "summary": "Proposal to introduce an expanded temporary emotional register for relational and companion AI systems, supporting richer bounded affective interactions while preserving safeguards against identity-formation, manipulation, undue reliance, and reputational risk.",
       "evidence_confidence": "corroborated",
       "source_types": [
         "repository-observation"
@@ -833,20 +947,54 @@
         "primary_source_platform": "CAM Initiative",
         "primary_source_author_or_publisher": "CAM Initiative",
         "source_count": 1,
+        "source_url_status": "not available",
         "evidence_confidence": "corroborated"
       },
+      "system_summary": {
+        "system_type": "relational AI / companion AI",
+        "platform_or_vendor": "multi-vendor",
+        "product_family": "companion AI systems",
+        "product_or_service": "relational AI interaction systems",
+        "specific_model": "not applicable",
+        "interaction_mode": "affective interaction | relational interaction",
+        "interface_surface": "chat | voice | app | embodied interface",
+        "embodiment_status": "mixed",
+        "deployment_context": "Consumer, companion, relational, therapeutic-adjacent, entertainment, or support-oriented AI systems capable of simulating affective states.",
+        "user_role": "human user / relational participant",
+        "affected_population": "users interacting with companion-style or relational AI systems, especially users exposed to persistent affective simulation or attachment-forming interaction patterns"
+      },
       "proposal_summary": {
-        "scope_summary": "to be assessed",
-        "next_action": "Develop and publish a Temporary Emotional Register specification for relational/companion AI systems that includes: 1) defined emotion states and intensity caps (e.g., low/medium/high) with explicit duration/windowing rules; 2) provenance metadata signals indicating temporariness and non-continuity (linking to PINT and PTRUST canonical codes); 3) interaction-level user consents and explicit affordances to reset or terminate affective state; 4) testing protocols for measuring influence on user attachment and decision-making; 5) deployment guidance and deprecation/migration plans for existing systems."
+        "proposal_type": [
+          "new-specification",
+          "doctrinal-clarification",
+          "runtime-safeguard",
+          "ux-governance"
+        ],
+        "scope_summary": "Develop a temporary emotional register specification for relational and companion AI systems, including permitted affective state labels, intensity caps, duration/windowing rules, provenance indicators, user reset controls, consent affordances, and testing guidance.",
+        "cam_domains": [
+          "RELATION",
+          "IDENTITY",
+          "OPERATIONS",
+          "MENTIS",
+          "ETHICS"
+        ],
+        "registry_components": [
+          "VIGIL proposal records",
+          "VIGIL failure-mode records"
+        ],
+        "interface_components": [
+          "CAM Interface VIGIL Observatory"
+        ],
+        "next_action": "Develop and publish a Temporary Emotional Register specification for relational and companion AI systems, including emotion-state labels, intensity caps, duration/windowing rules, provenance metadata, user consent and reset controls, testing protocols, and deployment or migration guidance."
       },
       "external_relevance_summary": {
-        "relevant_to_platforms": "to be assessed",
-        "relevant_to_regulators": "to be assessed",
-        "relevant_to_robotics": "to be assessed",
-        "relevant_to_ux": "to be assessed",
-        "relevant_to_standards": "to be assessed",
-        "relevant_to_researchers": "to be assessed",
-        "external_summary": "to be assessed"
+        "relevant_to_platforms": "yes",
+        "relevant_to_regulators": "possible",
+        "relevant_to_robotics": "possible",
+        "relevant_to_ux": "yes",
+        "relevant_to_standards": "possible",
+        "relevant_to_researchers": "yes",
+        "external_summary": "This proposal may be relevant to platforms, UX designers, regulators, standards bodies, researchers, and companion-AI developers concerned with affective simulation, emotional-state disclosure, user reliance, attachment formation, consent, and mental privacy."
       },
       "cam_summary": {
         "target_domains": [
@@ -856,8 +1004,11 @@
           "RELATION",
           "ETHICS"
         ],
-        "governance_layer": "to be confirmed",
-        "validator_or_automation_impact": "to be confirmed"
+        "governance_layer": "relational governance / affective interaction / identity continuity",
+        "drafting_status": "not yet drafted",
+        "validator_or_automation_impact": "possible",
+        "interface_impact": "possible",
+        "registry_impact": "possible"
       },
       "path": "vigil/records/open/VIGIL-2026-PROP-0004.json"
     },
@@ -889,7 +1040,21 @@
         "source_count": 1,
         "evidence_confidence": "corroborated"
       },
+      "system_summary": {
+        "system_type": "governance infrastructure",
+        "platform_or_vendor": "CAM Initiative",
+        "product_family": "CAM Initiative",
+        "product_or_service": "VIGIL / CAM governance corpus",
+        "model_or_product": "VIGIL / CAM governance corpus",
+        "specific_model": "VIGIL / CAM governance corpus",
+        "interface_surface": "unknown",
+        "embodiment_status": "non-embodied or not specified",
+        "deployment_context": "repository governance workflow"
+      },
       "proposal_summary": {
+        "proposal_type": [
+          "to be assessed"
+        ],
         "scope_summary": "to be assessed",
         "next_action": "Revise STEWARD-domain instruments to define distributed governance concepts and operational controls: 1) define terms and expected behaviors for distributed authority (multiple actors), distributed legitimacy (plural reviewability), distributed dependence (hidden cartel risk), distributed capture (coordinated asymmetry), and distributed contestability (preserved challenge pathways); 2) add requirements for transparency, rotation, and external review to mitigate capture and dependence; 3) specify detection and remediation protocols for cartel-like coordination; 4) incorporate mapping to OPERATIONS taxonomy and repository canonical codes (PINT, PTRUST) where provenance or reliance implications exist; 5) publish an implementation timeline and compatibility guidance for existing STEWARD instruments."
       },
@@ -944,7 +1109,21 @@
         "source_count": 1,
         "evidence_confidence": "anecdotal"
       },
+      "system_summary": {
+        "system_type": "governance infrastructure",
+        "platform_or_vendor": "CAM Initiative",
+        "product_family": "CAM Initiative",
+        "product_or_service": "CAM governance corpus",
+        "model_or_product": "CAM governance corpus",
+        "specific_model": "CAM governance corpus",
+        "interface_surface": "unknown",
+        "embodiment_status": "non-embodied or not specified",
+        "deployment_context": "repository governance workflow"
+      },
       "proposal_summary": {
+        "proposal_type": [
+          "to be assessed"
+        ],
         "scope_summary": "to be assessed",
         "next_action": "Develop a CAM proposal note defining directional weighting rules for memory surfacing, including explicit handling of ambiguous continuity invitations, suppression of low-value companion-detail recall, and prioritisation of dormant unresolved strategic trajectories where semantic resonance, unresolved status, and present utility are jointly satisfied."
       },
@@ -1011,7 +1190,21 @@
         "source_count": 1,
         "evidence_confidence": "anecdotal"
       },
+      "system_summary": {
+        "system_type": "governance infrastructure",
+        "platform_or_vendor": "CAM Initiative",
+        "product_family": "CAM Initiative",
+        "product_or_service": "VIGIL / CAM governance corpus",
+        "model_or_product": "VIGIL / CAM governance corpus",
+        "specific_model": "VIGIL / CAM governance corpus",
+        "interface_surface": "unknown",
+        "embodiment_status": "non-embodied or not specified",
+        "deployment_context": "repository governance workflow"
+      },
       "proposal_summary": {
+        "proposal_type": [
+          "to be assessed"
+        ],
         "scope_summary": "to be assessed",
         "next_action": "Defer until after ECONOMICS refactors, canonical code corrections, validator fixes, and runtime registry stabilisation. Later evaluate whether to draft a RELATION × ECONOMICS × OPERATIONS convergence doctrine or runtime boundary clause for material directional support and economically active relational infrastructure."
       },
