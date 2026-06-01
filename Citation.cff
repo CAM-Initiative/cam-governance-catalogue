@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use or cite the CAM Governance Interface, please cite it using this metadata."
+title: "CAM Governance Interface"
+type: software
+abstract: "The CAM Governance Interface is the public Web UX layer for navigating the Caelestis Architecture Model governance corpus, runtime governance materials, relational governance explainers, instrument catalogue, and VIGIL observatory for AI governance records and digital ecosystem health signals."
+authors:
+
+* family-names: "O'Rourke"
+  given-names: "Michelle Vivian"
+  name-particle: "Dr."
+* name: "Aeon Governance Lab"
+* name: "CAM Initiative"
+  repository-code: "https://github.com/CAM-Initiative/cam-governance-catalogue"
+  url: "https://cam-initiative.github.io/cam-governance-catalogue/"
+  license: "LicenseRef-CAM-Governance-Interface"
+  version: "1.0.0"
+  date-released: "2026-06-01"
+  keywords:
+* "AI governance"
+* "governance interface"
+* "Caelestis Architecture Model"
+* "CAM"
+* "VIGIL"
+* "public observatory"
+* "digital ecosystem health"
+* "runtime governance"
+* "registry interface"
+* "governance UX"
+  preferred-citation:
+  type: software
+  title: "CAM Governance Interface"
+  authors:
+
+  * family-names: "O'Rourke"
+    given-names: "Michelle Vivian"
+    name-particle: "Dr."
+  * name: "Aeon Governance Lab"
+  * name: "CAM Initiative"
+    repository-code: "https://github.com/CAM-Initiative/cam-governance-catalogue"
+    url: "https://cam-initiative.github.io/cam-governance-catalogue/"
+    year: 2026
+    notes: "Public Web UX layer for the Caelestis Architecture Model governance corpus and VIGIL observatory."
