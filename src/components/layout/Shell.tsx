@@ -3,10 +3,16 @@ import { Link, useLocation } from "wouter";
 
 const footerLinks = [
   { href: "/", label: "Home", internal: true },
+  { href: "/about", label: "About", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
   { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
+];
+
+const homeLinks = [
+  { href: "/", label: "Overview" },
+  { href: "/about", label: "About" },
 ];
 
 const constitutionLinks = [
@@ -17,6 +23,7 @@ const constitutionLinks = [
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  const isHomeActive = location === "/" || location === "/about";
   const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
 
   const links = [
@@ -41,16 +48,35 @@ export function Shell({ children }: { children: ReactNode }) {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/"
-              className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                location === "/"
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Home
-            </Link>
+            <div className="group relative">
+              <Link
+                href="/"
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
+                  isHomeActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Home
+              </Link>
+              <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="rounded-xl border border-border/70 bg-background/95 p-2 shadow-lg backdrop-blur-sm">
+                  {homeLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
+                        location === link.href
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-card hover:text-foreground"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className="group relative">
               <Link
                 href="/constitution"
@@ -117,7 +143,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Public governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved.
+                © 2026 CAM Initiative. Maintained by Aeon Governance Lab. Public access does not imply unrestricted reuse; citation and applicable licence terms apply.
               </p>
             </div>
 
