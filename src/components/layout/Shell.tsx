@@ -109,41 +109,41 @@ export function Shell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-border/50 bg-background py-3">
+      <footer className="mt-auto border-t border-primary/20 bg-[hsl(36_48%_95%)] py-4 text-foreground shadow-[inset_0_1px_0_hsl(38_62%_40%/0.06)] md:py-5">
         <div className="container mx-auto px-6 md:px-10">
-          <div className="flex flex-col gap-3 text-center md:flex-row md:items-center md:justify-between md:text-left">
-            <div className="space-y-1">
-              <p className="text-xs leading-relaxed text-muted-foreground">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
+            <div className="max-w-xl space-y-1.5 text-center md:text-left">
+              <p className="text-sm leading-relaxed text-muted-foreground md:text-[15px]">
                 <span className="font-medium text-foreground">CAM Initiative</span> · Public governance infrastructure for AI and synthetic systems.
               </p>
-              <p className="font-serif text-[11px] italic text-muted-foreground/50">
-                Aeterna Resonantia, Lux et Vox — Et Veritas Vivens
+              <p className="font-serif text-sm italic leading-snug text-muted-foreground md:text-[15px]">
+                Aeterna Resonantia, Lux et Vox — Ex Veritas Vivens
               </p>
             </div>
 
-            <div className="flex flex-col items-center gap-2 md:items-end">
-              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-3 gap-y-1 md:justify-end">
+            <div className="flex flex-col items-center gap-2.5 rounded-xl border border-border/70 bg-card/45 px-4 py-3 md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0">
+              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:justify-end">
                 {footerLinks.map((link) => (
                   link.internal ? (
-                    <Link key={link.href} href={link.href} className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+                    <Link key={link.href} href={link.href} className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                       {link.label}
                     </Link>
                   ) : (
-                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                       {link.label}
                     </a>
                   )
                 ))}
               </nav>
 
-              <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 md:justify-end">
-                <a href="mailto:ethics@cam-initiative.org" className="font-mono text-[9px] tracking-wider text-muted-foreground/60 transition-colors hover:text-primary">
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 md:justify-end">
+                <a href="mailto:ethics@cam-initiative.org" className="font-mono text-[11px] tracking-wide text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                   ethics@cam-initiative.org
                 </a>
-                <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-[9px] tracking-wider text-muted-foreground/60 transition-colors hover:text-primary">
+                <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-[11px] tracking-wide text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                   @CAM_Initiative
                 </a>
-                <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-[9px] tracking-wider text-muted-foreground/60 transition-colors hover:text-primary">
+                <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-[11px] tracking-wide text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                   Support
                 </a>
               </div>
