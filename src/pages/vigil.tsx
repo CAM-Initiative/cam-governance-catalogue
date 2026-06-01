@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 
+const VIGIL_PAGE_SIZE = 20;
+
 type UnknownRecord = Record<string, unknown>;
 
 type SummaryEntry = { label: string; value: string };
@@ -776,6 +778,7 @@ export default function Vigil() {
   const [search, setSearch] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
+  const [recordPage, setRecordPage] = useState(1);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}vigil/VIGIL.Records.Index.json`)
@@ -813,6 +816,17 @@ export default function Vigil() {
     }),
     [filters, records, search],
   );
+
+  useEffect(() => {
+    setRecordPage(1);
+  }, [filters, search]);
+
+  const recordPageCount = Math.max(1, Math.ceil(filtered.length / VIGIL_PAGE_SIZE));
+  const currentRecordPage = Math.min(recordPage, recordPageCount);
+  const recordPageStart = (currentRecordPage - 1) * VIGIL_PAGE_SIZE;
+  const pagedRecords = filtered.slice(recordPageStart, recordPageStart + VIGIL_PAGE_SIZE);
+  const visibleRecordStart = filtered.length === 0 ? 0 : recordPageStart + 1;
+  const visibleRecordEnd = Math.min(recordPageStart + VIGIL_PAGE_SIZE, filtered.length);
 
   function setFilter(key: FilterKey, value: string) {
     setFilters((current) => ({ ...current, [key]: value }));
@@ -852,8 +866,11 @@ export default function Vigil() {
         <details className="cam-parchment-card mb-5 rounded-xl p-3 text-sm shadow-sm">
           <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">About VIGIL</summary>
           <div className="mt-3 space-y-2 leading-relaxed text-muted-foreground">
-            <p>Observation and Failure Mode records foreground public source, observed system, jurisdiction, and triage context rather than CAM internal routing.</p>
-            <p>Proposal and Patch Note records are CAM-specific, so target or changed instruments, domains, annexes, and implementation context may be shown when present.</p>
+            <p>VIGIL is CAM’s public observatory for recording AI governance signals, runtime failures, implementation gaps, proposals, and corrective patches.</p>
+            <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+            <p>Observation and Failure Mode records focus on what was seen: the public source, affected system, jurisdictional context, observed behaviour, and triage relevance.</p>
+            <p>Proposal and Patch Note records focus on what should change: the affected CAM domain, target instrument, implementation context, and governance rationale.</p>
+            <p>Together, VIGIL acts as a bridge between lived runtime evidence and formal governance maintenance.</p>
           </div>
         </details>
 
@@ -892,7 +909,7 @@ export default function Vigil() {
             </div>
           </aside>
 
-          <section className="min-w-0 space-y-4">
+          <section className="min-w-0 space-y-4" data-result-range-example="Showing 1–20">
             <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <input
@@ -904,7 +921,9 @@ export default function Vigil() {
                   placeholder="Search VIGIL records"
                 />
                 <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">{filtered.length} / {records.length} records</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
+                    Showing {visibleRecordStart}–{visibleRecordEnd} of {filtered.length} VIGIL records.
+                  </p>
                   <button
                     className="rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80 disabled:cursor-not-allowed disabled:opacity-50"
                     type="button"
@@ -930,18 +949,47 @@ export default function Vigil() {
               <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">No VIGIL records are currently published in <code>vigil/VIGIL.Records.Index.json</code>.</div>
             )}
 
+            {loadState === "ready" && filtered.length > 0 && (
+              <div className="flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70" aria-live="polite">
+                  Showing {visibleRecordStart}–{visibleRecordEnd} of {filtered.length} VIGIL records.
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
+                    onClick={() => setRecordPage((page) => Math.max(1, page - 1))}
+                    disabled={currentRecordPage === 1}
+                    aria-label="Show previous VIGIL records page"
+                  >
+                    Previous
+                  </button>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">Page {currentRecordPage} of {recordPageCount}</span>
+                  <button
+                    type="button"
+                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
+                    onClick={() => setRecordPage((page) => Math.min(recordPageCount, page + 1))}
+                    disabled={currentRecordPage === recordPageCount}
+                    aria-label="Show next VIGIL records page"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
-              {filtered.map((record, index) => (
+              {pagedRecords.map((record, index) => (
                 <details key={`${record.id}-${index}`} className="group rounded-xl border border-border bg-card/70 shadow-sm transition hover:bg-card">
-                  <summary className="grid cursor-pointer gap-2 px-3 py-2.5 text-sm transition md:grid-cols-[9.5rem_4rem_minmax(18rem,1fr)_7rem_8rem] md:items-center">
-                    <span className="truncate font-mono text-[11px] text-cam-gold" title={record.id}>{record.id}</span>
-                    <span className="w-fit rounded-full border border-border bg-background/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">{recordTypeBadge(record.record_type)}</span>
+                  <summary className="grid cursor-pointer gap-2 px-3 py-3 text-sm transition md:grid-cols-[9.5rem_4rem_minmax(18rem,1fr)_7rem_8rem] md:items-start">
+                    <span className="truncate font-mono text-[11px] text-cam-gold md:pt-1" title={record.id}>{record.id}</span>
+                    <span className="w-fit rounded-full border border-border bg-background/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground md:mt-0.5">{recordTypeBadge(record.record_type)}</span>
                     <span className="min-w-0">
-                      <span className="block truncate font-serif text-[15px] leading-snug text-foreground" title={record.title}>{record.title}</span>
-                      <span className="mt-0.5 block truncate text-[11px] leading-snug text-muted-foreground" title={record.compact_source_system_hint}>{record.compact_source_system_hint ?? "Source/system not specified"}</span>
+                      <span className="block whitespace-normal break-words font-serif text-[15px] leading-snug text-foreground" title={record.title}>{record.title}</span>
+                      <span className="mt-1 block truncate text-[11px] leading-snug text-muted-foreground" title={record.compact_source_system_hint}>{record.compact_source_system_hint ?? "Source/system not specified"}</span>
                     </span>
-                    <span className="font-mono text-[10px] text-muted-foreground">{record.record_state}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">{record.date_recorded ?? record.date_implemented ?? "—"}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground md:pt-1">{record.record_state}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground md:pt-1">{record.date_recorded ?? record.date_implemented ?? "—"}</span>
                   </summary>
 
                   <div className="border-t border-border px-3 py-4">

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 
 const footerLinks = [
-  { href: "/", label: "Archive", internal: true },
+  { href: "/", label: "Home", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
   { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
@@ -35,7 +35,7 @@ export function Shell({ children }: { children: ReactNode }) {
               className="w-7 h-7 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
               style={{ filter: "drop-shadow(0 0 1px rgba(184,147,90,0.3))" }}
             />
-            <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-primary font-medium">
+            <span className="font-mono text-[12px] tracking-[0.18em] uppercase text-primary font-semibold">
               Aeon Governance Lab
             </span>
           </Link>
@@ -43,7 +43,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/"
-              className={`text-[11px] font-mono tracking-[0.15em] uppercase transition-colors ${
+              className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                 location === "/"
                   ? "text-primary"
                   : "text-muted-foreground hover:text-foreground"
@@ -54,7 +54,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <div className="group relative">
               <Link
                 href="/constitution"
-                className={`text-[11px] font-mono tracking-[0.15em] uppercase transition-colors ${
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isConstitutionActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
@@ -68,7 +68,7 @@ export function Shell({ children }: { children: ReactNode }) {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`block rounded-lg px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] transition-colors ${
+                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
                         location === link.href
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-card hover:text-foreground"
@@ -84,7 +84,7 @@ export function Shell({ children }: { children: ReactNode }) {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-[11px] font-mono tracking-[0.15em] uppercase transition-colors ${
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   link.active
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
@@ -97,7 +97,7 @@ export function Shell({ children }: { children: ReactNode }) {
               href="https://github.com/CAM-Initiative/Caelestis"
               target="_blank"
               rel="noreferrer"
-              className="text-[11px] font-mono tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+              className="text-[12px] font-mono tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
             >
               Governance ↗
             </a>
@@ -114,7 +114,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
             <div className="max-w-2xl space-y-2 text-center md:text-left">
               <p className="text-base leading-relaxed text-foreground md:text-[17px]">
-                <span className="font-medium">© 2026 CAM Initiative.</span> Public governance infrastructure for AI and synthetic systems. All rights reserved.
+                © 2026 CAM Initiative. Public governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems. All rights reserved.
               </p>
             </div>
 

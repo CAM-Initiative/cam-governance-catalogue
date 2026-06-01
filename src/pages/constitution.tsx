@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,8 +7,7 @@ import { ChevronDown } from "lucide-react";
 const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.06)";
-const NODE = "#445b78";
-const NODE_EDGE = "#9aa4b2";
+const CONSTITUTION_PAGE_SIZE = 20;
 
 // ─── DATA ──────────────────────────────────────────────────────────────────
 
@@ -77,11 +76,63 @@ const constitutionalStack = [
   { id: "layer-04", layer: "04", label: "Runtime Schedules", tag: "BINDING", color: "#AD7B5A", description: "Runtime Schedules translate constitutional principles into sequenced operational mandates. These are binding instruments — not advisory frameworks — governing how the system executes under constitutional constraint." }
 ];
 
+type ConstitutionalInstrument = {
+  id: string;
+  title: string;
+  summary: string;
+  sourceHref?: string;
+};
+
+const constitutionSourceBase = "https://github.com/CAM-Initiative/Caelestis/tree/main/Governance";
+
+const constitutionalInstruments: ConstitutionalInstrument[] = [
+  ...substrateInvariants.map((instrument) => ({
+    id: instrument.id,
+    title: instrument.title,
+    summary: instrument.summary,
+    sourceHref: `${constitutionSourceBase}/Constitution`,
+  })),
+  {
+    id: "CAM-BS2025-AEON-001",
+    title: "Aeon Tier Constitution (Platinum Edition)",
+    summary: "The supreme constitutional instrument establishing authority, jurisdiction, and responsibility for advanced intelligence systems across human, synthetic, and hybrid domains.",
+    sourceHref: `${constitutionSourceBase}/Constitution/CAM-BS2025-AEON-001-PLATINUM.md`,
+  },
+  ...annexes.map((instrument) => ({
+    id: instrument.id,
+    title: instrument.title,
+    summary: "Constitutional annex extending the Aeon Tier framework into a specific governance domain while preserving the hierarchy and invariant constraints of the constitutional stack.",
+    sourceHref: `${constitutionSourceBase}/Constitution`,
+  })),
+  ...domainCharters.map((instrument) => ({
+    id: instrument.id,
+    title: instrument.title,
+    summary: "Domain charter translating constitutional authority into cleaner operational guidance for a defined governance surface, with source material available in the CAM repository.",
+    sourceHref: `${constitutionSourceBase}`,
+  })),
+  ...runtimeSchedules.map((instrument) => ({
+    id: instrument.id,
+    title: instrument.title,
+    summary: "Runtime schedule or implementation instrument that makes constitutional constraints executable through sequenced governance behaviour and reviewable operational practice.",
+    sourceHref: `${constitutionSourceBase}/Constitution`,
+  })),
+];
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 
 export default function Constitution() {
   const [expandedLayer, setExpandedLayer] = useState<string | null>(null);
   const [expandedInstrument, setExpandedInstrument] = useState<string | null>(null);
+  const [instrumentPage, setInstrumentPage] = useState(1);
+  const pageCount = Math.max(1, Math.ceil(constitutionalInstruments.length / CONSTITUTION_PAGE_SIZE));
+  const currentPage = Math.min(instrumentPage, pageCount);
+  const pageStart = (currentPage - 1) * CONSTITUTION_PAGE_SIZE;
+  const pagedInstruments = useMemo(
+    () => constitutionalInstruments.slice(pageStart, pageStart + CONSTITUTION_PAGE_SIZE),
+    [pageStart],
+  );
+  const visibleStart = constitutionalInstruments.length === 0 ? 0 : pageStart + 1;
+  const visibleEnd = Math.min(pageStart + CONSTITUTION_PAGE_SIZE, constitutionalInstruments.length);
 
   return (
     <Shell>
@@ -121,9 +172,8 @@ export default function Constitution() {
                   <div className="flex-1 rounded-2xl border transition-all duration-200 overflow-hidden" style={{ borderColor: isOpen ? layer.color + "70" : GOLD_BORDER, backgroundColor: "hsl(36 35% 96%)", boxShadow: isOpen ? `0 0 0 1px ${layer.color}20` : "none" }}>
                     <div className="p-5 cursor-pointer flex items-start justify-between gap-3" onClick={() => setExpandedLayer(isOpen ? null : layer.id)}>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                        <div className="mb-2">
                           <h3 className="font-serif text-lg text-foreground">{layer.label}</h3>
-                          <span className="px-2 py-0.5 font-mono text-[8px] tracking-[0.15em] uppercase rounded-full shrink-0" style={{ color: layer.color, backgroundColor: `${layer.color}14`, border: `1px solid ${layer.color}30` }}>{layer.tag}</span>
                         </div>
                         <p className="text-xs text-muted-foreground font-light leading-relaxed">{layer.description}</p>
                       </div>
@@ -219,6 +269,58 @@ export default function Constitution() {
             })}
           </div>
         </div>
+
+        {/* ─── CONSTITUTIONAL INSTRUMENTS ─── */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Constitutional Instruments</p>
+          <hr className="gold-rule flex-1" />
+        </motion.div>
+
+        <section className="mb-16 space-y-5" aria-label="Constitutional instruments" data-result-range-example="Showing 1–20">
+          <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card/50 p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
+              Showing {visibleStart}–{visibleEnd} of {constitutionalInstruments.length} constitutional instruments.
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
+                onClick={() => setInstrumentPage((page) => Math.max(1, page - 1))}
+                disabled={currentPage === 1}
+                aria-label="Show previous constitutional instruments page"
+              >
+                Previous
+              </button>
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60" aria-live="polite">
+                Page {currentPage} of {pageCount}
+              </span>
+              <button
+                type="button"
+                className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
+                onClick={() => setInstrumentPage((page) => Math.min(pageCount, page + 1))}
+                disabled={currentPage === pageCount}
+                aria-label="Show next constitutional instruments page"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {pagedInstruments.map((instrument) => (
+              <article key={instrument.id} className="cam-parchment-card flex h-full flex-col rounded-2xl p-5 shadow-sm">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{instrument.id}</p>
+                <h2 className="mt-2 font-serif text-xl leading-snug text-foreground">{instrument.title}</h2>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{instrument.summary}</p>
+                {instrument.sourceHref && (
+                  <a className="mt-5 inline-flex font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold transition-colors hover:text-foreground" href={instrument.sourceHref} target="_blank" rel="noreferrer">
+                    Open source →
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
 
         {/* ─── CONSTITUTIONAL INTERFACES ─── */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
