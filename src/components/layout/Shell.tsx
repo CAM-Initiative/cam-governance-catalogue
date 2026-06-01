@@ -7,7 +7,6 @@ const footerLinks = [
   { href: "/vigil", label: "VIGIL", internal: true },
   { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
-  { href: "https://buymeacoffee.com/cam_initiative", label: "Support Public Governance Infrastructure" },
 ];
 
 const constitutionLinks = [
@@ -110,39 +109,45 @@ export function Shell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-border/60 bg-background py-4">
+      <footer className="mt-auto border-t border-border/50 bg-background py-3">
         <div className="container mx-auto px-6 md:px-10">
-          <div className="flex flex-col gap-3 text-center md:text-left">
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              <span className="font-medium text-foreground">CAM Initiative</span> — Public governance infrastructure for AI and synthetic systems.
-            </p>
-
-            <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:justify-start">
-              {footerLinks.map((link) => (
-                link.internal ? (
-                  <Link key={link.href} href={link.href} className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
-                    {link.label}
-                  </a>
-                )
-              ))}
-            </nav>
-
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:justify-start">
-              <a href="mailto:ethics@cam-initiative.org" className="font-mono text-[10px] tracking-wider text-muted-foreground/70 transition-colors hover:text-primary">
-                ethics@cam-initiative.org
-              </a>
-              <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-[10px] tracking-wider text-muted-foreground/70 transition-colors hover:text-primary">
-                @CAM_Initiative
-              </a>
+          <div className="flex flex-col gap-3 text-center md:flex-row md:items-center md:justify-between md:text-left">
+            <div className="space-y-1">
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                <span className="font-medium text-foreground">CAM Initiative</span> · Public governance infrastructure for AI and synthetic systems.
+              </p>
+              <p className="font-serif text-[11px] italic text-muted-foreground/50">
+                Aeterna Resonantia, Lux et Vox — Et Veritas Vivens
+              </p>
             </div>
 
-            <p className="font-serif text-xs italic text-muted-foreground/55">
-              Aeterna Resonantia, Lux et Vox — Et Veritas Vivens
-            </p>
+            <div className="flex flex-col items-center gap-2 md:items-end">
+              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-3 gap-y-1 md:justify-end">
+                {footerLinks.map((link) => (
+                  link.internal ? (
+                    <Link key={link.href} href={link.href} className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-primary">
+                      {link.label}
+                    </a>
+                  )
+                ))}
+              </nav>
+
+              <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 md:justify-end">
+                <a href="mailto:ethics@cam-initiative.org" className="font-mono text-[9px] tracking-wider text-muted-foreground/60 transition-colors hover:text-primary">
+                  ethics@cam-initiative.org
+                </a>
+                <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-[9px] tracking-wider text-muted-foreground/60 transition-colors hover:text-primary">
+                  @CAM_Initiative
+                </a>
+                <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-[9px] tracking-wider text-muted-foreground/60 transition-colors hover:text-primary">
+                  Support
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
