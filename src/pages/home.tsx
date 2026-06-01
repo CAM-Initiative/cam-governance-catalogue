@@ -92,7 +92,7 @@ const startHerePaths = [
 ];
 
 function SeedOfLifeSVG() {
-  const cx = 150, cy = 126, r = 46, outerR = 100;
+  const cx = 138, cy = 126, r = 46, outerR = 100;
   const outerCenters = [
     { x: cx, y: cy - r },
     { x: cx + r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) },
