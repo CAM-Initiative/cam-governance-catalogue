@@ -1,10 +1,10 @@
 {
-  "synced_at_utc": "2026-06-01T01:14:03.255Z",
+  "synced_at_utc": "2026-06-01T01:47:37.380Z",
   "files": [
     {
       "file": "VIGIL.Records.Index.json",
       "source_url": "https://raw.githubusercontent.com/CAM-Initiative/VIGIL/main/vigil/VIGIL.Records.Index.json",
-      "record_count": 12,
+      "record_count": 15,
       "status": "stale_local_copy"
     }
   ]
