@@ -3,32 +3,18 @@ import { dirname, isAbsolute, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const outputDir = resolve(repoRoot, "docs", "vigil");
-const syncMetaPath = resolve(outputDir, "VIGIL.SyncMeta.json");
-const defaultRemoteBase = "https://raw.githubusercontent.com/CAM-Initiative/VIGIL/main/vigil";
-const registerFiles = [
-  "VIGIL.ActiveRecords.json",
-  "VIGIL.ClosedRecords.json",
-  "VIGIL.Records.Index.json",
-];
+const sourceConfigPath = resolve(repoRoot, "src", "config", "registrySources.json");
+const outputDir = resolve(repoRoot, "docs", "data");
+const fallbackPath = resolve(outputDir, "vigil-registry-fallback.json");
+const syncMetaPath = resolve(outputDir, "vigil-registry-sync-meta.json");
 const strictSync = process.env.VIGIL_SYNC_STRICT === "1";
 
-function resolveSource(fileName) {
-  const specificEnvName = `VIGIL_${fileName.replace(/[^A-Za-z0-9]/g, "_").toUpperCase()}_SOURCE`;
-  const specificSource = process.env[specificEnvName];
-  if (specificSource) return specificSource;
+const registrySources = JSON.parse(await readFile(sourceConfigPath, "utf8"));
+const configuredRegistryUrl = registrySources.vigil.registry_index_url;
+const registrySource = process.env.VIGIL_REGISTRY_SOURCE || configuredRegistryUrl;
 
-  if (process.env.VIGIL_RECORDS_SOURCE && fileName === "VIGIL.Records.Index.json") {
-    return process.env.VIGIL_RECORDS_SOURCE;
-  }
-
-  const sourceBase = process.env.VIGIL_RECORDS_SOURCE_BASE || defaultRemoteBase;
-  if (/^https?:\/\//i.test(sourceBase)) {
-    return `${sourceBase.replace(/\/$/, "")}/${fileName}`;
-  }
-
-  const localBase = isAbsolute(sourceBase) ? sourceBase : resolve(repoRoot, sourceBase);
-  return resolve(localBase, fileName);
+function resolveLocalSource(source) {
+  return isAbsolute(source) ? source : resolve(repoRoot, source);
 }
 
 async function loadSource(source) {
@@ -40,94 +26,107 @@ async function loadSource(source) {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status} ${response.statusText}`);
-    }
-
+    if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
     return response.text();
   }
 
-  const sourcePath = isAbsolute(source) ? source : resolve(repoRoot, source);
-  return readFile(sourcePath, "utf8");
+  return readFile(resolveLocalSource(source), "utf8");
 }
 
-function validateRegisterJson(sourceText, source, fileName) {
-  let parsed;
-
+function parseRegistry(sourceText, source) {
   try {
-    parsed = JSON.parse(sourceText);
+    const parsed = JSON.parse(sourceText);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("must be a top-level JSON object");
+    }
+    return parsed;
   } catch (error) {
-    throw new Error(`VIGIL register loaded from ${source} is not valid JSON: ${error.message}`);
+    throw new Error(`VIGIL registry loaded from ${source} is not valid JSON: ${error.message}`);
   }
+}
 
-  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-    throw new Error(`VIGIL register loaded from ${source} must be a top-level JSON object`);
+function registryEntries(registries) {
+  if (Array.isArray(registries)) return registries.filter((entry) => entry && typeof entry === "object");
+  if (!registries || typeof registries !== "object") return [];
+  return Object.entries(registries)
+    .filter(([, entry]) => entry && typeof entry === "object")
+    .map(([key, entry]) => ({ key, ...entry }));
+}
+
+function recordsFrom(payload) {
+  if (Array.isArray(payload?.records)) return payload.records;
+  for (const key of ["failure_modes", "observations", "proposals", "patch_notes", "items"]) {
+    if (Array.isArray(payload?.[key])) return payload[key];
   }
+  return [];
+}
 
-  if (!Array.isArray(parsed.records)) {
-    throw new Error(`VIGIL register loaded from ${source} must include a top-level records array`);
-  }
+async function buildCombinedFallback(masterRegistry, source) {
+  const directRecords = recordsFrom(masterRegistry);
+  if (Array.isArray(masterRegistry.records)) return { ...masterRegistry, records: directRecords };
 
-  if (typeof parsed.record_count === "number" && parsed.record_count !== parsed.records.length) {
-    throw new Error(
-      `VIGIL register loaded from ${source} has record_count ${parsed.record_count}, but records.length is ${parsed.records.length}`,
-    );
-  }
+  const childRegistries = registryEntries(masterRegistry.registries);
+  const childRecordSets = await Promise.all(childRegistries.map(async (entry, index) => {
+    const childSource = entry.raw_url || entry.registry_index_url || entry.url;
+    if (!childSource) return [];
+    const childText = await loadSource(childSource);
+    const childRegistry = parseRegistry(childText, childSource);
+    return recordsFrom(childRegistry).map((record) => ({
+      ...(record && typeof record === "object" ? record : { summary: record }),
+      source_registry: record?.source_registry ?? entry.key ?? childSource ?? `registry-${index + 1}`,
+    }));
+  }));
 
-  if (!Object.hasOwn(parsed, "generated_from")) {
-    throw new Error(`VIGIL register loaded from ${source} must include generated_from provenance`);
-  }
-
-  if (fileName === "VIGIL.Records.Index.json" && parsed.records.length < 1) {
-    throw new Error(`VIGIL index loaded from ${source} must include at least one record`);
-  }
-
-  return parsed;
+  return {
+    ...masterRegistry,
+    records: childRecordSets.flat(),
+    fallback_generated_from: source,
+  };
 }
 
 try {
   await mkdir(outputDir, { recursive: true });
-  const syncedFiles = [];
 
-  for (const fileName of registerFiles) {
-    const source = resolveSource(fileName);
-    let sourceText;
-    let syncStatus = "fetched";
+  let sourceText;
+  let syncStatus = "fetched";
+  try {
+    sourceText = await loadSource(registrySource);
+  } catch (error) {
+    if (strictSync) throw error;
     try {
-      sourceText = await loadSource(source);
-    } catch (error) {
-      const existingPath = resolve(outputDir, fileName);
-      if (strictSync) throw error;
-      try {
-        sourceText = await readFile(existingPath, "utf8");
-        syncStatus = "stale_local_copy";
-        console.warn(`Unable to fetch ${fileName} from ${source}; keeping existing local copy for this build.`);
-      } catch {
-        console.warn(`Unable to fetch ${fileName} from ${source}; no existing local copy is available, so this optional register was not written.`);
-        continue;
-      }
+      sourceText = await readFile(fallbackPath, "utf8");
+      syncStatus = "stale_local_copy";
+      console.warn(`Unable to fetch live VIGIL registry from ${registrySource}; keeping existing fallback copy for this build.`);
+    } catch {
+      console.warn(`Unable to fetch live VIGIL registry from ${registrySource}; no existing fallback copy is available, so no fallback was written.`);
+      process.exit(0);
     }
-    const parsed = validateRegisterJson(sourceText, source, fileName);
-    await writeFile(resolve(outputDir, fileName), sourceText.endsWith("\n") ? sourceText : `${sourceText}\n`);
-    syncedFiles.push({ file: fileName, source_url: source, record_count: parsed.record_count ?? parsed.records.length, status: syncStatus });
-    console.log(`${syncStatus === "fetched" ? "Synced" : "Retained"} ${fileName} from ${source}`);
   }
 
+  const masterRegistry = parseRegistry(sourceText, registrySource);
+  const fallbackRegistry = syncStatus === "fetched"
+    ? await buildCombinedFallback(masterRegistry, registrySource)
+    : masterRegistry;
+
+  if (!Array.isArray(fallbackRegistry.records)) {
+    throw new Error("VIGIL fallback registry must include a records array after resolution");
+  }
+
+  await writeFile(fallbackPath, `${JSON.stringify(fallbackRegistry, null, 2)}\n`);
   await writeFile(
     syncMetaPath,
-    `${JSON.stringify(
-      {
-        synced_at_utc: new Date().toISOString(),
-        files: syncedFiles,
-      },
-      null,
-      2,
-    )}\n`,
+    `${JSON.stringify({
+      synced_at_utc: new Date().toISOString(),
+      source_url: registrySource,
+      fallback_file: "docs/data/vigil-registry-fallback.json",
+      record_count: fallbackRegistry.records.length,
+      status: syncStatus,
+    }, null, 2)}\n`,
   );
 
-  console.log("Wrote docs/vigil VIGIL register copies and VIGIL.SyncMeta.json");
+  console.log(`${syncStatus === "fetched" ? "Synced" : "Retained"} VIGIL registry fallback from ${registrySource}`);
 } catch (error) {
-  console.error("Failed to sync VIGIL generated registers");
+  console.error("Failed to sync VIGIL registry fallback");
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 }
