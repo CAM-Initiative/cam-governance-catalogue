@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import { Shell } from "@/components/layout/Shell";
 
 const VIGIL_PAGE_SIZE = 20;
@@ -43,7 +43,7 @@ type VigilIndexRecord = {
   title: string;
   summary: string;
   record_type: string;
-  record_state: string;
+  record_state?: string;
   date_recorded?: string;
   date_implemented?: string;
   evidence_confidence?: string;
@@ -470,20 +470,15 @@ function recordTypeBadge(recordType: string) {
   return recordType;
 }
 
-function meaningfulCollapsedStatus(status?: string) {
-  if (!isSpecifiedText(status)) return undefined;
-  const normalized = status.trim().toLowerCase().replace(/[\s_-]+/g, "-");
-  if (["open", "unclassified", "new", "pending"].includes(normalized)) return undefined;
-  return titleizeValue(status);
-}
-
 function previewText(text?: string, limit = 180) {
   if (!isMeaningfulText(text)) return undefined;
   return text.length > limit ? `${text.slice(0, limit).trim()}…` : text;
 }
 
-function normalizeStatus(status: string): string {
-  return status.trim().toLowerCase() === "proposal" ? "open" : status.trim();
+function normalizeStatus(status: string | undefined): string | undefined {
+  if (!isSpecifiedText(status)) return undefined;
+  if (canonicalComparisonKey(status) === "unclassified") return undefined;
+  return status.trim();
 }
 
 function summaryEntries(value: unknown): SummaryEntry[] {
@@ -558,7 +553,7 @@ function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexR
     title: resolveRecordTitle(record, id, path, index),
     summary: getOptionalField(record, ["summary", "description", "observation", "signal"]) ?? "Summary not provided.",
     record_type,
-    record_state: normalizeStatus(getOptionalField(record, ["record_state", "status", "state"]) ?? "unclassified"),
+    record_state: normalizeStatus(getOptionalField(record, ["record_state", "status", "state"])),
     date_recorded: getOptionalField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
     date_implemented: getOptionalField(record, ["date_implemented", "dateImplemented", "implemented_date", "implementedDate"]),
     affected_domains: arrayFrom(record.affected_domains ?? record.affectedDomains),
@@ -679,7 +674,7 @@ function debugFilterOptionCounts(records: VigilIndexRecord[], filterOptions: Rec
 function valuesForFilter(record: VigilIndexRecord, key: FilterKey): string[] {
   const mapping: Record<FilterKey, string[] | undefined> = {
     recordType: [record.record_type],
-    status: [record.record_state],
+    status: record.record_state ? [record.record_state] : undefined,
     evidenceConfidence: record.evidence_confidence ? [record.evidence_confidence] : undefined,
     sourcePlatform: record.source_platform ? [record.source_platform] : undefined,
     sourceType: record.source_types,
@@ -773,7 +768,7 @@ export default function Vigil() {
   const [records, setRecords] = useState<VigilIndexRecord[]>([]);
   const [filters, setFilters] = useState<Record<FilterKey, string>>({
     recordType: "",
-    status: "open",
+    status: "",
     evidenceConfidence: "",
     sourcePlatform: "",
     sourceType: "",
@@ -804,6 +799,7 @@ export default function Vigil() {
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [recordPage, setRecordPage] = useState(1);
+  const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}vigil/VIGIL.Records.Index.json`)
@@ -855,6 +851,24 @@ export default function Vigil() {
 
   function setFilter(key: FilterKey, value: string) {
     setFilters((current) => ({ ...current, [key]: value }));
+  }
+
+  function toggleExpandedRecord(recordKey: string) {
+    setExpandedRecordKeys((current) => {
+      const next = new Set(current);
+      if (next.has(recordKey)) {
+        next.delete(recordKey);
+      } else {
+        next.add(recordKey);
+      }
+      return next;
+    });
+  }
+
+  function handleRecordRowKeyDown(event: KeyboardEvent<HTMLDivElement>, recordKey: string) {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    toggleExpandedRecord(recordKey);
   }
 
   function exportCurrentView() {
@@ -1000,39 +1014,56 @@ export default function Vigil() {
               </div>
             )}
 
+            {loadState === "ready" && filtered.length > 0 && (
+              <p className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">Click any row to expand record details.</p>
+            )}
+
             <div className="space-y-2">
+              {loadState === "ready" && filtered.length > 0 && (
+                <div className="grid gap-2 rounded-lg border border-border bg-card/45 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:px-4">
+                  <div>Date</div>
+                  <div>Platform</div>
+                  <div>Type</div>
+                  <div>Title</div>
+                  <div className="md:text-right">Source</div>
+                </div>
+              )}
+
               {pagedRecords.map((record, index) => {
                 const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
-                const collapsedStatus = meaningfulCollapsedStatus(record.record_state);
                 const sourceHref = record.path ? sourceRecordUrl(record.path) : undefined;
+                const recordKey = `${record.id}-${record.path ?? index}`;
+                const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
+                const isExpanded = expandedRecordKeys.has(recordKey);
 
                 return (
-                <details key={`${record.id}-${index}`} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
-                  <summary className="cursor-pointer list-none px-3 py-2.5 text-sm transition marker:hidden [&::-webkit-details-marker]:hidden md:px-4">
-                    <div className="grid gap-2 md:grid-cols-[7.5rem_9rem_5rem_minmax(0,1fr)_auto] md:items-center">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{recordDate}</div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{record.affected_platform_label}</div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{recordTypeBadge(record.record_type)}</div>
-                      <div className="min-w-0">
-                        <h2 className="whitespace-normal break-words font-serif text-base leading-snug text-foreground md:text-lg">{record.title}</h2>
-                        {collapsedStatus && (
-                          <span className="mt-1 inline-flex rounded-full border border-border bg-background/50 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground md:hidden">{collapsedStatus}</span>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                        {collapsedStatus && (
-                          <span className="hidden rounded-full border border-border bg-background/50 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground md:inline-flex">{collapsedStatus}</span>
-                        )}
-                        <span className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold group-open:hidden">Details</span>
-                        <span className="hidden rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold group-open:inline-flex">Hide details</span>
-                        {sourceHref && (
-                          <a className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>Source ↗</a>
+                <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isExpanded}
+                    aria-controls={detailsPanelId}
+                    className="cursor-pointer px-3 py-2.5 text-sm transition md:px-4"
+                    onClick={() => toggleExpandedRecord(recordKey)}
+                    onKeyDown={(event) => handleRecordRowKeyDown(event, recordKey)}
+                  >
+                    <div className="grid gap-2 font-sans md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:items-center">
+                      <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordDate}</div>
+                      <div className="font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(32_55%_27%)]">{record.affected_platform_label}</div>
+                      <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordTypeBadge(record.record_type)}</div>
+                      <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-semibold leading-snug text-foreground md:text-[15px]">{record.title}</h2>
+                      <div className="flex items-center md:justify-end">
+                        {sourceHref ? (
+                          <a className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-sans text-[10px] uppercase tracking-[0.12em] text-[hsl(32_55%_27%)] transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
+                        ) : (
+                          <span className="font-sans text-[10px] text-muted-foreground/40" aria-hidden="true">—</span>
                         )}
                       </div>
                     </div>
-                  </summary>
+                  </div>
 
-                  <div className="border-t border-border px-3 py-4">
+                  {isExpanded && (
+                  <div id={detailsPanelId} className="border-t border-border px-3 py-4">
                     <div className="mb-4">
                       <h2 className="font-mono text-xs text-cam-gold">{record.id}</h2>
                       <p className="mt-1 font-serif text-xl text-foreground">{record.title}</p>
@@ -1080,7 +1111,8 @@ export default function Vigil() {
                       </div>
                     )}
                   </div>
-                </details>
+                  )}
+                </article>
                 );
               })}
             </div>
