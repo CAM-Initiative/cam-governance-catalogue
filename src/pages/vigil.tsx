@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
-import { humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, normalizeRecordType, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, normalizeRecordType, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 
 const VIGIL_PAGE_SIZE = 20;
 
