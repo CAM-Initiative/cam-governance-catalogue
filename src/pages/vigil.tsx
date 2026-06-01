@@ -331,8 +331,8 @@ export default function Vigil() {
     <Shell>
       <div className="container mx-auto max-w-7xl px-5 py-8 md:px-8 lg:px-10">
         <div className="mb-5">
-          <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">AI Governance Observatory</p>
-          <h1 className="mb-3 font-serif text-3xl text-foreground md:text-4xl">VIGIL — Digital Ecosystem Health Register</h1>
+          <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">Evidence-to-Repair Governance Ledger</p>
+          <h1 className="mb-3 font-serif text-3xl text-foreground md:text-4xl">VIGIL Observatory</h1>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
             VIGIL records observations, failure modes, CAM proposals, and implemented patch notes from the live VIGIL registry index with public-facing source, system, jurisdiction, classification, and routing summaries.
           </p>

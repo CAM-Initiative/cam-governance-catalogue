@@ -6,11 +6,13 @@ import Constitution from "@/pages/constitution";
 import RelationalGovernance from "@/pages/relational-governance";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
+import About from "@/pages/about";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/about" component={About} />
       <Route path="/runtime" component={Runtime} />
       <Route path="/constitution/runtime" component={Runtime} />
       <Route path="/constitution/relational" component={RelationalGovernance} />
