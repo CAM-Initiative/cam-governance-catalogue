@@ -29,6 +29,16 @@ const missingPurposeMessage = "Purpose statement not yet available in catalogue 
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
 const pageSize = 20;
 
+const metadataFields: Array<{ key: string; label: string }> = [
+  { key: "domain", label: "Domain" },
+  { key: "instrument_class", label: "Type" },
+  { key: "hierarchy_type", label: "Hierarchy" },
+  { key: "status", label: "Status" },
+  { key: "effect", label: "Effect" },
+  { key: "enforcement", label: "Enforcement" },
+  { key: "id", label: "Instrument ID" },
+];
+
 const supplementalFields: Array<{ key: string; label: string }> = [
   { key: "link", label: "Source Path" },
   { key: "parent_id", label: "Parent Instrument" },
@@ -101,6 +111,11 @@ function detailRows(it: Instrument, collapsedDescription: string) {
   if (fullPurpose && fullPurpose !== collapsedDescription) {
     addDetail({ label: "Full Purpose / Abstract", value: fullPurpose, variant: "wide" });
   }
+
+  metadataFields.forEach((field) => {
+    const value = displayValue(it[field.key]);
+    if (value) addDetail({ label: field.label, value });
+  });
 
   supplementalFields.forEach((field) => {
     const value = field.key === "link" || field.key === "HASH" || field.key === "pinned_sha"
@@ -297,12 +312,6 @@ export default function Catalogue() {
                 const details = detailRows(it, description);
                 const source = sourceUrl(it.link);
                 const isExpanded = expandedId === cardId;
-                const topMetadata = [
-                  displayValue(it.domain),
-                  displayValue(it.instrument_class),
-                  displayValue(it.status),
-                  displayValue(it.effect),
-                ].filter(Boolean).join(" · ");
 
                 return (
                   <article
@@ -315,13 +324,27 @@ export default function Catalogue() {
                     onKeyDown={(event) => handleCardKeyDown(event, cardId)}
                     className="group cam-parchment-card cursor-pointer rounded-xl p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
                   >
-                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-                      <div className="min-w-0 flex-1">
-                        {topMetadata && (
-                          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">
-                            {topMetadata}
-                          </p>
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="min-w-0 break-words font-mono text-xs uppercase tracking-[0.14em] text-cam-gold">
+                          {it.id || "Unresolved/source mapping required"}
+                        </p>
+                        {source ? (
+                          <a
+                            href={source}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={stopCardToggle}
+                            className="shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                          >
+                            Source ↗
+                          </a>
+                        ) : (
+                          <span className="shrink-0 rounded-md border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs text-red-700">Source unavailable</span>
                         )}
+                      </div>
+
+                      <div className="min-w-0">
                         <h2 className="break-words font-serif text-xl leading-snug text-foreground">
                           {it.title || "Untitled instrument"}
                         </h2>
@@ -331,28 +354,12 @@ export default function Catalogue() {
                           <p className="mt-2 text-sm leading-relaxed text-muted-foreground/70">{missingPurposeMessage}</p>
                         )}
                       </div>
-                      <span className="shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">
-                        {isExpanded ? "Hide details" : "Details"}
-                      </span>
-                    </div>
 
-                    <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border/70 pt-3">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">
-                        ID: {it.id || "Unresolved/source mapping required"}
-                      </span>
-                      {source ? (
-                        <a
-                          href={source}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={stopCardToggle}
-                          className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25"
-                        >
-                          Source ↗
-                        </a>
-                      ) : (
-                        <span className="rounded-md border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs text-red-700">Source unavailable</span>
-                      )}
+                      <div className="flex justify-end border-t border-border/70 pt-3">
+                        <span className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">
+                          {isExpanded ? "Hide details" : "Details"}
+                        </span>
+                      </div>
                     </div>
 
                     {isExpanded && (
