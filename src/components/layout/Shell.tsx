@@ -109,44 +109,43 @@ export function Shell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-primary/20 bg-[hsl(36_48%_95%)] py-4 text-foreground shadow-[inset_0_1px_0_hsl(38_62%_40%/0.06)] md:py-5">
+      <footer className="mt-auto border-t border-primary/25 bg-[hsl(36_48%_95%)] py-7 text-foreground shadow-[inset_0_1px_0_hsl(38_62%_40%/0.08)] md:py-8">
         <div className="container mx-auto px-6 md:px-10">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
-            <div className="max-w-xl space-y-1.5 text-center md:text-left">
-              <p className="text-sm leading-relaxed text-muted-foreground md:text-[15px]">
-                <span className="font-medium text-foreground">CAM Initiative</span> · Public governance infrastructure for AI and synthetic systems.
-              </p>
-              <p className="font-serif text-sm italic leading-snug text-muted-foreground md:text-[15px]">
-                Aeterna Resonantia, Lux et Vox — Ex Veritas Vivens
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
+            <div className="max-w-2xl space-y-2 text-center md:text-left">
+              <p className="text-base leading-relaxed text-foreground md:text-[17px]">
+                <span className="font-medium">© 2026 CAM Initiative.</span> Public governance infrastructure for AI and synthetic systems. All rights reserved.
               </p>
             </div>
 
-            <div className="flex flex-col items-center gap-2.5 rounded-xl border border-border/70 bg-card/45 px-4 py-3 md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0">
-              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-4 gap-y-2 md:justify-end">
+            <div className="flex flex-col items-center gap-4 rounded-xl border border-primary/15 bg-card/55 px-5 py-4 shadow-sm md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0 md:shadow-none">
+              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:justify-end md:gap-x-7">
                 {footerLinks.map((link) => (
                   link.internal ? (
-                    <Link key={link.href} href={link.href} className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                    <Link key={link.href} href={link.href} className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
                       {link.label}
                     </Link>
                   ) : (
-                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
                       {link.label}
                     </a>
                   )
                 ))}
               </nav>
 
-              <div className="flex flex-wrap justify-center gap-x-4 gap-y-1.5 md:justify-end">
-                <a href="mailto:ethics@cam-initiative.org" className="font-mono text-[11px] tracking-wide text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                  ethics@cam-initiative.org
-                </a>
-                <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-[11px] tracking-wide text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                  @CAM_Initiative
-                </a>
-                <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-[11px] tracking-wide text-muted-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                  Support
-                </a>
-              </div>
+              <address className="not-italic">
+                <div className="flex flex-wrap justify-center gap-x-5 gap-y-2.5 md:justify-end md:gap-x-6">
+                  <a href="mailto:ethics@cam-initiative.org" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
+                    ethics@cam-initiative.org
+                  </a>
+                  <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
+                    @CAM_Initiative
+                  </a>
+                  <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
+                    Support
+                  </a>
+                </div>
+              </address>
             </div>
           </div>
         </div>
