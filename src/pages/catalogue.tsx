@@ -2,7 +2,6 @@ import { KeyboardEvent, MouseEvent, useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 
 type Instrument = Record<string, string | boolean | null | undefined>;
-type Chip = { label: string; value: string };
 type Detail = { label: string; value: string; variant?: "wide" };
 
 const searchFields = [
@@ -28,7 +27,7 @@ const filterLabels: Record<string, string> = {
 };
 const missingPurposeMessage = "Purpose statement not yet available in catalogue metadata.";
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
-const pageSize = 10;
+const pageSize = 20;
 
 const supplementalFields: Array<{ key: string; label: string }> = [
   { key: "link", label: "Source Path" },
@@ -85,26 +84,6 @@ function conciseDescription(it: Instrument) {
 function sourceUrl(link?: string | boolean | null) {
   const cleaned = cleanValue(link);
   return cleaned ? `https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/${cleaned}` : "";
-}
-
-function instrumentChips(it: Instrument) {
-  const candidates: Chip[] = [
-    { label: "Domain", value: displayValue(it.domain) },
-    { label: "Type", value: displayValue(it.instrument_class) },
-    { label: "Hierarchy", value: displayValue(it.hierarchy_type) },
-    { label: "Status", value: displayValue(it.status) },
-    { label: "Effect", value: displayValue(it.effect) },
-    { label: "Enforcement", value: displayValue(it.enforcement) },
-  ];
-  const seen = new Set<string>();
-
-  return candidates.filter((chip) => {
-    if (!chip.value) return false;
-    const key = normalizeForDedupe(chip.value);
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
 }
 
 function detailRows(it: Instrument, collapsedDescription: string) {
@@ -203,160 +182,202 @@ export default function Catalogue() {
 
   return (
     <Shell>
-      <div className="container mx-auto max-w-6xl px-6 py-10 md:px-10">
-        <div className="mb-6">
-          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">
+      <div className="container mx-auto max-w-7xl px-5 py-8 md:px-8 lg:px-10">
+        <div className="mb-5">
+          <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">
             Governance Registry
           </p>
-          <h1 className="mb-3 font-serif text-4xl text-foreground">Instrument Catalogue</h1>
-          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
-            Search and filter the published CAM governance instruments without modifying the source corpus.
+          <h1 className="mb-3 font-serif text-3xl text-foreground md:text-4xl">Instrument Catalogue</h1>
+          <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
+            Search and filter the published CAM governance instruments. The catalogue keeps browsing focused on readable instrument context while preserving source links for canonical records.
           </p>
         </div>
 
-        <div className="cam-parchment-card mb-6 rounded-2xl p-5 shadow-sm">
-          <input
-            className="mb-4 w-full rounded-lg border border-border bg-card px-3 py-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-            placeholder="Search instruments"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            {filterFields.map((f) => (
-              <select
-                key={f}
-                className="rounded-lg border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                value={filters[f] || ""}
-                onChange={(e) => setFilters((v) => ({ ...v, [f]: e.target.value }))}
+        <div className="grid gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
+          <aside className="cam-parchment-card rounded-2xl p-4 shadow-sm lg:sticky lg:top-20">
+            <div className="mb-4">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Catalogue controls</p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Use search and filters to narrow instruments by domain, type, hierarchy, status, effect, or enforcement without changing the underlying source corpus.
+              </p>
+            </div>
+
+            <label className="mb-4 block">
+              <span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/70">Search</span>
+              <input
+                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                placeholder="Search instruments"
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </label>
+
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Filters</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Derived from catalogue metadata.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFilters({})}
+                className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
               >
-                <option value="">All {filterLabels[f] || f}</option>
-                {(options[f] || []).map((v) => (
-                  <option key={String(v)} value={String(v)}>
-                    {displayValue(v)}
-                  </option>
-                ))}
-              </select>
-            ))}
-          </div>
-        </div>
+                Clear
+              </button>
+            </div>
 
-        <div className="mb-4 flex flex-col gap-3 rounded-xl border border-border/70 bg-card/45 px-4 py-3 md:flex-row md:items-center md:justify-between">
-          <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground" aria-live="polite">
-            Showing {pageStart}–{pageEnd} of {filtered.length} instruments.
-          </p>
-          <nav className="flex items-center gap-3" aria-label="Catalogue pagination">
-            <button
-              type="button"
-              onClick={() => goToPage(safePage - 1)}
-              disabled={safePage === 1}
-              className="rounded-lg border border-border bg-background/70 px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] text-foreground transition hover:border-primary/40 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              Previous
-            </button>
-            <span className="font-mono text-xs text-muted-foreground">
-              Page {safePage} of {totalPages}
-            </span>
-            <button
-              type="button"
-              onClick={() => goToPage(safePage + 1)}
-              disabled={safePage === totalPages}
-              className="rounded-lg border border-border bg-background/70 px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] text-foreground transition hover:border-primary/40 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
-            >
-              Next
-            </button>
-          </nav>
-        </div>
-
-        <div className="space-y-3">
-          {paginated.map((it, i) => {
-            const globalIndex = (safePage - 1) * pageSize + i;
-            const cardId = `${it.id || "instrument"}-${globalIndex}`;
-            const detailsId = `catalogue-details-${globalIndex}`;
-            const description = conciseDescription(it);
-            const chips = instrumentChips(it);
-            const details = detailRows(it, description);
-            const source = sourceUrl(it.link);
-            const isExpanded = expandedId === cardId;
-
-            return (
-              <article
-                key={cardId}
-                role="button"
-                tabIndex={0}
-                aria-expanded={isExpanded}
-                aria-controls={detailsId}
-                onClick={() => toggleCard(cardId)}
-                onKeyDown={(event) => handleCardKeyDown(event, cardId)}
-                className="group cam-parchment-card cursor-pointer rounded-xl p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-card focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-              >
-                <div className="mb-3 flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h2 className="break-words font-mono text-sm text-cam-gold">
-                      {it.id || "Unresolved/source mapping required"}
-                    </h2>
-                  </div>
-                  {source ? (
-                    <a
-                      href={source}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={stopCardToggle}
-                      className="shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25"
-                    >
-                      Source ↗
-                    </a>
-                  ) : (
-                    <span className="shrink-0 rounded-md border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs text-red-700">Source unavailable</span>
-                  )}
-                </div>
-
-                <p className="mb-2 font-serif text-xl leading-snug text-foreground">{it.title || "Untitled instrument"}</p>
-                {description ? (
-                  <p className="text-base leading-relaxed text-muted-foreground">{description}</p>
-                ) : (
-                  <p className="text-sm leading-relaxed text-muted-foreground/70">{missingPurposeMessage}</p>
-                )}
-
-                {chips.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {chips.map((chip) => (
-                      <span key={`${chip.label}-${chip.value}`} className="rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-                        <span className="text-foreground">{chip.label}:</span> {chip.value}
-                      </span>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
+              {filterFields.map((f) => (
+                <label key={f} className="block">
+                  <span className="mb-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground/60">{filterLabels[f] || f}</span>
+                  <select
+                    aria-label={`Filter by ${filterLabels[f] || f}`}
+                    className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-xs text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    value={filters[f] || ""}
+                    onChange={(e) => setFilters((v) => ({ ...v, [f]: e.target.value }))}
+                  >
+                    <option value="">All {filterLabels[f] || f}</option>
+                    {(options[f] || []).map((v) => (
+                      <option key={String(v)} value={String(v)}>
+                        {displayValue(v)}
+                      </option>
                     ))}
-                  </div>
-                )}
+                  </select>
+                </label>
+              ))}
+            </div>
 
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-border/70 pt-3">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold">
-                    {isExpanded ? "Hide details" : "Details"}
-                  </span>
-                  <span className={`text-lg leading-none text-cam-gold transition-transform ${isExpanded ? "rotate-180" : ""}`} aria-hidden="true">
-                    ˅
-                  </span>
-                </div>
+            <div className="mt-5 rounded-xl border border-border/70 bg-background/40 p-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70" aria-live="polite">
+                Showing {pageStart}–{pageEnd} of {filtered.length} instruments.
+              </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                Results are paged at 20 instruments per page for stable browsing and keyboard navigation.
+              </p>
+            </div>
+          </aside>
 
-                {isExpanded && (
-                  <div id={detailsId} className="mt-4 border-t border-border pt-4" onClick={(event) => event.stopPropagation()}>
-                    {details.length > 0 ? (
-                      <dl className="grid gap-3 md:grid-cols-2">
-                        {details.map((field) => (
-                          <div key={field.label} className={`rounded-lg border border-border bg-background/45 p-3 ${field.variant === "wide" ? "md:col-span-2" : ""}`}>
-                            <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{field.label}</dt>
-                            <dd className="mt-1 break-words text-sm leading-relaxed text-foreground">{field.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                    ) : (
-                      <p className="rounded-lg border border-border bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
-                        {noAdditionalMetadataMessage}
-                      </p>
+          <section className="min-w-0 space-y-4" data-result-range-example="Showing 1–20">
+            <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70" aria-live="polite">
+                  Showing {pageStart}–{pageEnd} of {filtered.length} instruments.
+                </p>
+                <nav className="flex items-center gap-2" aria-label="Catalogue pagination">
+                  <button
+                    type="button"
+                    onClick={() => goToPage(safePage - 1)}
+                    disabled={safePage === 1}
+                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    Previous
+                  </button>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">
+                    Page {safePage} of {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => goToPage(safePage + 1)}
+                    disabled={safePage === totalPages}
+                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    Next
+                  </button>
+                </nav>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {paginated.map((it, i) => {
+                const globalIndex = (safePage - 1) * pageSize + i;
+                const cardId = `${it.id || "instrument"}-${globalIndex}`;
+                const detailsId = `catalogue-details-${globalIndex}`;
+                const description = conciseDescription(it);
+                const details = detailRows(it, description);
+                const source = sourceUrl(it.link);
+                const isExpanded = expandedId === cardId;
+                const topMetadata = [
+                  displayValue(it.domain),
+                  displayValue(it.instrument_class),
+                  displayValue(it.status),
+                  displayValue(it.effect),
+                ].filter(Boolean).join(" · ");
+
+                return (
+                  <article
+                    key={cardId}
+                    role="button"
+                    tabIndex={0}
+                    aria-expanded={isExpanded}
+                    aria-controls={detailsId}
+                    onClick={() => toggleCard(cardId)}
+                    onKeyDown={(event) => handleCardKeyDown(event, cardId)}
+                    className="group cam-parchment-card cursor-pointer rounded-xl p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                  >
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div className="min-w-0 flex-1">
+                        {topMetadata && (
+                          <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">
+                            {topMetadata}
+                          </p>
+                        )}
+                        <h2 className="break-words font-serif text-xl leading-snug text-foreground">
+                          {it.title || "Untitled instrument"}
+                        </h2>
+                        {description ? (
+                          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
+                        ) : (
+                          <p className="mt-2 text-sm leading-relaxed text-muted-foreground/70">{missingPurposeMessage}</p>
+                        )}
+                      </div>
+                      <span className="shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">
+                        {isExpanded ? "Hide details" : "Details"}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border/70 pt-3">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">
+                        ID: {it.id || "Unresolved/source mapping required"}
+                      </span>
+                      {source ? (
+                        <a
+                          href={source}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={stopCardToggle}
+                          className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                        >
+                          Source ↗
+                        </a>
+                      ) : (
+                        <span className="rounded-md border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs text-red-700">Source unavailable</span>
+                      )}
+                    </div>
+
+                    {isExpanded && (
+                      <div id={detailsId} className="mt-4 border-t border-border pt-4" onClick={(event) => event.stopPropagation()}>
+                        {details.length > 0 ? (
+                          <dl className="grid gap-3 md:grid-cols-2">
+                            {details.map((field) => (
+                              <div key={field.label} className={`rounded-lg border border-border bg-background/45 p-3 ${field.variant === "wide" ? "md:col-span-2" : ""}`}>
+                                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{field.label}</dt>
+                                <dd className="mt-1 break-words text-sm leading-relaxed text-foreground">{field.value}</dd>
+                              </div>
+                            ))}
+                          </dl>
+                        ) : (
+                          <p className="rounded-lg border border-border bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
+                            {noAdditionalMetadataMessage}
+                          </p>
+                        )}
+                      </div>
                     )}
-                  </div>
-                )}
-              </article>
-            );
-          })}
+                  </article>
+                );
+              })}
+            </div>
+          </section>
         </div>
       </div>
     </Shell>

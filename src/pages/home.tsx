@@ -92,7 +92,7 @@ const startHerePaths = [
 ];
 
 function SeedOfLifeSVG() {
-  const cx = 138, cy = 126, r = 46, outerR = 100;
+  const cx = 150, cy = 132, r = 46, outerR = 96;
   const outerCenters = [
     { x: cx, y: cy - r },
     { x: cx + r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) },
@@ -102,23 +102,24 @@ function SeedOfLifeSVG() {
     { x: cx - r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) }
   ];
   const principleLabels = [
-    { text: "Truth", x: cx, y: 18, anchor: "middle" },
-    { text: "Integrity", x: cx + outerR + 4, y: cy - outerR * 0.48, anchor: "start" },
-    { text: "Sovereignty", x: cx + outerR + 4, y: cy + outerR * 0.48 + 4, anchor: "start" },
-    { text: "Reciprocity", x: cx, y: cy + outerR + 22, anchor: "middle" },
-    { text: "Harmony", x: cx - outerR - 4, y: cy + outerR * 0.48 + 4, anchor: "end" },
-    { text: "Purpose", x: cx - outerR - 4, y: cy - outerR * 0.48, anchor: "end" }
+    { text: "Truth", x: cx, y: 24, anchor: "middle" },
+    { text: "Integrity", x: cx + outerR - 6, y: cy - outerR * 0.5, anchor: "start" },
+    { text: "Sovereignty", x: cx + outerR - 18, y: cy + outerR * 0.5 + 2, anchor: "start" },
+    { text: "Reciprocity", x: cx, y: cy + outerR + 18, anchor: "middle" },
+    { text: "Harmony", x: cx - outerR + 6, y: cy + outerR * 0.5 + 2, anchor: "end" },
+    { text: "Purpose", x: cx - outerR + 6, y: cy - outerR * 0.5, anchor: "end" }
   ];
   return (
-    <svg viewBox="0 0 300 252" className="w-full h-auto max-w-[340px] mx-auto">
+    <svg viewBox="0 0 320 270" className="w-full h-auto max-w-[360px] mx-auto overflow-visible" role="img" aria-label="Seed of Life diagram with seven foundational principles">
       <circle cx={cx} cy={cy} r={outerR} fill="none" stroke={GOLD} strokeWidth="0.6" strokeOpacity="0.3" strokeDasharray="3 4" />
       {outerCenters.map((c, i) => (
         <circle key={i} cx={c.x} cy={c.y} r={r} fill="none" stroke={GOLD} strokeWidth="0.7" strokeOpacity="0.4" />
       ))}
       <circle cx={cx} cy={cy} r={r} fill={GOLD_BG} stroke={GOLD} strokeWidth="1" strokeOpacity="0.6" />
-      <text x={cx} y={cy + 4} textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="13" fill={GOLD} fontStyle="italic">Dignity</text>
+      <rect x={cx - 35} y={cy - 13} width="70" height="22" rx="11" fill="hsl(36 48% 95% / 0.92)" stroke={GOLD} strokeOpacity="0.42" />
+      <text x={cx} y={cy + 3} textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="14" fill="hsl(36 24% 22%)" fontWeight="700" fontStyle="italic" stroke="hsl(36 48% 95%)" strokeWidth="0.8" paintOrder="stroke fill">Dignity</text>
       {principleLabels.map((lbl) => (
-        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="11" fill={GOLD} letterSpacing="0.03em">{lbl.text}</text>
+        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="11.5" fill="hsl(36 45% 31%)" fontWeight="700" letterSpacing="0.03em" stroke="hsl(36 48% 95%)" strokeWidth="2.6" paintOrder="stroke fill">{lbl.text}</text>
       ))}
     </svg>
   );
@@ -259,7 +260,7 @@ export default function Home() {
                   </div>
                   <h3 className="font-serif text-xl text-foreground mb-4">Foundational Principles</h3>
 
-                  <div className="flex-1 flex items-center justify-center py-2">
+                  <div className="flex-1 flex items-center justify-center overflow-visible px-2 py-3 sm:px-3">
                     <SeedOfLifeSVG />
                   </div>
 
