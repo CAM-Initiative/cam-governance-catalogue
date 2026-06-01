@@ -9,7 +9,8 @@
     "deploy:docs": "pnpm run build",
     "validate:catalogue": "node scripts/validate-catalogue-data.js",
     "sync:vigil": "node scripts/sync-vigil-records.mjs",
-    "validate:vigil": "node scripts/validate-vigil-registry-sources.mjs"
+    "validate:vigil": "node scripts/validate-vigil-registry-sources.mjs",
+    "test:vigil": "node --test scripts/test-vigil-observatory.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
