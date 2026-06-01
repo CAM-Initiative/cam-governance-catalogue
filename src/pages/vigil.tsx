@@ -1049,12 +1049,12 @@ export default function Vigil() {
                   >
                     <div className="grid gap-2 font-sans md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:items-center">
                       <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordDate}</div>
-                      <div className="font-sans text-[10px] font-semibold uppercase tracking-[0.14em] text-[hsl(32_55%_27%)]">{record.affected_platform_label}</div>
+                      <div className="font-sans text-[10px] font-medium uppercase tracking-[0.14em] text-[hsl(32_62%_25%)]">{record.affected_platform_label}</div>
                       <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordTypeBadge(record.record_type)}</div>
-                      <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-semibold leading-snug text-foreground md:text-[15px]">{record.title}</h2>
+                      <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-medium leading-snug text-foreground md:text-[15px]">{record.title}</h2>
                       <div className="flex items-center md:justify-end">
                         {sourceHref ? (
-                          <a className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-sans text-[10px] uppercase tracking-[0.12em] text-[hsl(32_55%_27%)] transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
+                          <a className="inline-flex whitespace-nowrap font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
                         ) : (
                           <span className="font-sans text-[10px] text-muted-foreground/40" aria-hidden="true">—</span>
                         )}
