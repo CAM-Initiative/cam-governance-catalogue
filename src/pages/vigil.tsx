@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import { Shell } from "@/components/layout/Shell";
+import { githubBlobUrlForRecord, loadVigilRegistryRecords, rawUrlForRecord, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
+import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 const VIGIL_PAGE_SIZE = 20;
 
-type UnknownRecord = Record<string, unknown>;
 
 type SummaryEntry = { label: string; value: string };
 type FilterKey =
@@ -48,6 +49,12 @@ type VigilIndexRecord = {
   date_implemented?: string;
   evidence_confidence?: string;
   path?: string;
+  github_blob_url?: string;
+  raw_url?: string;
+  registry_type?: string;
+  source_registry?: string;
+  source_summary?: string;
+  linked_records?: string[];
   affected_platform_label: string;
   source_record_hint?: string;
   next_action?: string;
@@ -84,8 +91,7 @@ type VigilIndexRecord = {
 };
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
-const sourceRecordBaseUrl = "https://github.com/CAM-Initiative/VIGIL/blob/main/";
-const exportNotice = "Filtered VIGIL index export from the CAM Interface. Canonical records remain in CAM-Initiative/VIGIL.";
+const exportNotice = "Filtered VIGIL index export from the CAM Interface. Canonical records remain in CAM-Initiative/Vigil.";
 const summaryNames = [
   "source_summary",
   "system_summary",
@@ -329,10 +335,10 @@ function titleizeValue(value: string) {
 
 function normalizeRecordTypeLabel(value: string | undefined) {
   const normalized = normalizeRecordType(value);
-  if (normalized === "observation") return "Observation";
-  if (normalized === "failure_mode") return "Failure Mode";
-  if (normalized === "proposal") return "Proposal";
-  if (normalized === "patch_note") return "Patch Note";
+  if (normalized === "observation") return "Observations";
+  if (normalized === "failure_mode") return "Failure Modes";
+  if (normalized === "proposal") return "Proposals";
+  if (normalized === "patch_note") return "Patch Notes";
   return value ? titleizeValue(value) : "Unclassified";
 }
 
@@ -430,10 +436,10 @@ function normalizeRecordType(input: UnknownRecord | string | undefined): string 
 
   for (const candidate of candidates.filter(isMeaningfulText)) {
     const normalized = candidate.trim().toLowerCase().replace(/[-\s]+/g, "_");
-    if (["obs", "observation", "emerging_tech_signal"].includes(normalized) || /(^|_)obs(_|$)/.test(normalized)) return "observation";
-    if (["fm", "failure_mode", "failuremode", "failure_mode_observation"].includes(normalized) || /(^|_)fm(_|$)/.test(normalized)) return "failure_mode";
-    if (["prop", "proposal", "proposal_development_expansion"].includes(normalized) || /(^|_)prop(_|$)/.test(normalized)) return "proposal";
-    if (["patch", "patch_note", "patchnote", "implemented_patch_note"].includes(normalized) || /(^|_)patch(_|$)/.test(normalized)) return "patch_note";
+    if (["obs", "observation", "observations", "emerging_tech_signal"].includes(normalized) || /(^|_)obs(_|$)/.test(normalized)) return "observation";
+    if (["fm", "failure_mode", "failure_modes", "failuremode", "failure_mode_observation"].includes(normalized) || /(^|_)fm(_|$)/.test(normalized)) return "failure_mode";
+    if (["prop", "proposal", "proposals", "proposal_development_expansion"].includes(normalized) || /(^|_)prop(_|$)/.test(normalized)) return "proposal";
+    if (["patch", "patches", "patch_note", "patch_notes", "patchnote", "implemented_patch_note"].includes(normalized) || /(^|_)patch(_|$)/.test(normalized)) return "patch_note";
   }
 
   const explicit = candidates.find(isMeaningfulText)?.trim().toLowerCase().replace(/[-\s]+/g, "_");
@@ -441,8 +447,8 @@ function normalizeRecordType(input: UnknownRecord | string | undefined): string 
 }
 
 function resolveRecordTitle(record: UnknownRecord, id: string, path?: string, index?: number) {
-  return getNestedField(record, ["record_identity.title", "recordIdentity.title"])
-    ?? getOptionalField(record, ["title", "name"])
+  return getOptionalField(record, ["title", "name"])
+    ?? getNestedField(record, ["record_identity.title", "recordIdentity.title"])
     ?? id
     ?? recordFileName(path)
     ?? `VIGIL record ${(index ?? 0) + 1}`;
@@ -551,7 +557,10 @@ function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexR
     raw: record,
     id,
     title: resolveRecordTitle(record, id, path, index),
-    summary: getOptionalField(record, ["summary", "description", "observation", "signal"]) ?? "Summary not provided.",
+    summary: getOptionalField(record, ["summary", "description", "observation", "signal"])
+      ?? getNestedField(record, ["proposal_summary.scope_summary"])
+      ?? getOptionalField(record, ["failure_mode_definition"])
+      ?? "",
     record_type,
     record_state: normalizeStatus(getOptionalField(record, ["record_state", "status", "state"])),
     date_recorded: getOptionalField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
@@ -560,6 +569,12 @@ function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexR
     affected_instruments: arrayFrom(record.affected_instruments ?? record.affectedInstruments),
     affected_annexes: arrayFrom(record.affected_annexes ?? record.affectedAnnexes),
     path,
+    github_blob_url: getOptionalField(record, ["github_blob_url", "githubBlobUrl"]),
+    raw_url: getOptionalField(record, ["raw_url", "rawUrl"]),
+    registry_type: getOptionalField(record, ["registry_type", "registryType"]),
+    source_registry: getOptionalField(record, ["source_registry", "sourceRegistry"]),
+    source_summary: textFrom(record.source_summary),
+    linked_records: arrayFrom(record.linked_records ?? record.linkedRecords),
     affected_platform_label: affectedPlatformLabel(observed_vendor, observed_product),
     source_record_hint: sourceRecordHint(source_platform, observed_vendor, observed_product),
     next_action: getOptionalField(record, ["next_action", "nextAction"]),
@@ -636,7 +651,7 @@ function getFilterOptionsFromRecords(records: VigilIndexRecord[]) {
 
       const options = [...optionsByKey.values()].sort((a, b) => a.label.localeCompare(b.label));
       if (filter.key === "recordType") {
-        const preferred = ["Observation", "Failure Mode", "Proposal", "Patch Note"];
+        const preferred = ["Failure Modes", "Observations", "Proposals", "Patch Notes"];
         return [filter.key, [
           ...preferred.flatMap((label) => optionsByKey.get(filterComparisonKey(filter.key, label)) ?? []),
           ...options.filter((option) => !preferred.includes(option.label)),
@@ -730,8 +745,12 @@ function SummaryBlock({ title, entries }: { title: string; entries?: SummaryEntr
   );
 }
 
-function sourceRecordUrl(path: string) {
-  return `${sourceRecordBaseUrl}${path}`;
+function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url" | "path">) {
+  return githubBlobUrlForRecord(record);
+}
+
+function sourceRawUrl(record: Pick<VigilIndexRecord, "raw_url" | "path">) {
+  return rawUrlForRecord(record);
 }
 
 function exportFileName(status: string) {
@@ -798,25 +817,30 @@ export default function Vigil() {
   const [search, setSearch] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loadNotice, setLoadNotice] = useState("");
   const [recordPage, setRecordPage] = useState(1);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}vigil/VIGIL.Records.Index.json`)
-      .then((response) => {
-        if (response.status === 404) return [];
-        if (!response.ok) throw new Error(`Unable to load VIGIL records (${response.status})`);
-        return response.json();
-      })
-      .then((data) => {
-        setRecords(normalizeRecords(data));
+    let cancelled = false;
+
+    loadVigilRegistryRecords()
+      .then((result) => {
+        if (cancelled) return;
+        setRecords(normalizeRecords(result.records));
+        setLoadNotice(result.message ?? "");
         setLoadState("ready");
       })
       .catch((error: Error) => {
+        if (cancelled) return;
         setErrorMessage(error.message);
         setRecords([]);
         setLoadState("error");
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const activeMode = modeForRecordType(filters.recordType);
@@ -875,7 +899,7 @@ export default function Vigil() {
     const payload = {
       export_notice: exportNotice,
       exported_at_utc: new Date().toISOString(),
-      source: "VIGIL.Records.Index.json",
+      source: VIGIL_REGISTRY_SOURCE.registry_index_url,
       filters: { ...filters, search },
       record_count: filtered.length,
       records: filtered.map(({ raw }) => raw),
@@ -898,7 +922,7 @@ export default function Vigil() {
           <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">AI Governance Observatory</p>
           <h1 className="mb-3 font-serif text-3xl text-foreground md:text-4xl">VIGIL — Digital Ecosystem Health Register</h1>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            VIGIL records observations, failure modes, CAM proposals, and implemented patch notes with public-facing source, system, jurisdiction, classification, and routing summaries.
+            VIGIL records observations, failure modes, CAM proposals, and implemented patch notes from the live VIGIL registry index with public-facing source, system, jurisdiction, classification, and routing summaries.
           </p>
         </div>
 
@@ -972,17 +996,21 @@ export default function Vigil() {
               </div>
             </div>
 
-            {loadState === "loading" && <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">Loading VIGIL records…</div>}
+            {loadState === "loading" && <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">Loading VIGIL records from <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>…</div>}
 
             {loadState === "error" && (
               <div className="cam-parchment-card rounded-xl p-5 shadow-sm">
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-red-700">Records unavailable</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">VIGIL records could not be loaded from <code>vigil/VIGIL.Records.Index.json</code>. {errorMessage}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{errorMessage || `VIGIL registry could not be loaded from the live registry source. Attempted ${VIGIL_REGISTRY_SOURCE.registry_index_url}.`}</p>
               </div>
             )}
 
+            {loadState === "ready" && loadNotice && (
+              <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">{loadNotice}</div>
+            )}
+
             {loadState === "ready" && records.length === 0 && (
-              <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">No VIGIL records are currently published in <code>vigil/VIGIL.Records.Index.json</code>.</div>
+              <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">No VIGIL records are currently published in <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>.</div>
             )}
 
             {loadState === "ready" && filtered.length > 0 && (
@@ -1031,7 +1059,8 @@ export default function Vigil() {
 
               {pagedRecords.map((record, index) => {
                 const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
-                const sourceHref = record.path ? sourceRecordUrl(record.path) : undefined;
+                const sourceHref = sourceRecordUrl(record);
+                const rawHref = sourceRawUrl(record);
                 const recordKey = `${record.id}-${record.path ?? index}`;
                 const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
                 const isExpanded = expandedRecordKeys.has(recordKey);
@@ -1104,10 +1133,11 @@ export default function Vigil() {
                       <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(record.raw, null, 2)}</pre>
                     </details>
 
-                    {record.path && (
+                    {(record.path || sourceHref || rawHref) && (
                       <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3 md:flex-row md:items-center md:justify-between">
-                        <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Source record: {record.path}</p>
-                        <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceRecordUrl(record.path)} target="_blank" rel="noreferrer">Open source record →</a>
+                        <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Source record: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
+                        {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open source record →</a>}
+                        {rawHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={rawHref} target="_blank" rel="noreferrer">Raw JSON →</a>}
                       </div>
                     )}
                   </div>
