@@ -44,6 +44,7 @@ type VigilIndexRecord = {
   date_implemented?: string;
   evidence_confidence?: string;
   path?: string;
+  compact_source_system_hint?: string;
   next_action?: string;
   source_types?: string[];
   affected_domains?: string[];
@@ -266,13 +267,61 @@ function arrayFrom(value: unknown): string[] | undefined {
   return values.length ? [...new Set(values)] : undefined;
 }
 
-function normalizeRecordType(recordType: string) {
-  const normalized = recordType.trim().toLowerCase().replace(/-/g, "_");
-  if (["obs", "observation", "emerging_tech_signal"].includes(normalized)) return "observation";
-  if (["fm", "failure_mode", "failure_mode_observation"].includes(normalized)) return "failure_mode";
-  if (["prop", "proposal", "proposal_development_expansion"].includes(normalized)) return "proposal";
-  if (["patch", "patch_note", "implemented_patch_note"].includes(normalized)) return "patch_note";
-  return normalized || "unclassified";
+function recordFileName(path?: string) {
+  if (!path) return undefined;
+  const segment = path.split(/[\\/]/).filter(Boolean).pop();
+  return segment?.replace(/\.json$/i, "");
+}
+
+function normalizeRecordType(input: UnknownRecord | string | undefined): string {
+  const candidates = typeof input === "string"
+    ? [input]
+    : input
+      ? [
+          getOptionalField(input, ["record_type", "recordType", "type", "category"]),
+          getNestedField(input, ["record_identity.record_type", "record_identity.type", "recordIdentity.recordType"]),
+          getNestedField(input, ["record_identity.id", "record_identity.record_id", "recordIdentity.id", "recordIdentity.recordId"]),
+          getOptionalField(input, ["id", "record_id", "recordId", "ID"]),
+          getOptionalField(input, ["path", "filename", "file", "file_name", "fileName"]),
+        ]
+      : [];
+
+  for (const candidate of candidates.filter(isMeaningfulText)) {
+    const normalized = candidate.trim().toLowerCase().replace(/-/g, "_");
+    if (["obs", "observation", "emerging_tech_signal"].includes(normalized) || /(^|_)obs(_|$)/.test(normalized)) return "observation";
+    if (["fm", "failure_mode", "failure_mode_observation"].includes(normalized) || /(^|_)fm(_|$)/.test(normalized)) return "failure_mode";
+    if (["prop", "proposal", "proposal_development_expansion"].includes(normalized) || /(^|_)prop(_|$)/.test(normalized)) return "proposal";
+    if (["patch", "patch_note", "implemented_patch_note"].includes(normalized) || /(^|_)patch(_|$)/.test(normalized)) return "patch_note";
+  }
+
+  const explicit = candidates.find(isMeaningfulText)?.trim().toLowerCase().replace(/-/g, "_");
+  return explicit || "unclassified";
+}
+
+function resolveRecordTitle(record: UnknownRecord, id: string, path?: string, index?: number) {
+  return getNestedField(record, ["record_identity.title", "recordIdentity.title"])
+    ?? getOptionalField(record, ["title", "name"])
+    ?? id
+    ?? recordFileName(path)
+    ?? `VIGIL record ${(index ?? 0) + 1}`;
+}
+
+function compactSourceSystemHint(sourcePlatform?: string, observedVendor?: string, observedProduct?: string) {
+  const systemHint = [observedVendor, observedProduct].filter(isMeaningfulText).join(" / ");
+  return [sourcePlatform, systemHint].filter(isMeaningfulText).join(" → ") || undefined;
+}
+
+function recordTypeBadge(recordType: string) {
+  if (recordType === "observation") return "OBS";
+  if (recordType === "failure_mode") return "FM";
+  if (recordType === "proposal") return "PROP";
+  if (recordType === "patch_note") return "PATCH";
+  return recordType;
+}
+
+function previewText(text?: string, limit = 180) {
+  if (!isMeaningfulText(text)) return undefined;
+  return text.length > limit ? `${text.slice(0, limit).trim()}…` : text;
 }
 
 function normalizeStatus(status: string): string {
@@ -292,7 +341,7 @@ function summaryEntries(value: unknown): SummaryEntry[] {
 
 function sourceFallbackEntries(record: UnknownRecord): SummaryEntry[] {
   return [
-    { label: "Source Platform", value: getNestedField(record, ["source_platform", "source.platform", "platform"]) },
+    { label: "Source Platform", value: getNestedField(record, ["primary_source_platform", "source_platform", "source.platform", "platform"]) },
     { label: "Source Author / Publisher", value: getNestedField(record, ["source_author", "source_account", "source.author", "source.account", "author", "account", "publisher"]) },
     { label: "Source Type", value: getNestedField(record, ["source_type", "source_types", "source.type"]) },
   ].filter((entry): entry is SummaryEntry => isMeaningfulText(entry.value));
@@ -300,8 +349,8 @@ function sourceFallbackEntries(record: UnknownRecord): SummaryEntry[] {
 
 function systemFallbackEntries(record: UnknownRecord): SummaryEntry[] {
   return [
-    { label: "Observed System Vendor", value: getNestedField(record, ["observed_system_vendor", "observed_vendor", "system_vendor", "vendor", "platform"]) },
-    { label: "Observed Product / System", value: getNestedField(record, ["observed_product_system", "observed_product", "observed_system", "system_or_product"]) },
+    { label: "Observed System Vendor", value: getNestedField(record, ["platform_or_vendor", "observed_system_vendor", "observed_vendor", "system_vendor", "vendor"]) },
+    { label: "Observed Product / System", value: getNestedField(record, ["model_or_product", "observed_product_system", "observed_product", "observed_system", "system_or_product"]) },
     { label: "Observed Product / Model", value: getNestedField(record, ["observed_product_model", "model_or_algorithm"]) },
     { label: "Interaction Mode", value: getNestedField(record, ["interaction_mode", "interaction_modes", "deployment_context"]) },
   ].filter((entry): entry is SummaryEntry => isMeaningfulText(entry.value));
@@ -332,18 +381,23 @@ function addFallbackSummaries(record: UnknownRecord, summaries: Record<string, S
 }
 
 function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexRecord {
-  const record_type = normalizeRecordType(getOptionalField(record, ["record_type", "recordType", "type", "category"]) ?? "unclassified");
+  const record_type = normalizeRecordType(record);
   const summaries = Object.fromEntries(summaryNames.map((name) => [name, summaryEntries(record[name])])) as Record<string, SummaryEntry[]>;
   addFallbackSummaries(record, summaries);
 
-  const source_platform = getNestedField(record, ["source_summary.source_platform", "source_summary.platform", "source_platform", "source.platform", "platform"]);
-  const observed_vendor = getNestedField(record, ["system_summary.observed_system_vendor", "system_summary.vendor", "observed_system_vendor", "observed_vendor", "system_vendor", "vendor", "platform"]);
-  const observed_product = getNestedField(record, ["system_summary.observed_product_system", "system_summary.observed_product", "system_summary.observed_product_model", "observed_product_system", "observed_product", "system_or_product", "model_or_algorithm"]);
+  const path = getOptionalField(record, ["path", "filename", "file", "file_name", "fileName"]);
+  const id = getNestedField(record, ["record_identity.id", "record_identity.record_id", "recordIdentity.id", "recordIdentity.recordId"])
+    ?? getOptionalField(record, ["id", "record_id", "recordId", "ID"])
+    ?? recordFileName(path)
+    ?? `VIGIL-${index + 1}`;
+  const source_platform = getNestedField(record, ["source_summary.primary_source_platform", "source_summary.source_platform", "source_summary.platform", "source_platform", "source.platform", "platform"]);
+  const observed_vendor = getNestedField(record, ["system_summary.platform_or_vendor", "system_summary.observed_system_vendor", "system_summary.vendor", "observed_system_vendor", "observed_vendor", "system_vendor", "vendor"]);
+  const observed_product = getNestedField(record, ["system_summary.model_or_product", "system_summary.observed_product_system", "system_summary.observed_product", "system_summary.observed_product_model", "observed_product_system", "observed_product", "system_or_product", "model_or_algorithm"]);
 
   const normalized: VigilIndexRecord = {
     raw: record,
-    id: getOptionalField(record, ["id", "record_id", "recordId", "ID"]) ?? `VIGIL-${index + 1}`,
-    title: getOptionalField(record, ["title", "name"]) ?? getOptionalField(record, ["summary", "description", "observation", "signal"]) ?? `VIGIL record ${index + 1}`,
+    id,
+    title: resolveRecordTitle(record, id, path, index),
     summary: getOptionalField(record, ["summary", "description", "observation", "signal"]) ?? "Summary not provided.",
     record_type,
     record_state: normalizeStatus(getOptionalField(record, ["record_state", "status", "state"]) ?? "unclassified"),
@@ -352,7 +406,8 @@ function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexR
     affected_domains: arrayFrom(record.affected_domains ?? record.affectedDomains),
     affected_instruments: arrayFrom(record.affected_instruments ?? record.affectedInstruments),
     affected_annexes: arrayFrom(record.affected_annexes ?? record.affectedAnnexes),
-    path: getOptionalField(record, ["path"]),
+    path,
+    compact_source_system_hint: compactSourceSystemHint(source_platform, observed_vendor, observed_product),
     next_action: getOptionalField(record, ["next_action", "nextAction"]),
     evidence_confidence: getOptionalField(record, ["evidence_confidence", "evidenceConfidence"]),
     source_types: arrayFrom(record.source_types ?? record.source_type ?? record.sourceTypes),
@@ -392,6 +447,9 @@ function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexR
     normalized.record_type,
     normalized.date_recorded,
     normalized.evidence_confidence,
+    normalized.path,
+    normalized.compact_source_system_hint,
+    recordTypeBadge(normalized.record_type),
     ...searchSummaryNames.flatMap((name) => normalized.summaries[name]?.flatMap((entry) => [entry.label, entry.value]) ?? []),
   ].filter(isMeaningfulText).join(" ").toLowerCase();
 
@@ -501,9 +559,10 @@ function summaryBlocksFor(record: VigilIndexRecord) {
 }
 
 function modeForRecordType(recordType: string): "failure" | "proposal" | "patch" | undefined {
-  if (recordType === "failure_mode") return "failure";
-  if (recordType === "proposal") return "proposal";
-  if (recordType === "patch_note") return "patch";
+  const normalized = normalizeRecordType(recordType);
+  if (normalized === "failure_mode") return "failure";
+  if (normalized === "proposal") return "proposal";
+  if (normalized === "patch_note") return "patch";
   return undefined;
 }
 
@@ -561,7 +620,6 @@ export default function Vigil() {
   }, []);
 
   const activeMode = modeForRecordType(filters.recordType);
-  const visibleFilterConfig = filterConfig.filter((filter) => !filter.mode || filter.mode === activeMode);
   const filterOptions = useMemo(() => {
     return Object.fromEntries(
       filterConfig.map((filter) => {
@@ -570,6 +628,7 @@ export default function Vigil() {
       }),
     ) as Record<FilterKey, string[]>;
   }, [records]);
+  const visibleFilterConfig = filterConfig.filter((filter) => !filter.mode || filter.mode === activeMode || (!filters.recordType && filterOptions[filter.key].length > 0));
 
   const filtered = useMemo(
     () => records.filter((record) => {
@@ -683,56 +742,62 @@ export default function Vigil() {
           <div className="cam-parchment-card rounded-2xl p-6 text-base text-muted-foreground shadow-sm">No VIGIL records are currently published in <code>vigil/VIGIL.Records.Index.json</code>.</div>
         )}
 
-        <div className="space-y-4">
+        <div className="space-y-2">
           {filtered.map((record, index) => (
-            <article key={`${record.id}-${index}`} className="cam-parchment-card rounded-2xl p-5 shadow-sm">
-              <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                <div>
+            <details key={`${record.id}-${index}`} className="cam-parchment-card rounded-xl shadow-sm">
+              <summary className="grid cursor-pointer gap-2 px-4 py-3 text-sm transition hover:bg-background/40 md:grid-cols-[minmax(13rem,1.2fr)_4.5rem_6.5rem_minmax(16rem,2fr)_8rem_8rem_minmax(12rem,1.4fr)] md:items-center">
+                <span className="break-words font-mono text-[12px] text-cam-gold">{record.id}</span>
+                <span className="w-fit rounded-full border border-border bg-background/60 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{recordTypeBadge(record.record_type)}</span>
+                <span className="font-mono text-[11px] text-muted-foreground">{record.date_recorded ?? record.date_implemented ?? "—"}</span>
+                <span className="font-serif text-base leading-snug text-foreground">{record.title}</span>
+                <span className="font-mono text-[11px] text-muted-foreground">{record.record_state}</span>
+                <span className="font-mono text-[11px] text-muted-foreground">{record.evidence_confidence ?? "—"}</span>
+                <span className="text-xs leading-snug text-muted-foreground">{record.compact_source_system_hint ?? "—"}</span>
+              </summary>
+
+              <div className="border-t border-border px-4 py-5">
+                <div className="mb-5">
                   <h2 className="font-mono text-sm text-cam-gold">{record.id}</h2>
-                  <p className="mt-1 font-serif text-xl text-foreground">{record.title}</p>
-                  {record.summary !== record.title && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{record.summary}</p>}
+                  <p className="mt-1 font-serif text-2xl text-foreground">{record.title}</p>
+                  {previewText(record.summary) && record.summary !== record.title && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{record.summary}</p>}
                 </div>
-                <div className="flex flex-wrap gap-2 md:justify-end">
-                  <span className="rounded-full border border-border bg-background/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{record.record_state}</span>
-                  <span className="rounded-full border border-border bg-background/60 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{record.record_type}</span>
+
+                <div className="mb-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                  <Field label="Record Type" value={record.record_type} />
+                  <Field label="Record State" value={record.record_state} />
+                  <Field label="Date Recorded" value={record.date_recorded} />
+                  <Field label="Date Implemented" value={record.record_type === "patch_note" ? record.date_implemented : undefined} />
+                  <Field label="Evidence Confidence" value={record.record_type === "patch_note" ? undefined : record.evidence_confidence} />
+                  <Field label="Next Action" value={["observation", "proposal"].includes(record.record_type) ? record.next_action : undefined} />
+                  <Field label="Source / System" value={record.compact_source_system_hint} />
                 </div>
-              </div>
 
-              <div className="mb-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Field label="Date Recorded" value={record.date_recorded} />
-                <Field label="Date Implemented" value={record.record_type === "patch_note" ? record.date_implemented : undefined} />
-                <Field label="Evidence Confidence" value={record.record_type === "patch_note" ? undefined : record.evidence_confidence} />
-                <Field label="Next Action" value={["observation", "proposal"].includes(record.record_type) ? record.next_action : undefined} />
-              </div>
+                <div className="space-y-4">
+                  {summaryBlocksFor(record).map((name) => (
+                    <SummaryBlock key={name} title={humanLabel(name)} entries={record.summaries[name]} />
+                  ))}
+                </div>
 
-              <div className="space-y-4">
-                {summaryBlocksFor(record).map((name) => (
-                  <SummaryBlock key={name} title={humanLabel(name)} entries={record.summaries[name]} />
-                ))}
-              </div>
+                <details className="mt-5 rounded-xl border border-border bg-background/40 p-4">
+                  <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Full Record / Technical Details</summary>
+                  {(record.record_type === "proposal" || record.record_type === "patch_note") && (
+                    <div className="mt-3 grid gap-3 md:grid-cols-3">
+                      <Field label="Affected Domains" value={record.affected_domains?.join("; ")} />
+                      <Field label="Affected Instruments" value={record.affected_instruments?.join("; ")} />
+                      <Field label="Affected Annexes" value={record.affected_annexes?.join("; ")} />
+                    </div>
+                  )}
+                  <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(record.raw, null, 2)}</pre>
+                </details>
 
-              <details className="mt-5 rounded-xl border border-border bg-background/40 p-4">
-                <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Full Record / Technical Details</summary>
-                {record.record_type === "observation" || record.record_type === "failure_mode" ? (
-                  <p className="mt-3 text-xs leading-relaxed text-muted-foreground">CAM internal routing is intentionally below the public source, system, jurisdiction, and triage context for this record class.</p>
-                ) : null}
-                {(record.record_type === "proposal" || record.record_type === "patch_note") && (
-                  <div className="mt-3 grid gap-3 md:grid-cols-3">
-                    <Field label="Affected Domains" value={record.affected_domains?.join("; ")} />
-                    <Field label="Affected Instruments" value={record.affected_instruments?.join("; ")} />
-                    <Field label="Affected Annexes" value={record.affected_annexes?.join("; ")} />
+                {record.path && (
+                  <div className="mt-5 flex flex-col gap-2 rounded-xl border border-border bg-background/40 p-4 md:flex-row md:items-center md:justify-between">
+                    <p className="break-words font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Source record: {record.path}</p>
+                    <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:bg-background/80" href={sourceRecordUrl(record.path)} target="_blank" rel="noreferrer">Open source record →</a>
                   </div>
                 )}
-                <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(record.raw, null, 2)}</pre>
-              </details>
-
-              {record.path && (
-                <div className="mt-5 flex flex-col gap-2 rounded-xl border border-border bg-background/40 p-4 md:flex-row md:items-center md:justify-between">
-                  <p className="break-words font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Source record: {record.path}</p>
-                  <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground transition hover:bg-background/80" href={sourceRecordUrl(record.path)} target="_blank" rel="noreferrer">Open source record →</a>
-                </div>
-              )}
-            </article>
+              </div>
+            </details>
           ))}
         </div>
       </div>
