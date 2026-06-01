@@ -49,6 +49,7 @@ type VigilIndexRecord = {
   evidence_confidence?: string;
   path?: string;
   compact_source_system_hint?: string;
+  public_vendor_platform?: string;
   next_action?: string;
   source_types?: string[];
   affected_domains?: string[];
@@ -446,6 +447,10 @@ function compactSourceSystemHint(sourcePlatform?: string, observedVendor?: strin
   return [sourcePlatform, systemHint].filter(isMeaningfulText).join(" → ") || undefined;
 }
 
+function publicVendorPlatform(sourcePlatform?: string, observedVendor?: string, observedProduct?: string) {
+  return observedVendor ?? sourcePlatform ?? observedProduct ?? "Platform not specified";
+}
+
 function recordTypeBadge(recordType: string) {
   if (recordType === "observation") return "OBS";
   if (recordType === "failure_mode") return "FM";
@@ -543,6 +548,7 @@ function normalizeIndexRecord(record: UnknownRecord, index: number): VigilIndexR
     affected_annexes: arrayFrom(record.affected_annexes ?? record.affectedAnnexes),
     path,
     compact_source_system_hint: compactSourceSystemHint(source_platform, observed_vendor, observed_product),
+    public_vendor_platform: publicVendorPlatform(source_platform, observed_vendor, observed_product),
     next_action: getOptionalField(record, ["next_action", "nextAction"]),
     evidence_confidence: getNestedField(record, ["evidence_confidence", "evidenceConfidence", "source_summary.evidence_confidence", "classification_summary.confidence"]),
     source_types: arrayFrom(getNestedField(record, ["source_summary.primary_source_type", "source_summary.source_type", "source_type", "source_types"])),
@@ -979,17 +985,35 @@ export default function Vigil() {
             )}
 
             <div className="space-y-2">
-              {pagedRecords.map((record, index) => (
-                <details key={`${record.id}-${index}`} className="group rounded-xl border border-border bg-card/70 shadow-sm transition hover:bg-card">
-                  <summary className="grid cursor-pointer gap-2 px-3 py-3 text-sm transition md:grid-cols-[9.5rem_4rem_minmax(18rem,1fr)_7rem_8rem] md:items-start">
-                    <span className="truncate font-mono text-[11px] text-cam-gold md:pt-1" title={record.id}>{record.id}</span>
-                    <span className="w-fit rounded-full border border-border bg-background/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground md:mt-0.5">{recordTypeBadge(record.record_type)}</span>
-                    <span className="min-w-0">
-                      <span className="block whitespace-normal break-words font-serif text-[15px] leading-snug text-foreground" title={record.title}>{record.title}</span>
-                      <span className="mt-1 block truncate text-[11px] leading-snug text-muted-foreground" title={record.compact_source_system_hint}>{record.compact_source_system_hint ?? "Source/system not specified"}</span>
-                    </span>
-                    <span className="font-mono text-[10px] text-muted-foreground md:pt-1">{record.record_state}</span>
-                    <span className="font-mono text-[10px] text-muted-foreground md:pt-1">{record.date_recorded ?? record.date_implemented ?? "—"}</span>
+              {pagedRecords.map((record, index) => {
+                const collapsedMeta = [
+                  record.date_recorded ?? record.date_implemented ?? "Date not specified",
+                  record.public_vendor_platform,
+                  recordTypeBadge(record.record_type),
+                  record.record_state,
+                  record.primary_jurisdictions?.[0],
+                ].filter(isMeaningfulText).join(" · ");
+                const sourceHref = record.path ? sourceRecordUrl(record.path) : undefined;
+
+                return (
+                <details key={`${record.id}-${index}`} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
+                  <summary className="cursor-pointer list-none px-4 py-4 text-sm transition marker:hidden [&::-webkit-details-marker]:hidden">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                      <div className="min-w-0 flex-1">
+                        <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{collapsedMeta}</p>
+                        <h2 className="whitespace-normal break-words font-serif text-lg leading-snug text-foreground md:text-xl">{record.title}</h2>
+                        {previewText(record.summary, 150) && record.summary !== record.title && (
+                          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 150)}</p>
+                        )}
+                      </div>
+                      <span className="shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold group-open:hidden">Details</span>
+                      <span className="hidden shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold group-open:inline-flex">Hide details</span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-3 border-t border-border/70 pt-3">
+                      {sourceHref && (
+                        <a className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>Source ↗</a>
+                      )}
+                    </div>
                   </summary>
 
                   <div className="border-t border-border px-3 py-4">
@@ -1015,8 +1039,9 @@ export default function Vigil() {
                       ))}
                     </div>
 
-                    <details className="mt-4 rounded-lg border border-border bg-background/40 p-3">
-                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Full Record / Technical Details</summary>
+                    <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
+                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Technical JSON record</summary>
+                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
                       {(record.record_type === "proposal" || record.record_type === "patch_note") && (
                         <div className="mt-3 grid gap-3 md:grid-cols-3">
                           <Field label="Affected Domains" value={record.affected_domains?.join("; ")} />
@@ -1024,7 +1049,7 @@ export default function Vigil() {
                           <Field label="Affected Annexes" value={record.affected_annexes?.join("; ")} />
                         </div>
                       )}
-                      <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(record.raw, null, 2)}</pre>
+                      <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(record.raw, null, 2)}</pre>
                     </details>
 
                     {record.path && (
@@ -1035,7 +1060,8 @@ export default function Vigil() {
                     )}
                   </div>
                 </details>
-              ))}
+                );
+              })}
             </div>
           </section>
         </div>
