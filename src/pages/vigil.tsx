@@ -1,71 +1,21 @@
 import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
-import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, normalizeRecordType, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 
 const VIGIL_PAGE_SIZE = 20;
 
-type FilterKey =
-  | "recordType"
-  | "status"
-  | "evidenceConfidence"
-  | "sourcePlatform"
-  | "sourceType"
-  | "observedVendor"
-  | "observedProduct"
-  | "interactionMode"
-  | "primaryJurisdiction"
-  | "regulatorySurface"
-  | "sector"
-  | "failureFamily"
-  | "failureSubtype"
-  | "severity"
-  | "likelihood"
-  | "triagePriority"
-  | "triageStatus"
-  | "mitigationStatus"
-  | "proposalType"
-  | "targetDomain"
-  | "draftingStatus"
-  | "externalRelevance"
-  | "patchType"
-  | "changeScope"
-  | "implementationMode"
-  | "verificationStatus"
-  | "changedDomain";
+type FilterKey = "recordType" | "affectedPlatform" | "status";
+type DateSort = "newest" | "oldest";
 
 type FilterOption = { value: string; label: string };
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
 const exportNotice = "Filtered VIGIL index export from the CAM Interface. Canonical records remain in CAM-Initiative/Vigil.";
-const filterConfig: Array<{ key: FilterKey; label: string; placeholder: string; mode?: "failure" | "proposal" | "patch" }> = [
+const filterConfig: Array<{ key: FilterKey; label: string; placeholder: string }> = [
   { key: "recordType", label: "Record Type", placeholder: "All record types" },
-  { key: "status", label: "Record State", placeholder: "All record states" },
-  { key: "evidenceConfidence", label: "Evidence Confidence", placeholder: "All evidence confidence values" },
-  { key: "sourcePlatform", label: "Source Platform", placeholder: "All source platforms" },
-  { key: "sourceType", label: "Source Type", placeholder: "All source types" },
-  { key: "observedVendor", label: "Observed System / Vendor", placeholder: "All observed vendors" },
-  { key: "observedProduct", label: "Observed Product / Model", placeholder: "All observed products/models" },
-  { key: "interactionMode", label: "Interaction Mode", placeholder: "All interaction modes" },
-  { key: "primaryJurisdiction", label: "Primary Jurisdiction", placeholder: "All jurisdictions" },
-  { key: "regulatorySurface", label: "Regulatory Surface", placeholder: "All regulatory surfaces" },
-  { key: "sector", label: "Sector", placeholder: "All sectors" },
-  { key: "failureFamily", label: "Failure Family", placeholder: "All failure families", mode: "failure" },
-  { key: "failureSubtype", label: "Failure Subtype", placeholder: "All failure subtypes", mode: "failure" },
-  { key: "severity", label: "Severity", placeholder: "All severity values", mode: "failure" },
-  { key: "likelihood", label: "Likelihood", placeholder: "All likelihood values", mode: "failure" },
-  { key: "triagePriority", label: "Triage Priority", placeholder: "All triage priorities", mode: "failure" },
-  { key: "triageStatus", label: "Triage Status", placeholder: "All triage statuses", mode: "failure" },
-  { key: "mitigationStatus", label: "Mitigation Status", placeholder: "All mitigation statuses", mode: "failure" },
-  { key: "proposalType", label: "Proposal Type", placeholder: "All proposal types", mode: "proposal" },
-  { key: "targetDomain", label: "Target Domain", placeholder: "All target domains", mode: "proposal" },
-  { key: "draftingStatus", label: "Drafting Status", placeholder: "All drafting statuses", mode: "proposal" },
-  { key: "externalRelevance", label: "External Relevance", placeholder: "All external relevance values", mode: "proposal" },
-  { key: "patchType", label: "Patch Type", placeholder: "All patch types", mode: "patch" },
-  { key: "changeScope", label: "Change Scope", placeholder: "All change scopes", mode: "patch" },
-  { key: "implementationMode", label: "Implementation Mode", placeholder: "All implementation modes", mode: "patch" },
-  { key: "verificationStatus", label: "Verification Status", placeholder: "All verification statuses", mode: "patch" },
-  { key: "changedDomain", label: "Changed Domain", placeholder: "All changed domains", mode: "patch" },
+  { key: "affectedPlatform", label: "Affected Platform", placeholder: "All affected platforms" },
+  { key: "status", label: "Record Status", placeholder: "All record statuses" },
 ];
 
 function getFilterOptionsFromRecords(records: VigilIndexRecord[]) {
@@ -102,34 +52,16 @@ function getFilterOptionsFromRecords(records: VigilIndexRecord[]) {
 function valuesForFilter(record: VigilIndexRecord, key: FilterKey): string[] {
   const mapping: Record<FilterKey, string[] | undefined> = {
     recordType: [record.record_type],
+    affectedPlatform: record.affected_platform_label ? [record.affected_platform_label] : undefined,
     status: record.record_state ? [record.record_state] : undefined,
-    evidenceConfidence: record.evidence_confidence ? [record.evidence_confidence] : undefined,
-    sourcePlatform: record.source_platform ? [record.source_platform] : undefined,
-    sourceType: record.source_types,
-    observedVendor: record.observed_vendor ? [record.observed_vendor] : undefined,
-    observedProduct: record.observed_product ? [record.observed_product] : undefined,
-    interactionMode: record.interaction_modes,
-    primaryJurisdiction: record.primary_jurisdictions,
-    regulatorySurface: record.regulatory_surfaces,
-    sector: record.sectors,
-    failureFamily: record.failure_family ? [record.failure_family] : undefined,
-    failureSubtype: record.failure_subtype ? [record.failure_subtype] : undefined,
-    severity: record.severity ? [record.severity] : undefined,
-    likelihood: record.likelihood ? [record.likelihood] : undefined,
-    triagePriority: record.triage_priority ? [record.triage_priority] : undefined,
-    triageStatus: record.triage_status ? [record.triage_status] : undefined,
-    mitigationStatus: record.mitigation_status ? [record.mitigation_status] : undefined,
-    proposalType: record.proposal_type ? [record.proposal_type] : undefined,
-    targetDomain: record.target_domains,
-    draftingStatus: record.drafting_status ? [record.drafting_status] : undefined,
-    externalRelevance: record.external_relevance ? [record.external_relevance] : undefined,
-    patchType: record.patch_type ? [record.patch_type] : undefined,
-    changeScope: record.change_scope ? [record.change_scope] : undefined,
-    implementationMode: record.implementation_mode ? [record.implementation_mode] : undefined,
-    verificationStatus: record.verification_status ? [record.verification_status] : undefined,
-    changedDomain: record.changed_domains,
   };
   return mapping[key] ?? [];
+}
+
+function recordTimestamp(record: VigilIndexRecord) {
+  const dateValue = record.date_recorded ?? record.date_implemented;
+  const timestamp = dateValue ? Date.parse(dateValue) : Number.NaN;
+  return Number.isNaN(timestamp) ? 0 : timestamp;
 }
 
 function Field({ label, value }: { label: string; value?: string }) {
@@ -188,46 +120,15 @@ function summaryBlocksFor(record: VigilIndexRecord) {
   return ["source_summary", "system_summary", "jurisdiction_summary", "classification_summary", "triage_summary", "proposal_summary", "change_summary"] as const;
 }
 
-function modeForRecordType(recordType: string): "failure" | "proposal" | "patch" | undefined {
-  const normalized = normalizeRecordType(recordType);
-  if (normalized === "failure_mode") return "failure";
-  if (normalized === "proposal") return "proposal";
-  if (normalized === "patch_note") return "patch";
-  return undefined;
-}
-
 export default function Vigil() {
   const [records, setRecords] = useState<VigilIndexRecord[]>([]);
   const [filters, setFilters] = useState<Record<FilterKey, string>>({
     recordType: "",
+    affectedPlatform: "",
     status: "",
-    evidenceConfidence: "",
-    sourcePlatform: "",
-    sourceType: "",
-    observedVendor: "",
-    observedProduct: "",
-    interactionMode: "",
-    primaryJurisdiction: "",
-    regulatorySurface: "",
-    sector: "",
-    failureFamily: "",
-    failureSubtype: "",
-    severity: "",
-    likelihood: "",
-    triagePriority: "",
-    triageStatus: "",
-    mitigationStatus: "",
-    proposalType: "",
-    targetDomain: "",
-    draftingStatus: "",
-    externalRelevance: "",
-    patchType: "",
-    changeScope: "",
-    implementationMode: "",
-    verificationStatus: "",
-    changedDomain: "",
   });
   const [search, setSearch] = useState("");
+  const [dateSort, setDateSort] = useState<DateSort>("newest");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [loadNotice, setLoadNotice] = useState("");
@@ -256,9 +157,7 @@ export default function Vigil() {
     };
   }, []);
 
-  const activeMode = modeForRecordType(filters.recordType);
   const filterOptions = useMemo(() => getFilterOptionsFromRecords(records), [records]);
-  const visibleFilterConfig = filterConfig.filter((filter) => !filter.mode || filter.mode === activeMode || (!filters.recordType && filterOptions[filter.key].length > 0));
 
   const filtered = useMemo(
     () => records.filter((record) => {
@@ -270,13 +169,16 @@ export default function Vigil() {
       });
       const searchOk = !search.trim() || record.searchText.includes(search.trim().toLowerCase());
       return filtersOk && searchOk;
+    }).sort((a, b) => {
+      const direction = dateSort === "newest" ? -1 : 1;
+      return (recordTimestamp(a) - recordTimestamp(b)) * direction;
     }),
-    [filters, records, search],
+    [dateSort, filters, records, search],
   );
 
   useEffect(() => {
     setRecordPage(1);
-  }, [filters, search]);
+  }, [dateSort, filters, search]);
 
   const recordPageCount = Math.max(1, Math.ceil(filtered.length / VIGIL_PAGE_SIZE));
   const currentRecordPage = Math.min(recordPage, recordPageCount);
@@ -312,7 +214,7 @@ export default function Vigil() {
       export_notice: exportNotice,
       exported_at_utc: new Date().toISOString(),
       source: VIGIL_REGISTRY_SOURCE.registry_index_url,
-      filters: { ...filters, search },
+      filters: { ...filters, search, date_sort: dateSort },
       record_count: filtered.length,
       records: filtered.map(({ raw }) => raw),
     };
@@ -349,23 +251,44 @@ export default function Vigil() {
           </div>
         </details>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(260px,300px)_minmax(0,1fr)] lg:items-start">
-          <aside className="cam-parchment-card rounded-xl p-3 shadow-sm lg:sticky lg:top-20">
+        <section className="space-y-4" data-result-range-example="Showing 1–20">
+          <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <input
+                aria-label="Search VIGIL records"
+                className="min-w-0 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search VIGIL records"
+              />
+              <button
+                className="self-start rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-background/80 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 md:self-auto"
+                type="button"
+                onClick={exportCurrentView}
+                disabled={loadState !== "ready" || filtered.length === 0}
+              >
+                Export JSON
+              </button>
+            </div>
+          </div>
+
+          <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Filters</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Derived from loaded VIGIL register fields.</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Use the compact institutional filters below, or search across the full public record text.</p>
               </div>
               <button
                 className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground"
                 type="button"
-                onClick={() => setFilters((current) => Object.fromEntries(Object.keys(current).map((key) => [key, ""])) as Record<FilterKey, string>)}
+                onClick={() => setFilters({ recordType: "", affectedPlatform: "", status: "" })}
               >
                 Clear
               </button>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
-              {visibleFilterConfig.map((filter) => (
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              {filterConfig.map((filter) => (
                 <label key={filter.key} className="block">
                   <span className="mb-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground/60">{filter.label}</span>
                   <select
@@ -381,32 +304,21 @@ export default function Vigil() {
                   </select>
                 </label>
               ))}
-            </div>
-          </aside>
 
-          <section className="min-w-0 space-y-4" data-result-range-example="Showing 1–20">
-            <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <input
-                  aria-label="Search VIGIL records"
-                  className="min-w-0 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search VIGIL records"
-                />
-                <div className="flex flex-wrap items-center gap-2 md:justify-end">
-                  <button
-                    className="rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80 disabled:cursor-not-allowed disabled:opacity-50"
-                    type="button"
-                    onClick={exportCurrentView}
-                    disabled={loadState !== "ready" || filtered.length === 0}
-                  >
-                    Export
-                  </button>
-                </div>
-              </div>
+              <label className="block">
+                <span className="mb-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground/60">Date sort</span>
+                <select
+                  aria-label="Sort VIGIL records by date"
+                  className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-xs text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  value={dateSort}
+                  onChange={(event) => setDateSort(event.target.value as DateSort)}
+                >
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
+              </label>
             </div>
+          </div>
 
             {loadState === "loading" && <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">Loading VIGIL records from <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>…</div>}
 
@@ -455,12 +367,12 @@ export default function Vigil() {
             )}
 
             {loadState === "ready" && filtered.length > 0 && (
-              <p className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">Click any row to expand record details.</p>
+              <p className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">Select any entry to expand record details and inspect raw JSON.</p>
             )}
 
             <div className="space-y-2">
               {loadState === "ready" && filtered.length > 0 && (
-                <div className="grid gap-2 rounded-lg border border-border bg-card/45 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:px-4">
+                <div className="hidden gap-2 rounded-lg border border-border bg-card/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem]">
                   <div>Date</div>
                   <div>Platform</div>
                   <div>Type</div>
@@ -476,6 +388,7 @@ export default function Vigil() {
                 const recordKey = `${record.id}-${record.path ?? index}`;
                 const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
                 const isExpanded = expandedRecordKeys.has(recordKey);
+                const displayRecordId = record.id;
 
                 return (
                 <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
@@ -488,17 +401,56 @@ export default function Vigil() {
                     onClick={() => toggleExpandedRecord(recordKey)}
                     onKeyDown={(event) => handleRecordRowKeyDown(event, recordKey)}
                   >
-                    <div className="grid gap-2 font-sans md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:items-center">
-                      <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordDate}</div>
-                      <div className="font-sans text-[10px] font-medium uppercase tracking-[0.14em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
-                      <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{record.type_label}</div>
-                      <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-medium leading-snug text-foreground md:text-[15px]">{record.title}</h2>
-                      <div className="flex items-center md:justify-end">
-                        {sourceHref ? (
-                          <a className="inline-flex whitespace-nowrap font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
-                        ) : (
-                          <span className="font-sans text-[10px] text-muted-foreground/40" aria-hidden="true">—</span>
+                    <div className="font-sans">
+                      <div className="space-y-3 md:hidden">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Record ID</p>
+                            <p className="mt-1 break-words font-mono text-[11px] text-cam-gold">{displayRecordId}</p>
+                          </div>
+                          <span className="shrink-0 rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                            {isExpanded ? "Collapse" : "Expand"}
+                          </span>
+                        </div>
+
+                        <div>
+                          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Title</p>
+                          <h2 className="mt-1 break-words font-serif text-lg leading-snug text-foreground">{record.title}</h2>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
+                          <Field label="Record Type" value={record.type_label} />
+                          <Field label="Record Status" value={record.record_state} />
+                          <Field label="Record Date" value={recordDate} />
+                          <Field label="Affected Platform" value={record.platform_label} />
+                        </div>
+
+                        {previewText(record.summary) && record.summary !== record.title && (
+                          <p className="text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 220)}</p>
                         )}
+
+                        <div className="flex items-center justify-between gap-3 border-t border-border/70 pt-3">
+                          {sourceHref ? (
+                            <a className="inline-flex whitespace-nowrap font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
+                          ) : (
+                            <span className="font-sans text-[11px] text-muted-foreground/50">No source link listed</span>
+                          )}
+                          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
+                        </div>
+                      </div>
+
+                      <div className="hidden gap-2 md:grid md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:items-center">
+                        <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordDate}</div>
+                        <div className="font-sans text-[10px] font-medium uppercase tracking-[0.14em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
+                        <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{record.type_label}</div>
+                        <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-medium leading-snug text-foreground md:text-[15px]">{record.title}</h2>
+                        <div className="flex items-center md:justify-end">
+                          {sourceHref ? (
+                            <a className="inline-flex whitespace-nowrap font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
+                          ) : (
+                            <span className="font-sans text-[10px] text-muted-foreground/40" aria-hidden="true">—</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -558,7 +510,6 @@ export default function Vigil() {
               })}
             </div>
           </section>
-        </div>
       </div>
     </Shell>
   );

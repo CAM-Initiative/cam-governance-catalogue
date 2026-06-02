@@ -296,7 +296,7 @@ export function normalizeFilterLabel(key: string, value: string | undefined) {
   if (!isMeaningfulText(value)) return undefined;
   if (key === "recordType") return normalizeRecordTypeLabel(value);
   if (key === "failureFamily") return normalizeFailureFamilyLabel(value);
-  if (key === "sourcePlatform" || key === "observedVendor") return normalizePlatformLabel(value);
+  if (key === "sourcePlatform" || key === "affectedPlatform" || key === "observedVendor") return normalizePlatformLabel(value);
   if (key === "observedProduct") return normalizeProductLabel(value);
   return titleizeValue(value);
 }
@@ -305,7 +305,7 @@ export function filterComparisonKey(key: string, value: string | undefined) {
   if (!isMeaningfulText(value)) return "";
   if (key === "recordType") return normalizeRecordType(value);
   if (key === "failureFamily") return canonicalComparisonKey(normalizeFailureFamilyLabel(value) ?? value);
-  if (key === "sourcePlatform" || key === "observedVendor") return canonicalComparisonKey(normalizePlatformLabel(value) ?? value);
+  if (key === "sourcePlatform" || key === "affectedPlatform" || key === "observedVendor") return canonicalComparisonKey(normalizePlatformLabel(value) ?? value);
   if (key === "observedProduct") return canonicalComparisonKey(normalizeProductLabel(value) ?? value);
   return canonicalComparisonKey(value);
 }
