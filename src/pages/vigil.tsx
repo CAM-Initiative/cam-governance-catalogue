@@ -75,18 +75,23 @@ function Field({ label, value }: { label: string; value?: string }) {
   );
 }
 
-function SummaryBlock({ title, entries }: { title: string; entries?: SummaryEntry[] }) {
+function SummaryBlock({ title, entries, defaultOpen = false }: { title: string; entries?: SummaryEntry[]; defaultOpen?: boolean }) {
   if (!entries?.length) return null;
 
   return (
-    <section className="rounded-xl border border-border bg-background/35 p-4">
-      <h3 className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">{title}</h3>
-      <div className="grid gap-3 md:grid-cols-2">
+    <details className="rounded-lg border border-border bg-background/35 px-3 py-2" open={defaultOpen}>
+      <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold marker:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+        <span className="inline-flex w-full items-center justify-between gap-3">
+          <span>{title}</span>
+          <span className="text-[9px] text-muted-foreground/60" aria-hidden="true">Open / close</span>
+        </span>
+      </summary>
+      <div className="mt-3 grid gap-3 border-t border-border/70 pt-3 md:grid-cols-2">
         {entries.map((entry, index) => (
           <Field key={`${entry.label}-${index}`} label={entry.label} value={entry.value} />
         ))}
       </div>
-    </section>
+    </details>
   );
 }
 
@@ -106,18 +111,31 @@ function exportFileName(status: string) {
 
 function summaryBlocksFor(record: VigilIndexRecord) {
   if (record.record_type === "observation") {
-    return ["source_summary", "system_summary", "jurisdiction_summary"] as const;
+    return ["source_summary", "system_summary", "jurisdiction_summary", "classification_summary", "cam_summary"] as const;
   }
   if (record.record_type === "failure_mode") {
-    return ["source_summary", "system_summary", "jurisdiction_summary", "classification_summary", "triage_summary"] as const;
+    return ["classification_summary", "triage_summary", "source_summary", "system_summary", "jurisdiction_summary", "cam_summary"] as const;
   }
   if (record.record_type === "proposal") {
-    return ["source_summary", "proposal_summary", "external_relevance_summary", "cam_summary"] as const;
+    return ["proposal_summary", "source_summary", "external_relevance_summary", "cam_summary"] as const;
   }
   if (record.record_type === "patch_note") {
-    return ["source_summary", "change_summary", "verification_summary", "impact_summary", "cam_summary"] as const;
+    return ["change_summary", "verification_summary", "impact_summary", "cam_summary"] as const;
   }
-  return ["source_summary", "system_summary", "jurisdiction_summary", "classification_summary", "triage_summary", "proposal_summary", "change_summary"] as const;
+  return ["source_summary", "system_summary", "jurisdiction_summary", "classification_summary", "triage_summary", "proposal_summary", "change_summary", "external_relevance_summary", "impact_summary", "cam_summary"] as const;
+}
+
+function defaultOpenSummaryNames(record: VigilIndexRecord) {
+  const preferredByType: Record<string, string[]> = {
+    observation: ["source_summary", "system_summary"],
+    failure_mode: ["classification_summary", "triage_summary"],
+    proposal: ["proposal_summary"],
+    patch_note: ["change_summary", "verification_summary"],
+  };
+  const meaningfulSummaries = summaryBlocksFor(record).filter((name) => record.summaries[name]?.length);
+  const preferred = new Set((preferredByType[record.record_type] ?? []).filter((name) => meaningfulSummaries.includes(name as (typeof meaningfulSummaries)[number])));
+  if (preferred.size > 0) return preferred;
+  return new Set(meaningfulSummaries.slice(0, 1));
 }
 
 export default function Vigil() {
@@ -372,11 +390,13 @@ export default function Vigil() {
 
             <div className="space-y-2">
               {loadState === "ready" && filtered.length > 0 && (
-                <div className="hidden gap-2 rounded-lg border border-border bg-card/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem]">
+                <div className="hidden gap-2 rounded-lg border border-border bg-card/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid md:grid-cols-[6.5rem_6.5rem_7.5rem_5rem_minmax(0,1fr)_5rem_4.5rem]">
+                  <div>Record ID</div>
                   <div>Date</div>
                   <div>Platform</div>
                   <div>Type</div>
                   <div>Title</div>
+                  <div>Status</div>
                   <div className="md:text-right">Source</div>
                 </div>
               )}
@@ -389,9 +409,11 @@ export default function Vigil() {
                 const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
                 const isExpanded = expandedRecordKeys.has(recordKey);
                 const displayRecordId = record.id;
+                const defaultOpenSummaries = defaultOpenSummaryNames(record);
 
                 return (
                 <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
+                  {!isExpanded && (
                   <div
                     role="button"
                     tabIndex={0}
@@ -439,11 +461,13 @@ export default function Vigil() {
                         </div>
                       </div>
 
-                      <div className="hidden gap-2 md:grid md:grid-cols-[7.5rem_10rem_5.5rem_minmax(0,1fr)_5.5rem] md:items-center">
+                      <div className="hidden gap-2 md:grid md:grid-cols-[6.5rem_6.5rem_7.5rem_5rem_minmax(0,1fr)_5rem_4.5rem] md:items-center">
+                        <div className="break-words font-mono text-[10px] text-cam-gold">{displayRecordId}</div>
                         <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordDate}</div>
                         <div className="font-sans text-[10px] font-medium uppercase tracking-[0.14em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
                         <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{record.type_label}</div>
                         <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-medium leading-snug text-foreground md:text-[15px]">{record.title}</h2>
+                        <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{record.record_state}</div>
                         <div className="flex items-center md:justify-end">
                           {sourceHref ? (
                             <a className="inline-flex whitespace-nowrap font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
@@ -454,23 +478,37 @@ export default function Vigil() {
                       </div>
                     </div>
                   </div>
+                  )}
 
                   {isExpanded && (
-                  <div id={detailsPanelId} className="border-t border-border px-3 py-4">
-                    <div className="mb-4">
-                      <h2 className="font-mono text-xs text-cam-gold">{record.id}</h2>
-                      <p className="mt-1 font-serif text-xl text-foreground">{record.title}</p>
-                      {previewText(record.summary) && record.summary !== record.title && <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{record.summary}</p>}
+                  <div id={detailsPanelId} className="px-3 py-4 md:px-4">
+                    <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
+                      <div className="min-w-0">
+                        <p className="break-words font-mono text-[11px] text-cam-gold">{record.id}</p>
+                        <h2 className="mt-1 break-words font-serif text-xl leading-snug text-foreground">{record.title}</h2>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {[record.type_label, record.record_state, recordDate, record.platform_label].filter(isMeaningfulText).map((value) => (
+                            <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>
+                          ))}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                        onClick={() => toggleExpandedRecord(recordKey)}
+                        aria-expanded={isExpanded}
+                        aria-controls={detailsPanelId}
+                      >
+                        Collapse record −
+                      </button>
                     </div>
 
-                    <div className="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                      <Field label="Record Type" value={record.record_type} />
-                      <Field label="Record State" value={record.record_state} />
-                      <Field label="Date Recorded" value={record.date_recorded} />
+                    {previewText(record.summary) && record.summary !== record.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{record.summary}</p>}
+
+                    <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
                       <Field label="Date Implemented" value={record.record_type === "patch_note" ? record.date_implemented : undefined} />
                       <Field label="Evidence Confidence" value={record.record_type === "patch_note" ? undefined : record.evidence_confidence} />
                       <Field label="Next Action" value={["observation", "proposal"].includes(record.record_type) ? record.next_action : undefined} />
-                      <Field label="Platform" value={record.platform_label} />
                       <Field label="Source Platform" value={record.source_platform} />
                       <Field label="Source Type" value={record.source_types?.join("; ")} />
                       <Field label="Source Context" value={record.source_record_hint} />
@@ -478,9 +516,9 @@ export default function Vigil() {
                       <Field label="Observed Model / Product" value={record.observed_product} />
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       {summaryBlocksFor(record).map((name) => (
-                        <SummaryBlock key={name} title={humanLabel(name)} entries={record.summaries[name]} />
+                        <SummaryBlock key={name} title={humanLabel(name)} entries={record.summaries[name]} defaultOpen={defaultOpenSummaries.has(name)} />
                       ))}
                     </div>
 
