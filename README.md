@@ -188,16 +188,7 @@ This allows the CAM Governance Interface to rebuild or refresh after VIGIL regis
 
 ---
 
-## Deprecated VIGIL Files
-
-The interface should not consume deprecated VIGIL generated files, including:
-
-```text
-VIGIL.Records.json
-VIGIL.Records.Index.json
-VIGIL.ActiveRecords.json
-VIGIL.ClosedRecords.json
-```
+## VIGIL Live Entry Files
 
 The canonical live VIGIL entry point is:
 
@@ -258,9 +249,9 @@ or the applicable repository licence file.
 
 If citing the CAM Governance Interface, use the repository citation metadata where available.
 
-Suggested short-form citation:
+Suggested short-form (Umbrella) citation:
 
-> CAM Initiative / Aeon Governance Lab. *CAM Governance Interface*. Public Web UX layer for the Caelestis Architecture Model governance corpus and VIGIL observatory.
+> CAM Initiative. Caelestis Architecture Model public governance infrastructure. Maintained by Aeon Governance Lab. 2026.
 
 See:
 
