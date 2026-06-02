@@ -93,7 +93,6 @@ transition={{ duration: 0.7 }}
 className="mb-14"
 > <div className="mb-6 flex items-center gap-2"> <hr className="gold-rule w-16" /> <div className="h-1.5 w-1.5 rounded-full bg-primary/60" /> </div>
 
-```
       <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.28em] text-primary">
         Public Governance Infrastructure
       </p>
@@ -288,7 +287,5 @@ className="mb-14"
     </motion.section>
   </div>
 </Shell>
-```
-
 );
 }
