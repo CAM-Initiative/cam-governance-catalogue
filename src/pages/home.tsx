@@ -169,7 +169,8 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.1 }}
               >
                 <div className="font-mono text-[15px] md:text-[18px] tracking-[0.3em] uppercase text-cam-gold mb-2 flex items-center gap-3">
-                  <span className="text-[25px]">C A E L E S T I S</span>
+                  <span className="whitespace-nowrap text-[22px] tracking-[0.12em] sm:hidden">CAELESTIS</span>
+                  <span className="hidden text-[25px] sm:inline">C A E L E S T I S</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
                 </div>
                 <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight mb-3">

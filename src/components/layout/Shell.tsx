@@ -1,12 +1,23 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 const footerLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
+  { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
   { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
+  { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
+];
+
+const mobileLinks = [
+  { href: "/", label: "Home", internal: true },
+  { href: "/about", label: "About", internal: true },
+  { href: "/catalogue", label: "Catalogue", internal: true },
+  { href: "/constitution", label: "Constitution", internal: true },
+  { href: "/vigil", label: "Observatory / VIGIL", internal: true },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance / GitHub" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -23,6 +34,7 @@ const constitutionLinks = [
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about";
   const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
 
@@ -30,6 +42,10 @@ export function Shell({ children }: { children: ReactNode }) {
     { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
     { href: "/vigil", label: "Observatory", active: location === "/vigil" },
   ];
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20">
@@ -46,6 +62,16 @@ export function Shell({ children }: { children: ReactNode }) {
               Aeon Governance Lab
             </span>
           </Link>
+
+          <button
+            type="button"
+            className="inline-flex items-center rounded-lg border border-border bg-card/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
+            aria-controls="mobile-site-navigation"
+            aria-expanded={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+          >
+            Menu
+          </button>
 
           <nav className="hidden md:flex items-center gap-8">
             <div className="group relative">
@@ -129,6 +155,38 @@ export function Shell({ children }: { children: ReactNode }) {
             </a>
           </nav>
         </div>
+
+        {isMobileMenuOpen && (
+          <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="border-t border-border/60 bg-background/95 px-6 py-3 shadow-sm md:hidden">
+            <div className="container mx-auto grid gap-1">
+              {mobileLinks.map((link) => (
+                link.internal ? (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
+                      location === link.href || (link.href === "/constitution" && isConstitutionActive)
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-card hover:text-foreground"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                    className="rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
+                  >
+                    {link.label}
+                  </a>
+                )
+              ))}
+            </div>
+          </nav>
+        )}
       </header>
 
       <main className="flex-1 flex flex-col">
@@ -143,7 +201,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Public governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. Maintained by Aeon Governance Lab. Public access does not imply unrestricted reuse; citation and applicable licence terms apply.
+                © 2026 CAM Initiative. All rights reserved. Citation and reuse terms apply.
               </p>
             </div>
 
