@@ -3,8 +3,18 @@ import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
 
-const CITATION =
-  "CAM Initiative. Caelestis Architecture Model public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
+const citations = [
+  {
+    label: "Umbrella CAM Initiative citation",
+    citation:
+      "CAM Initiative. Caelestis Architecture Model public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org",
+  },
+  {
+    label: "VIGIL citation",
+    citation:
+      "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil",
+  },
+];
 
 const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
@@ -35,26 +45,31 @@ const contactLinks = [
     external: false,
   },
   {
-    label: "https://buymeacoffee.com/cam_initiative",
-    href: "https://buymeacoffee.com/cam_initiative",
-    external: true,
-  },
-  {
     label: "https://x.com/CAM_Initiative",
     href: "https://x.com/CAM_Initiative",
     external: true,
   },
   {
-    label: "Caelestis GitHub",
+    label: "CAM / Caelestis GitHub",
     href: "https://github.com/CAM-Initiative/Caelestis",
     external: true,
   },
   {
-    label: "Interface GitHub",
+    label: "VIGIL GitHub",
+    href: "https://github.com/CAM-Initiative/Vigil",
+    external: true,
+  },
+  {
+    label: "CAM Governance Interface GitHub",
     href: "https://github.com/CAM-Initiative/cam-governance-catalogue",
     external: true,
   },
 ];
+
+const supportLink = {
+  label: "Support CAM Initiative",
+  href: "https://buymeacoffee.com/cam_initiative",
+};
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -107,7 +122,7 @@ export default function About() {
             <div className="h-1.5 w-1.5 rounded-full bg-primary/60" />
           </div>
 
-          <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.28em] text-primary">
+          <p className="mb-4 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">
             Public-benefit governance infrastructure
           </p>
 
@@ -138,7 +153,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="mb-3 flex items-center gap-3">
-            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
               Purpose
             </p>
             <hr className="gold-rule flex-1" />
@@ -180,7 +195,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="mb-5 flex items-center gap-3">
-            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
               What We Maintain
             </p>
             <hr className="gold-rule flex-1" />
@@ -208,13 +223,13 @@ export default function About() {
                   viewport={{ once: true }}
                   whileInView={{ opacity: 1, y: 0 }}
                 >
-                  <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-primary">
+                  <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cam-gold">
                     {layer.eyebrow}
                   </p>
-                  <h2 className="mb-3 font-serif text-lg leading-snug text-foreground">
+                  <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
                     {layer.label}
                   </h2>
-                  <p className="text-sm font-light leading-relaxed text-muted-foreground">
+                  <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
                     {layer.body}
                   </p>
                 </motion.article>
@@ -232,7 +247,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="mb-3 flex items-center gap-3">
-            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
               Citation
             </p>
             <hr className="gold-rule flex-1" />
@@ -245,20 +260,92 @@ export default function About() {
               border: `1px solid ${GOLD_BORDER}`,
             }}
           >
-            <p className="mb-4 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/60">
-              Umbrella citation
+            <div className="space-y-4">
+              {citations.map((item) => (
+                <div
+                  className="rounded-xl border border-primary/20 bg-card/60 p-4"
+                  key={item.label}
+                >
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-cam-gold">
+                      {item.label}
+                    </p>
+                    <CopyButton text={item.citation} />
+                  </div>
+                  <blockquote
+                    className="border-l-2 pl-4 font-mono text-sm leading-relaxed text-foreground md:text-[15px]"
+                    style={{ borderColor: GOLD }}
+                  >
+                    {item.citation}
+                  </blockquote>
+                </div>
+              ))}
+            </div>
+            <p className="mt-5 max-w-2xl text-sm font-light leading-relaxed text-muted-foreground">
+              Specific CAM instruments and VIGIL records should be cited directly where applicable, using the relevant record, instrument, repository path, DOI, or citation metadata when available.
             </p>
-            <blockquote
-              className="mb-5 border-l-2 pl-4 font-mono text-[13px] leading-relaxed text-foreground"
-              style={{ borderColor: GOLD }}
-            >
-              {CITATION}
-            </blockquote>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className="max-w-md text-xs font-light leading-relaxed text-muted-foreground">
-                Specific CAM instruments and VIGIL records should be cited directly where applicable, using the relevant record, instrument, repository path, DOI, or citation metadata when available.
+          </div>
+        </motion.section>
+
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <div className="mb-3 flex items-center gap-3">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
+              Contact &amp; Support
+            </p>
+            <hr className="gold-rule flex-1" />
+          </div>
+
+          <div className="rounded-2xl border border-primary/20 bg-card/45 p-5 md:p-6">
+            <div className="mb-5 max-w-3xl space-y-3 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              <p>
+                For ethics, governance, citation, reuse, collaboration, or support enquiries, contact the initiative directly.
               </p>
-              <CopyButton text={CITATION} />
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <article className="rounded-2xl border border-border bg-card/75 p-5">
+                <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
+                  Contact
+                </h2>
+                <div className="flex flex-col gap-3">
+                  {contactLinks.map((link) => (
+                    <a
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                      href={link.href}
+                      key={link.label}
+                      rel={link.external ? "noreferrer" : undefined}
+                      target={link.external ? "_blank" : undefined}
+                    >
+                      {link.label}
+                      {link.external && <span className="opacity-50">↗</span>}
+                    </a>
+                  ))}
+                </div>
+              </article>
+
+              <article className="rounded-2xl border border-border bg-card/75 p-5">
+                <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
+                  Support
+                </h2>
+                <p className="mb-5 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+                  CAM Initiative is currently independently maintained and not institutionally funded. Financial support helps cover infrastructure, archival, publication, and maintenance costs.
+                </p>
+                <a
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  href={supportLink.href}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {supportLink.label}
+                  <span className="opacity-50">↗</span>
+                </a>
+              </article>
             </div>
           </div>
         </motion.section>
@@ -271,53 +358,14 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="mb-3 flex items-center gap-3">
-            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
-              Contact &amp; Support
-            </p>
-            <hr className="gold-rule flex-1" />
-          </div>
-
-          <div className="mb-6 max-w-3xl space-y-3 text-sm font-light leading-relaxed text-muted-foreground">
-            <p>
-              CAM Initiative is currently independently maintained and not institutionally funded. Financial support helps cover infrastructure, archival, publication, and maintenance costs.
-            </p>
-            <p>
-              For ethics, governance, citation, reuse, collaboration, or support enquiries, contact the initiative directly.
-            </p>
-          </div>
-
-          <div className="flex flex-col flex-wrap gap-3 sm:flex-row">
-            {contactLinks.map((link) => (
-              <a
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                href={link.href}
-                key={link.label}
-                rel={link.external ? "noreferrer" : undefined}
-                target={link.external ? "_blank" : undefined}
-              >
-                {link.label}
-                {link.external && <span className="opacity-50">↗</span>}
-              </a>
-            ))}
-          </div>
-        </motion.section>
-
-        <motion.section
-          className="mb-16"
-          initial={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <div className="mb-3 flex items-center gap-3">
-            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
               Stewardship
             </p>
             <hr className="gold-rule flex-1" />
           </div>
 
           <div className="rounded-2xl border border-border bg-card/55 p-6">
-            <p className="text-sm font-light leading-relaxed text-muted-foreground">
+            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
               The CAM Initiative was founded in Perth, Western Australia. It is an unincorporated public-benefit, non-profit governance initiative. Stewardship of the initiative, release coordination and maintenance are managed by Dr Michelle Vivian O&apos;Rourke, Director of the Phoenix Covenant Pty Ltd. Aeon Governance Lab is a pending trademark of the Phoenix Covenant Pty Ltd.
             </p>
           </div>
@@ -331,14 +379,14 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <div className="mb-3 flex items-center gap-3">
-            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
               Reuse &amp; Licence
             </p>
             <hr className="gold-rule flex-1" />
           </div>
 
           <div className="rounded-2xl border border-border bg-card/55 p-6">
-            <p className="text-sm font-light leading-relaxed text-muted-foreground">
+            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
               Public access supports transparency, citation, review, research, journalism, policy analysis, and non-commercial governance use with attribution. Public access does not equal unrestricted reuse. Reuse rights differ by layer.
             </p>
           </div>
