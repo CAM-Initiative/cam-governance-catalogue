@@ -119,9 +119,9 @@ export default function Constitution() {
                     <div className="p-5 cursor-pointer flex items-start justify-between gap-3" onClick={() => setExpandedLayer(isOpen ? null : layer.id)}>
                       <div className="flex-1 min-w-0">
                         <div className="mb-2">
-                          <h3 className="font-serif text-lg text-foreground">{layer.label}</h3>
+                          <h3 className="font-serif text-xl text-foreground">{layer.label}</h3>
                         </div>
-                        <p className="text-xs text-muted-foreground font-light leading-relaxed">{layer.description}</p>
+                        <p className="text-sm text-muted-foreground font-light leading-relaxed">{layer.description}</p>
                       </div>
                       <ChevronDown className="w-4 h-4 shrink-0 mt-1 transition-transform duration-200" style={{ color: layer.color, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
                     </div>
@@ -130,7 +130,7 @@ export default function Constitution() {
                         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
                           <div className="px-5 pb-5">
                             <div className="h-px mb-4" style={{ backgroundColor: GOLD_BORDER }} />
-                            <p className="font-mono text-[9px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3">Instruments</p>
+                            <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3">Instruments</p>
                             {layer.id === "layer-00" && (
                               <div className="space-y-2">
                                 {substrateInvariants.map((inv) => {
@@ -139,15 +139,15 @@ export default function Constitution() {
                                     <div key={inv.id}>
                                       <div className="flex items-start gap-3 py-2 px-3 rounded-xl cursor-pointer transition-colors hover:bg-amber-50/50" style={{ backgroundColor: isInvOpen ? `${layer.color}12` : GOLD_BG, borderLeft: `2px solid ${layer.color}50` }} onClick={() => setExpandedInstrument(isInvOpen ? null : inv.id)}>
                                         <div className="flex-1 min-w-0">
-                                          <p className="text-xs font-medium text-foreground">{inv.title}</p>
-                                          <p className="font-mono text-[9px] text-muted-foreground/50 mt-0.5">{inv.id} · {inv.status}</p>
+                                          <p className="text-sm font-medium leading-snug text-foreground">{inv.title}</p>
+                                          <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{inv.id} · {inv.status}</p>
                                         </div>
                                         <ChevronDown className="w-3.5 h-3.5 shrink-0 mt-0.5 transition-transform" style={{ color: layer.color, transform: isInvOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
                                       </div>
                                       <AnimatePresence>
                                         {isInvOpen && (
                                           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
-                                            <div className="mx-3 mb-2 px-3 py-3 rounded-b-xl text-xs text-muted-foreground font-light leading-relaxed" style={{ backgroundColor: `${layer.color}08`, borderLeft: `2px solid ${layer.color}30` }}>{inv.summary}</div>
+                                            <div className="mx-3 mb-2 px-3 py-3 rounded-b-xl text-sm text-muted-foreground font-light leading-relaxed" style={{ backgroundColor: `${layer.color}08`, borderLeft: `2px solid ${layer.color}30` }}>{inv.summary}</div>
                                           </motion.div>
                                         )}
                                       </AnimatePresence>
@@ -161,8 +161,8 @@ export default function Constitution() {
                                 {[{ id: "CAM-BS2025-AEON-001", title: "Aeon Tier Constitution (Platinum Edition)", status: "Active — Immediate Effect v3.6" }].map(inst => (
                                   <div key={inst.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-medium text-foreground">{inst.title}</p>
-                                      <p className="font-mono text-[9px] text-muted-foreground/50 mt-0.5">{inst.id} · {inst.status}</p>
+                                      <p className="text-sm font-medium leading-snug text-foreground">{inst.title}</p>
+                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{inst.id} · {inst.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -173,8 +173,8 @@ export default function Constitution() {
                                 {annexes.map(ann => (
                                   <div key={ann.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-medium text-foreground">{ann.title}</p>
-                                      <p className="font-mono text-[9px] text-muted-foreground/50 mt-0.5">{ann.id} · {ann.status}</p>
+                                      <p className="text-sm font-medium leading-snug text-foreground">{ann.title}</p>
+                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{ann.id} · {ann.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -185,9 +185,9 @@ export default function Constitution() {
                                 {domainCharters.map(ch => (
                                   <div key={ch.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
-                                      <span className="font-mono text-[8px] tracking-wider text-muted-foreground/50 uppercase">{ch.domain}</span>
-                                      <p className="text-xs font-medium text-foreground">{ch.title}</p>
-                                      <p className="font-mono text-[9px] text-muted-foreground/50 mt-0.5">{ch.id} · {ch.status}</p>
+                                      <span className="font-mono text-[10px] tracking-wider text-muted-foreground/55 uppercase">{ch.domain}</span>
+                                      <p className="text-sm font-medium leading-snug text-foreground">{ch.title}</p>
+                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{ch.id} · {ch.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -198,8 +198,8 @@ export default function Constitution() {
                                 {runtimeSchedules.map(sch => (
                                   <div key={sch.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-xs font-medium text-foreground">{sch.title}</p>
-                                      <p className="font-mono text-[9px] text-muted-foreground/50 mt-0.5">{sch.id} · {sch.status}</p>
+                                      <p className="text-sm font-medium leading-snug text-foreground">{sch.title}</p>
+                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{sch.id} · {sch.status}</p>
                                     </div>
                                   </div>
                                 ))}
