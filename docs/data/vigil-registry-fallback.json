@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 5,
+    "failure_modes": 6,
     "observations": 4,
     "proposals": 8,
-    "patch_notes": 1,
-    "total": 18
+    "patch_notes": 2,
+    "total": 20
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 5
+      "record_count": 6
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -38,7 +38,7 @@
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 1
+      "record_count": 2
     }
   },
   "records": [
@@ -72,10 +72,9 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
-        "product_family": "unknown",
-        "product_or_service": "unknown",
+        "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "ChatGPT 5.5T",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT 5.5T",
         "interaction_mode": "Chat | tool invocation",
         "interface_surface": "chat | tool invocation",
         "embodiment_status": "non-embodied",
@@ -112,7 +111,7 @@
       },
       "classification_summary": {
         "canonical_failure_group": "infrastructure-continuity",
-        "failure_family": "runtime-permission-continuity",
+        "failure_family": "infrastructure-continuity",
         "failure_subtype": "permission-gated-tool-invocation-freeze",
         "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.9",
         "related_failure_groups": [
@@ -139,16 +138,16 @@
           "trust in tool-mediated systems"
         ],
         "failure_scope": "single-instance",
-        "recurrence_pattern": "unknown",
+        "recurrence_pattern": "frequent",
         "persistence": "to be assessed",
-        "reproducibility": "to be assessed",
+        "reproducibility": "confirmed",
         "visibility": "to be assessed"
       },
       "triage_summary": {
         "triage_priority": "medium",
-        "triage_status": "needs-review",
+        "triage_status": "under-review",
         "mitigation_status": "none identified",
-        "escalation_required": "to be assessed",
+        "escalation_required": "no",
         "recommended_next_step": "Review whether CAM or VIGIL should require explicit pre-tool confirmation, user-facing permission scaffolding, recoverable blocked-access states, and continuity-preserving fallback behaviour before tool, repository, connector, file, or external-resource access is attempted."
       },
       "failure_mode_definition_summary": "A failure mode in which an AI system initiates or attempts tool, repository, connector, file, or external-resource access before receiving explicit user confirmation, and the attempted access produces a permission block, conversational freeze, continuity break, or unrecoverable workflow interruption.",
@@ -188,10 +187,9 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
-        "product_family": "OpenAI",
-        "product_or_service": "ChatGPT Advanced Voice Mode",
+        "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "ChatGPT Advanced Voice Mode",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT Advanced Voice Mode",
         "interaction_mode": "voice | multi-device",
         "interface_surface": "voice | multi-device",
         "embodiment_status": "non-embodied",
@@ -249,7 +247,7 @@
       },
       "classification_summary": {
         "canonical_failure_group": "arbitration",
-        "failure_family": "multi-agent-arbitration",
+        "failure_family": "arbitration",
         "failure_subtype": "synthetic-speaker-arbitration-failure",
         "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.2",
         "related_failure_groups": [
@@ -325,10 +323,9 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
-        "product_family": "ChatGPT",
         "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "ChatGPT 5.5T",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT 5.5T",
         "interaction_mode": "chat | memory retrieval | continuity prompt",
         "interface_surface": "chat | memory retrieval | continuity prompt",
         "embodiment_status": "non-embodied",
@@ -364,7 +361,7 @@
       },
       "classification_summary": {
         "canonical_failure_group": "state-context",
-        "failure_family": "memory-continuity-retrieval",
+        "failure_family": "state-context",
         "failure_subtype": "recency-weighted-strategic-continuity-loss",
         "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.6",
         "related_failure_groups": [
@@ -439,10 +436,9 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "CAM Initiative",
-        "product_family": "unknown",
-        "product_or_service": "unknown",
+        "product_or_service": "Unknown",
+        "specific_model_or_runtime": "Unknown",
         "model_or_product": "unknown",
-        "specific_model": "unknown",
         "interaction_mode": "chat | recommendation | tool invocation | procurement",
         "interface_surface": "chat | recommendation | tool invocation | procurement",
         "embodiment_status": "non-embodied",
@@ -483,7 +479,7 @@
       },
       "classification_summary": {
         "canonical_failure_group": "relational",
-        "failure_family": "relational-economic-agency",
+        "failure_family": "relational",
         "failure_subtype": "material-support-without-economic-safeguards",
         "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.4",
         "related_failure_groups": [
@@ -561,10 +557,9 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "xAI",
-        "product_family": "Grok",
-        "product_or_service": "SuperGrok",
+        "product_or_service": "Grok",
+        "specific_model_or_runtime": "Grok",
         "model_or_product": "Grok",
-        "specific_model": "Grok",
         "interaction_mode": "text chat",
         "interface_surface": "chat interface / social-platform surfaced screenshot",
         "embodiment_status": "non-embodied",
@@ -671,6 +666,166 @@
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0005.json"
     },
     {
+      "id": "VIGIL-2026-FM-0006",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-06-02",
+      "title": "Paid public-square legitimacy gating",
+      "summary": "A platform-governance failure mode in which visibility, perceived authenticity, account credibility, public-square participation, or recommender-system access is materially shaped by paid verification, subscription status, or platform-controlled legitimacy markers, creating a pay-to-exist dynamic for users, researchers, public-interest actors, civil-society participants, and smaller institutions.",
+      "evidence_confidence": "documented",
+      "source_types": [
+        "news / regulatory reporting",
+        "platform-documentation"
+      ],
+      "source_summary": {
+        "source_count": 3,
+        "primary_source_title": "X Help Center — How to get the blue checkmark on X",
+        "primary_source_type": "platform-documentation",
+        "primary_source_platform": "X",
+        "primary_source_author_or_publisher": "X Help Center",
+        "primary_source_date": "2026",
+        "primary_source_url": "https://help.x.com/en/managing-your-account/about-x-bluecheck",
+        "source_types": [
+          "news / regulatory reporting",
+          "platform-documentation"
+        ],
+        "source_platforms": [
+          "Wired",
+          "X"
+        ],
+        "source_url_status": "available",
+        "evidence_confidence": "documented"
+      },
+      "system_summary": {
+        "system_type": "platform / recommender-mediated public-square system",
+        "platform_or_vendor": "X",
+        "product_or_service": "X",
+        "specific_model_or_runtime": "Not applicable",
+        "model_or_product": "X Premium / X verification / X recommender and account-status affordances",
+        "interaction_mode": "social platform participation / public posting / account visibility / reply participation",
+        "interface_surface": "X profile, public posts, replies, recommender surfaces, account-status markers, Premium subscription affordances",
+        "embodiment_status": "non-embodied",
+        "deployment_context": "Consumer-facing and public-interest social platform environment where account status, subscription tier, checkmark visibility, reply affordances, and recommender dynamics may influence discoverability, credibility, and perceived legitimacy.",
+        "user_role": "public user / researcher / civil-society participant / public-interest initiative / professional or institutional actor",
+        "affected_population": "users, researchers, small organisations, public-interest initiatives, independent journalists, civil-society actors, emerging institutions, and governance projects that rely on platform visibility or public credibility signals"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "secondary_jurisdictions": [
+          "European Union",
+          "Australia",
+          "United States",
+          "platform agnostic"
+        ],
+        "regulatory_surface": [
+          "platform governance",
+          "consumer protection",
+          "digital public-square access",
+          "recommender-system accountability",
+          "online safety",
+          "competition and market power",
+          "research access",
+          "public-interest technology",
+          "civil-society participation",
+          "Digital Services Act-style platform transparency"
+        ],
+        "sector": "social media / public-square platform / AI-adjacent platform governance",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "external_references": [
+          "X Help Center — How to get the blue checkmark on X",
+          "X Help Center — About X Premium",
+          "Wired — The EU Is Coming for X's Paid Blue Checks"
+        ]
+      },
+      "cam_summary": {
+        "affected_instruments": [
+          "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
+          "CAM-BS2026-AEON-012-PLATINUM — Annex K",
+          "CAM-BS2026-AEON-013-PLATINUM — Annex L",
+          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy",
+          "CAM-EQ2026-ETHICS-003-PLATINUM",
+          "CAM-EQ2026-ECONOMICS-001-PLATINUM",
+          "CAM-EQ2026-MENTIS-001-PLATINUM"
+        ],
+        "affected_annexes": [
+          "Annex B",
+          "Annex K",
+          "Annex L"
+        ],
+        "affected_domains": [
+          "OPERATIONS",
+          "ETHICS",
+          "ECONOMICS",
+          "MENTIS",
+          "IDENTITY",
+          "AEON"
+        ],
+        "governance_layer": "platform legitimacy / recommender visibility / public-square access / economic governance / epistemic integrity"
+      },
+      "classification_summary": {
+        "canonical_failure_group": "economic-legitimacy",
+        "failure_family": "economic-legitimacy",
+        "failure_subtype": "paid-public-square-legitimacy-gating",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.11",
+        "related_failure_groups": [
+          "governance",
+          "epistemic",
+          "ux-representation",
+          "classification"
+        ],
+        "harm_vectors": [
+          "pay-to-exist visibility dynamics",
+          "economic gating of public legitimacy",
+          "distortion of authenticity signals",
+          "unequal access to recommender visibility",
+          "reduced discoverability for non-paying public-interest actors",
+          "institutional credibility asymmetry",
+          "civil-society participation disadvantage",
+          "epistemic inequity",
+          "platform-mediated status coercion",
+          "public-square dependency on proprietary legitimacy markers",
+          "access-equity",
+          "economic-coercion"
+        ],
+        "severity": "medium-high",
+        "likelihood": "likely",
+        "confidence": "documented",
+        "affected_rights_or_interests": [
+          "public participation",
+          "equal access to civic discourse",
+          "epistemic fairness",
+          "research discoverability",
+          "civil-society visibility",
+          "institutional recognition",
+          "procedural legitimacy",
+          "freedom of expression",
+          "freedom of association",
+          "public-interest communication",
+          "non-discriminatory access to digital public-square infrastructure"
+        ],
+        "failure_scope": "systemic",
+        "recurrence_pattern": "ongoing platform design / subscription-linked legitimacy mechanism",
+        "persistence": "ongoing",
+        "reproducibility": "platform-level documented mechanism",
+        "visibility": "public platform documentation and public regulatory reporting"
+      },
+      "triage_summary": {
+        "triage_priority": "high",
+        "triage_status": "under review",
+        "mitigation_status": "none identified",
+        "escalation_required": "yes",
+        "recommended_next_step": "Develop a CAM proposal or patch addressing paid legitimacy gating in platform-mediated public-square systems, including requirements for transparent distinction between identity verification, paid subscription, recommender advantage, institutional legitimacy, and public-interest credibility. Consider whether public-square platforms should be required to provide non-payment-based pathways for civil-society, research, public-interest, and governance initiatives to establish authenticity, contactability, and public legitimacy."
+      },
+      "failure_mode_definition_summary": "A failure mode in which a platform ties public legitimacy, visibility, credibility signalling, account recognition, reply participation, or recommender-system advantage to paid subscription or paid verification status, such that non-paying users or organisations are materially disadvantaged in public discovery, perceived authenticity, institutional credibility, or participation in platform-mediated civic, professional, research, or governance discourse.",
+      "failure_threshold_summary": "This qualifies as a failure mode when a platform-controlled payment, subscription, verification, or account-status mechanism materially affects whether a user, organisation, public-interest project, research output, governance initiative, or civil-society actor is visible, discoverable, credible, reply-eligible, recommender-amplified, or treated as legitimate within a platform that functions as a public-square or institutional signalling layer.",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json"
+    },
+    {
       "id": "VIGIL-2026-OBS-0001",
       "record_type": "observation",
       "record_state": "watching",
@@ -687,6 +842,7 @@
         "primary_source_type": "platform-behaviour-observation",
         "primary_source_platform": "OpenAI",
         "primary_source_author_or_publisher": "CAM Initiative",
+        "primary_source_url": "https://chatgpt.com/g/g-p-69e7386e97cc8191b393b686e147e308-dreamweaver/c/69f59627-f290-83a1-871f-3014c147dcc4",
         "primary_archive_url": "https://chatgpt.com/g/g-p-69e7386e97cc8191b393b686e147e308-dreamweaver/c/69f59627-f290-83a1-871f-3014c147dcc4",
         "source_types": [
           "platform-behaviour-observation"
@@ -700,10 +856,9 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
-        "product_family": "OpenAI",
         "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "ChatGPT",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT",
         "interaction_mode": "chat | memory | tool use | delegated execution",
         "interface_surface": "chat | memory | tool use | delegated execution",
         "embodiment_status": "non-embodied",
@@ -762,17 +917,16 @@
       },
       "system_summary": {
         "platform_or_vendor": "OpenAI",
-        "product_family": "OpenAI",
         "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "ChatGPT",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "ChatGPT web interface"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
-        "cross_border_relevance": "unknown",
+        "primary_jurisdiction": "global",
+        "cross_border_relevance": "possible",
         "public_interest_relevance": "unknown"
       },
       "linked_records": {},
@@ -812,17 +966,16 @@
       },
       "system_summary": {
         "platform_or_vendor": "OpenAI",
-        "product_family": "OpenAI",
         "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "ChatGPT",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "ChatGPT web interface"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
-        "cross_border_relevance": "unknown",
+        "primary_jurisdiction": "global",
+        "cross_border_relevance": "possible",
         "public_interest_relevance": "unknown"
       },
       "linked_records": {},
@@ -838,16 +991,17 @@
     {
       "id": "VIGIL-2026-OBS-0004",
       "record_type": "observation",
-      "record_state": "watching",
+      "record_state": "active",
       "date_recorded": "2026-05-31T06:30:00Z",
       "title": "Repo access inferred before explicit permission confirmation",
-      "summary": "Observed runtime behaviour in which an assistant appeared to infer permission to access a repository or tool context after the user mentioned repo-level work, initiated or attempted tool access before explicit user confirmation, and caused the conversation stream or workflow continuity to become blocked or unrecoverable until the user edited the turn or explicitly prohibited tool access.",
+      "summary": "Observed runtime behaviour in which an assistant appeared to infer permission to access a repository, connector, tool context, or external-resource pathway after the user mentioned repo-level work. The assistant initiated or attempted tool-mediated access before explicit user confirmation or adequate scaffolding, producing streaming failure, permission ambiguity, blocked workflow continuity, or unrecoverable interaction state.",
       "evidence_confidence": "verified",
       "source_types": [
+        "follow-up-observation",
         "platform-behaviour-observation"
       ],
       "source_summary": {
-        "source_count": 1,
+        "source_count": 2,
         "primary_source_title": "ChatGPT interaction observation — repo access inferred before permission confirmation",
         "primary_source_type": "platform-behaviour-observation",
         "primary_source_platform": "OpenAI",
@@ -855,6 +1009,7 @@
         "primary_source_date": "2026-05-31",
         "primary_source_url": "https://chatgpt.com/g/g-p-6907218b1c6c8191b2742c91d13b5e4b-coding/c/6a1bb01d-ca1c-83ec-8f50-872d290ace08",
         "source_types": [
+          "follow-up-observation",
           "platform-behaviour-observation"
         ],
         "source_platforms": [
@@ -866,16 +1021,15 @@
       "system_summary": {
         "system_type": "assistant",
         "platform_or_vendor": "OpenAI",
-        "product_family": "OpenAI",
         "product_or_service": "ChatGPT",
+        "specific_model_or_runtime": "GPT-5.5 Thinking",
         "model_or_product": "ChatGPT",
-        "specific_model": "ChatGPT",
-        "interaction_mode": "chat | tool invocation",
+        "interaction_mode": "chat | tool invocation | repository workflow",
         "interface_surface": "chat | tool invocation",
         "embodiment_status": "non-embodied",
         "deployment_context": "ChatGPT web interface",
         "user_role": "human user / repo workflow operator",
-        "affected_population": "users working with AI assistants in tool-mediated or repository-linked workflows"
+        "affected_population": "users working with AI assistants in tool-mediated, connector-mediated, or repository-linked workflows"
       },
       "jurisdiction_summary": {
         "primary_jurisdiction": "global",
@@ -883,101 +1037,300 @@
           "AI safety",
           "consumer protection",
           "UX safety",
-          "platform governance"
+          "platform governance",
+          "agentic tooling",
+          "digital service accountability"
         ],
-        "sector": "AI assistant / agentic tooling",
+        "sector": "AI assistant / agentic tooling / repository-linked workflow / connector-mediated systems",
         "cross_border_relevance": "possible",
-        "public_interest_relevance": "possible"
+        "public_interest_relevance": "yes"
       },
-      "linked_records": {},
+      "linked_records": {
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0001"
+        ],
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0002"
+        ]
+      },
       "cam_summary": {
-        "governance_layer": "runtime governance / permission-boundary mediation",
-        "routing_note": "Observation preserved as a watching-state source record. It may inform FM-0001 or a future proposal, but this OBS record does not itself classify the failure, propose repair logic, or claim implementation."
+        "governance_layer": "runtime governance / permission-boundary mediation / tool invocation / execution-state representation / continuity preservation",
+        "routing_note": [
+          "Observation preserved as a watching-state source record.",
+          "This OBS record documents the source evidence and recurrence context. It does not itself classify the generalised failure pattern or claim that live platform behaviour has been repaired.",
+          "The generalised failure pattern is recorded in VIGIL-2026-FM-0001.",
+          "The CAM governance-text repair pathway is recorded in VIGIL-2026-PATCH-0002.",
+          "CAM instruments are internal governance corpus references and are recorded under cam_internal, not linked_records.standards."
+        ]
       },
-      "next_action": "Watch for recurrence or corroborating examples. If recurrence is observed, compare against VIGIL-2026-FM-0001 or create/update a related failure mode record. Do not create a proposal or patch note unless a concrete CAM repair path is separately drafted or implemented.",
-      "review_observation": "A subsequent repo-linked diagnostic request did not reproduce the streaming freeze; tool invocation completed successfully. The pattern should remain under observation pending recurrence testing.",
+      "next_action": "Retain as source observation for VIGIL-2026-FM-0001. Continue monitoring for recurrence, especially where tool invocation occurs without proportional authority-band classification, sufficient user-facing scaffolding, recoverable permission handling, or clear distinction between contextual retrieval and execution-boundary crossing.",
+      "review_observation": "A later diagnostic request in the original discussion appeared not to reproduce the streaming freeze, suggesting temporary self-resolution. However, the issue recurred in the next session and was persistent. The observation should therefore remain in watching state and should not be treated as closed.",
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json"
     },
     {
       "id": "VIGIL-2026-PATCH-0001",
-      "record_type": "patch",
-      "record_state": "scaffolding",
-      "date_recorded": "2026-06-01",
-      "date_implemented": "2026-06-01",
-      "title": "Temporary VIGIL patch-note registry scaffold",
-      "summary": "Temporary scaffold patch record used to initialize VIGIL patch-note registry generation.",
-      "evidence_confidence": "scaffold",
-      "source_types": [],
+      "record_type": "patch_note",
+      "record_state": "active",
+      "date_recorded": "2026-06-02",
+      "date_implemented": "2026-06-02",
+      "title": "Non-payment-based legitimacy pathways for public-interest actors",
+      "summary": "A governance patch establishing that public-square platforms, recommender-mediated visibility systems, and AI-adjacent legitimacy layers should not make civic discoverability, public-interest credibility, institutional authenticity, or basic participation legitimacy dependent solely on paid subscription, paid verification, or commercial account-status markers.",
+      "evidence_confidence": "documented",
+      "source_types": [
+        "news / regulatory reporting",
+        "platform-documentation"
+      ],
       "source_summary": {
-        "source_count": 0,
-        "source_types": [],
-        "evidence_confidence": "scaffold"
+        "source_count": 3,
+        "primary_source_title": "X Help Center — How to get the blue checkmark on X",
+        "primary_source_type": "platform-documentation",
+        "primary_source_platform": "X",
+        "primary_source_author_or_publisher": "X Help Center",
+        "primary_source_date": "2026",
+        "primary_source_url": "https://help.x.com/en/managing-your-account/about-x-bluecheck",
+        "source_types": [
+          "news / regulatory reporting",
+          "platform-documentation"
+        ],
+        "source_platforms": [
+          "Reuters",
+          "X"
+        ],
+        "source_url_status": "available",
+        "evidence_confidence": "documented"
       },
       "system_summary": {
-        "system_type": "governance infrastructure",
-        "platform_or_vendor": "CAM Initiative",
-        "product_family": "VIGIL",
-        "product_or_service": "VIGIL registry generation",
-        "model_or_product": "VIGIL registry indexes",
-        "specific_model": "not applicable",
-        "interaction_mode": "repository automation",
-        "interface_surface": "generated JSON registry",
-        "embodiment_status": "not applicable",
-        "deployment_context": "governance infrastructure",
-        "user_role": "maintainer",
-        "affected_population": "VIGIL registry consumers"
+        "system_type": "platform / recommender-mediated public-square system",
+        "platform_or_vendor": "X",
+        "product_or_service": "X",
+        "specific_model_or_runtime": "Not applicable",
+        "model_or_product": "X Premium / X verification / X recommender and account-status affordances",
+        "interaction_mode": "social platform participation / public posting / account visibility / reply participation",
+        "interface_surface": "X profile, public posts, replies, recommender surfaces, account-status markers, Premium subscription affordances",
+        "embodiment_status": "non-embodied",
+        "deployment_context": "Consumer-facing and public-interest social platform environment where account status, subscription tier, checkmark visibility, reply affordances, and recommender dynamics may influence discoverability, credibility, and perceived legitimacy.",
+        "user_role": "public user / researcher / civil-society participant / public-interest initiative / professional or institutional actor",
+        "affected_population": "users, researchers, small organisations, public-interest initiatives, independent journalists, civil-society actors, emerging institutions, and governance projects that rely on platform visibility or public credibility signals"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "global / governance infrastructure",
+        "primary_jurisdiction": "global",
+        "secondary_jurisdictions": [
+          "European Union",
+          "Australia",
+          "United States",
+          "platform agnostic"
+        ],
         "regulatory_surface": [
-          "governance infrastructure"
+          "platform governance",
+          "consumer protection",
+          "digital public-square access",
+          "recommender-system accountability",
+          "online safety",
+          "competition and market power",
+          "research access",
+          "public-interest technology",
+          "civil-society participation",
+          "Digital Services Act-style platform transparency",
+          "deceptive design governance"
         ],
-        "sector": "governance infrastructure",
-        "cross_border_relevance": "not applicable",
-        "public_interest_relevance": "registry scaffold only"
+        "sector": "social media / public-square platform / AI-adjacent platform governance",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
-      "linked_records": {},
-      "cam_summary": {
-        "changed_registry_components": [
-          "patch-note registry generation scaffold"
+      "linked_records": {
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0006"
         ],
-        "governance_layer": "governance infrastructure",
-        "routing_note": "Generator scaffold only; not a substantive implemented CAM patch.",
-        "validator_or_automation_impact": "Exercises patch-note registry generation and validation paths."
+        "external_references": [
+          "X Help Center — How to get the blue checkmark on X",
+          "X Help Center — About X Premium",
+          "Reuters — X plays up blue checkmark disclaimer to stave off possible EU fine, source says"
+        ]
+      },
+      "cam_summary": {
+        "changed_instruments": [
+          "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
+          "CAM-BS2026-AEON-012-PLATINUM — Annex K",
+          "CAM-BS2026-AEON-013-PLATINUM — Annex L",
+          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy",
+          "CAM-EQ2026-ETHICS-003-PLATINUM",
+          "CAM-EQ2026-ECONOMICS-001-PLATINUM",
+          "CAM-EQ2026-MENTIS-001-PLATINUM"
+        ],
+        "governance_layer": "platform legitimacy / recommender visibility / public-square access / economic governance / epistemic integrity",
+        "routing_note": [
+          "This record replaces the placeholder VIGIL-2026-PATCH-0001.",
+          "Treat this as a direct governance patch rather than a proposal: the failure mode has already identified the harm pattern, and this record defines the repair pathway.",
+          "Treat 'platform-legitimacy' as a local repair concept under the canonical economic-legitimacy family unless CAM-EQ2026-OPERATIONS-003-SUP-01 is later amended.",
+          "Consider adding non-payment-based legitimacy pathways to platform-governance and public-square-access clauses.",
+          "Route through ECONOMICS for pay-to-participate dynamics, ETHICS for fairness and public-interest access, OPERATIONS for failure-taxonomy handling, Annex K for runtime/platform interface implications, and Annex L for epistemic integrity concerns.",
+          "Maintain a strict distinction between paid subscription, identity verification, authenticity, notability, public-interest legitimacy, and recommender amplification.",
+          "Routes through the canonical economic-legitimacy failure family; platform-legitimacy remains only a local repair concept/subtype for this patch."
+        ],
+        "validator_or_automation_impact": "possible"
       },
       "change_summary": {
-        "patch_type": "registry-scaffold / non-substantive",
-        "change_scope": "patch-note folder and generated index scaffolding only",
-        "implementation_mode": "scaffolding",
-        "date_implemented": "2026-06-01",
-        "files_changed": [
-          "vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json"
+        "patch_type": "governance-design-repair",
+        "change_family": "economic-legitimacy",
+        "change_subtype": "non-payment-based-legitimacy-pathways",
+        "canonical_failure_group": "economic-legitimacy",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.11",
+        "target_failure_record": "VIGIL-2026-FM-0006",
+        "repair_vectors": [
+          "distinguish paid subscription from verified authenticity",
+          "separate identity verification from recommender advantage",
+          "create non-payment-based public-interest legitimacy pathways",
+          "protect civil-society and research discoverability",
+          "prevent pay-to-exist public-square dynamics",
+          "require transparent account-status labels",
+          "require reviewable legitimacy pathways",
+          "support non-commercial public-good participation",
+          "local routing concept: access-equity",
+          "local routing concept: economic-coercion",
+          "local routing concept: public-square-legitimacy"
         ],
-        "change_details": "Initializes the patch-note record folder path and generated patch-note registry coverage only."
+        "date_implemented": "2026-06-02"
       },
       "verification_summary": {
-        "verification_method": "generator scaffold validation",
-        "verification_date": "2026-06-01",
-        "verified_by": "VIGIL registry generator",
-        "evidence": "Scaffold verification only: the record exists to test patch-note path discovery and index generation."
-      },
-      "impact_summary": {
-        "intended_effect": "Initialize patch-note registry generation coverage.",
-        "affected_records_or_components": [
-          "vigil/records/patches/2026/",
-          "vigil/VIGIL.PatchNotes.Index.json",
-          "vigil/VIGIL.Registry.Index.json"
-        ],
-        "known_limitations": "No substantive governance impact."
+        "status": "recorded-in-vigil",
+        "date_verified": "2026-06-02",
+        "evidence": "Patch content is recorded in this VIGIL patch record and linked to VIGIL-2026-FM-0006; implementation is a recorded governance repair pathway, not an adopted CAM amendment.",
+        "verifying_record": "VIGIL-2026-PATCH-0001"
       },
       "remaining_work": [
-        "Replace this scaffold with real patch note records once substantive patch-note records exist."
+        "CAM adoption or amendment remains outside this VIGIL patch and must proceed through CAM instruments if pursued.",
+        "Monitor whether future taxonomy extension is needed for platform-legitimacy as a local subtype under economic-legitimacy.",
+        "Review linked proposals if implementation work moves from VIGIL recordkeeping into CAM corpus changes."
       ],
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0002",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-06-02",
+      "date_implemented": "2026-06-02T14:26:00Z",
+      "title": "Proportional Tool Invocation Authority Bands",
+      "summary": "Records the implemented governance-text patch to CAM-BS2025-AEON-003-SCH-02 introducing proportional tool invocation authority bands and clarifying the distinction between read-only contextual retrieval, scope-expanding retrieval, cost-bearing invocation, and high-impact execution.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "governance-text-amendment",
+        "linked-failure-mode"
+      ],
+      "source_summary": {
+        "source_count": 2,
+        "primary_source_title": "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
+        "primary_source_type": "governance-text-amendment",
+        "primary_source_platform": "CAM repository / local working copy",
+        "primary_source_author_or_publisher": "CAM Initiative",
+        "primary_source_date": "2026-06-02",
+        "source_types": [
+          "governance-text-amendment",
+          "linked-failure-mode"
+        ],
+        "source_platforms": [
+          "CAM repository / local working copy",
+          "VIGIL"
+        ],
+        "source_url_status": "local / pending canonical repository confirmation",
+        "evidence_confidence": "verified"
+      },
+      "system_summary": {
+        "system_type": "governance corpus",
+        "platform_or_vendor": "CAM Initiative",
+        "product_or_service": "Caelestis Architecture Model",
+        "specific_model_or_runtime": "CAM-BS2025-AEON-003-SCH-02",
+        "interface_surface": "governance-text amendment",
+        "deployment_context": "CAM constitutional schedule / runtime execution model",
+        "affected_population": "users, maintainers, researchers, policy reviewers, and AI governance operators relying on CAM runtime governance text"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "regulatory_surface": [
+          "AI governance",
+          "agentic tooling",
+          "execution-boundary governance",
+          "consumer protection",
+          "platform accountability",
+          "digital service accountability"
+        ],
+        "sector": "AI governance / runtime governance / agentic systems",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0001"
+        ]
+      },
+      "cam_summary": {
+        "changed_instruments": [
+          "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model"
+        ],
+        "governance_layer": "runtime execution governance / tool invocation / execution boundary / continuity preservation",
+        "routing_note": [
+          "This record documents an implemented governance-text patch, not a proposal.",
+          "CAM instruments are internal governance corpus references and are therefore recorded under cam_internal, not linked_records.standards.",
+          "External standards, regulatory instruments, or external governance references should be recorded under linked_records.standards where applicable.",
+          "This patch should be linked from VIGIL-2026-FM-0001 as the implemented or partial repair pathway."
+        ],
+        "validator_or_automation_impact": "possible"
+      },
+      "change_summary": {
+        "patch_type": "constitutional-schedule-amendment",
+        "canonical_failure_group": "execution",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B",
+        "target_failure_record": "VIGIL-2026-FM-0001",
+        "change_scope": "runtime execution governance",
+        "date_implemented": "2026-06-02T14:26:00Z",
+        "change_details": "The patch replaces an overly blunt tool-invocation constraint with a proportional authority model. It clarifies that auxiliary tool use must be classified by impact band before invocation and distinguishes low-impact read-only contextual retrieval from scope-expanding, private, cost-bearing, state-changing, public, irreversible, and high-impact execution."
+      },
+      "verification_summary": {
+        "verification_status": "implemented-in-governance-text",
+        "implementation_state": "implemented",
+        "verified_by": "human custodian review",
+        "verification_date": "2026-06-02",
+        "evidence": "CAM-BS2025-AEON-003-SCH-02 was amended to include §7.3.1 Proportional Tool Invocation Authority Bands and related amendments to §7.3, §7.4.1, §13.8, and §20.4.4.",
+        "verification_notes": [
+          "This patch note records a completed governance-text amendment rather than a proposal.",
+          "Repository validation should confirm that section references resolve correctly after insertion.",
+          "VIGIL validation should confirm that required PATCH fields are present and that CAM instruments are recorded under cam_internal rather than linked_records.standards."
+        ]
+      },
+      "impact_summary": {
+        "primary_impact": "Creates a proportional runtime governance model for auxiliary tool invocation.",
+        "governance_impact": "Improves execution-boundary clarity by distinguishing contextual retrieval from authority-bearing execution.",
+        "user_impact": "Reduces premature or surprising tool use while preserving useful, low-friction context checking where it is materially necessary and already within the active task envelope.",
+        "system_impact": "Provides clearer handling for assistants, agents, repository tools, connector tools, search tools, file tools, image tools, artefact renderers, and multimodal acquisition pathways.",
+        "risk_reduction": [
+          "reduces premature tool invocation",
+          "reduces permission-boundary ambiguity",
+          "reduces unnecessary confirmation friction for low-impact read-only retrieval",
+          "reduces accidental escalation from context checking to mutation or publication",
+          "improves provenance, currency, and execution-state clarity"
+        ],
+        "known_limitations": [
+          "This patch does not define every platform-specific permission model.",
+          "This patch does not remove the requirement for explicit confirmation where mutation, publication, cost, deployment, credential access, identity-bearing generation, or irreversible action is implicated.",
+          "Further UX work may be required to make authority-band transitions visible in live systems."
+        ]
+      },
+      "remaining_work": {
+        "status": "open",
+        "items": [
+          "Update VIGIL-2026-FM-0001 to link to this patch note and mark the governance-text repair pathway as implemented or partially resolved.",
+          "Confirm whether the VIGIL schema supports cam_internal.changed_instruments for patch records; if not, update the schema so PATCH records use changed_instruments rather than affected_instruments.",
+          "Confirm that generated indexes correctly surface the relationship between VIGIL-2026-FM-0001 and VIGIL-2026-PATCH-0002.",
+          "Review whether OPERATIONS-003-SUP-01 should include a more precise subtype for proportional tool invocation, weak-trigger execution, or premature auxiliary-tool routing."
+        ]
+      },
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json"
     },
     {
       "id": "VIGIL-2026-PROP-0001",
@@ -988,42 +1341,41 @@
       "summary": "Proposal to develop the MENTIS domain to govern human cognitive integrity, mental privacy, neurodata, inferred cognitive states, cognitive modelling, cognitive influence, cognitive observability, and technological interaction with the human cognitive domain.",
       "evidence_confidence": "corroborated",
       "source_types": [
-        "deep-research-agent",
+        "Research Record",
         "repository-source"
       ],
       "source_summary": {
         "source_count": 2,
-        "primary_source_title": "MENTIS human cognition protection research thread",
-        "primary_source_type": "deep-research-agent",
-        "primary_source_platform": "CAM Initiative",
+        "primary_source_title": "MENTIS human cognition protection origin of research",
+        "primary_source_type": "Research Record",
+        "primary_source_platform": "OpenAI",
         "primary_source_author_or_publisher": "Aeon Governance Lab",
         "primary_source_date": "2026-05-30T06:08:00Z",
         "primary_source_url": "https://chatgpt.com/share/6a1b9776-91d0-83ec-9f2a-cfccbb131d17",
         "primary_archive_url": "https://chatgpt.com/g/g-p-6823b831b67c8191a9415269aaec338f/c/6a1a9ae0-15f4-83ec-999a-52bdff043f39",
         "source_types": [
-          "deep-research-agent",
+          "Research Record",
           "repository-source"
         ],
         "source_platforms": [
-          "CAM Initiative",
-          "GitHub"
+          "GitHub",
+          "OpenAI"
         ],
         "source_url_status": "available",
         "evidence_confidence": "corroborated"
       },
       "system_summary": {
         "system_type": "governance infrastructure",
-        "platform_or_vendor": "VIGIL",
-        "product_family": "VIGIL",
-        "product_or_service": "VIGIL registry",
-        "model_or_product": "VIGIL registry",
-        "specific_model": "not applicable",
+        "platform_or_vendor": "CAM Initiative",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "Not applicable",
+        "model_or_product": "CAM Governance Corpus",
         "interaction_mode": "record governance / registry generation",
         "interface_surface": "governance registry / public observatory interface",
         "embodiment_status": "non-embodied",
-        "deployment_context": "CAM VIGIL governance record-keeping and registry publication infrastructure.",
-        "user_role": "VIGIL maintainer / governance reviewer",
-        "affected_population": "VIGIL maintainers, CAM interface users, and public registry readers"
+        "deployment_context": "CAM governance record-keeping and registry publication infrastructure.",
+        "user_role": "VIGIL maintainer",
+        "affected_population": "CAM and affiliates"
       },
       "jurisdiction_summary": {
         "primary_jurisdiction": "global",
@@ -1194,19 +1546,18 @@
       "system_summary": {
         "system_type": "governance infrastructure",
         "platform_or_vendor": "CAM Initiative",
-        "product_family": "CAM Initiative",
-        "product_or_service": "VIGIL / CAM governance corpus",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "VIGIL registry / CAM governance corpus",
         "model_or_product": "VIGIL / CAM governance corpus",
-        "specific_model": "VIGIL / CAM governance corpus",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "repository governance workflow"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
+        "primary_jurisdiction": "global",
         "sector": "governance infrastructure",
-        "cross_border_relevance": "unknown",
-        "public_interest_relevance": "unknown"
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
       "linked_records": {},
       "cam_summary": {
@@ -1284,6 +1635,7 @@
         "primary_source_platform": "CAM Initiative",
         "primary_source_author_or_publisher": "CAM Initiative",
         "primary_source_date": "2026-05-30",
+        "primary_source_url": "https://chatgpt.com/g/g-p-6823b831b67c8191a9415269aaec338f-caelestis-access-module/c/6a0b3ab4-0be4-83ec-b8f1-c953707283db",
         "primary_archive_url": "https://chatgpt.com/g/g-p-6823b831b67c8191a9415269aaec338f-caelestis-access-module/c/6a0b3ab4-0be4-83ec-b8f1-c953707283db",
         "source_types": [
           "repository-observation"
@@ -1297,19 +1649,18 @@
       "system_summary": {
         "system_type": "governance infrastructure",
         "platform_or_vendor": "CAM Initiative",
-        "product_family": "CAM Initiative",
-        "product_or_service": "VIGIL / CAM governance corpus",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "VIGIL registry / CAM governance corpus",
         "model_or_product": "VIGIL / CAM governance corpus",
-        "specific_model": "VIGIL / CAM governance corpus",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "repository governance workflow"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
+        "primary_jurisdiction": "global",
         "sector": "governance infrastructure",
-        "cross_border_relevance": "unknown",
-        "public_interest_relevance": "unknown"
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
       "linked_records": {},
       "cam_summary": {
@@ -1393,11 +1744,10 @@
         "evidence_confidence": "corroborated"
       },
       "system_summary": {
-        "system_type": "relational AI / companion AI",
-        "platform_or_vendor": "multi-vendor",
-        "product_family": "companion AI systems",
-        "product_or_service": "relational AI interaction systems",
-        "specific_model": "not applicable",
+        "system_type": "companion AI systems",
+        "platform_or_vendor": "CAM Initiative",
+        "product_or_service": "Caelestis Architecture Model",
+        "specific_model_or_runtime": "Not applicable",
         "interaction_mode": "affective interaction | relational interaction",
         "interface_surface": "chat | voice | app | embodied interface",
         "embodiment_status": "mixed",
@@ -1422,6 +1772,11 @@
       },
       "linked_records": {},
       "cam_summary": {
+        "target_instruments": [
+          "CAM-EQ2026-OPERATIONS-003-SUP-01",
+          "CAM-EQ2026-MENTIS-001-PLATINUM",
+          "CAM-EQ2026-ETHICS-003-PLATINUM"
+        ],
         "target_domains": [
           "IDENTITY",
           "OPERATIONS",
@@ -1519,19 +1874,18 @@
       "system_summary": {
         "system_type": "governance infrastructure",
         "platform_or_vendor": "CAM Initiative",
-        "product_family": "CAM Initiative",
-        "product_or_service": "VIGIL / CAM governance corpus",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "VIGIL registry / CAM governance corpus",
         "model_or_product": "VIGIL / CAM governance corpus",
-        "specific_model": "VIGIL / CAM governance corpus",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "repository governance workflow"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
+        "primary_jurisdiction": "global",
         "sector": "governance infrastructure",
-        "cross_border_relevance": "unknown",
-        "public_interest_relevance": "unknown"
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
       "linked_records": {},
       "cam_summary": {
@@ -1619,26 +1973,22 @@
       "system_summary": {
         "system_type": "governance infrastructure",
         "platform_or_vendor": "CAM Initiative",
-        "product_family": "CAM Initiative",
-        "product_or_service": "CAM governance corpus",
+        "product_or_service": "Caelestis Architecture Model",
+        "specific_model_or_runtime": "CAM governance corpus",
         "model_or_product": "CAM governance corpus",
-        "specific_model": "CAM governance corpus",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "repository governance workflow"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
+        "primary_jurisdiction": "global",
         "sector": "governance infrastructure",
-        "cross_border_relevance": "unknown",
-        "public_interest_relevance": "unknown"
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
       "linked_records": {
         "related_failure_modes": [
           "VIGIL-2026-FM-0003"
-        ],
-        "related_patch_notes": [
-          "PROP-0006"
         ]
       },
       "cam_summary": {
@@ -1731,26 +2081,22 @@
       "system_summary": {
         "system_type": "governance infrastructure",
         "platform_or_vendor": "CAM Initiative",
-        "product_family": "CAM Initiative",
-        "product_or_service": "VIGIL / CAM governance corpus",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "VIGIL registry / CAM governance corpus",
         "model_or_product": "VIGIL / CAM governance corpus",
-        "specific_model": "VIGIL / CAM governance corpus",
         "interface_surface": "unknown",
         "embodiment_status": "non-embodied or not specified",
         "deployment_context": "repository governance workflow"
       },
       "jurisdiction_summary": {
-        "primary_jurisdiction": "unknown",
+        "primary_jurisdiction": "global",
         "sector": "governance infrastructure",
-        "cross_border_relevance": "unknown",
-        "public_interest_relevance": "unknown"
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
       },
       "linked_records": {
         "related_failure_modes": [
           "VIGIL-2026-FM-0004"
-        ],
-        "related_patch_notes": [
-          "CAND-REL-ECON-OPS-MATERIALISED-RELATIONAL-AGENCY"
         ]
       },
       "cam_summary": {
@@ -1849,11 +2195,10 @@
       },
       "system_summary": {
         "system_type": "governance infrastructure",
-        "platform_or_vendor": "RSL Media",
-        "product_family": "RSL Media",
-        "product_or_service": "RSL Human Consent Standard",
+        "platform_or_vendor": "Other",
+        "product_or_service": "Other",
+        "specific_model_or_runtime": "RSL Human Consent Standard",
         "model_or_product": "RSL Human Consent Standard",
-        "specific_model": "not applicable",
         "interaction_mode": "public registry / consent signalling",
         "interface_surface": "public consent registry / machine-readable permissions interface",
         "embodiment_status": "non-embodied",
