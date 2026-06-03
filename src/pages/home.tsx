@@ -199,7 +199,11 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="mb-8 cam-parchment-card p-6 rounded-2xl backdrop-blur-sm"
+              className="mb-8 rounded-2xl p-6"
+              style={{
+                backgroundColor: GOLD_BG,
+                border: `1px solid ${GOLD_BORDER}`,
+              }}
             >
               <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">Vision</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Civilisational Readiness</h2>
@@ -214,7 +218,11 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.05 }}
-              className="mb-10 cam-parchment-card p-6 rounded-2xl backdrop-blur-sm"
+              className="mb-10 rounded-2xl p-6"
+              style={{
+                backgroundColor: GOLD_BG,
+                border: `1px solid ${GOLD_BORDER}`,
+              }}
             >
               <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">Mission</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Minimum Invariant Conditions</h2>
