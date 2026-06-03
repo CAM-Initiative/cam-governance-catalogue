@@ -11,7 +11,19 @@ type DateSort = "newest" | "oldest";
 type FilterOption = { value: string; label: string };
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
-const exportNotice = "Filtered VIGIL index export from the CAM Interface. Canonical records remain in CAM-Initiative/Vigil.";
+const exportNotice = "Filtered VIGIL index export from the CAM Governance Interface. Canonical records remain in CAM-Initiative/Vigil.";
+const vigilRecommendedCitation = "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil";
+const vigilReuseNotice = "This is public-benefit governance infrastructure. Please cite VIGIL if you use this export. Public access does not imply unrestricted reuse; applicable licence and reuse terms apply.";
+const vigilSupportUrl = "https://buymeacoffee.com/cam_initiative";
+const vigilCitation = {
+  recommended_citation: vigilRecommendedCitation,
+  title: "VIGIL: Evidence-to-Repair Governance Ledger",
+  publisher: "CAM Initiative",
+  maintainer: "Aeon Governance Lab",
+  year: "2026",
+  url: "https://www.cam-initiative.org/vigil",
+  repository: "https://github.com/CAM-Initiative/Vigil",
+};
 const filterConfig: Array<{ key: FilterKey; label: string; placeholder: string }> = [
   { key: "recordType", label: "Record Type", placeholder: "All record types" },
   { key: "affectedPlatform", label: "Affected Platform", placeholder: "All affected platforms" },
@@ -151,6 +163,7 @@ export default function Vigil() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loadNotice, setLoadNotice] = useState("");
   const [recordPage, setRecordPage] = useState(1);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
@@ -198,6 +211,17 @@ export default function Vigil() {
     setRecordPage(1);
   }, [dateSort, filters, search]);
 
+  useEffect(() => {
+    if (!isExportDialogOpen) return;
+
+    function closeOnEscape(event: globalThis.KeyboardEvent) {
+      if (event.key === "Escape") setIsExportDialogOpen(false);
+    }
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isExportDialogOpen]);
+
   const recordPageCount = Math.max(1, Math.ceil(filtered.length / VIGIL_PAGE_SIZE));
   const currentRecordPage = Math.min(recordPage, recordPageCount);
   const recordPageStart = (currentRecordPage - 1) * VIGIL_PAGE_SIZE;
@@ -232,6 +256,9 @@ export default function Vigil() {
       export_notice: exportNotice,
       exported_at_utc: new Date().toISOString(),
       source: VIGIL_REGISTRY_SOURCE.registry_index_url,
+      source_registry: VIGIL_REGISTRY_SOURCE.registry_index_url,
+      citation: vigilCitation,
+      reuse_notice: vigilReuseNotice,
       filters: { ...filters, search, date_sort: dateSort },
       record_count: filtered.length,
       records: filtered.map(({ raw }) => raw),
@@ -245,6 +272,11 @@ export default function Vigil() {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
+    setIsExportDialogOpen(false);
+  }
+
+  function openSupportLink() {
+    window.open(vigilSupportUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -259,15 +291,97 @@ export default function Vigil() {
         </div>
 
         <details className="cam-parchment-card mb-5 rounded-xl p-3 text-sm shadow-sm">
-          <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">About VIGIL</summary>
-          <div className="mt-3 space-y-2 leading-relaxed text-muted-foreground">
-            <p>VIGIL is CAM’s public observatory for recording AI governance signals, runtime failures, implementation gaps, proposals, and corrective patches.</p>
-            <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
-            <p>Observation and Failure Mode records focus on what was seen: the public source, affected system, jurisdictional context, observed behaviour, and triage relevance.</p>
-            <p>Proposal and Patch Note records focus on what should change: the affected CAM domain, target instrument, implementation context, and governance rationale.</p>
-            <p>Together, VIGIL acts as a bridge between lived runtime evidence and formal governance maintenance.</p>
+          <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">About VIGIL</summary>
+          <div className="mt-3 space-y-4 leading-relaxed text-muted-foreground">
+            <div className="space-y-2">
+              <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
+              <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+            </div>
+
+            <div>
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Record types</p>
+              <div className="grid gap-2 md:grid-cols-2">
+                <div className="rounded-lg border border-border bg-background/35 p-3">
+                  <p className="font-medium text-foreground">Observation — what was seen.</p>
+                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A source-linked record of an observed AI-system behaviour, platform signal, governance gap, or emerging digital ecosystem event.</p>
+                </div>
+                <div className="rounded-lg border border-border bg-background/35 p-3">
+                  <p className="font-medium text-foreground">Failure Mode — the pattern.</p>
+                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A structured classification of a recurring, significant, or governance-relevant failure pattern.</p>
+                </div>
+                <div className="rounded-lg border border-border bg-background/35 p-3">
+                  <p className="font-medium text-foreground">Proposal — what might change.</p>
+                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A candidate governance, schema, taxonomy, interface, operational, or doctrinal change. Proposals are exploratory unless implemented by a patch note.</p>
+                </div>
+                <div className="rounded-lg border border-border bg-background/35 p-3">
+                  <p className="font-medium text-foreground">Patch Note — what changed.</p>
+                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A record of an implemented repair, registry update, schema change, validator change, interface fix, or governance-maintenance action.</p>
+                </div>
+                <div className="rounded-lg border border-border bg-background/35 p-3 md:col-span-2">
+                  <p className="font-medium text-foreground">Source / Research — supporting context.</p>
+                  <p className="mt-1 text-xs leading-relaxed md:text-sm">Research notes, source records, or supporting evidence that may inform observations, proposals, or future governance work.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid gap-2 md:grid-cols-2">
+              <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Lifecycle note</p>
+                <p className="text-xs leading-relaxed md:text-sm">Records may move from observation to failure mode, proposal, patch note, monitoring, resolved, inactive, or superseded states. Not every observation becomes a proposal, and not every failure mode requires a new instrument.</p>
+              </div>
+              <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">What VIGIL is not</p>
+                <p className="text-xs leading-relaxed md:text-sm">VIGIL is not a regulator, legal determination system, safety certification body, or final incident adjudication authority. Records are governance artefacts intended to support analysis, review, and repair.</p>
+              </div>
+            </div>
           </div>
         </details>
+
+
+        {isExportDialogOpen && (
+          <div
+            aria-labelledby="vigil-export-dialog-title"
+            aria-modal="true"
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-background/70 px-4 py-6 backdrop-blur-sm"
+            role="dialog"
+          >
+            <div className="w-full max-w-lg rounded-2xl border border-primary/25 bg-[hsl(36_48%_95%)] p-5 text-foreground shadow-2xl md:p-6">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">VIGIL export</p>
+              <h2 id="vigil-export-dialog-title" className="font-serif text-2xl leading-snug text-foreground">Export current VIGIL view</h2>
+              <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                <p>This export contains public VIGIL registry records filtered by the current search and filter settings.</p>
+                <div className="rounded-xl border border-border bg-card/55 p-3">
+                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Please cite VIGIL if you use this data</p>
+                  <p className="font-mono text-xs leading-relaxed text-foreground">{vigilRecommendedCitation}</p>
+                </div>
+                <p>This is public-benefit governance infrastructure. If this work is useful, support helps cover infrastructure, archival, publication, and maintenance costs.</p>
+              </div>
+              <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <button
+                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={() => setIsExportDialogOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={openSupportLink}
+                >
+                  Support this work
+                </button>
+                <button
+                  className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={exportCurrentView}
+                >
+                  Download JSON
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <section className="space-y-4" data-result-range-example="Showing 1–20">
           <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
@@ -280,38 +394,40 @@ export default function Vigil() {
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search VIGIL records"
               />
-              <button
-                className="self-start rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-muted-foreground transition hover:bg-background/80 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 md:self-auto"
-                type="button"
-                onClick={exportCurrentView}
-                disabled={loadState !== "ready" || filtered.length === 0}
-              >
-                Export JSON
-              </button>
             </div>
           </div>
 
           <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
-            <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Use the compact institutional filters below, or search across the full public record text.</p>
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Use the compact institutional filters below, or search across the full public record text.</p>
               </div>
-              <button
-                className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground"
-                type="button"
-                onClick={() => setFilters({ recordType: "", affectedPlatform: "", status: "" })}
-              >
-                Clear
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground"
+                  type="button"
+                  onClick={() => setFilters({ recordType: "", affectedPlatform: "", status: "" })}
+                >
+                  Clear
+                </button>
+                <button
+                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                  type="button"
+                  onClick={() => setIsExportDialogOpen(true)}
+                  disabled={loadState !== "ready" || filtered.length === 0}
+                >
+                  Export current view
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
               {filterConfig.map((filter) => (
                 <label key={filter.key} className="block">
-                  <span className="mb-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground/60">{filter.label}</span>
+                  <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/75">{filter.label}</span>
                   <select
                     aria-label={`Filter by ${filter.label}`}
-                    className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-xs text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     value={filters[filter.key]}
                     onChange={(event) => setFilter(filter.key, event.target.value)}
                   >
@@ -324,10 +440,10 @@ export default function Vigil() {
               ))}
 
               <label className="block">
-                <span className="mb-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground/60">Date sort</span>
+                <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/75">Date sort</span>
                 <select
                   aria-label="Sort VIGIL records by date"
-                  className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-xs text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   value={dateSort}
                   onChange={(event) => setDateSort(event.target.value as DateSort)}
                 >
@@ -357,7 +473,7 @@ export default function Vigil() {
 
             {loadState === "ready" && filtered.length > 0 && (
               <div className="flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
-                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70" aria-live="polite">
+                <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground/75" aria-live="polite">
                   Showing {visibleRecordStart}–{visibleRecordEnd} of {filtered.length} VIGIL records.
                 </p>
                 <div className="flex items-center gap-2">
@@ -370,7 +486,7 @@ export default function Vigil() {
                   >
                     Previous
                   </button>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">Page {currentRecordPage} of {recordPageCount}</span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Page {currentRecordPage} of {recordPageCount}</span>
                   <button
                     type="button"
                     className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"

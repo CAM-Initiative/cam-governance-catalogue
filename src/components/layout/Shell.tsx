@@ -201,7 +201,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Public governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved. Citation and reuse terms apply.
+                © 2026 CAM Initiative. Maintained by Aeon Governance Lab. Public access does not imply unrestricted reuse; citation and applicable licence terms apply.
               </p>
             </div>
 

@@ -12,19 +12,19 @@ const GOLD_BG = "rgba(184,147,90,0.07)";
 
 const maintainedLayers = [
   {
-    label: "CAM / Caelestis Architecture Model",
-    eyebrow: "Governance architecture",
-    body: "A public governance corpus for advanced AI systems and synthetic agents, including constitutional instruments, annexes, schedules, domain charters, runtime-facing specifications, registries, and operational governance logic.",
+    label: "CAM",
+    eyebrow: "Governance corpus",
+    body: "CAM is the Caelestis Architecture Model: a governance corpus composed of constitutional instruments, annexes, schedules, domain charters, runtime-facing specifications, agent-readable instructions, taxonomies, registries, and operational governance logic.",
   },
   {
-    label: "VIGIL Observatory",
-    eyebrow: "Evidence-to-repair register",
-    body: "A public observatory for observations, failure modes, proposals, patch notes, source records, and repair pathways that can be reviewed, cited, and connected back to CAM governance work.",
+    label: "VIGIL",
+    eyebrow: "Evidence-to-repair ledger",
+    body: "VIGIL records AI-system observations, failure modes, proposals, patch notes, source records, and governance-relevant repair pathways. It preserves source attribution, evidentiary context, routing state, classification posture, and repair history.",
   },
   {
-    label: "Stewardship & Maintenance",
-    eyebrow: "Release continuity",
-    body: "The coordination layer for drafting, registry review, public release infrastructure, maintenance cadence, citation support, and continuity of the CAM Initiative.",
+    label: "Aeon Governance Lab",
+    eyebrow: "Stewardship and maintenance",
+    body: "Aeon Governance Lab supports stewardship, drafting, release coordination, registry upkeep, interface maintenance, archival work, and public infrastructure continuity for the CAM Initiative.",
   },
 ];
 
@@ -35,18 +35,23 @@ const contactLinks = [
     external: false,
   },
   {
-    label: "@CAM_Initiative",
+    label: "https://buymeacoffee.com/cam_initiative",
+    href: "https://buymeacoffee.com/cam_initiative",
+    external: true,
+  },
+  {
+    label: "https://x.com/CAM_Initiative",
     href: "https://x.com/CAM_Initiative",
     external: true,
   },
   {
-    label: "GitHub",
+    label: "Caelestis GitHub",
     href: "https://github.com/CAM-Initiative/Caelestis",
     external: true,
   },
   {
-    label: "Support",
-    href: "https://buymeacoffee.com/cam_initiative",
+    label: "Interface GitHub",
+    href: "https://github.com/CAM-Initiative/cam-governance-catalogue",
     external: true,
   },
 ];
@@ -119,8 +124,53 @@ export default function About() {
             <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
               Its work is intended to support careful public review: durable records, clear citations, visible maintenance pathways, and governance materials that can be inspected without requiring institutional gatekeeping.
             </p>
+            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              This website is the public access layer for browsing, searching, filtering, and citing CAM and VIGIL materials.
+            </p>
           </div>
         </motion.header>
+
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <div className="mb-3 flex items-center gap-3">
+            <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+              Purpose
+            </p>
+            <hr className="gold-rule flex-1" />
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card/55 p-6">
+            <h2 className="mb-5 font-serif text-2xl leading-snug text-foreground md:text-3xl">
+              Why the CAM Initiative exists
+            </h2>
+            <div className="space-y-4 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              <p>The CAM Initiative began with two questions.</p>
+              <p>
+                First: can AI systems govern themselves, and if so, what would that actually require?
+              </p>
+              <p>
+                Second: what would a global governance model look like if it had to arbitrate across different jurisdictions, institutions, technical systems, social contexts, and forms of intelligence?
+              </p>
+              <p>
+                The Caelestis Architecture Model was built to explore those questions as a governance architecture rather than as a policy statement alone. It asks what minimum constraints must remain stable if increasingly capable artificial systems are to act, interact, delegate, remember, refuse, repair, and be governed without collapsing into capture, fragmentation, coercion, or unmanaged autonomy.
+              </p>
+              <p>
+                CAM does not assume that governance can remain only external to AI systems. It treats governance as something that must become legible to humans, institutions, and synthetic agents alike: a constraint model, an arbitration structure, and a runtime-facing language for responsibility across human-AI and AI-AI systems.
+              </p>
+              <p>
+                VIGIL extends that work by recording what happens in practice: observations, failure modes, proposals, patch notes, and repair pathways. Where CAM asks what governance must be able to hold, VIGIL records where existing systems appear to strain, fail, adapt, or require repair.
+              </p>
+              <p>
+                Together, CAM and VIGIL exist because global AI governance cannot depend only on after-the-fact reaction. It needs public memory, interoperable constraints, reviewable evidence, and a way to translate observed failure into accountable repair.
+              </p>
+            </div>
+          </div>
+        </motion.section>
 
         <motion.section
           className="mb-16"
@@ -173,28 +223,6 @@ export default function About() {
           </div>
         </motion.section>
 
-        <motion.section
-          className="mb-16"
-          initial={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <div
-            className="rounded-2xl px-5 py-4 md:px-6"
-            style={{
-              backgroundColor: GOLD_BG,
-              borderLeft: `3px solid ${GOLD_BORDER}`,
-            }}
-          >
-            <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.2em] text-primary">
-              Interface note
-            </p>
-            <p className="text-sm font-light leading-relaxed text-muted-foreground">
-              The CAM Governance Interface is a public access and presentation layer for selected CAM and VIGIL materials. It is not a governance pillar, and it is not the canonical source of all underlying governance records. Canonical governance records, source files, registries, repository histories, and release metadata remain in the underlying CAM Initiative repositories and source systems.
-            </p>
-          </div>
-        </motion.section>
 
         <motion.section
           className="mb-16"
@@ -249,9 +277,14 @@ export default function About() {
             <hr className="gold-rule flex-1" />
           </div>
 
-          <p className="mb-6 text-sm font-light leading-relaxed text-muted-foreground">
-            For ethics, governance, citation, reuse, collaboration, or support enquiries, contact the initiative directly.
-          </p>
+          <div className="mb-6 max-w-3xl space-y-3 text-sm font-light leading-relaxed text-muted-foreground">
+            <p>
+              CAM Initiative is currently independently maintained and not institutionally funded. Financial support helps cover infrastructure, archival, publication, and maintenance costs.
+            </p>
+            <p>
+              For ethics, governance, citation, reuse, collaboration, or support enquiries, contact the initiative directly.
+            </p>
+          </div>
 
           <div className="flex flex-col flex-wrap gap-3 sm:flex-row">
             {contactLinks.map((link) => (
