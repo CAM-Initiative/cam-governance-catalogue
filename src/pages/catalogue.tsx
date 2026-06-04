@@ -243,13 +243,13 @@ export default function Catalogue() {
           <aside className="cam-parchment-card rounded-2xl p-4 shadow-sm lg:sticky lg:top-20">
             <div className="mb-4">
               <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Catalogue controls</p>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 Use search and filters to narrow instruments by domain, type, hierarchy, status, effect, or enforcement without changing the underlying source corpus.
               </p>
             </div>
 
             <label className="mb-4 block">
-              <span className="mb-1 block font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/70">Search</span>
+              <span className="mb-1 block font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">Search</span>
               <input
                 className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                 placeholder="Search instruments"
@@ -262,7 +262,7 @@ export default function Catalogue() {
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Filters</p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Derived from catalogue metadata.</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Derived from catalogue metadata.</p>
               </div>
               <button
                 type="button"
@@ -276,10 +276,10 @@ export default function Catalogue() {
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
               {filterFields.map((f) => (
                 <label key={f} className="block">
-                  <span className="mb-1 block font-mono text-[8px] uppercase tracking-[0.16em] text-muted-foreground/60">{filterLabels[f] || f}</span>
+                  <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{filterLabels[f] || f}</span>
                   <select
                     aria-label={`Filter by ${filterLabels[f] || f}`}
-                    className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-xs text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full rounded-md border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     value={filters[f] || ""}
                     onChange={(e) => setFilters((v) => ({ ...v, [f]: e.target.value }))}
                   >
@@ -295,10 +295,7 @@ export default function Catalogue() {
             </div>
 
             <div className="mt-5 rounded-xl border border-border/70 bg-background/40 p-3">
-              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70" aria-live="polite">
-                Showing {pageStart}–{pageEnd} of {filtered.length} instruments.
-              </p>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 Results are paged at 20 instruments per page for stable browsing and keyboard navigation.
               </p>
             </div>

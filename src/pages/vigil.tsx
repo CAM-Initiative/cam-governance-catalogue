@@ -482,35 +482,25 @@ export default function Vigil() {
         )}
 
         <section className="space-y-4" data-result-range-example="Showing 1–20">
-          <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <input
-                aria-label="Search VIGIL records"
-                className="min-w-0 flex-1 rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search VIGIL records"
-              />
-            </div>
-          </div>
-
-          <div className="cam-parchment-card rounded-xl p-3 shadow-sm">
-            <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="cam-parchment-card rounded-xl p-4 shadow-sm">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Use the compact institutional filters below, or search across the full public record text.</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search and narrow public records by type, affected platform, and status without changing the live VIGIL source data.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
-                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground"
+                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
                   type="button"
-                  onClick={() => setFilters({ recordType: "", affectedPlatform: "", status: "" })}
+                  onClick={() => {
+                    setSearch("");
+                    setFilters({ recordType: "", affectedPlatform: "", status: "" });
+                  }}
                 >
                   Clear
                 </button>
                 <button
-                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
                   type="button"
                   onClick={() => setIsExportDialogOpen(true)}
                   disabled={loadState !== "ready" || filtered.length === 0}
@@ -519,13 +509,24 @@ export default function Vigil() {
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <label className="block sm:col-span-2 lg:col-span-1">
+                <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/75">Search</span>
+                <input
+                  aria-label="Search VIGIL records"
+                  className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  type="search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search VIGIL records"
+                />
+              </label>
               {filterConfig.map((filter) => (
                 <label key={filter.key} className="block">
                   <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/75">{filter.label}</span>
                   <select
                     aria-label={`Filter by ${filter.label}`}
-                    className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="w-full rounded-md border border-border bg-card px-2 py-2 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     value={filters[filter.key]}
                     onChange={(event) => setFilter(filter.key, event.target.value)}
                   >
@@ -537,6 +538,34 @@ export default function Vigil() {
                 </label>
               ))}
             </div>
+            {loadState === "ready" && (
+              <div className="mt-4 flex flex-col gap-3 border-t border-border/70 pt-3 md:flex-row md:items-center md:justify-between">
+                <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground/75" aria-live="polite">
+                  Showing {visibleRecordStart}–{visibleRecordEnd} of {filtered.length} VIGIL records.
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:bg-card hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
+                    onClick={() => setRecordPage((page) => Math.max(1, page - 1))}
+                    disabled={currentRecordPage === 1 || filtered.length === 0}
+                    aria-label="Show previous VIGIL records page"
+                  >
+                    Previous
+                  </button>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Page {currentRecordPage} of {recordPageCount}</span>
+                  <button
+                    type="button"
+                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:bg-card hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
+                    onClick={() => setRecordPage((page) => Math.min(recordPageCount, page + 1))}
+                    disabled={currentRecordPage === recordPageCount || filtered.length === 0}
+                    aria-label="Show next VIGIL records page"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
             {loadState === "loading" && <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">Loading VIGIL records from <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>…</div>}
@@ -557,53 +586,24 @@ export default function Vigil() {
             )}
 
             {loadState === "ready" && filtered.length > 0 && (
-              <div className="flex flex-col gap-3 rounded-xl border border-border bg-card/50 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
-                <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground/75" aria-live="polite">
-                  Showing {visibleRecordStart}–{visibleRecordEnd} of {filtered.length} VIGIL records.
-                </p>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
-                    onClick={() => setRecordPage((page) => Math.max(1, page - 1))}
-                    disabled={currentRecordPage === 1}
-                    aria-label="Show previous VIGIL records page"
-                  >
-                    Previous
-                  </button>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">Page {currentRecordPage} of {recordPageCount}</span>
-                  <button
-                    type="button"
-                    className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground disabled:cursor-not-allowed disabled:opacity-45"
-                    onClick={() => setRecordPage((page) => Math.min(recordPageCount, page + 1))}
-                    disabled={currentRecordPage === recordPageCount}
-                    aria-label="Show next VIGIL records page"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {loadState === "ready" && filtered.length > 0 && (
-              <p className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">Select any entry to expand record details and inspect raw JSON.</p>
+              <p className="font-sans text-sm leading-relaxed text-muted-foreground">Select any entry to expand record details and inspect raw JSON. Click a column heading to sort records.</p>
             )}
 
             <div className="space-y-2">
               {loadState === "ready" && filtered.length > 0 && (
-                <div className="hidden gap-2 rounded-lg border border-border bg-card/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem]" role="row">
+                <div className="hidden gap-2 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem]" role="row">
                   {sortableColumns.map((column) => {
                     const isActive = sortConfig.key === column.key;
                     return (
                       <div key={column.key} role="columnheader" aria-sort={isActive ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}>
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1 rounded-sm text-left transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                          className={`inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-left transition hover:bg-background/70 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background ${isActive ? "text-cam-gold" : "text-muted-foreground"}`}
                           onClick={() => updateSort(column.key)}
                           aria-label={`Sort VIGIL records by ${column.label} ${isActive && sortConfig.direction === "asc" ? "descending" : "ascending"}`}
                         >
                           <span>{column.label}</span>
-                          <span className={isActive ? "text-cam-gold" : "text-muted-foreground/35"} aria-hidden="true">{isActive ? (sortConfig.direction === "asc" ? "↑" : "↓") : "↕"}</span>
+                          <span className={isActive ? "text-cam-gold" : "text-muted-foreground/60"} aria-hidden="true">{isActive ? (sortConfig.direction === "asc" ? "↑" : "↓") : "↕"}</span>
                         </button>
                       </div>
                     );
@@ -647,7 +647,7 @@ export default function Vigil() {
 
                         <div>
                           <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Title</p>
-                          <h2 className="mt-1 break-words font-mono text-base font-medium leading-snug text-foreground">{record.title}</h2>
+                          <h2 className="mt-1 break-words font-mono text-base font-normal leading-snug text-foreground/90">{record.title}</h2>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
@@ -671,7 +671,7 @@ export default function Vigil() {
                         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
                         <div className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
                         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
-                        <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-medium leading-snug text-foreground lg:text-base">{record.title}</h2>
+                        <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
                         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.record_state}</div>
                       </div>
                     </div>
@@ -683,7 +683,7 @@ export default function Vigil() {
                     <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
                       <div className="min-w-0">
                         <p className="break-words font-mono text-[11px] text-cam-gold">{record.id}</p>
-                        <h2 className="mt-1 break-words font-mono text-xl font-medium leading-snug text-foreground">{record.title}</h2>
+                        <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{record.title}</h2>
                         <div className="mt-3 flex flex-wrap gap-2">
                           {[record.type_label, record.record_state, recordDate, record.platform_label].filter(isMeaningfulText).map((value) => (
                             <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>

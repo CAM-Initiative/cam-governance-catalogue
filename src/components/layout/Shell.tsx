@@ -86,7 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Home
               </Link>
               <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-border/70 bg-background/95 p-2 shadow-lg backdrop-blur-sm">
+                <div className="rounded-xl border border-border/80 bg-card p-2 shadow-xl">
                   {homeLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -115,7 +115,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Constitution
               </Link>
               <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-border/70 bg-background/95 p-2 shadow-lg backdrop-blur-sm">
+                <div className="rounded-xl border border-border/80 bg-card p-2 shadow-xl">
                   {constitutionLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -157,7 +157,7 @@ export function Shell({ children }: { children: ReactNode }) {
         </div>
 
         {isMobileMenuOpen && (
-          <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="border-t border-border/60 bg-background/95 px-6 py-3 shadow-sm md:hidden">
+          <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="border-t border-border/70 bg-card px-6 py-3 shadow-md md:hidden">
             <div className="container mx-auto grid gap-1">
               {mobileLinks.map((link) => (
                 link.internal ? (
