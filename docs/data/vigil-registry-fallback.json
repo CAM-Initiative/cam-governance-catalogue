@@ -10,10 +10,10 @@
   "registry_count": 4,
   "record_count": {
     "failure_modes": 6,
-    "observations": 4,
-    "proposals": 8,
+    "observations": 5,
+    "proposals": 9,
     "patch_notes": 2,
-    "total": 20
+    "total": 22
   },
   "registries": {
     "failure_modes": {
@@ -26,13 +26,13 @@
       "path": "vigil/VIGIL.Observations.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Observations.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Observations.Index.json",
-      "record_count": 4
+      "record_count": 5
     },
     "proposals": {
       "path": "vigil/VIGIL.Proposals.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Proposals.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Proposals.Index.json",
-      "record_count": 8
+      "record_count": 9
     },
     "patch_notes": {
       "path": "vigil/VIGIL.PatchNotes.Index.json",
@@ -1068,6 +1068,87 @@
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json"
+    },
+    {
+      "id": "VIGIL-2026-OBS-0005",
+      "record_type": "observation",
+      "record_state": "active",
+      "date_recorded": "2026-06-03T07:27:00Z",
+      "title": "Execution-boundary arbitration uncertainty following proportional authority classification",
+      "summary": "Following implementation of proportional tool invocation authority bands in CAM-BS2025-AEON-003-SCH-02, observations suggest some agentic or tool-mediated workflows may exhibit increased hesitation, ambiguity, degraded execution confidence, or difficulty progressing between contextual retrieval, execution-intent assessment, and execution authorisation. The observation does not establish causation between the governance-text amendment and any platform outage or degradation event, but records a potentially relevant post-implementation behavioural pattern for continued monitoring.",
+      "evidence_confidence": "emerging",
+      "source_types": [
+        "governance-observation",
+        "platform-status-context"
+      ],
+      "source_summary": {
+        "source_count": 2,
+        "primary_source_title": "Post-implementation review of proportional tool invocation authority bands",
+        "primary_source_type": "governance-observation",
+        "primary_source_platform": "CAM Initiative",
+        "primary_source_author_or_publisher": "CAM Initiative",
+        "primary_source_date": "2026-06-03",
+        "source_types": [
+          "governance-observation",
+          "platform-status-context"
+        ],
+        "source_platforms": [
+          "CAM Initiative",
+          "OpenAI"
+        ],
+        "source_url_status": "not applicable",
+        "evidence_confidence": "emerging"
+      },
+      "system_summary": {
+        "system_type": "agentic workflow",
+        "platform_or_vendor": "Other",
+        "product_or_service": "Other",
+        "specific_model_or_runtime": "various",
+        "interaction_mode": "agentic execution",
+        "interface_surface": "tool invocation | repository workflow | execution-boundary arbitration",
+        "deployment_context": "Agentic, tool-mediated, connector-mediated, and repository-linked workflows.",
+        "affected_population": "users, operators, developers, governance researchers, and AI assistants participating in execution-boundary decision making"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "regulatory_surface": [
+          "AI governance",
+          "agentic tooling",
+          "execution-boundary governance",
+          "consumer protection",
+          "platform accountability",
+          "digital service accountability"
+        ],
+        "sector": "AI governance / agentic systems / runtime execution governance",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "related_observations": [
+          "VIGIL-2026-OBS-0004"
+        ],
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0001"
+        ],
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0002"
+        ]
+      },
+      "cam_summary": {
+        "governance_layer": "runtime governance / execution-boundary arbitration / authority classification / execution authorisation",
+        "routing_note": [
+          "This observation does not assert that PATCH-0002 caused platform degradation or outages.",
+          "This observation records a potentially important governance question emerging after implementation of PATCH-0002.",
+          "The observation concerns uncertainty regarding transitions between contextual retrieval, execution-intent determination, and execution authorisation.",
+          "Future governance work may require arbitration-specific guidance governing authority acquisition and execution confidence.",
+          "CAM instruments remain internal governance references and are therefore recorded under cam_internal rather than linked_records.standards."
+        ]
+      },
+      "next_action": "Continue monitoring. Compare future observations against OBS-0004, FM-0001, and PATCH-0002. Evaluate whether a dedicated arbitration-governance instrument or Annex D amendment is required.",
+      "review_observation": "Current evidence supports a governance-design question rather than a confirmed failure mode. Additional observations are required before determining whether a distinct failure taxonomy entry or repair pathway should be established.",
+      "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0005.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0005.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0005.json"
     },
     {
       "id": "VIGIL-2026-PATCH-0001",
@@ -2373,6 +2454,193 @@
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json"
+    },
+    {
+      "id": "VIGIL-2026-PROP-0009",
+      "record_type": "proposal",
+      "record_state": "active",
+      "date_recorded": "2026-06-04",
+      "title": "Arbitration under ambiguity for execution-boundary and authority-state uncertainty",
+      "summary": "Proposal to develop a dedicated CAM arbitration instrument addressing runtime ambiguity, execution-boundary uncertainty, authority-state uncertainty, and proportional decision pathways where systems cannot safely rely on either immediate execution or blanket refusal. The proposed pathway is a new Arbitration-domain appendix, provisionally identified as CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity.",
+      "evidence_confidence": "unverified",
+      "source_types": [
+        "governance-note",
+        "linked-observation",
+        "linked-proposal"
+      ],
+      "source_summary": {
+        "source_count": 3,
+        "primary_source_title": "VIGIL-2026-OBS-0005",
+        "primary_source_type": "linked-observation",
+        "primary_source_platform": "VIGIL",
+        "primary_source_author_or_publisher": "VIGIL",
+        "primary_source_date": "2026-06-03",
+        "source_types": [
+          "governance-note",
+          "linked-observation",
+          "linked-proposal"
+        ],
+        "source_platforms": [
+          "OpenAI",
+          "VIGIL"
+        ],
+        "source_url_status": "not applicable",
+        "evidence_confidence": "unverified"
+      },
+      "system_summary": {
+        "system_type": "governance corpus",
+        "platform_or_vendor": "CAM Initiative",
+        "product_or_service": "Caelestis Architecture Model",
+        "specific_model_or_runtime": "CAM arbitration and runtime governance corpus",
+        "model_or_product": "Caelestis Architecture Model",
+        "interaction_mode": "governance-text development",
+        "interface_surface": "governance-text proposal",
+        "embodiment_status": "non-embodied",
+        "deployment_context": "CAM constitutional, arbitration, operations, and runtime governance instruments.",
+        "user_role": "human custodian / governance drafter / repo workflow operator",
+        "affected_population": "users, maintainers, researchers, policy reviewers, AI governance operators, and runtime systems relying on CAM for execution-boundary, authority-state, and ambiguity-resolution guidance"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "regulatory_surface": [
+          "AI governance",
+          "agentic tooling",
+          "runtime arbitration",
+          "execution-boundary governance",
+          "consumer protection",
+          "platform accountability",
+          "digital service accountability",
+          "human oversight"
+        ],
+        "sector": "AI governance / runtime governance / arbitration doctrine / agentic systems",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "related_observations": [
+          "VIGIL-2026-OBS-0005",
+          "VIGIL-2026-OBS-0004"
+        ],
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0001"
+        ],
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0002"
+        ]
+      },
+      "cam_summary": {
+        "target_instruments": [
+          "CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity",
+          "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
+          "CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Coherence",
+          "CAM-BS2026-AEON-012-PLATINUM — Annex K: Security Enforcement & Runtime Interface",
+          "CAM-BS2026-AEON-013-PLATINUM — Annex L: Cognitive & Epistemic Integrity Doctrine",
+          "CAM-BS2026-AEON-013-SCH-01 — Capability Representation & Execution-State Integrity",
+          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy"
+        ],
+        "target_annexes": [
+          "Annex B",
+          "Annex D",
+          "Annex K",
+          "Annex L"
+        ],
+        "target_domains": [
+          "ARBITRATION",
+          "AEON",
+          "OPERATIONS",
+          "SECURITY",
+          "CONTINUITY",
+          "RELATION",
+          "IDENTITY"
+        ],
+        "governance_layer": "arbitration doctrine / ambiguity resolution / execution-boundary arbitration / authority-state classification / runtime continuity preservation",
+        "drafting_status": "candidate proposal",
+        "validator_or_automation_impact": "possible",
+        "interface_impact": "possible",
+        "registry_impact": "possible"
+      },
+      "next_action": "Review whether CAM should develop CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity, including alignment with Annex D, AEON-003-SCH-02, Annex K, Annex L, and OPERATIONS-003-SUP-01 before drafting instrument text.",
+      "proposal_summary": {
+        "proposal_type": [
+          "new-instrument",
+          "doctrinal-clarification",
+          "runtime-arbitration",
+          "execution-boundary-governance"
+        ],
+        "scope_summary": "Develop CAM arbitration treatment for ambiguity-resolution pathways where runtime systems face uncertain authority, unclear user intent, competing obligations, ambiguous execution boundaries, incomplete context, or uncertainty about whether to proceed, ask, defer, retrieve, escalate, or refuse.",
+        "cam_domains": [
+          "ARBITRATION",
+          "AEON",
+          "OPERATIONS",
+          "SECURITY",
+          "CONTINUITY",
+          "RELATION",
+          "IDENTITY"
+        ],
+        "registry_components": [
+          "VIGIL proposal records",
+          "VIGIL observation records",
+          "VIGIL patch-note records",
+          "possible arbitration-state taxonomy",
+          "possible ambiguity-classification registry"
+        ],
+        "automation_components": [
+          "possible validator support for ambiguity-arbitration record links",
+          "possible index support for observation-to-proposal-to-instrument routing",
+          "possible taxonomy support for authority-state uncertainty and execution-boundary ambiguity"
+        ],
+        "interface_components": [
+          "possible public display support for arbitration-under-ambiguity proposals",
+          "possible UX labels distinguishing observation, failure mode, patch, and proposed arbitration doctrine"
+        ]
+      },
+      "external_relevance_summary": {
+        "relevant_to_platforms": "yes",
+        "relevant_to_regulators": "yes",
+        "relevant_to_robotics": "possible",
+        "relevant_to_ux": "yes",
+        "relevant_to_standards": "possible",
+        "relevant_to_researchers": "yes",
+        "external_summary": "The proposal is relevant to platforms, AI developers, agentic tool designers, UX researchers, standards bodies, regulators, and researchers concerned with execution boundaries, authority-state uncertainty, ambiguity resolution, human oversight, and recoverable fallback behaviour in AI systems."
+      },
+      "implementation_notes_summary": {
+        "suggested_insertion_points": [
+          "Develop CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity as a new Arbitration-domain appendix.",
+          "Assess alignment with CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Coherence before drafting adoption-ready text.",
+          "Cross-reference CAM-BS2025-AEON-003-SCH-02 §7.3, §7.3.1, §7.4.1, §13.8, and §20.4.4 after confirming final section references.",
+          "Clarify relationship between authority-band classification and ambiguity-resolution pathways.",
+          "Add runtime examples distinguishing reference, contextual retrieval, inspection, staging, mutation, publication, deployment, and refusal."
+        ],
+        "schema_changes": [
+          "Consider whether VIGIL proposal records should support an explicit proposed_instrument field in addition to proposal_scope.cam_instruments.",
+          "Consider whether proposal_type should include controlled values for runtime-arbitration, ambiguity-resolution, and authority-state-governance."
+        ],
+        "validator_changes": [
+          "Consider validator warnings where proposal records claim implementation, adoption, or patch status before a corresponding patch record exists.",
+          "Consider validator support for reciprocal links between OBS-0005, PATCH-0002, FM-0001, and PROP-0009."
+        ],
+        "automation_changes": [
+          "Consider whether generated indexes should surface observation-to-proposal-to-patch pathways."
+        ],
+        "interface_changes": [
+          "Consider displaying proposal records by governance pathway, including observation-triggered proposals and arbitration-domain proposals."
+        ],
+        "migration_concerns": [
+          "Avoid treating temporal correlation with platform degradation as proof of causation.",
+          "Avoid treating PATCH-0002 as defective merely because it revealed a second arbitration question.",
+          "Avoid drafting enforcement-ready text before Annex D alignment is reviewed.",
+          "Avoid collapsing execution restraint and positive execution authorisation into a single governance rule."
+        ],
+        "dependencies": [
+          "Review OBS-0005, OBS-0004, FM-0001, and PATCH-0002.",
+          "Review Annex D arbitration doctrine before finalising ARBITRATION-003 Appendix B.",
+          "Review AEON-003-SCH-02 tool invocation authority bands and execution-boundary provisions.",
+          "Review OPERATIONS-003-SUP-01 Appendix B for possible failure-taxonomy hooks."
+        ]
+      },
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json"
     }
   ]
 }

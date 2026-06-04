@@ -1,7 +1,7 @@
 {
-  "synced_at_utc": "2026-06-04T08:01:29.234Z",
+  "synced_at_utc": "2026-06-04T13:40:50.010Z",
   "source_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Registry.Index.json",
   "fallback_file": "docs/data/vigil-registry-fallback.json",
-  "record_count": 20,
+  "record_count": 22,
   "status": "fetched"
 }
