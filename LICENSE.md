@@ -153,15 +153,17 @@ Written permission is required before any such use.
 
 ---
 
-## 14. Suggested Attribution
+## 14. Suggested Attribution for the Interface Codebase
 
-Where reasonably practicable, use the following attribution:
+Where reasonably practicable, use the following attribution for the Interface codebase:
 
 > CAM Governance Interface © Aeon Governance Lab / CAM Initiative. Used under the CAM Governance Interface Licence v1.0.
 
 For modified versions:
 
 > Based on the CAM Governance Interface © Aeon Governance Lab / CAM Initiative. Modified by [name/entity]. Original project and governance materials remain subject to their respective licences.
+
+This attribution notice is not a scholarly citation for CAM instruments, VIGIL records, or archive/DOI releases. Use the applicable CITATION.cff, DOI record, or repository-specific citation guidance for those materials.
 
 ---
 

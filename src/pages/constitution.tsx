@@ -96,7 +96,7 @@ export default function Constitution() {
 
         {/* ─── GOVERNANCE STACK (horizontal scroll) ─── */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Governance Stack</p>
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-cam-gold shrink-0">Governance Stack</p>
           <hr className="gold-rule flex-1" />
           <p className="font-mono text-xs tracking-[0.14em] uppercase text-muted-foreground/50 shrink-0 hidden sm:block">scroll →</p>
         </motion.div>
@@ -109,7 +109,7 @@ export default function Constitution() {
                 <motion.div key={layer.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.07 }} className="w-[280px] shrink-0 flex flex-col">
                   <div className="flex items-center gap-2 mb-3 px-1">
                     <div className="w-7 h-7 rounded-full flex items-center justify-center border-2 bg-background shrink-0" style={{ borderColor: layer.color }}>
-                      <span className="font-mono text-[9px] font-medium" style={{ color: layer.color }}>{layer.layer}</span>
+                      <span className="font-mono text-[11px] font-medium" style={{ color: layer.color }}>{layer.layer}</span>
                     </div>
                     {i < constitutionalStack.length - 1 && (
                       <div className="flex-1 h-px" style={{ background: `linear-gradient(to right, ${layer.color}50, transparent)` }} />
@@ -130,7 +130,7 @@ export default function Constitution() {
                         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
                           <div className="px-5 pb-5">
                             <div className="h-px mb-4" style={{ backgroundColor: GOLD_BORDER }} />
-                            <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-3">Instruments</p>
+                            <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-muted-foreground/60 mb-3">Instruments</p>
                             {layer.id === "layer-00" && (
                               <div className="space-y-2">
                                 {substrateInvariants.map((inv) => {
@@ -140,7 +140,7 @@ export default function Constitution() {
                                       <div className="flex items-start gap-3 py-2 px-3 rounded-xl cursor-pointer transition-colors hover:bg-amber-50/50" style={{ backgroundColor: isInvOpen ? `${layer.color}12` : GOLD_BG, borderLeft: `2px solid ${layer.color}50` }} onClick={() => setExpandedInstrument(isInvOpen ? null : inv.id)}>
                                         <div className="flex-1 min-w-0">
                                           <p className="text-sm font-medium leading-snug text-foreground">{inv.title}</p>
-                                          <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{inv.id} · {inv.status}</p>
+                                          <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{inv.id} · {inv.status}</p>
                                         </div>
                                         <ChevronDown className="w-3.5 h-3.5 shrink-0 mt-0.5 transition-transform" style={{ color: layer.color, transform: isInvOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
                                       </div>
@@ -162,7 +162,7 @@ export default function Constitution() {
                                   <div key={inst.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-sm font-medium leading-snug text-foreground">{inst.title}</p>
-                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{inst.id} · {inst.status}</p>
+                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{inst.id} · {inst.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -174,7 +174,7 @@ export default function Constitution() {
                                   <div key={ann.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-sm font-medium leading-snug text-foreground">{ann.title}</p>
-                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{ann.id} · {ann.status}</p>
+                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{ann.id} · {ann.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -185,9 +185,9 @@ export default function Constitution() {
                                 {domainCharters.map(ch => (
                                   <div key={ch.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
-                                      <span className="font-mono text-[10px] tracking-wider text-muted-foreground/55 uppercase">{ch.domain}</span>
+                                      <span className="font-mono text-[11px] tracking-wider text-muted-foreground/55 uppercase">{ch.domain}</span>
                                       <p className="text-sm font-medium leading-snug text-foreground">{ch.title}</p>
-                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{ch.id} · {ch.status}</p>
+                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{ch.id} · {ch.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -199,7 +199,7 @@ export default function Constitution() {
                                   <div key={sch.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
                                     <div className="flex-1 min-w-0">
                                       <p className="text-sm font-medium leading-snug text-foreground">{sch.title}</p>
-                                      <p className="font-mono text-[10px] leading-relaxed text-muted-foreground/55 mt-1">{sch.id} · {sch.status}</p>
+                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{sch.id} · {sch.status}</p>
                                     </div>
                                   </div>
                                 ))}
@@ -218,7 +218,7 @@ export default function Constitution() {
 
         {/* ─── CONSTITUTIONAL INTERFACES ─── */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Constitutional Interfaces</p>
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-cam-gold shrink-0">Constitutional Interfaces</p>
           <hr className="gold-rule flex-1" />
         </motion.div>
 
