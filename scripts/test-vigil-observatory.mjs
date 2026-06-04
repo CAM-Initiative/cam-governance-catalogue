@@ -85,13 +85,14 @@ test("VIGIL normalization resolves source and platform display fields", async ()
   }
 });
 
-test("collapsed VIGIL row keeps clean public source presentation", async () => {
+test("collapsed VIGIL row omits record-file link while keeping readable public fields", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
   assert.match(collapsedRow, /record\.title/);
   assert.match(collapsedRow, /record\.platform_label/);
   assert.match(collapsedRow, /record\.type_label/);
-  assert.match(collapsedRow, /Source ↗/);
+  assert.doesNotMatch(collapsedRow, /Source ↗/);
+  assert.doesNotMatch(collapsedRow, /Open record/);
   assert.doesNotMatch(collapsedRow, /Raw JSON/);
   assert.doesNotMatch(collapsedRow, /record\.id/);
 });

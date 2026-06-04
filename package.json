@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm run sync:vigil && rm -rf docs/assets && vite build && node scripts/prepare-github-pages.js",
+    "build": "pnpm run sync:cam && pnpm run sync:vigil && rm -rf docs/assets && vite build && node scripts/prepare-github-pages.js",
     "deploy:docs": "pnpm run build",
     "validate:catalogue": "node scripts/validate-catalogue-data.js",
     "sync:vigil": "node scripts/sync-vigil-records.mjs",
     "validate:vigil": "node scripts/validate-vigil-registry-sources.mjs",
-    "test:vigil": "node --test scripts/test-vigil-observatory.mjs"
+    "test:vigil": "node --test scripts/test-vigil-observatory.mjs",
+    "sync:cam": "node scripts/sync-cam-governance.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",

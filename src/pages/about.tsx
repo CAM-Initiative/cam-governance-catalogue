@@ -14,6 +14,11 @@ const citations = [
     citation:
       "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil",
   },
+  {
+    label: "Caelestis Architecture Model Corpus citation",
+    citation:
+      "O’Rourke, M. V. (2026). Caelestis Architecture Model. https://doi.org/10.5281/zenodo.19779351",
+  },
 ];
 
 const GOLD = "#B8935A";
