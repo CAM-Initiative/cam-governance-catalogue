@@ -1,5 +1,6 @@
 import { KeyboardEvent, MouseEvent, useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
+import registrySources from "@/config/registrySources.json";
 
 type Instrument = Record<string, string | boolean | null | undefined>;
 type Detail = { label: string; value: string; variant?: "wide" };
@@ -28,6 +29,9 @@ const filterLabels: Record<string, string> = {
 const missingPurposeMessage = "Purpose statement not yet available in catalogue metadata.";
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
 const pageSize = 20;
+const camRegistrySource = registrySources.cam;
+const camRegistryUrl = camRegistrySource.registry_index_url;
+const camFallbackUrl = `${import.meta.env.BASE_URL}data/cam-governance-fallback.json`;
 
 const metadataFields: Array<{ key: string; label: string }> = [
   { key: "domain", label: "Domain" },
@@ -93,7 +97,26 @@ function conciseDescription(it: Instrument) {
 
 function sourceUrl(link?: string | boolean | null) {
   const cleaned = cleanValue(link);
-  return cleaned ? `https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/${cleaned}` : "";
+  return cleaned ? `https://github.com/${camRegistrySource.repo}/blob/${camRegistrySource.branch}/Governance/${cleaned}` : "";
+}
+
+function cacheBustUrl(url: string, version = Date.now()) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}v=${version}`;
+}
+
+function itemsFromGovernanceIndex(data: unknown): Instrument[] {
+  if (Array.isArray(data)) return data as Instrument[];
+  if (data && typeof data === "object" && Array.isArray((data as { items?: unknown }).items)) {
+    return (data as { items: Instrument[] }).items;
+  }
+  return [];
+}
+
+async function fetchGovernanceItems(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+  return itemsFromGovernanceIndex(await response.json());
 }
 
 function detailRows(it: Instrument, collapsedDescription: string) {
@@ -140,12 +163,20 @@ export default function Catalogue() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/cam-governance.json`)
-      .then((r) => r.json())
-      .then((data) => {
-        const items = Array.isArray(data) ? data : Array.isArray(data.items) ? data.items : [];
-        setRows(items);
+    let cancelled = false;
+
+    fetchGovernanceItems(cacheBustUrl(camRegistryUrl))
+      .catch(() => fetchGovernanceItems(camFallbackUrl))
+      .then((items) => {
+        if (!cancelled) setRows(items);
+      })
+      .catch(() => {
+        if (!cancelled) setRows([]);
       });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const options = useMemo(

@@ -6,7 +6,9 @@ import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel
 const VIGIL_PAGE_SIZE = 20;
 
 type FilterKey = "recordType" | "affectedPlatform" | "status";
-type DateSort = "newest" | "oldest";
+type SortKey = "id" | "date" | "platform" | "type" | "title" | "status";
+type SortDirection = "asc" | "desc";
+type SortConfig = { key: SortKey; direction: SortDirection };
 
 type FilterOption = { value: string; label: string };
 
@@ -24,6 +26,15 @@ const vigilCitation = {
   url: "https://www.cam-initiative.org/vigil",
   repository: "https://github.com/CAM-Initiative/Vigil",
 };
+const sortableColumns: Array<{ key: SortKey; label: string }> = [
+  { key: "id", label: "Record ID" },
+  { key: "date", label: "Date" },
+  { key: "platform", label: "Platform" },
+  { key: "type", label: "Type" },
+  { key: "title", label: "Title" },
+  { key: "status", label: "Status" },
+];
+
 const filterConfig: Array<{ key: FilterKey; label: string; placeholder: string }> = [
   { key: "recordType", label: "Record Type", placeholder: "All record types" },
   { key: "affectedPlatform", label: "Affected Platform", placeholder: "All affected platforms" },
@@ -74,6 +85,47 @@ function recordTimestamp(record: VigilIndexRecord) {
   const dateValue = record.date_recorded ?? record.date_implemented;
   const timestamp = dateValue ? Date.parse(dateValue) : Number.NaN;
   return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function sortTextValue(value?: string) {
+  const cleaned = String(value ?? "").trim();
+  return cleaned ? cleaned.toLocaleLowerCase() : undefined;
+}
+
+function sortValueForRecord(record: VigilIndexRecord, key: SortKey) {
+  if (key === "date") {
+    const timestamp = recordTimestamp(record);
+    return timestamp > 0 ? timestamp : undefined;
+  }
+
+  const values: Record<Exclude<SortKey, "date">, string | undefined> = {
+    id: record.id,
+    platform: record.platform_label,
+    type: record.type_label,
+    title: record.title,
+    status: record.record_state,
+  };
+
+  return sortTextValue(values[key]);
+}
+
+function compareRecordsBySort(a: VigilIndexRecord, b: VigilIndexRecord, sortConfig: SortConfig) {
+  const aValue = sortValueForRecord(a, sortConfig.key);
+  const bValue = sortValueForRecord(b, sortConfig.key);
+
+  if (aValue === undefined && bValue === undefined) return 0;
+  if (aValue === undefined) return 1;
+  if (bValue === undefined) return -1;
+
+  const comparison = typeof aValue === "number" && typeof bValue === "number"
+    ? aValue - bValue
+    : String(aValue).localeCompare(String(bValue), undefined, { numeric: true, sensitivity: "base" });
+
+  return sortConfig.direction === "asc" ? comparison : -comparison;
+}
+
+function jsonFileName(record: VigilIndexRecord) {
+  return `${(record.id || "vigil-record").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "vigil-record"}.json`;
 }
 
 function Field({ label, value }: { label: string; value?: string }) {
@@ -158,13 +210,14 @@ export default function Vigil() {
     status: "",
   });
   const [search, setSearch] = useState("");
-  const [dateSort, setDateSort] = useState<DateSort>("newest");
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "date", direction: "desc" });
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [loadNotice, setLoadNotice] = useState("");
   const [recordPage, setRecordPage] = useState(1);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
+  const [copiedRecordKey, setCopiedRecordKey] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -200,16 +253,13 @@ export default function Vigil() {
       });
       const searchOk = !search.trim() || record.searchText.includes(search.trim().toLowerCase());
       return filtersOk && searchOk;
-    }).sort((a, b) => {
-      const direction = dateSort === "newest" ? -1 : 1;
-      return (recordTimestamp(a) - recordTimestamp(b)) * direction;
-    }),
-    [dateSort, filters, records, search],
+    }).sort((a, b) => compareRecordsBySort(a, b, sortConfig)),
+    [filters, records, search, sortConfig],
   );
 
   useEffect(() => {
     setRecordPage(1);
-  }, [dateSort, filters, search]);
+  }, [filters, search, sortConfig]);
 
   useEffect(() => {
     if (!isExportDialogOpen) return;
@@ -231,6 +281,54 @@ export default function Vigil() {
 
   function setFilter(key: FilterKey, value: string) {
     setFilters((current) => ({ ...current, [key]: value }));
+  }
+
+
+  function updateSort(key: SortKey) {
+    setSortConfig((current) => ({
+      key,
+      direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
+    }));
+  }
+
+  async function copyRecordJson(record: VigilIndexRecord, recordKey: string) {
+    const jsonText = JSON.stringify(record.raw, null, 2);
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(jsonText);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = jsonText;
+        textArea.setAttribute("readonly", "");
+        textArea.style.position = "fixed";
+        textArea.style.top = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.select();
+        const copied = document.execCommand("copy");
+        textArea.remove();
+        if (!copied) throw new Error("Clipboard copy failed");
+      }
+
+      setCopiedRecordKey(recordKey);
+      window.setTimeout(() => {
+        setCopiedRecordKey((current) => (current === recordKey ? null : current));
+      }, 2000);
+    } catch {
+      setCopiedRecordKey(null);
+    }
+  }
+
+  function downloadRecordJson(record: VigilIndexRecord) {
+    const blob = new Blob([`${JSON.stringify(record.raw, null, 2)}\n`], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = jsonFileName(record);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
   }
 
   function toggleExpandedRecord(recordKey: string) {
@@ -259,7 +357,7 @@ export default function Vigil() {
       source_registry: VIGIL_REGISTRY_SOURCE.registry_index_url,
       citation: vigilCitation,
       reuse_notice: vigilReuseNotice,
-      filters: { ...filters, search, date_sort: dateSort },
+      filters: { ...filters, search, sort: sortConfig },
       record_count: filtered.length,
       records: filtered.map(({ raw }) => raw),
     };
@@ -421,7 +519,7 @@ export default function Vigil() {
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {filterConfig.map((filter) => (
                 <label key={filter.key} className="block">
                   <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/75">{filter.label}</span>
@@ -438,19 +536,6 @@ export default function Vigil() {
                   </select>
                 </label>
               ))}
-
-              <label className="block">
-                <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/75">Date sort</span>
-                <select
-                  aria-label="Sort VIGIL records by date"
-                  className="w-full rounded-md border border-border bg-card px-2 py-1.5 text-sm text-foreground focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                  value={dateSort}
-                  onChange={(event) => setDateSort(event.target.value as DateSort)}
-                >
-                  <option value="newest">Newest first</option>
-                  <option value="oldest">Oldest first</option>
-                </select>
-              </label>
             </div>
           </div>
 
@@ -506,14 +591,23 @@ export default function Vigil() {
 
             <div className="space-y-2">
               {loadState === "ready" && filtered.length > 0 && (
-                <div className="hidden gap-2 rounded-lg border border-border bg-card/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid md:grid-cols-[6.5rem_6.5rem_7.5rem_5rem_minmax(0,1fr)_5rem_4.5rem]">
-                  <div>Record ID</div>
-                  <div>Date</div>
-                  <div>Platform</div>
-                  <div>Type</div>
-                  <div>Title</div>
-                  <div>Status</div>
-                  <div className="md:text-right">Source</div>
+                <div className="hidden gap-2 rounded-lg border border-border bg-card/45 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/80 md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem]" role="row">
+                  {sortableColumns.map((column) => {
+                    const isActive = sortConfig.key === column.key;
+                    return (
+                      <div key={column.key} role="columnheader" aria-sort={isActive ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}>
+                        <button
+                          type="button"
+                          className="inline-flex items-center gap-1 rounded-sm text-left transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                          onClick={() => updateSort(column.key)}
+                          aria-label={`Sort VIGIL records by ${column.label} ${isActive && sortConfig.direction === "asc" ? "descending" : "ascending"}`}
+                        >
+                          <span>{column.label}</span>
+                          <span className={isActive ? "text-cam-gold" : "text-muted-foreground/35"} aria-hidden="true">{isActive ? (sortConfig.direction === "asc" ? "↑" : "↓") : "↕"}</span>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
@@ -553,7 +647,7 @@ export default function Vigil() {
 
                         <div>
                           <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Title</p>
-                          <h2 className="mt-1 break-words font-serif text-lg leading-snug text-foreground">{record.title}</h2>
+                          <h2 className="mt-1 break-words font-mono text-base font-medium leading-snug text-foreground">{record.title}</h2>
                         </div>
 
                         <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
@@ -567,30 +661,18 @@ export default function Vigil() {
                           <p className="text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 220)}</p>
                         )}
 
-                        <div className="flex items-center justify-between gap-3 border-t border-border/70 pt-3">
-                          {sourceHref ? (
-                            <a className="inline-flex whitespace-nowrap font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
-                          ) : (
-                            <span className="font-sans text-[11px] text-muted-foreground/50">No source link listed</span>
-                          )}
-                          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
+                        <div className="flex items-center justify-end gap-3 border-t border-border/70 pt-3">
+                          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
                         </div>
                       </div>
 
-                      <div className="hidden gap-2 md:grid md:grid-cols-[6.5rem_6.5rem_7.5rem_5rem_minmax(0,1fr)_5rem_4.5rem] md:items-center">
-                        <div className="break-words font-mono text-[10px] text-cam-gold">{displayRecordId}</div>
-                        <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{recordDate}</div>
-                        <div className="font-sans text-[10px] font-medium uppercase tracking-[0.14em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
-                        <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{record.type_label}</div>
-                        <h2 className="min-w-0 whitespace-normal break-words font-sans text-sm font-medium leading-snug text-foreground md:text-[15px]">{record.title}</h2>
-                        <div className="font-sans text-[10px] uppercase tracking-[0.14em] text-muted-foreground/75">{record.record_state}</div>
-                        <div className="flex items-center md:justify-end">
-                          {sourceHref ? (
-                            <a className="inline-flex whitespace-nowrap font-sans text-[10px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] underline-offset-4 transition-colors hover:text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background" href={sourceHref} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>Source ↗</a>
-                          ) : (
-                            <span className="font-sans text-[10px] text-muted-foreground/40" aria-hidden="true">—</span>
-                          )}
-                        </div>
+                      <div className="hidden gap-2 md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem] md:items-center">
+                        <div className="break-words font-mono text-[11px] leading-snug text-cam-gold">{displayRecordId}</div>
+                        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
+                        <div className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
+                        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
+                        <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-medium leading-snug text-foreground lg:text-base">{record.title}</h2>
+                        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.record_state}</div>
                       </div>
                     </div>
                   </div>
@@ -601,7 +683,7 @@ export default function Vigil() {
                     <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
                       <div className="min-w-0">
                         <p className="break-words font-mono text-[11px] text-cam-gold">{record.id}</p>
-                        <h2 className="mt-1 break-words font-serif text-xl leading-snug text-foreground">{record.title}</h2>
+                        <h2 className="mt-1 break-words font-mono text-xl font-medium leading-snug text-foreground">{record.title}</h2>
                         <div className="mt-3 flex flex-wrap gap-2">
                           {[record.type_label, record.record_state, recordDate, record.platform_label].filter(isMeaningfulText).map((value) => (
                             <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>
@@ -639,8 +721,28 @@ export default function Vigil() {
                     </div>
 
                     <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
-                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Technical JSON record</summary>
-                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
+                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON record</summary>
+                      <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <p className="text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
+                        <div className="flex shrink-0 flex-wrap gap-2">
+                          <button
+                            type="button"
+                            className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                            onClick={() => copyRecordJson(record, recordKey)}
+                            aria-label={`Copy raw JSON for ${record.id}`}
+                          >
+                            {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
+                          </button>
+                          <button
+                            type="button"
+                            className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                            onClick={() => downloadRecordJson(record)}
+                            aria-label={`Download raw JSON for ${record.id}`}
+                          >
+                            Download JSON
+                          </button>
+                        </div>
+                      </div>
                       {(record.record_type === "proposal" || record.record_type === "patch_note") && (
                         <div className="mt-3 grid gap-3 md:grid-cols-3">
                           <Field label="Affected Domains" value={record.affected_domains?.join("; ")} />
@@ -653,8 +755,8 @@ export default function Vigil() {
 
                     {(record.path || sourceHref || rawHref) && (
                       <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3 md:flex-row md:items-center md:justify-between">
-                        <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Source record: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
-                        {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open source record →</a>}
+                        <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record path: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
+                        {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open record →</a>}
                       </div>
                     )}
                   </div>

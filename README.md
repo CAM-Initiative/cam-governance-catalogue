@@ -33,7 +33,7 @@ It is responsible for:
 
 * rendering the public CAM interface;
 * building the static GitHub Pages output;
-* loading local CAM catalogue data;
+* loading live CAM catalogue registry data with a cached fallback;
 * loading live VIGIL registry data;
 * preserving source links and provenance paths;
 * providing fallback data where appropriate; and
@@ -88,10 +88,37 @@ The interface uses both local build-time data and live external registry data.
 Core local data files include:
 
 ```text
-/docs/data/cam-governance.json
 /docs/data/runtime-flow.json
 /docs/data/problem-pathways.json
 ```
+
+The canonical CAM/Caelestis generated governance index is:
+
+```text
+Governance/CAM.Governance.JSON
+```
+
+in the `CAM-Initiative/Caelestis` repository. Its live raw registry URL is:
+
+```text
+https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON
+```
+
+That canonical source is a JSON object with a numeric `count` and an `items` array. Each item preserves the catalogue-compatible governance instrument shape used by the interface, including fields such as `id`, `cycle_year`, `stack`, `domain`, `instrument_class`, `hierarchy_type`, `hierarchy_number`, `parent_id`, `seal`, `link`, `title`, `summary`, `status`, `effect`, `enforcement`, `review_state`, `authority_role`, `version`, `HASH`, `pinned_sha`, `updated_at`, `last_updated_utc`, `purpose`, and `is_derived` where present.
+
+The CAM cached fallback generated for this interface is:
+
+```text
+/docs/data/cam-governance-fallback.json
+```
+
+The legacy Interface snapshot remains in the repository for backward compatibility only:
+
+```text
+/docs/data/cam-governance.json
+```
+
+It is no longer the catalogue page's sole source of truth. The Interface first attempts the live Caelestis registry URL at runtime and falls back to `cam-governance-fallback.json` if the live source cannot be loaded.
 
 The live VIGIL registry source is:
 
@@ -108,6 +135,45 @@ An optional cached VIGIL fallback may be generated at build time:
 Runtime Governance and Relational Governance sit under the Constitution section.
 
 VIGIL is exposed as CAM’s public AI governance observatory and digital ecosystem health register.
+
+---
+
+## CAM Catalogue Sync
+
+The catalogue page is populated at runtime from the live Caelestis governance index configured in:
+
+```text
+src/config/registrySources.json
+```
+
+The CAM source entry points at the default-branch generated file:
+
+```text
+https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON
+```
+
+Run the CAM sync command to refresh the Interface fallback cache:
+
+```bash
+pnpm run sync:cam
+```
+
+The sync writes:
+
+```text
+docs/data/cam-governance-fallback.json
+docs/data/cam-governance-sync-meta.json
+```
+
+`cam-governance-fallback.json` is an Interface cache of the Caelestis canonical generated index. `cam-governance-sync-meta.json` records the source URL, source path, fallback file, record count, sync timestamp, data-fetched timestamp, and sync status.
+
+The distinction is intentional:
+
+* **Canonical source:** `CAM-Initiative/Caelestis` owns and generates `Governance/CAM.Governance.JSON`.
+* **Interface cached fallback:** this repository stores `docs/data/cam-governance-fallback.json` so the static interface can still render catalogue data when the live registry request fails.
+* **Legacy snapshot:** `docs/data/cam-governance.json` remains only for compatibility and emergency seeding. New catalogue loading and validation use the live CAM registry plus the generated fallback.
+
+If the live source is unavailable during sync, the script retains an existing fallback or seeds from the legacy snapshot unless `CAM_SYNC_STRICT=1` is set.
 
 ---
 
@@ -206,7 +272,7 @@ Run:
 pnpm run validate:catalogue
 ```
 
-This checks local catalogue references and helps detect broken or inconsistent interface data.
+This checks catalogue references against `docs/data/cam-governance-fallback.json`, verifies CAM sync metadata, and detects missing, internally inconsistent, or stale CAM fallback data. Set `CAM_FALLBACK_MAX_AGE_DAYS` to adjust the default 45-day freshness threshold.
 
 ---
 
@@ -217,11 +283,13 @@ pnpm install
 pnpm run dev
 pnpm run build
 pnpm run validate:catalogue
+pnpm run sync:cam
 ```
 
-If supported by the current package scripts, VIGIL fallback sync may be run with:
+CAM and VIGIL fallback sync may be run with:
 
 ```bash
+pnpm run sync:cam
 pnpm run sync:vigil
 ```
 

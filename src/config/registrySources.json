@@ -5,5 +5,13 @@
     "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Registry.Index.json",
     "repo": "CAM-Initiative/Vigil",
     "branch": "main"
+  },
+  "cam": {
+    "repo": "CAM-Initiative/Caelestis",
+    "branch": "main",
+    "source_path": "Governance/CAM.Governance.JSON",
+    "registry_index_url": "https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON",
+    "github_blob_url": "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/CAM.Governance.JSON",
+    "fallback_file": "docs/data/cam-governance-fallback.json"
   }
 }
