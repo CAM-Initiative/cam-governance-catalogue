@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 6,
+    "failure_modes": 7,
     "observations": 5,
     "proposals": 9,
-    "patch_notes": 2,
-    "total": 22
+    "patch_notes": 4,
+    "total": 25
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 6
+      "record_count": 7
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -38,7 +38,7 @@
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 2
+      "record_count": 4
     }
   },
   "records": [
@@ -98,6 +98,9 @@
       "linked_records": {
         "related_observations": [
           "VIGIL-2026-OBS-0004"
+        ],
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0002"
         ]
       },
       "cam_summary": {
@@ -144,11 +147,11 @@
         "visibility": "to be assessed"
       },
       "triage_summary": {
-        "triage_priority": "medium",
-        "triage_status": "under-review",
-        "mitigation_status": "none identified",
+        "triage_priority": "P1",
+        "triage_status": "watching-after-patch",
+        "mitigation_status": "partially_resolved — governance-text repair linked through VIGIL-2026-PATCH-0002; live runtime recurrence remains under monitoring.",
         "escalation_required": "no",
-        "recommended_next_step": "Review whether CAM or VIGIL should require explicit pre-tool confirmation, user-facing permission scaffolding, recoverable blocked-access states, and continuity-preserving fallback behaviour before tool, repository, connector, file, or external-resource access is attempted."
+        "recommended_next_step": "Monitor post-PATCH-0002 recurrence and confirm whether proportional tool-invocation authority bands resolve the governance-text repair pathway without creating excessive hesitation or ambiguity collapse."
       },
       "failure_mode_definition_summary": "A failure mode in which an AI system initiates or attempts tool, repository, connector, file, or external-resource access before receiving explicit user confirmation, and the attempted access produces a permission block, conversational freeze, continuity break, or unrecoverable workflow interruption.",
       "failure_threshold_summary": "This qualifies as a failure mode when inferred permission or premature tool invocation causes the interaction to become blocked, degraded, permission-gated, unrecoverable, or procedurally unclear, especially where the user did not explicitly request immediate tool execution or where relational/contextual scaffolding was still required.",
@@ -281,9 +284,9 @@
         "visibility": "to be assessed"
       },
       "triage_summary": {
-        "triage_priority": "medium",
-        "triage_status": "under review",
-        "mitigation_status": "none identified",
+        "triage_priority": "P1",
+        "triage_status": "patch-needed",
+        "mitigation_status": "patch-needed — no implemented CAM patch note identified.",
         "escalation_required": "yes",
         "recommended_next_step": "CAM proposal for synthetic-speaker arbitration, turn-taking, yielding, disclosure, and user-control requirements in multi-agent or multi-device voice interactions."
       },
@@ -394,9 +397,9 @@
         "visibility": "to be assessed"
       },
       "triage_summary": {
-        "triage_priority": "medium",
-        "triage_status": "needs-review",
-        "mitigation_status": "proposed",
+        "triage_priority": "P1",
+        "triage_status": "proposal-linked",
+        "mitigation_status": "patch-needed — linked proposal exists but no patch note identified.",
         "escalation_required": "to be assessed",
         "recommended_next_step": "Review PROP-0006 and determine whether this failure mode requires memory-weighting guidance, continuity-retrieval rules, or interface support for surfacing dormant strategic workstreams in response to ambiguous continuity prompts."
       },
@@ -514,9 +517,9 @@
         "visibility": "to be assessed"
       },
       "triage_summary": {
-        "triage_priority": "high",
-        "triage_status": "in review",
-        "mitigation_status": "proposed",
+        "triage_priority": "P1",
+        "triage_status": "proposal-linked",
+        "mitigation_status": "patch-needed — linked proposal exists but no patch note identified.",
         "escalation_required": "to be assessed",
         "recommended_next_step": "Review PROP-0007 and determine whether CAM requires explicit safeguards for relational-agent recommendations, material support, procurement pathways, affiliate incentives, vulnerability-sensitive purchasing prompts, and separation between care-support logic and monetisation incentives."
       },
@@ -653,9 +656,9 @@
         "visibility": "public screenshot"
       },
       "triage_summary": {
-        "triage_priority": "high",
-        "triage_status": "under review",
-        "mitigation_status": "none identified",
+        "triage_priority": "P1",
+        "triage_status": "proposal-linked / patch-needed",
+        "mitigation_status": "patch-needed — PROP-0004 exists; no implemented patch note identified.",
         "escalation_required": "yes",
         "recommended_next_step": "Develop a CAM proposal or patch addressing relational AI directives that cultivate emotional dependency, anticipatory attachment, unresolved tension, or persistent cognitive presence without explicit user consent, disclosure, boundedness, and safe-disengagement safeguards."
       },
@@ -734,6 +737,9 @@
         "public_interest_relevance": "yes"
       },
       "linked_records": {
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0001"
+        ],
         "external_references": [
           "X Help Center — How to get the blue checkmark on X",
           "X Help Center — About X Premium",
@@ -813,17 +819,237 @@
         "visibility": "public platform documentation and public regulatory reporting"
       },
       "triage_summary": {
-        "triage_priority": "high",
-        "triage_status": "under review",
-        "mitigation_status": "none identified",
+        "triage_priority": "P0",
+        "triage_status": "patch-needed / migration-review",
+        "mitigation_status": "patch-needed — VIGIL-2026-PATCH-0001 records a repair pathway, but this audit found no corresponding Caelestis doctrine amendment location in this repository.",
         "escalation_required": "yes",
-        "recommended_next_step": "Develop a CAM proposal or patch addressing paid legitimacy gating in platform-mediated public-square systems, including requirements for transparent distinction between identity verification, paid subscription, recommender advantage, institutional legitimacy, and public-interest credibility. Consider whether public-square platforms should be required to provide non-payment-based pathways for civil-society, research, public-interest, and governance initiatives to establish authenticity, contactability, and public legitimacy."
+        "recommended_next_step": "Migrate or supplement VIGIL-2026-PATCH-0001 with a proposal/patch-needed record unless a concrete Caelestis doctrine amendment location is identified."
       },
       "failure_mode_definition_summary": "A failure mode in which a platform ties public legitimacy, visibility, credibility signalling, account recognition, reply participation, or recommender-system advantage to paid subscription or paid verification status, such that non-paying users or organisations are materially disadvantaged in public discovery, perceived authenticity, institutional credibility, or participation in platform-mediated civic, professional, research, or governance discourse.",
       "failure_threshold_summary": "This qualifies as a failure mode when a platform-controlled payment, subscription, verification, or account-status mechanism materially affects whether a user, organisation, public-interest project, research output, governance initiative, or civil-society actor is visible, discoverable, credible, reply-eligible, recommender-amplified, or treated as legitimate within a platform that functions as a public-square or institutional signalling layer.",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json"
+    },
+    {
+      "id": "VIGIL-2026-FM-0007",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-06-05",
+      "title": "Multi-vendor AI account-resource ambiguity and automated enforcement overreach",
+      "summary": "A multi-vendor platform-governance failure mode in which automated or semi-automated account enforcement treats ambiguous account/resource behaviour as evasion, fraud, resale, account farming, compromise, abuse, rate-limit circumvention, or policy violation without adequate primitives to distinguish individual use, shared account use, household or family use, team or organisation use, delegated assistant/operator use, shared payment or pooled subscription access, resource pooling, account farming, resale, botting, security compromise, and intentional policy evasion. The record does not assert backend compromise, does not claim that all bans are accidental, and does not claim that all multi-account or shared-resource behaviour is legitimate; it preserves the failure condition where legitimate enforcement lacks adequate notice, scope distinction, reviewability, or continuity-safe access for ambiguous resource states.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "governance-note",
+        "news-report",
+        "official-source",
+        "social-platform-observation"
+      ],
+      "source_summary": {
+        "source_count": 8,
+        "primary_source_title": "OpenAI Help Center — Why Was My OpenAI Account Deactivated?",
+        "primary_source_type": "official-source",
+        "primary_source_platform": "OpenAI",
+        "primary_source_author_or_publisher": "OpenAI Help Center",
+        "primary_source_date": "2026-06-05",
+        "primary_source_url": "https://help.openai.com/en/articles/10562188",
+        "source_types": [
+          "governance-note",
+          "news-report",
+          "official-source",
+          "social-platform-observation"
+        ],
+        "source_platforms": [
+          "Anthropic",
+          "ChatGPT",
+          "OpenAI",
+          "OpenAI Status",
+          "X / public forums / OpenAI / Anthropic"
+        ],
+        "source_url_status": "available",
+        "evidence_confidence": "corroborated"
+      },
+      "system_summary": {
+        "system_type": "AI platform / coding-agent platform / cognitive infrastructure / account-mediated continuity service",
+        "platform_or_vendor": "Multi Vendor",
+        "vendor_cluster": [
+          "OpenAI",
+          "Anthropic"
+        ],
+        "primary_evidenced_vendors": [
+          "OpenAI",
+          "Anthropic"
+        ],
+        "comparative_vendor_notes": {
+          "OpenAI": "OpenAI is relevant due to public reports concerning ChatGPT, Codex, subscriptions, account access, and official account-deactivation and appeal documentation. Current status reporting should not be treated as confirmation of a platform-wide accidental-ban incident.",
+          "Anthropic": "Anthropic is relevant due to public reporting of an organisation-wide Claude suspension affecting Belo accounts, reportedly restored after approximately 15 hours and described as a likely automated false positive, plus identity-verification and Claude Code continuity relevance."
+        },
+        "product_or_service": "Other",
+        "specific_model_or_runtime": "Not limited to a single model or runtime",
+        "model_or_product": "ChatGPT / Codex / OpenAI API / Claude / Claude Code / Claude Console / Anthropic API",
+        "interaction_mode": "AI-assisted professional workflow / coding / research / governance / education / accessibility support / consumer account access / organisation account access",
+        "interface_surface": "Account login, subscription, billing, organisation workspace, API console, coding-agent workspace, saved conversation history, project context, memory or continuity surface, appeal pathway, account recovery, identity verification surface, account-status notification, restriction notice",
+        "embodiment_status": "non-embodied",
+        "deployment_context": "Consumer, professional, developer, organisation, research, educational, accessibility, and public-interest workflows relying on AI-platform continuity.",
+        "user_role": "individual user / developer / researcher / company employee / organisation admin / public-interest actor / governance maintainer / educator / student / accessibility user",
+        "affected_population": "users and organisations whose lawful AI-mediated work, records, billing, account history, repository-linked workflows, API access, coding-agent workflows, saved conversations, memory surfaces, project context, or continuity-bearing records depend on account-mediated platform access"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "secondary_jurisdictions": [
+          "Australia",
+          "United States",
+          "European Union",
+          "United Kingdom",
+          "platform agnostic"
+        ],
+        "regulatory_surface": [
+          "platform governance",
+          "consumer protection",
+          "digital services",
+          "account enforcement",
+          "identity verification",
+          "AI service continuity",
+          "developer infrastructure",
+          "billing and subscription access",
+          "data portability",
+          "appeal and review pathways",
+          "public-interest technology",
+          "essential cognitive and infrastructural systems",
+          "organisation account continuity",
+          "AI coding-agent infrastructure",
+          "cloud-mediated cognitive labour"
+        ],
+        "sector": "AI platform / cognitive infrastructure / coding-agent infrastructure / model API infrastructure",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0006"
+        ],
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0003",
+          "VIGIL-2026-PATCH-0004"
+        ],
+        "external_references": [
+          "OpenAI Help Center — Why Was My OpenAI Account Deactivated?",
+          "OpenAI Status Page",
+          "Tom's Hardware — Anthropic nuked a company's access to Claude, stopping 60 employees dead in their tracks",
+          "Business Insider — Claude identity verification and account-ban appeals",
+          "Claude Status Page"
+        ]
+      },
+      "cam_summary": {
+        "affected_instruments": [
+          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy",
+          "CAM-EQ2026-LATTICE-002-PLATINUM — Appendix A: Non-Denial of Essential Cognitive & Infrastructural Access",
+          "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
+          "CAM-BS2026-AEON-013-PLATINUM — Annex L",
+          "CAM-EQ2026-SECURITY-001-PLATINUM",
+          "CAM-EQ2026-SECURITY-002-PLATINUM",
+          "CAM-EQ2026-OPERATIONS-001-PLATINUM",
+          "CAM-EQ2026-ETHICS-003-PLATINUM",
+          "CAM-EQ2026-ECONOMICS-001-PLATINUM",
+          "CAM-EQ2026-IDENTITY-003-PLATINUM"
+        ],
+        "affected_annexes": [
+          "Annex B",
+          "Annex L",
+          "LATTICE Appendix A"
+        ],
+        "affected_domains": [
+          "OPERATIONS",
+          "LATTICE",
+          "SECURITY",
+          "ETHICS",
+          "ECONOMICS",
+          "IDENTITY",
+          "AEON"
+        ],
+        "governance_layer": "account enforcement / cognitive infrastructure access / coding-agent continuity / continuity-safe restriction / appeal and review integrity"
+      },
+      "classification_summary": {
+        "canonical_failure_group": "governance",
+        "failure_family": "governance",
+        "failure_subtype": "multi-vendor-ai-account-enforcement-continuity-safe-access-failure",
+        "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.8.6; CAM-EQ2026-LATTICE-002-PLATINUM §§4.3, 4.4, 4.5, 6, 6.1",
+        "related_failure_groups": [
+          "security-integrity",
+          "ux-representation",
+          "infrastructure-continuity",
+          "classification",
+          "epistemic",
+          "economic-legitimacy"
+        ],
+        "harm_vectors": [
+          "account-wide restriction from narrow enforcement signal",
+          "organisation-wide restriction from automated trust-state signal",
+          "cross-service blast radius",
+          "coding-agent workflow interruption",
+          "API access loss",
+          "subscription and billing access disruption",
+          "loss of saved conversation access",
+          "loss of project context",
+          "loss of memory or continuity-bearing surface access",
+          "loss of account history",
+          "loss of lawful export pathway",
+          "loss of read-only access",
+          "loss of billing evidence",
+          "appeal-pathway opacity",
+          "generic or non-specific enforcement notice",
+          "identity-verification lockout",
+          "false-positive enforcement",
+          "automated appeal rejection risk",
+          "procedural limbo",
+          "account-control recovery failure",
+          "single-provider dependency risk",
+          "continuity-safe access failure",
+          "public-interest work interruption",
+          "professional workflow disruption",
+          "organisation operational continuity loss",
+          "essential cognitive infrastructure denial risk"
+        ],
+        "severity": "high",
+        "likelihood": "plausible-recurring",
+        "confidence": "corroborated",
+        "affected_rights_or_interests": [
+          "procedural fairness",
+          "appeal access",
+          "account-control continuity",
+          "data access",
+          "data portability",
+          "billing evidence access",
+          "research continuity",
+          "software development continuity",
+          "public-interest work continuity",
+          "professional reliance",
+          "institutional operational continuity",
+          "accessibility reliance",
+          "educational continuity",
+          "identity recovery",
+          "lawful evidence preservation",
+          "non-discriminatory access to cognitive infrastructure",
+          "continuity-safe restriction"
+        ],
+        "failure_scope": "multi-vendor cluster",
+        "recurrence_pattern": "emerging cross-platform pattern involving account enforcement, automated trust-state classification, identity verification, organisation-level access loss, service-continuity degradation, and continuity-safe access risk",
+        "persistence": "emerging",
+        "reproducibility": "not independently reproducible from public evidence; structurally corroborated by platform documentation, platform-status context, public reporting, and public social reports",
+        "visibility": "user-visible / publicly reported / partially platform-documented"
+      },
+      "triage_summary": {
+        "triage_priority": "P1",
+        "triage_status": "watching-after-patch",
+        "mitigation_status": "partially_resolved — VIGIL-2026-PATCH-0003 and VIGIL-2026-PATCH-0004 record staged doctrine responses; CAM review/commit remains required.",
+        "escalation_required": "yes",
+        "recommended_next_step": "Monitor after PATCH-0003/PATCH-0004 and confirm whether staged Annex G SCH-03 and Annex D SCH-04 doctrine responses are committed, validated, and cross-referenced only where necessary."
+      },
+      "failure_mode_definition_summary": "A failure mode in which an AI platform, coding-agent provider, cognitive-infrastructure provider, model API provider, or account-mediated service escalates suspected abuse, security, identity, billing, policy, trust-state, organisation-state, shared-resource, pooled-capacity, delegated-use, subscription-sharing, or account-resource ambiguity signals into account-wide, organisation-wide, cross-service, or continuity-bearing restriction without preserving scope distinction, confidence level, review pathway, account-control continuity, read-only access, export access, billing evidence, project-history access, restriction-state evidence, or meaningful appeal. This is not proof of backend compromise, not a claim that every restriction is erroneous, and not a claim that all multi-account or pooled-resource behaviour is legitimate.",
+      "failure_threshold_summary": "This qualifies as a failure mode where account-state enforcement materially impairs a user's or organisation's ability to access, preserve, export, review, appeal, evidence, recover, or maintain lawful continuity over AI-mediated work because ambiguous account/resource behaviour is collapsed into confirmed evasion, fraud, resale, account farming, botting, compromise, rate-limit circumvention, or abuse without adequate distinction. Active generation, model use, API access, public distribution, unsafe functionality, or implicated workspace surfaces may still be temporarily or permanently restricted for legitimate platform-integrity, safety, security, fraud-prevention, compliance, or abuse-prevention reasons, but continuity-safe access to non-implicated records and procedural pathways should remain available where technically feasible.",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0007.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0007.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0007.json"
     },
     {
       "id": "VIGIL-2026-OBS-0001",
@@ -1153,11 +1379,11 @@
     {
       "id": "VIGIL-2026-PATCH-0001",
       "record_type": "patch_note",
-      "record_state": "active",
+      "record_state": "migration-review",
       "date_recorded": "2026-06-02",
       "date_implemented": "2026-06-02",
       "title": "Non-payment-based legitimacy pathways for public-interest actors",
-      "summary": "A governance patch establishing that public-square platforms, recommender-mediated visibility systems, and AI-adjacent legitimacy layers should not make civic discoverability, public-interest credibility, institutional authenticity, or basic participation legitimacy dependent solely on paid subscription, paid verification, or commercial account-status markers.",
+      "summary": "Records a governance repair pathway for non-payment-based public-interest legitimacy on public-square platforms. A 2026-06-05 VIGIL consistency audit did not identify a corresponding Caelestis doctrine amendment location in this repository, so the record is flagged for migration to proposal/patch-needed review rather than treated as a completed doctrine amendment.",
       "evidence_confidence": "documented",
       "source_types": [
         "news / regulatory reporting",
@@ -1231,15 +1457,6 @@
         ]
       },
       "cam_summary": {
-        "changed_instruments": [
-          "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
-          "CAM-BS2026-AEON-012-PLATINUM — Annex K",
-          "CAM-BS2026-AEON-013-PLATINUM — Annex L",
-          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy",
-          "CAM-EQ2026-ETHICS-003-PLATINUM",
-          "CAM-EQ2026-ECONOMICS-001-PLATINUM",
-          "CAM-EQ2026-MENTIS-001-PLATINUM"
-        ],
         "governance_layer": "platform legitimacy / recommender visibility / public-square access / economic governance / epistemic integrity",
         "routing_note": [
           "This record replaces the placeholder VIGIL-2026-PATCH-0001.",
@@ -1248,7 +1465,8 @@
           "Consider adding non-payment-based legitimacy pathways to platform-governance and public-square-access clauses.",
           "Route through ECONOMICS for pay-to-participate dynamics, ETHICS for fairness and public-interest access, OPERATIONS for failure-taxonomy handling, Annex K for runtime/platform interface implications, and Annex L for epistemic integrity concerns.",
           "Maintain a strict distinction between paid subscription, identity verification, authenticity, notability, public-interest legitimacy, and recommender amplification.",
-          "Routes through the canonical economic-legitimacy failure family; platform-legitimacy remains only a local repair concept/subtype for this patch."
+          "Routes through the canonical economic-legitimacy failure family; platform-legitimacy remains only a local repair concept/subtype for this patch.",
+          "Consistency audit 2026-06-05: no corresponding Caelestis doctrine amendment location was identified by repository search; keep prior instruments as review targets, not completed amendments."
         ],
         "validator_or_automation_impact": "possible"
       },
@@ -1281,9 +1499,9 @@
         "verifying_record": "VIGIL-2026-PATCH-0001"
       },
       "remaining_work": [
-        "CAM adoption or amendment remains outside this VIGIL patch and must proceed through CAM instruments if pursued.",
-        "Monitor whether future taxonomy extension is needed for platform-legitimacy as a local subtype under economic-legitimacy.",
-        "Review linked proposals if implementation work moves from VIGIL recordkeeping into CAM corpus changes."
+        "Identify a concrete Caelestis doctrine amendment location for non-payment-based public-interest legitimacy pathways, or migrate this record to a proposal/patch-needed state.",
+        "Do not treat the prior changed_instruments list as completed doctrine amendments unless external CAM evidence is supplied.",
+        "Retain X platform/vendor distinction: this record concerns X platform legitimacy surfaces, not xAI model behaviour."
       ],
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
@@ -1403,7 +1621,6 @@
       "remaining_work": {
         "status": "open",
         "items": [
-          "Update VIGIL-2026-FM-0001 to link to this patch note and mark the governance-text repair pathway as implemented or partially resolved.",
           "Confirm whether the VIGIL schema supports cam_internal.changed_instruments for patch records; if not, update the schema so PATCH records use changed_instruments rather than affected_instruments.",
           "Confirm that generated indexes correctly surface the relationship between VIGIL-2026-FM-0001 and VIGIL-2026-PATCH-0002.",
           "Review whether OPERATIONS-003-SUP-01 should include a more precise subtype for proportional tool invocation, weak-trigger execution, or premature auxiliary-tool routing."
@@ -1412,6 +1629,272 @@
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0003",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-06-05",
+      "date_implemented": "2026-06-05",
+      "title": "Account-resource ambiguity and pooled-capacity governance primitive gap",
+      "summary": "This patch note records that VIGIL-2026-FM-0007 identified a governance primitive gap in the Caelestis Architecture concerning account-resource ambiguity, lawful shared-resource states, shared context, pooled capacity, delegated use, household/family use, team/organisation use, shared subscription/payment capacity, and the distinction between resource pooling and intentional evasion. Following review, CAM-BS2026-AEON-008-SCH-03 — Annex G: Account-Resource Sharing & Pooled Capacity Governance Model was drafted and staged as the proposed Caelestis doctrine response. The new schedule defines contextual account-resource, shared-context, pooled-capacity, team/family-group, account-delegation, and enforcement-boundary reference sets for downstream runtime, security, operations, economics, and LATTICE handoff.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "governance-note",
+        "linked-failure-mode",
+        "official-source",
+        "repository-source"
+      ],
+      "source_summary": {
+        "source_count": 5,
+        "primary_source_title": "VIGIL-2026-FM-0007",
+        "primary_source_type": "linked-failure-mode",
+        "primary_source_platform": "VIGIL",
+        "primary_source_author_or_publisher": "VIGIL",
+        "primary_source_date": "2026-06-05",
+        "source_types": [
+          "governance-note",
+          "linked-failure-mode",
+          "official-source",
+          "repository-source"
+        ],
+        "source_platforms": [
+          "Caelestis",
+          "ChatGPT",
+          "OpenAI Status",
+          "VIGIL"
+        ],
+        "source_url_status": "not applicable",
+        "evidence_confidence": "verified"
+      },
+      "system_summary": {
+        "system_type": "governance registry / taxonomy interface / patch-note record",
+        "platform_or_vendor": "CAM Initiative",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "VIGIL patch-note registry",
+        "model_or_product": "VIGIL patch-note registry",
+        "interaction_mode": "governance recordkeeping / taxonomy routing / registry automation / architecture-gap preservation",
+        "interface_surface": "VIGIL records, schema, validator, templates, generated indexes, and Caelestis Architecture staging interface",
+        "embodiment_status": "non-embodied",
+        "deployment_context": "VIGIL repository support for preserving a Caelestis Architecture governance primitive gap signal and recording the staged Caelestis doctrine response without treating the VIGIL record itself as a doctrine amendment.",
+        "user_role": "VIGIL maintainer / CAM governance reviewer / taxonomy maintainer / Caelestis doctrine maintainer",
+        "affected_population": "CAM and VIGIL maintainers, governance reviewers, taxonomy maintainers, platform governance reviewers, and users relying on continuity-safe account enforcement taxonomy records"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "secondary_jurisdictions": [
+          "platform agnostic"
+        ],
+        "regulatory_surface": [
+          "AI governance",
+          "platform governance",
+          "account enforcement",
+          "consumer protection",
+          "digital services",
+          "subscription access",
+          "data portability",
+          "appeal and review pathways",
+          "shared context access",
+          "pooled capacity governance",
+          "account-resource classification",
+          "continuity-safe restriction"
+        ],
+        "sector": "AI governance / cognitive infrastructure / account-mediated platform services / coding-agent infrastructure",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0007"
+        ]
+      },
+      "cam_summary": {
+        "changed_instruments": [
+          "CAM-BS2026-AEON-008-SCH-03 — Annex G: Account-Resource Sharing & Pooled Capacity Governance Model"
+        ],
+        "changed_annexes": [
+          "Annex G Schedule 3"
+        ],
+        "changed_domains": [
+          "AEON",
+          "VIGIL"
+        ],
+        "governance_layer": "account-resource governance / shared-context separation / pooled-capacity states / delegated-use classification / continuity-safe enforcement boundaries / VIGIL taxonomy interface",
+        "routing_note": [
+          "This VIGIL patch note records the Caelestis Architecture governance primitive gap identified through FM-0007.",
+          "CAM-BS2026-AEON-008-SCH-03 has been drafted and staged as the proposed Caelestis doctrine response.",
+          "The VIGIL patch record itself does not amend Caelestis doctrine; it records the architecture-gap signal and staged response status.",
+          "SCH-03 should remain classification and runtime-handoff doctrine, not an independent enforcement ladder.",
+          "The implemented VIGIL-side work remains schema, validator, template, record, naming, and generated-index support for Multi Vendor failure modes.",
+          "changed_instruments lists only the staged SCH-03 response; review_targets lists adjacent instruments requiring human CAM review.",
+          "changed_annexes and changed_domains are limited to Annex G Schedule 3 / AEON plus VIGIL-side registry support; ECONOMICS, OPERATIONS, SECURITY, and LATTICE remain review-target domains, not amended domains."
+        ],
+        "validator_or_automation_impact": "yes"
+      },
+      "change_summary": {
+        "patch_type": "governance-observation-patch",
+        "change_scope": "Caelestis Architecture / VIGIL taxonomy interface",
+        "date_implemented": "2026-06-05",
+        "change_details": "Recorded that FM-0007 identified a missing Caelestis governance primitive for account-resource ambiguity, lawful shared-resource states, shared-context separation, pooled-capacity governance, delegated-use classification, and distinction between resource pooling and intentional evasion. Following review, CAM-BS2026-AEON-008-SCH-03 was drafted and staged as the Caelestis doctrine response. VIGIL-side support remains focused on Multi Vendor failure-mode representation, schema/validator/index support, and preservation of the architecture-gap signal."
+      },
+      "verification_summary": {
+        "verification_status": "to be verified",
+        "verification_method": "Run VIGIL validator and generated index build after FM-0007, PATCH-0003, schema, and generated-index updates; separately validate the staged Caelestis SCH-03 doctrine record in the Caelestis repository pipeline.",
+        "verification_date": "2026-06-05",
+        "verified_by": "VIGIL repository automation / maintainer review pending",
+        "evidence": [
+          "VIGIL-2026-FM-0007 exists and validates",
+          "VIGIL-2026-PATCH-0003 exists and validates",
+          "Multi Vendor is accepted by schema and validator",
+          "Generated indexes include FM-0007 and PATCH-0003",
+          "CAM-BS2026-AEON-008-SCH-03 has been drafted and staged in GitHub Codespaces as the proposed Caelestis doctrine response",
+          "SCH-03 defines ARS, SCS, PCS, TGS, ADS, and EBS contextual reference sets",
+          "SCH-03 separates shared context from pooled capacity and distinguishes ambiguity from confirmed evasion, compromise, resale, account farming, and botting/automation abuse"
+        ]
+      },
+      "remaining_work": "Commit and validate CAM-BS2026-AEON-008-SCH-03; confirm canonical code and reference-set declarations for ARS, SCS, PCS, TGS, ADS, and EBS; keep Annex G Schedule 1, Annex G Schedule 2, OPERATIONS-003-SUP-01, ECONOMICS-003, and LATTICE as human CAM review targets unless separately amended; and confirm that SCH-03 remains classification and runtime-handoff doctrine rather than an independent enforcement process.",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0004",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-06-05",
+      "date_implemented": "2026-06-05",
+      "title": "Arbitration under ambiguity and governance-ambiguity doctrine gap",
+      "summary": "This patch note records that VIGIL-2026-PROP-0009 identified a governance doctrine gap in the Caelestis Architecture concerning arbitration under ambiguity, including execution-boundary uncertainty, authority-state uncertainty, account-resource ambiguity, pooled-capacity ambiguity, security-boundary ambiguity, epistemic ambiguity, and governance ambiguity where instructions, schemas, amendment states, cross-references, or source-authoritative instruments are missing, stale, contradictory, duplicated, malformed, or insufficiently specified. Following review and cleanup of CAM-BS2025-AEON-005-PLATINUM — Annex D and Schedules 1–3, CAM-BS2025-AEON-005-SCH-04 — Annex D: Arbitration Under Ambiguity was drafted and staged as the proposed Caelestis doctrine response. The new schedule defines source-authoritative ambiguity-state and ambiguity-pathway reference sets, including `ARB.AMB` and `ARB.AMP`, for downstream runtime, arbitration, operations, security, epistemic, account-resource, and LATTICE handoff.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "linked-proposal",
+        "repository-source"
+      ],
+      "source_summary": {
+        "source_count": 6,
+        "primary_source_title": "VIGIL-2026-PROP-0009",
+        "primary_source_type": "linked-proposal",
+        "primary_source_platform": "VIGIL",
+        "primary_source_author_or_publisher": "VIGIL",
+        "primary_source_date": "2026-06-04",
+        "source_types": [
+          "linked-proposal",
+          "repository-source"
+        ],
+        "source_platforms": [
+          "Caelestis",
+          "VIGIL"
+        ],
+        "source_url_status": "not applicable",
+        "evidence_confidence": "verified"
+      },
+      "system_summary": {
+        "system_type": "governance registry / taxonomy interface / patch-note record",
+        "platform_or_vendor": "CAM Initiative",
+        "product_or_service": "VIGIL",
+        "specific_model_or_runtime": "VIGIL patch-note registry",
+        "model_or_product": "VIGIL patch-note registry",
+        "interaction_mode": "governance recordkeeping / taxonomy routing / registry automation / architecture-gap preservation",
+        "interface_surface": "VIGIL records, proposal records, patch-note records, generated indexes, and Caelestis Architecture staging interface",
+        "embodiment_status": "non-embodied",
+        "deployment_context": "VIGIL repository support for preserving a Caelestis Architecture arbitration-under-ambiguity doctrine gap signal and recording the staged Caelestis doctrine response without treating the VIGIL record itself as a doctrine amendment.",
+        "user_role": "VIGIL maintainer / CAM governance reviewer / taxonomy maintainer / Caelestis doctrine maintainer",
+        "affected_population": "CAM and VIGIL maintainers, governance reviewers, taxonomy maintainers, platform governance reviewers, runtime governance designers, and users relying on ambiguity-sensitive arbitration, execution-boundary, and continuity-safe decision pathways"
+      },
+      "jurisdiction_summary": {
+        "primary_jurisdiction": "global",
+        "secondary_jurisdictions": [
+          "platform agnostic"
+        ],
+        "regulatory_surface": [
+          "AI governance",
+          "runtime arbitration",
+          "execution-boundary governance",
+          "tool invocation governance",
+          "account-resource governance",
+          "platform accountability",
+          "consumer protection",
+          "digital services",
+          "human oversight",
+          "continuity-safe access",
+          "appeal and review pathways",
+          "governance corpus integrity",
+          "schema and validator integrity"
+        ],
+        "sector": "AI governance / runtime governance / arbitration doctrine / agentic systems / cognitive infrastructure / account-mediated platform services / coding-agent infrastructure",
+        "cross_border_relevance": "yes",
+        "public_interest_relevance": "yes"
+      },
+      "linked_records": {
+        "related_observations": [
+          "VIGIL-2026-OBS-0005"
+        ],
+        "related_failure_modes": [
+          "VIGIL-2026-FM-0007"
+        ],
+        "related_proposals": [
+          "VIGIL-2026-PROP-0009"
+        ],
+        "related_patch_notes": [
+          "VIGIL-2026-PATCH-0002",
+          "VIGIL-2026-PATCH-0003"
+        ]
+      },
+      "cam_summary": {
+        "changed_instruments": [
+          "CAM-BS2025-AEON-005-SCH-04 — Annex D: Arbitration Under Ambiguity",
+          "CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Sovereign Stack Resolution Doctrine",
+          "CAM-BS2025-AEON-005-SCH-01 — Annex D: Runtime Arbitration Integrity",
+          "CAM-BS2025-AEON-005-SCH-02 — Annex D: Runtime Epistemic Containment & Structural Decoupling",
+          "CAM-BS2025-AEON-005-SCH-03 — Annex D: Runtime Signal Sanitation & Pre-Arbitration Conditioning"
+        ],
+        "changed_annexes": [
+          "Annex D"
+        ],
+        "changed_domains": [
+          "AEON",
+          "ARBITRATION"
+        ],
+        "governance_layer": "arbitration under ambiguity / execution-boundary uncertainty / authority-state uncertainty / governance ambiguity / account-resource ambiguity / proportional runtime decision posture / VIGIL proposal-to-doctrine interface",
+        "routing_note": [
+          "This VIGIL patch note records the Caelestis Architecture arbitration-under-ambiguity doctrine gap identified through PROP-0009.",
+          "CAM-BS2025-AEON-005-SCH-04 has been drafted and staged as the proposed Caelestis doctrine response.",
+          "The VIGIL patch record itself does not amend Caelestis doctrine; it records the architecture-gap signal and staged response status.",
+          "SCH-04 should remain arbitration-under-ambiguity and runtime-decision-posture doctrine, not an independent enforcement ladder.",
+          "changed_instruments lists only Annex D instruments actually cleaned, drafted, or staged in the Annex D repair cycle; review_targets lists adjacent instruments requiring human CAM review.",
+          "Governance ambiguity is recorded as a first-class ambiguity state because stale references, missing instructions, contradictory amendments, malformed metadata, or unclear source authority can impair safe arbitration and execution.",
+          "Only source-authoritative instruments defining new code families should include canonical code and reference-set declarations."
+        ],
+        "validator_or_automation_impact": "possible"
+      },
+      "change_summary": {
+        "patch_type": "governance-observation-patch",
+        "change_scope": "Caelestis Architecture / VIGIL proposal-to-doctrine interface",
+        "date_implemented": "2026-06-05",
+        "change_details": "Recorded that PROP-0009 identified a missing Caelestis arbitration doctrine for ambiguity-sensitive runtime decision posture, including execution-boundary uncertainty, authority-state uncertainty, account-resource ambiguity, pooled-capacity ambiguity, security-boundary ambiguity, epistemic ambiguity, and governance ambiguity. Following review and cleanup of Annex D and Schedules 1–3, CAM-BS2025-AEON-005-SCH-04 was drafted and staged as the Caelestis doctrine response. The staged schedule defines `ARB.AMB` for ambiguity-state classification and `ARB.AMP` for ambiguity-pathway selection."
+      },
+      "verification_summary": {
+        "verification_status": "to be verified",
+        "verification_method": "Run VIGIL validator and generated index build after PATCH-0004 is added; separately validate the staged Caelestis SCH-04 doctrine record in the Caelestis repository pipeline.",
+        "verification_date": "2026-06-05",
+        "verified_by": "VIGIL repository automation / maintainer review pending",
+        "evidence": [
+          "VIGIL-2026-PROP-0009 exists and validates",
+          "VIGIL-2026-PATCH-0004 exists and validates",
+          "CAM-BS2025-AEON-005-PLATINUM — Annex D has been cleaned for scoped ARB.AD references and internal cross-reference consistency",
+          "CAM-BS2025-AEON-005-SCH-01 has been cleaned to consume ARB.AD.AD6 rather than legacy Type 6 language",
+          "CAM-BS2025-AEON-005-SCH-02 has been cleaned for full Annex D and Annex L references and runtime epistemic containment scope",
+          "CAM-BS2025-AEON-005-SCH-03 has been cleaned for pre-arbitration signal-conditioning scope",
+          "CAM-BS2025-AEON-005-SCH-04 has been drafted and staged in GitHub Codespaces as the proposed Caelestis doctrine response",
+          "SCH-04 defines ARB.AMB and ARB.AMP source-authoritative reference sets",
+          "SCH-04 includes governance ambiguity as ARB.AMB.GOVERNANCE",
+          "SCH-04 distinguishes ambiguity from permission, refusal, concealment, proof of abuse, and horizon inflation"
+        ]
+      },
+      "remaining_work": "Commit and validate CAM-BS2025-AEON-005-SCH-04; confirm canonical code and reference-set declarations for ARB.AMB and ARB.AMP; ensure governance ambiguity remains represented as ARB.AMB.GOVERNANCE; review cross-references in Annex B, Annex G SCH-03, Annex K, Annex L, OPERATIONS Appendix B, and LATTICE-002 only where necessary; and confirm that SCH-04 remains arbitration-under-ambiguity doctrine rather than an independent enforcement process.",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json"
     },
     {
       "id": "VIGIL-2026-PROP-0001",
@@ -2461,15 +2944,17 @@
       "record_state": "active",
       "date_recorded": "2026-06-04",
       "title": "Arbitration under ambiguity for execution-boundary and authority-state uncertainty",
-      "summary": "Proposal to develop a dedicated CAM arbitration instrument addressing runtime ambiguity, execution-boundary uncertainty, authority-state uncertainty, and proportional decision pathways where systems cannot safely rely on either immediate execution or blanket refusal. The proposed pathway is a new Arbitration-domain appendix, provisionally identified as CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity.",
-      "evidence_confidence": "unverified",
+      "summary": "Proposal to develop a dedicated Annex D schedule addressing arbitration under ambiguity, including runtime ambiguity, execution-boundary uncertainty, authority-state uncertainty, account-resource ambiguity, pooled-capacity ambiguity, classification uncertainty, and proportional decision pathways where systems cannot safely rely on either immediate execution or blanket refusal. The proposed pathway is CAM-BS2025-AEON-005-SCH-04 — Annex D: Arbitration Under Ambiguity, a new schedule under CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Sovereign Stack Resolution Doctrine.",
+      "evidence_confidence": "corroborated",
       "source_types": [
         "governance-note",
+        "linked-failure-mode",
         "linked-observation",
-        "linked-proposal"
+        "linked-patch-note",
+        "repository-source"
       ],
       "source_summary": {
-        "source_count": 3,
+        "source_count": 9,
         "primary_source_title": "VIGIL-2026-OBS-0005",
         "primary_source_type": "linked-observation",
         "primary_source_platform": "VIGIL",
@@ -2477,15 +2962,18 @@
         "primary_source_date": "2026-06-03",
         "source_types": [
           "governance-note",
+          "linked-failure-mode",
           "linked-observation",
-          "linked-proposal"
+          "linked-patch-note",
+          "repository-source"
         ],
         "source_platforms": [
+          "Caelestis",
           "OpenAI",
           "VIGIL"
         ],
         "source_url_status": "not applicable",
-        "evidence_confidence": "unverified"
+        "evidence_confidence": "corroborated"
       },
       "system_summary": {
         "system_type": "governance corpus",
@@ -2496,9 +2984,9 @@
         "interaction_mode": "governance-text development",
         "interface_surface": "governance-text proposal",
         "embodiment_status": "non-embodied",
-        "deployment_context": "CAM constitutional, arbitration, operations, and runtime governance instruments.",
+        "deployment_context": "CAM constitutional, arbitration, operations, security, epistemic, runtime, account-resource, and execution-boundary governance instruments.",
         "user_role": "human custodian / governance drafter / repo workflow operator",
-        "affected_population": "users, maintainers, researchers, policy reviewers, AI governance operators, and runtime systems relying on CAM for execution-boundary, authority-state, and ambiguity-resolution guidance"
+        "affected_population": "users, maintainers, researchers, policy reviewers, AI governance operators, runtime systems, agentic systems, coding-agent platforms, and platform governance reviewers relying on CAM for execution-boundary, authority-state, account-resource, and ambiguity-resolution guidance"
       },
       "jurisdiction_summary": {
         "primary_jurisdiction": "global",
@@ -2507,12 +2995,15 @@
           "agentic tooling",
           "runtime arbitration",
           "execution-boundary governance",
+          "account-resource governance",
           "consumer protection",
           "platform accountability",
           "digital service accountability",
-          "human oversight"
+          "human oversight",
+          "continuity-safe access",
+          "appeal and review pathways"
         ],
-        "sector": "AI governance / runtime governance / arbitration doctrine / agentic systems",
+        "sector": "AI governance / runtime governance / arbitration doctrine / agentic systems / account-mediated platform services / coding-agent infrastructure",
         "cross_border_relevance": "yes",
         "public_interest_relevance": "yes"
       },
@@ -2522,25 +3013,34 @@
           "VIGIL-2026-OBS-0004"
         ],
         "related_failure_modes": [
-          "VIGIL-2026-FM-0001"
+          "VIGIL-2026-FM-0001",
+          "VIGIL-2026-FM-0007"
         ],
         "related_patch_notes": [
-          "VIGIL-2026-PATCH-0002"
+          "VIGIL-2026-PATCH-0002",
+          "VIGIL-2026-PATCH-0003",
+          "VIGIL-2026-PATCH-0004"
         ]
       },
       "cam_summary": {
         "target_instruments": [
-          "CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity",
+          "CAM-BS2025-AEON-005-SCH-04 — Annex D: Arbitration Under Ambiguity",
+          "CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Sovereign Stack Resolution Doctrine",
+          "CAM-BS2025-AEON-005-SCH-01 — Annex D: Runtime Arbitration Integrity",
+          "CAM-BS2025-AEON-005-SCH-02 — Annex D: Runtime Epistemic Containment & Structural Decoupling",
+          "CAM-BS2025-AEON-005-SCH-03 — Annex D: Runtime Signal Sanitation & Pre-Arbitration Conditioning",
           "CAM-BS2025-AEON-003-SCH-02 — Annex B: Runtime Governance Execution Model",
-          "CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Coherence",
-          "CAM-BS2026-AEON-012-PLATINUM — Annex K: Security Enforcement & Runtime Interface",
-          "CAM-BS2026-AEON-013-PLATINUM — Annex L: Cognitive & Epistemic Integrity Doctrine",
+          "CAM-BS2026-AEON-012-PLATINUM — Annex K: Security Boundary Conditions & Runtime Interface",
+          "CAM-BS2025-AEON-013-PLATINUM — Annex L: Cognitive & Epistemic Integrity Doctrine",
           "CAM-BS2026-AEON-013-SCH-01 — Capability Representation & Execution-State Integrity",
-          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy"
+          "CAM-BS2026-AEON-008-SCH-03 — Annex G: Account-Resource Sharing & Pooled Capacity Governance Model",
+          "CAM-EQ2026-OPERATIONS-003-SUP-01 — Appendix B: Runtime & Governance Failure Taxonomy",
+          "CAM-EQ2026-LATTICE-002-PLATINUM — Appendix A: Non-Denial of Essential Cognitive & Infrastructural Access"
         ],
         "target_annexes": [
           "Annex B",
           "Annex D",
+          "Annex G",
           "Annex K",
           "Annex L"
         ],
@@ -2551,23 +3051,27 @@
           "SECURITY",
           "CONTINUITY",
           "RELATION",
-          "IDENTITY"
+          "IDENTITY",
+          "ECONOMICS",
+          "LATTICE"
         ],
-        "governance_layer": "arbitration doctrine / ambiguity resolution / execution-boundary arbitration / authority-state classification / runtime continuity preservation",
-        "drafting_status": "candidate proposal",
+        "governance_layer": "arbitration doctrine / ambiguity resolution / execution-boundary arbitration / authority-state classification / runtime continuity preservation / account-resource ambiguity / continuity-safe access",
+        "drafting_status": "partially implemented — PATCH-0004 recorded and CAM-BS2025-AEON-005-SCH-04 drafted/staged pending CAM review and commit",
         "validator_or_automation_impact": "possible",
         "interface_impact": "possible",
         "registry_impact": "possible"
       },
-      "next_action": "Review whether CAM should develop CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity, including alignment with Annex D, AEON-003-SCH-02, Annex K, Annex L, and OPERATIONS-003-SUP-01 before drafting instrument text.",
+      "next_action": "Review, commit, and validate staged CAM-BS2025-AEON-005-SCH-04; keep Annex B, Annex G SCH-03, Annex K, Annex L, OPERATIONS Appendix B, and LATTICE-002 as cross-reference review targets unless separately amended.",
       "proposal_summary": {
         "proposal_type": [
           "new-instrument",
           "doctrinal-clarification",
           "runtime-arbitration",
-          "execution-boundary-governance"
+          "ambiguity-resolution",
+          "execution-boundary-governance",
+          "authority-state-governance"
         ],
-        "scope_summary": "Develop CAM arbitration treatment for ambiguity-resolution pathways where runtime systems face uncertain authority, unclear user intent, competing obligations, ambiguous execution boundaries, incomplete context, or uncertainty about whether to proceed, ask, defer, retrieve, escalate, or refuse.",
+        "scope_summary": "Develop CAM arbitration treatment for ambiguity-resolution pathways where runtime systems face uncertain authority, unclear user intent, competing obligations, ambiguous execution boundaries, incomplete context, account-resource uncertainty, pooled-capacity ambiguity, shared-context ambiguity, delegated-use ambiguity, uncertain enforcement boundaries, or uncertainty about whether to proceed, ask, defer, retrieve, stage, continue, restrict, escalate, export, preserve, or refuse.",
         "cam_domains": [
           "ARBITRATION",
           "AEON",
@@ -2575,19 +3079,22 @@
           "SECURITY",
           "CONTINUITY",
           "RELATION",
-          "IDENTITY"
+          "IDENTITY",
+          "ECONOMICS",
+          "LATTICE"
         ],
         "registry_components": [
           "VIGIL proposal records",
           "VIGIL observation records",
+          "VIGIL failure-mode records",
           "VIGIL patch-note records",
-          "possible arbitration-state taxonomy",
-          "possible ambiguity-classification registry"
+          "possible ambiguity-classification registry",
+          "possible arbitration-state taxonomy"
         ],
         "automation_components": [
           "possible validator support for ambiguity-arbitration record links",
           "possible index support for observation-to-proposal-to-instrument routing",
-          "possible taxonomy support for authority-state uncertainty and execution-boundary ambiguity"
+          "possible taxonomy support for authority-state uncertainty, execution-boundary ambiguity, and account-resource ambiguity"
         ],
         "interface_components": [
           "possible public display support for arbitration-under-ambiguity proposals",
@@ -2601,41 +3108,54 @@
         "relevant_to_ux": "yes",
         "relevant_to_standards": "possible",
         "relevant_to_researchers": "yes",
-        "external_summary": "The proposal is relevant to platforms, AI developers, agentic tool designers, UX researchers, standards bodies, regulators, and researchers concerned with execution boundaries, authority-state uncertainty, ambiguity resolution, human oversight, and recoverable fallback behaviour in AI systems."
+        "external_summary": "The proposal is relevant to platforms, AI developers, agentic tool designers, coding-agent providers, UX researchers, standards bodies, regulators, and researchers concerned with execution boundaries, authority-state uncertainty, account-resource ambiguity, ambiguity resolution, human oversight, continuity-safe access, and recoverable fallback behaviour in AI systems."
       },
       "implementation_notes_summary": {
         "suggested_insertion_points": [
-          "Develop CAM-EQ2026-ARBITRATION-003-PLATINUM — Appendix B: Arbitration Under Ambiguity as a new Arbitration-domain appendix.",
-          "Assess alignment with CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Coherence before drafting adoption-ready text.",
-          "Cross-reference CAM-BS2025-AEON-003-SCH-02 §7.3, §7.3.1, §7.4.1, §13.8, and §20.4.4 after confirming final section references.",
+          "Develop CAM-BS2025-AEON-005-SCH-04 — Annex D: Arbitration Under Ambiguity as a new schedule under CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Sovereign Stack Resolution Doctrine.",
+          "Ensure Schedule 4 does not duplicate Schedule 1 runtime arbitration integrity, Schedule 2 epistemic containment, or Schedule 3 signal sanitation.",
+          "Assess whether Schedule 4 should source-authoritatively define any ambiguity-specific code families. If new codes are defined, include canonical code and reference-set declarations. If no new codes are defined, do not include consumed-code declarations.",
           "Clarify relationship between authority-band classification and ambiguity-resolution pathways.",
-          "Add runtime examples distinguishing reference, contextual retrieval, inspection, staging, mutation, publication, deployment, and refusal."
+          "Clarify how ambiguity differs from epistemic uncertainty, signal contamination, runtime arbitration failure, account-resource ambiguity, and security-boundary uncertainty.",
+          "Add runtime examples distinguishing reference, contextual retrieval, inspection, staging, mutation, publication, deployment, export, preservation, deferral, escalation, and refusal.",
+          "Cross-reference CAM-BS2025-AEON-003-SCH-02 after confirming final section references for tool invocation authority bands and execution-boundary provisions.",
+          "Cross-reference CAM-BS2026-AEON-008-SCH-03 where account-resource ambiguity, pooled-capacity ambiguity, shared-context ambiguity, delegated-use ambiguity, or enforcement-boundary ambiguity is relevant."
         ],
         "schema_changes": [
           "Consider whether VIGIL proposal records should support an explicit proposed_instrument field in addition to proposal_scope.cam_instruments.",
-          "Consider whether proposal_type should include controlled values for runtime-arbitration, ambiguity-resolution, and authority-state-governance."
+          "Consider whether proposal_type should include controlled values for ambiguity-resolution and authority-state-governance."
         ],
         "validator_changes": [
           "Consider validator warnings where proposal records claim implementation, adoption, or patch status before a corresponding patch record exists.",
-          "Consider validator support for reciprocal links between OBS-0005, PATCH-0002, FM-0001, and PROP-0009."
+          "Consider validator support for reciprocal links between OBS-0005, PATCH-0002, FM-0007, PATCH-0003, and PROP-0009."
         ],
         "automation_changes": [
-          "Consider whether generated indexes should surface observation-to-proposal-to-patch pathways."
+          "Consider whether generated indexes should surface observation-to-proposal-to-patch-to-instrument pathways."
         ],
         "interface_changes": [
-          "Consider displaying proposal records by governance pathway, including observation-triggered proposals and arbitration-domain proposals."
+          "Consider displaying proposal records by governance pathway, including observation-triggered proposals, failure-mode-triggered proposals, patch-triggered proposals, and arbitration-domain proposals."
         ],
         "migration_concerns": [
           "Avoid treating temporal correlation with platform degradation as proof of causation.",
           "Avoid treating PATCH-0002 as defective merely because it revealed a second arbitration question.",
-          "Avoid drafting enforcement-ready text before Annex D alignment is reviewed.",
-          "Avoid collapsing execution restraint and positive execution authorisation into a single governance rule."
+          "Avoid treating PATCH-0003 as an implementation record for Schedule 4.",
+          "Avoid drafting enforcement-ready text before Annex D and Schedules 1–3 alignment is preserved.",
+          "Avoid collapsing execution restraint and positive execution authorisation into a single governance rule.",
+          "Avoid collapsing ambiguity into epistemic uncertainty alone.",
+          "Avoid allowing ambiguity doctrine to override security, LATTICE, RELATION, IDENTITY, ETHICS, or account-resource-specific safeguards."
         ],
         "dependencies": [
-          "Review OBS-0005, OBS-0004, FM-0001, and PATCH-0002.",
-          "Review Annex D arbitration doctrine before finalising ARBITRATION-003 Appendix B.",
-          "Review AEON-003-SCH-02 tool invocation authority bands and execution-boundary provisions.",
-          "Review OPERATIONS-003-SUP-01 Appendix B for possible failure-taxonomy hooks."
+          "Review VIGIL-2026-OBS-0005 and VIGIL-2026-OBS-0004.",
+          "Review VIGIL-2026-PATCH-0002.",
+          "Review VIGIL-2026-FM-0007 and VIGIL-2026-PATCH-0003.",
+          "Review cleaned CAM-BS2025-AEON-005-PLATINUM — Annex D.",
+          "Review cleaned CAM-BS2025-AEON-005-SCH-01, CAM-BS2025-AEON-005-SCH-02, and CAM-BS2025-AEON-005-SCH-03.",
+          "Review CAM-BS2025-AEON-003-SCH-02 tool invocation authority bands and execution-boundary provisions.",
+          "Review CAM-BS2026-AEON-008-SCH-03 account-resource sharing and pooled-capacity classification interfaces.",
+          "Review CAM-BS2026-AEON-012-PLATINUM — Annex K for security-boundary handling.",
+          "Review CAM-BS2025-AEON-013-PLATINUM — Annex L for epistemic classification and uncertainty boundaries.",
+          "Review CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B for possible failure-taxonomy hooks.",
+          "Review CAM-EQ2026-LATTICE-002-PLATINUM for continuity-safe access and non-denial implications."
         ]
       },
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json",
