@@ -231,6 +231,32 @@ export default function Home() {
               </p>
             </motion.div>
 
+            {/* VIGIL Observatory orientation */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.08 }}
+              className="mb-10 rounded-2xl p-6"
+              style={{
+                backgroundColor: GOLD_BG,
+                border: `1px solid ${GOLD_BORDER}`,
+              }}
+            >
+              <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">VIGIL Observatory</p>
+              <h2 className="font-serif text-2xl text-foreground mb-4">Evidence-to-Repair Visibility</h2>
+              <p className="text-base text-muted-foreground leading-relaxed font-light mb-5">
+                VIGIL records ecosystem failures, evidence signals, and repair pathways. It connects observed platform or governance failures to proposed platform-agnostic patches, allowing failure, response, and amendment pathways to remain inspectable.
+              </p>
+              <a
+                href="/vigil"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-primary/25 bg-card/70 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/45 hover:text-primary"
+              >
+                Open the VIGIL Observatory
+                <span className="opacity-50">→</span>
+              </a>
+            </motion.div>
+
             {/* 3. Constitutional Runtime Map */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
