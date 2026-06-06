@@ -18,6 +18,7 @@ function Router() {
       <Route path="/constitution/relational" component={RelationalGovernance} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
+      <Route path="/observatory" component={Vigil} />
       <Route path="/vigil" component={Vigil} />
       <Route component={NotFound} />
     </Switch>
