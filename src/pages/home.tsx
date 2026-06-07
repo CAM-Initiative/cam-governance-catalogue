@@ -64,6 +64,35 @@ const runtimeTranslation = [
   }
 ];
 
+const governanceFlow = [
+  {
+    label: "Architecture",
+    title: "CAM Architecture",
+    description: "Defines the constitutional governance architecture."
+  },
+  {
+    label: "Runtime",
+    title: "Runtime Governance",
+    description: "Applies governance logic during execution."
+  },
+  {
+    label: "Evidence-to-repair loop",
+    title: "VIGIL Observatory",
+    description: "Records ecosystem failures, evidence signals, and repair pathways, then feeds validated observations back into governance amendment.",
+    href: "/vigil"
+  },
+  {
+    label: "Repair",
+    title: "Repair Patch",
+    description: "Translates validated failures into platform-agnostic repair pathways."
+  },
+  {
+    label: "Amendment",
+    title: "Amendment / Registry Update",
+    description: "Feeds repair outcomes back into governance instruments and registries."
+  }
+];
+
 const startHerePaths = [
   {
     label: "Builder Path",
@@ -231,31 +260,6 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* VIGIL Observatory orientation */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.08 }}
-              className="mb-10 rounded-2xl p-6"
-              style={{
-                backgroundColor: GOLD_BG,
-                border: `1px solid ${GOLD_BORDER}`,
-              }}
-            >
-              <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">VIGIL Observatory</p>
-              <h2 className="font-serif text-2xl text-foreground mb-4">Evidence-to-Repair Visibility</h2>
-              <p className="text-base text-muted-foreground leading-relaxed font-light mb-5">
-                VIGIL records ecosystem failures, evidence signals, and repair pathways. It connects observed platform or governance failures to proposed platform-agnostic patches, allowing failure, response, and amendment pathways to remain inspectable.
-              </p>
-              <a
-                href="/vigil"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-primary/25 bg-card/70 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/45 hover:text-primary"
-              >
-                Open the VIGIL Observatory
-                <span className="opacity-50">→</span>
-              </a>
-            </motion.div>
 
             {/* 3. Constitutional Runtime Map */}
             <motion.div
@@ -414,6 +418,46 @@ export default function Home() {
                   <p className="font-serif text-base text-foreground">Runtime Governance Execution Model</p>
                   <p className="text-sm text-muted-foreground font-light leading-relaxed mt-2">
                     Receives schedule influence into runtime layers: signal interpretation, arbitration, execution, representation, and execution-lock discipline.
+                  </p>
+                </div>
+
+                <div className="mt-6 rounded-xl border border-primary/15 bg-card/45 p-4">
+                  <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1.1fr_auto_1fr_auto_1.1fr] lg:items-stretch">
+                    {governanceFlow.map((step, index) => {
+                      const StepContent = (
+                        <>
+                          <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-cam-gold mb-1">{step.label}</p>
+                          <h4 className="font-serif text-base text-foreground">{step.title}</h4>
+                          <p className="text-xs text-muted-foreground font-light leading-relaxed mt-1">{step.description}</p>
+                        </>
+                      );
+
+                      return (
+                        <div key={step.title} className="contents">
+                          {step.href ? (
+                            <a
+                              href={step.href}
+                              className="rounded-xl border border-primary/25 bg-background/55 p-3 transition-colors hover:border-primary/45 hover:text-primary"
+                            >
+                              {StepContent}
+                            </a>
+                          ) : (
+                            <div className="rounded-xl border border-primary/15 bg-background/35 p-3">
+                              {StepContent}
+                            </div>
+                          )}
+                          {index < governanceFlow.length - 1 && (
+                            <div className="flex items-center justify-center text-cam-gold/70" aria-hidden="true">
+                              <span className="hidden text-lg lg:inline">→</span>
+                              <span className="text-lg lg:hidden">↓</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <p className="mt-3 text-center font-mono text-[10px] tracking-[0.14em] uppercase text-muted-foreground/70">
+                    VIGIL closes the execution chain and reopens the repair loop through evidence-backed amendment.
                   </p>
                 </div>
               </div>
