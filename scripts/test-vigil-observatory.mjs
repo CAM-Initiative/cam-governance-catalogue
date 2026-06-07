@@ -80,6 +80,18 @@ test("VIGIL normalization resolves source and platform display fields", async ()
       source_records: [{ source_platform: "TikTok" }],
     });
     assert.equal(sourceFallback.platform_label, "TikTok");
+
+    const canonicalPriority = normalizeVigilRecord({
+      id: "VIGIL-2026-OBS-0003",
+      title: "Canonical platform projection priority",
+      system_context: { platform_or_vendor: "OpenAI", product_or_service: "ChatGPT" },
+      observed_vendor: "Lower priority vendor",
+      source_records: [{ source_platform: "Lower priority source", system_or_product: "Lower priority product" }],
+    });
+    assert.equal(canonicalPriority.platform_label, "OpenAI");
+    assert.equal(canonicalPriority.affected_platform_label, "OpenAI");
+    assert.equal(canonicalPriority.observed_vendor, "OpenAI");
+    assert.equal(canonicalPriority.observed_product, "ChatGPT");
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -181,7 +193,10 @@ test("VIGIL normalization supports lean index entries without detailed summary o
     assert.equal(record.title, "Lean index title");
     assert.equal(record.summary, "Collapsed row summary only");
     assert.equal(record.record_state, "watching");
+    assert.equal(record.platform_label, "OpenAI");
+    assert.equal(record.affected_platform_label, "OpenAI");
     assert.equal(record.source_platform, "GitHub");
+    assert.equal(record.observed_vendor, "OpenAI");
     assert.equal(record.severity, "medium");
     assert.equal(record.triage_priority, "review");
     assert.equal(record.raw.path, "vigil/records/lean.json");
@@ -189,6 +204,42 @@ test("VIGIL normalization supports lean index entries without detailed summary o
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
+});
+
+
+test("generated VIGIL fallback keeps lean records with projected platform metadata", async () => {
+  const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
+  assert.ok(Array.isArray(fallback.records));
+  assert.ok(fallback.records.length > 0);
+
+  const forbidden = new Set([
+    "system_context",
+    "source_records",
+    "failure_classification",
+    "triage",
+    "source_summary",
+    "system_summary",
+    "jurisdiction_summary",
+    "classification_summary",
+    "triage_summary",
+    "proposal_summary",
+    "external_relevance_summary",
+    "change_summary",
+    "verification_summary",
+    "impact_summary",
+    "cam_summary",
+  ]);
+
+  for (const entry of fallback.records) {
+    for (const key of forbidden) assert.equal(Object.hasOwn(entry, key), false, `${entry.id} includes forbidden nested ${key}`);
+    assert.equal(typeof entry.platform_label, "string", `${entry.id} is missing platform_label`);
+    assert.equal(typeof entry.affected_platform_label, "string", `${entry.id} is missing affected_platform_label`);
+    assert.equal(typeof entry.source_platform, "string", `${entry.id} is missing source_platform`);
+    assert.equal(typeof entry.observed_vendor, "string", `${entry.id} is missing observed_vendor`);
+    assert.ok(Object.keys(entry).length < 55, `${entry.id} lean index entry is too large`);
+  }
+
+  assert.ok(fallback.records.some((entry) => typeof entry.observed_product === "string" && entry.observed_product.length > 0));
 });
 
 test("VIGIL page lazy-loads details and warns when canonical detail falls back to index entry", async () => {

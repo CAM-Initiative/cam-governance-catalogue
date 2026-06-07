@@ -13,6 +13,104 @@ const registrySources = JSON.parse(await readFile(sourceConfigPath, "utf8"));
 const configuredRegistryUrl = registrySources.vigil.registry_index_url;
 const registrySource = process.env.VIGIL_REGISTRY_SOURCE || configuredRegistryUrl;
 
+const forbiddenIndexPayloadKeys = new Set([
+  "system_context",
+  "source_records",
+  "failure_classification",
+  "triage",
+  "source_summary",
+  "system_summary",
+  "jurisdiction_summary",
+  "classification_summary",
+  "triage_summary",
+  "proposal_summary",
+  "external_relevance_summary",
+  "change_summary",
+  "verification_summary",
+  "impact_summary",
+  "cam_summary",
+]);
+
+function textFrom(value) {
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed ? trimmed : undefined;
+  }
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (Array.isArray(value)) {
+    const values = value.map(textFrom).filter(Boolean);
+    return values.length ? values.join(", ") : undefined;
+  }
+  return undefined;
+}
+
+function nestedValue(record, path) {
+  return path.split(".").reduce((current, part) => {
+    if (Array.isArray(current) && /^\d+$/.test(part)) return current[Number(part)];
+    return current && typeof current === "object" && !Array.isArray(current) ? current[part] : undefined;
+  }, record);
+}
+
+function firstText(record, paths) {
+  for (const path of paths) {
+    const value = textFrom(nestedValue(record, path));
+    if (value) return value;
+  }
+  return undefined;
+}
+
+function projectedPlatform(record) {
+  return firstText(record, [
+    "system_context.platform_or_vendor",
+    "platform_or_vendor",
+    "observed_system_vendor",
+    "observed_vendor",
+    "system_vendor",
+    "source_records.0.source_platform",
+    "source_platform",
+  ]);
+}
+
+function projectedProduct(record) {
+  return firstText(record, [
+    "system_context.product_or_service",
+    "system_context.specific_model_or_runtime",
+    "system_or_product",
+    "model_or_product",
+    "model_or_algorithm",
+    "source_records.0.system_or_product",
+    "source_records.0.model_or_algorithm",
+  ]);
+}
+
+function projectLeanIndexRecord(record) {
+  if (!record || typeof record !== "object" || Array.isArray(record)) return record;
+
+  const projected = Object.fromEntries(
+    Object.entries(record).filter(([key]) => !forbiddenIndexPayloadKeys.has(key)),
+  );
+  const platform = projectedPlatform(record);
+  const product = projectedProduct(record);
+
+  if (platform) {
+    projected.platform_label = platform;
+    projected.affected_platform_label = platform;
+    projected.source_platform = platform;
+    projected.observed_vendor = platform;
+  }
+  if (product) projected.observed_product = product;
+
+  return projected;
+}
+
+function projectLeanIndexRecords(registry) {
+  if (!registry || typeof registry !== "object" || !Array.isArray(registry.records)) return registry;
+  return {
+    ...registry,
+    records: registry.records.map(projectLeanIndexRecord),
+  };
+}
+
 function resolveLocalSource(source) {
   return isAbsolute(source) ? source : resolve(repoRoot, source);
 }
@@ -104,9 +202,9 @@ try {
   }
 
   const masterRegistry = parseRegistry(sourceText, registrySource);
-  const fallbackRegistry = syncStatus === "fetched"
+  const fallbackRegistry = projectLeanIndexRecords(syncStatus === "fetched"
     ? await buildCombinedFallback(masterRegistry, registrySource)
-    : masterRegistry;
+    : masterRegistry);
 
   if (!Array.isArray(fallbackRegistry.records)) {
     throw new Error("VIGIL fallback registry must include a records array after resolution");
