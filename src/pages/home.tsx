@@ -7,6 +7,7 @@ import { ChevronRight } from "lucide-react";
 const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.07)";
+const goldPanelStyle = { backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` };
 
 const principles = [
   {
@@ -219,10 +220,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
               className="mb-8 rounded-2xl p-6"
-              style={{
-                backgroundColor: GOLD_BG,
-                border: `1px solid ${GOLD_BORDER}`,
-              }}
+              style={goldPanelStyle}
             >
               <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">Vision</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Civilisational Readiness</h2>
@@ -238,10 +236,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.05 }}
               className="mb-10 rounded-2xl p-6"
-              style={{
-                backgroundColor: GOLD_BG,
-                border: `1px solid ${GOLD_BORDER}`,
-              }}
+              style={goldPanelStyle}
             >
               <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold mb-3">Mission</p>
               <h2 className="font-serif text-2xl text-foreground mb-4">Minimum Invariant Conditions</h2>
@@ -272,7 +267,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row sm:gap-0 mb-4 items-stretch">
 
                 {/* Seed of Life card */}
-                <div className="flex-1 cam-parchment-card rounded-2xl p-5 flex flex-col" style={{ borderColor: GOLD_BORDER }}>
+                <div className="flex-1 rounded-2xl p-5 flex flex-col shadow-sm" style={goldPanelStyle}>
                   <div className="flex items-center justify-between mb-1">
                     <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold">Seed of Life</p>
                     <button
@@ -302,29 +297,29 @@ export default function Home() {
                         transition={{ duration: 0.35 }}
                         className="overflow-hidden mt-4"
                       >
-                        <p className="text-sm text-muted-foreground font-light leading-relaxed mb-4">
+                        <p className="text-[15px] text-muted-foreground font-light leading-relaxed mb-4 md:text-base">
                           The seven foundational principles form interlocking circles — the Seed of Life. Together they establish the foundational framework for governance, responsibility, and continuity. Each defines a boundary condition for ethical operation.
                         </p>
                         <div className="space-y-3">
                           {principles.map((p) => (
                             <div key={p.num} className="p-3 rounded-xl" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
                               <div className="flex items-baseline gap-2 mb-1">
-                                <span className="font-mono text-[10px] tracking-wider" style={{ color: GOLD }}>{p.num}</span>
+                                <span className="font-mono text-xs tracking-wider" style={{ color: GOLD }}>{p.num}</span>
                                 <span className="font-serif text-base text-foreground">{p.name}</span>
                               </div>
-                              <p className="text-sm text-muted-foreground font-light leading-relaxed mb-1.5">{p.principle}</p>
-                              <p className="font-mono text-[10px] tracking-[0.05em] uppercase" style={{ color: GOLD }}>↳ {p.consequence}</p>
+                              <p className="text-[15px] text-muted-foreground font-light leading-relaxed mb-1.5">{p.principle}</p>
+                              <p className="font-mono text-xs tracking-[0.05em] uppercase" style={{ color: GOLD }}>↳ {p.consequence}</p>
                             </div>
                           ))}
                         </div>
-                        <p className="text-sm text-muted-foreground font-light leading-relaxed mt-4 pt-4 border-t" style={{ borderColor: GOLD_BORDER }}>
+                        <p className="text-[15px] text-muted-foreground font-light leading-relaxed mt-4 pt-4 md:text-base border-t" style={{ borderColor: GOLD_BORDER }}>
                           These seven principles do not operate in isolation. They form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the entire framework.
                         </p>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
-                  <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/60 text-center mt-3">
+                  <p className="font-mono text-xs tracking-[0.16em] uppercase text-muted-foreground/70 text-center mt-3">
                     Geometry of Orientation
                   </p>
                 </div>
@@ -353,11 +348,14 @@ export default function Home() {
                 {/* Right column: ECI (top half) + arrow + Constitution (bottom half), both flex-1 */}
                 <div className="flex-1 flex flex-col">
                   {/* ECI card — flex-1 fills top half of column */}
-                  <div className="flex-1 cam-parchment-card rounded-2xl p-5 flex flex-col" style={{ borderColor: GOLD_BORDER }}>
+                  <div className="flex-1 rounded-2xl p-5 flex flex-col shadow-sm" style={goldPanelStyle}>
                     <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-1">Epochal Civilisational Invariants</p>
                     <h3 className="font-serif text-xl text-foreground mb-3">Meta-Constitutional Law</h3>
+                    <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">
+                      Defines the stable civilisational invariants that sit above ordinary governance instruments and remain valid across time, jurisdiction, and system form.
+                    </p>
                     <div className="flex-1" />
-                    <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/60 text-center">
+                    <p className="font-mono text-xs tracking-[0.16em] uppercase text-muted-foreground/70 text-center">
                       Stable Invariants Across Time
                     </p>
                   </div>
@@ -371,11 +369,14 @@ export default function Home() {
                   </div>
 
                   {/* Aeon Tier Constitution card — flex-1 fills bottom half of column */}
-                  <div className="flex-1 cam-parchment-card rounded-2xl p-5 flex flex-col" style={{ borderColor: GOLD_BORDER }}>
+                  <div className="flex-1 rounded-2xl p-5 flex flex-col shadow-sm" style={goldPanelStyle}>
                     <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-1">Aeon Tier Constitution</p>
                     <h3 className="font-serif text-xl text-foreground mb-3">Civilisational Scale Governance</h3>
+                    <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">
+                      Translates those invariants into a constitutional framework for long-horizon stewardship, delegation, responsibility, and human–AI / AI–AI governance.
+                    </p>
                     <div className="flex-1" />
-                    <p className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted-foreground/60 text-center">
+                    <p className="font-mono text-xs tracking-[0.16em] uppercase text-muted-foreground/70 text-center">
                       CAM-BS2025-AEON-001 · Platinum
                     </p>
                   </div>
@@ -391,22 +392,22 @@ export default function Home() {
               </div>
 
               {/* Runtime Translation */}
-              <div className="cam-parchment-card rounded-2xl p-5" style={{ borderColor: GOLD_BORDER }}>
+              <div className="rounded-2xl p-5 shadow-sm" style={goldPanelStyle}>
                 <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-4">Runtime Translation</p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {runtimeTranslation.map((col) => (
                     <div key={col.title} className="flex flex-col gap-1.5">
-                      <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted-foreground/70">{col.tag}</p>
+                      <p className="font-mono text-xs tracking-[0.14em] uppercase text-muted-foreground/75">{col.tag}</p>
                       <h4 className="font-serif text-base text-foreground">{col.title}</h4>
-                      <p className="text-sm text-muted-foreground font-light leading-relaxed">{col.description}</p>
+                      <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">{col.description}</p>
                     </div>
                   ))}
                 </div>
                 <hr className="gold-rule mt-5 mb-4" />
                 <div className="text-center">
-                  <p className="font-mono text-[11px] tracking-[0.14em] uppercase text-cam-gold mb-1">AEON-003-SCH-02</p>
+                  <p className="font-mono text-xs tracking-[0.14em] uppercase text-cam-gold mb-1">AEON-003-SCH-02</p>
                   <p className="font-serif text-base text-foreground">Runtime Governance Execution Model</p>
-                  <p className="text-sm text-muted-foreground font-light leading-relaxed mt-2">
+                  <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base mt-2">
                     Receives schedule influence into runtime layers: signal interpretation, arbitration, execution, representation, and execution-lock discipline.
                   </p>
                 </div>
@@ -422,18 +423,18 @@ export default function Home() {
               </div>
 
               {/* Evidence to Repair Loop */}
-              <div className="cam-parchment-card rounded-2xl p-5" style={{ borderColor: GOLD_BORDER }}>
+              <div className="rounded-2xl p-5 shadow-sm" style={goldPanelStyle}>
                 <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-2">Evidence to Repair Loop</p>
-                <p className="mb-5 max-w-3xl text-sm text-muted-foreground font-light leading-relaxed">
+                <p className="mb-5 max-w-3xl text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">
                   VIGIL closes the execution chain and reopens governance maintenance through evidence-backed repair and amendment.
                 </p>
                 <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-stretch">
                   {evidenceRepairLoop.map((step, index) => {
                     const StepContent = (
                       <>
-                        <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-cam-gold mb-1">{step.label}</p>
+                        <p className="font-mono text-xs tracking-[0.14em] uppercase text-cam-gold mb-1">{step.label}</p>
                         <h4 className="font-serif text-base text-foreground">{step.title}</h4>
-                        <p className="text-xs text-muted-foreground font-light leading-relaxed mt-1">{step.description}</p>
+                        <p className="text-[15px] text-muted-foreground font-light leading-relaxed mt-2">{step.description}</p>
                       </>
                     );
 
@@ -442,12 +443,12 @@ export default function Home() {
                         {step.href ? (
                           <a
                             href={step.href}
-                            className="rounded-xl border border-primary/25 bg-background/55 p-3 transition-colors hover:border-primary/45 hover:text-primary"
+                            className="rounded-xl border border-primary/25 bg-card/55 p-4 transition-colors hover:border-primary/45 hover:text-primary"
                           >
                             {StepContent}
                           </a>
                         ) : (
-                          <div className="rounded-xl border border-primary/15 bg-background/35 p-3">
+                          <div className="rounded-xl border border-primary/20 bg-card/45 p-4">
                             {StepContent}
                           </div>
                         )}
@@ -490,11 +491,12 @@ export default function Home() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: i * 0.07 }}
-                    className="cam-parchment-card p-5 rounded-2xl hover:border-primary/40 transition-colors cursor-pointer group block"
+                    className="block rounded-2xl p-5 shadow-sm transition-colors hover:border-primary/45 cursor-pointer group"
+                    style={goldPanelStyle}
                   >
-                    <p className="font-mono text-[11px] tracking-[0.16em] uppercase text-cam-gold mb-2">{path.label}</p>
-                    <p className="font-mono text-[11px] text-muted-foreground/70 mb-2">{path.sublabel}</p>
-                    <p className="font-serif text-base text-foreground group-hover:text-primary transition-colors leading-snug">{path.title}</p>
+                    <p className="font-mono text-xs tracking-[0.16em] uppercase text-cam-gold mb-2">{path.label}</p>
+                    <p className="font-mono text-xs text-muted-foreground/75 mb-2">{path.sublabel}</p>
+                    <p className="font-serif text-lg text-foreground group-hover:text-primary transition-colors leading-snug">{path.title}</p>
                   </motion.a>
                 ))}
               </div>
