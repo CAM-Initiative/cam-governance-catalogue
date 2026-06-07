@@ -64,21 +64,11 @@ const runtimeTranslation = [
   }
 ];
 
-const governanceFlow = [
+const evidenceRepairLoop = [
   {
-    label: "Architecture",
-    title: "CAM Architecture",
-    description: "Defines the constitutional governance architecture."
-  },
-  {
-    label: "Runtime",
-    title: "Runtime Governance",
-    description: "Applies governance logic during execution."
-  },
-  {
-    label: "Evidence-to-repair loop",
+    label: "Evidence",
     title: "VIGIL Observatory",
-    description: "Records ecosystem failures, evidence signals, and repair pathways, then feeds validated observations back into governance amendment.",
+    description: "Records ecosystem failures, evidence signals, and repair pathways.",
     href: "/vigil"
   },
   {
@@ -421,44 +411,55 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="mt-6 rounded-xl border border-primary/15 bg-card/45 p-4">
-                  <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1.1fr_auto_1fr_auto_1.1fr] lg:items-stretch">
-                    {governanceFlow.map((step, index) => {
-                      const StepContent = (
-                        <>
-                          <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-cam-gold mb-1">{step.label}</p>
-                          <h4 className="font-serif text-base text-foreground">{step.title}</h4>
-                          <p className="text-xs text-muted-foreground font-light leading-relaxed mt-1">{step.description}</p>
-                        </>
-                      );
+              </div>
 
-                      return (
-                        <div key={step.title} className="contents">
-                          {step.href ? (
-                            <a
-                              href={step.href}
-                              className="rounded-xl border border-primary/25 bg-background/55 p-3 transition-colors hover:border-primary/45 hover:text-primary"
-                            >
-                              {StepContent}
-                            </a>
-                          ) : (
-                            <div className="rounded-xl border border-primary/15 bg-background/35 p-3">
-                              {StepContent}
-                            </div>
-                          )}
-                          {index < governanceFlow.length - 1 && (
-                            <div className="flex items-center justify-center text-cam-gold/70" aria-hidden="true">
-                              <span className="hidden text-lg lg:inline">→</span>
-                              <span className="text-lg lg:hidden">↓</span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <p className="mt-3 text-center font-mono text-[10px] tracking-[0.14em] uppercase text-muted-foreground/70">
-                    VIGIL closes the execution chain and reopens the repair loop through evidence-backed amendment.
-                  </p>
+              {/* Arrow → Evidence to Repair Loop */}
+              <div className="flex justify-center my-3">
+                <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
+                  <line x1="12" y1="2" x2="12" y2="22" stroke={GOLD_BORDER} strokeWidth="1.5" />
+                  <polyline points="6,17 12,24 18,17" fill="none" stroke={GOLD_BORDER} strokeWidth="1.5" strokeLinejoin="round" />
+                </svg>
+              </div>
+
+              {/* Evidence to Repair Loop */}
+              <div className="cam-parchment-card rounded-2xl p-5" style={{ borderColor: GOLD_BORDER }}>
+                <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-2">Evidence to Repair Loop</p>
+                <p className="mb-5 max-w-3xl text-sm text-muted-foreground font-light leading-relaxed">
+                  VIGIL closes the execution chain and reopens governance maintenance through evidence-backed repair and amendment.
+                </p>
+                <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-stretch">
+                  {evidenceRepairLoop.map((step, index) => {
+                    const StepContent = (
+                      <>
+                        <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-cam-gold mb-1">{step.label}</p>
+                        <h4 className="font-serif text-base text-foreground">{step.title}</h4>
+                        <p className="text-xs text-muted-foreground font-light leading-relaxed mt-1">{step.description}</p>
+                      </>
+                    );
+
+                    return (
+                      <div key={step.title} className="contents">
+                        {step.href ? (
+                          <a
+                            href={step.href}
+                            className="rounded-xl border border-primary/25 bg-background/55 p-3 transition-colors hover:border-primary/45 hover:text-primary"
+                          >
+                            {StepContent}
+                          </a>
+                        ) : (
+                          <div className="rounded-xl border border-primary/15 bg-background/35 p-3">
+                            {StepContent}
+                          </div>
+                        )}
+                        {index < evidenceRepairLoop.length - 1 && (
+                          <div className="flex items-center justify-center text-cam-gold/70" aria-hidden="true">
+                            <span className="hidden text-lg lg:inline">→</span>
+                            <span className="text-lg lg:hidden">↓</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>

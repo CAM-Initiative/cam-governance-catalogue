@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
+import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
 import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 
 const VIGIL_PAGE_SIZE = 20;
@@ -11,9 +11,10 @@ type SortDirection = "asc" | "desc";
 type SortConfig = { key: SortKey; direction: SortDirection };
 
 type FilterOption = { value: string; label: string };
+type DetailLoadState = { status: "loading" } | { status: "ready"; raw: UnknownRecord; displayRecord: VigilIndexRecord } | { status: "error"; error: string };
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
-const exportNotice = "Filtered VIGIL index export from the CAM Governance Interface. Canonical records remain in CAM-Initiative/Vigil.";
+const exportNotice = "Filtered VIGIL index-entry export from the CAM Governance Interface. Full canonical records remain in CAM-Initiative/Vigil and are loaded per record on demand.";
 const vigilRecommendedCitation = "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil";
 const vigilReuseNotice = "This is public-benefit governance infrastructure. Please cite VIGIL if you use this export. Public access does not imply unrestricted reuse; applicable licence and reuse terms apply.";
 const vigilSupportUrl = "https://buymeacoffee.com/cam_initiative";
@@ -128,6 +129,21 @@ function jsonFileName(record: VigilIndexRecord) {
   return `${(record.id || "vigil-record").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "vigil-record"}.json`;
 }
 
+function recordKeyFor(record: VigilIndexRecord, index = 0) {
+  return [record.id, record.path, record.raw_url, record.github_blob_url, String(index)].filter(isMeaningfulText).join("::");
+}
+
+function detailDisplayRecord(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
+  const normalized = normalizeRecords([{
+    ...detail,
+    path: typeof detail.path === "string" ? detail.path : indexRecord.path,
+    raw_url: typeof detail.raw_url === "string" ? detail.raw_url : indexRecord.raw_url,
+    github_blob_url: typeof detail.github_blob_url === "string" ? detail.github_blob_url : indexRecord.github_blob_url,
+    source_registry: typeof detail.source_registry === "string" ? detail.source_registry : indexRecord.source_registry,
+  }])[0];
+  return { ...normalized, raw: detail };
+}
+
 function Field({ label, value }: { label: string; value?: string }) {
   if (!isMeaningfulText(value)) return null;
 
@@ -218,6 +234,8 @@ export default function Vigil() {
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
   const [copiedRecordKey, setCopiedRecordKey] = useState<string | null>(null);
+  const [detailLoads, setDetailLoads] = useState<Record<string, DetailLoadState>>({});
+  const detailLoadPromises = useRef<Partial<Record<string, Promise<UnknownRecord>>>>({});
 
   useEffect(() => {
     let cancelled = false;
@@ -291,8 +309,34 @@ export default function Vigil() {
     }));
   }
 
+  async function ensureRecordDetail(record: VigilIndexRecord, recordKey: string) {
+    const existing = detailLoads[recordKey];
+    if (existing?.status === "ready") return existing.raw;
+    if (detailLoadPromises.current[recordKey]) return detailLoadPromises.current[recordKey];
+
+    setDetailLoads((current) => ({ ...current, [recordKey]: { status: "loading" } }));
+    const detailPromise = loadVigilRecordDetail(record.raw)
+      .then((raw) => {
+        const displayRecord = detailDisplayRecord(record, raw);
+        setDetailLoads((current) => ({ ...current, [recordKey]: { status: "ready", raw, displayRecord } }));
+        return raw;
+      })
+      .catch((error) => {
+        const message = error instanceof Error ? error.message : "VIGIL canonical record could not be loaded.";
+        setDetailLoads((current) => ({ ...current, [recordKey]: { status: "error", error: message } }));
+        return record.raw;
+      })
+      .finally(() => {
+        delete detailLoadPromises.current[recordKey];
+      });
+
+    detailLoadPromises.current[recordKey] = detailPromise;
+    return detailPromise;
+  }
+
   async function copyRecordJson(record: VigilIndexRecord, recordKey: string) {
-    const jsonText = JSON.stringify(record.raw, null, 2);
+    const detailJson = await ensureRecordDetail(record, recordKey);
+    const jsonText = JSON.stringify(detailJson, null, 2);
 
     try {
       if (navigator.clipboard?.writeText) {
@@ -319,8 +363,9 @@ export default function Vigil() {
     }
   }
 
-  function downloadRecordJson(record: VigilIndexRecord) {
-    const blob = new Blob([`${JSON.stringify(record.raw, null, 2)}\n`], { type: "application/json" });
+  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
+    const detailJson = await ensureRecordDetail(record, recordKey);
+    const blob = new Blob([`${JSON.stringify(detailJson, null, 2)}\n`], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -331,7 +376,8 @@ export default function Vigil() {
     URL.revokeObjectURL(url);
   }
 
-  function toggleExpandedRecord(recordKey: string) {
+  function toggleExpandedRecord(record: VigilIndexRecord, recordKey: string) {
+    const shouldLoadDetail = !expandedRecordKeys.has(recordKey);
     setExpandedRecordKeys((current) => {
       const next = new Set(current);
       if (next.has(recordKey)) {
@@ -341,12 +387,13 @@ export default function Vigil() {
       }
       return next;
     });
+    if (shouldLoadDetail) void ensureRecordDetail(record, recordKey);
   }
 
-  function handleRecordRowKeyDown(event: KeyboardEvent<HTMLDivElement>, recordKey: string) {
+  function handleRecordRowKeyDown(event: KeyboardEvent<HTMLDivElement>, record: VigilIndexRecord, recordKey: string) {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
-    toggleExpandedRecord(recordKey);
+    toggleExpandedRecord(record, recordKey);
   }
 
   function exportCurrentView() {
@@ -615,11 +662,14 @@ export default function Vigil() {
                 const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
                 const sourceHref = sourceRecordUrl(record);
                 const rawHref = sourceRawUrl(record);
-                const recordKey = `${record.id}-${record.path ?? index}`;
+                const recordKey = recordKeyFor(record, recordPageStart + index);
                 const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
                 const isExpanded = expandedRecordKeys.has(recordKey);
+                const detailLoad = detailLoads[recordKey];
+                const detailRecord = detailLoad?.status === "ready" ? detailLoad.displayRecord : record;
+                const detailRecordDate = detailRecord.date_recorded ?? detailRecord.date_implemented ?? "Date not specified";
                 const displayRecordId = record.id;
-                const defaultOpenSummaries = defaultOpenSummaryNames(record);
+                const defaultOpenSummaries = defaultOpenSummaryNames(detailRecord);
 
                 return (
                 <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
@@ -630,8 +680,8 @@ export default function Vigil() {
                     aria-expanded={isExpanded}
                     aria-controls={detailsPanelId}
                     className="cursor-pointer px-3 py-2.5 text-sm transition md:px-4"
-                    onClick={() => toggleExpandedRecord(recordKey)}
-                    onKeyDown={(event) => handleRecordRowKeyDown(event, recordKey)}
+                    onClick={() => toggleExpandedRecord(record, recordKey)}
+                    onKeyDown={(event) => handleRecordRowKeyDown(event, record, recordKey)}
                   >
                     <div className="font-sans">
                       <div className="space-y-3 md:hidden">
@@ -682,10 +732,10 @@ export default function Vigil() {
                   <div id={detailsPanelId} className="px-3 py-4 md:px-4">
                     <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
                       <div className="min-w-0">
-                        <p className="break-words font-mono text-[11px] text-cam-gold">{record.id}</p>
-                        <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{record.title}</h2>
+                        <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
+                        <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
                         <div className="mt-3 flex flex-wrap gap-2">
-                          {[record.type_label, record.record_state, recordDate, record.platform_label].filter(isMeaningfulText).map((value) => (
+                          {[detailRecord.type_label, detailRecord.record_state, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value) => (
                             <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>
                           ))}
                         </div>
@@ -693,7 +743,7 @@ export default function Vigil() {
                       <button
                         type="button"
                         className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                        onClick={() => toggleExpandedRecord(recordKey)}
+                        onClick={() => toggleExpandedRecord(record, recordKey)}
                         aria-expanded={isExpanded}
                         aria-controls={detailsPanelId}
                       >
@@ -701,22 +751,34 @@ export default function Vigil() {
                       </button>
                     </div>
 
-                    {previewText(record.summary) && record.summary !== record.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{record.summary}</p>}
+                    {detailLoad?.status === "loading" && (
+                      <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-xs leading-relaxed text-muted-foreground" role="status">
+                        Loading canonical VIGIL record detail…
+                      </div>
+                    )}
+
+                    {detailLoad?.status === "error" && (
+                      <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800" role="alert">
+                        Detailed canonical record could not be loaded. Showing the registry index entry instead. {detailLoad.error}
+                      </div>
+                    )}
+
+                    {previewText(detailRecord.summary) && detailRecord.summary !== detailRecord.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{detailRecord.summary}</p>}
 
                     <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
-                      <Field label="Date Implemented" value={record.record_type === "patch_note" ? record.date_implemented : undefined} />
-                      <Field label="Evidence Confidence" value={record.record_type === "patch_note" ? undefined : record.evidence_confidence} />
-                      <Field label="Next Action" value={["observation", "proposal"].includes(record.record_type) ? record.next_action : undefined} />
-                      <Field label="Source Platform" value={record.source_platform} />
-                      <Field label="Source Type" value={record.source_types?.join("; ")} />
-                      <Field label="Source Context" value={record.source_record_hint} />
-                      <Field label="Observed System Vendor" value={record.observed_vendor} />
-                      <Field label="Observed Model / Product" value={record.observed_product} />
+                      <Field label="Date Implemented" value={detailRecord.record_type === "patch_note" ? detailRecord.date_implemented : undefined} />
+                      <Field label="Evidence Confidence" value={detailRecord.record_type === "patch_note" ? undefined : detailRecord.evidence_confidence} />
+                      <Field label="Next Action" value={["observation", "proposal"].includes(detailRecord.record_type) ? detailRecord.next_action : undefined} />
+                      <Field label="Source Platform" value={detailRecord.source_platform} />
+                      <Field label="Source Type" value={detailRecord.source_types?.join("; ")} />
+                      <Field label="Source Context" value={detailRecord.source_record_hint} />
+                      <Field label="Observed System Vendor" value={detailRecord.observed_vendor} />
+                      <Field label="Observed Model / Product" value={detailRecord.observed_product} />
                     </div>
 
                     <div className="space-y-2">
-                      {summaryBlocksFor(record).map((name) => (
-                        <SummaryBlock key={name} title={humanLabel(name)} entries={record.summaries[name]} defaultOpen={defaultOpenSummaries.has(name)} />
+                      {summaryBlocksFor(detailRecord).map((name) => (
+                        <SummaryBlock key={name} title={humanLabel(name)} entries={detailRecord.summaries[name]} defaultOpen={defaultOpenSummaries.has(name)} />
                       ))}
                     </div>
 
@@ -729,28 +791,28 @@ export default function Vigil() {
                             type="button"
                             className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
                             onClick={() => copyRecordJson(record, recordKey)}
-                            aria-label={`Copy raw JSON for ${record.id}`}
+                            aria-label={`Copy raw JSON for ${detailRecord.id}`}
                           >
                             {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
                           </button>
                           <button
                             type="button"
                             className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                            onClick={() => downloadRecordJson(record)}
-                            aria-label={`Download raw JSON for ${record.id}`}
+                            onClick={() => downloadRecordJson(record, recordKey)}
+                            aria-label={`Download raw JSON for ${detailRecord.id}`}
                           >
                             Download JSON
                           </button>
                         </div>
                       </div>
-                      {(record.record_type === "proposal" || record.record_type === "patch_note") && (
+                      {(detailRecord.record_type === "proposal" || detailRecord.record_type === "patch_note") && (
                         <div className="mt-3 grid gap-3 md:grid-cols-3">
-                          <Field label="Affected Domains" value={record.affected_domains?.join("; ")} />
-                          <Field label="Affected Instruments" value={record.affected_instruments?.join("; ")} />
-                          <Field label="Affected Annexes" value={record.affected_annexes?.join("; ")} />
+                          <Field label="Affected Domains" value={detailRecord.affected_domains?.join("; ")} />
+                          <Field label="Affected Instruments" value={detailRecord.affected_instruments?.join("; ")} />
+                          <Field label="Affected Annexes" value={detailRecord.affected_annexes?.join("; ")} />
                         </div>
                       )}
-                      <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(record.raw, null, 2)}</pre>
+                      <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(detailRecord.raw, null, 2)}</pre>
                     </details>
 
                     {(record.path || sourceHref || rawHref) && (

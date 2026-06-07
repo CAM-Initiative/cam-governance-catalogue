@@ -9,7 +9,7 @@ export type RegistryLoadResult = {
   message?: string;
 };
 
-type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
+export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 type RegistryPointer = {
   key?: string;
@@ -136,4 +136,28 @@ export function rawUrlForRecord(record: { raw_url?: string; path?: string }) {
   if (record.raw_url) return record.raw_url;
   if (!record.path) return undefined;
   return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+}
+
+export async function loadVigilRecordDetail(
+  record: UnknownRecord,
+  fetcher: FetchLike = fetch,
+): Promise<UnknownRecord> {
+  const detailUrl = rawUrlForRecord({
+    raw_url: typeof record.raw_url === "string" ? record.raw_url : typeof record.rawUrl === "string" ? record.rawUrl : undefined,
+    path: typeof record.path === "string" ? record.path : undefined,
+  });
+
+  if (!detailUrl) {
+    throw new Error("VIGIL canonical record could not be loaded because the index entry has no usable raw_url or path.");
+  }
+
+  try {
+    const payload = await fetchJson(fetcher, cacheBustUrl(detailUrl));
+    if (!isObject(payload)) {
+      throw new Error("canonical record JSON must be a top-level object");
+    }
+    return payload;
+  } catch (error) {
+    throw new Error(`VIGIL canonical record could not be loaded from ${detailUrl}. ${(error as Error).message}`);
+  }
 }

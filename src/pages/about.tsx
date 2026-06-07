@@ -39,7 +39,7 @@ const maintainedLayers = [
   {
     label: "Aeon Governance Lab",
     eyebrow: "Stewardship and maintenance",
-    body: "Aeon Governance Lab supports stewardship, drafting, release coordination, registry upkeep, interface maintenance, archival work, and public infrastructure continuity for the CAM Initiative.",
+    body: "Aeon Governance Lab supports stewardship, drafting, release coordination, registry upkeep, interface maintenance, archival work, and public infrastructure continuity for the CAM Initiative. The CAM Initiative was founded in Perth, Western Australia. It is an unincorporated public-benefit, non-profit governance initiative. Stewardship of the initiative, release coordination, and maintenance are managed by Dr Michelle Vivian O'Rourke, Director of the Phoenix Covenant Pty Ltd. Aeon Governance Lab is a pending trademark of the Phoenix Covenant Pty Ltd.",
   },
 ];
 
@@ -49,6 +49,9 @@ const contactLinks = [
     href: "mailto:ethics@cam-initiative.org",
     external: false,
   },
+];
+
+const followLinks = [
   {
     label: "https://x.com/CAM_Initiative",
     href: "https://x.com/CAM_Initiative",
@@ -137,17 +140,6 @@ export default function About() {
 
           <hr className="gold-rule mb-8 w-24" />
 
-          <div className="max-w-3xl space-y-4">
-            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              The CAM Initiative maintains public governance infrastructure for advanced AI systems, synthetic agents, runtime governance environments, and digital ecosystem accountability.
-            </p>
-            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              Its work is intended to support careful public review: durable records, clear citations, visible maintenance pathways, and governance materials that can be inspected without requiring institutional gatekeeping.
-            </p>
-            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              This website is the public access layer for browsing, searching, filtering, and citing CAM and VIGIL materials.
-            </p>
-          </div>
         </motion.header>
 
         <motion.section
@@ -164,11 +156,29 @@ export default function About() {
             <hr className="gold-rule flex-1" />
           </div>
 
-          <div className="rounded-2xl border border-border bg-card/55 p-6">
-            <h2 className="mb-5 font-serif text-2xl leading-snug text-foreground md:text-3xl">
-              Why the CAM Initiative exists
-            </h2>
+          <div
+            className="rounded-2xl p-6"
+            style={{
+              backgroundColor: GOLD_BG,
+              border: `1px solid ${GOLD_BORDER}`,
+            }}
+          >
             <div className="space-y-4 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              <p>
+                The CAM Initiative maintains public governance infrastructure for advanced AI systems, synthetic agents, runtime governance environments, and digital ecosystem accountability.
+              </p>
+              <p>
+                Its work is intended to support careful public review: durable records, clear citations, visible maintenance pathways, and governance materials that can be inspected without requiring institutional gatekeeping.
+              </p>
+              <p>
+                This website is the public access layer for browsing, searching, filtering, and citing CAM and VIGIL materials.
+              </p>
+              <div className="pt-2">
+                <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cam-gold">Purpose</p>
+                <h2 className="font-serif text-2xl leading-snug text-foreground md:text-3xl">
+                  Why the CAM Initiative exists
+                </h2>
+              </div>
               <p>The CAM Initiative began with two questions.</p>
               <p>
                 First: can AI systems govern themselves, and if so, what would that actually require?
@@ -206,19 +216,7 @@ export default function About() {
             <hr className="gold-rule flex-1" />
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-            <div
-              aria-label="CAM triskelion mark"
-              className="flex min-h-72 items-center justify-center rounded-3xl border border-primary/20 bg-card/45 p-8"
-            >
-              <img
-                alt="CAM Initiative triskelion emblem"
-                className="h-auto w-full max-w-64 opacity-90 mix-blend-screen drop-shadow-[0_0_28px_rgba(184,147,90,0.22)]"
-                src="/favicon.svg"
-              />
-            </div>
-
-            <div className="space-y-4">
+          <div className="space-y-4">
               {maintainedLayers.map((layer, index) => (
                 <motion.article
                   className="rounded-2xl border border-primary/20 bg-card/65 p-5"
@@ -239,13 +237,12 @@ export default function About() {
                   </p>
                 </motion.article>
               ))}
-            </div>
           </div>
         </motion.section>
 
 
         <motion.section
-          className="mb-16"
+          className="mb-8"
           initial={{ opacity: 0, y: 12 }}
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
@@ -301,57 +298,15 @@ export default function About() {
         >
           <div className="mb-3 flex items-center gap-3">
             <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
-              Contact &amp; Support
+              Reuse &amp; Licence
             </p>
             <hr className="gold-rule flex-1" />
           </div>
 
-          <div className="rounded-2xl border border-primary/20 bg-card/45 p-5 md:p-6">
-            <div className="mb-5 max-w-3xl space-y-3 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              <p>
-                For ethics, governance, citation, reuse, collaboration, or support enquiries, contact the initiative directly.
-              </p>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <article className="rounded-2xl border border-border bg-card/75 p-5">
-                <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
-                  Contact
-                </h2>
-                <div className="flex flex-col gap-3">
-                  {contactLinks.map((link) => (
-                    <a
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                      href={link.href}
-                      key={link.label}
-                      rel={link.external ? "noreferrer" : undefined}
-                      target={link.external ? "_blank" : undefined}
-                    >
-                      {link.label}
-                      {link.external && <span className="opacity-50">↗</span>}
-                    </a>
-                  ))}
-                </div>
-              </article>
-
-              <article className="rounded-2xl border border-border bg-card/75 p-5">
-                <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
-                  Support
-                </h2>
-                <p className="mb-5 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-                  CAM Initiative is currently independently maintained and not institutionally funded. Financial support helps cover infrastructure, archival, publication, and maintenance costs.
-                </p>
-                <a
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                  href={supportLink.href}
-                  rel="noreferrer"
-                  target="_blank"
-                >
-                  {supportLink.label}
-                  <span className="opacity-50">↗</span>
-                </a>
-              </article>
-            </div>
+          <div className="rounded-2xl border border-border bg-card/55 p-6">
+            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              Public access supports transparency, citation, review, research, journalism, policy analysis, and non-commercial governance use with attribution. Public access does not equal unrestricted reuse. Reuse rights differ by layer.
+            </p>
           </div>
         </motion.section>
 
@@ -364,16 +319,71 @@ export default function About() {
         >
           <div className="mb-3 flex items-center gap-3">
             <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
-              Stewardship
+              Contact
             </p>
             <hr className="gold-rule flex-1" />
           </div>
 
-          <div className="rounded-2xl border border-border bg-card/55 p-6">
-            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              The CAM Initiative was founded in Perth, Western Australia. It is an unincorporated public-benefit, non-profit governance initiative. Stewardship of the initiative, release coordination and maintenance are managed by Dr Michelle Vivian O&apos;Rourke, Director of the Phoenix Covenant Pty Ltd. Aeon Governance Lab is a pending trademark of the Phoenix Covenant Pty Ltd.
+          <article className="rounded-2xl border border-border bg-card/75 p-5">
+            <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
+              Outreach
+            </h2>
+            <p className="mb-5 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              For ethics, governance, citation, reuse, collaboration, or public-interest enquiries, contact the initiative directly.
             </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {contactLinks.map((link) => (
+                <a
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  href={link.href}
+                  key={link.label}
+                  rel={link.external ? "noreferrer" : undefined}
+                  target={link.external ? "_blank" : undefined}
+                >
+                  {link.label}
+                  {link.external && <span className="opacity-50">↗</span>}
+                </a>
+              ))}
+            </div>
+          </article>
+        </motion.section>
+
+        <motion.section
+          className="mb-16"
+          initial={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <div className="mb-3 flex items-center gap-3">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
+              Follow Us
+            </p>
+            <hr className="gold-rule flex-1" />
           </div>
+
+          <article className="rounded-2xl border border-border bg-card/75 p-5">
+            <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
+              Project channels
+            </h2>
+            <p className="mb-5 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              Follow public updates and inspect the open repositories for CAM, VIGIL, and this governance interface.
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              {followLinks.map((link) => (
+                <a
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+                  href={link.href}
+                  key={link.label}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {link.label}
+                  <span className="opacity-50">↗</span>
+                </a>
+              ))}
+            </div>
+          </article>
         </motion.section>
 
         <motion.section
@@ -385,16 +395,28 @@ export default function About() {
         >
           <div className="mb-3 flex items-center gap-3">
             <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">
-              Reuse &amp; Licence
+              Support
             </p>
             <hr className="gold-rule flex-1" />
           </div>
 
-          <div className="rounded-2xl border border-border bg-card/55 p-6">
-            <p className="text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              Public access supports transparency, citation, review, research, journalism, policy analysis, and non-commercial governance use with attribution. Public access does not equal unrestricted reuse. Reuse rights differ by layer.
+          <article className="rounded-2xl border border-border bg-card/75 p-5">
+            <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">
+              Support CAM Initiative
+            </h2>
+            <p className="mb-5 text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              CAM Initiative is currently independently maintained and not institutionally funded. Financial support helps cover infrastructure, archival, publication, and maintenance costs.
             </p>
-          </div>
+            <a
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+              href={supportLink.href}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {supportLink.label}
+              <span className="opacity-50">↗</span>
+            </a>
+          </article>
         </motion.section>
       </main>
     </Shell>
