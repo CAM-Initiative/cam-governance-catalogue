@@ -7,9 +7,7 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "CAM / Caelestis" },
-  { href: "https://github.com/CAM-Initiative/Vigil", label: "VIGIL GitHub" },
-  { href: "https://github.com/CAM-Initiative/cam-governance-catalogue", label: "Website GitHub" },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -19,9 +17,7 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "Observatory / VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "CAM / Caelestis GitHub" },
-  { href: "https://github.com/CAM-Initiative/Vigil", label: "VIGIL GitHub" },
-  { href: "https://github.com/CAM-Initiative/cam-governance-catalogue", label: "Website GitHub" },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance / GitHub" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -206,9 +202,6 @@ export function Shell({ children }: { children: ReactNode }) {
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
                 © 2026 CAM Initiative. Maintained by Aeon Governance Lab. Public access does not imply unrestricted reuse; citation and applicable licence terms apply.
-              </p>
-              <p className="text-xs leading-relaxed text-muted-foreground md:text-sm">
-                Public search indexing and citation discovery are permitted where consistent with robots.txt. No permission is granted for bulk scraping, model training, dataset creation, commercial replication, or automated extraction beyond ordinary search indexing without prior written permission.
               </p>
             </div>
 
