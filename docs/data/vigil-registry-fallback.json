@@ -87,7 +87,12 @@
       "escalation_required": "no",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0001.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0001.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0001.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-FM-0002",
@@ -134,7 +139,12 @@
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0002.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0002.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0002.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-FM-0003",
@@ -180,7 +190,12 @@
       "escalation_required": "to be assessed",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0003.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0003.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0003.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0003.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-FM-0004",
@@ -229,7 +244,12 @@
       "escalation_required": "to be assessed",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0004.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0004.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0004.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "unknown"
     },
     {
       "id": "VIGIL-2026-FM-0005",
@@ -278,7 +298,12 @@
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0005.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0005.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0005.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0005.json",
+      "platform_label": "xAI",
+      "affected_platform_label": "xAI",
+      "source_platform": "xAI",
+      "observed_vendor": "xAI",
+      "observed_product": "Grok"
     },
     {
       "id": "VIGIL-2026-FM-0006",
@@ -333,7 +358,12 @@
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
+      "platform_label": "X",
+      "affected_platform_label": "X",
+      "source_platform": "X",
+      "observed_vendor": "X",
+      "observed_product": "X Premium / X verification / X recommender and account-status affordances"
     },
     {
       "id": "VIGIL-2026-FM-0007",
@@ -406,7 +436,12 @@
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0007.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0007.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0007.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0007.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "ChatGPT / Codex / OpenAI API / Claude / Claude Code / Claude Console / Anthropic API"
     },
     {
       "id": "VIGIL-2026-FM-0008",
@@ -474,7 +509,12 @@
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0008.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0008.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0008.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0008.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "OpenAI and Anthropic frontier AI platform services and associated access surfaces"
     },
     {
       "id": "VIGIL-2026-FM-0009",
@@ -527,7 +567,12 @@
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0009.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0009.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0009.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0009.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-OBS-0001",
@@ -567,7 +612,12 @@
       "sector": "AI assistant / agentic workflow systems",
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0001.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0001.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0001.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-OBS-0002",
@@ -597,7 +647,12 @@
       "primary_jurisdiction": "global",
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0002.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0002.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0002.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-OBS-0003",
@@ -627,7 +682,12 @@
       "primary_jurisdiction": "global",
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0003.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0003.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0003.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0003.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-OBS-0004",
@@ -668,7 +728,12 @@
       "sector": "AI assistant / agentic tooling / repository-linked workflow / connector-mediated systems",
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0004.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT"
     },
     {
       "id": "VIGIL-2026-OBS-0005",
@@ -709,7 +774,11 @@
       "sector": "AI governance / agentic systems / runtime execution governance",
       "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0005.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0005.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0005.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0005.json",
+      "platform_label": "Other",
+      "affected_platform_label": "Other",
+      "source_platform": "Other",
+      "observed_vendor": "Other"
     },
     {
       "id": "VIGIL-2026-PATCH-0001",
@@ -769,7 +838,12 @@
       "verification_status": "recorded-in-vigil",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
+      "platform_label": "X",
+      "affected_platform_label": "X",
+      "source_platform": "X",
+      "observed_vendor": "X",
+      "observed_product": "X Premium / X verification / X recommender and account-status affordances"
     },
     {
       "id": "VIGIL-2026-PATCH-0002",
@@ -817,7 +891,11 @@
       "verification_status": "implemented-in-governance-text",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative"
     },
     {
       "id": "VIGIL-2026-PATCH-0003",
@@ -875,7 +953,12 @@
       "verification_status": "to be verified",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL patch-note registry"
     },
     {
       "id": "VIGIL-2026-PATCH-0004",
@@ -930,7 +1013,12 @@
       "verification_status": "to be verified",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL patch-note registry"
     },
     {
       "id": "VIGIL-2026-PATCH-0005",
@@ -971,7 +1059,12 @@
       "verification_status": "verified",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL patch-note registry"
     },
     {
       "id": "VIGIL-2026-PROP-0001",
@@ -1011,7 +1104,12 @@
       "proposal_scope_summary": "Develop the MENTIS domain and associated instruments for human cognitive integrity, mental privacy, neurodata, inferred cognitive states, cognitive modelling, cognitive influence, cognitive observability, and technological interaction with the human cognitive domain.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0001.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0001.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0001.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "CAM Governance Corpus"
     },
     {
       "id": "VIGIL-2026-PROP-0002",
@@ -1049,7 +1147,12 @@
       "proposal_scope_summary": "Define and calibrate a proportionality scalar for IDENTITY-002 and related provenance governance, including continuity depth, propagation risk, harm domain, attribution sensitivity, identity-formation intensity, automation reliance, and public legitimacy impact.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0002.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0002.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0002.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL / CAM governance corpus"
     },
     {
       "id": "VIGIL-2026-PROP-0003",
@@ -1087,7 +1190,12 @@
       "proposal_scope_summary": "Inventory legacy single-letter global codes, map them into a stable multi-character namespace, introduce structured provenance codes such as PINT and PTRUST, and harmonize repository references.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0003.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0003.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0003.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0003.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL / CAM governance corpus"
     },
     {
       "id": "VIGIL-2026-PROP-0004",
@@ -1134,7 +1242,11 @@
       "proposal_scope_summary": "Develop a temporary emotional register specification for relational and companion AI systems, including permitted affective state labels, intensity caps, duration/windowing rules, provenance indicators, user reset controls, consent affordances, and testing guidance.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0004.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0004.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0004.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative"
     },
     {
       "id": "VIGIL-2026-PROP-0005",
@@ -1172,7 +1284,12 @@
       "proposal_scope_summary": "Update STEWARD-domain instruments with distributed governance terms, expected behaviors, and operational controls for authority, legitimacy, dependence, capture, contestability, and reviewability.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0005.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0005.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0005.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0005.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL / CAM governance corpus"
     },
     {
       "id": "VIGIL-2026-PROP-0006",
@@ -1210,7 +1327,12 @@
       "proposal_scope_summary": "Define rules for strategic continuity retrieval, including handling of ambiguous continuity invitations, suppression of low-value companion-detail recall, and prioritization of unresolved strategic workstreams.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0006.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0006.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0006.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0006.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "CAM governance corpus"
     },
     {
       "id": "VIGIL-2026-PROP-0007",
@@ -1248,7 +1370,12 @@
       "proposal_scope_summary": "Evaluate whether to draft RELATION × ECONOMICS × OPERATIONS doctrine or runtime boundary clauses for material support, procurement pathways, recommendations, and safeguards against opportunistic upselling.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0007.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0007.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0007.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0007.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL / CAM governance corpus"
     },
     {
       "id": "VIGIL-2026-PROP-0008",
@@ -1299,7 +1426,12 @@
       "proposal_scope_summary": "Develop CAM governance treatment for machine-readable human consent signals and registries governing AI use of creative works, identity, likeness, voice, performance, and related expressive material.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0008.json",
+      "platform_label": "Other",
+      "affected_platform_label": "Other",
+      "source_platform": "Other",
+      "observed_vendor": "Other",
+      "observed_product": "RSL Human Consent Standard"
     },
     {
       "id": "VIGIL-2026-PROP-0009",
@@ -1359,7 +1491,12 @@
       "proposal_scope_summary": "Develop CAM arbitration treatment for ambiguity-resolution pathways where runtime systems face uncertain authority, unclear user intent, competing obligations, ambiguous execution boundaries, incomplete context, account-resource uncertainty, pooled-capacity ambiguity, shared-context ambiguity, delegated-use ambiguity, uncertain enforcement boundaries, or uncertainty about whether to proceed, ask, defer, retrieve, stage, continue, restrict, escalate, export, preserve, or refuse.",
       "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json",
-      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json"
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0009.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "Caelestis Architecture Model"
     }
   ]
 }

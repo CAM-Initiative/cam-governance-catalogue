@@ -364,30 +364,50 @@ function sourceRecordHint(sourcePlatform?: string, platformLabel?: string) {
 
 function resolvePlatformValue(record: UnknownRecord) {
   return getNestedField(record, [
+    "platform_label",
+    "affected_platform_label",
+    "system_context.platform_or_vendor",
+    "platform_or_vendor",
+    "observed_system_vendor",
+    "observed_vendor",
+    "system_vendor",
+    "source_records.0.source_platform",
+    "source_platform",
     "system_summary.platform_or_vendor",
     "system_summary.product_family",
     "system_summary.product_or_service",
     "source_summary.primary_source_platform",
-    "system_context.platform_or_vendor",
-    "source_records.0.source_platform",
   ]);
 }
 
 function resolveObservedVendor(record: UnknownRecord) {
   return getNestedField(record, [
+    "platform_label",
+    "affected_platform_label",
+    "system_context.platform_or_vendor",
+    "platform_or_vendor",
+    "observed_system_vendor",
+    "observed_vendor",
+    "system_vendor",
+    "source_records.0.source_platform",
+    "source_platform",
     "system_summary.platform_or_vendor",
     "system_summary.product_family",
     "system_summary.product_or_service",
     "system_summary.observed_system_vendor",
-    "observed_system_vendor",
-    "observed_vendor",
-    "system_vendor",
-    "system_context.platform_or_vendor",
   ]);
 }
 
 function resolveObservedProduct(record: UnknownRecord) {
   return getNestedField(record, [
+    "observed_product",
+    "system_context.product_or_service",
+    "system_context.specific_model_or_runtime",
+    "system_or_product",
+    "model_or_product",
+    "model_or_algorithm",
+    "source_records.0.system_or_product",
+    "source_records.0.model_or_algorithm",
     "system_summary.model_or_product",
     "system_summary.product_family",
     "system_summary.product_or_service",
@@ -395,9 +415,6 @@ function resolveObservedProduct(record: UnknownRecord) {
     "system_summary.observed_product",
     "system_summary.observed_product_model",
     "observed_product_system",
-    "observed_product",
-    "system_or_product",
-    "model_or_algorithm",
   ]);
 }
 
@@ -434,7 +451,7 @@ function summaryEntries(value: unknown): SummaryEntry[] {
 
 function sourceFallbackEntries(record: UnknownRecord): SummaryEntry[] {
   return [
-    { label: "Source Platform", value: getNestedField(record, ["source_summary.primary_source_platform", "primary_source_platform", "source_platform", "source.platform"]) },
+    { label: "Source Platform", value: getNestedField(record, ["source_platform", "source_summary.primary_source_platform", "primary_source_platform", "source.platform", "source_records.0.source_platform"]) },
     { label: "Source Author / Publisher", value: getNestedField(record, ["source_summary.primary_source_author_or_publisher", "source_author", "source_account", "source.author", "source.account", "author", "account", "publisher"]) },
     { label: "Source Type", value: getNestedField(record, ["source_summary.primary_source_type", "source_type", "source_types", "source.type"]) },
   ].filter((entry): entry is SummaryEntry => isMeaningfulText(entry.value));
@@ -442,8 +459,8 @@ function sourceFallbackEntries(record: UnknownRecord): SummaryEntry[] {
 
 function systemFallbackEntries(record: UnknownRecord): SummaryEntry[] {
   return [
-    { label: "Observed System Vendor", value: getNestedField(record, ["system_summary.platform_or_vendor", "system_summary.product_family", "system_summary.product_or_service", "platform_or_vendor", "observed_system_vendor", "observed_vendor", "system_vendor"]) },
-    { label: "Observed Product / System", value: getNestedField(record, ["system_summary.model_or_product", "system_summary.product_family", "system_summary.product_or_service", "model_or_product", "observed_product_system", "observed_product", "observed_system", "system_or_product"]) },
+    { label: "Observed System Vendor", value: getNestedField(record, ["platform_label", "affected_platform_label", "system_context.platform_or_vendor", "platform_or_vendor", "observed_system_vendor", "observed_vendor", "system_vendor", "source_records.0.source_platform", "source_platform", "system_summary.platform_or_vendor", "system_summary.product_family", "system_summary.product_or_service"]) },
+    { label: "Observed Product / System", value: getNestedField(record, ["observed_product", "system_context.product_or_service", "system_context.specific_model_or_runtime", "system_or_product", "model_or_product", "model_or_algorithm", "source_records.0.system_or_product", "source_records.0.model_or_algorithm", "system_summary.model_or_product", "system_summary.product_family", "system_summary.product_or_service", "observed_product_system", "observed_system"]) },
     { label: "Observed Product / Model", value: getNestedField(record, ["observed_product_model", "model_or_algorithm"]) },
     { label: "Interaction Mode", value: getNestedField(record, ["interaction_mode", "interaction_modes", "deployment_context"]) },
   ].filter((entry): entry is SummaryEntry => isMeaningfulText(entry.value));
@@ -483,7 +500,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     ?? getOptionalField(record, ["id", "record_id", "recordId", "ID"])
     ?? recordFileName(path)
     ?? `VIGIL-${index + 1}`;
-  const source_platform = getNestedField(record, ["source_summary.primary_source_platform", "source_summary.source_platform", "source_platform", "source.platform", "source_records.0.source_platform"]);
+  const source_platform = getNestedField(record, ["source_platform", "source_summary.primary_source_platform", "source_summary.source_platform", "source.platform", "source_records.0.source_platform"]);
   const observed_vendor = resolveObservedVendor(record);
   const observed_product = resolveObservedProduct(record);
   const platform_label = normalizePlatformLabel(resolvePlatformValue(record)) ?? "Not specified";
