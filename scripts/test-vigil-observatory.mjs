@@ -123,3 +123,92 @@ test("VIGIL live registry resolver follows master child indexes without deprecat
     await rm(tempDir, { recursive: true, force: true });
   }
 });
+
+test("VIGIL detail loader fetches canonical record JSON from raw_url", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    const requested = [];
+    const canonical = { id: "VIGIL-2026-OBS-0099", title: "Canonical detail title", canonical_only: true };
+    const detail = await loadVigilRecordDetail({ id: "lean-index", raw_url: "https://example.test/vigil/record.json" }, async (url, init) => {
+      requested.push({ url, init });
+      return { ok: true, json: async () => canonical };
+    });
+
+    assert.deepEqual(detail, canonical);
+    assert.equal(requested.length, 1);
+    assert.match(requested[0].url, /^https:\/\/example\.test\/vigil\/record\.json\?v=/);
+    assert.equal(requested[0].init.cache, "no-store");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL detail loader derives canonical raw URL from path", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    let requestedUrl = "";
+    await loadVigilRecordDetail({ id: "lean-index", path: "vigil/records/example.json" }, async (url) => {
+      requestedUrl = url;
+      return { ok: true, json: async () => ({ id: "canonical-from-path" }) };
+    });
+
+    assert.match(requestedUrl, /^https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Vigil\/main\/vigil\/records\/example\.json\?v=/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL normalization supports lean index entries without detailed summary objects", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-OBS-0100",
+      title: "Lean index title",
+      summary: "Collapsed row summary only",
+      record_type: "observation",
+      record_state: "watching",
+      date_recorded: "2026-06-01",
+      source_platform: "GitHub",
+      observed_vendor: "OpenAI",
+      severity: "medium",
+      triage_priority: "review",
+      path: "vigil/records/lean.json",
+    });
+
+    assert.equal(record.title, "Lean index title");
+    assert.equal(record.summary, "Collapsed row summary only");
+    assert.equal(record.record_state, "watching");
+    assert.equal(record.source_platform, "GitHub");
+    assert.equal(record.severity, "medium");
+    assert.equal(record.triage_priority, "review");
+    assert.equal(record.raw.path, "vigil/records/lean.json");
+    assert.match(record.raw_url, /^https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Vigil\/main\/vigil\/records\/lean\.json$/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL page lazy-loads details and warns when canonical detail falls back to index entry", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /loadVigilRecordDetail\(record\.raw\)/);
+  assert.match(page, /detailDisplayRecord\(record, raw\)/);
+  assert.match(page, /detailRecord = detailLoad\?\.status === "ready" \? detailLoad\.displayRecord : record/);
+  assert.match(page, /Detailed canonical record could not be loaded\. Showing the registry index entry instead\./);
+  assert.match(page, /JSON\.stringify\(detailRecord\.raw, null, 2\)/);
+});
+
+test("VIGIL per-record copy and download load canonical detail before exporting JSON", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const copyFunction = page.slice(page.indexOf("async function copyRecordJson"), page.indexOf("async function downloadRecordJson"));
+  const downloadFunction = page.slice(page.indexOf("async function downloadRecordJson"), page.indexOf("function toggleExpandedRecord"));
+
+  assert.match(copyFunction, /await ensureRecordDetail\(record, recordKey\)/);
+  assert.match(copyFunction, /JSON\.stringify\(detailJson, null, 2\)/);
+  assert.doesNotMatch(copyFunction, /JSON\.stringify\(record\.raw, null, 2\)/);
+  assert.match(downloadFunction, /await ensureRecordDetail\(record, recordKey\)/);
+  assert.match(downloadFunction, /JSON\.stringify\(detailJson, null, 2\)/);
+  assert.doesNotMatch(downloadFunction, /JSON\.stringify\(record\.raw, null, 2\)/);
+});
