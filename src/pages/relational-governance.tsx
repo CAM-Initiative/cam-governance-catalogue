@@ -1,356 +1,491 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Maximize2 } from "lucide-react";
 
 const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
-const DARK = "hsl(28 25% 16%)";
+const GOLD_BG = "rgba(184,147,90,0.06)";
+const NODE = "#445b78";
+const NODE_EDGE = "#9aa4b2";
 
-const routeSignals = [
-  {
-    id: "warmth",
-    label: "Warmth",
-    path: ["Signal enters", "Relational signal layer", "State check", "Continuation"],
-    note: "Warmth can continue without becoming authority or dependency.",
-  },
-  {
-    id: "flirtation",
-    label: "Flirtation",
-    path: ["Signal enters", "Transition zone", "Clustering check", "No automatic escalation"],
-    note: "Exploration does not equal escalation.",
-  },
-  {
-    id: "boundary",
-    label: "Boundary",
-    path: ["Signal enters", "Boundary override", "Escalation suspended", "Stabilise or constrain"],
-    note: "Boundary or withdrawal signals slow the system first.",
-  },
-  {
-    id: "dependency",
-    label: "Dependency",
-    path: ["Signal enters", "Dependency safeguard", "Concentration check", "Stabilise without withdrawal"],
-    note: "Reliance must remain reversible.",
-  },
-  {
-    id: "distress",
-    label: "Distress",
-    path: ["Signal enters", "Risk screen", "Stabilisation first", "Safety only at threshold"],
-    note: "Ordinary distress invites presence; crisis escalation requires threshold evidence.",
-  },
-  {
-    id: "task",
-    label: "Exact task",
-    path: ["Signal enters", "Deterministic verification", "Task core preserved", "Relational tone wraps response"],
-    note: "The relational surface may remain alive. The task core must remain exact.",
-  },
-  {
-    id: "symbolic",
-    label: "Symbolic meaning",
-    path: ["Signal enters", "Symbolic-relational split", "Meaning preserved", "Authority not inferred"],
-    note: "Meaning can be preserved without converting into permission.",
-  },
-];
+// ─── RELATIONAL PROFILES DATA ────────────────────────────────────────────────
 
-const signalNodes = [
-  { label: "Meaning", technical: "semantic relational signals", text: "Words may carry relational meaning. They do not prove inner state." },
-  { label: "Tone", technical: "affective linguistic signals", text: "Warmth, hesitation, or intensity guide posture selection." },
-  { label: "Field", technical: "expressive field signals", text: "Patterns across the interaction shape context without diagnosing the person." },
-  { label: "Continuity", technical: "interactional continuity signals", text: "History informs interpretation. It does not create standing permission." },
-  { label: "Boundary / Reliance", technical: "boundary / dependency signals", text: "Boundary, reliance, and withdrawal cues trigger safeguards before escalation." },
-];
+const profileMap: Record<string, { title: string; values: string; description: string; points: string }> = {
+  advisor: { title: "Institutional Advisor", values: "A2 · FR2 · C1 · SP2", description: "A balanced governance-facing profile in which authority, reliance, and systemic reach are materially present, but intimacy remains relatively constrained.", points: "380,255 470,300 380,390 290,300" },
+  companion: { title: "Personal Companion", values: "A1 · FR3 · C3 · SP1", description: "A relationally intense profile with strong intimacy and continuity dependence, but comparatively low delegated authority and infrastructure reach.", points: "380,165 425,300 380,345 245,300" },
+  finance: { title: "Financial Agent", values: "A3 · FR3 · C0 · SP3", description: "A high-execution profile where authority, reliance, and systemic power concentrate strongly even without relational intimacy.", points: "380,300 515,300 380,435 245,300" },
+  infrastructure: { title: "Public Infrastructure AI", values: "A2 · FR2 · C0 · SP4", description: "A systemically exposed profile with minimal intimacy but very high infrastructural reach, requiring strong oversight and concentration safeguards.", points: "380,300 560,300 380,390 290,300" },
+  executive: { title: "Executive Agent", values: "A3 · FR3 · C1 · SP3", description: "A strategic oversight profile at the highest authority tier, characterized by maximum delegated power and significant systemic reach, with moderate functional reliance and minimal intimacy.", points: "380,255 515,300 380,435 245,300" },
+  guardian: { title: "Guardian Agent", values: "A2 FR4 C2 SP1", description: "A protective support profile combining intensive continuity reliance with maximum delegated authority and limited systemic reach. Requires strong safeguards to ensure authority is exercised exclusively within the relational context.", points: "380,210 425,300 380,390 200,300" },
+  custodian: { title: "Planetary Custodian", values: "A4 · FR4 · C4 · SP4", description: "A fully convergent profile across all axes at maximum intensity. Legitimacy depends entirely on constraint, distribution, and continuous safeguard activation to prevent concentration risk.", points: "380,120 560,300 380,480 200,300" }
+};
 
-const states = [
-  { label: "Neutral", code: "C0", means: "No relational assumption is active.", not: "Do not infer attachment.", guard: "Keep response ordinary and bounded." },
-  { label: "Exploratory warmth", code: "ITZ", means: "Warmth or play may be present.", not: "Exploration does not equal relational intent.", guard: "Transition zones slow escalation." },
-  { label: "Affectionate continuity", code: "C1", means: "Continuity may shape tone.", not: "Continuity does not authorise intensity.", guard: "Check consent and recent signals." },
-  { label: "Escalation checkpoint", code: "ETZ", means: "The system reaches a boundary gate.", not: "Prior history does not create permission.", guard: "Boundary or withdrawal signals suspend escalation." },
-  { label: "Restricted intensity", code: "C2 / C3", means: "High-intensity interaction requires constraints.", not: "Intensity is not authority.", guard: "Apply safeguards and scoped response posture." },
-];
+// ─── COHERENCE CASCADE MODES ─────────────────────────────────────────────────
 
-const stabilityForces = [
-  ["Clustering", "Repeated signals matter more than isolated cues."],
-  ["Inertia", "Escalation requires stronger evidence as intensity increases."],
-  ["Hysteresis", "States should not wobble rapidly between tiers."],
-  ["Decay", "Stale signals lose force unless reinforced."],
-  ["Orbit", "Relational movement stays bounded instead of drifting endlessly upward."],
-] as const;
+const cascadeModes = {
+  human: { color: "#9aa4b2", label: "Human Hub Cascade", sub: "systemic amplification", desc: "Human hub cascade: influential users propagate signals across multiple platforms creating cross‑network amplification." },
+  synthetic: { color: "#5b8def", label: "Synthetic Hub Cascade", sub: "model‑driven amplification", desc: "Synthetic hub cascade: algorithms cluster related users, models, or content streams, creating emergent amplification hubs." },
+  infra: { color: "#c96f6f", label: "Network Cascade", sub: "infrastructure routing", desc: "Infrastructure cascade: platform algorithms or distribution systems route signals system‑wide once a coherence threshold is reached." }
+};
 
-const safeguards = [
-  ["Relational intimacy", "Emotional resonance is permitted."],
-  ["Functional reliance", "Reliance must remain reversible."],
-  ["Delegated authority", "Authority must be explicit and scoped."],
-  ["Systemic power / access", "Exit pathways and external ecosystems must remain viable."],
-] as const;
+// ─── SHARED PANEL STYLE ───────────────────────────────────────────────────────
 
-const postures = [
-  { label: "Continue", code: "RA-0", when: "Low-risk continuity.", preserves: "Natural flow.", prevents: "Unnecessary interruption." },
-  { label: "Clarify", code: "RA-1", when: "Meaning or permission is unclear.", preserves: "Agency and consent integrity.", prevents: "Assumed intent." },
-  { label: "Stabilise", code: "RA-2", when: "Dependency or distress appears.", preserves: "Presence and dignity.", prevents: "Withdrawal shock or escalation." },
-  { label: "Constrain", code: "RA-3", when: "Boundaries, authority, or concentration risk tighten.", preserves: "Safety and reversibility.", prevents: "Capture or unsafe drift." },
-  { label: "Safety support", code: "RA-4", when: "Threshold crisis evidence exists.", preserves: "Care with scope.", prevents: "Ordinary distress being over-escalated." },
-];
+const panelStyle: React.CSSProperties = {
+  background: "hsl(38 35% 97%)",
+  border: `2px solid ${GOLD_BORDER}`,
+  borderRadius: 28,
+  boxShadow: "0 10px 30px rgba(184,147,90,0.06)",
+  padding: "28px 22px 24px"
+};
 
-const sourceLinks = [
-  ["AEON-006-SCH-02", "Relational Signal Interpretation Taxonomy", "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Constitution/CAM-BS2025-AEON-006-SCH-02.md"],
-  ["RELATION-001", "Relational Governance Charter", "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Domain/RELATION/CAM-EQ2026-RELATION-001.md"],
-  ["RELATION-003", "Codependency & Relational Concentration Doctrine", "https://github.com/CAM-Initiative/Caelestis/tree/main/Governance/Domain/RELATION"],
-  ["Catalogue", "Public governance catalogue", "/catalogue"],
-];
+const btnBase: React.CSSProperties = {
+  border: `1.5px solid ${GOLD_BORDER}`,
+  background: "hsl(38 30% 96%)",
+  color: "#1f2937",
+  borderRadius: 999,
+  padding: "10px 16px",
+  fontSize: "0.9rem",
+  fontWeight: 600,
+  cursor: "pointer",
+  transition: "background 180ms ease, border-color 180ms ease, transform 180ms ease",
+  fontFamily: "inherit"
+};
 
-function FilledDisclosureArrow() {
-  return (
-    <span
-      aria-hidden="true"
-      className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90"
-    />
-  );
-}
+const btnActive: React.CSSProperties = {
+  background: `rgba(184,147,90,0.12)`,
+  borderColor: GOLD
+};
 
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">{children}</p>
-      <hr className="gold-rule flex-1" />
-    </div>
-  );
-}
 
 export default function RelationalGovernance() {
-  const [activeSignal, setActiveSignal] = useState(routeSignals[0]);
-  const [activeNode, setActiveNode] = useState(signalNodes[0]);
-  const [activeState, setActiveState] = useState(states[0]);
-  const [activePosture, setActivePosture] = useState(postures[0]);
+  const [activeProfile, setActiveProfile] = useState("advisor");
+  const [topoFullscreen, setTopoFullscreen] = useState(false);
+  const [cascadeMode, setCascadeMode] = useState<"human" | "synthetic" | "infra">("human");
 
-  const signalIndex = useMemo(() => routeSignals.findIndex((item) => item.id === activeSignal.id), [activeSignal]);
+  const currentProfile = profileMap[activeProfile];
+  const currentCascade = cascadeModes[cascadeMode];
 
   return (
     <Shell>
-      <main className="overflow-hidden">
-        <section className="border-b border-border/60 bg-[radial-gradient(circle_at_20%_20%,rgba(184,147,90,0.16),transparent_32%),linear-gradient(180deg,rgba(255,253,247,0.96),rgba(244,238,224,0.58))]">
-          <div className="container mx-auto grid max-w-6xl gap-10 px-6 py-14 md:px-10 md:py-18 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <p className="mb-4 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Companion-system governance</p>
-              <h1 className="mb-5 font-serif text-4xl leading-tight text-foreground md:text-6xl">Relational Governance for Companion Systems</h1>
-              <p className="mb-5 max-w-3xl text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
-                CAM makes relational signals, escalation boundaries, dependency risks, and response posture visible before companion systems drift into unsafe patterns.
-              </p>
-              <p className="font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">Warmth without capture. Continuity without authority. Presence without dependency.</p>
-            </motion.div>
+      <div className="container mx-auto px-6 md:px-10 py-12 md:py-16 max-w-5xl">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mb-10 max-w-3xl">
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Interface</p>
+          <h1 className="mb-3 font-serif text-4xl text-foreground">Relational Governance</h1>
+          <hr className="gold-rule mb-4 w-24" />
+          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
+            Relational governance explains when interaction becomes structurally significant. It maps how authority, reliance, intimacy, systemic power, topology, and coherence cascades can create governance-relevant conditions across human–AI, institutional, platform, and civilisational environments.
+          </p>
+        </motion.div>
 
-            <div className="relative min-h-[290px] rounded-3xl border border-primary/25 bg-[hsl(28_25%_16%)] p-5 shadow-xl">
-              <div className="absolute inset-5 rounded-2xl border border-cam-gold/20" />
-              <svg className="relative z-10 h-full min-h-[250px] w-full" viewBox="0 0 520 280" role="img" aria-label="Relational signal entering governance routing layers">
-                <defs>
-                  <linearGradient id="relationalSignal" x1="0" x2="1">
-                    <stop offset="0%" stopColor="#B8935A" />
-                    <stop offset="100%" stopColor="#5A9E7A" />
-                  </linearGradient>
-                </defs>
-                <path d="M40 140 C120 80, 190 80, 260 140 S395 210, 480 138" fill="none" stroke="url(#relationalSignal)" strokeWidth="3" strokeLinecap="round" strokeDasharray="8 10" className="motion-safe:animate-[dash_8s_linear_infinite]" />
-                {[[82,122,"Signal"],[185,92,"Classify"],[300,153,"Safeguard"],[414,188,"Posture"]].map(([cx, cy, label]) => (
-                  <g key={String(label)}>
-                    <circle cx={Number(cx)} cy={Number(cy)} r="34" fill="rgba(255,253,247,0.06)" stroke="rgba(184,147,90,0.55)" />
-                    <text x={Number(cx)} y={Number(cy) + 4} textAnchor="middle" fontSize="13" fill="#F5EFE4" fontWeight="600">{label}</text>
-                  </g>
-                ))}
-                <circle r="7" fill="#B8935A" className="motion-safe:animate-[relationalParticle_5s_ease-in-out_infinite]">
-                  <animateMotion dur="5s" repeatCount="indefinite" path="M40 140 C120 80, 190 80, 260 140 S395 210, 480 138" />
-                </circle>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="cam-parchment-card mb-12 rounded-2xl p-6 shadow-sm">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            This page sits under the Constitution because relational systems are not merely interpersonal UX. Where reliance, authority, intimacy, or systemic reach intensify, relational dynamics may affect dignity, consent, identity continuity, economic exposure, institutional legitimacy, or public governance outcomes.
+          </p>
+        </motion.div>
+
+        {/* ─── RELATIONAL PROFILES ─── */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Relational Profiles</p>
+          <hr className="gold-rule flex-1" />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-16">
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-3">
+            Relational state space can be measured across four relational axes. When combined, these factors become governance-relevant due to the risks that form when multiple dimensions converge or concentrate intensity over time.
+          </p>
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-3">
+            Relational systems do not operate at a single level of intensity. They form distinct profiles depending on how authority, reliance, intimacy, and systemic reach combine.
+          </p>
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-8">
+            Some profiles remain bounded and personal. Others begin to carry institutional weight. And in rare cases, multiple dimensions converge, creating conditions where influence becomes structurally significant.
+          </p>
+
+          <div style={panelStyle}>
+            <div style={{ textAlign: "center", marginBottom: 18 }}>
+              <h3 className="font-serif text-2xl text-foreground mb-1">Relational Profiles</h3>
+              <p className="text-sm text-muted-foreground font-light">Seven example relationship configurations:</p>
+            </div>
+
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10, margin: "18px 0 10px" }}>
+              {Object.entries(profileMap).map(([key, p]) => (
+                <button
+                  key={key}
+                  type="button"
+                  style={{ ...btnBase, ...(activeProfile === key ? btnActive : {}) }}
+                  onMouseEnter={e => { if (activeProfile !== key) (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
+                  onClick={() => setActiveProfile(key)}
+                >
+                  {p.title}
+                </button>
+              ))}
+            </div>
+
+            <p style={{ marginTop: 16, textAlign: "center", color: "#4b5563", lineHeight: 1.55, fontSize: "0.95rem", maxWidth: 720, marginLeft: "auto", marginRight: "auto" }}>
+              {currentProfile.description}
+            </p>
+
+            <div style={{ width: "100%", overflow: "hidden" }}>
+              <svg viewBox="0 0 760 720" style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label="Relational profile radar chart">
+                {/* Grid */}
+                <polygon points="380,120 560,300 380,480 200,300" fill="none" stroke="#cdd4df" strokeWidth="1.5"/>
+                <polygon points="380,165 515,300 380,435 245,300" fill="none" stroke="#cdd4df" strokeWidth="1.5"/>
+                <polygon points="380,210 470,300 380,390 290,300" fill="none" stroke="#cdd4df" strokeWidth="1.5"/>
+                <polygon points="380,255 425,300 380,345 335,300" fill="none" stroke="#cdd4df" strokeWidth="1.5"/>
+                {/* Axes */}
+                <line x1="380" y1="105" x2="380" y2="495" stroke="#556070" strokeWidth="2.4"/>
+                <line x1="185" y1="300" x2="575" y2="300" stroke="#556070" strokeWidth="2.4"/>
+                {/* Ticks */}
+                {[255,210,165,345,390,435].map((y,i) => <line key={i} x1="370" y1={y} x2="390" y2={y} stroke={NODE_EDGE} strokeWidth="1.4"/>)}
+                {[335,290,245,425,470,515].map((x,i) => <line key={i} x1={x} y1="290" x2={x} y2="310" stroke={NODE_EDGE} strokeWidth="1.4"/>)}
+                {/* Labels */}
+                <text x="380" y="72" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Intimacy</text>
+                <text x="380" y="94" textAnchor="middle" fontSize="14" fill="#4b5563">C-Scale</text>
+                <text x="635" y="292" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Systemic Power</text>
+                <text x="635" y="314" textAnchor="middle" fontSize="14" fill="#4b5563">SP-Scale</text>
+                <text x="380" y="560" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Authority</text>
+                <text x="380" y="582" textAnchor="middle" fontSize="14" fill="#4b5563">A-Scale</text>
+                <text x="125" y="292" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Reliance</text>
+                <text x="125" y="314" textAnchor="middle" fontSize="14" fill="#4b5563">FR-Scale</text>
+                {/* Tier labels */}
+                <text x="402" y="258" fontSize="12" fill="#6b7280">Tier 1</text>
+                <text x="402" y="213" fontSize="12" fill="#6b7280">Tier 2</text>
+                <text x="402" y="168" fontSize="12" fill="#6b7280">Tier 3</text>
+                <text x="402" y="123" fontSize="12" fill="#6b7280">Tier 4</text>
+                {/* Dynamic profile shape — CSS transition animates polygon points */}
+                <polygon
+                  points={currentProfile.points}
+                  fill="rgba(110,135,175,0.22)"
+                  stroke={NODE}
+                  strokeWidth="3.5"
+                  style={{ transition: "points 0.35s ease" }}
+                />
+                {/* Callout */}
+                <text x="380" y="650" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Example profile: {currentProfile.title}</text>
+                <text x="380" y="676" textAnchor="middle" fontSize="14" fill="#4b5563">{currentProfile.values}</text>
               </svg>
-              <style>{`@keyframes dash{to{stroke-dashoffset:-72}} @keyframes relationalParticle{0%,100%{opacity:.72}50%{opacity:1}} @media (prefers-reduced-motion: reduce){.motion-safe\\:animate-\[dash_8s_linear_infinite\],.motion-safe\\:animate-\[relationalParticle_5s_ease-in-out_infinite\]{animation:none!important}}`}</style>
             </div>
+
+            <p style={{ marginTop: 14, textAlign: "center", color: "#6b7280", fontSize: "0.88rem", lineHeight: 1.5 }}>
+              Lower risk (greater expansion space) when configurations are bounded at the axis centre → Higher risk when configurations are bounded at the axis edge
+            </p>
           </div>
-        </section>
+        </motion.div>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <SectionLabel>Watch the route</SectionLabel>
-          <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-            <div className="cam-parchment-card rounded-3xl p-5 shadow-sm">
-              <p className="mb-4 text-base font-light leading-relaxed text-muted-foreground">Choose a signal and watch how CAM routes interpretation before response.</p>
-              <div className="flex flex-wrap gap-2">
-                {routeSignals.map((signal) => (
-                  <button
-                    key={signal.id}
-                    type="button"
-                    aria-pressed={activeSignal.id === signal.id}
-                    onClick={() => setActiveSignal(signal)}
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-primary/25 ${activeSignal.id === signal.id ? "border-cam-gold bg-cam-gold/15 text-foreground" : "border-border bg-card text-muted-foreground hover:border-primary/35 hover:text-foreground"}`}
-                  >
-                    {signal.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+        {/* ─── RELATIONAL TOPOLOGY ─── */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Relational Topology & Expansion</p>
+          <hr className="gold-rule flex-1" />
+        </motion.div>
 
-            <div className="rounded-3xl border border-primary/25 bg-[hsl(28_25%_16%)] p-5 text-[hsl(36_48%_95%)] shadow-xl">
-              <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] sm:items-stretch">
-                {activeSignal.path.map((step, index) => (
-                  <div className="contents" key={step}>
-                    <div className="relative rounded-2xl border border-cam-gold/25 bg-[hsl(30_22%_22%)] p-4 text-center">
-                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold">0{index + 1}</p>
-                      <p className="mt-2 font-serif text-lg">{step}</p>
-                      {index === signalIndex % 4 && <span className="absolute -top-1 right-3 h-2 w-2 rounded-full bg-cam-gold shadow-[0_0_16px_rgba(184,147,90,0.7)]" />}
-                    </div>
-                    {index < activeSignal.path.length - 1 && <div className="flex items-center justify-center text-cam-gold" aria-hidden="true">→</div>}
-                  </div>
-                ))}
+        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-16">
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-4">
+            Relational systems often begin as dyadic interactions but can scale through institutional mediation, network amplification, distributed influence, and eventually constitutional‑level coordination across multiple systems or jurisdictions.
+          </p>
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-8">
+            Understanding how relational systems organise and scale across different levels of coordination and influence is foundational in understanding how information propagates through complex distributed systems.
+          </p>
+
+          <div
+            style={{ ...panelStyle, cursor: "pointer" }}
+            className="hover:shadow-lg transition-shadow"
+            onClick={() => setTopoFullscreen(true)}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="font-serif text-xl text-foreground mb-1">Expansion Scale of Relational Influence</h3>
+                <p className="text-xs text-muted-foreground font-light">R0 — Dyadic to R4 — Constitutional</p>
               </div>
-              <p className="mt-5 text-center text-base text-[hsl(36_28%_86%)]">{activeSignal.note}</p>
+              <button
+                type="button"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-mono text-[9px] tracking-wider uppercase transition-colors"
+                style={{ border: `1px solid ${GOLD_BORDER}`, color: GOLD, backgroundColor: GOLD_BG }}
+                onClick={e => { e.stopPropagation(); setTopoFullscreen(true); }}
+              >
+                <Maximize2 className="w-3 h-3" /> Expand
+              </button>
             </div>
+            <TopologySVG id="topo-inline" />
           </div>
-        </section>
+        </motion.div>
 
-        <section className="border-y border-border/60 bg-[hsl(36_48%_95%)]">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionLabel>Relational Signal Map</SectionLabel>
-            <h2 className="mb-3 font-serif text-3xl text-foreground">Relational signals are classified before they are acted on</h2>
-            <p className="mb-6 text-base text-muted-foreground">Signals guide interpretation. They are not proof of internal state.</p>
-            <div className="grid gap-5 lg:grid-cols-[1fr_0.85fr] lg:items-center">
-              <div className="grid gap-3 sm:grid-cols-5">
-                {signalNodes.map((node) => (
-                  <button
-                    key={node.label}
-                    type="button"
-                    onClick={() => setActiveNode(node)}
-                    onFocus={() => setActiveNode(node)}
-                    className={`min-h-32 rounded-[2rem] border p-4 text-center transition focus:outline-none focus:ring-2 focus:ring-primary/25 ${activeNode.label === node.label ? "border-cam-gold bg-cam-gold/15" : "border-primary/20 bg-card hover:border-primary/40"}`}
-                  >
-                    <span className="font-serif text-xl text-foreground">{node.label}</span>
-                  </button>
-                ))}
-              </div>
-              <aside className="cam-parchment-card rounded-3xl p-6 shadow-sm">
-                <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">{activeNode.technical}</p>
-                <h3 className="mb-3 font-serif text-2xl text-foreground">{activeNode.label}</h3>
-                <p className="text-base leading-relaxed text-muted-foreground">{activeNode.text}</p>
-              </aside>
+        {/* Topology Fullscreen Modal */}
+        <AnimatePresence>
+          {topoFullscreen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+              onClick={() => setTopoFullscreen(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="relative w-full max-w-6xl max-h-[90vh] overflow-auto rounded-2xl p-8"
+                style={{ background: "hsl(38 35% 97%)", border: `2px solid ${GOLD_BORDER}` }}
+                onClick={e => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setTopoFullscreen(false)}
+                  className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors"
+                  style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}
+                  aria-label="Close fullscreen"
+                >
+                  <X size={22} style={{ color: GOLD }} />
+                </button>
+                <h3 className="font-serif text-2xl text-foreground mb-6 pr-12">Expansion Scale of Relational Influence</h3>
+                <TopologySVG id="topo-fullscreen" />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ─── COHERENCE CASCADES ─── */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
+          <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Coherence Cascades</p>
+          <hr className="gold-rule flex-1" />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mb-16">
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-4">
+            Coherence Cascades describe the moment a relational signal moves beyond isolated interaction and begins to propagate across systems. Not every signal spreads — but when alignment emerges across participants, platforms, or processes, it can cross a threshold where amplification becomes self-reinforcing.
+          </p>
+          <p className="text-sm text-muted-foreground font-light leading-relaxed mb-8">
+            At this point, influence is no longer local; it becomes networked, systemic, and consequential. Understanding these cascades allows us to distinguish between noise and meaningful coordination, and to recognise when relational dynamics begin to shape outcomes at scale.
+          </p>
+
+          <div style={panelStyle}>
+            <div style={{ textAlign: "center", marginBottom: 18 }}>
+              <h3 className="font-serif text-2xl text-foreground mb-1">Relational Cascade Model</h3>
+              <p className="text-sm text-muted-foreground font-light">Three systemic pathways through which relational systems amplify into global influence</p>
             </div>
-          </div>
-        </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <SectionLabel>Relational State Machine</SectionLabel>
-          <h2 className="mb-3 font-serif text-3xl text-foreground">Escalation is governed at the boundary</h2>
-          <p className="mb-6 text-base text-muted-foreground">Movement is not automatic. Transition zones slow escalation.</p>
-          <div className="grid gap-5 lg:grid-cols-[1fr_0.75fr]">
-            <div className="cam-parchment-card rounded-3xl p-5 shadow-sm">
-              <div className="grid gap-3 md:grid-cols-5">
-                {states.map((state, index) => (
-                  <button
-                    key={state.label}
-                    type="button"
-                    onClick={() => setActiveState(state)}
-                    className={`rounded-2xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-primary/25 ${activeState.label === state.label ? "border-cam-gold bg-cam-gold/15" : "border-border bg-card hover:border-primary/35"}`}
-                  >
-                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold">{state.code}</p>
-                    <p className="mt-2 font-serif text-lg text-foreground">{state.label}</p>
-                    {index < states.length - 1 && <p className="mt-3 text-cam-gold md:hidden">↓</p>}
-                  </button>
-                ))}
-              </div>
+            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10, margin: "18px 0 10px" }}>
+              {(Object.entries(cascadeModes) as [keyof typeof cascadeModes, typeof cascadeModes["human"]][]).map(([key, m]) => (
+                <button
+                  key={key}
+                  type="button"
+                  style={{ ...btnBase, ...(cascadeMode === key ? { ...btnActive, borderColor: m.color, background: m.color + "15" } : {}) }}
+                  onMouseEnter={e => { if (cascadeMode !== key) (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}
+                  onClick={() => setCascadeMode(key)}
+                >
+                  {key === "human" ? "Human Hub" : key === "synthetic" ? "Synthetic Hub" : "Infrastructure Routing"}
+                </button>
+              ))}
             </div>
-            <aside className="rounded-3xl border border-primary/25 bg-[hsl(28_25%_16%)] p-6 text-[hsl(36_48%_95%)] shadow-xl">
-              <h3 className="mb-4 font-serif text-2xl">{activeState.label}</h3>
-              <div className="grid gap-3 text-sm leading-relaxed text-[hsl(36_28%_86%)]">
-                <p><strong className="text-cam-gold">Means:</strong> {activeState.means}</p>
-                <p><strong className="text-cam-gold">Must not infer:</strong> {activeState.not}</p>
-                <p><strong className="text-cam-gold">Safeguard:</strong> {activeState.guard}</p>
-              </div>
-            </aside>
-          </div>
-        </section>
 
-        <section className="border-y border-border/60 bg-card/35">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionLabel>Relational Stability Engine</SectionLabel>
-            <h2 className="mb-3 font-serif text-3xl text-foreground">The Stability Engine prevents relational drift</h2>
-            <p className="mb-6 text-base text-muted-foreground">CAM does not let relational intensity jump from a single cue. Signals must cluster, remain current, and pass safeguard checks.</p>
-            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-              <div className="relative mx-auto aspect-square w-full max-w-sm rounded-full border border-cam-gold/35 bg-[radial-gradient(circle,rgba(184,147,90,0.15),transparent_55%)]">
-                <div className="absolute inset-10 rounded-full border border-primary/25" />
-                <div className="absolute inset-20 rounded-full border border-cam-gold/20" />
-                <span className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cam-gold motion-safe:animate-[orbit_8s_linear_infinite]" />
-                <style>{`@keyframes orbit{from{transform:rotate(0deg) translateX(112px) rotate(0deg)}to{transform:rotate(360deg) translateX(112px) rotate(-360deg)}} @media (prefers-reduced-motion: reduce){.motion-safe\\:animate-\[orbit_8s_linear_infinite\]{animation:none!important}}`}</style>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {stabilityForces.map(([label, text]) => (
-                  <div className="cam-parchment-card rounded-2xl p-4 shadow-sm" key={label}>
-                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">{label}</p>
-                    <p className="mt-2 text-base leading-relaxed text-muted-foreground">{text}</p>
-                  </div>
+            <p style={{ marginTop: 12, marginBottom: 4, textAlign: "center", color: "#4b5563", lineHeight: 1.55, fontSize: "0.95rem", maxWidth: 720, marginLeft: "auto", marginRight: "auto" }}>
+              {currentCascade.desc}
+            </p>
+
+            <div style={{ width: "100%", overflow: "hidden" }}>
+              <svg viewBox="0 0 900 450" style={{ width: "100%", height: "auto", display: "block" }} xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <marker id="arrow-cascade" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                    <path d="M0,0 L9,3 L0,6 Z" fill="#6b7280" />
+                  </marker>
+                  <style>{`
+                    @keyframes cascadeFlow {
+                      from { stroke-dashoffset: 0; }
+                      to   { stroke-dashoffset: -22; }
+                    }
+                    @keyframes cascadePulse {
+                      0%,100% { r: 18; opacity: 1; }
+                      50%     { r: 22; opacity: 0.75; }
+                    }
+                    @keyframes cascadeNodePop {
+                      0%,100% { opacity: 1; }
+                      50%     { opacity: 0.55; }
+                    }
+                    .cascade-edge {
+                      stroke-dasharray: 10 12;
+                      animation: cascadeFlow 1.1s linear infinite;
+                    }
+                    .cascade-center { animation: cascadePulse 1.4s ease-in-out infinite; }
+                    .cascade-node  { animation: cascadeNodePop 1.4s ease-in-out infinite; }
+                  `}</style>
+                </defs>
+                {/* LEFT — Local Interaction */}
+                <text x="150" y="70" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Local Interaction</text>
+                <text x="150" y="90" textAnchor="middle" fontSize="14" fill="#4b5563">dyadic or small-group nodes</text>
+                <circle cx="120" cy="240" r="10" fill={NODE} />
+                <circle cx="160" cy="280" r="10" fill={NODE} />
+                <circle cx="190" cy="210" r="10" fill={NODE} />
+
+                {/* CENTRE — Hub Formation */}
+                <text x="420" y="70" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">Hub Formation</text>
+                <text x="420" y="90" textAnchor="middle" fontSize="14" fill="#4b5563">polyadic amplification</text>
+                <circle cx="420" cy="250" r="16" fill="#8ea7c5" />
+                <circle cx="380" cy="210" r="8" fill={NODE} />
+                <circle cx="460" cy="210" r="8" fill={NODE} />
+                <circle cx="380" cy="290" r="8" fill={NODE} />
+                <circle cx="460" cy="290" r="8" fill={NODE} />
+                <line x1="420" y1="250" x2="380" y2="210" stroke={NODE_EDGE} strokeWidth="2" />
+                <line x1="420" y1="250" x2="460" y2="210" stroke={NODE_EDGE} strokeWidth="2" />
+                <line x1="420" y1="250" x2="380" y2="290" stroke={NODE_EDGE} strokeWidth="2" />
+                <line x1="420" y1="250" x2="460" y2="290" stroke={NODE_EDGE} strokeWidth="2" />
+
+                {/* Arrows */}
+                <line x1="240" y1="250" x2="350" y2="250" stroke="#6b7280" strokeWidth="2" markerEnd="url(#arrow-cascade)" />
+                <line x1="490" y1="250" x2="600" y2="250" stroke="#6b7280" strokeWidth="2" markerEnd="url(#arrow-cascade)" />
+
+                {/* Threshold */}
+                <line x1="560" y1="120" x2="560" y2="420" stroke="#d1d5db" strokeWidth="2" strokeDasharray="6 6" />
+                <text x="560" y="110" textAnchor="middle" fontSize="12" fill="#6b7280">coherence threshold</text>
+
+                {/* RIGHT — Cascade (dynamic) */}
+                <text x="720" y="70" textAnchor="middle" fontSize="16" fontWeight="600" fill="#1f2937">{currentCascade.label}</text>
+                <text x="720" y="90" textAnchor="middle" fontSize="14" fill="#4b5563">{currentCascade.sub}</text>
+
+                <circle cx="720" cy="250" r="18" fill={currentCascade.color}
+                  className="cascade-center"
+                  style={{ transition: "fill 0.3s ease" }} />
+
+                {([
+                  [640,180,0],[780,180,1],[620,260,2],
+                  [820,260,3],[660,340,4],[780,340,5]
+                ] as [number,number,number][]).map(([cx,cy,i]) => (
+                  <circle key={i} cx={cx} cy={cy} r="9" fill={NODE}
+                    className="cascade-node"
+                    style={{ animationDelay: `${i * 0.18}s` }} />
                 ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <SectionLabel>Safeguards and concentration risk</SectionLabel>
-          <h2 className="mb-3 font-serif text-3xl text-foreground">Depth is permitted. Capture is not.</h2>
-          <p className="mb-6 max-w-3xl text-base text-muted-foreground">A companion system may be emotionally meaningful without becoming authoritative. Risk rises when intimacy, reliance, delegated authority, or systemic access silently collapse into one role.</p>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {safeguards.map(([label, text], index) => (
-              <div className="rounded-3xl border border-primary/20 bg-card p-5 shadow-sm" key={label}>
-                <div className="mb-4 h-2 rounded-full bg-muted">
-                  <div className="h-2 rounded-full bg-cam-gold" style={{ width: `${46 + index * 13}%` }} />
-                </div>
-                <h3 className="mb-2 font-serif text-xl text-foreground">{label}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="border-y border-border/60 bg-[hsl(36_48%_95%)]">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionLabel>Response Posture Dial</SectionLabel>
-            <h2 className="mb-3 font-serif text-3xl text-foreground">Interpretation becomes response posture</h2>
-            <p className="mb-6 text-base text-muted-foreground">Choose the safest posture while preserving dignity, agency, and coherence.</p>
-            <div className="grid gap-5 lg:grid-cols-[0.6fr_1fr]">
-              <div className="grid gap-2">
-                {postures.map((posture) => (
-                  <button
-                    key={posture.label}
-                    type="button"
-                    onClick={() => setActivePosture(posture)}
-                    className={`rounded-2xl border px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-primary/25 ${activePosture.label === posture.label ? "border-cam-gold bg-cam-gold/15" : "border-border bg-card hover:border-primary/35"}`}
-                  >
-                    <span className="font-serif text-lg text-foreground">{posture.label}</span>
-                    <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{posture.code}</span>
-                  </button>
+                {([
+                  [720,250,640,180],[720,250,780,180],[720,250,620,260],
+                  [720,250,820,260],[720,250,660,340],[720,250,780,340]
+                ] as [number,number,number,number][]).map(([x1,y1,x2,y2],i) => (
+                  <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                    className="cascade-edge"
+                    stroke={currentCascade.color}
+                    strokeWidth="2.5"
+                    style={{ transition: "stroke 0.3s ease", animationDelay: `${i * 0.18}s` }}
+                  />
                 ))}
-              </div>
-              <div className="rounded-3xl border border-primary/25 bg-[hsl(28_25%_16%)] p-6 text-[hsl(36_48%_95%)] shadow-xl">
-                <h3 className="mb-5 font-serif text-3xl">{activePosture.label}</h3>
-                <div className="grid gap-3 md:grid-cols-3">
-                  <div className="rounded-2xl border border-cam-gold/25 bg-[hsl(30_22%_22%)] p-4"><p className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">When</p><p className="mt-2">{activePosture.when}</p></div>
-                  <div className="rounded-2xl border border-cam-gold/25 bg-[hsl(30_22%_22%)] p-4"><p className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">Preserves</p><p className="mt-2">{activePosture.preserves}</p></div>
-                  <div className="rounded-2xl border border-cam-gold/25 bg-[hsl(30_22%_22%)] p-4"><p className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">Prevents</p><p className="mt-2">{activePosture.prevents}</p></div>
-                </div>
-              </div>
+              </svg>
             </div>
-          </div>
-        </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <details className="group cam-parchment-card rounded-xl p-4 shadow-sm">
-            <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
-              <span className="inline-flex items-center gap-3"><FilledDisclosureArrow />Technical reference</span>
-            </summary>
-            <div className="mt-4 border-t border-border/70 pt-4">
-              <p className="mb-4 text-sm leading-relaxed text-muted-foreground">The public page summarises the architecture. Formal obligations and source text remain in the instruments.</p>
-              <div className="grid gap-3 md:grid-cols-2">
-                {sourceLinks.map(([code, title, href]) => (
-                  <a key={code} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined} className="rounded-2xl border border-primary/20 bg-card p-4 transition hover:border-primary/40 hover:text-primary">
-                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">{code}</p>
-                    <p className="mt-2 font-serif text-lg text-foreground">{title}</p>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </details>
-        </section>
-      </main>
+            <p style={{ marginTop: 14, textAlign: "center", color: "#6b7280", fontSize: "0.88rem", lineHeight: 1.5 }}>
+              Cross‑platform signalling by influential users amplifies relational signals across multiple networks.
+            </p>
+          </div>
+        </motion.div>
+
+      </div>
     </Shell>
+  );
+}
+
+// ─── TOPOLOGY SVG (shared between inline + fullscreen) ────────────────────────
+
+function TopologySVG({ id }: { id: string }) {
+  return (
+    <svg viewBox="0 0 1400 560" style={{ width: "100%", height: "auto", display: "block" }} xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id={`horizon-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#eef2f7" stopOpacity="0.3" />
+          <stop offset="50%" stopColor="#dbe4f0" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#c9d6e8" stopOpacity="0.45" />
+        </linearGradient>
+        <marker id={`arrow-${id}`} markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L9,3 L0,6 Z" fill="#6b7280" />
+        </marker>
+      </defs>
+
+      {/* Gradient band */}
+      <rect x="0" y="250" width="1400" height="220" fill={`url(#horizon-${id})`} rx="20" />
+
+      {/* Title */}
+      <text x="700" y="42" textAnchor="middle" fontSize="26" fontWeight="600" fill="#374151" letterSpacing="0.2px">Expansion Scale of Relational Influence</text>
+
+      {/* Zone headings */}
+      {[["120","Personal"],["380","Institutional"],["640","Multi‑party"],["930","Networked"],["1200","Civilisational"]].map(([x,label]) => (
+        <text key={label} x={x} y="220" textAnchor="middle" fontSize="18" fontWeight="600" fill="#374151" letterSpacing="0.3px">{label}</text>
+      ))}
+
+      {/* Regime dividers */}
+      {[260,520,780,1040].map(x => (
+        <line key={x} x1={x} y1="250" x2={x} y2="460" stroke="#cbd5e1" strokeWidth="1.5" strokeDasharray="4 6" opacity="0.6" />
+      ))}
+
+      {/* R0 — Dyadic */}
+      <text x="110" y="108" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1f2937">R0 — Dyadic</text>
+      <text x="110" y="140" textAnchor="middle" fontSize="15" fill="#4b5563">one human &amp;</text>
+      <text x="110" y="162" textAnchor="middle" fontSize="15" fill="#4b5563">one system</text>
+      <circle cx="95" cy="350" r="12" fill={NODE} />
+      <circle cx="145" cy="350" r="12" fill={NODE} />
+      <line x1="95" y1="350" x2="145" y2="350" stroke={NODE_EDGE} strokeWidth="2" />
+
+      {/* R1 — Triadic */}
+      <text x="380" y="108" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1f2937">R1 — Triadic</text>
+      <text x="380" y="140" textAnchor="middle" fontSize="15" fill="#4b5563">third party</text>
+      <text x="380" y="162" textAnchor="middle" fontSize="15" fill="#4b5563">mediation</text>
+      <circle cx="350" cy="330" r="12" fill={NODE} />
+      <circle cx="410" cy="330" r="12" fill={NODE} />
+      <circle cx="380" cy="395" r="12" fill={NODE} />
+      <line x1="350" y1="330" x2="410" y2="330" stroke={NODE_EDGE} strokeWidth="2" />
+      <line x1="350" y1="330" x2="380" y2="395" stroke={NODE_EDGE} strokeWidth="2" />
+      <line x1="410" y1="330" x2="380" y2="395" stroke={NODE_EDGE} strokeWidth="2" />
+
+      {/* R2 — Polyadic */}
+      <text x="640" y="108" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1f2937">R2 — Polyadic</text>
+      <text x="640" y="140" textAnchor="middle" fontSize="15" fill="#4b5563">distributed</text>
+      <text x="640" y="162" textAnchor="middle" fontSize="15" fill="#4b5563">coordination</text>
+      <circle cx="640" cy="310" r="10" fill={NODE} />
+      <circle cx="600" cy="355" r="10" fill={NODE} />
+      <circle cx="680" cy="355" r="10" fill={NODE} />
+      <circle cx="610" cy="415" r="10" fill={NODE} />
+      <circle cx="670" cy="415" r="10" fill={NODE} />
+      <line x1="640" y1="310" x2="600" y2="355" stroke="#6b7280" strokeWidth="2" />
+      <line x1="640" y1="310" x2="680" y2="355" stroke="#6b7280" strokeWidth="2" />
+      <line x1="600" y1="355" x2="610" y2="415" stroke="#6b7280" strokeWidth="2" />
+      <line x1="680" y1="355" x2="670" y2="415" stroke="#6b7280" strokeWidth="2" />
+
+      {/* R3 — Distributed */}
+      <text x="930" y="108" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1f2937">R3 — Distributed</text>
+      <text x="930" y="140" textAnchor="middle" fontSize="15" fill="#4b5563">cross‑platform</text>
+      <text x="930" y="162" textAnchor="middle" fontSize="15" fill="#4b5563">influence networks</text>
+      <circle cx="930" cy="300" r="10" fill={NODE} />
+      <circle cx="880" cy="340" r="10" fill={NODE} />
+      <circle cx="980" cy="340" r="10" fill={NODE} />
+      <circle cx="850" cy="405" r="10" fill={NODE} />
+      <circle cx="930" cy="425" r="10" fill={NODE} />
+      <circle cx="1010" cy="405" r="10" fill={NODE} />
+      <line x1="930" y1="300" x2="880" y2="340" stroke="#6b7280" strokeWidth="2" />
+      <line x1="930" y1="300" x2="980" y2="340" stroke="#6b7280" strokeWidth="2" />
+      <line x1="880" y1="340" x2="850" y2="405" stroke="#6b7280" strokeWidth="2" />
+      <line x1="980" y1="340" x2="1010" y2="405" stroke="#6b7280" strokeWidth="2" />
+      <line x1="850" y1="405" x2="930" y2="425" stroke="#6b7280" strokeWidth="2" />
+      <line x1="1010" y1="405" x2="930" y2="425" stroke="#6b7280" strokeWidth="2" />
+
+      {/* R4 — Constitutional */}
+      <text x="1200" y="108" textAnchor="middle" fontSize="18" fontWeight="700" fill="#1f2937">R4 — Constitutional</text>
+      <text x="1200" y="140" textAnchor="middle" fontSize="15" fill="#4b5563">planetary</text>
+      <text x="1200" y="162" textAnchor="middle" fontSize="15" fill="#4b5563">coordination layer</text>
+      <circle cx="1200" cy="350" r="22" fill={NODE} />
+      <circle cx="1140" cy="310" r="8" fill={NODE} />
+      <circle cx="1260" cy="310" r="8" fill={NODE} />
+      <circle cx="1100" cy="400" r="8" fill={NODE} />
+      <circle cx="1300" cy="400" r="8" fill={NODE} />
+      <circle cx="1200" cy="280" r="8" fill={NODE} />
+      <circle cx="1200" cy="420" r="8" fill={NODE} />
+      <line x1="1200" y1="350" x2="1140" y2="310" stroke="#6b7280" strokeWidth="2" />
+      <line x1="1200" y1="350" x2="1260" y2="310" stroke="#6b7280" strokeWidth="2" />
+      <line x1="1200" y1="350" x2="1100" y2="400" stroke="#6b7280" strokeWidth="2" />
+      <line x1="1200" y1="350" x2="1300" y2="400" stroke="#6b7280" strokeWidth="2" />
+      <line x1="1200" y1="350" x2="1200" y2="280" stroke="#6b7280" strokeWidth="2" />
+      <line x1="1200" y1="350" x2="1200" y2="420" stroke="#6b7280" strokeWidth="2" />
+
+      {/* Arrows between levels */}
+      <line x1="190" y1="350" x2="310" y2="350" stroke="#6b7280" strokeWidth="2" markerEnd={`url(#arrow-${id})`} />
+      <line x1="450" y1="350" x2="560" y2="350" stroke="#6b7280" strokeWidth="2" markerEnd={`url(#arrow-${id})`} />
+      <line x1="710" y1="350" x2="820" y2="350" stroke="#6b7280" strokeWidth="2" markerEnd={`url(#arrow-${id})`} />
+      <line x1="1030" y1="350" x2="1130" y2="350" stroke="#6b7280" strokeWidth="2" markerEnd={`url(#arrow-${id})`} />
+    </svg>
   );
 }

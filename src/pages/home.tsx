@@ -6,13 +6,6 @@ import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const panelStyle = { backgroundColor: "rgba(255,253,247,0.62)", border: `1px solid ${GOLD_BORDER}` };
 
-const heroButtons = [
-  { label: "Explore Constitutional AI", href: "/catalogue", variant: "primary" },
-  { label: "Explore Companion Systems", href: "/constitution/relational", variant: "secondary" },
-  { label: "Explore Evidence-to-Repair Ledger", href: "/observatory", variant: "secondary" },
-  { label: "Explore Transitional Architecture", href: "#transition-architecture", variant: "secondary" },
-];
-
 const pathways = [
   {
     id: "constitutional-ai",
@@ -136,28 +129,11 @@ export default function Home() {
   return (
     <Shell>
       <main className="overflow-hidden">
-        <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_18%_18%,rgba(184,147,90,0.18),transparent_30%),linear-gradient(180deg,rgba(255,253,247,0.96),rgba(244,238,224,0.58))]">
-          <div className="pointer-events-none absolute inset-0 opacity-70" aria-hidden="true">
-            <svg className="h-full w-full" viewBox="0 0 1200 620" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="heroRoute" x1="0" x2="1">
-                  <stop offset="0%" stopColor="rgba(184,147,90,0.1)" />
-                  <stop offset="50%" stopColor="rgba(184,147,90,0.45)" />
-                  <stop offset="100%" stopColor="rgba(73,112,91,0.28)" />
-                </linearGradient>
-              </defs>
-              <path d="M80 420 C270 260, 360 520, 560 330 S820 165, 1120 260" fill="none" stroke="url(#heroRoute)" strokeWidth="2" strokeDasharray="10 12" />
-              <path d="M160 145 H520 M230 210 H670 M105 288 H430 M760 120 V470 M900 170 V520" stroke="rgba(184,147,90,0.18)" strokeWidth="1" />
-              {[160, 300, 520, 760, 900, 1040].map((x, index) => (
-                <circle key={x} cx={x} cy={index % 2 ? 210 : 288} r="5" fill="rgba(184,147,90,0.55)" />
-              ))}
-            </svg>
-          </div>
-
-          <div className="container relative mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+        <section className="border-b border-border/60 bg-[linear-gradient(180deg,rgba(255,253,247,0.96),rgba(244,238,224,0.58))]">
+          <div className="container mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-20">
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="relative max-w-4xl"
+              className="max-w-4xl"
               initial={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.7 }}
             >
@@ -167,48 +143,21 @@ export default function Home() {
                   CAM Initiative
                 </p>
               </div>
-              <div className="relative rounded-[2rem] border border-cam-gold/20 bg-background/45 p-5 backdrop-blur-[1px] md:p-7">
-                <div className="absolute -inset-3 -z-10 rounded-[2.3rem] border border-cam-gold/10" aria-hidden="true" />
-                <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">
-                  Governance Architecture
-                </h1>
-                <p className="mb-8 font-mono text-sm uppercase tracking-[0.2em] text-cam-gold md:text-[15px]">
-                  Understanding failures. Designing governance. Navigating transition.
+              <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">
+                Governance Architecture
+              </h1>
+              <p className="mb-8 font-mono text-sm uppercase tracking-[0.2em] text-cam-gold md:text-[15px]">
+                Understanding failures. Designing governance. Navigating transition.
+              </p>
+              <div className="max-w-3xl space-y-5 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
+                <p>
+                  CAM Initiative develops governance frameworks for AI systems, companion systems, technology failure response, and emerging frontier transitions.
                 </p>
-                <div className="max-w-3xl space-y-5 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
-                  <p>
-                    CAM Initiative develops governance frameworks for AI systems, companion systems, technology failure response, and emerging frontier transitions.
-                  </p>
-                  <p>
-                    It turns observed failures into structured diagnosis, repair pathways, and safer governance design across multiple domains.
-                  </p>
-                </div>
+                <p>
+                  It turns observed failures into structured diagnosis, repair pathways, and safer governance design across multiple domains.
+                </p>
               </div>
             </motion.div>
-
-            <aside className="rounded-3xl border border-cam-gold/30 bg-[hsl(28_25%_16%)] p-5 text-[hsl(36_48%_95%)] shadow-2xl" aria-label="Choose a pathway">
-              <div className="mb-5 flex items-center justify-between gap-3">
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">Enter the architecture</p>
-                <span className="h-2 w-2 rounded-full bg-cam-gold shadow-[0_0_18px_rgba(184,147,90,0.8)]" aria-hidden="true" />
-              </div>
-              <div className="grid gap-3">
-                {[
-                  ["Constitutional AI", "Cross-domain governance for AI systems, institutions, platforms, and accountability structures.", "Explore Constitutional AI", "/catalogue"],
-                  ["Companion Systems", "Relational governance for companion systems, attachment, continuity, dependency, agency, consent, and harm prevention.", "Explore Companion Systems", "/constitution/relational"],
-                  ["VIGIL Records", "Observed failures, evidence, classification, accountability gaps, and repair pathways.", "Explore Evidence-to-Repair Ledger", "/observatory"],
-                  ["Transitional Architecture", "Governance tools for emerging technologies, institutional adaptation, frontier systems, and transition planning.", "Explore Transitional Architecture", "/catalogue"],
-                ].map(([title, purpose, label, href]) => (
-                  <a key={title} href={href} className="group rounded-2xl border border-cam-gold/20 bg-[hsl(30_22%_22%)] p-4 transition hover:border-cam-gold/55 hover:bg-[hsl(30_22%_25%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/40">
-                    <span className="mb-1 flex items-center justify-between gap-3">
-                      <span className="font-serif text-xl text-[hsl(36_48%_95%)]">{title}</span>
-                      <span className="text-cam-gold transition group-hover:translate-x-1" aria-hidden="true">→</span>
-                    </span>
-                    <span className="block text-sm leading-relaxed text-[hsl(36_28%_82%)]">{purpose}</span>
-                    <span className="mt-3 block font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold">{label}</span>
-                  </a>
-                ))}
-              </div>
-            </aside>
           </div>
         </section>
 
@@ -230,17 +179,24 @@ export default function Home() {
         </section>
 
         <section className="container mx-auto max-w-6xl px-6 pb-12 md:px-10 md:pb-16" aria-labelledby="pathways-heading">
-          <SectionLabel>Four pathways into CAM</SectionLabel>
+          <SectionLabel>Choose your pathway into CAM</SectionLabel>
           <h2 id="pathways-heading" className="mb-7 font-serif text-3xl leading-tight text-foreground md:text-4xl">
             Choose the governance pathway that matches the work.
           </h2>
-          <div className="grid auto-rows-fr gap-5 lg:grid-cols-2">
-            {pathways.map((pathway) => (
+          <div className="grid gap-6 [perspective:1400px] md:grid-cols-2 xl:grid-cols-4">
+            {pathways.map((pathway, index) => {
+              const depthClass = [
+                "md:[transform:rotateY(-8deg)_translateZ(8px)]",
+                "md:[transform:rotateY(-3deg)_translateZ(18px)]",
+                "md:[transform:rotateY(3deg)_translateZ(18px)]",
+                "md:[transform:rotateY(8deg)_translateZ(8px)]",
+              ][index];
+
+              return (
               <article
-                className="flex h-full scroll-mt-24 flex-col rounded-3xl p-6 shadow-sm md:p-7"
+                className={`group flex h-full min-h-[360px] scroll-mt-24 flex-col rounded-3xl border border-cam-gold/25 bg-card/90 p-6 shadow-[0_24px_60px_rgba(80,55,20,0.12)] transition duration-300 [transform-style:preserve-3d] hover:shadow-[0_30px_80px_rgba(80,55,20,0.18)] focus-within:-translate-y-2 md:p-7 md:hover:[transform:translateY(-0.5rem)_rotateY(0deg)_translateZ(24px)] motion-reduce:transform-none ${depthClass}`}
                 id={pathway.id}
                 key={pathway.id}
-                style={panelStyle}
               >
                 <div className="flex-1">
                   <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">
@@ -259,7 +215,8 @@ export default function Home() {
                   <ButtonLink href={pathway.href} label={pathway.cta} />
                 </div>
               </article>
-            ))}
+              );
+            })}
           </div>
         </section>
 

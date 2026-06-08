@@ -86,7 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Home
               </Link>
               <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/25 bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-primary/10">
+                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
                   {homeLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -115,7 +115,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Constitution
               </Link>
               <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/25 bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-primary/10">
+                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
                   {constitutionLinks.map((link) => (
                     <Link
                       key={link.href}
