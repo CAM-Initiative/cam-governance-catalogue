@@ -8,7 +8,7 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Repository" },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance" },
 ];
 
 const mobileLinks = [
@@ -17,7 +17,7 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "Observatory / VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance / Repository" },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 

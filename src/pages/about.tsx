@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Coffee, Copy, ExternalLink, Github, Mail } from "lucide-react";
+import { Check, Coffee, Copy, ExternalLink, Github, Mail } from "lucide-react";
 
 const citations = [
   {
@@ -110,13 +110,13 @@ const actionLinks = [
     external: true,
   },
   {
-    label: "CAM Repository",
+    label: "CAM Governance",
     href: "https://github.com/CAM-Initiative/Caelestis",
     icon: "github",
     external: true,
   },
   {
-    label: "VIGIL Repository",
+    label: "VIGIL Governance",
     href: "https://github.com/CAM-Initiative/Vigil",
     icon: "github",
     external: true,
@@ -189,7 +189,7 @@ function ObservatoryStyleDetails({ title, children, formal = false }: { title: s
     <details className={`group rounded-xl p-3 text-sm shadow-sm transition ${formal ? "border border-primary/35 bg-[hsl(28_25%_16%)] hover:border-cam-gold/60" : "cam-parchment-card hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]"}`}>
       <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
-          <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90" aria-hidden="true" />
+          <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
         </span>
       </summary>

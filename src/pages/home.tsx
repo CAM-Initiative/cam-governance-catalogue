@@ -8,8 +8,8 @@ const panelStyle = { backgroundColor: "rgba(255,253,247,0.62)", border: `1px sol
 
 const heroButtons = [
   { label: "Explore Constitutional AI", href: "/catalogue", variant: "primary" },
-  { label: "Explore Companion Systems", href: "#companion-systems", variant: "secondary" },
-  { label: "View VIGIL Records", href: "/observatory", variant: "secondary" },
+  { label: "Explore Companion Systems", href: "/constitution/relational", variant: "secondary" },
+  { label: "Explore Evidence-to-Repair Ledger", href: "/observatory", variant: "secondary" },
   { label: "Explore Transitional Architecture", href: "#transition-architecture", variant: "secondary" },
 ];
 
@@ -31,11 +31,6 @@ const pathways = [
       "Explore CAM’s governance work on relational AI and companion systems, including attachment, continuity, dependency, identity, agency, consent, safeguarding, and harm prevention.",
     cta: "Explore Companion Systems",
     href: "/constitution/relational",
-    note: {
-      label: "Featured instrument note",
-      text: "Includes advanced companion-system governance work such as AEON-006-SCH-02.",
-      href: "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Constitution/CAM-BS2025-AEON-006-SCH-02.md",
-    },
   },
   {
     id: "failures-evidence-repair",
@@ -43,7 +38,7 @@ const pathways = [
     title: "Failures, Evidence, and Repair",
     description:
       "Use VIGIL to examine real-world technology failures, preserve evidence, classify harms, identify accountability gaps, and connect failures to repair pathways.",
-    cta: "View VIGIL Records",
+    cta: "Explore Evidence-to-Repair Ledger",
     href: "/observatory",
   },
   {
@@ -80,8 +75,8 @@ const audiences = [
 const actionLinks = [
   { label: "Email", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
   { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
-  { label: "CAM Repository", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
-  { label: "VIGIL Repository", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
+  { label: "CAM Governance", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
+  { label: "VIGIL Governance", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
   { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
 ];
 
@@ -118,7 +113,7 @@ function CollapsiblePanel({ title, children }: { title: string; children: ReactN
     <details className="group cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
       <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
-          <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90" aria-hidden="true" />
+          <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
         </span>
       </summary>
@@ -141,11 +136,28 @@ export default function Home() {
   return (
     <Shell>
       <main className="overflow-hidden">
-        <section className="border-b border-border/60 bg-[radial-gradient(circle_at_top_left,rgba(184,147,90,0.13),transparent_34%),linear-gradient(180deg,rgba(255,253,247,0.95),rgba(244,238,224,0.52))]">
-          <div className="container mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-20">
+        <section className="relative overflow-hidden border-b border-border/60 bg-[radial-gradient(circle_at_18%_18%,rgba(184,147,90,0.18),transparent_30%),linear-gradient(180deg,rgba(255,253,247,0.96),rgba(244,238,224,0.58))]">
+          <div className="pointer-events-none absolute inset-0 opacity-70" aria-hidden="true">
+            <svg className="h-full w-full" viewBox="0 0 1200 620" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="heroRoute" x1="0" x2="1">
+                  <stop offset="0%" stopColor="rgba(184,147,90,0.1)" />
+                  <stop offset="50%" stopColor="rgba(184,147,90,0.45)" />
+                  <stop offset="100%" stopColor="rgba(73,112,91,0.28)" />
+                </linearGradient>
+              </defs>
+              <path d="M80 420 C270 260, 360 520, 560 330 S820 165, 1120 260" fill="none" stroke="url(#heroRoute)" strokeWidth="2" strokeDasharray="10 12" />
+              <path d="M160 145 H520 M230 210 H670 M105 288 H430 M760 120 V470 M900 170 V520" stroke="rgba(184,147,90,0.18)" strokeWidth="1" />
+              {[160, 300, 520, 760, 900, 1040].map((x, index) => (
+                <circle key={x} cx={x} cy={index % 2 ? 210 : 288} r="5" fill="rgba(184,147,90,0.55)" />
+              ))}
+            </svg>
+          </div>
+
+          <div className="container relative mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-4xl"
+              className="relative max-w-4xl"
               initial={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.7 }}
             >
@@ -155,26 +167,48 @@ export default function Home() {
                   CAM Initiative
                 </p>
               </div>
-              <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">
-                Governance Architecture
-              </h1>
-              <p className="mb-8 font-mono text-sm uppercase tracking-[0.2em] text-cam-gold md:text-[15px]">
-                Understanding failures. Designing governance. Navigating transition.
-              </p>
-              <div className="max-w-3xl space-y-5 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
-                <p>
-                  CAM Initiative develops governance frameworks for AI systems, companion systems, technology failure response, and emerging frontier transitions.
+              <div className="relative rounded-[2rem] border border-cam-gold/20 bg-background/45 p-5 backdrop-blur-[1px] md:p-7">
+                <div className="absolute -inset-3 -z-10 rounded-[2.3rem] border border-cam-gold/10" aria-hidden="true" />
+                <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">
+                  Governance Architecture
+                </h1>
+                <p className="mb-8 font-mono text-sm uppercase tracking-[0.2em] text-cam-gold md:text-[15px]">
+                  Understanding failures. Designing governance. Navigating transition.
                 </p>
-                <p>
-                  It turns observed failures into structured diagnosis, repair pathways, and safer governance design across multiple domains.
-                </p>
-              </div>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:max-w-3xl">
-                {heroButtons.map((button) => (
-                  <ButtonLink key={button.label} {...button} />
-                ))}
+                <div className="max-w-3xl space-y-5 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
+                  <p>
+                    CAM Initiative develops governance frameworks for AI systems, companion systems, technology failure response, and emerging frontier transitions.
+                  </p>
+                  <p>
+                    It turns observed failures into structured diagnosis, repair pathways, and safer governance design across multiple domains.
+                  </p>
+                </div>
               </div>
             </motion.div>
+
+            <aside className="rounded-3xl border border-cam-gold/30 bg-[hsl(28_25%_16%)] p-5 text-[hsl(36_48%_95%)] shadow-2xl" aria-label="Choose a pathway">
+              <div className="mb-5 flex items-center justify-between gap-3">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">Enter the architecture</p>
+                <span className="h-2 w-2 rounded-full bg-cam-gold shadow-[0_0_18px_rgba(184,147,90,0.8)]" aria-hidden="true" />
+              </div>
+              <div className="grid gap-3">
+                {[
+                  ["Constitutional AI", "Cross-domain governance for AI systems, institutions, platforms, and accountability structures.", "Explore Constitutional AI", "/catalogue"],
+                  ["Companion Systems", "Relational governance for companion systems, attachment, continuity, dependency, agency, consent, and harm prevention.", "Explore Companion Systems", "/constitution/relational"],
+                  ["VIGIL Records", "Observed failures, evidence, classification, accountability gaps, and repair pathways.", "Explore Evidence-to-Repair Ledger", "/observatory"],
+                  ["Transitional Architecture", "Governance tools for emerging technologies, institutional adaptation, frontier systems, and transition planning.", "Explore Transitional Architecture", "/catalogue"],
+                ].map(([title, purpose, label, href]) => (
+                  <a key={title} href={href} className="group rounded-2xl border border-cam-gold/20 bg-[hsl(30_22%_22%)] p-4 transition hover:border-cam-gold/55 hover:bg-[hsl(30_22%_25%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/40">
+                    <span className="mb-1 flex items-center justify-between gap-3">
+                      <span className="font-serif text-xl text-[hsl(36_48%_95%)]">{title}</span>
+                      <span className="text-cam-gold transition group-hover:translate-x-1" aria-hidden="true">→</span>
+                    </span>
+                    <span className="block text-sm leading-relaxed text-[hsl(36_28%_82%)]">{purpose}</span>
+                    <span className="mt-3 block font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold">{label}</span>
+                  </a>
+                ))}
+              </div>
+            </aside>
           </div>
         </section>
 
@@ -218,39 +252,8 @@ export default function Home() {
                   <p className="mb-5 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
                     {pathway.description}
                   </p>
-
-                  {pathway.id === "failures-evidence-repair" && (
-                    <div className="mb-5 rounded-2xl border border-primary/20 bg-card/55 p-4">
-                      <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.18em] text-primary">
-                        CAM + VIGIL
-                      </p>
-                      <div className="space-y-2 text-[15px] font-light leading-relaxed text-muted-foreground md:text-base">
-                        <p>CAM is the governance architecture. VIGIL is the failure observatory.</p>
-                        <p>
-                          Together, CAM and VIGIL convert observed failure into structured diagnosis, governance learning, repair pathways, and safer future-system design.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {pathway.note && (
-                    <a
-                      className="mb-5 block rounded-2xl border border-cam-gold/35 bg-cam-gold/10 p-4 transition hover:border-cam-gold/70 hover:text-primary"
-                      href={pathway.note.href}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <p className="mb-1 font-mono text-[12px] uppercase tracking-[0.18em] text-cam-gold">
-                        {pathway.note.label}
-                      </p>
-                      <p className="text-[15px] font-light leading-relaxed text-muted-foreground md:text-base">
-                        {pathway.note.text}
-                      </p>
-                    </a>
-                  )}
                 </div>
 
-                {/* TODO: Create a dedicated Companion Systems page that surfaces AEON-006-SCH-02 directly rather than using the relational governance route as the public entry point. */}
                 {/* TODO: Create a dedicated Transitional Architecture page; this entry currently routes to the catalogue as the closest supported route. */}
                 <div className="mt-2 pt-2">
                   <ButtonLink href={pathway.href} label={pathway.cta} />
