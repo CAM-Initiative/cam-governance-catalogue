@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 import {
   instrumentDisplayId,
   instrumentHref,
@@ -293,7 +294,7 @@ function SourcePanel({
   byId: Record<string, GovernanceInstrumentRecord>;
 }) {
   return (
-    <div className="rounded-xl p-4" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
+    <div>
       <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: GOLD }}>
         {heading}
       </p>
@@ -302,25 +303,31 @@ function SourcePanel({
           const item = resolveSource(ref, byId);
           const body = (
             <>
-              <span className="block font-serif text-base leading-snug text-foreground">{item.title}</span>
-              <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
-                {instrumentDisplayId(item.id)}{item.domain ? ` · ${item.domain}` : ""} · {item.status}
+              <span className="block font-serif text-lg leading-snug text-foreground">{item.title}</span>
+              <span className="mt-2 block font-mono text-xs text-cam-gold break-words transition-colors">
+                {instrumentDisplayId(item.id)}{item.domain ? ` · ${item.domain}` : ""}
+              </span>
+              <span className="mt-3 block font-mono text-[11px] uppercase tracking-wider" style={{ color: GOLD }}>
+                {item.status}
               </span>
             </>
           );
 
+          const panelStyle = { backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` };
+
           return item.href ? (
             <a
-              className="block rounded-lg border border-cam-gold/20 bg-card/60 px-3 py-2 transition-colors hover:border-cam-gold/45 hover:bg-card/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="block rounded-xl p-4 transition-colors hover:border-cam-gold/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               href={item.href}
               key={item.id}
               rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+              style={panelStyle}
               target={item.href.startsWith("http") ? "_blank" : undefined}
             >
               {body}
             </a>
           ) : (
-            <div className="rounded-lg border border-cam-gold/20 bg-card/60 px-3 py-2" key={item.id}>
+            <div className="rounded-xl p-4" key={item.id} style={panelStyle}>
               {body}
             </div>
           );
@@ -332,19 +339,19 @@ function SourcePanel({
 
 function StageDetail({ stage, byId }: { stage: RelationalStage; byId: Record<string, GovernanceInstrumentRecord> }) {
   return (
-    <div className="flex flex-1 flex-col overflow-y-auto hide-scrollbar">
-      <p className="mb-4 text-base font-light leading-relaxed text-muted-foreground">{stage.description}</p>
+    <div className="flex-1 flex flex-col mt-4 overflow-y-auto hide-scrollbar">
+      <p className="text-base text-muted-foreground leading-relaxed font-light mb-5">{stage.description}</p>
 
       {stage.requiredLines?.map((line) => (
-        <div className="mb-3 rounded-xl p-3 font-serif text-base leading-relaxed text-foreground" key={line} style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
+        <div className="mb-5 p-4 rounded-xl font-serif text-base text-foreground leading-relaxed" key={line} style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
           {line}
         </div>
       ))}
 
       {stage.examples && (
-        <div className="mb-4 grid gap-2 sm:grid-cols-2">
+        <div className="mb-5 grid gap-2 sm:grid-cols-2">
           {stage.examples.map((example) => (
-            <span className="rounded-lg border border-cam-gold/20 bg-card/60 px-3 py-2 text-sm text-muted-foreground" key={example}>
+            <span className="rounded-xl p-3 text-sm text-muted-foreground leading-relaxed font-light" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }} key={example}>
               {example}
             </span>
           ))}
@@ -352,9 +359,9 @@ function StageDetail({ stage, byId }: { stage: RelationalStage; byId: Record<str
       )}
 
       {stage.mechanisms && (
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="mb-5 flex flex-wrap gap-2">
           {stage.mechanisms.map((mechanism) => (
-            <span className="rounded-full border border-cam-gold/25 bg-[rgba(184,147,90,0.10)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold" key={mechanism}>
+            <span className="rounded-xl px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }} key={mechanism}>
               {mechanism}
             </span>
           ))}
@@ -362,16 +369,16 @@ function StageDetail({ stage, byId }: { stage: RelationalStage; byId: Record<str
       )}
 
       {stage.postures && (
-        <div className="mb-4 grid gap-2 sm:grid-cols-5">
+        <div className="mb-5 grid gap-2 sm:grid-cols-5">
           {stage.postures.map((posture) => (
-            <span className="rounded-lg border border-cam-gold/25 bg-[rgba(184,147,90,0.10)] px-2 py-2 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold" key={posture}>
+            <span className="rounded-xl px-2 py-2 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }} key={posture}>
               {posture}
             </span>
           ))}
         </div>
       )}
 
-      <div className="mb-4 rounded-xl border border-border bg-background/35 p-4">
+      <div className="mb-5 p-4 rounded-xl" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
         <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: GOLD }}>
           What this prevents
         </p>
@@ -405,7 +412,7 @@ function RelationalGovernanceModel() {
 
       <div className="overflow-x-auto overflow-y-hidden pb-4" style={{ minHeight: 470 }}>
         <div
-          className="relative z-10 flex min-w-[2500px] items-start gap-0"
+          className="flex min-w-[2500px] items-start gap-0 relative z-10"
           style={{ width: CONTENT_W, paddingLeft: PAD_X, paddingRight: PAD_X, paddingTop: PAD_TOP, paddingBottom: 44 }}
         >
           {stages.map((stage, index) => {
@@ -416,9 +423,10 @@ function RelationalGovernanceModel() {
               <div className="flex items-start" key={stage.id}>
                 <motion.article
                   animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-                  className="cam-parchment-card flex flex-col rounded-2xl border transition-colors duration-200"
+                  className="cam-parchment-card cursor-pointer flex flex-col rounded-2xl border transition-colors duration-200"
                   id={stage.id}
                   initial={shouldReduceMotion ? undefined : { opacity: 0, y: 10 }}
+                  layout
                   style={{
                     width: isExpanded ? CARD_W_EXPANDED : CARD_W,
                     minHeight: CARD_H_COLLAPSED,
@@ -430,19 +438,27 @@ function RelationalGovernanceModel() {
                   <button
                     aria-controls={`${stage.id}-detail`}
                     aria-expanded={isExpanded}
-                    className="flex h-full min-h-[inherit] w-full flex-col p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="p-5 flex flex-col h-full w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     onClick={() => setExpandedId(isExpanded ? null : stage.id)}
                     type="button"
                   >
-                    <span className="mb-3 flex items-center justify-between gap-3">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: GOLD }}>
-                        Stage {stage.stage} · {stage.sublabel}
+                    <span className="flex items-center justify-between mb-2.5">
+                      <span className="font-mono text-[10px] tracking-[0.18em] uppercase" style={{ color: GOLD }}>
+                        {stage.sublabel}
                       </span>
-                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: isExpanded ? GOLD : GOLD_LIGHT }} aria-hidden="true" />
+                      {!isExpanded && (
+                        <span
+                          className="w-6 h-6 rounded-full flex items-center justify-center shrink-0"
+                          style={{ border: `1px solid ${GOLD_BORDER}`, backgroundColor: GOLD_BG }}
+                          aria-hidden="true"
+                        >
+                          <ChevronRight className="w-3 h-3" style={{ color: GOLD }} />
+                        </span>
+                      )}
                     </span>
-                    <span className="block font-serif text-2xl leading-tight text-foreground">{stage.label}</span>
+                    <span className="block font-serif leading-snug text-foreground" style={{ fontSize: 20, fontWeight: 400 }}>{stage.label}</span>
                     {!isExpanded && (
-                      <span className="mt-3 block text-sm font-light leading-relaxed text-muted-foreground">
+                      <span className="text-sm leading-relaxed font-light mt-3" style={{ color: "hsl(28 20% 50%)" }}>
                         {stage.description}
                       </span>
                     )}
@@ -465,7 +481,7 @@ function RelationalGovernanceModel() {
                 </motion.article>
 
                 {!isLast && (
-                  <div className="flex shrink-0 items-center justify-center" style={{ width: ARROW_W, height: CARD_H_COLLAPSED }} aria-hidden="true">
+                  <div className="flex items-center justify-center shrink-0" style={{ width: ARROW_W, height: CARD_H_COLLAPSED }} aria-hidden="true">
                     <svg width="36" height="14" viewBox="0 0 36 14" fill="none">
                       <line x1="2" y1="7" x2="28" y2="7" stroke={GOLD_LIGHT} strokeWidth="1" />
                       <polyline points="24,3 32,7 24,11" fill="none" stroke={GOLD_LIGHT} strokeWidth="1" strokeLinejoin="round" />
@@ -478,7 +494,7 @@ function RelationalGovernanceModel() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between border-t border-border/40 px-6 py-2.5 md:px-10">
+      <div className="shrink-0 px-12 py-2.5 flex items-center justify-between border-t border-border/40" style={{ zIndex: 10 }}>
         <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Select stage — expand safeguards</span>
         <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/60">Relational route control</span>
       </div>

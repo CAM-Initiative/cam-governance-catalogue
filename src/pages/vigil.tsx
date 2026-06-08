@@ -460,7 +460,7 @@ export default function Vigil() {
 
 
             <div>
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">From evidence to repair: Observe → Record → Classify → Diagnose → Repair → Learn</p>
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">From evidence to repair:</p>
               <div className="grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-stretch">
                 {evidenceRepairSteps.map((step, index) => (
                   <div className="contents" key={step.label}>

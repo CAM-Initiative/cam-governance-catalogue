@@ -214,7 +214,7 @@ export default function Home() {
         </section>
 
         <section className="container mx-auto max-w-6xl px-6 pt-10 md:px-10 md:pt-14">
-          <div className="rounded-3xl p-6 shadow-sm md:p-8" style={citationPanelStyle}>
+          <div className="cam-parchment-card relative overflow-hidden rounded-3xl p-6 shadow-sm md:p-8" style={citationPanelStyle}>
             <div className="border-l-2 pl-5 md:pl-6" style={{ borderColor: GOLD_BORDER }}>
               <h2 className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
                 Technology failures are rarely isolated events.
@@ -228,10 +228,12 @@ export default function Home() {
                 </p>
               </div>
             </div>
+            <div className="pointer-events-none absolute bottom-0 left-8 h-10 w-px bg-gradient-to-b from-cam-gold/35 to-transparent md:left-10" aria-hidden="true" />
           </div>
+          <div className="mx-8 h-8 border-l border-cam-gold/30 md:mx-10" aria-hidden="true" />
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 pb-12 pt-5 md:px-10 md:pb-16 md:pt-6" aria-labelledby="pathways-heading">
+        <section className="container mx-auto max-w-6xl px-6 pb-12 pt-8 md:px-10 md:pb-16 md:pt-10" aria-labelledby="pathways-heading">
           <SectionLabel>Four pathways into CAM</SectionLabel>
           <p id="pathways-heading" className="mb-6 max-w-3xl text-base font-light leading-relaxed text-muted-foreground md:text-lg">
             Each pathway gives a different entry point into the same governance architecture.
