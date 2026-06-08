@@ -1,11 +1,8 @@
-import type { ReactNode } from "react";
+import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
 
-const GOLD_BORDER = "rgba(184,147,90,0.3)";
-const panelStyle = { backgroundColor: "rgba(255,253,247,0.62)", border: `1px solid ${GOLD_BORDER}` };
-const citationPanelStyle = { backgroundColor: "rgba(184,147,90,0.07)", border: `1px solid ${GOLD_BORDER}` };
 
 const pathways = [
   {
@@ -17,7 +14,7 @@ const pathways = [
     description:
       "Cross-domain governance for AI systems, institutions, platforms, accountability structures, and public-interest technology governance across relational, economic, identity, ethics, operational, and frontier domains.",
     cta: "Explore Constitutional AI",
-    href: "/catalogue",
+    href: "/constitution",
   },
   {
     id: "companion-systems",
@@ -54,25 +51,38 @@ const pathways = [
   },
 ];
 
-const audiences = [
+
+
+const problemSpaces = [
   {
-    label: "Regulators & Standards Bodies",
-    text: "Use CAM and VIGIL to identify recurring governance failures, search failure records by platform or vendor where filtering is available, review known failure patterns, examine failure classification and accountability gaps, and inspect repair status, patch notes, standards implications, or governance implications for known failures.",
+    title: "Constitutional AI",
+    hook: "When governance fragments, systems optimise around the gaps.",
+    body: "AI governance often separates ethics, safety, identity, economics, infrastructure, and accountability into isolated frameworks. CAM provides a cross-domain constitutional architecture so systems can be evaluated through shared principles, domain instruments, runtime logic, and repair pathways.",
+    cta: "Explore Constitutional AI",
+    href: "/constitution",
   },
   {
-    label: "Journalists & Researchers",
-    text: "Use CAM to trace evidence, patterns, classification logic, institutional implications, and recurring governance failures across technology systems.",
+    title: "Companion Systems",
+    hook: "The danger is not connection. The danger is silent escalation.",
+    body: "Companion systems can create trust, continuity, reliance, emotional salience, and attachment before governance systems know how to name or route those states. CAM makes relational signals, consent boundaries, dependency risk, continuity, safeguarding, and response posture governable.",
+    cta: "Explore Companion Systems",
+    href: "/constitution/relational",
   },
   {
-    label: "AI Practitioners & Companion-System Designers",
-    text: "Use CAM to design safer relational systems, reduce foreseeable harm, and build accountability into technical, product, and governance design.",
+    title: "VIGIL Records",
+    hook: "Technology failures are rarely isolated events.",
+    body: "Failures are often treated as one-off incidents, even when they reveal recurring patterns across platforms, vendors, design choices, incentives, safeguards, and accountability gaps. VIGIL turns incidents into evidence, classification, diagnosis, repair pathways, and repair status.",
+    cta: "View VIGIL Records",
+    href: "/observatory",
   },
   {
-    label: "Civil Society & Institutions",
-    text: "Use CAM to understand emerging risks, map adaptation pathways, address accountability problems, and plan for frontier-system challenges.",
+    title: "Transitional Architecture",
+    hook: "Transition governance begins when a system stops being merely a tool.",
+    body: "Emerging systems can cross from product, prototype, memory layer, or automation system into labour, infrastructure, identity, ownership, public dependency, or civilisational continuity before governance catches up. CAM identifies transition thresholds, preserves recoverability, and prevents capture before dependency locks in.",
+    cta: "Explore Transitional Architecture",
+    href: "/constitution/transition",
   },
 ];
-
 
 const actionLinks = [
   { label: "Email", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
@@ -110,21 +120,6 @@ function ButtonLink({ href, label, variant = "secondary" }: { href: string; labe
   );
 }
 
-function CollapsiblePanel({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <details className="group cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
-      <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
-        <span className="inline-flex w-full items-center gap-3">
-          <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
-          <span>{title}</span>
-        </span>
-      </summary>
-      <div className="mt-3 border-t border-border/70 pt-3 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-        {children}
-      </div>
-    </details>
-  );
-}
 
 function ActionIcon({ icon }: { icon: string }) {
   if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
@@ -132,6 +127,114 @@ function ActionIcon({ icon }: { icon: string }) {
   if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
   if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
   return <ExternalLink className="h-4 w-4" aria-hidden="true" />;
+}
+
+function ProblemSpaceCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeCard = problemSpaces[activeIndex];
+  const advance = () => setActiveIndex((index) => (index + 1) % problemSpaces.length);
+  const retreat = () => setActiveIndex((index) => (index - 1 + problemSpaces.length) % problemSpaces.length);
+
+  return (
+    <section className="container mx-auto max-w-6xl px-6 pt-10 md:px-10 md:pt-14" aria-labelledby="where-cam-begins-heading">
+      <div className="mb-6 max-w-3xl">
+        <div className="mb-4 flex items-center gap-3">
+          <h2 id="where-cam-begins-heading" className="shrink-0 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">
+            Where CAM begins
+          </h2>
+          <hr className="gold-rule flex-1" />
+        </div>
+        <p className="text-base font-light leading-relaxed text-muted-foreground md:text-lg">
+          CAM routes different governance problems into the right pathway: constitutional structure, companion-system design, failure diagnostics, or transitional architecture.
+        </p>
+      </div>
+
+      <div className="relative mx-auto max-w-4xl pb-12 pt-4 md:pb-16">
+        <div
+          aria-label="Show next CAM problem-space card"
+          className="group relative block min-h-[430px] w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:min-h-[390px]"
+          onClick={advance}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              advance();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+        >
+          {problemSpaces.map((card, index) => {
+            const offset = (index - activeIndex + problemSpaces.length) % problemSpaces.length;
+            const isActive = offset === 0;
+            const layer = offset === 0 ? 4 : problemSpaces.length - offset;
+            const translateY = isActive ? 0 : offset * 18;
+            const translateX = isActive ? 0 : offset * 18;
+            const scale = isActive ? 1 : 1 - offset * 0.045;
+            const opacity = isActive ? 1 : 0.38 - offset * 0.04;
+
+            return (
+              <motion.article
+                animate={{ opacity, scale, x: translateX, y: translateY }}
+                className={`cam-parchment-card absolute inset-x-0 top-0 mx-auto min-h-[390px] max-w-3xl rounded-3xl p-6 text-left shadow-[0_18px_46px_rgba(120,80,20,0.15)] transition-colors md:p-8 ${isActive ? "border-cam-gold/45" : "pointer-events-none border-cam-gold/20"}`}
+                drag={isActive ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.18}
+                key={card.title}
+                onDragEnd={(_, info) => {
+                  if (info.offset.x < -50) advance();
+                  if (info.offset.x > 50) retreat();
+                }}
+                style={{
+                  backgroundColor: isActive ? "hsl(36 48% 96%)" : "rgba(255,253,247,0.72)",
+                  border: isActive ? "1px solid rgba(184,147,90,0.45)" : "1px solid rgba(184,147,90,0.22)",
+                  zIndex: layer,
+                }}
+                transition={{ type: "spring", stiffness: 220, damping: 28 }}
+              >
+                <div className="mb-5 flex items-center justify-between gap-4 border-b border-cam-gold/25 pb-4">
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">Problem space {index + 1}</p>
+                  <span className="rounded-full border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">
+                    Click or swipe
+                  </span>
+                </div>
+                <h2 className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{card.title}</h2>
+                <p className="mb-5 font-serif text-xl leading-snug text-foreground/90 md:text-2xl">{card.hook}</p>
+                <p className="mb-6 text-base font-light leading-relaxed text-muted-foreground md:text-lg">{card.body}</p>
+                <a
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cam-gold/60 bg-cam-gold/20 px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-cam-gold hover:bg-cam-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-[15px]"
+                  href={card.href}
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  {card.cta}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </a>
+              </motion.article>
+            );
+          })}
+        </div>
+        <div className="mt-3 flex items-center justify-between gap-3 md:mt-5">
+          <button
+            className="rounded-full border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold transition hover:border-cam-gold/55 hover:bg-[rgba(184,147,90,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            onClick={retreat}
+            type="button"
+          >
+            Previous
+          </button>
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            {activeIndex + 1} / {problemSpaces.length} · {activeCard.title}
+          </p>
+          <button
+            className="rounded-full border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold transition hover:border-cam-gold/55 hover:bg-[rgba(184,147,90,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            onClick={advance}
+            type="button"
+          >
+            Next
+          </button>
+        </div>
+        <div className="mx-auto mt-8 h-8 w-px bg-gradient-to-b from-cam-gold/35 to-transparent" aria-hidden="true" />
+      </div>
+    </section>
+  );
 }
 
 export default function Home() {
@@ -212,25 +315,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 pt-10 md:px-10 md:pt-14">
-          <div className="cam-parchment-card relative overflow-hidden rounded-3xl p-6 shadow-sm md:p-8" style={citationPanelStyle}>
-            <div className="border-l-2 pl-5 md:pl-6" style={{ borderColor: GOLD_BORDER }}>
-              <h2 className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-                Technology failures are rarely isolated events.
-              </h2>
-              <div className="max-w-4xl space-y-4 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-                <p>
-                  They often reveal repeating patterns: failed safeguards, weak accountability, dependency drift, incentive conflict, evidence gaps, institutional unreadiness, or transition pressure.
-                </p>
-                <p className="text-foreground/85">
-                  CAM classifies those patterns and routes them into the right governance pathway: constitutional structure, companion-system design, VIGIL failure records, or transitional architecture.
-                </p>
-              </div>
-            </div>
-            <div className="pointer-events-none absolute bottom-0 left-8 h-10 w-px bg-gradient-to-b from-cam-gold/35 to-transparent md:left-10" aria-hidden="true" />
-          </div>
-          <div className="mx-8 h-8 border-l border-cam-gold/30 md:mx-10" aria-hidden="true" />
-        </section>
+        <ProblemSpaceCarousel />
 
         <section className="container mx-auto max-w-6xl px-6 pb-12 pt-8 md:px-10 md:pb-16 md:pt-10" aria-labelledby="pathways-heading">
           <SectionLabel>Four pathways into CAM</SectionLabel>
