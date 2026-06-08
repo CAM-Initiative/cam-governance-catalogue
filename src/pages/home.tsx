@@ -50,8 +50,7 @@ const pathways = [
     description:
       "Governance tools for emerging systems, institutional adaptation, frontier-system design, labour, infrastructure, continuity, and public dependency.",
     cta: "Explore Transitional Architecture",
-    // TODO: Replace this safe in-page anchor with /constitution/transition when the dedicated transition page exists.
-    href: "#transitional-architecture",
+    href: "/constitution/transition",
   },
 ];
 
@@ -254,7 +253,6 @@ export default function Home() {
                 <p className="mb-5 flex-1 text-base font-light leading-relaxed text-muted-foreground">
                   {pathway.description}
                 </p>
-                {/* TODO: Create a dedicated Transitional Architecture page; this entry currently routes to the catalogue as the closest supported route. */}
                 <ButtonLink href={pathway.href} label={pathway.cta} />
               </article>
             ))}

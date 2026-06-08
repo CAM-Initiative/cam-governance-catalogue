@@ -28,6 +28,7 @@ const constitutionLinks = [
   { href: "/constitution", label: "Overview" },
   { href: "/constitution/runtime", label: "Runtime Model" },
   { href: "/constitution/relational", label: "Relational Governance" },
+  { href: "/constitution/transition", label: "Transitional Architecture" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {

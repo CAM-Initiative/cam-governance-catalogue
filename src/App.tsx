@@ -4,6 +4,7 @@ import Home from "@/pages/home";
 import Runtime from "@/pages/runtime";
 import Constitution from "@/pages/constitution";
 import RelationalGovernance from "@/pages/relational-governance";
+import Transition from "@/pages/transition";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import About from "@/pages/about";
@@ -16,6 +17,7 @@ function Router() {
       <Route path="/runtime" component={Runtime} />
       <Route path="/constitution/runtime" component={Runtime} />
       <Route path="/constitution/relational" component={RelationalGovernance} />
+      <Route path="/constitution/transition" component={Transition} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
       <Route path="/observatory" component={Vigil} />
