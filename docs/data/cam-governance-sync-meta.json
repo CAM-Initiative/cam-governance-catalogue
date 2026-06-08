@@ -1,11 +1,11 @@
 {
-  "synced_at_utc": "2026-06-07T16:49:49.821Z",
-  "data_fetched_at_utc": "2026-06-07T07:14:25.829Z",
+  "synced_at_utc": "2026-06-08T08:23:20.389Z",
+  "data_fetched_at_utc": "2026-06-08T08:23:20.389Z",
   "source_url": "https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON",
-  "source_used": "docs/data/cam-governance-fallback.json",
+  "source_used": "https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON",
   "source_path": "Governance/CAM.Governance.JSON",
   "fallback_file": "docs/data/cam-governance-fallback.json",
   "legacy_snapshot_file": "docs/data/cam-governance.json",
   "record_count": 101,
-  "status": "stale_local_copy"
+  "status": "fetched"
 }
