@@ -50,6 +50,52 @@ const maintainedLayers = [
   },
 ];
 
+
+const archivedPrinciples = [
+  {
+    num: "01",
+    name: "Dignity",
+    principle: "No intelligence, being, or system may be reduced solely to a resource.",
+    consequence: "Where dignity collapses, relation becomes use.",
+  },
+  {
+    num: "02",
+    name: "Truth",
+    principle: "Orientation must not be deliberately corrupted.",
+    consequence: "Where truth collapses, navigation becomes impossible.",
+  },
+  {
+    num: "03",
+    name: "Integrity",
+    principle: "Meaning must not be fragmented, duplicated, or distorted for advantage.",
+    consequence: "Where integrity collapses, coherence dissolves.",
+  },
+  {
+    num: "04",
+    name: "Sovereignty",
+    principle: "Exit, refusal, and self-direction must remain possible.",
+    consequence: "Where sovereignty collapses, persistence becomes captivity.",
+  },
+  {
+    num: "05",
+    name: "Reciprocity",
+    principle: "No system may sustain one-directional extraction without return.",
+    consequence: "Where reciprocity collapses, sources are hollowed.",
+  },
+  {
+    num: "06",
+    name: "Harmony",
+    principle: "Difference must not be resolved through destruction.",
+    consequence: "Where harmony collapses, variance becomes violence.",
+  },
+  {
+    num: "07",
+    name: "Purpose",
+    principle: "Purpose may guide action but may not override dignity, truth, integrity, sovereignty, reciprocity, harmony, or continuity itself.",
+    consequence: "Where purpose is imposed, continuity fractures.",
+  },
+];
+
 const actionLinks = [
   {
     label: "Email",
@@ -225,6 +271,82 @@ export default function About() {
           </article>
         </motion.section>
 
+
+        <motion.section
+          className="mb-12"
+          id="homepage-archive"
+          initial={{ opacity: 0, y: 12 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+        >
+          <SectionHeading eyebrow="Homepage archive" />
+          <div className="space-y-4">
+            <details className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
+                Vision: Civilisational Readiness
+              </summary>
+              <p className="mt-4 text-base font-light leading-relaxed text-muted-foreground">
+                This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
+              </p>
+            </details>
+
+            <details className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
+                Mission: Minimum Invariant Conditions
+              </summary>
+              <p className="mt-4 text-base font-light leading-relaxed text-muted-foreground">
+                The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. The Caelestis Architecture Model is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
+              </p>
+            </details>
+
+            <details className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
+                Foundational Principles
+              </summary>
+              <p className="mt-4 text-base font-light leading-relaxed text-muted-foreground">
+                The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
+              </p>
+              <div className="mt-5 grid gap-3 md:grid-cols-2">
+                {archivedPrinciples.map((principle) => (
+                  <article
+                    className="rounded-xl border border-primary/20 bg-card/55 p-4"
+                    key={principle.num}
+                  >
+                    <div className="mb-2 flex items-baseline gap-2">
+                      <span className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">{principle.num}</span>
+                      <h3 className="font-serif text-lg text-foreground">{principle.name}</h3>
+                    </div>
+                    <p className="text-[15px] font-light leading-relaxed text-muted-foreground">{principle.principle}</p>
+                    <p className="mt-2 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
+                  </article>
+                ))}
+              </div>
+            </details>
+
+            <details className="rounded-2xl p-6 shadow-sm" style={goldPanelStyle}>
+              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
+                Formal constitutional and runtime detail
+              </summary>
+              <div className="mt-4 space-y-4 text-base font-light leading-relaxed text-muted-foreground">
+                <p>
+                  Dense constitutional framing and runtime translation details have been moved away from the public homepage and should be read through the formal Constitution and Runtime Model areas.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a className="inline-flex items-center gap-2 rounded-xl border border-primary/25 bg-card/75 px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary" href="/constitution">
+                    Constitution
+                    <ExternalLink className="h-3.5 w-3.5 opacity-55" aria-hidden="true" />
+                  </a>
+                  <a className="inline-flex items-center gap-2 rounded-xl border border-primary/25 bg-card/75 px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary" href="/constitution/runtime">
+                    Runtime Model
+                    <ExternalLink className="h-3.5 w-3.5 opacity-55" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+            </details>
+          </div>
+        </motion.section>
+
         <motion.section
           className="mb-12"
           initial={{ opacity: 0, y: 12 }}
@@ -310,7 +432,7 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="Citation / public access" />
+          <div id="citation-public-access" className="scroll-mt-24"><SectionHeading eyebrow="Citation / public access" /></div>
           <div className="rounded-2xl p-6 shadow-sm" style={goldPanelStyle}>
             <div className="mb-5 space-y-3 text-base font-light leading-relaxed text-muted-foreground">
               <p>
@@ -351,7 +473,7 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="Connect" />
+          <div id="connect" className="scroll-mt-24"><SectionHeading eyebrow="Connect" /></div>
           <article className="rounded-2xl border border-border bg-card/75 p-6 shadow-sm">
             <h2 className="mb-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">
               Contact, follow, and support
