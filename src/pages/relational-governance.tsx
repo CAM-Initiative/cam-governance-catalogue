@@ -78,11 +78,7 @@ export default function RelationalGovernance() {
           </p>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="cam-parchment-card mb-12 rounded-2xl p-6 shadow-sm">
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            This page sits under the Constitution because relational systems are not merely interpersonal UX. Where reliance, authority, intimacy, or systemic reach intensify, relational dynamics may affect dignity, consent, identity continuity, economic exposure, institutional legitimacy, or public governance outcomes.
-          </p>
-        </motion.div>
+
 
         {/* ─── RELATIONAL PROFILES ─── */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">

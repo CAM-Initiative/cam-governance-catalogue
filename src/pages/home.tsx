@@ -5,6 +5,7 @@ import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
 
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const panelStyle = { backgroundColor: "rgba(255,253,247,0.62)", border: `1px solid ${GOLD_BORDER}` };
+const citationPanelStyle = { backgroundColor: "rgba(184,147,90,0.07)", border: `1px solid ${GOLD_BORDER}` };
 
 const pathways = [
   {
@@ -49,7 +50,8 @@ const pathways = [
     description:
       "Governance tools for emerging systems, institutional adaptation, frontier-system design, labour, infrastructure, continuity, and public dependency.",
     cta: "Explore Transitional Architecture",
-    href: "/catalogue",
+    // TODO: Replace this safe in-page anchor with /constitution/transition when the dedicated transition page exists.
+    href: "#transitional-architecture",
   },
 ];
 
@@ -76,8 +78,8 @@ const audiences = [
 const actionLinks = [
   { label: "Email", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
   { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
-  { label: "CAM Governance", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
-  { label: "VIGIL Governance", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
+  { label: "CAM", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
+  { label: "VIGIL", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
   { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
 ];
 
@@ -211,24 +213,25 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <SectionLabel>Why the CAM Initiative exists</SectionLabel>
-          <div className="rounded-3xl p-6 md:p-8" style={panelStyle}>
-            <h2 className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-              Technology failures are rarely isolated events.
-            </h2>
-            <div className="max-w-4xl space-y-4 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-              <p>
-                They often reveal recurring failures of governance, design, incentives, accountability, relational safety, institutional readiness, or frontier-system planning.
-              </p>
-              <p>
-                CAM provides a way to identify the pattern, classify the harm, map the accountability gap, and design repair before failures become entrenched.
-              </p>
+        <section className="container mx-auto max-w-6xl px-6 pt-10 md:px-10 md:pt-14">
+          <div className="rounded-3xl p-6 shadow-sm md:p-8" style={citationPanelStyle}>
+            <div className="border-l-2 pl-5 md:pl-6" style={{ borderColor: GOLD_BORDER }}>
+              <h2 className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+                Technology failures are rarely isolated events.
+              </h2>
+              <div className="max-w-4xl space-y-4 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
+                <p>
+                  They often reveal repeating patterns: failed safeguards, weak accountability, dependency drift, incentive conflict, evidence gaps, institutional unreadiness, or transition pressure.
+                </p>
+                <p className="text-foreground/85">
+                  CAM classifies those patterns and routes them into the right governance pathway: constitutional structure, companion-system design, VIGIL failure records, or transitional architecture.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 pb-12 md:px-10 md:pb-16" aria-labelledby="pathways-heading">
+        <section className="container mx-auto max-w-6xl px-6 pb-12 pt-5 md:px-10 md:pb-16 md:pt-6" aria-labelledby="pathways-heading">
           <SectionLabel>Four pathways into CAM</SectionLabel>
           <p id="pathways-heading" className="mb-6 max-w-3xl text-base font-light leading-relaxed text-muted-foreground md:text-lg">
             Each pathway gives a different entry point into the same governance architecture.
@@ -236,7 +239,7 @@ export default function Home() {
           <div className="grid gap-4 md:grid-cols-2">
             {pathways.map((pathway) => (
               <article
-                className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl p-5 shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]"
+                className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-cam-gold/55 hover:bg-[rgba(184,147,90,0.12)] hover:shadow-[0_12px_32px_rgba(120,80,20,0.14)]"
                 id={pathway.id}
                 key={pathway.id}
               >
@@ -256,33 +259,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="border-y border-border/60 bg-[hsl(36_48%_95%)]">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionLabel>Who this is for</SectionLabel>
-            <div className="grid gap-3">
-              {audiences.map((audience) => (
-                <CollapsiblePanel key={audience.label} title={audience.label}>
-                  <p>{audience.text}</p>
-                </CollapsiblePanel>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
           <SectionLabel>Connect</SectionLabel>
-          <article className="rounded-3xl border border-border bg-card/75 p-6 shadow-sm md:p-8">
+          <article className="cam-parchment-card rounded-3xl bg-[hsl(36_48%_96%)] p-5 shadow-sm md:p-6">
             <h2 className="mb-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">
               Contact, follow, and support
             </h2>
-            <p className="mb-5 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-              For ethics, governance, citation, reuse, collaboration, public-interest enquiries, repository inspection, or independent maintenance support, use the links below.
+            <p className="mb-4 max-w-3xl text-sm font-light leading-relaxed text-muted-foreground md:text-base">
+              For citation, collaboration, reuse, governance enquiries, repository inspection, or public-interest support.
             </p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {actionLinks.map((link) => (
                 <a
                   aria-label={link.icon === "github" ? `${link.label} on GitHub` : link.label}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary md:text-base"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary md:text-[15px]"
                   href={link.href}
                   key={link.label}
                   rel={link.external ? "noreferrer" : undefined}

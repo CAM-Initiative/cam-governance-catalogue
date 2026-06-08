@@ -8,7 +8,6 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance" },
 ];
 
 const mobileLinks = [
@@ -17,7 +16,6 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "Observatory / VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -151,7 +149,7 @@ export function Shell({ children }: { children: ReactNode }) {
               rel="noreferrer"
               className="text-[12px] font-mono tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
             >
-              Governance ↗
+              GitHub ↗
             </a>
           </nav>
         </div>
@@ -206,14 +204,14 @@ export function Shell({ children }: { children: ReactNode }) {
             </div>
 
             <div className="flex flex-col items-center gap-4 rounded-xl border border-primary/15 bg-card/55 px-5 py-4 shadow-sm md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0 md:shadow-none">
-              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:justify-end md:gap-x-7">
+              <nav aria-label="Footer" className="flex flex-nowrap justify-center gap-x-4 gap-y-2 md:justify-end md:gap-x-6">
                 {footerLinks.map((link) => (
                   link.internal ? (
-                    <Link key={link.href} href={link.href} className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
+                    <Link key={link.href} href={link.href} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
                       {link.label}
                     </Link>
                   ) : (
-                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
+                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
                       {link.label}
                     </a>
                   )

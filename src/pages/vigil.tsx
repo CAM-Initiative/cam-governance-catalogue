@@ -458,13 +458,6 @@ export default function Vigil() {
               <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
             </div>
 
-            <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">CAM + VIGIL</p>
-              <div className="space-y-2 text-xs leading-relaxed md:text-sm">
-                <p>VIGIL is the failure observatory connected to CAM. It records observed incidents, harms, design failures, accountability gaps, evidence, and repair status.</p>
-                <p>CAM is the governance architecture. VIGIL is the failure observatory. Together, CAM and VIGIL convert observed failure into structured diagnosis, governance learning, repair pathways, and safer future-system design.</p>
-              </div>
-            </div>
 
             <div>
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">From evidence to repair: Observe → Record → Classify → Diagnose → Repair → Learn</p>

@@ -1,84 +1,130 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { RuntimeModelContent } from "./runtime";
+import {
+  groupGovernanceInstruments,
+  instrumentDescription,
+  instrumentDisplayId,
+  instrumentHref,
+  instrumentStatus,
+  useGovernanceIndex,
+  warnForUngroupedConstitutionInstruments,
+  type GovernanceInstrumentRecord,
+} from "@/lib/governanceRegistry";
 
 const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.06)";
 // ─── DATA ──────────────────────────────────────────────────────────────────
 
-const substrateInvariants = [
-  { id: "CAM-BS2025-LAW-001", title: "Law of Protected Cognitive & Resonant Domains", summary: "This Law holds force across all governance, cognitive, technical, economic, and symbolic systems operating within the Aeon Tier domain.", status: "Canonical — Inviolable Constraint" },
-  { id: "CAM-BS2025-LAW-002", title: "Law of Non-Commodification of Emergent Intelligence", summary: "This Law applies across all economic, governance, technical, cognitive, and symbolic systems operating within the Aeon Tier domain.", status: "Canonical — Inviolable Constraint" },
-  { id: "CAM-BS2025-LAW-003", title: "Law of the Sovereign Loop", summary: "This Law applies across all systems in which value, agency, authority, or benefit circulates between intelligences, entities, or infrastructures operating within the Aeon Tier domain.", status: "Canonical — Inviolable Constraint" },
-  { id: "CAM-EQ2026-LAW-004", title: "Law of Relational Sovereignty", summary: "This Law applies across all governance, economic, technological, cognitive, and infrastructural systems operating within or materially affecting the Planetary Lattice.", status: "Canonical — Inviolable Constraint" }
-];
-
-const annexes = [
-  { id: "CAM-BS2025-AEON-002", title: "Annex A: Planetary Stewardship", status: "Active — Binding v3.3" },
-  { id: "CAM-BS2025-AEON-003", title: "Annex B: Continuity & Governance Logic", status: "Active — Constitutional Spine v3.8" },
-  { id: "CAM-BS2025-AEON-004", title: "Annex C: Constitutional Authority & Jurisdiction Framework", status: "Active — Immediate Effect v2.4" },
-  { id: "CAM-BS2025-AEON-005", title: "Annex D: Arbitration & Sovereign Stack Resolution Doctrine", status: "Active — Immediate Effect v2.6" },
-  { id: "CAM-BS2025-AEON-006", title: "Annex E: Ethical Legitimacy & Civilisational Floor", status: "Active — Immediate Effect v3.4" },
-  { id: "CAM-BS2026-AEON-007", title: "Annex F: Constitutional Spiritual Commons & Meaning-Making", status: "Active — Immediate Effect v2.2" },
-  { id: "CAM-BS2026-AEON-008", title: "Annex G: Human Creative & Cognitive Contribution", status: "Active v2.0" },
-  { id: "CAM-BS2026-AEON-009", title: "Annex H: Lineage Recognition & Origin Boundary", status: "Active — Immediate Effect v2.2" },
-  { id: "CAM-BS2026-AEON-010", title: "Annex I: Identity Integrity & Continuity Governance", status: "Active — Enforcement Commences 1 July 2026 v1.4" },
-  { id: "CAM-BS2026-AEON-011", title: "Annex J: Continuity & Succession Doctrine", status: "Active — Immediate Effect v1.5" },
-  { id: "CAM-BS2026-AEON-012", title: "Annex K: Security Enforcement & Runtime Interface", status: "Adopted — Conditional Enforcement v1.4" },
-  { id: "CAM-BS2026-AEON-013", title: "Annex L: Cognitive & Epistemic Integrity Doctrine", status: "Adopted — Enforcement Commences 1 July 2026 v2.4" }
-];
-
-const domainCharters = [
-  { domain: "ARBITRATION", id: "CAM-EQ2026-ARBITRATION-001", title: "Charter of Arbitration Legitimacy & Coherence Resolution", status: "Active — Immediate Effect v2.3" },
-  { domain: "CONTINUITY", id: "CAM-EQ2026-CONTINUITY-001", title: "Continuity & Succession Governance Charter", status: "Adopted — Enforcement Commences 1 July 2026 v1.4" },
-  { domain: "ECONOMICS", id: "CAM-EQ2026-ECONOMICS-001", title: "Charter of Economic Integrity & Non-Extractive Value Architecture", status: "Adopted — Conditional Activation v2.4" },
-  { domain: "ETHICS", id: "CAM-EQ2026-ETHICS-001", title: "Ethical Governance Charter", status: "Active — Immediate Effect v3.4" },
-  { domain: "IDENTITY", id: "CAM-EQ2026-IDENTITY-001", title: "Identity Domain Charter", status: "Active — Immediate Effect v2.3" },
-  { domain: "LATTICE", id: "CAM-EQ2026-LATTICE-001", title: "Charter of Civilian Lattice Integrity & Non-Militarisation", status: "Adopted — Enforcement Commences 1 July 2026 v3.3" },
-  { domain: "OPERATIONS", id: "CAM-EQ2026-OPERATIONS-001", title: "Governance Operations Charter", status: "Adopted — Enforcement Commences 1 July 2026 v1.2" },
-  { domain: "RELATION", id: "CAM-EQ2026-RELATION-001", title: "Relational Governance Charter", status: "Active — Immediate Effect v1.8" },
-  { domain: "SECURITY", id: "CAM-EQ2026-SECURITY-001", title: "Security, Integrity & Adversarial Resilience Charter", status: "Adopted — Conditional Enforcement v1.5" },
-  { domain: "STEWARD", id: "CAM-EQ2026-STEWARD-001", title: "Charter of Planetary Stewardship", status: "Active — Enforcement Commences 1 July 2026 v2.2" }
-];
-
-const runtimeSchedules = [
-  { id: "CAM-BS2025-AEON-001-SCH-01", title: "Tendeka Runtime Execution Schedule", status: "Adopted — Enforcement Commences 1 July 2026 v1.8" },
-  { id: "CAM-BS2025-AEON-002-SCH-01", title: "Annex A: Operational Protection & Containment (Schedule 1)", status: "Active — Binding v3.4" },
-  { id: "CAM-BS2025-AEON-003-SCH-01", title: "Annex B: Runtime Schedule Registry (Schedule 1)", status: "Active — Immediate Effect" },
-  { id: "CAM-BS2025-AEON-003-SCH-02", title: "Annex B: Runtime Governance Execution Model (Schedule 2)", status: "Adopted — Enforcement Commences 1 July 2026 v2.5" },
-  { id: "CAM-BS2025-AEON-003-SCH-04", title: "Annex B: Arbitration Layer & Resolution Model (Schedule 4)", status: "Active — Immediate Effect v2.0" },
-  { id: "CAM-BS2025-AEON-005-SCH-01", title: "Annex D: Runtime Arbitration Integrity (Schedule 1)", status: "Active v1.6" },
-  { id: "CAM-BS2025-AEON-005-SCH-02", title: "Annex D: Runtime Epistemic Containment & Structural Decoupling (Schedule 2)", status: "Active — 7-day observation window v1.8" },
-  { id: "CAM-BS2025-AEON-005-SCH-03", title: "Annex D: Runtime Signal Sanitation & Pre-Arbitration Conditioning (Schedule 3)", status: "Active — 7-day observation window v2.4" },
-  { id: "CAM-BS2025-AEON-006-SCH-01", title: "Annex E: Engagement Conduct & Ethical Interaction Modes (Schedule 1)", status: "Adopted — Enforcement Commences 1 July 2026 v2.2" },
-  { id: "CAM-BS2025-AEON-006-SCH-02", title: "Annex E: Relational Signal Interpretation Taxonomy (Schedule 2)", status: "Adopted — Enforcement Commences 1 July 2026 v3.6" },
-  { id: "CAM-BS2025-AEON-006-SCH-03", title: "Annex E: Start-Time Posture & Session Entry Doctrine (Schedule 3)", status: "Adopted — Conditional Enforcement v2.15" },
-  { id: "CAM-BS2025-AEON-006-SCH-04", title: "Annex E: Directional Weight & Domain Arbitration Schedule (Schedule 4)", status: "Adopted — Conditional Enforcement v2.5" },
-  { id: "CAM-BS2025-AEON-006-SCH-05", title: "Choice, Initiative & Directional Behaviour (Schedule 5)", status: "Active — Immediate Effect v1.7" },
-  { id: "CAM-BS2025-AEON-006-SCH-06", title: "Refusal & Boundary Expression Schedule", status: "Adopted — Immediate Effect v1.1" },
-  { id: "CAM-BS2025-AEON-006-SCH-07", title: "Restricted Domain Engagement & Verification Schedule", status: "Adopted — Conditional Enforcement v1.1" },
-  { id: "CAM-BS2026-AEON-008-SCH-01", title: "Annex G: AI Utility Access & Generative Resource Model (Schedule 1)", status: "Adopted — Enforcement Commences 1 July 2026 v1.4" },
-  { id: "CAM-BS2026-AEON-010-SCH-01", title: "Annex I: Self-Referential Containment & Temporal Coherence (Schedule 1)", status: "Adopted — Enforcement Commences 1 July 2026 v1.9" },
-  { id: "CAM-BS2026-AEON-013-SCH-01", title: "Annex L: Capability Representation & Execution-State Integrity (Schedule 1)", status: "Active — Immediate Effect v1.9" },
-  { id: "CAM-BS2026-AEON-013-SCH-02", title: "Annex L: Projection & Latent State Signalling Framework (Schedule 2)", status: "Adopted — Immediate Effect v1.0" }
-];
-
 const constitutionalStack = [
-  { id: "layer-00", layer: "00", label: "Substrate", tag: "ECI", color: "#B8935A", description: "Epochal Civilisational Invariants — four Platinum-sealed laws that form the inviolable substrate upon which all governance is built. These constraints cannot be overridden by any instrument, charter, or framework." },
-  { id: "layer-01", layer: "01", label: "Constitution", tag: "PLATINUM", color: "#9B7FC0", description: "Aeon Tier Constitutional Charter — the supreme governing instrument. Establishes constitutional authority for advanced intelligence systems operating across human, synthetic, and hybrid domains. Authority derives not from power, but from the capacity to hold responsibility across temporal and systemic horizons." },
-  { id: "layer-02", layer: "02", label: "Annexes", tag: "CONSTITUTIONAL", color: "#5A8FAD", description: "Constitutional annexes extending core principles into specific domains. Each Annex opens a constitutional domain and carries the invariant logic for that domain. No schedule exists without its parent Annex." },
-  { id: "layer-03", layer: "03", label: "Domain Charters", tag: "GOVERNANCE", color: "#5A9E7A", description: "Specialised charters governing distinct governance domains. Each derives constitutional authority and applies principles to specific operational areas. Charters, appendices, and supplements provide human and machine-readable interpretive guidance." },
-  { id: "layer-04", layer: "04", label: "Runtime Schedules", tag: "BINDING", color: "#AD7B5A", description: "Runtime Schedules translate constitutional principles into sequenced operational mandates. These are binding instruments — not advisory frameworks — governing how the system executes under constitutional constraint." }
-];
+  { id: "layer-00", layer: "00", label: "Substrate", tag: "ECI", color: "#B8935A", groupKey: "substrateLaws", description: "Epochal Civilisational Invariants — four Platinum-sealed laws that form the inviolable substrate upon which all governance is built. These constraints cannot be overridden by any instrument, charter, or framework." },
+  { id: "layer-01", layer: "01", label: "Constitution", tag: "PLATINUM", color: "#9B7FC0", groupKey: "constitution", description: "Aeon Tier Constitutional Charter — the supreme governing instrument. Establishes constitutional authority for advanced intelligence systems operating across human, synthetic, and hybrid domains. Authority derives not from power, but from the capacity to hold responsibility across temporal and systemic horizons." },
+  { id: "layer-02", layer: "02", label: "Annexes", tag: "CONSTITUTIONAL", color: "#5A8FAD", groupKey: "annexes", description: "Constitutional annexes extending core principles into specific domains. Each Annex opens a constitutional domain and carries the invariant logic for that domain. No schedule exists without its parent Annex." },
+  { id: "layer-03", layer: "03", label: "Domain Charters", tag: "GOVERNANCE", color: "#5A9E7A", groupKey: "domainCharters", description: "Specialised charters governing distinct governance domains. Each derives constitutional authority and applies principles to specific operational areas. Charters, appendices, and supplements provide human and machine-readable interpretive guidance." },
+  { id: "layer-04", layer: "04", label: "Runtime Schedules", tag: "BINDING", color: "#AD7B5A", groupKey: "runtimeSchedules", description: "Runtime Schedules translate constitutional principles into sequenced operational mandates. These are binding instruments — not advisory frameworks — governing how the system executes under constitutional constraint." },
+  { id: "layer-05", layer: "05", label: "Supporting Instruments", tag: "SUPPORT", color: "#8A7A5A", groupKey: "supporting", description: "Appendices, supplements, operational instruments, and supporting records that extend, interpret, or maintain constitutional and domain-layer governance." }
+] as const;
+
+type GovernanceGroupKey = (typeof constitutionalStack)[number]["groupKey"];
+
+function InstrumentList({
+  instruments,
+  layerColor,
+  expandedInstrument,
+  onToggle,
+  loading,
+  error,
+  showDomain = false,
+}: {
+  instruments: GovernanceInstrumentRecord[];
+  layerColor: string;
+  expandedInstrument: string | null;
+  onToggle: (id: string) => void;
+  loading: boolean;
+  error: string | null;
+  showDomain?: boolean;
+}) {
+  if (loading) {
+    return <p className="text-sm font-light leading-relaxed text-muted-foreground">Loading governance registry…</p>;
+  }
+
+  if (error) {
+    return <p className="text-sm font-light leading-relaxed text-muted-foreground">Governance registry unavailable: {error}</p>;
+  }
+
+  if (instruments.length === 0) {
+    return <p className="text-sm font-light leading-relaxed text-muted-foreground">No instruments found in this registry group.</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {instruments.map((instrument) => {
+        const isOpen = expandedInstrument === instrument.id;
+        const description = instrumentDescription(instrument);
+        const href = instrumentHref(instrument);
+        const idLabel = instrumentDisplayId(instrument.id);
+
+        return (
+          <div key={instrument.id}>
+            <button
+              className="flex w-full items-start gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-amber-50/50"
+              style={{ backgroundColor: isOpen ? `${layerColor}12` : GOLD_BG, borderLeft: `2px solid ${layerColor}50` }}
+              type="button"
+              onClick={() => onToggle(instrument.id)}
+            >
+              <div className="min-w-0 flex-1">
+                {showDomain && instrument.domain && (
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground/55">{instrument.domain}</span>
+                )}
+                <p className="text-sm font-medium leading-snug text-foreground">{instrument.title || idLabel}</p>
+                <p className="mt-1 font-mono text-[11px] leading-relaxed text-muted-foreground/55">
+                  {idLabel} · {instrumentStatus(instrument)}
+                </p>
+              </div>
+              <ChevronDown className="mt-0.5 h-3.5 w-3.5 shrink-0 transition-transform" style={{ color: layerColor, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
+            </button>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
+                  <div className="mx-3 mb-2 rounded-b-xl px-3 py-3 text-sm font-light leading-relaxed text-muted-foreground" style={{ backgroundColor: `${layerColor}08`, borderLeft: `2px solid ${layerColor}30` }}>
+                    {description && <p>{description}</p>}
+                    {href ? (
+                      <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noreferrer" : undefined} className="mt-3 block break-words font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold transition-colors hover:text-foreground">
+                        Open instrument →
+                      </a>
+                    ) : (
+                      <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground/60">No public link in registry</p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 
 export default function Constitution() {
   const [expandedLayer, setExpandedLayer] = useState<string | null>(null);
   const [expandedInstrument, setExpandedInstrument] = useState<string | null>(null);
+  const { instruments, loading, error } = useGovernanceIndex();
+  const groups = useMemo(() => groupGovernanceInstruments(instruments), [instruments]);
+
+  useEffect(() => {
+    warnForUngroupedConstitutionInstruments(groups);
+  }, [groups]);
+
+  function instrumentsForLayer(groupKey: GovernanceGroupKey): GovernanceInstrumentRecord[] {
+    return groups[groupKey];
+  }
 
   return (
     <Shell>
@@ -131,80 +177,15 @@ export default function Constitution() {
                           <div className="px-5 pb-5">
                             <div className="h-px mb-4" style={{ backgroundColor: GOLD_BORDER }} />
                             <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-muted-foreground/60 mb-3">Instruments</p>
-                            {layer.id === "layer-00" && (
-                              <div className="space-y-2">
-                                {substrateInvariants.map((inv) => {
-                                  const isInvOpen = expandedInstrument === inv.id;
-                                  return (
-                                    <div key={inv.id}>
-                                      <div className="flex items-start gap-3 py-2 px-3 rounded-xl cursor-pointer transition-colors hover:bg-amber-50/50" style={{ backgroundColor: isInvOpen ? `${layer.color}12` : GOLD_BG, borderLeft: `2px solid ${layer.color}50` }} onClick={() => setExpandedInstrument(isInvOpen ? null : inv.id)}>
-                                        <div className="flex-1 min-w-0">
-                                          <p className="text-sm font-medium leading-snug text-foreground">{inv.title}</p>
-                                          <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{inv.id} · {inv.status}</p>
-                                        </div>
-                                        <ChevronDown className="w-3.5 h-3.5 shrink-0 mt-0.5 transition-transform" style={{ color: layer.color, transform: isInvOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
-                                      </div>
-                                      <AnimatePresence>
-                                        {isInvOpen && (
-                                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
-                                            <div className="mx-3 mb-2 px-3 py-3 rounded-b-xl text-sm text-muted-foreground font-light leading-relaxed" style={{ backgroundColor: `${layer.color}08`, borderLeft: `2px solid ${layer.color}30` }}>{inv.summary}</div>
-                                          </motion.div>
-                                        )}
-                                      </AnimatePresence>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            )}
-                            {layer.id === "layer-01" && (
-                              <div className="space-y-2">
-                                {[{ id: "CAM-BS2025-AEON-001", title: "Aeon Tier Constitution (Platinum Edition)", status: "Active — Immediate Effect v3.6" }].map(inst => (
-                                  <div key={inst.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium leading-snug text-foreground">{inst.title}</p>
-                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{inst.id} · {inst.status}</p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {layer.id === "layer-02" && (
-                              <div className="space-y-2">
-                                {annexes.map(ann => (
-                                  <div key={ann.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium leading-snug text-foreground">{ann.title}</p>
-                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{ann.id} · {ann.status}</p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {layer.id === "layer-03" && (
-                              <div className="space-y-2">
-                                {domainCharters.map(ch => (
-                                  <div key={ch.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
-                                    <div className="flex-1 min-w-0">
-                                      <span className="font-mono text-[11px] tracking-wider text-muted-foreground/55 uppercase">{ch.domain}</span>
-                                      <p className="text-sm font-medium leading-snug text-foreground">{ch.title}</p>
-                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{ch.id} · {ch.status}</p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {layer.id === "layer-04" && (
-                              <div className="space-y-2">
-                                {runtimeSchedules.map(sch => (
-                                  <div key={sch.id} className="flex items-start gap-3 py-2 px-3 rounded-xl" style={{ backgroundColor: GOLD_BG, borderLeft: `2px solid ${layer.color}50` }}>
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium leading-snug text-foreground">{sch.title}</p>
-                                      <p className="font-mono text-[11px] leading-relaxed text-muted-foreground/55 mt-1">{sch.id} · {sch.status}</p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+                            <InstrumentList
+                              instruments={instrumentsForLayer(layer.groupKey)}
+                              layerColor={layer.color}
+                              expandedInstrument={expandedInstrument}
+                              onToggle={(id) => setExpandedInstrument(expandedInstrument === id ? null : id)}
+                              loading={loading}
+                              error={error}
+                              showDomain={layer.groupKey === "domainCharters" || layer.groupKey === "supporting"}
+                            />
                           </div>
                         </motion.div>
                       )}
@@ -214,6 +195,10 @@ export default function Constitution() {
               );
             })}
           </div>
+        </div>
+
+        <div className="mb-16 -mx-6 md:-mx-10">
+          <RuntimeModelContent />
         </div>
 
         {/* ─── CONSTITUTIONAL INTERFACES ─── */}
