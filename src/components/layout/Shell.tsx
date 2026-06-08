@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
+import { Coffee, Mail } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const footerLinks = [
@@ -221,15 +222,15 @@ export function Shell({ children }: { children: ReactNode }) {
               </nav>
 
               <address className="not-italic">
-                <div className="flex flex-wrap justify-center gap-x-5 gap-y-2.5 md:justify-end md:gap-x-6">
-                  <a href="mailto:ethics@cam-initiative.org" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
-                    ethics@cam-initiative.org
+                <div className="flex flex-wrap justify-center gap-3 md:justify-end">
+                  <a href="mailto:ethics@cam-initiative.org" aria-label="Email CAM Initiative" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                    <Mail className="h-4 w-4" aria-hidden="true" />
                   </a>
-                  <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
-                    @CAM_Initiative
+                  <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                    <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>
                   </a>
-                  <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
-                    Support
+                  <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                    <Coffee className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </div>
               </address>

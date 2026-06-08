@@ -27,6 +27,16 @@ const vigilCitation = {
   url: "https://www.cam-initiative.org/vigil",
   repository: "https://github.com/CAM-Initiative/Vigil",
 };
+
+const evidenceRepairSteps = [
+  { label: "Observe", text: "Identify a real-world incident, harm, or governance breakdown." },
+  { label: "Record", text: "Preserve evidence and context." },
+  { label: "Classify", text: "Map the failure against CAM domains and taxonomy." },
+  { label: "Diagnose", text: "Identify design failures, accountability gaps, and governance weaknesses." },
+  { label: "Repair", text: "Propose patches, standards, safeguards, or institutional responses." },
+  { label: "Learn", text: "Feed the pattern back into future-system design and transition planning." },
+];
+
 const sortableColumns: Array<{ key: SortKey; label: string }> = [
   { key: "id", label: "Record ID" },
   { key: "date", label: "Date" },
@@ -435,12 +445,45 @@ export default function Vigil() {
           </p>
         </div>
 
-        <details className="cam-parchment-card mb-5 rounded-xl p-3 text-sm shadow-sm">
-          <summary className="cursor-pointer font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">About VIGIL</summary>
-          <div className="mt-3 space-y-4 leading-relaxed text-muted-foreground">
+        <details className="cam-parchment-card mb-5 rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
+          <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+            <span className="inline-flex w-full items-center justify-between gap-3">
+              <span>About VIGIL</span>
+              <span className="text-[10px] text-muted-foreground/60" aria-hidden="true">Open / close</span>
+            </span>
+          </summary>
+          <div className="mt-3 space-y-5 border-t border-border/70 pt-3 leading-relaxed text-muted-foreground">
             <div className="space-y-2">
               <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
               <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+            </div>
+
+            <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">CAM + VIGIL</p>
+              <div className="space-y-2 text-xs leading-relaxed md:text-sm">
+                <p>VIGIL is the failure observatory connected to CAM. It records observed incidents, harms, design failures, accountability gaps, evidence, and repair status.</p>
+                <p>CAM is the governance architecture. VIGIL is the failure observatory. Together, CAM and VIGIL convert observed failure into structured diagnosis, governance learning, repair pathways, and safer future-system design.</p>
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">From evidence to repair: Observe → Record → Classify → Diagnose → Repair → Learn</p>
+              <div className="grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-stretch">
+                {evidenceRepairSteps.map((step, index) => (
+                  <div className="contents" key={step.label}>
+                    <div className="rounded-lg border border-border bg-background/35 p-3">
+                      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{step.label}</p>
+                      <p className="text-xs leading-relaxed md:text-sm">{step.text}</p>
+                    </div>
+                    {index < evidenceRepairSteps.length - 1 && (
+                      <div className="flex items-center justify-center text-cam-gold/75" aria-hidden="true">
+                        <span className="hidden lg:inline">→</span>
+                        <span className="lg:hidden">↓</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div>

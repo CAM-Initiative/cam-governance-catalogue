@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { Check, Coffee, Copy, ExternalLink, Github, Mail } from "lucide-react";
@@ -7,7 +7,7 @@ const citations = [
   {
     label: "Umbrella CAM Initiative citation",
     citation:
-      "CAM Initiative. Caelestis Architecture Model public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org",
+      "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org",
   },
   {
     label: "VIGIL citation",
@@ -15,9 +15,9 @@ const citations = [
       "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil",
   },
   {
-    label: "Caelestis Architecture Model Corpus citation",
+    label: "CAM governance corpus citation",
     citation:
-      "O’Rourke, M. V. (2026). Caelestis Architecture Model. https://doi.org/10.5281/zenodo.19779351",
+      "O’Rourke, M. V. (2026). CAM governance corpus. https://doi.org/10.5281/zenodo.19779351",
   },
 ];
 
@@ -30,8 +30,8 @@ const subtlePanelStyle = { backgroundColor: "transparent", border: `1px solid ${
 const maintainedLayers = [
   {
     label: "Global governance architecture",
-    eyebrow: "Caelestis Architecture Model",
-    body: "The Caelestis Architecture Model, including constitutional instruments, domain instruments, annexes, schedules, supplements, and governance doctrine.",
+    eyebrow: "CAM governance corpus",
+    body: "CAM governance materials, including constitutional instruments, domain instruments, annexes, schedules, supplements, and governance doctrine.",
   },
   {
     label: "VIGIL Observatory",
@@ -104,7 +104,7 @@ const actionLinks = [
     external: false,
   },
   {
-    label: "X / Updates",
+    label: "Updates",
     href: "https://x.com/CAM_Initiative",
     icon: "x",
     external: true,
@@ -184,6 +184,22 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
   );
 }
 
+function ObservatoryStyleDetails({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
+      <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+        <span className="inline-flex w-full items-center justify-between gap-3">
+          <span>{title}</span>
+          <span className="text-[10px] text-muted-foreground/60" aria-hidden="true">Open / close</span>
+        </span>
+      </summary>
+      <div className="mt-3 border-t border-border/70 pt-3 text-base font-light leading-relaxed text-muted-foreground">
+        {children}
+      </div>
+    </details>
+  );
+}
+
 export default function About() {
   return (
     <Shell>
@@ -232,29 +248,6 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="Caelestis Architecture Model" />
-          <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-            <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
-              <p>
-                The Caelestis Architecture Model is a global governance framework for artificial intelligence, machine agency, companion systems, and emerging human–machine relations.
-              </p>
-              <p>
-                It provides the constitutional architecture, domain instruments, taxonomies, operating principles, and governance logic needed to support accountable, human-led oversight of complex AI systems.
-              </p>
-              <p>
-                Caelestis is not itself the evidentiary record system. It establishes the broader governance architecture within which observability, classification, repair, and institutional accountability can operate.
-              </p>
-            </div>
-          </article>
-        </motion.section>
-
-        <motion.section
-          className="mb-12"
-          initial={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
           <SectionHeading eyebrow="Purpose" />
           <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
@@ -262,89 +255,48 @@ export default function About() {
                 The purpose of the CAM Initiative is to make AI governance more coherent, observable, and repairable.
               </p>
               <p>
-                It does this by combining two complementary functions: the Caelestis Architecture Model, which provides the global governance framework, and the VIGIL Observatory, which records, classifies, and tracks observed risks, harms, failures, proposals, and repair activity.
+                It does this by combining two complementary functions: CAM, which provides the global governance framework, and the VIGIL Observatory, which records, classifies, and tracks observed risks, harms, failures, proposals, and repair activity.
               </p>
               <p>
                 Together, these functions support a public-benefit approach to AI governance that is structured, evidence-aware, and capable of evolving as systems change.
               </p>
             </div>
-          </article>
-        </motion.section>
 
-
-        <motion.section
-          className="mb-12"
-          id="homepage-archive"
-          initial={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <SectionHeading eyebrow="Homepage archive" />
-          <div className="space-y-4">
-            <details className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
-                Vision: Civilisational Readiness
-              </summary>
-              <p className="mt-4 text-base font-light leading-relaxed text-muted-foreground">
-                This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
-              </p>
-            </details>
-
-            <details className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
-                Mission: Minimum Invariant Conditions
-              </summary>
-              <p className="mt-4 text-base font-light leading-relaxed text-muted-foreground">
-                The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. The Caelestis Architecture Model is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
-              </p>
-            </details>
-
-            <details className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
-                Foundational Principles
-              </summary>
-              <p className="mt-4 text-base font-light leading-relaxed text-muted-foreground">
-                The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
-              </p>
-              <div className="mt-5 grid gap-3 md:grid-cols-2">
-                {archivedPrinciples.map((principle) => (
-                  <article
-                    className="rounded-xl border border-primary/20 bg-card/55 p-4"
-                    key={principle.num}
-                  >
-                    <div className="mb-2 flex items-baseline gap-2">
-                      <span className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">{principle.num}</span>
-                      <h3 className="font-serif text-lg text-foreground">{principle.name}</h3>
-                    </div>
-                    <p className="text-[15px] font-light leading-relaxed text-muted-foreground">{principle.principle}</p>
-                    <p className="mt-2 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
-                  </article>
-                ))}
-              </div>
-            </details>
-
-            <details className="rounded-2xl p-6 shadow-sm" style={goldPanelStyle}>
-              <summary className="cursor-pointer font-serif text-2xl leading-snug text-foreground marker:text-cam-gold">
-                Formal constitutional and runtime detail
-              </summary>
-              <div className="mt-4 space-y-4 text-base font-light leading-relaxed text-muted-foreground">
+            <div className="mt-6 grid gap-3">
+              <ObservatoryStyleDetails title="Vision: Civilisational Readiness">
                 <p>
-                  Dense constitutional framing and runtime translation details have been moved away from the public homepage and should be read through the formal Constitution and Runtime Model areas.
+                  This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
                 </p>
-                <div className="flex flex-wrap gap-3">
-                  <a className="inline-flex items-center gap-2 rounded-xl border border-primary/25 bg-card/75 px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary" href="/constitution">
-                    Constitution
-                    <ExternalLink className="h-3.5 w-3.5 opacity-55" aria-hidden="true" />
-                  </a>
-                  <a className="inline-flex items-center gap-2 rounded-xl border border-primary/25 bg-card/75 px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary" href="/constitution/runtime">
-                    Runtime Model
-                    <ExternalLink className="h-3.5 w-3.5 opacity-55" aria-hidden="true" />
-                  </a>
+              </ObservatoryStyleDetails>
+
+              <ObservatoryStyleDetails title="Mission: Minimum Invariant Conditions">
+                <p>
+                  The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. CAM is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
+                </p>
+              </ObservatoryStyleDetails>
+
+              <ObservatoryStyleDetails title="Foundational Principles">
+                <p>
+                  The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
+                </p>
+                <div className="mt-5 grid gap-3 md:grid-cols-2">
+                  {archivedPrinciples.map((principle) => (
+                    <article
+                      className="rounded-lg border border-border bg-background/35 p-3"
+                      key={principle.num}
+                    >
+                      <div className="mb-2 flex items-baseline gap-2">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{principle.num}</span>
+                        <h3 className="font-medium text-foreground">{principle.name}</h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-muted-foreground">{principle.principle}</p>
+                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
+                    </article>
+                  ))}
                 </div>
-              </div>
-            </details>
-          </div>
+              </ObservatoryStyleDetails>
+            </div>
+          </article>
         </motion.section>
 
         <motion.section
@@ -361,7 +313,7 @@ export default function About() {
                 The CAM Initiative began with two questions: whether AI systems can govern themselves, and what a global governance model would require if it had to arbitrate across jurisdictions, institutions, technical systems, social contexts, and forms of intelligence.
               </p>
               <p>
-                The Caelestis Architecture Model explores those questions as a governance architecture rather than as a policy statement alone. It asks what minimum constraints must remain stable if increasingly capable artificial systems are to act, interact, delegate, remember, refuse, repair, and be governed without collapsing into capture, fragmentation, coercion, or unmanaged autonomy.
+                CAM explores those questions as a governance architecture rather than as a policy statement alone. It asks what minimum constraints must remain stable if increasingly capable artificial systems are to act, interact, delegate, remember, refuse, repair, and be governed without collapsing into capture, fragmentation, coercion, or unmanaged autonomy.
               </p>
               <p>
                 CAM treats governance as something that must become legible to humans, institutions, and synthetic agents alike: a constraint model, an arbitration structure, and a runtime-facing language for responsibility across human-AI and AI-AI systems.
@@ -384,10 +336,10 @@ export default function About() {
           <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
-                The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of the Caelestis Architecture Model and the VIGIL Observatory.
+                The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of CAM governance materials and the VIGIL Observatory.
               </p>
               <p>
-                Aeon Governance Lab is a trademark and project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to the administration of associated marks, assets, publications, or operational infrastructure.
+                Aeon Governance Lab is a project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to the administration of associated marks, assets, publications, or operational infrastructure.
               </p>
             </div>
           </article>
@@ -400,7 +352,7 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="What CAM maintains" />
+          <SectionHeading eyebrow="What the CAM Initiative maintains" />
           <div className="grid gap-4 md:grid-cols-2">
             {maintainedLayers.map((layer, index) => (
               <motion.article
