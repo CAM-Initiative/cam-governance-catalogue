@@ -25,7 +25,6 @@ const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.07)";
 const goldPanelStyle = { backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` };
-const subtlePanelStyle = { backgroundColor: "#fdfaf7", border: `1px solid ${GOLD_BORDER}` };
 
 const maintainedLayers = [
   {
@@ -112,9 +111,9 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       aria-label="Copy citation"
-      className="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.14em] transition-colors"
+      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 font-mono text-xs uppercase tracking-[0.14em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       onClick={handleCopy}
-      style={{ color: copied ? "#5A9E7A" : GOLD }}
+      style={{ color: GOLD }}
       type="button"
     >
       {copied ? (
@@ -143,19 +142,17 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
   );
 }
 
-function ObservatoryStyleDetails({ title, children, formal = false }: { title: string; children: ReactNode; formal?: boolean }) {
+function AboutDetails({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <details className="group cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
-      <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+    <details className="group cam-parchment-card overflow-hidden rounded-2xl text-sm shadow-sm transition-colors hover:border-cam-gold/40">
+      <summary className="cursor-pointer list-none p-4 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
           <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
         </span>
       </summary>
-      <div className="mt-3 rounded-lg border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] p-4 text-base font-light leading-relaxed text-muted-foreground">
-        <div className={formal ? "text-[17px] leading-relaxed md:text-lg" : undefined}>
-          {children}
-        </div>
+      <div className="mx-4 mb-4 rounded-xl p-4 text-base font-light leading-relaxed text-muted-foreground" style={goldPanelStyle}>
+        {children}
       </div>
     </details>
   );
@@ -195,7 +192,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="About Us" />
-          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
                 The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of CAM governance materials and the VIGIL Observatory.
@@ -215,28 +212,31 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Purpose" />
-          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
             <div className="grid gap-3">
-              <ObservatoryStyleDetails title="Vision: Civilisational Readiness">
+              <AboutDetails title="Vision: Civilisational Readiness">
                 <p>
                   This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
                 </p>
-              </ObservatoryStyleDetails>
+              </AboutDetails>
 
-              <ObservatoryStyleDetails title="Mission: Minimum Invariant Conditions">
+              <AboutDetails title="Mission: Minimum Invariant Conditions">
                 <p>
                   The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. CAM is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
                 </p>
-              </ObservatoryStyleDetails>
+              </AboutDetails>
 
-              <ObservatoryStyleDetails title="Foundational Principles" formal>
-                <p>
-                  The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
-                </p>
-                <div className="mt-5 grid gap-3 md:grid-cols-2">
+              <section className="cam-parchment-card rounded-2xl p-5 shadow-sm" aria-labelledby="foundational-principles-heading">
+                <div className="mb-4">
+                  <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Foundational Principles</p>
+                  <p className="text-base font-light leading-relaxed text-muted-foreground md:text-[17px]" id="foundational-principles-heading">
+                    The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
+                  </p>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
                     <article
-                      className="rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4 shadow-sm"
+                      className="cam-parchment-card rounded-xl p-4 shadow-sm"
                       key={principle.num}
                     >
                       <div className="mb-2 flex items-baseline gap-2">
@@ -244,11 +244,11 @@ export default function About() {
                         <h3 className="font-serif text-xl text-foreground">{principle.name}</h3>
                       </div>
                       <p className="text-base leading-relaxed text-muted-foreground md:text-[17px]">{principle.principle}</p>
-                      <p className="mt-3 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
+                      <p className="mt-3 rounded-xl p-3 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold" style={goldPanelStyle}>↳ {principle.consequence}</p>
                     </article>
                   ))}
                 </div>
-              </ObservatoryStyleDetails>
+              </section>
             </div>
           </article>
         </motion.section>
@@ -261,7 +261,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Why it matters" />
-          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
                 The CAM Initiative began with two questions: whether AI systems can govern themselves, and what a global governance model would require if it had to arbitrate across jurisdictions, institutions, technical systems, social contexts, and forms of intelligence.
@@ -290,7 +290,7 @@ export default function About() {
           <div className="grid gap-4 md:grid-cols-2">
             {maintainedLayers.map((layer, index) => (
               <motion.article
-                className="rounded-2xl border border-primary/20 bg-card/70 p-5 shadow-sm"
+                className="cam-parchment-card rounded-2xl p-5 shadow-sm"
                 initial={{ opacity: 0, y: 8 }}
                 key={layer.label}
                 transition={{ duration: 0.45, delay: index * 0.06 }}
@@ -331,7 +331,7 @@ export default function About() {
             <div className="space-y-4">
               {citations.map((item) => (
                 <div
-                  className="rounded-xl border border-primary/20 bg-card/60 p-4"
+                  className="cam-parchment-card rounded-xl p-4"
                   key={item.label}
                 >
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
