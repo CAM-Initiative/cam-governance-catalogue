@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { Check, Coffee, Copy, ExternalLink, Github, Mail } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 
 const citations = [
   {
@@ -25,7 +25,7 @@ const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.07)";
 const goldPanelStyle = { backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` };
-const subtlePanelStyle = { backgroundColor: "transparent", border: `1px solid ${GOLD_BORDER}` };
+const subtlePanelStyle = { backgroundColor: "#fdfaf7", border: `1px solid ${GOLD_BORDER}` };
 
 const maintainedLayers = [
   {
@@ -96,39 +96,6 @@ const archivedPrinciples = [
   },
 ];
 
-const actionLinks = [
-  {
-    label: "Email",
-    href: "mailto:ethics@cam-initiative.org",
-    icon: "mail",
-    external: false,
-  },
-  {
-    label: "Updates",
-    href: "https://x.com/CAM_Initiative",
-    icon: "x",
-    external: true,
-  },
-  {
-    label: "CAM Governance",
-    href: "https://github.com/CAM-Initiative/Caelestis",
-    icon: "github",
-    external: true,
-  },
-  {
-    label: "VIGIL Governance",
-    href: "https://github.com/CAM-Initiative/Vigil",
-    icon: "github",
-    external: true,
-  },
-  {
-    label: "Support",
-    href: "https://buymeacoffee.com/cam_initiative",
-    icon: "support",
-    external: true,
-  },
-];
-
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -165,14 +132,6 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-function ActionIcon({ icon }: { icon: string }) {
-  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
-  return <ExternalLink className="h-4 w-4" aria-hidden="true" />;
-}
-
 function SectionHeading({ eyebrow }: { eyebrow: string }) {
   return (
     <div className="mb-3 flex items-center gap-3">
@@ -186,15 +145,17 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
 
 function ObservatoryStyleDetails({ title, children, formal = false }: { title: string; children: ReactNode; formal?: boolean }) {
   return (
-    <details className={`group rounded-xl p-3 text-sm shadow-sm transition ${formal ? "border border-primary/35 bg-[hsl(28_25%_16%)] hover:border-cam-gold/60" : "cam-parchment-card hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]"}`}>
+    <details className="group cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
       <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
           <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
         </span>
       </summary>
-      <div className={`mt-3 border-t pt-3 text-base font-light leading-relaxed ${formal ? "border-cam-gold/30 text-[hsl(36_48%_95%)]" : "border-border/70 text-muted-foreground"}`}>
-        {children}
+      <div className="mt-3 rounded-lg border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] p-4 text-base font-light leading-relaxed text-muted-foreground">
+        <div className={formal ? "text-[17px] leading-relaxed md:text-lg" : undefined}>
+          {children}
+        </div>
       </div>
     </details>
   );
@@ -220,7 +181,7 @@ export default function About() {
           </p>
 
           <h1 className="mb-6 font-serif text-4xl leading-tight text-foreground md:text-5xl">
-            Who we are
+            About Us
           </h1>
 
           <hr className="gold-rule mb-8 w-24" />
@@ -233,8 +194,8 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="Who we are" />
-          <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+          <SectionHeading eyebrow="About Us" />
+          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
                 The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of CAM governance materials and the VIGIL Observatory.
@@ -254,7 +215,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Purpose" />
-          <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
             <div className="grid gap-3">
               <ObservatoryStyleDetails title="Vision: Civilisational Readiness">
                 <p>
@@ -275,14 +236,14 @@ export default function About() {
                 <div className="mt-5 grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
                     <article
-                      className="rounded-xl border border-cam-gold/25 bg-[hsl(30_22%_22%)] p-4 shadow-sm"
+                      className="rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4 shadow-sm"
                       key={principle.num}
                     >
                       <div className="mb-2 flex items-baseline gap-2">
                         <span className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">{principle.num}</span>
-                        <h3 className="font-serif text-xl text-[hsl(36_48%_95%)]">{principle.name}</h3>
+                        <h3 className="font-serif text-xl text-foreground">{principle.name}</h3>
                       </div>
-                      <p className="text-base leading-relaxed text-[hsl(36_28%_86%)]">{principle.principle}</p>
+                      <p className="text-base leading-relaxed text-muted-foreground md:text-[17px]">{principle.principle}</p>
                       <p className="mt-3 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
                     </article>
                   ))}
@@ -300,7 +261,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Why it matters" />
-          <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
                 The CAM Initiative began with two questions: whether AI systems can govern themselves, and what a global governance model would require if it had to arbitrate across jurisdictions, institutions, technical systems, social contexts, and forms of intelligence.
@@ -391,38 +352,6 @@ export default function About() {
           </div>
         </motion.section>
 
-        <motion.section
-          className="mb-6"
-          initial={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <div id="connect" className="scroll-mt-24"><SectionHeading eyebrow="Connect" /></div>
-          <article className="rounded-2xl border border-border bg-card/75 p-6 shadow-sm">
-            <h2 className="mb-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">
-              Contact, follow, and support
-            </h2>
-            <p className="mb-5 text-base font-light leading-relaxed text-muted-foreground">
-              For ethics, governance, citation, reuse, collaboration, public-interest enquiries, repository inspection, or independent maintenance support, use the links below.
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {actionLinks.map((link) => (
-                <a
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary md:text-base"
-                  href={link.href}
-                  key={link.label}
-                  rel={link.external ? "noreferrer" : undefined}
-                  target={link.external ? "_blank" : undefined}
-                >
-                  <ActionIcon icon={link.icon} />
-                  <span>{link.label}</span>
-                  {link.external && <ExternalLink className="h-3.5 w-3.5 opacity-55" aria-hidden="true" />}
-                </a>
-              ))}
-            </div>
-          </article>
-        </motion.section>
       </main>
     </Shell>
   );

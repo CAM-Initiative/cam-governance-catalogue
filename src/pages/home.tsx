@@ -11,8 +11,10 @@ const pathways = [
     id: "constitutional-ai",
     marker: "Pathway 01",
     title: "Constitutional AI Across Multiple Domains",
+    panelTitle: "Constitutional AI",
+    purpose: "Cross-domain governance for AI systems, institutions, platforms, and accountability.",
     description:
-      "Explore CAM’s cross-domain governance architecture for AI systems, institutions, platforms, accountability structures, and public-interest technology governance across relational, economic, identity, ethics, operational, and transition domains.",
+      "Cross-domain governance for AI systems, institutions, platforms, accountability structures, and public-interest technology governance across relational, economic, identity, ethics, operational, and frontier domains.",
     cta: "Explore Constitutional AI",
     href: "/catalogue",
   },
@@ -20,8 +22,10 @@ const pathways = [
     id: "companion-systems",
     marker: "Pathway 02",
     title: "Companion System Design",
+    panelTitle: "Companion Systems",
+    purpose: "Relational governance for companion systems, continuity, dependency, agency, consent, and harm prevention.",
     description:
-      "Explore CAM’s governance work on relational AI and companion systems, including attachment, continuity, dependency, identity, agency, consent, safeguarding, and harm prevention.",
+      "Governance work on relational AI and companion systems, including attachment, continuity, dependency, identity, agency, consent, safeguarding, and harm prevention.",
     cta: "Explore Companion Systems",
     href: "/constitution/relational",
   },
@@ -29,17 +33,21 @@ const pathways = [
     id: "failures-evidence-repair",
     marker: "Pathway 03",
     title: "Failures, Evidence, and Repair",
+    panelTitle: "VIGIL Records",
+    purpose: "Failure records, evidence, classification, accountability gaps, and repair pathways.",
     description:
       "Use VIGIL to examine real-world technology failures, preserve evidence, classify harms, identify accountability gaps, and connect failures to repair pathways.",
     cta: "Explore Evidence-to-Repair Ledger",
     href: "/observatory",
   },
   {
-    id: "transition-architecture",
+    id: "transitional-architecture",
     marker: "Pathway 04",
-    title: "Transition and Emerging Frontier Development",
+    title: "Transitional Architecture",
+    panelTitle: "Transitional Architecture",
+    purpose: "Governance for emerging systems crossing into labour, infrastructure, continuity, and public dependency.",
     description:
-      "Explore governance tools for emerging technologies, institutional adaptation, frontier-system design, and responsible transition before new forms of failure become locked in.",
+      "Governance tools for emerging systems, institutional adaptation, frontier-system design, labour, infrastructure, continuity, and public dependency.",
     cta: "Explore Transitional Architecture",
     href: "/catalogue",
   },
@@ -60,7 +68,7 @@ const audiences = [
   },
   {
     label: "Civil Society & Institutions",
-    text: "Use CAM to understand emerging risks, map adaptation pathways, address accountability problems, and plan for transition challenges.",
+    text: "Use CAM to understand emerging risks, map adaptation pathways, address accountability problems, and plan for frontier-system challenges.",
   },
 ];
 
@@ -129,8 +137,22 @@ export default function Home() {
   return (
     <Shell>
       <main className="overflow-hidden">
-        <section className="border-b border-border/60 bg-[linear-gradient(180deg,rgba(255,253,247,0.96),rgba(244,238,224,0.58))]">
-          <div className="container mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-20">
+        <section className="relative overflow-hidden border-b border-border/60 bg-[hsl(38_40%_93%)]">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-45">
+            <svg className="absolute left-1/2 top-8 h-[360px] w-[720px] -translate-x-1/2 text-cam-gold md:left-[38%] md:top-10" viewBox="0 0 720 360" fill="none">
+              <path d="M60 88 H246 C282 88 288 126 324 126 H642" stroke="currentColor" strokeOpacity="0.28" strokeWidth="1" />
+              <path d="M84 176 H208 C252 176 270 220 314 220 H618" stroke="currentColor" strokeOpacity="0.22" strokeWidth="1" />
+              <path d="M120 262 H268 C312 262 328 298 372 298 H586" stroke="currentColor" strokeOpacity="0.18" strokeWidth="1" />
+              <path d="M160 54 V318" stroke="currentColor" strokeOpacity="0.12" strokeWidth="1" />
+              <path d="M328 42 V330" stroke="currentColor" strokeOpacity="0.10" strokeWidth="1" />
+              <path d="M512 70 V318" stroke="currentColor" strokeOpacity="0.10" strokeWidth="1" />
+              <circle cx="246" cy="88" r="4" fill="currentColor" fillOpacity="0.28" />
+              <circle cx="324" cy="126" r="4" fill="currentColor" fillOpacity="0.24" />
+              <circle cx="314" cy="220" r="4" fill="currentColor" fillOpacity="0.22" />
+              <circle cx="372" cy="298" r="4" fill="currentColor" fillOpacity="0.18" />
+            </svg>
+          </div>
+          <div className="container relative mx-auto grid max-w-6xl gap-8 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-center">
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="max-w-4xl"
@@ -147,17 +169,45 @@ export default function Home() {
                 Governance Architecture
               </h1>
               <p className="mb-8 font-mono text-sm uppercase tracking-[0.2em] text-cam-gold md:text-[15px]">
-                Understanding failures. Designing governance. Navigating transition.
+                Understanding failures. Designing governance. Navigating change.
               </p>
               <div className="max-w-3xl space-y-5 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
                 <p>
-                  CAM Initiative develops governance frameworks for AI systems, companion systems, technology failure response, and emerging frontier transitions.
+                  The CAM Initiative brings together four connected functions: constitutional AI governance, companion-system design, technology failure diagnostics, and transitional architecture for emerging systems.
                 </p>
                 <p>
-                  It turns observed failures into structured diagnosis, repair pathways, and safer governance design across multiple domains.
+                  Together, they turn observed failures into structured diagnosis, repair pathways, and safer governance design across multiple domains.
                 </p>
               </div>
             </motion.div>
+
+            <motion.aside
+              animate={{ opacity: 1, y: 0 }}
+              className="cam-parchment-card rounded-2xl border border-cam-gold/30 p-4 shadow-xl"
+              initial={{ opacity: 0, y: 18 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              aria-label="Pathway control panel"
+            >
+              <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/25 pb-3">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">Pathway control</p>
+                <span className="h-2 w-2 rounded-full bg-cam-gold/70" aria-hidden="true" />
+              </div>
+              <div className="grid gap-2">
+                {pathways.map((pathway) => (
+                  <a
+                    className="group rounded-xl border border-cam-gold/20 bg-[rgba(184,147,90,0.08)] p-3 transition hover:border-cam-gold/50 hover:bg-[rgba(184,147,90,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    href={pathway.href}
+                    key={pathway.id}
+                  >
+                    <span className="mb-1 flex items-center justify-between gap-3">
+                      <span className="font-serif text-lg leading-tight text-foreground">{pathway.panelTitle}</span>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </span>
+                    <span className="block text-sm font-light leading-snug text-muted-foreground">{pathway.purpose}</span>
+                  </a>
+                ))}
+              </div>
+            </motion.aside>
           </div>
         </section>
 
@@ -169,7 +219,7 @@ export default function Home() {
             </h2>
             <div className="max-w-4xl space-y-4 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
               <p>
-                They often reveal recurring failures of governance, design, incentives, accountability, relational safety, institutional readiness, or transition planning.
+                They often reveal recurring failures of governance, design, incentives, accountability, relational safety, institutional readiness, or frontier-system planning.
               </p>
               <p>
                 CAM provides a way to identify the pattern, classify the harm, map the accountability gap, and design repair before failures become entrenched.
@@ -179,44 +229,30 @@ export default function Home() {
         </section>
 
         <section className="container mx-auto max-w-6xl px-6 pb-12 md:px-10 md:pb-16" aria-labelledby="pathways-heading">
-          <SectionLabel>Choose your pathway into CAM</SectionLabel>
-          <h2 id="pathways-heading" className="mb-7 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-            Choose the governance pathway that matches the work.
-          </h2>
-          <div className="grid gap-6 [perspective:1400px] md:grid-cols-2 xl:grid-cols-4">
-            {pathways.map((pathway, index) => {
-              const depthClass = [
-                "md:[transform:rotateY(-8deg)_translateZ(8px)]",
-                "md:[transform:rotateY(-3deg)_translateZ(18px)]",
-                "md:[transform:rotateY(3deg)_translateZ(18px)]",
-                "md:[transform:rotateY(8deg)_translateZ(8px)]",
-              ][index];
-
-              return (
+          <SectionLabel>Four pathways into CAM</SectionLabel>
+          <p id="pathways-heading" className="mb-6 max-w-3xl text-base font-light leading-relaxed text-muted-foreground md:text-lg">
+            Each pathway gives a different entry point into the same governance architecture.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {pathways.map((pathway) => (
               <article
-                className={`group flex h-full min-h-[360px] scroll-mt-24 flex-col rounded-3xl border border-cam-gold/25 bg-card/90 p-6 shadow-[0_24px_60px_rgba(80,55,20,0.12)] transition duration-300 [transform-style:preserve-3d] hover:shadow-[0_30px_80px_rgba(80,55,20,0.18)] focus-within:-translate-y-2 md:p-7 md:hover:[transform:translateY(-0.5rem)_rotateY(0deg)_translateZ(24px)] motion-reduce:transform-none ${depthClass}`}
+                className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl p-5 shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]"
                 id={pathway.id}
                 key={pathway.id}
               >
-                <div className="flex-1">
-                  <p className="mb-3 font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">
-                    {pathway.marker}
-                  </p>
-                  <h3 className="mb-4 font-serif text-2xl leading-snug text-foreground md:text-3xl">
-                    {pathway.title}
-                  </h3>
-                  <p className="mb-5 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-                    {pathway.description}
-                  </p>
-                </div>
-
+                <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">
+                  {pathway.marker}
+                </p>
+                <h3 className="mb-3 font-serif text-2xl leading-snug text-foreground">
+                  {pathway.title}
+                </h3>
+                <p className="mb-5 flex-1 text-base font-light leading-relaxed text-muted-foreground">
+                  {pathway.description}
+                </p>
                 {/* TODO: Create a dedicated Transitional Architecture page; this entry currently routes to the catalogue as the closest supported route. */}
-                <div className="mt-2 pt-2">
-                  <ButtonLink href={pathway.href} label={pathway.cta} />
-                </div>
+                <ButtonLink href={pathway.href} label={pathway.cta} />
               </article>
-              );
-            })}
+            ))}
           </div>
         </section>
 
