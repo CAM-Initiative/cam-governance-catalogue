@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
 
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const panelStyle = { backgroundColor: "rgba(255,253,247,0.62)", border: `1px solid ${GOLD_BORDER}` };
@@ -76,6 +76,15 @@ const audiences = [
   },
 ];
 
+
+const actionLinks = [
+  { label: "Email", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
+  { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
+  { label: "CAM Repository", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
+  { label: "VIGIL Repository", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
+  { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
+];
+
 function SectionLabel({ children }: { children: string }) {
   return (
     <div className="mb-4 flex items-center gap-3">
@@ -106,11 +115,11 @@ function ButtonLink({ href, label, variant = "secondary" }: { href: string; labe
 
 function CollapsiblePanel({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <details className="cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
+    <details className="group cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
       <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
-        <span className="inline-flex w-full items-center justify-between gap-3">
+        <span className="inline-flex w-full items-center gap-3">
+          <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
-          <span className="text-[10px] text-muted-foreground/60" aria-hidden="true">Open / close</span>
         </span>
       </summary>
       <div className="mt-3 border-t border-border/70 pt-3 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
@@ -118,6 +127,14 @@ function CollapsiblePanel({ title, children }: { title: string; children: ReactN
       </div>
     </details>
   );
+}
+
+function ActionIcon({ icon }: { icon: string }) {
+  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
+  return <ExternalLink className="h-4 w-4" aria-hidden="true" />;
 }
 
 export default function Home() {
@@ -134,17 +151,17 @@ export default function Home() {
             >
               <div className="mb-7 flex items-center gap-3">
                 <hr className="gold-rule w-16" />
-                <p className="font-mono text-xs uppercase tracking-[0.24em] text-cam-gold">
+                <p className="font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">
                   CAM Initiative
                 </p>
               </div>
               <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">
                 Governance Architecture
               </h1>
-              <p className="mb-6 font-mono text-sm uppercase tracking-[0.2em] text-primary/80 md:text-[15px]">
+              <p className="mb-8 font-mono text-sm uppercase tracking-[0.2em] text-cam-gold md:text-[15px]">
                 Understanding failures. Designing governance. Navigating transition.
               </p>
-              <div className="max-w-3xl space-y-3 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
+              <div className="max-w-3xl space-y-5 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
                 <p>
                   CAM Initiative develops governance frameworks for AI systems, companion systems, technology failure response, and emerging frontier transitions.
                 </p>
@@ -162,7 +179,7 @@ export default function Home() {
         </section>
 
         <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <SectionLabel>Why CAM exists</SectionLabel>
+          <SectionLabel>Why the CAM Initiative exists</SectionLabel>
           <div className="rounded-3xl p-6 md:p-8" style={panelStyle}>
             <h2 className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
               Technology failures are rarely isolated events.
@@ -256,31 +273,34 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="use-cite-licence">
-          <SectionLabel>Use and attribution</SectionLabel>
-          <div className="rounded-3xl p-6 shadow-sm md:p-8" style={panelStyle}>
-            <h2 className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-              Use, Cite, or Licence CAM
+        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
+          <SectionLabel>Connect</SectionLabel>
+          <article className="rounded-3xl border border-border bg-card/75 p-6 shadow-sm md:p-8">
+            <h2 className="mb-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">
+              Contact, follow, and support
             </h2>
-            <div className="max-w-4xl space-y-4 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-              <p>
-                CAM Initiative is published as a public-facing governance architecture. Use of CAM materials requires attribution and must respect the applicable licence terms.
-              </p>
-              <p>
-                A formal licensing pathway is being developed to support legitimate institutional, commercial, and implementation use.
-              </p>
-              <p className="font-medium text-foreground">Attribution is required.</p>
-              <p>
-                A future licence pathway can provide a legitimate route for organisations that want to use, adapt, implement, or build with CAM materials.
-              </p>
+            <p className="mb-5 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
+              For ethics, governance, citation, reuse, collaboration, public-interest enquiries, repository inspection, or independent maintenance support, use the links below.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {actionLinks.map((link) => (
+                <a
+                  aria-label={link.icon === "github" ? `${link.label} on GitHub` : link.label}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-[15px] font-medium text-foreground transition-colors hover:border-primary/40 hover:text-primary md:text-base"
+                  href={link.href}
+                  key={link.label}
+                  rel={link.external ? "noreferrer" : undefined}
+                  target={link.external ? "_blank" : undefined}
+                >
+                  <ActionIcon icon={link.icon} />
+                  <span>{link.label}</span>
+                  {link.external && <ExternalLink className="h-3.5 w-3.5 opacity-55" aria-hidden="true" />}
+                </a>
+              ))}
             </div>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <ButtonLink href="/about#citation-public-access" label="Cite CAM" variant="primary" />
-              <ButtonLink href="/about#citation-public-access" label="Review Licence Pathway" />
-              <ButtonLink href="/about#connect" label="Contact / Get Involved" />
-            </div>
-          </div>
+          </article>
         </section>
+
       </main>
     </Shell>
   );

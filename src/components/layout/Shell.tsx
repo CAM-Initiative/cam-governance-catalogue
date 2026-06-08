@@ -8,8 +8,7 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
-  { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Repository" },
 ];
 
 const mobileLinks = [
@@ -18,7 +17,7 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "Observatory / VIGIL", internal: true },
-  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance / GitHub" },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance / Repository" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -87,7 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Home
               </Link>
               <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-border/80 bg-card p-2 shadow-xl">
+                <div className="rounded-xl border border-primary/25 bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-primary/10">
                   {homeLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -116,7 +115,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Constitution
               </Link>
               <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-border/80 bg-card p-2 shadow-xl">
+                <div className="rounded-xl border border-primary/25 bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-primary/10">
                   {constitutionLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -223,7 +222,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
               <address className="not-italic">
                 <div className="flex flex-wrap justify-center gap-3 md:justify-end">
-                  <a href="mailto:ethics@cam-initiative.org" aria-label="Email CAM Initiative" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                  <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                     <Mail className="h-4 w-4" aria-hidden="true" />
                   </a>
                   <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">

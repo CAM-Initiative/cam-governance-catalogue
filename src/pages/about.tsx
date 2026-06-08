@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { Check, Coffee, Copy, ExternalLink, Github, Mail } from "lucide-react";
+import { ArrowRight, Check, Coffee, Copy, ExternalLink, Github, Mail } from "lucide-react";
 
 const citations = [
   {
@@ -110,13 +110,13 @@ const actionLinks = [
     external: true,
   },
   {
-    label: "CAM GitHub",
+    label: "CAM Repository",
     href: "https://github.com/CAM-Initiative/Caelestis",
     icon: "github",
     external: true,
   },
   {
-    label: "VIGIL GitHub",
+    label: "VIGIL Repository",
     href: "https://github.com/CAM-Initiative/Vigil",
     icon: "github",
     external: true,
@@ -184,16 +184,16 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
   );
 }
 
-function ObservatoryStyleDetails({ title, children }: { title: string; children: ReactNode }) {
+function ObservatoryStyleDetails({ title, children, formal = false }: { title: string; children: ReactNode; formal?: boolean }) {
   return (
-    <details className="cam-parchment-card rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
+    <details className={`group rounded-xl p-3 text-sm shadow-sm transition ${formal ? "border border-primary/35 bg-[hsl(28_25%_16%)] hover:border-cam-gold/60" : "cam-parchment-card hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]"}`}>
       <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
-        <span className="inline-flex w-full items-center justify-between gap-3">
+        <span className="inline-flex w-full items-center gap-3">
+          <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
-          <span className="text-[10px] text-muted-foreground/60" aria-hidden="true">Open / close</span>
         </span>
       </summary>
-      <div className="mt-3 border-t border-border/70 pt-3 text-base font-light leading-relaxed text-muted-foreground">
+      <div className={`mt-3 border-t pt-3 text-base font-light leading-relaxed ${formal ? "border-cam-gold/30 text-[hsl(36_48%_95%)]" : "border-border/70 text-muted-foreground"}`}>
         {children}
       </div>
     </details>
@@ -220,7 +220,7 @@ export default function About() {
           </p>
 
           <h1 className="mb-6 font-serif text-4xl leading-tight text-foreground md:text-5xl">
-            About the CAM Initiative
+            Who we are
           </h1>
 
           <hr className="gold-rule mb-8 w-24" />
@@ -233,11 +233,16 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="About the CAM Initiative" />
+          <SectionHeading eyebrow="Who we are" />
           <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-            <p className="text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-              The CAM Initiative is a public-benefit governance initiative developing global governance architecture for artificial intelligence, machine agency, companion systems, evidentiary observability, and repair-oriented accountability.
-            </p>
+            <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
+              <p>
+                The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of CAM governance materials and the VIGIL Observatory.
+              </p>
+              <p>
+                Aeon Governance Lab is a project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to the administration of associated marks, assets, publications, or operational infrastructure.
+              </p>
+            </div>
           </article>
         </motion.section>
 
@@ -250,19 +255,7 @@ export default function About() {
         >
           <SectionHeading eyebrow="Purpose" />
           <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-            <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
-              <p>
-                The purpose of the CAM Initiative is to make AI governance more coherent, observable, and repairable.
-              </p>
-              <p>
-                It does this by combining two complementary functions: CAM, which provides the global governance framework, and the VIGIL Observatory, which records, classifies, and tracks observed risks, harms, failures, proposals, and repair activity.
-              </p>
-              <p>
-                Together, these functions support a public-benefit approach to AI governance that is structured, evidence-aware, and capable of evolving as systems change.
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-3">
+            <div className="grid gap-3">
               <ObservatoryStyleDetails title="Vision: Civilisational Readiness">
                 <p>
                   This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
@@ -275,22 +268,22 @@ export default function About() {
                 </p>
               </ObservatoryStyleDetails>
 
-              <ObservatoryStyleDetails title="Foundational Principles">
+              <ObservatoryStyleDetails title="Foundational Principles" formal>
                 <p>
                   The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
                 </p>
                 <div className="mt-5 grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
                     <article
-                      className="rounded-lg border border-border bg-background/35 p-3"
+                      className="rounded-xl border border-cam-gold/25 bg-[hsl(30_22%_22%)] p-4 shadow-sm"
                       key={principle.num}
                     >
                       <div className="mb-2 flex items-baseline gap-2">
-                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{principle.num}</span>
-                        <h3 className="font-medium text-foreground">{principle.name}</h3>
+                        <span className="font-mono text-xs uppercase tracking-[0.16em] text-cam-gold">{principle.num}</span>
+                        <h3 className="font-serif text-xl text-[hsl(36_48%_95%)]">{principle.name}</h3>
                       </div>
-                      <p className="text-sm leading-relaxed text-muted-foreground">{principle.principle}</p>
-                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
+                      <p className="text-base leading-relaxed text-[hsl(36_28%_86%)]">{principle.principle}</p>
+                      <p className="mt-3 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold">↳ {principle.consequence}</p>
                     </article>
                   ))}
                 </div>
@@ -320,26 +313,6 @@ export default function About() {
               </p>
               <p>
                 VIGIL extends that work by recording what happens in practice. Together, CAM and VIGIL support public memory, interoperable constraints, reviewable evidence, and a way to translate observed failure into accountable repair.
-              </p>
-            </div>
-          </article>
-        </motion.section>
-
-        <motion.section
-          className="mb-12"
-          initial={{ opacity: 0, y: 12 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
-          <SectionHeading eyebrow="Who we are" />
-          <article className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
-            <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
-              <p>
-                The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of CAM governance materials and the VIGIL Observatory.
-              </p>
-              <p>
-                Aeon Governance Lab is a project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to the administration of associated marks, assets, publications, or operational infrastructure.
               </p>
             </div>
           </article>
