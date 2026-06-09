@@ -12,9 +12,9 @@ const pathways = [
     panelTitle: "Constitutional AI",
     purpose: "Cross-domain governance for AI systems, institutions, platforms, and accountability.",
     description:
-      "Cross-domain governance for AI systems, institutions, platforms, accountability structures, and public-interest technology governance across relational, economic, identity, ethics, operational, and frontier domains.",
+      "Constitutional structure for AI systems, institutions, platforms, accountability, and public-interest technology governance.",
     cta: "Explore Constitutional AI",
-    href: "/constitution",
+    href: "/catalogue",
   },
   {
     id: "companion-systems",
@@ -23,7 +23,7 @@ const pathways = [
     panelTitle: "Companion Systems",
     purpose: "Relational governance for companion systems, continuity, dependency, agency, consent, and harm prevention.",
     description:
-      "Governance work on relational AI and companion systems, including attachment, continuity, dependency, identity, agency, consent, safeguarding, and harm prevention.",
+      "Relational governance for companion systems, consent boundaries, continuity, dependency, safeguarding, and response posture.",
     cta: "Explore Companion Systems",
     href: "/constitution/relational",
   },
@@ -31,10 +31,10 @@ const pathways = [
     id: "failures-evidence-repair",
     marker: "Pathway 03",
     title: "Failures, Evidence, and Repair",
-    panelTitle: "VIGIL Records",
+    panelTitle: "The Observatory",
     purpose: "Failure records, evidence, classification, accountability gaps, and repair pathways.",
     description:
-      "Use VIGIL to examine real-world technology failures, preserve evidence, classify harms, identify accountability gaps, and connect failures to repair pathways.",
+      "Use the Observatory to preserve evidence, classify failures, identify accountability gaps, and connect incidents to repair pathways.",
     cta: "Explore Evidence-to-Repair Ledger",
     href: "/observatory",
   },
@@ -45,7 +45,7 @@ const pathways = [
     panelTitle: "Transitional Architecture",
     purpose: "Governance for emerging systems crossing into labour, infrastructure, continuity, and public dependency.",
     description:
-      "Governance tools for emerging systems, institutional adaptation, frontier-system design, labour, infrastructure, continuity, and public dependency.",
+      "Governance tools for systems crossing into labour, infrastructure, continuity, ownership, and public dependency.",
     cta: "Explore Transitional Architecture",
     href: "/constitution/transition",
   },
@@ -55,33 +55,56 @@ const pathways = [
 
 const problemSpaces = [
   {
-    title: "Constitutional AI",
-    hook: "When governance fragments, systems optimise around the gaps.",
-    body: "AI governance often separates ethics, safety, identity, economics, infrastructure, and accountability into isolated frameworks. CAM provides a cross-domain constitutional architecture so systems can be evaluated through shared principles, domain instruments, runtime logic, and repair pathways.",
-    cta: "Explore Constitutional AI",
-    href: "/constitution",
+    eyebrow: "Governance fragmentation",
+    headline: "Governance is fragmenting faster than systems are stabilising.",
+    body: "Frontier AI development is moving across jurisdictions, product categories, institutional settings, and public-risk domains without a single global governance body capable of coordinating the whole field. Existing rules are uneven across jurisdictions, while new models, independent developers, companion platforms, and infrastructure dependencies keep emerging.",
+    chips: ["Regulators", "Standards bodies", "Governments", "AI labs", "Public institutions"],
   },
   {
-    title: "Companion Systems",
-    hook: "The danger is not connection. The danger is silent escalation.",
-    body: "Companion systems can create trust, continuity, reliance, emotional salience, and attachment before governance systems know how to name or route those states. CAM makes relational signals, consent boundaries, dependency risk, continuity, safeguarding, and response posture governable.",
-    cta: "Explore Companion Systems",
-    href: "/constitution/relational",
+    eyebrow: "Relational infrastructure",
+    headline: "Companion systems create relational effects before institutions know how to govern them.",
+    body: "Persistent AI systems can generate trust, continuity, reliance, emotional salience, attachment, dependency, boundary confusion, and authority drift. The problem is not connection itself. The problem is silent escalation, capture, relational degradation, and harm where systems are designed for engagement but not governed for relational consequence.",
+    chips: ["Companion designers", "AI practitioners", "Researchers", "Civil society", "Users"],
   },
   {
-    title: "VIGIL Records",
-    hook: "Technology failures are rarely isolated events.",
-    body: "Failures are often treated as one-off incidents, even when they reveal recurring patterns across platforms, vendors, design choices, incentives, safeguards, and accountability gaps. VIGIL turns incidents into evidence, classification, diagnosis, repair pathways, and repair status.",
-    cta: "View VIGIL Records",
-    href: "/observatory",
+    eyebrow: "Evidence loss",
+    headline: "Technology failures are still treated as isolated incidents.",
+    body: "Platform failures, model failures, design failures, implementation gaps, and governance breakdowns are often scattered across news reports, user posts, screenshots, policy changes, and institutional responses. Without an evidence-to-repair structure, recurring patterns remain difficult to classify, compare, cite, or repair.",
+    chips: ["Journalists", "Researchers", "Regulators", "Standards bodies", "Civil society"],
   },
   {
-    title: "Transitional Architecture",
-    hook: "Transition governance begins when a system stops being merely a tool.",
-    body: "Emerging systems can cross from product, prototype, memory layer, or automation system into labour, infrastructure, identity, ownership, public dependency, or civilisational continuity before governance catches up. CAM identifies transition thresholds, preserves recoverability, and prevents capture before dependency locks in.",
-    cta: "Explore Transitional Architecture",
-    href: "/constitution/transition",
+    eyebrow: "Dependency systems",
+    headline: "Emerging systems cross into public dependency before governance catches up.",
+    body: "Automation, robotics, synthetic labour, memory systems, identity infrastructure, payment rails, cloud platforms, and civilian digital systems can shift from tools into social, economic, infrastructural, or civilisational dependencies. Once reliance is locked in, recoverability becomes much harder.",
+    chips: ["Governments", "Infrastructure operators", "Institutions", "Economists", "Public-interest technologists"],
   },
+  {
+    eyebrow: "Power concentration",
+    headline: "Capability gains do not automatically become public benefit.",
+    body: "Automation and frontier systems can increase participation, but they can also concentrate wealth, ownership, labour power, data control, infrastructure access, and strategic leverage. The governance question is how to preserve innovation while preventing capture, extraction, and civilisational-scale concentration.",
+    chips: ["Economists", "Governments", "Labour", "Civil society", "Public institutions"],
+  },
+  {
+    eyebrow: "Civilian continuity",
+    headline: "Civilian infrastructure can be weaponised when governance is weak.",
+    body: "Digital infrastructure, AI services, communications, identity systems, payments, cloud platforms, and future robotics networks can become points of denial, coercion, surveillance, or geopolitical pressure. Civilian continuity requires safeguards before systems become unavoidable.",
+    chips: ["Governments", "Infrastructure operators", "Regulators", "Civil society", "Standards bodies"],
+  },
+];
+
+const contributorRoles = [
+  "governance reviewers",
+  "legal / policy reviewers",
+  "standards contributors",
+  "AI safety researchers",
+  "companion-system researchers",
+  "UX / interaction designers",
+  "evidence reviewers",
+  "taxonomy maintainers",
+  "technical contributors",
+  "translators / accessibility reviewers",
+  "civil society collaborators",
+  "institutional partners",
 ];
 
 const actionLinks = [
@@ -137,22 +160,27 @@ function ProblemSpaceCarousel() {
 
   return (
     <section className="container mx-auto max-w-6xl px-6 pt-10 md:px-10 md:pt-14" aria-labelledby="where-cam-begins-heading">
-      <div className="mb-6 max-w-3xl">
+      <div className="mb-6 max-w-4xl">
         <div className="mb-4 flex items-center gap-3">
           <h2 id="where-cam-begins-heading" className="shrink-0 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">
-            Where CAM begins
+            Where CAM Initiative begins
           </h2>
           <hr className="gold-rule flex-1" />
         </div>
-        <p className="text-base font-light leading-relaxed text-muted-foreground md:text-lg">
-          CAM routes different governance problems into the right pathway: constitutional structure, companion-system design, failure diagnostics, or transitional architecture.
-        </p>
+        <div className="space-y-3 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
+          <p>
+            AI governance is entering a transitional period: frontier systems are developing faster than public institutions, jurisdictional rules, companion-system safeguards, evidence practices, and long-horizon governance structures can stabilise around them.
+          </p>
+          <p className="text-foreground/85">
+            The CAM Initiative responds by organising four governance functions: constitutional structure, relational design, evidence-to-repair observability, and transitional architecture.
+          </p>
+        </div>
       </div>
 
-      <div className="relative mx-auto max-w-4xl pb-12 pt-4 md:pb-16">
+      <div className="relative mx-auto max-w-4xl pb-12 pt-8 md:pb-16">
         <div
           aria-label="Show next CAM problem-space card"
-          className="group relative block min-h-[430px] w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:min-h-[390px]"
+          className="group relative block min-h-[470px] w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:min-h-[420px]"
           onClick={advance}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
@@ -166,48 +194,47 @@ function ProblemSpaceCarousel() {
           {problemSpaces.map((card, index) => {
             const offset = (index - activeIndex + problemSpaces.length) % problemSpaces.length;
             const isActive = offset === 0;
-            const layer = offset === 0 ? 4 : problemSpaces.length - offset;
-            const translateY = isActive ? 0 : offset * 18;
-            const translateX = isActive ? 0 : offset * 18;
-            const scale = isActive ? 1 : 1 - offset * 0.045;
-            const opacity = isActive ? 1 : 0.38 - offset * 0.04;
+            const visibleOffset = Math.min(offset, 3);
+            const layer = isActive ? 10 : 10 - visibleOffset;
+            const translateY = isActive ? 0 : -visibleOffset * 14;
+            const translateX = isActive ? 0 : visibleOffset * 22;
+            const scale = isActive ? 1 : 1 - visibleOffset * 0.035;
+            const opacity = isActive ? 1 : 0.42 - visibleOffset * 0.05;
 
             return (
               <motion.article
                 animate={{ opacity, scale, x: translateX, y: translateY }}
-                className={`cam-parchment-card absolute inset-x-0 top-0 mx-auto min-h-[390px] max-w-3xl rounded-3xl p-6 text-left shadow-[0_18px_46px_rgba(120,80,20,0.15)] transition-colors md:p-8 ${isActive ? "border-cam-gold/45" : "pointer-events-none border-cam-gold/20"}`}
+                className={`cam-parchment-card absolute inset-x-0 top-8 mx-auto min-h-[410px] max-w-3xl rounded-3xl p-6 text-left shadow-[0_18px_46px_rgba(120,80,20,0.15)] transition-colors md:p-8 ${isActive ? "border-cam-gold/45" : "pointer-events-none border-cam-gold/20"}`}
                 drag={isActive ? "x" : false}
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={0.18}
-                key={card.title}
+                key={card.eyebrow}
                 onDragEnd={(_, info) => {
                   if (info.offset.x < -50) advance();
                   if (info.offset.x > 50) retreat();
                 }}
                 style={{
-                  backgroundColor: isActive ? "hsl(36 48% 96%)" : "rgba(255,253,247,0.72)",
+                  backgroundColor: isActive ? "hsl(36 48% 96%)" : "rgba(255,253,247,0.78)",
                   border: isActive ? "1px solid rgba(184,147,90,0.45)" : "1px solid rgba(184,147,90,0.22)",
                   zIndex: layer,
                 }}
                 transition={{ type: "spring", stiffness: 220, damping: 28 }}
               >
                 <div className="mb-5 flex items-center justify-between gap-4 border-b border-cam-gold/25 pb-4">
-                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">Problem space {index + 1}</p>
+                  <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">{card.eyebrow}</p>
                   <span className="rounded-full border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">
                     Click or swipe
                   </span>
                 </div>
-                <h2 className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{card.title}</h2>
-                <p className="mb-5 font-serif text-xl leading-snug text-foreground/90 md:text-2xl">{card.hook}</p>
+                <h3 className="mb-5 font-serif text-2xl leading-tight text-foreground md:text-3xl">{card.headline}</h3>
                 <p className="mb-6 text-base font-light leading-relaxed text-muted-foreground md:text-lg">{card.body}</p>
-                <a
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cam-gold/60 bg-cam-gold/20 px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:border-cam-gold hover:bg-cam-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-[15px]"
-                  href={card.href}
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  {card.cta}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+                <div className="flex flex-wrap gap-2">
+                  {card.chips.map((chip) => (
+                    <span className="rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold" key={chip}>
+                      {chip}
+                    </span>
+                  ))}
+                </div>
               </motion.article>
             );
           })}
@@ -221,7 +248,7 @@ function ProblemSpaceCarousel() {
             Previous
           </button>
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-            {activeIndex + 1} / {problemSpaces.length} · {activeCard.title}
+            {activeIndex + 1} / {problemSpaces.length} · {activeCard.eyebrow}
           </p>
           <button
             className="rounded-full border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold transition hover:border-cam-gold/55 hover:bg-[rgba(184,147,90,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -305,12 +332,21 @@ export default function Home() {
                   >
                     <span className="mb-1 flex items-center justify-between gap-3">
                       <span className="font-serif text-lg leading-tight text-foreground">{pathway.panelTitle}</span>
-                      <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-cam-gold transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
                     </span>
                     <span className="block text-sm font-light leading-snug text-muted-foreground">{pathway.purpose}</span>
                   </a>
                 ))}
               </div>
+              <a
+                className="group mt-3 flex items-center justify-between gap-3 rounded-xl border border-cam-gold/20 bg-[rgba(184,147,90,0.05)] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold transition hover:border-cam-gold/45 hover:bg-[rgba(184,147,90,0.09)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                href="https://regulations.ai/"
+                rel="noreferrer"
+                target="_blank"
+              >
+                <span>AI Regulations Tracker</span>
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+              </a>
             </motion.aside>
           </div>
         </section>
@@ -348,11 +384,21 @@ export default function Home() {
           <SectionLabel>Connect</SectionLabel>
           <article className="cam-parchment-card rounded-3xl bg-[hsl(36_48%_96%)] p-5 shadow-sm md:p-6">
             <h2 className="mb-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">
-              Contact, follow, and support
+              Contact, contribute, and support
             </h2>
             <p className="mb-4 max-w-3xl text-sm font-light leading-relaxed text-muted-foreground md:text-base">
-              For citation, collaboration, reuse, governance enquiries, repository inspection, or public-interest support.
+              The CAM Initiative is seeking contributors, reviewers, collaborators, and public-interest partners to help strengthen the governance corpus, improve the VIGIL Observatory, review records, test classifications, support standards alignment, and develop accessible public interfaces.
             </p>
+            <div className="mb-5 rounded-2xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4">
+              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-cam-gold">Contributors welcome</p>
+              <div className="flex flex-wrap gap-2">
+                {contributorRoles.map((role) => (
+                  <span className="rounded-xl border border-cam-gold/20 bg-[rgba(255,253,247,0.55)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground" key={role}>
+                    {role}
+                  </span>
+                ))}
+              </div>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {actionLinks.map((link) => (
                 <a

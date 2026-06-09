@@ -191,7 +191,7 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <SectionHeading eyebrow="About Us" />
+          <SectionHeading eyebrow="Institutional context" />
           <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
@@ -226,8 +226,13 @@ export default function About() {
                 </p>
               </AboutDetails>
 
-              <section className="cam-parchment-card rounded-2xl p-5 shadow-sm" aria-labelledby="foundational-principles-heading">
-                <div className="mb-4">
+              <section className="cam-parchment-card relative overflow-hidden rounded-2xl p-5 shadow-sm" aria-labelledby="foundational-principles-heading">
+                <img
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-8 top-4 h-36 w-36 opacity-[0.045]"
+                  src={`${import.meta.env.BASE_URL}favicon.svg`}
+                />
+                <div className="relative mb-4">
                   <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Foundational Principles</p>
                   <p className="text-base font-light leading-relaxed text-muted-foreground md:text-[17px]" id="foundational-principles-heading">
                     The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
@@ -236,7 +241,7 @@ export default function About() {
                 <div className="grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
                     <article
-                      className="cam-parchment-card rounded-xl p-4 shadow-sm"
+                      className="rounded-xl border border-cam-gold/25 bg-[hsl(36_48%_96%)] p-4 shadow-sm"
                       key={principle.num}
                     >
                       <div className="mb-2 flex items-baseline gap-2">
@@ -244,7 +249,7 @@ export default function About() {
                         <h3 className="font-serif text-xl text-foreground">{principle.name}</h3>
                       </div>
                       <p className="text-base leading-relaxed text-muted-foreground md:text-[17px]">{principle.principle}</p>
-                      <p className="mt-3 rounded-xl p-3 font-mono text-xs uppercase tracking-[0.08em] text-cam-gold" style={goldPanelStyle}>↳ {principle.consequence}</p>
+                      <p className="mt-3 rounded-xl border-l-2 p-3 font-mono text-xs uppercase tracking-[0.08em] text-foreground/85" style={{ backgroundColor: "rgba(86,62,32,0.12)", borderColor: GOLD }}>↳ {principle.consequence}</p>
                     </article>
                   ))}
                 </div>
@@ -318,7 +323,7 @@ export default function About() {
           viewport={{ once: true }}
           whileInView={{ opacity: 1, y: 0 }}
         >
-          <div id="citation-public-access" className="scroll-mt-24"><SectionHeading eyebrow="Citation / public access" /></div>
+          <div id="citations" className="scroll-mt-24"><SectionHeading eyebrow="Citation / public access" /></div>
           <div className="rounded-2xl p-6 shadow-sm" style={goldPanelStyle}>
             <div className="mb-5 space-y-3 text-base font-light leading-relaxed text-muted-foreground">
               <p>
@@ -331,8 +336,9 @@ export default function About() {
             <div className="space-y-4">
               {citations.map((item) => (
                 <div
-                  className="cam-parchment-card rounded-xl p-4"
+                  className="rounded-xl p-4"
                   key={item.label}
+                  style={{ backgroundColor: "rgba(184,147,90,0.09)", border: `1px solid ${GOLD_BORDER}` }}
                 >
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                     <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">

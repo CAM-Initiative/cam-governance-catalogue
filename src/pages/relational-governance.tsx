@@ -10,7 +10,7 @@ import {
   type GovernanceInstrumentRecord,
 } from "@/lib/governanceRegistry";
 
-const GOLD = "#B8935A";
+const GOLD = "#9A6F2F";
 const GOLD_LIGHT = "#D4AA72";
 const GOLD_BG = "rgba(184,147,90,0.08)";
 const GOLD_BORDER = "rgba(184,147,90,0.35)";
@@ -278,7 +278,7 @@ function resolveSource(ref: SourceRef, byId: Record<string, GovernanceInstrument
   return {
     id: ref.id,
     title: instrument?.title || ref.fallback,
-    status: instrument ? instrumentStatus(instrument) : "Registry match pending",
+    status: instrument ? instrumentStatus(instrument) : "Referenced source",
     href: instrument ? instrumentHref(instrument) : undefined,
     domain: instrument?.domain,
   };
@@ -403,7 +403,10 @@ function RelationalGovernanceModel() {
   return (
     <section aria-labelledby="relational-model-heading" className="relative -mx-6 border-y border-border/60 md:-mx-10">
       <div className="px-6 pb-3 pt-6 md:px-10">
-        <h2 id="relational-model-heading" className="mb-3 font-serif text-3xl text-foreground">Relational Governance Model</h2>
+        <div className="mb-3 flex items-center gap-3">
+          <h2 id="relational-model-heading" className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">Relational Governance Model</h2>
+          <hr className="gold-rule flex-1" />
+        </div>
         <p className="max-w-4xl text-base font-light leading-relaxed text-muted-foreground">
           The relational model shows how CAM routes companion-system interactions through classification, protected-condition checks, boundary safeguards, stability controls, dependency review, and response posture.
         </p>
@@ -503,7 +506,7 @@ function RelationalGovernanceModel() {
 
 function SafeguardOverlays() {
   const { byId } = useGovernanceIndex();
-  const [expandedOverlay, setExpandedOverlay] = useState<string | null>(overlayGroups[0]?.title ?? null);
+  const [expandedOverlay, setExpandedOverlay] = useState<string | null>(null);
 
   return (
     <section className="mt-12" aria-labelledby="safeguard-overlays-heading">
@@ -583,7 +586,7 @@ export default function RelationalGovernance() {
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
             CAM routes relational signals through consent, boundary, stability, dependency, ethics, and continuity safeguards before response posture is selected.
           </p>
-          <p className="mt-4 font-serif text-xl leading-relaxed text-foreground">
+          <p className="mt-4 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">
             Warmth without capture. Continuity without authority. Presence without dependency.
           </p>
         </motion.div>

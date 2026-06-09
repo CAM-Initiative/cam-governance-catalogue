@@ -11,7 +11,7 @@ import {
   type GovernanceInstrumentRecord,
 } from "@/lib/governanceRegistry";
 
-const GOLD = "#B8935A";
+const GOLD = "#9A6F2F";
 const GOLD_LIGHT = "#D4AA72";
 const GOLD_BG = "rgba(184,147,90,0.08)";
 const GOLD_BORDER = "rgba(184,147,90,0.35)";
