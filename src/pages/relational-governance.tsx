@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import {
   instrumentDisplayId,
   instrumentHref,
@@ -403,7 +403,6 @@ function RelationalGovernanceModel() {
   return (
     <section aria-labelledby="relational-model-heading" className="relative -mx-6 border-y border-border/60 md:-mx-10">
       <div className="px-6 pb-3 pt-6 md:px-10">
-        <p className="mb-3 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">Relational Governance Model</p>
         <h2 id="relational-model-heading" className="mb-3 font-serif text-3xl text-foreground">Relational Governance Model</h2>
         <p className="max-w-4xl text-base font-light leading-relaxed text-muted-foreground">
           The relational model shows how CAM routes companion-system interactions through classification, protected-condition checks, boundary safeguards, stability controls, dependency review, and response posture.
@@ -504,6 +503,7 @@ function RelationalGovernanceModel() {
 
 function SafeguardOverlays() {
   const { byId } = useGovernanceIndex();
+  const [expandedOverlay, setExpandedOverlay] = useState<string | null>(overlayGroups[0]?.title ?? null);
 
   return (
     <section className="mt-12" aria-labelledby="safeguard-overlays-heading">
@@ -515,15 +515,53 @@ function SafeguardOverlays() {
         Relational governance pulls from multiple instrument families, not just one companion schedule.
       </p>
       <div className="grid gap-4 md:grid-cols-2">
-        {overlayGroups.map((group) => (
-          <article className="cam-parchment-card rounded-2xl p-5 shadow-sm" key={group.title}>
-            <h3 className="font-serif text-xl text-foreground">{group.title}</h3>
-            <p className="mt-2 text-sm font-light leading-relaxed text-muted-foreground">{group.summary}</p>
-            <div className="mt-4">
-              <SourcePanel heading="Source architecture" sources={group.sources} byId={byId} />
-            </div>
-          </article>
-        ))}
+        {overlayGroups.map((group) => {
+          const isOpen = expandedOverlay === group.title;
+
+          return (
+            <article
+              className="flex flex-col overflow-hidden rounded-2xl border transition-all duration-200"
+              key={group.title}
+              style={{
+                backgroundColor: "hsl(36 35% 96%)",
+                borderColor: isOpen ? GOLD : GOLD_BORDER,
+                boxShadow: isOpen ? `0 0 0 1px ${GOLD_BORDER}` : "none",
+              }}
+            >
+              <button
+                aria-expanded={isOpen}
+                className="flex w-full items-start justify-between gap-3 p-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                onClick={() => setExpandedOverlay(isOpen ? null : group.title)}
+                type="button"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block font-serif text-xl text-foreground">{group.title}</span>
+                  <span className="mt-2 block text-sm font-light leading-relaxed text-muted-foreground">{group.summary}</span>
+                </span>
+                <ChevronDown
+                  className="mt-1 h-4 w-4 shrink-0 transition-transform duration-200"
+                  style={{ color: GOLD, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+                />
+              </button>
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="overflow-hidden"
+                    exit={{ opacity: 0, height: 0 }}
+                    initial={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <div className="px-5 pb-5">
+                      <div className="mb-4 h-px" style={{ backgroundColor: GOLD_BORDER }} />
+                      <SourcePanel heading="Source architecture" sources={group.sources} byId={byId} />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

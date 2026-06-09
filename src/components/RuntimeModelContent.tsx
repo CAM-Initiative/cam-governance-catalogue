@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { Shell } from "@/components/layout/Shell";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import runtimeData from "@/data/runtimeTrace.json";
@@ -581,13 +580,5 @@ export function RuntimeModelContent() {
           }}
         />
     </div>
-  );
-}
-
-export default function Runtime() {
-  return (
-    <Shell>
-      <RuntimeModelContent />
-    </Shell>
   );
 }

@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { RuntimeModelContent } from "./runtime";
+import { RuntimeModelContent } from "@/components/RuntimeModelContent";
 import {
   groupGovernanceInstruments,
   instrumentDescription,
@@ -209,10 +209,10 @@ export default function Constitution() {
 
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="grid gap-5 md:grid-cols-3">
           <InterfaceCard
-            title="Runtime Governance Model"
-            body="How constitutional constraints execute across runtime layers, schedules, arbitration pathways, and operational review. The runtime model translates constitutional authority into sequenced governance behaviour."
-            cta="Explore Runtime Model →"
-            href="/constitution/runtime"
+            title="Transitional Architecture"
+            body="Governance for systems crossing from tool, product, memory, or automation layer into labour, embodiment, ownership, infrastructure, and civilisational continuity."
+            cta="Explore Transitional Architecture →"
+            href="/constitution/transition"
           />
           <InterfaceCard
             title="Relational Governance"

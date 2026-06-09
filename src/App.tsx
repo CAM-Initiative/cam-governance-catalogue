@@ -1,7 +1,6 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
-import Runtime from "@/pages/runtime";
 import Constitution from "@/pages/constitution";
 import RelationalGovernance from "@/pages/relational-governance";
 import Transition from "@/pages/transition";
@@ -14,8 +13,6 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
-      <Route path="/runtime" component={Runtime} />
-      <Route path="/constitution/runtime" component={Runtime} />
       <Route path="/constitution/relational" component={RelationalGovernance} />
       <Route path="/constitution/transition" component={Transition} />
       <Route path="/constitution" component={Constitution} />
