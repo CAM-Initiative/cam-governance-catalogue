@@ -1,8 +1,10 @@
-import { KeyboardEvent, MouseEvent, useEffect, useMemo, useState } from "react";
+import { KeyboardEvent, MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import registrySources from "@/config/registrySources.json";
+import { fetchSourceText, resolveGithubBlobUrl, resolveRawSourceUrl } from "@/lib/sourceLoader";
 
 type Instrument = Record<string, string | boolean | null | undefined>;
+type SourceLoadState = { status: "idle" } | { status: "loading" } | { status: "ready"; text: string } | { status: "error"; error: string };
 type Detail = { label: string; value: string; variant?: "wide" };
 
 const searchFields = [
@@ -30,6 +32,7 @@ const missingPurposeMessage = "Purpose statement not yet available in catalogue 
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
 const pageSize = 20;
 const camRegistrySource = registrySources.cam;
+const camSourceRepository = { repo: camRegistrySource.repo, branch: camRegistrySource.branch, basePath: "Governance" };
 const camRegistryUrl = camRegistrySource.registry_index_url;
 const camFallbackUrl = `${import.meta.env.BASE_URL}data/cam-governance-fallback.json`;
 
@@ -95,9 +98,12 @@ function conciseDescription(it: Instrument) {
   return `${description.slice(0, 217).trimEnd()}…`;
 }
 
-function sourceUrl(link?: string | boolean | null) {
-  const cleaned = cleanValue(link);
-  return cleaned ? `https://github.com/${camRegistrySource.repo}/blob/${camRegistrySource.branch}/Governance/${cleaned}` : "";
+function sourceUrl(instrument: Instrument) {
+  return resolveGithubBlobUrl(instrument, camSourceRepository) ?? "";
+}
+
+function rawInstrumentSourceUrl(instrument: Instrument) {
+  return resolveRawSourceUrl(instrument, camSourceRepository) ?? "";
 }
 
 function cacheBustUrl(url: string, version = Date.now()) {
@@ -151,8 +157,32 @@ function detailRows(it: Instrument, collapsedDescription: string) {
   return details;
 }
 
-function stopCardToggle(event: MouseEvent<HTMLAnchorElement>) {
+function stopCardToggle(event: MouseEvent<HTMLElement>) {
   event.stopPropagation();
+}
+
+
+function MarkdownText({ text }: { text: string }) {
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  return (
+    <div className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+      {lines.map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div className="h-2" key={index} aria-hidden="true" />;
+        if (/^#{1,6}\s+/.test(trimmed)) {
+          const level = trimmed.match(/^#+/)?.[0].length ?? 2;
+          const content = trimmed.replace(/^#{1,6}\s+/, "");
+          const className = level <= 2 ? "mt-4 font-serif text-xl leading-snug text-foreground" : "mt-3 font-serif text-lg leading-snug text-foreground";
+          return <p className={className} key={index}>{content}</p>;
+        }
+        if (/^[-*]\s+/.test(trimmed)) {
+          return <p className="pl-4" key={index}>• {trimmed.replace(/^[-*]\s+/, "")}</p>;
+        }
+        if (/^```/.test(trimmed)) return null;
+        return <p key={index}>{trimmed.replace(/\*\*/g, "")}</p>;
+      })}
+    </div>
+  );
 }
 
 export default function Catalogue() {
@@ -161,6 +191,8 @@ export default function Catalogue() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sourceLoads, setSourceLoads] = useState<Record<string, SourceLoadState>>({});
+  const sourceTextCache = useRef(new Map<string, string>());
 
   useEffect(() => {
     let cancelled = false;
@@ -224,6 +256,30 @@ export default function Catalogue() {
   function goToPage(page: number) {
     setCurrentPage(page);
     setExpandedId(null);
+  }
+
+  async function readInstrumentSource(instrument: Instrument, cardId: string) {
+    const rawUrl = rawInstrumentSourceUrl(instrument);
+    if (!rawUrl) {
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "error", error: "Canonical Markdown source is unavailable for this instrument." } }));
+      return;
+    }
+
+    const cached = sourceTextCache.current.get(rawUrl);
+    if (cached) {
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "ready", text: cached } }));
+      return;
+    }
+
+    setSourceLoads((current) => ({ ...current, [cardId]: { status: "loading" } }));
+    try {
+      const text = await fetchSourceText(rawUrl);
+      sourceTextCache.current.set(rawUrl, text);
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "ready", text } }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Canonical Markdown source could not be loaded.";
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "error", error: message } }));
+    }
   }
 
   return (
@@ -338,7 +394,9 @@ export default function Catalogue() {
                 const detailsId = `catalogue-details-${globalIndex}`;
                 const description = conciseDescription(it);
                 const details = detailRows(it, description);
-                const source = sourceUrl(it.link);
+                const source = sourceUrl(it);
+                const rawSource = rawInstrumentSourceUrl(it);
+                const sourceLoad = sourceLoads[cardId] ?? { status: "idle" as const };
                 const isExpanded = expandedId === cardId;
 
                 return (
@@ -383,7 +441,18 @@ export default function Catalogue() {
                         )}
                       </div>
 
-                      <div className="flex justify-end border-t border-border/70 pt-3">
+                      <div className="flex flex-wrap justify-end gap-2 border-t border-border/70 pt-3">
+                        <button
+                          type="button"
+                          className="rounded-md border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            if (!isExpanded) setExpandedId(cardId);
+                            void readInstrumentSource(it, cardId);
+                          }}
+                        >
+                          Read instrument
+                        </button>
                         <span className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">
                           {isExpanded ? "Hide details" : "Details"}
                         </span>
@@ -406,6 +475,33 @@ export default function Catalogue() {
                             {noAdditionalMetadataMessage}
                           </p>
                         )}
+
+                        <div className="mt-4 rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4">
+                          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Canonical Markdown source</p>
+                              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Loaded on demand from the instrument source file.</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                type="button"
+                                className="rounded-md border border-cam-gold/30 bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  void readInstrumentSource(it, cardId);
+                                }}
+                              >
+                                {sourceLoad.status === "loading" ? "Loading…" : "Read instrument"}
+                              </button>
+                              {source && <a className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" href={source} target="_blank" rel="noreferrer" onClick={stopCardToggle}>GitHub source ↗</a>}
+                            </div>
+                          </div>
+                          {!rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Canonical Markdown source is unavailable for this instrument.</p>}
+                          {sourceLoad.status === "idle" && rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Select “Read instrument” to load the source Markdown inside the catalogue.</p>}
+                          {sourceLoad.status === "loading" && <p className="text-sm leading-relaxed text-muted-foreground">Loading canonical Markdown source…</p>}
+                          {sourceLoad.status === "error" && <p className="text-sm leading-relaxed text-muted-foreground">{sourceLoad.error}</p>}
+                          {sourceLoad.status === "ready" && <div className="mt-4 max-h-[32rem] overflow-auto rounded-xl border border-border/70 bg-background/45 p-4"><MarkdownText text={sourceLoad.text} /></div>}
+                        </div>
                       </div>
                     )}
                   </article>

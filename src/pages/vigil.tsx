@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
-import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 
 const VIGIL_PAGE_SIZE = 20;
 
@@ -183,6 +183,83 @@ function SummaryBlock({ title, entries, defaultOpen = false }: { title: string; 
       </div>
     </details>
   );
+}
+
+
+type CanonicalDetailSection = { title: string; entries: SummaryEntry[] };
+
+function valueAtPath(record: UnknownRecord, path: string): unknown {
+  return path.split(".").reduce<unknown>((current, part) => {
+    if (Array.isArray(current) && /^\d+$/.test(part)) return current[Number(part)];
+    return current && typeof current === "object" && !Array.isArray(current) ? (current as UnknownRecord)[part] : undefined;
+  }, record);
+}
+
+function firstCanonicalText(record: UnknownRecord, paths: string[]) {
+  for (const path of paths) {
+    const text = textFrom(valueAtPath(record, path));
+    if (isMeaningfulText(text)) return text;
+  }
+  return undefined;
+}
+
+function canonicalDetailSections(record: VigilIndexRecord): CanonicalDetailSection[] {
+  const raw = record.raw;
+  const groups: Array<{ title: string; fields: Array<[string, string[]]> }> = [
+    {
+      title: "Canonical record details",
+      fields: [
+        ["Record state", ["record_state", "status", "state"]],
+        ["Record date", ["date_recorded", "recorded_date", "date"]],
+        ["Evidence confidence", ["evidence_confidence", "source_summary.evidence_confidence", "classification_summary.confidence"]],
+        ["Next action", ["next_action", "nextAction"]],
+      ],
+    },
+    {
+      title: "Source and system context",
+      fields: [
+        ["Source platform", ["source_platform", "source_summary.primary_source_platform", "source_records.0.source_platform"]],
+        ["Source author / publisher", ["source_summary.primary_source_author_or_publisher", "source_author", "source_account", "publisher", "source_records.0.source_account"]],
+        ["Source type", ["source_summary.primary_source_type", "source_summary.source_type", "source_type", "source_types"]],
+        ["Observed system vendor", ["observed_system_vendor", "observed_vendor", "system_context.platform_or_vendor", "system_summary.platform_or_vendor"]],
+        ["Observed product / model", ["observed_product", "observed_product_model", "system_context.product_or_service", "system_context.specific_model_or_runtime", "source_records.0.system_or_product"]],
+      ],
+    },
+    {
+      title: "Classification and governance context",
+      fields: [
+        ["Failure family", ["classification_summary.failure_family", "failure_family"]],
+        ["Failure subtype", ["classification_summary.failure_subtype", "failure_subtype", "failure_mode"]],
+        ["Severity", ["classification_summary.severity", "severity"]],
+        ["Likelihood", ["classification_summary.likelihood", "likelihood"]],
+        ["Triage priority", ["triage_summary.triage_priority", "triage_priority"]],
+        ["Mitigation status", ["triage_summary.mitigation_status", "mitigation_status"]],
+        ["Affected domains", ["affected_domains", "cam_summary.affected_domains", "cam_summary.target_domains"]],
+        ["Affected instruments", ["affected_instruments"]],
+        ["Affected annexes", ["affected_annexes"]],
+      ],
+    },
+    {
+      title: "Repair and implementation context",
+      fields: [
+        ["Proposal type", ["proposal_summary.proposal_type", "proposal_type"]],
+        ["Drafting status", ["proposal_summary.drafting_status", "cam_summary.drafting_status", "drafting_status"]],
+        ["Patch type", ["change_summary.patch_type", "patch_type"]],
+        ["Change scope", ["change_summary.change_scope", "change_scope"]],
+        ["Implementation mode", ["change_summary.implementation_mode", "implementation_mode"]],
+        ["Verification status", ["verification_summary.verification_status", "verification_status"]],
+      ],
+    },
+  ];
+
+  return groups
+    .map((group) => ({
+      title: group.title,
+      entries: group.fields
+        .map(([label, paths]) => ({ label, value: firstCanonicalText(raw, paths) }))
+        .filter((entry): entry is SummaryEntry => isMeaningfulText(entry.value)),
+    }))
+    .filter((group) => group.entries.length > 0);
 }
 
 function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url">) {
@@ -817,6 +894,27 @@ export default function Vigil() {
                         <SummaryBlock key={name} title={humanLabel(name)} entries={detailRecord.summaries[name]} defaultOpen={defaultOpenSummaries.has(name)} />
                       ))}
                     </div>
+
+                    {detailLoad?.status === "ready" && (
+                      <section className="mt-4 rounded-lg border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-3" aria-label="Canonical record details">
+                        <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Canonical record details</p>
+                        <div className="grid gap-3">
+                          {canonicalDetailSections(detailRecord).map((section) => (
+                            <details className="rounded-lg border border-border/70 bg-background/35 px-3 py-2" key={section.title} open={section.title === "Canonical record details"}>
+                              <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold marker:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+                                <span className="inline-flex w-full items-center justify-between gap-3">
+                                  <span>{section.title}</span>
+                                  <span className="text-[9px] text-muted-foreground/60" aria-hidden="true">Open / close</span>
+                                </span>
+                              </summary>
+                              <div className="mt-3 grid gap-3 border-t border-border/70 pt-3 md:grid-cols-2">
+                                {section.entries.map((entry) => <Field key={`${section.title}-${entry.label}`} label={entry.label} value={entry.value} />)}
+                              </div>
+                            </details>
+                          ))}
+                        </div>
+                      </section>
+                    )}
 
                     <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
                       <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON record</summary>
