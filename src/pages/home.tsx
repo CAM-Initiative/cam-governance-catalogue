@@ -57,7 +57,7 @@ const problemSpaces = [
   {
     eyebrow: "Governance fragmentation",
     headline: "Governance is fragmenting faster than systems are stabilising.",
-    body: "Frontier AI development is moving across jurisdictions, product categories, institutional settings, and public-risk domains without a single global governance body capable of coordinating the whole field. Existing rules are uneven across jurisdictions, while new models, independent developers, companion platforms, and infrastructure dependencies keep emerging.",
+    body: "Frontier AI is developing across jurisdictions, markets, product categories, institutional settings, and public-risk domains. Regulation, standards, platform rules, and corporate policy are moving unevenly, while new models, independent developers, companion platforms, and infrastructure dependencies keep emerging.",
     chips: ["Regulators", "Standards bodies", "Governments", "AI labs", "Public institutions"],
   },
   {
@@ -89,6 +89,13 @@ const problemSpaces = [
     headline: "Civilian infrastructure can be weaponised when governance is weak.",
     body: "Digital infrastructure, AI services, communications, identity systems, payments, cloud platforms, and future robotics networks can become points of denial, coercion, surveillance, or geopolitical pressure. Civilian continuity requires safeguards before systems become unavoidable.",
     chips: ["Governments", "Infrastructure operators", "Regulators", "Civil society", "Standards bodies"],
+  },
+  {
+    eyebrow: "Minimum ethical floor",
+    headline: "No shared ethical floor exists for global-scale AI.",
+    body: "AI governance is developing through fragmented standards, corporate policies, national regulations, platform rules, and sector-specific controls. What is still missing is a shared minimum floor: a way to name harms consistently, classify failures across domains, preserve evidence, govern relational systems, and coordinate high-impact technologies before they become locked into public life.",
+    emphasis: "The CAM Initiative proposes a public governance architecture for minimum ethical, relational, evidentiary, and transitional conditions.",
+    chips: ["Standards bodies", "Regulators", "AI labs", "Governments", "Civil society", "Public institutions"],
   },
 ];
 
@@ -169,10 +176,10 @@ function ProblemSpaceCarousel() {
         </div>
         <div className="space-y-3 text-base font-light leading-relaxed text-muted-foreground md:text-lg">
           <p>
-            AI governance is entering a transitional period: frontier systems are developing faster than public institutions, jurisdictional rules, companion-system safeguards, evidence practices, and long-horizon governance structures can stabilise around them.
+            Frontier AI is developing across jurisdictions, markets, companion systems, public infrastructure, and social life faster than shared governance language can stabilise. Standards, laws, platform policies, and corporate safety practices are emerging, but they do not yet provide a common taxonomy, evidence pathway, or minimum ethical floor for high-impact, global-scale AI systems.
           </p>
           <p className="text-foreground/85">
-            The CAM Initiative responds by organising four governance functions: constitutional structure, relational design, evidence-to-repair observability, and transitional architecture.
+            The CAM Initiative responds by organising four connected functions: constitutional governance, companion-system design, VIGIL evidence-to-repair observability, and transitional architecture for disruptive technologies.
           </p>
         </div>
       </div>
@@ -228,6 +235,11 @@ function ProblemSpaceCarousel() {
                 </div>
                 <h3 className="mb-5 font-serif text-2xl leading-tight text-foreground md:text-3xl">{card.headline}</h3>
                 <p className="mb-6 text-base font-light leading-relaxed text-muted-foreground md:text-lg">{card.body}</p>
+                {"emphasis" in card && card.emphasis && (
+                  <p className="mb-6 rounded-2xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-3 font-mono text-xs uppercase tracking-[0.08em] text-foreground/85">
+                    {card.emphasis}
+                  </p>
+                )}
                 <div className="flex flex-wrap gap-2">
                   {card.chips.map((chip) => (
                     <span className="rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold" key={chip}>
