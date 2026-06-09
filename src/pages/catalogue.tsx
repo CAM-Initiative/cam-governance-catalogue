@@ -1,8 +1,11 @@
-import { KeyboardEvent, MouseEvent, useEffect, useMemo, useState } from "react";
+import { KeyboardEvent, MouseEvent, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import registrySources from "@/config/registrySources.json";
+import { fetchSourceText, resolveGithubBlobUrl, resolveRawSourceUrl } from "@/lib/sourceLoader";
 
 type Instrument = Record<string, string | boolean | null | undefined>;
+type SourceLoadState = { status: "idle" } | { status: "loading" } | { status: "ready"; text: string } | { status: "error"; error: string };
+type SourceAction = { cardId: string; instrumentId: string; action: "copy" | "download" } | null;
 type Detail = { label: string; value: string; variant?: "wide" };
 
 const searchFields = [
@@ -30,6 +33,8 @@ const missingPurposeMessage = "Purpose statement not yet available in catalogue 
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
 const pageSize = 20;
 const camRegistrySource = registrySources.cam;
+const camSourceRepository = { repo: camRegistrySource.repo, branch: camRegistrySource.branch, basePath: "Governance" };
+const camCitation = "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
 const camRegistryUrl = camRegistrySource.registry_index_url;
 const camFallbackUrl = `${import.meta.env.BASE_URL}data/cam-governance-fallback.json`;
 
@@ -95,9 +100,17 @@ function conciseDescription(it: Instrument) {
   return `${description.slice(0, 217).trimEnd()}…`;
 }
 
-function sourceUrl(link?: string | boolean | null) {
-  const cleaned = cleanValue(link);
-  return cleaned ? `https://github.com/${camRegistrySource.repo}/blob/${camRegistrySource.branch}/Governance/${cleaned}` : "";
+function sourceUrl(instrument: Instrument) {
+  return resolveGithubBlobUrl(instrument, camSourceRepository) ?? "";
+}
+
+function rawInstrumentSourceUrl(instrument: Instrument) {
+  return resolveRawSourceUrl(instrument, camSourceRepository) ?? "";
+}
+
+function instrumentFileName(instrumentId?: string | boolean | null) {
+  const cleaned = cleanValue(instrumentId).replace(/[^A-Za-z0-9._-]+/g, "-").replace(/^-|-$/g, "");
+  return `${cleaned || "cam-instrument"}.md`;
 }
 
 function cacheBustUrl(url: string, version = Date.now()) {
@@ -151,8 +164,55 @@ function detailRows(it: Instrument, collapsedDescription: string) {
   return details;
 }
 
-function stopCardToggle(event: MouseEvent<HTMLAnchorElement>) {
+function stopCardToggle(event: MouseEvent<HTMLElement>) {
   event.stopPropagation();
+}
+
+
+function MarkdownText({ text }: { text: string }) {
+  const lines = text.replace(/\r\n/g, "\n").split("\n");
+  return (
+    <div className="space-y-2 text-sm leading-relaxed text-muted-foreground">
+      {lines.map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div className="h-2" key={index} aria-hidden="true" />;
+        if (/^#{1,6}\s+/.test(trimmed)) {
+          const level = trimmed.match(/^#+/)?.[0].length ?? 2;
+          const content = trimmed.replace(/^#{1,6}\s+/, "");
+          const className = level <= 2 ? "mt-4 font-serif text-xl leading-snug text-foreground" : "mt-3 font-serif text-lg leading-snug text-foreground";
+          return <p className={className} key={index}>{content}</p>;
+        }
+        if (/^[-*]\s+/.test(trimmed)) return <p className="pl-4" key={index}>• {trimmed.replace(/^[-*]\s+/, "")}</p>;
+        if (/^```/.test(trimmed)) return null;
+        return <p key={index}>{trimmed.replace(/\*\*/g, "")}</p>;
+      })}
+    </div>
+  );
+}
+
+function MetadataDisclosure({
+  isOpen,
+  onToggle,
+  children,
+}: {
+  isOpen: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)]">
+      <button
+        aria-expanded={isOpen}
+        className="flex w-full items-center gap-3 p-3 text-left font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        onClick={onToggle}
+        type="button"
+      >
+        <span className={`inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`} aria-hidden="true" />
+        <span>Metadata</span>
+      </button>
+      {isOpen && <div className="border-t border-cam-gold/20 p-3">{children}</div>}
+    </div>
+  );
 }
 
 export default function Catalogue() {
@@ -161,6 +221,12 @@ export default function Catalogue() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [metadataOpen, setMetadataOpen] = useState<Record<string, boolean>>({});
+  const [readerOpenId, setReaderOpenId] = useState<string | null>(null);
+  const [sourceLoads, setSourceLoads] = useState<Record<string, SourceLoadState>>({});
+  const [sourceAction, setSourceAction] = useState<SourceAction>(null);
+  const [copiedSourceId, setCopiedSourceId] = useState<string | null>(null);
+  const sourceTextCache = useRef(new Map<string, string>());
 
   useEffect(() => {
     let cancelled = false;
@@ -210,7 +276,15 @@ export default function Catalogue() {
   const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   function toggleCard(cardId: string) {
-    setExpandedId((current) => (current === cardId ? null : cardId));
+    setExpandedId((current) => {
+      const next = current === cardId ? null : cardId;
+      if (next) {
+        setMetadataOpen((open) => ({ ...open, [cardId]: true }));
+      } else {
+        setReaderOpenId((readerId) => (readerId === cardId ? null : readerId));
+      }
+      return next;
+    });
   }
 
   function handleCardKeyDown(event: KeyboardEvent<HTMLElement>, cardId: string) {
@@ -224,6 +298,82 @@ export default function Catalogue() {
   function goToPage(page: number) {
     setCurrentPage(page);
     setExpandedId(null);
+    setReaderOpenId(null);
+  }
+
+  async function readInstrumentSource(instrument: Instrument, cardId: string) {
+    const rawUrl = rawInstrumentSourceUrl(instrument);
+    if (!rawUrl) {
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "error", error: "Canonical Markdown source is unavailable for this instrument." } }));
+      return;
+    }
+
+    const cached = sourceTextCache.current.get(rawUrl);
+    if (cached) {
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "ready", text: cached } }));
+      return;
+    }
+
+    setSourceLoads((current) => ({ ...current, [cardId]: { status: "loading" } }));
+    try {
+      const text = await fetchSourceText(rawUrl);
+      sourceTextCache.current.set(rawUrl, text);
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "ready", text } }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Canonical Markdown source could not be loaded.";
+      setSourceLoads((current) => ({ ...current, [cardId]: { status: "error", error: message } }));
+    }
+  }
+
+  function toggleInstrumentReader(instrument: Instrument, cardId: string) {
+    if (readerOpenId === cardId) {
+      setReaderOpenId(null);
+      return;
+    }
+    setExpandedId(cardId);
+    setMetadataOpen((open) => ({ ...open, [cardId]: false }));
+    setReaderOpenId(cardId);
+    void readInstrumentSource(instrument, cardId);
+  }
+
+  async function confirmSourceAction() {
+    if (!sourceAction) return;
+    const sourceLoad = sourceLoads[sourceAction.cardId];
+    if (!sourceLoad || sourceLoad.status !== "ready") return;
+    const fileName = instrumentFileName(sourceAction.instrumentId);
+    const text = `${camCitation}
+
+${sourceLoad.text}`;
+
+    if (sourceAction.action === "copy") {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.setAttribute("readonly", "true");
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+      setCopiedSourceId(sourceAction.cardId);
+      window.setTimeout(() => setCopiedSourceId((current) => (current === sourceAction.cardId ? null : current)), 2000);
+    } else {
+      const blob = new Blob([`${text}
+`], { type: "text/markdown" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+    setSourceAction(null);
   }
 
   return (
@@ -338,7 +488,11 @@ export default function Catalogue() {
                 const detailsId = `catalogue-details-${globalIndex}`;
                 const description = conciseDescription(it);
                 const details = detailRows(it, description);
-                const source = sourceUrl(it.link);
+                const source = sourceUrl(it);
+                const rawSource = rawInstrumentSourceUrl(it);
+                const isReaderOpen = readerOpenId === cardId;
+                const isMetadataOpen = Boolean(metadataOpen[cardId]) && !isReaderOpen;
+                const sourceLoad = sourceLoads[cardId] ?? { status: "idle" as const };
                 const isExpanded = expandedId === cardId;
 
                 return (
@@ -383,7 +537,17 @@ export default function Catalogue() {
                         )}
                       </div>
 
-                      <div className="flex justify-end border-t border-border/70 pt-3">
+                      <div className="flex flex-wrap justify-end gap-2 border-t border-border/70 pt-3">
+                        <button
+                          type="button"
+                          className="rounded-md border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleInstrumentReader(it, cardId);
+                          }}
+                        >
+                          {isReaderOpen ? "Close instrument" : "Read instrument"}
+                        </button>
                         <span className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">
                           {isExpanded ? "Hide details" : "Details"}
                         </span>
@@ -391,20 +555,58 @@ export default function Catalogue() {
                     </div>
 
                     {isExpanded && (
-                      <div id={detailsId} className="mt-4 border-t border-border pt-4" onClick={(event) => event.stopPropagation()}>
-                        {details.length > 0 ? (
-                          <dl className="grid gap-3 md:grid-cols-2">
-                            {details.map((field) => (
-                              <div key={field.label} className={`rounded-lg border border-border bg-background/45 p-3 ${field.variant === "wide" ? "md:col-span-2" : ""}`}>
-                                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{field.label}</dt>
-                                <dd className="mt-1 break-words text-sm leading-relaxed text-foreground">{field.value}</dd>
+                      <div id={detailsId} className="mt-4 space-y-4 border-t border-border pt-4" onClick={(event) => event.stopPropagation()}>
+                        <MetadataDisclosure
+                          isOpen={isMetadataOpen}
+                          onToggle={() => {
+                            if (isReaderOpen) setReaderOpenId(null);
+                            setMetadataOpen((open) => ({ ...open, [cardId]: !Boolean(open[cardId]) }));
+                          }}
+                        >
+                          {details.length > 0 ? (
+                            <dl className="grid gap-2 md:grid-cols-2">
+                              {details.map((field) => (
+                                <div key={field.label} className={`rounded-lg border border-border/70 bg-background/45 px-3 py-2 ${field.variant === "wide" ? "md:col-span-2" : ""}`}>
+                                  <dt className="inline font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{field.label}: </dt>
+                                  <dd className="inline break-words text-sm leading-relaxed text-foreground">{field.value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          ) : (
+                            <p className="rounded-lg border border-border bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
+                              {noAdditionalMetadataMessage}
+                            </p>
+                          )}
+                        </MetadataDisclosure>
+
+                        {isReaderOpen && (
+                          <div className="rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4">
+                            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                              <div>
+                                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Canonical Markdown source</p>
+                                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Loaded on demand from the instrument source file.</p>
                               </div>
-                            ))}
-                          </dl>
-                        ) : (
-                          <p className="rounded-lg border border-border bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
-                            {noAdditionalMetadataMessage}
-                          </p>
+                              <div className="flex flex-wrap gap-2">
+                                {sourceLoad.status === "ready" && (
+                                  <>
+                                    <button className="rounded-md border border-cam-gold/30 bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => setSourceAction({ cardId, instrumentId: cleanValue(it.id), action: "copy" })} type="button">
+                                      {copiedSourceId === cardId ? "Copied" : "Copy"}
+                                    </button>
+                                    <button className="rounded-md border border-cam-gold/30 bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => setSourceAction({ cardId, instrumentId: cleanValue(it.id), action: "download" })} type="button">
+                                      Download
+                                    </button>
+                                  </>
+                                )}
+                                {source && <a className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" href={source} target="_blank" rel="noreferrer" onClick={stopCardToggle}>GitHub source ↗</a>}
+                                <button className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => setReaderOpenId(null)} type="button">Close instrument</button>
+                              </div>
+                            </div>
+                            {!rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Canonical Markdown source is unavailable for this instrument.</p>}
+                            {sourceLoad.status === "idle" && rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Select “Read instrument” to load the source Markdown inside the catalogue.</p>}
+                            {sourceLoad.status === "loading" && <p className="text-sm leading-relaxed text-muted-foreground">Loading canonical Markdown source…</p>}
+                            {sourceLoad.status === "error" && <p className="text-sm leading-relaxed text-muted-foreground">{sourceLoad.error}</p>}
+                            {sourceLoad.status === "ready" && <div className="mt-4 max-h-[40rem] overflow-auto rounded-xl border border-border/70 bg-background/45 p-4"><MarkdownText text={sourceLoad.text} /></div>}
+                          </div>
                         )}
                       </div>
                     )}
@@ -415,6 +617,39 @@ export default function Catalogue() {
           </section>
         </div>
       </div>
+
+      {sourceAction && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-background/75 px-4 py-6 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="catalogue-source-action-heading">
+          <div className="cam-parchment-card max-w-lg rounded-2xl p-5 shadow-xl">
+            <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-cam-gold">Citation required</p>
+            <h2 id="catalogue-source-action-heading" className="mb-3 font-serif text-2xl text-foreground">
+              {sourceAction.action === "copy" ? "Copy instrument source" : "Download instrument source"}
+            </h2>
+            <div className="mb-4 rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-3">
+              <p className="font-mono text-sm leading-relaxed text-foreground">{camCitation}</p>
+            </div>
+            <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+              This action includes the CAM Initiative citation header with the instrument source. Please preserve attribution when reusing, quoting, or redistributing catalogue material. If this public-interest infrastructure supports your work, consider supporting ongoing maintenance.
+            </p>
+            <div className="flex flex-wrap justify-end gap-2">
+              <button
+                className="rounded-lg border border-border bg-card px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                onClick={() => setSourceAction(null)}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-lg border border-cam-gold/40 bg-[rgba(184,147,90,0.12)] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                onClick={() => void confirmSourceAction()}
+                type="button"
+              >
+                {sourceAction.action === "copy" ? "Copy" : "Download"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Shell>
   );
 }
