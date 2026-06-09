@@ -5,6 +5,8 @@ import { fetchSourceText, resolveGithubBlobUrl, resolveRawSourceUrl } from "@/li
 
 type Instrument = Record<string, string | boolean | null | undefined>;
 type SourceLoadState = { status: "idle" } | { status: "loading" } | { status: "ready"; text: string } | { status: "error"; error: string };
+type SourceAction = "copy" | "download";
+type SourceActionDialog = { action: SourceAction; instrument: Instrument; text: string } | null;
 type Detail = { label: string; value: string; variant?: "wide" };
 
 const searchFields = [
@@ -30,6 +32,9 @@ const filterLabels: Record<string, string> = {
 };
 const missingPurposeMessage = "Purpose statement not yet available in catalogue metadata.";
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
+const catalogueCitation = "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
+const catalogueReuseNotice = "This is public-benefit governance infrastructure. Please cite CAM Initiative if you use this material. If this work is useful, support helps cover infrastructure, archival, publication, and maintenance costs.";
+const catalogueSupportUrl = "https://buymeacoffee.com/cam_initiative";
 const pageSize = 20;
 const camRegistrySource = registrySources.cam;
 const camSourceRepository = { repo: camRegistrySource.repo, branch: camRegistrySource.branch, basePath: "Governance" };
@@ -161,6 +166,38 @@ function stopCardToggle(event: MouseEvent<HTMLElement>) {
   event.stopPropagation();
 }
 
+function instrumentMarkdownFileName(instrument: Instrument) {
+  const id = cleanValue(instrument.id).replace(/[\\/:*?"<>|]+/g, "-").replace(/^-+|-+$/g, "");
+  return `${id || "cam-instrument"}.md`;
+}
+
+function writeTextToClipboard(text: string) {
+  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text);
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.top = "-9999px";
+  document.body.appendChild(textArea);
+  textArea.select();
+  const copied = document.execCommand("copy");
+  textArea.remove();
+  if (!copied) throw new Error("Clipboard copy failed");
+  return Promise.resolve();
+}
+
+function downloadMarkdownSource(instrument: Instrument, text: string) {
+  const blob = new Blob([text.endsWith("\n") ? text : `${text}\n`], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = instrumentMarkdownFileName(instrument);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
 
 function MarkdownText({ text }: { text: string }) {
   const lines = text.replace(/\r\n/g, "\n").split("\n");
@@ -190,6 +227,9 @@ export default function Catalogue() {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [metadataOpenIds, setMetadataOpenIds] = useState<Set<string>>(() => new Set());
+  const [openSourceIds, setOpenSourceIds] = useState<Set<string>>(() => new Set());
+  const [sourceActionDialog, setSourceActionDialog] = useState<SourceActionDialog>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sourceLoads, setSourceLoads] = useState<Record<string, SourceLoadState>>({});
   const sourceTextCache = useRef(new Map<string, string>());
@@ -233,6 +273,8 @@ export default function Catalogue() {
   useEffect(() => {
     setCurrentPage(1);
     setExpandedId(null);
+    setMetadataOpenIds(new Set());
+    setOpenSourceIds(new Set());
   }, [query, filters]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -242,7 +284,17 @@ export default function Catalogue() {
   const paginated = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   function toggleCard(cardId: string) {
-    setExpandedId((current) => (current === cardId ? null : cardId));
+    setExpandedId((current) => {
+      const next = current === cardId ? null : cardId;
+      if (next) {
+        setMetadataOpenIds((openIds) => {
+          const updated = new Set(openIds);
+          updated.add(cardId);
+          return updated;
+        });
+      }
+      return next;
+    });
   }
 
   function handleCardKeyDown(event: KeyboardEvent<HTMLElement>, cardId: string) {
@@ -256,6 +308,17 @@ export default function Catalogue() {
   function goToPage(page: number) {
     setCurrentPage(page);
     setExpandedId(null);
+    setMetadataOpenIds(new Set());
+    setOpenSourceIds(new Set());
+  }
+
+  function toggleMetadata(cardId: string) {
+    setMetadataOpenIds((current) => {
+      const next = new Set(current);
+      if (next.has(cardId)) next.delete(cardId);
+      else next.add(cardId);
+      return next;
+    });
   }
 
   async function readInstrumentSource(instrument: Instrument, cardId: string) {
@@ -280,6 +343,46 @@ export default function Catalogue() {
       const message = error instanceof Error ? error.message : "Canonical Markdown source could not be loaded.";
       setSourceLoads((current) => ({ ...current, [cardId]: { status: "error", error: message } }));
     }
+  }
+
+  function toggleInstrumentReader(instrument: Instrument, cardId: string) {
+    if (openSourceIds.has(cardId)) {
+      setOpenSourceIds((current) => {
+        const next = new Set(current);
+        next.delete(cardId);
+        return next;
+      });
+      return;
+    }
+
+    if (expandedId !== cardId) setExpandedId(cardId);
+    setOpenSourceIds((current) => {
+      const next = new Set(current);
+      next.add(cardId);
+      return next;
+    });
+    setMetadataOpenIds((current) => {
+      const next = new Set(current);
+      next.delete(cardId);
+      return next;
+    });
+    void readInstrumentSource(instrument, cardId);
+  }
+
+  async function confirmSourceAction() {
+    if (!sourceActionDialog) return;
+
+    if (sourceActionDialog.action === "copy") {
+      await writeTextToClipboard(sourceActionDialog.text);
+    } else {
+      downloadMarkdownSource(sourceActionDialog.instrument, sourceActionDialog.text);
+    }
+
+    setSourceActionDialog(null);
+  }
+
+  function openSupportLink() {
+    window.open(catalogueSupportUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -447,36 +550,60 @@ export default function Catalogue() {
                           className="rounded-md border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25"
                           onClick={(event) => {
                             event.stopPropagation();
-                            if (!isExpanded) setExpandedId(cardId);
-                            void readInstrumentSource(it, cardId);
+                            toggleInstrumentReader(it, cardId);
+                          }}
+                          aria-expanded={openSourceIds.has(cardId)}
+                          aria-controls={`${detailsId}-reader`}
+                        >
+                          {openSourceIds.has(cardId) ? "Close instrument" : "Read instrument"}
+                        </button>
+                        <button
+                          type="button"
+                          className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/40 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleCard(cardId);
                           }}
                         >
-                          Read instrument
-                        </button>
-                        <span className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">
                           {isExpanded ? "Hide details" : "Details"}
-                        </span>
+                        </button>
                       </div>
                     </div>
 
                     {isExpanded && (
                       <div id={detailsId} className="mt-4 border-t border-border pt-4" onClick={(event) => event.stopPropagation()}>
-                        {details.length > 0 ? (
-                          <dl className="grid gap-3 md:grid-cols-2">
-                            {details.map((field) => (
-                              <div key={field.label} className={`rounded-lg border border-border bg-background/45 p-3 ${field.variant === "wide" ? "md:col-span-2" : ""}`}>
-                                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{field.label}</dt>
-                                <dd className="mt-1 break-words text-sm leading-relaxed text-foreground">{field.value}</dd>
-                              </div>
-                            ))}
-                          </dl>
-                        ) : (
-                          <p className="rounded-lg border border-border bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
-                            {noAdditionalMetadataMessage}
-                          </p>
-                        )}
+                        <div className="group rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-3">
+                          <button
+                            type="button"
+                            className="flex w-full items-center gap-3 text-left font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background"
+                            onClick={() => toggleMetadata(cardId)}
+                            aria-expanded={metadataOpenIds.has(cardId)}
+                            aria-controls={`${detailsId}-metadata`}
+                          >
+                            <span className={`inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 ${metadataOpenIds.has(cardId) ? "rotate-90" : ""}`} aria-hidden="true" />
+                            <span>Metadata</span>
+                          </button>
+                          {metadataOpenIds.has(cardId) && (
+                            <div id={`${detailsId}-metadata`} className="mt-3 border-t border-border/70 pt-3">
+                              {details.length > 0 ? (
+                                <dl className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                                  {details.map((field) => (
+                                    <div key={field.label} className={`rounded-lg border border-border bg-background/40 px-3 py-2 ${field.variant === "wide" ? "md:col-span-2 xl:col-span-3" : ""}`}>
+                                      <dt className="inline font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">{field.label}: </dt>
+                                      <dd className="inline break-words text-sm leading-relaxed text-foreground">{field.value}</dd>
+                                    </div>
+                                  ))}
+                                </dl>
+                              ) : (
+                                <p className="rounded-lg border border-border bg-background/45 p-3 text-sm leading-relaxed text-muted-foreground">
+                                  {noAdditionalMetadataMessage}
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </div>
 
-                        <div className="mt-4 rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4">
+                        <div id={`${detailsId}-reader`} className="mt-3 rounded-xl border border-cam-gold/25 bg-[rgba(184,147,90,0.08)] p-4">
                           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                             <div>
                               <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Canonical Markdown source</p>
@@ -488,19 +615,46 @@ export default function Catalogue() {
                                 className="rounded-md border border-cam-gold/30 bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 focus:outline-none focus:ring-2 focus:ring-primary/25"
                                 onClick={(event) => {
                                   event.stopPropagation();
-                                  void readInstrumentSource(it, cardId);
+                                  toggleInstrumentReader(it, cardId);
                                 }}
+                                aria-expanded={openSourceIds.has(cardId)}
                               >
-                                {sourceLoad.status === "loading" ? "Loading…" : "Read instrument"}
+                                {sourceLoad.status === "loading" ? "Loading…" : openSourceIds.has(cardId) ? "Close instrument" : "Read instrument"}
                               </button>
                               {source && <a className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" href={source} target="_blank" rel="noreferrer" onClick={stopCardToggle}>GitHub source ↗</a>}
                             </div>
                           </div>
                           {!rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Canonical Markdown source is unavailable for this instrument.</p>}
-                          {sourceLoad.status === "idle" && rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Select “Read instrument” to load the source Markdown inside the catalogue.</p>}
-                          {sourceLoad.status === "loading" && <p className="text-sm leading-relaxed text-muted-foreground">Loading canonical Markdown source…</p>}
-                          {sourceLoad.status === "error" && <p className="text-sm leading-relaxed text-muted-foreground">{sourceLoad.error}</p>}
-                          {sourceLoad.status === "ready" && <div className="mt-4 max-h-[32rem] overflow-auto rounded-xl border border-border/70 bg-background/45 p-4"><MarkdownText text={sourceLoad.text} /></div>}
+                          {!openSourceIds.has(cardId) && rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Select “Read instrument” to load the source Markdown inside the catalogue.</p>}
+                          {openSourceIds.has(cardId) && sourceLoad.status === "loading" && <p className="text-sm leading-relaxed text-muted-foreground">Loading canonical Markdown source…</p>}
+                          {openSourceIds.has(cardId) && sourceLoad.status === "error" && <p className="text-sm leading-relaxed text-muted-foreground">{sourceLoad.error}</p>}
+                          {openSourceIds.has(cardId) && sourceLoad.status === "ready" && (
+                            <div className="mt-4">
+                              <div className="mb-3 flex flex-wrap justify-end gap-2">
+                                <button
+                                  type="button"
+                                  className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSourceActionDialog({ action: "copy", instrument: it, text: sourceLoad.text });
+                                  }}
+                                >
+                                  Copy
+                                </button>
+                                <button
+                                  type="button"
+                                  className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setSourceActionDialog({ action: "download", instrument: it, text: sourceLoad.text });
+                                  }}
+                                >
+                                  Download
+                                </button>
+                              </div>
+                              <div className="max-h-[42rem] overflow-auto rounded-xl border border-border/70 bg-background/45 p-4"><MarkdownText text={sourceLoad.text} /></div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -511,6 +665,59 @@ export default function Catalogue() {
           </section>
         </div>
       </div>
+
+      {sourceActionDialog && (
+        <div
+          aria-labelledby="catalogue-source-action-dialog-title"
+          aria-modal="true"
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-background/70 px-4 py-6 backdrop-blur-sm"
+          role="dialog"
+          onClick={() => setSourceActionDialog(null)}
+        >
+          <div
+            className="w-full max-w-lg rounded-2xl border border-primary/25 bg-[hsl(36_48%_95%)] p-5 text-foreground shadow-2xl md:p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">Catalogue source {sourceActionDialog.action}</p>
+            <h2 id="catalogue-source-action-dialog-title" className="font-serif text-2xl leading-snug text-foreground">
+              {sourceActionDialog.action === "copy" ? "Copy instrument Markdown" : "Download instrument Markdown"}
+            </h2>
+            <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+              <p>
+                This action uses the rendered instrument Markdown source and includes the CAM Initiative citation for reuse context.
+              </p>
+              <div className="rounded-xl border border-border bg-card/55 p-3">
+                <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Please cite CAM Initiative if you use this material</p>
+                <p className="font-mono text-xs leading-relaxed text-foreground">{catalogueCitation}</p>
+              </div>
+              <p>{catalogueReuseNotice}</p>
+            </div>
+            <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                type="button"
+                onClick={() => setSourceActionDialog(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                type="button"
+                onClick={openSupportLink}
+              >
+                Support this work
+              </button>
+              <button
+                className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                type="button"
+                onClick={() => void confirmSourceAction()}
+              >
+                {sourceActionDialog.action === "copy" ? "Copy" : "Download"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Shell>
   );
 }
