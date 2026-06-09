@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
-import { filterComparisonKey, humanLabel, isMeaningfulText, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 
 const VIGIL_PAGE_SIZE = 20;
 
@@ -12,10 +12,12 @@ type SortConfig = { key: SortKey; direction: SortDirection };
 
 type FilterOption = { value: string; label: string };
 type DetailLoadState = { status: "loading" } | { status: "ready"; raw: UnknownRecord; displayRecord: VigilIndexRecord } | { status: "error"; error: string };
+type RecordActionDialog = { action: "copy" | "download"; recordKey: string; recordId: string; exportText: string; fileName: string } | null;
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
 const exportNotice = "Filtered VIGIL index-entry export from the CAM Governance Interface. Full canonical records remain in CAM-Initiative/Vigil and are loaded per record on demand.";
 const vigilRecommendedCitation = "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil";
+const camInitiativeCitationHeader = "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
 const vigilReuseNotice = "This is public-benefit governance infrastructure. Please cite VIGIL if you use this export. Public access does not imply unrestricted reuse; applicable licence and reuse terms apply.";
 const vigilSupportUrl = "https://buymeacoffee.com/cam_initiative";
 const vigilCitation = {
@@ -136,7 +138,7 @@ function compareRecordsBySort(a: VigilIndexRecord, b: VigilIndexRecord, sortConf
 }
 
 function jsonFileName(record: VigilIndexRecord) {
-  return `${(record.id || "vigil-record").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "vigil-record"}.json`;
+  return `${(record.id || "vigil-record").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "") || "vigil-record"}.json`;
 }
 
 function recordKeyFor(record: VigilIndexRecord, index = 0) {
@@ -185,6 +187,248 @@ function SummaryBlock({ title, entries, defaultOpen = false }: { title: string; 
   );
 }
 
+
+
+function hasMeaningfulValue(value: unknown): boolean {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string") return isMeaningfulText(value);
+  if (Array.isArray(value)) return value.some(hasMeaningfulValue);
+  if (isObject(value)) return Object.values(value).some(hasMeaningfulValue);
+  return true;
+}
+
+function fieldValue(record: UnknownRecord, nestedKey: string, fallback?: UnknownRecord) {
+  const value = record[nestedKey];
+  if (hasMeaningfulValue(value)) return value;
+  return fallback?.[nestedKey];
+}
+
+function valuesForKeys(record: UnknownRecord | undefined, keys: string[], fallback?: UnknownRecord) {
+  if (!record && !fallback) return [];
+  return keys
+    .map((key) => ({ key, label: humanLabel(key), value: record ? fieldValue(record, key, fallback) : fallback?.[key] }))
+    .filter((entry) => hasMeaningfulValue(entry.value));
+}
+
+function compactText(value: unknown) {
+  const text = textFrom(value);
+  return isMeaningfulText(text) ? text : undefined;
+}
+
+function primitiveItems(value: unknown) {
+  const values = arrayFrom(value);
+  return values?.filter(isMeaningfulText) ?? [];
+}
+
+function isPrimitiveList(value: unknown) {
+  return Array.isArray(value) && value.every((item) => !isObject(item));
+}
+
+function LinkValue({ value }: { value: unknown }) {
+  const text = compactText(value);
+  if (!text) return null;
+  if (/^https?:\/\//i.test(text)) {
+    return <a className="break-words text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4 hover:text-cam-gold" href={text} target="_blank" rel="noreferrer">{text}</a>;
+  }
+  return <span>{text}</span>;
+}
+
+function ValueField({ label, value }: { label: string; value: unknown }) {
+  if (!hasMeaningfulValue(value)) return null;
+
+  if (Array.isArray(value)) {
+    const chips = isPrimitiveList(value) ? primitiveItems(value) : [];
+    if (chips.length) {
+      return (
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {chips.map((item, index) => <span key={`${item}-${index}`} className="rounded-full border border-border bg-card/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">{item}</span>)}
+          </div>
+        </div>
+      );
+    }
+  }
+
+  if (isObject(value)) {
+    const entries = Object.entries(value).filter(([, item]) => hasMeaningfulValue(item));
+    if (!entries.length) return null;
+    return (
+      <div>
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
+        <div className="mt-1 space-y-1.5 text-sm leading-relaxed text-foreground">
+          {entries.map(([key, item]) => (
+            <p key={key}><span className="font-medium text-foreground/80">{humanLabel(key)}:</span> <LinkValue value={item} /></p>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
+      <p className="mt-1 text-sm leading-relaxed text-foreground"><LinkValue value={value} /></p>
+    </div>
+  );
+}
+
+function DetailSection({ title, children, defaultOpen = false, show = true }: { title: string; children: ReactNode; defaultOpen?: boolean; show?: boolean }) {
+  if (!show || !children) return null;
+  return (
+    <details className="group rounded-lg border border-border bg-background/35 px-3 py-2" open={defaultOpen}>
+      <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+        <span className="inline-flex w-full items-center gap-3">
+          <span className="inline-block h-0 w-0 shrink-0 border-y-[0.3rem] border-l-[0.45rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
+          <span>{title}</span>
+        </span>
+      </summary>
+      <div className="mt-3 border-t border-border/70 pt-3">{children}</div>
+    </details>
+  );
+}
+
+function FieldGrid({ entries }: { entries: Array<{ key: string; label: string; value: unknown }> }) {
+  if (!entries.length) return null;
+  return (
+    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      {entries.map((entry) => <ValueField key={entry.key} label={entry.label} value={entry.value} />)}
+    </div>
+  );
+}
+
+function ParagraphFields({ entries }: { entries: Array<{ key: string; label: string; value: unknown }> }) {
+  if (!entries.length) return null;
+  return (
+    <div className="space-y-4">
+      {entries.map((entry) => (
+        <div key={entry.key}>
+          <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">{entry.label}</p>
+          <div className="text-sm leading-relaxed text-foreground"><ValueBody value={entry.value} /></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ValueBody({ value }: { value: unknown }) {
+  if (Array.isArray(value)) {
+    const chips = isPrimitiveList(value) ? primitiveItems(value) : [];
+    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className="rounded-full border border-border bg-card/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">{item}</span>)}</div>;
+  }
+  if (isObject(value)) {
+    const entries = Object.entries(value).filter(([, item]) => hasMeaningfulValue(item));
+    return <div className="grid gap-2 md:grid-cols-2">{entries.map(([key, item]) => <ValueField key={key} label={humanLabel(key)} value={item} />)}</div>;
+  }
+  return <p>{compactText(value)}</p>;
+}
+
+function CompactObjectCards({ items, keys, titleKeys = [] }: { items: unknown; keys: string[]; titleKeys?: string[] }) {
+  const records = Array.isArray(items) ? items.filter(isObject) : isObject(items) ? [items] : [];
+  if (!records.length) return null;
+  return (
+    <div className="space-y-3">
+      {records.map((item, index) => {
+        const title = titleKeys.map((key) => compactText(item[key])).find(isMeaningfulText);
+        const entries = valuesForKeys(item, keys.filter((key) => !titleKeys.includes(key)));
+        const sourceUrl = compactText(item.source_url ?? item.url);
+        const archiveUrl = compactText(item.archive_url);
+        return (
+          <article key={`${title ?? "record"}-${index}`} className="rounded-lg border border-border bg-card/45 p-3">
+            {title && <h4 className="mb-2 font-serif text-base leading-snug text-foreground">{title}</h4>}
+            <FieldGrid entries={entries} />
+            {(sourceUrl || archiveUrl) && (
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                {sourceUrl && <a className="rounded-md border border-border bg-background/70 px-2.5 py-1.5 text-[hsl(32_62%_25%)] transition hover:text-cam-gold" href={sourceUrl} target="_blank" rel="noreferrer">Source link →</a>}
+                {archiveUrl && <a className="rounded-md border border-border bg-background/70 px-2.5 py-1.5 text-[hsl(32_62%_25%)] transition hover:text-cam-gold" href={archiveUrl} target="_blank" rel="noreferrer">Archive link →</a>}
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+function FailureModeDetailView({ record }: { record: VigilIndexRecord }) {
+  const raw = record.raw;
+  const systemContext = isObject(raw.system_context) ? raw.system_context : raw;
+  const failureClassification = isObject(raw.failure_classification) ? raw.failure_classification : raw;
+  const triage = isObject(raw.triage) ? raw.triage : raw;
+  const jurisdiction = isObject(raw.jurisdictional_context) ? raw.jurisdictional_context : raw;
+  const camInternal = isObject(raw.cam_internal) ? raw.cam_internal : raw;
+  const linkedRecords = isObject(raw.linked_records) ? raw.linked_records : undefined;
+
+  const sourceSummaryEntries = valuesForKeys(raw, ["summary", "why_it_matters_to_CAM", "failure_mode_definition", "failure_threshold"]);
+  const systemEntries = valuesForKeys(systemContext, ["system_type", "platform_or_vendor", "vendor_cluster", "primary_evidenced_vendors", "product_or_service", "interface_surface", "deployment_context", "user_role", "affected_population"], raw);
+  const classificationEntries = valuesForKeys(failureClassification, ["failure_family", "failure_subtype", "harm_vectors", "severity", "likelihood", "confidence", "affected_rights_or_interests", "failure_scope", "recurrence_pattern", "taxonomy_reference", "related_failure_groups", "persistence", "reproducibility", "visibility"], raw);
+  const triageEntries = valuesForKeys(triage, ["triage_priority", "triage_owner", "triage_status", "mitigation_status", "escalation_required", "recommended_next_step"], raw);
+  const jurisdictionEntries = valuesForKeys(jurisdiction, ["primary_jurisdiction", "secondary_jurisdictions", "regulatory_surface"]);
+  const impactEntries = valuesForKeys(raw, ["distinguishing_observations", "user_impact"]);
+  const gapEntries = valuesForKeys(raw, ["governance_gap", "repair_hypothesis"]);
+  const linkedEntries = linkedRecords ? valuesForKeys(linkedRecords, ["predecessor_records", "related_observations", "related_failure_modes", "related_proposals", "related_patch_notes", "potential_child_records", "potential_patch_records", "external_reference_cluster"]) : valuesForKeys(raw, ["predecessor_records", "related_observations", "related_failure_modes", "related_proposals", "related_patch_notes", "potential_child_records", "potential_patch_records", "external_reference_cluster"]);
+  const camEntries = valuesForKeys(camInternal, ["cam_relevance", "cam_failure_type", "cam_compliance_status", "cam_internal_failure_statement", "cam_expected_control", "cam_observed_failure", "cam_taxonomy_primary_group", "cam_taxonomy_secondary_groups", "cam_taxonomy_candidate_labels", "cam_controls_implicated", "recommended_cam_action"], raw);
+
+  return (
+    <div className="space-y-2">
+      <DetailSection title="System Context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0}><FieldGrid entries={systemEntries} /></DetailSection>
+      <DetailSection title="Source Record / Failure Summary" defaultOpen={sourceSummaryEntries.length > 0} show={sourceSummaryEntries.length > 0}><ParagraphFields entries={sourceSummaryEntries} /></DetailSection>
+      <DetailSection title="Evidence & Sources" show={hasMeaningfulValue(raw.source_records)}><CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_platform", "system_or_product", "source_context", "relevance_note"]} /></DetailSection>
+      <DetailSection title="Failure Classification" show={classificationEntries.length > 0}><FieldGrid entries={classificationEntries} /></DetailSection>
+      <DetailSection title="Triage & Status" show={triageEntries.length > 0}><FieldGrid entries={triageEntries} /></DetailSection>
+      <DetailSection title="Jurisdictional / Standards Context" show={jurisdictionEntries.length > 0 || hasMeaningfulValue(jurisdiction.external_standards_or_regulations ?? raw.external_standards_or_regulations)}>
+        <div className="space-y-3">
+          <FieldGrid entries={jurisdictionEntries} />
+          <CompactObjectCards items={jurisdiction.external_standards_or_regulations ?? raw.external_standards_or_regulations} titleKeys={["instrument"]} keys={["jurisdiction", "instrument", "status", "failure_relevance", "x_should_have_happened", "y_happened_instead"]} />
+        </div>
+      </DetailSection>
+      <DetailSection title="Impact & Distinguishing Observations" show={impactEntries.length > 0}><ParagraphFields entries={impactEntries} /></DetailSection>
+      <DetailSection title="CAM Coverage & Governance Gap" show={hasMeaningfulValue(raw.existing_cam_coverage) || gapEntries.length > 0}>
+        <div className="space-y-3">
+          <CompactObjectCards items={raw.existing_cam_coverage} titleKeys={["instrument"]} keys={["instrument", "coverage_type", "relevance", "internal_failure"]} />
+          <ParagraphFields entries={gapEntries} />
+        </div>
+      </DetailSection>
+      <DetailSection title="Recommended Repair Path" show={hasMeaningfulValue(raw.recommended_repair_path)}><CompactObjectCards items={raw.recommended_repair_path} titleKeys={["repair_action"]} keys={["repair_action", "expected_control", "implementation_note"]} /></DetailSection>
+      <DetailSection title="Linked Records" show={linkedEntries.length > 0}><FieldGrid entries={linkedEntries} /></DetailSection>
+      <DetailSection title="CAM Internal" show={camEntries.length > 0}><FieldGrid entries={camEntries} /></DetailSection>
+    </div>
+  );
+}
+
+function GenericDetailView({ record }: { record: VigilIndexRecord }) {
+  const raw = record.raw;
+  const openEntries = valuesForKeys(raw, ["summary", "source_summary", "system_summary", "proposal_summary", "change_summary", "verification_summary", "impact_summary"]);
+  const curatedTopLevelKeys = [
+    "record_identity", "source_records", "system_context", "failure_classification", "triage", "jurisdictional_context", "distinguishing_observations", "user_impact", "existing_cam_coverage", "governance_gap", "repair_hypothesis", "recommended_repair_path", "linked_records", "cam_internal",
+  ];
+  const fallbackSections = Object.entries(raw)
+    .filter(([key, value]) => !["path", "raw_url", "github_blob_url"].includes(key) && !openEntries.some((entry) => entry.key === key) && (curatedTopLevelKeys.includes(key) || isObject(value) || Array.isArray(value)))
+    .filter(([, value]) => hasMeaningfulValue(value));
+
+  return (
+    <div className="space-y-2">
+      <DetailSection title="Core Record Content" defaultOpen={openEntries.length > 0} show={openEntries.length > 0}><ParagraphFields entries={openEntries} /></DetailSection>
+      {fallbackSections.map(([key, value], index) => (
+        <DetailSection key={key} title={humanLabel(key)} defaultOpen={index === 0 && openEntries.length === 0}>
+          {Array.isArray(value) && value.some(isObject)
+            ? <CompactObjectCards items={value} titleKeys={["title", "source_title", "instrument", "repair_action"]} keys={Array.from(new Set(value.filter(isObject).flatMap((item) => Object.keys(item)).slice(0, 12)))} />
+            : <ValueBody value={value} />}
+        </DetailSection>
+      ))}
+      {!openEntries.length && !fallbackSections.length && <SummaryBlock title="Record Summary" entries={summaryBlocksFor(record).flatMap((name) => record.summaries[name] ?? [])} defaultOpen />}
+    </div>
+  );
+}
+
+function CuratedRecordDetail({ record }: { record: VigilIndexRecord }) {
+  if (record.record_type === "failure_mode") return <FailureModeDetailView record={record} />;
+  return <GenericDetailView record={record} />;
+}
+
+function recordExportText(jsonText: string) {
+  return `${camInitiativeCitationHeader}\n\n${vigilReuseNotice}\n\n${jsonText}\n`;
+}
 
 function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url">) {
   return record.github_blob_url || undefined;
@@ -243,6 +487,7 @@ export default function Vigil() {
   const [loadNotice, setLoadNotice] = useState("");
   const [recordPage, setRecordPage] = useState(1);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [recordActionDialog, setRecordActionDialog] = useState<RecordActionDialog>(null);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
   const [copiedRecordKey, setCopiedRecordKey] = useState<string | null>(null);
   const [detailLoads, setDetailLoads] = useState<Record<string, DetailLoadState>>({});
@@ -291,15 +536,17 @@ export default function Vigil() {
   }, [filters, search, sortConfig]);
 
   useEffect(() => {
-    if (!isExportDialogOpen) return;
+    if (!isExportDialogOpen && !recordActionDialog) return;
 
     function closeOnEscape(event: globalThis.KeyboardEvent) {
-      if (event.key === "Escape") setIsExportDialogOpen(false);
+      if (event.key !== "Escape") return;
+      setIsExportDialogOpen(false);
+      setRecordActionDialog(null);
     }
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isExportDialogOpen]);
+  }, [isExportDialogOpen, recordActionDialog]);
 
   const recordPageCount = Math.max(1, Math.ceil(filtered.length / VIGIL_PAGE_SIZE));
   const currentRecordPage = Math.min(recordPage, recordPageCount);
@@ -348,13 +595,50 @@ export default function Vigil() {
   async function copyRecordJson(record: VigilIndexRecord, recordKey: string) {
     const detailJson = await ensureRecordDetail(record, recordKey);
     const jsonText = JSON.stringify(detailJson, null, 2);
+    setRecordActionDialog({
+      action: "copy",
+      recordKey,
+      recordId: record.id || "VIGIL record",
+      exportText: recordExportText(jsonText),
+      fileName: jsonFileName(record),
+    });
+  }
+
+  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
+    const detailJson = await ensureRecordDetail(record, recordKey);
+    const jsonText = JSON.stringify(detailJson, null, 2);
+    setRecordActionDialog({
+      action: "download",
+      recordKey,
+      recordId: record.id || "VIGIL record",
+      exportText: recordExportText(jsonText),
+      fileName: jsonFileName(record),
+    });
+  }
+
+  async function confirmRecordAction() {
+    if (!recordActionDialog) return;
+
+    if (recordActionDialog.action === "download") {
+      const blob = new Blob([recordActionDialog.exportText], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = recordActionDialog.fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setRecordActionDialog(null);
+      return;
+    }
 
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(jsonText);
+        await navigator.clipboard.writeText(recordActionDialog.exportText);
       } else {
         const textArea = document.createElement("textarea");
-        textArea.value = jsonText;
+        textArea.value = recordActionDialog.exportText;
         textArea.setAttribute("readonly", "");
         textArea.style.position = "fixed";
         textArea.style.top = "-9999px";
@@ -365,26 +649,15 @@ export default function Vigil() {
         if (!copied) throw new Error("Clipboard copy failed");
       }
 
-      setCopiedRecordKey(recordKey);
+      const copiedKey = recordActionDialog.recordKey;
+      setCopiedRecordKey(copiedKey);
       window.setTimeout(() => {
-        setCopiedRecordKey((current) => (current === recordKey ? null : current));
+        setCopiedRecordKey((current) => (current === copiedKey ? null : current));
       }, 2000);
+      setRecordActionDialog(null);
     } catch {
       setCopiedRecordKey(null);
     }
-  }
-
-  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
-    const detailJson = await ensureRecordDetail(record, recordKey);
-    const blob = new Blob([`${JSON.stringify(detailJson, null, 2)}\n`], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = jsonFileName(record);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
   }
 
   function toggleExpandedRecord(record: VigilIndexRecord, recordKey: string) {
@@ -565,6 +838,55 @@ export default function Vigil() {
           </div>
         )}
 
+
+        {recordActionDialog && (
+          <div
+            aria-labelledby="vigil-record-action-dialog-title"
+            aria-modal="true"
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-background/70 px-4 py-6 backdrop-blur-sm"
+            role="dialog"
+          >
+            <div className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl border border-primary/25 bg-[hsl(36_48%_95%)] p-5 text-foreground shadow-2xl md:p-6">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">VIGIL canonical record</p>
+              <h2 id="vigil-record-action-dialog-title" className="font-serif text-2xl leading-snug text-foreground">
+                {recordActionDialog.action === "copy" ? "Copy canonical JSON" : "Download canonical JSON"}
+              </h2>
+              <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                <p>The technical JSON export for <span className="font-mono text-foreground">{recordActionDialog.recordId}</span> will include the CAM Initiative citation/header block before the complete unedited canonical JSON record.</p>
+                <div className="rounded-xl border border-border bg-card/55 p-3">
+                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Citation / attribution header</p>
+                  <p className="font-mono text-xs leading-relaxed text-foreground">{camInitiativeCitationHeader}</p>
+                </div>
+                <p>This is public-benefit governance infrastructure. If this work is useful, support helps cover infrastructure, archival, publication, and maintenance costs.</p>
+                <pre className="max-h-56 overflow-auto rounded-lg border border-border bg-card/60 p-3 text-[11px] leading-relaxed text-muted-foreground">{recordActionDialog.exportText}</pre>
+              </div>
+              <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <button
+                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={() => setRecordActionDialog(null)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={openSupportLink}
+                >
+                  Support this work
+                </button>
+                <button
+                  className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={confirmRecordAction}
+                >
+                  {recordActionDialog.action === "copy" ? "Copy" : "Download"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <section className="space-y-4" data-result-range-example="Showing 1–20">
           <div className="cam-parchment-card rounded-xl p-4 shadow-sm">
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -706,8 +1028,6 @@ export default function Vigil() {
                 const detailRecord = detailLoad?.status === "ready" ? detailLoad.displayRecord : record;
                 const detailRecordDate = detailRecord.date_recorded ?? detailRecord.date_implemented ?? "Date not specified";
                 const displayRecordId = record.id;
-                const defaultOpenSummaries = defaultOpenSummaryNames(detailRecord);
-
                 return (
                 <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
                   {!isExpanded && (
@@ -803,24 +1123,20 @@ export default function Vigil() {
                     {previewText(detailRecord.summary) && detailRecord.summary !== detailRecord.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{detailRecord.summary}</p>}
 
                     <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
+                      <Field label="Date Recorded" value={detailRecord.record_type === "patch_note" ? undefined : detailRecordDate} />
                       <Field label="Date Implemented" value={detailRecord.record_type === "patch_note" ? detailRecord.date_implemented : undefined} />
                       <Field label="Evidence Confidence" value={detailRecord.record_type === "patch_note" ? undefined : detailRecord.evidence_confidence} />
                       <Field label="Next Action" value={["observation", "proposal"].includes(detailRecord.record_type) ? detailRecord.next_action : undefined} />
                       <Field label="Source Platform" value={detailRecord.source_platform} />
                       <Field label="Source Type" value={detailRecord.source_types?.join("; ")} />
-                      <Field label="Source Context" value={detailRecord.source_record_hint} />
                       <Field label="Observed System Vendor" value={detailRecord.observed_vendor} />
                       <Field label="Observed Model / Product" value={detailRecord.observed_product} />
                     </div>
 
-                    <div className="space-y-2">
-                      {summaryBlocksFor(detailRecord).map((name) => (
-                        <SummaryBlock key={name} title={humanLabel(name)} entries={detailRecord.summaries[name]} defaultOpen={defaultOpenSummaries.has(name)} />
-                      ))}
-                    </div>
+                    <CuratedRecordDetail record={detailRecord} />
 
                     <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
-                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON record</summary>
+                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>
                       <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <p className="text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
                         <div className="flex shrink-0 flex-wrap gap-2">
@@ -842,13 +1158,6 @@ export default function Vigil() {
                           </button>
                         </div>
                       </div>
-                      {(detailRecord.record_type === "proposal" || detailRecord.record_type === "patch_note") && (
-                        <div className="mt-3 grid gap-3 md:grid-cols-3">
-                          <Field label="Affected Domains" value={detailRecord.affected_domains?.join("; ")} />
-                          <Field label="Affected Instruments" value={detailRecord.affected_instruments?.join("; ")} />
-                          <Field label="Affected Annexes" value={detailRecord.affected_annexes?.join("; ")} />
-                        </div>
-                      )}
                       <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(detailRecord.raw, null, 2)}</pre>
                     </details>
 
