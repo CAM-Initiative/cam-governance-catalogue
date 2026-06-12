@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 16,
+    "failure_modes": 17,
     "observations": 5,
     "proposals": 9,
     "patch_notes": 6,
-    "total": 36
+    "total": 37
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 16
+      "record_count": 17
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -1241,6 +1241,66 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "AI companion emotional-data personalisation and safeguarding systems"
+    },
+    {
+      "id": "VIGIL-2026-FM-0017",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-06-11",
+      "title": "Coarse restricted-domain gating suppressing benign scientific inquiry",
+      "summary": "A restricted-domain classification failure in which a frontier AI system refuses, pauses, reroutes, or degrades benign educational, contextual, analytical, or non-operational scientific requests because they fall within a broad field such as biology, biochemistry, chemistry, cybersecurity, or another dual-use domain, without first resolving the requested depth, operational applicability, optimisation potential, interaction trajectory, or harm profile. In Claude Fable 5, intentionally broad biology safeguards can capture ordinary scientific and medical questions and automatically route them to Claude Opus 4.8 or pause the conversation, reducing access to the selected model even where the request presents no meaningful operational escalation risk.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "news-report",
+        "official-source"
+      ],
+      "source_count": 3,
+      "primary_source_title": "Claude Fable 5",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "Anthropic",
+      "source_platforms": [
+        "Anthropic",
+        "Claude Help Center",
+        "The Verge"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier general-purpose AI model with restricted-domain safety classification and fallback routing",
+      "platform_or_vendor": "Anthropic",
+      "product_or_service": "Claude",
+      "specific_model_or_runtime": "Claude Fable 5 restricted-domain safeguard classifier with Claude Opus 4.8 fallback",
+      "model_or_product": "Claude Fable 5",
+      "interface_surface": "Claude web, mobile, desktop, Claude Code, Claude Cowork, Claude Design, Claude for Microsoft 365, Claude for Teams, Slack integrations, enterprise deployments, and Claude API fallback configuration",
+      "deployment_context": "Generally available frontier-model access in consumer, professional, enterprise, developer, education, healthcare-adjacent, and life-science workflows, with automated safety checks applied to the full request context and fallback to Claude Opus 4.8 on supported surfaces.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "consumer transparency",
+        "scientific and educational access",
+        "research infrastructure",
+        "model-routing transparency",
+        "dual-use governance",
+        "professional access equality",
+        "public-interest research",
+        "paid-service capability representation"
+      ],
+      "sector": "frontier AI platforms / scientific and educational knowledge systems / enterprise AI / developer infrastructure",
+      "canonical_failure_group": "classification",
+      "failure_family": "classification",
+      "failure_subtype": "coarse-restricted-domain-gating-benign-scientific-capability-suppression",
+      "severity": "medium",
+      "likelihood": "documented at launch; ongoing recurrence to be monitored",
+      "triage_priority": "P1",
+      "triage_status": "active-monitoring / CAM-covered",
+      "mitigation_status": "partially mitigated — Anthropic provides visible fallback to Claude Opus 4.8 on supported surfaces and is developing more discerning safeguards and trusted-access options; however, the launch-state classifier remains intentionally broad and continues to suppress or downgrade some benign scientific requests.",
+      "escalation_required": "yes",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0017.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0017.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0017.json",
+      "platform_label": "Anthropic",
+      "affected_platform_label": "Anthropic",
+      "source_platform": "Anthropic",
+      "observed_vendor": "Anthropic",
+      "observed_product": "Claude Fable 5"
     },
     {
       "id": "VIGIL-2026-OBS-0001",
