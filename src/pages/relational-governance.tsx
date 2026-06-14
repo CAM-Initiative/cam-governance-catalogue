@@ -298,7 +298,7 @@ function SourcePanel({
       <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: GOLD }}>
         {heading}
       </p>
-      <div className="space-y-2.5">
+      <div className="grid gap-4 md:grid-cols-2">
         {sources.map((ref) => {
           const item = resolveSource(ref, byId);
           const body = (
@@ -582,12 +582,12 @@ export default function RelationalGovernance() {
         >
           <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Interface</p>
           <h1 className="mb-3 font-serif text-4xl text-foreground">Relational Governance for Companion Systems</h1>
+          <p className="mb-4 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">
+            Warmth without capture. Continuity without authority. Presence without dependency.
+          </p>
           <hr className="gold-rule mb-4 w-24" />
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
             CAM routes relational signals through consent, boundary, stability, dependency, ethics, and continuity safeguards before response posture is selected.
-          </p>
-          <p className="mt-4 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">
-            Warmth without capture. Continuity without authority. Presence without dependency.
           </p>
         </motion.div>
 

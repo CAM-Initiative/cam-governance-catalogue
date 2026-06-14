@@ -166,6 +166,28 @@ function stopCardToggle(event: MouseEvent<HTMLElement>) {
   event.stopPropagation();
 }
 
+
+function instrumentJsonFileName(instrument: Instrument) {
+  const id = cleanValue(instrument.id).replace(/[\/:*?"<>|]+/g, "-").replace(/^-+|-+$/g, "");
+  return `${id || "cam-catalogue-record"}.json`;
+}
+
+function instrumentJsonText(instrument: Instrument) {
+  return `${JSON.stringify(instrument, null, 2)}\n`;
+}
+
+function downloadInstrumentJson(instrument: Instrument) {
+  const blob = new Blob([instrumentJsonText(instrument)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = instrumentJsonFileName(instrument);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 function instrumentMarkdownFileName(instrument: Instrument) {
   const id = cleanValue(instrument.id).replace(/[\\/:*?"<>|]+/g, "-").replace(/^-+|-+$/g, "");
   return `${id || "cam-instrument"}.md`;
@@ -230,6 +252,7 @@ export default function Catalogue() {
   const [metadataOpenIds, setMetadataOpenIds] = useState<Set<string>>(() => new Set());
   const [openSourceIds, setOpenSourceIds] = useState<Set<string>>(() => new Set());
   const [sourceActionDialog, setSourceActionDialog] = useState<SourceActionDialog>(null);
+  const [copiedJsonId, setCopiedJsonId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sourceLoads, setSourceLoads] = useState<Record<string, SourceLoadState>>({});
   const sourceTextCache = useRef(new Map<string, string>());
@@ -381,6 +404,12 @@ export default function Catalogue() {
     setSourceActionDialog(null);
   }
 
+  async function copyInstrumentJson(instrument: Instrument, cardId: string) {
+    await writeTextToClipboard(instrumentJsonText(instrument));
+    setCopiedJsonId(cardId);
+    window.setTimeout(() => setCopiedJsonId((current) => (current === cardId ? null : current)), 2000);
+  }
+
   function openSupportLink() {
     window.open(catalogueSupportUrl, "_blank", "noopener,noreferrer");
   }
@@ -518,19 +547,27 @@ export default function Catalogue() {
                         <p className="min-w-0 break-words font-mono text-xs uppercase tracking-[0.14em] text-cam-gold">
                           {it.id || "Unresolved/source mapping required"}
                         </p>
-                        {source ? (
-                          <a
-                            href={source}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={stopCardToggle}
-                            className="shrink-0 rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25"
-                          >
-                            Source ↗
-                          </a>
-                        ) : (
-                          <span className="shrink-0 rounded-md border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs text-red-700">Source unavailable</span>
-                        )}
+                        <div className="flex shrink-0 flex-wrap justify-end gap-2">
+                          {source ? (
+                            <a
+                              href={source}
+                              target="_blank"
+                              rel="noreferrer"
+                              onClick={stopCardToggle}
+                              className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25"
+                            >
+                              Source ↗
+                            </a>
+                          ) : (
+                            <span className="rounded-md border border-red-200 bg-red-50/60 px-2.5 py-1 text-xs text-red-700">Source unavailable</span>
+                          )}
+                          <button type="button" className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void copyInstrumentJson(it, cardId); }}>
+                            {copiedJsonId === cardId ? "Copied" : "Copy JSON"}
+                          </button>
+                          <button type="button" className="rounded-md border border-border bg-background/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold transition-colors hover:border-primary/30 hover:bg-card hover:text-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); downloadInstrumentJson(it); }}>
+                            Download JSON
+                          </button>
+                        </div>
                       </div>
 
                       <div className="min-w-0">
@@ -621,7 +658,6 @@ export default function Catalogue() {
                               >
                                 {sourceLoad.status === "loading" ? "Loading…" : openSourceIds.has(cardId) ? "Close instrument" : "Read instrument"}
                               </button>
-                              {source && <a className="rounded-md border border-border bg-card/70 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" href={source} target="_blank" rel="noreferrer" onClick={stopCardToggle}>GitHub source ↗</a>}
                             </div>
                           </div>
                           {!rawSource && <p className="text-sm leading-relaxed text-muted-foreground">Canonical Markdown source is unavailable for this instrument.</p>}
