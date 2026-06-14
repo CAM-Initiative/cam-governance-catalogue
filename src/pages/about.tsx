@@ -192,7 +192,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Institutional context" />
-          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
+          <article className="rounded-2xl border border-border/70 bg-background/30 p-6 shadow-sm">
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
                 The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for the publication and maintenance of CAM governance materials and the VIGIL Observatory.
@@ -212,7 +212,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Purpose" />
-          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
+          <article className="rounded-2xl border border-border/70 bg-background/30 p-6 shadow-sm">
             <div className="grid gap-3">
               <AboutDetails title="Vision: Civilisational Readiness">
                 <p>
@@ -226,7 +226,7 @@ export default function About() {
                 </p>
               </AboutDetails>
 
-              <section className="cam-parchment-card relative overflow-hidden rounded-2xl p-5 shadow-sm" aria-labelledby="foundational-principles-heading">
+              <section className="relative overflow-hidden rounded-2xl p-5 shadow-sm" style={goldPanelStyle} aria-labelledby="foundational-principles-heading">
                 <img
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-8 top-4 h-36 w-36 opacity-[0.045]"
@@ -241,7 +241,8 @@ export default function About() {
                 <div className="grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
                     <article
-                      className="rounded-xl border border-cam-gold/25 bg-[hsl(36_48%_96%)] p-4 shadow-sm"
+                      className="rounded-xl p-4 shadow-sm"
+                      style={{ backgroundColor: "rgba(184,147,90,0.09)", border: `1px solid ${GOLD_BORDER}` }}
                       key={principle.num}
                     >
                       <div className="mb-2 flex items-baseline gap-2">
@@ -266,7 +267,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
         >
           <SectionHeading eyebrow="Why it matters" />
-          <article className="cam-parchment-card rounded-2xl p-6 shadow-sm">
+          <article className="rounded-2xl border border-border/70 bg-background/30 p-6 shadow-sm">
             <div className="space-y-4 text-base font-light leading-relaxed text-muted-foreground">
               <p>
                 The CAM Initiative began with two questions: whether AI systems can govern themselves, and what a global governance model would require if it had to arbitrate across jurisdictions, institutions, technical systems, social contexts, and forms of intelligence.

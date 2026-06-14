@@ -322,7 +322,7 @@ export function RuntimeModelContent() {
         {/* ── Runtime Flow section divider ── */}
         <div className="shrink-0 px-6 md:px-10 pt-5 pb-2">
           <div className="flex items-center gap-3">
-            <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Runtime Flow</p>
+            <p className="font-mono text-sm tracking-[0.22em] uppercase text-cam-gold shrink-0">Runtime Flow</p>
             <hr className="gold-rule flex-1" />
           </div>
         </div>

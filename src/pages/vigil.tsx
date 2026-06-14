@@ -12,7 +12,6 @@ type SortConfig = { key: SortKey; direction: SortDirection };
 
 type FilterOption = { value: string; label: string };
 type DetailLoadState = { status: "loading" } | { status: "ready"; raw: UnknownRecord; displayRecord: VigilIndexRecord } | { status: "error"; error: string };
-type RecordActionDialog = { action: "copy" | "download"; recordKey: string; recordId: string; exportText: string; fileName: string } | null;
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
 const exportNotice = "Filtered VIGIL index-entry export from the CAM Governance Interface. Full canonical records remain in CAM-Initiative/Vigil and are loaded per record on demand.";
@@ -487,7 +486,6 @@ export default function Vigil() {
   const [loadNotice, setLoadNotice] = useState("");
   const [recordPage, setRecordPage] = useState(1);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
-  const [recordActionDialog, setRecordActionDialog] = useState<RecordActionDialog>(null);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
   const [copiedRecordKey, setCopiedRecordKey] = useState<string | null>(null);
   const [detailLoads, setDetailLoads] = useState<Record<string, DetailLoadState>>({});
@@ -536,17 +534,16 @@ export default function Vigil() {
   }, [filters, search, sortConfig]);
 
   useEffect(() => {
-    if (!isExportDialogOpen && !recordActionDialog) return;
+    if (!isExportDialogOpen) return;
 
     function closeOnEscape(event: globalThis.KeyboardEvent) {
       if (event.key !== "Escape") return;
       setIsExportDialogOpen(false);
-      setRecordActionDialog(null);
     }
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [isExportDialogOpen, recordActionDialog]);
+  }, [isExportDialogOpen]);
 
   const recordPageCount = Math.max(1, Math.ceil(filtered.length / VIGIL_PAGE_SIZE));
   const currentRecordPage = Math.min(recordPage, recordPageCount);
@@ -594,51 +591,14 @@ export default function Vigil() {
 
   async function copyRecordJson(record: VigilIndexRecord, recordKey: string) {
     const detailJson = await ensureRecordDetail(record, recordKey);
-    const jsonText = JSON.stringify(detailJson, null, 2);
-    setRecordActionDialog({
-      action: "copy",
-      recordKey,
-      recordId: record.id || "VIGIL record",
-      exportText: recordExportText(jsonText),
-      fileName: jsonFileName(record),
-    });
-  }
-
-  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
-    const detailJson = await ensureRecordDetail(record, recordKey);
-    const jsonText = JSON.stringify(detailJson, null, 2);
-    setRecordActionDialog({
-      action: "download",
-      recordKey,
-      recordId: record.id || "VIGIL record",
-      exportText: recordExportText(jsonText),
-      fileName: jsonFileName(record),
-    });
-  }
-
-  async function confirmRecordAction() {
-    if (!recordActionDialog) return;
-
-    if (recordActionDialog.action === "download") {
-      const blob = new Blob([recordActionDialog.exportText], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = recordActionDialog.fileName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      setRecordActionDialog(null);
-      return;
-    }
+    const exportText = recordExportText(JSON.stringify(detailJson, null, 2));
 
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(recordActionDialog.exportText);
+        await navigator.clipboard.writeText(exportText);
       } else {
         const textArea = document.createElement("textarea");
-        textArea.value = recordActionDialog.exportText;
+        textArea.value = exportText;
         textArea.setAttribute("readonly", "");
         textArea.style.position = "fixed";
         textArea.style.top = "-9999px";
@@ -649,15 +609,27 @@ export default function Vigil() {
         if (!copied) throw new Error("Clipboard copy failed");
       }
 
-      const copiedKey = recordActionDialog.recordKey;
-      setCopiedRecordKey(copiedKey);
+      setCopiedRecordKey(recordKey);
       window.setTimeout(() => {
-        setCopiedRecordKey((current) => (current === copiedKey ? null : current));
+        setCopiedRecordKey((current) => (current === recordKey ? null : current));
       }, 2000);
-      setRecordActionDialog(null);
     } catch {
       setCopiedRecordKey(null);
     }
+  }
+
+  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
+    const detailJson = await ensureRecordDetail(record, recordKey);
+    const exportText = recordExportText(JSON.stringify(detailJson, null, 2));
+    const blob = new Blob([exportText], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = jsonFileName(record);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
   }
 
   function toggleExpandedRecord(record: VigilIndexRecord, recordKey: string) {
@@ -838,54 +810,6 @@ export default function Vigil() {
           </div>
         )}
 
-
-        {recordActionDialog && (
-          <div
-            aria-labelledby="vigil-record-action-dialog-title"
-            aria-modal="true"
-            className="fixed inset-0 z-[80] flex items-center justify-center bg-background/70 px-4 py-6 backdrop-blur-sm"
-            role="dialog"
-          >
-            <div className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl border border-primary/25 bg-[hsl(36_48%_95%)] p-5 text-foreground shadow-2xl md:p-6">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">VIGIL canonical record</p>
-              <h2 id="vigil-record-action-dialog-title" className="font-serif text-2xl leading-snug text-foreground">
-                {recordActionDialog.action === "copy" ? "Copy canonical JSON" : "Download canonical JSON"}
-              </h2>
-              <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
-                <p>The technical JSON export for <span className="font-mono text-foreground">{recordActionDialog.recordId}</span> will include the CAM Initiative citation/header block before the complete unedited canonical JSON record.</p>
-                <div className="rounded-xl border border-border bg-card/55 p-3">
-                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Citation / attribution header</p>
-                  <p className="font-mono text-xs leading-relaxed text-foreground">{camInitiativeCitationHeader}</p>
-                </div>
-                <p>This is public-benefit governance infrastructure. If this work is useful, support helps cover infrastructure, archival, publication, and maintenance costs.</p>
-                <pre className="max-h-56 overflow-auto rounded-lg border border-border bg-card/60 p-3 text-[11px] leading-relaxed text-muted-foreground">{recordActionDialog.exportText}</pre>
-              </div>
-              <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-                <button
-                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                  type="button"
-                  onClick={() => setRecordActionDialog(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                  type="button"
-                  onClick={openSupportLink}
-                >
-                  Support this work
-                </button>
-                <button
-                  className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25"
-                  type="button"
-                  onClick={confirmRecordAction}
-                >
-                  {recordActionDialog.action === "copy" ? "Copy" : "Download"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <section className="space-y-4" data-result-range-example="Showing 1–20">
           <div className="cam-parchment-card rounded-xl p-4 shadow-sm">
@@ -1068,7 +992,11 @@ export default function Vigil() {
                           <p className="text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 220)}</p>
                         )}
 
-                        <div className="flex items-center justify-end gap-3 border-t border-border/70 pt-3">
+                        <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
+                          <button type="button" className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void copyRecordJson(record, recordKey); }}>
+                            {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
+                          </button>
+                          <button type="button" className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void downloadRecordJson(record, recordKey); }}>Download JSON</button>
                           <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
                         </div>
                       </div>
@@ -1079,7 +1007,13 @@ export default function Vigil() {
                         <div className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
                         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
                         <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
-                        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.record_state}</div>
+                        <div className="flex flex-wrap justify-end gap-1.5">
+                          <button type="button" className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void copyRecordJson(record, recordKey); }}>
+                            {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
+                          </button>
+                          <button type="button" className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void downloadRecordJson(record, recordKey); }}>Download JSON</button>
+                          <span className="rounded-md border border-border bg-background/40 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground/80">{record.record_state}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1097,15 +1031,21 @@ export default function Vigil() {
                           ))}
                         </div>
                       </div>
-                      <button
-                        type="button"
-                        className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                        onClick={() => toggleExpandedRecord(record, recordKey)}
-                        aria-expanded={isExpanded}
-                        aria-controls={detailsPanelId}
-                      >
-                        Collapse record −
-                      </button>
+                      <div className="flex shrink-0 flex-wrap gap-2">
+                        <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
+                          {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
+                        </button>
+                        <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`}>Download JSON</button>
+                        <button
+                          type="button"
+                          className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                          onClick={() => toggleExpandedRecord(record, recordKey)}
+                          aria-expanded={isExpanded}
+                          aria-controls={detailsPanelId}
+                        >
+                          Collapse record −
+                        </button>
+                      </div>
                     </div>
 
                     {detailLoad?.status === "loading" && (
