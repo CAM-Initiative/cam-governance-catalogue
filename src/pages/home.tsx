@@ -229,9 +229,7 @@ function ProblemSpaceCarousel() {
               >
                 <div className="mb-5 flex items-center justify-between gap-4 border-b border-cam-gold/25 pb-4">
                   <p className="font-mono text-xs uppercase tracking-[0.2em] text-cam-gold">{card.eyebrow}</p>
-                  <span className="rounded-full border border-cam-gold/30 bg-[rgba(184,147,90,0.08)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">
-                    Click or swipe
-                  </span>
+                  <span className="sr-only">Click or swipe to show the next problem-space card.</span>
                 </div>
                 <h3 className="mb-5 font-serif text-2xl leading-tight text-foreground md:text-3xl">{card.headline}</h3>
                 <p className="mb-6 text-base font-light leading-relaxed text-muted-foreground md:text-lg">{card.body}</p>
@@ -364,6 +362,12 @@ export default function Home() {
         </section>
 
         <ProblemSpaceCarousel />
+
+        <section className="container mx-auto max-w-6xl px-6 pb-4 md:px-10">
+          <a className="inline-flex rounded-xl border border-cam-gold/25 bg-card/70 px-4 py-3 font-mono text-xs uppercase tracking-[0.14em] text-cam-gold transition hover:border-cam-gold/45 hover:text-foreground" href="/about#foundational-principles">
+            View the Seed of Life foundational principles geometry →
+          </a>
+        </section>
 
         <section className="container mx-auto max-w-6xl px-6 pb-12 pt-8 md:px-10 md:pb-16 md:pt-10" aria-labelledby="pathways-heading">
           <SectionLabel>Four pathways into CAM</SectionLabel>

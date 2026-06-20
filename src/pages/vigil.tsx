@@ -702,6 +702,7 @@ export default function Vigil() {
             <div className="space-y-2">
               <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
               <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+              <a className="inline-flex rounded-xl border border-cam-gold/30 bg-card/70 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold transition hover:border-cam-gold/55 hover:text-foreground" href="/observatory/report">Report a VIGIL signal</a>
             </div>
 
 

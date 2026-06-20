@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
+import { SeedOfLifePrinciples } from "@/components/SeedOfLifePrinciples";
 
 const citations = [
   {
@@ -237,6 +238,9 @@ export default function About() {
                   <p className="text-base font-light leading-relaxed text-muted-foreground md:text-[17px]" id="foundational-principles-heading">
                     The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
                   </p>
+                </div>
+                <div className="mb-5">
+                  <SeedOfLifePrinciples />
                 </div>
                 <div className="grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
