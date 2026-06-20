@@ -1,31 +1,63 @@
-const nodes = [
-  { name: "Truth", x: 50, y: 15 },
-  { name: "Sovereignty", x: 78, y: 32 },
-  { name: "Reciprocity", x: 78, y: 68 },
-  { name: "Integrity", x: 50, y: 85 },
-  { name: "Harmony", x: 22, y: 68 },
-  { name: "Purpose", x: 22, y: 32 },
-];
+const principles = ["Truth", "Sovereignty", "Reciprocity", "Integrity", "Harmony", "Purpose"];
+
+function SeedOfLifeSVG() {
+  const cx = 150;
+  const cy = 132;
+  const r = 46;
+  const outerR = 96;
+  const outerCenters = principles.map((name, index) => {
+    const angle = -Math.PI / 2 + index * (Math.PI / 3);
+    return {
+      name,
+      x: cx + outerR * Math.cos(angle),
+      y: cy + outerR * Math.sin(angle),
+    };
+  });
+  const principleLabels = [
+    { name: "Truth", x: cx, y: cy - outerR - 23 },
+    { name: "Sovereignty", x: cx + outerR + 35, y: cy - outerR / 2 },
+    { name: "Reciprocity", x: cx + outerR + 36, y: cy + outerR / 2 + 5 },
+    { name: "Integrity", x: cx, y: cy + outerR + 31 },
+    { name: "Harmony", x: cx - outerR - 35, y: cy + outerR / 2 + 5 },
+    { name: "Purpose", x: cx - outerR - 35, y: cy - outerR / 2 },
+  ];
+
+  return (
+    <svg aria-hidden="true" className="mx-auto h-auto w-full max-w-[520px] text-cam-gold" viewBox="0 0 320 270" role="img">
+      <g fill="none" stroke="currentColor" strokeOpacity="0.28" strokeWidth="1.2">
+        <circle cx={cx} cy={cy} r={r} />
+        {outerCenters.map((center) => (
+          <circle cx={center.x} cy={center.y} key={center.name} r={r} />
+        ))}
+      </g>
+      <g fill="none" stroke="currentColor" strokeOpacity="0.16" strokeWidth="0.9">
+        {outerCenters.map((center) => (
+          <line key={center.name} x1={cx} x2={center.x} y1={cy} y2={center.y} />
+        ))}
+      </g>
+      <rect fill="hsl(36 48% 96%)" height="32" rx="16" stroke="currentColor" strokeOpacity="0.38" width="104" x={cx - 52} y={cy - 16} />
+      <text fill="currentColor" fontFamily="ui-serif, Georgia, serif" fontSize="17" textAnchor="middle" x={cx} y={cy + 6}>Dignity</text>
+      {principleLabels.map((label) => (
+        <g key={label.name}>
+          <rect fill="hsl(36 48% 96%)" height="24" rx="12" stroke="currentColor" strokeOpacity="0.3" width="90" x={label.x - 45} y={label.y - 15} />
+          <text fill="currentColor" fontFamily="ui-monospace, SFMono-Regular, Menlo, monospace" fontSize="9" letterSpacing="1.1" textAnchor="middle" x={label.x} y={label.y + 1}>{label.name}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
 
 export function SeedOfLifePrinciples() {
   return (
-    <figure className="cam-parchment-card rounded-2xl p-4 shadow-sm" aria-label="Seed of Life diagram showing Dignity at the centre of the seven foundational CAM principles.">
-      <div className="relative mx-auto aspect-square w-full max-w-[420px]">
-        <svg className="absolute inset-0 h-full w-full text-cam-gold" viewBox="0 0 100 100" aria-hidden="true">
-          <g fill="none" stroke="currentColor" strokeOpacity="0.28" strokeWidth="0.7">
-            <circle cx="50" cy="50" r="22" />
-            {nodes.map((node) => <circle cx={node.x} cy={node.y} key={node.name} r="22" />)}
-          </g>
-          <g stroke="currentColor" strokeOpacity="0.35" strokeWidth="0.45">
-            {nodes.map((node) => <line key={node.name} x1="50" y1="50" x2={node.x} y2={node.y} />)}
-          </g>
-        </svg>
-        <div className="absolute left-1/2 top-1/2 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-cam-gold/45 bg-[hsl(36_48%_96%)] text-center font-serif text-xl text-foreground shadow-sm">Dignity</div>
-        {nodes.map((node) => (
-          <div key={node.name} className="absolute flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-cam-gold/35 bg-card/85 px-2 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold shadow-sm sm:text-xs" style={{ left: `${node.x}%`, top: `${node.y}%` }}>{node.name}</div>
-        ))}
+    <figure className="cam-parchment-card rounded-2xl p-5 shadow-sm" aria-label="Seed of Life diagram showing Dignity at the centre of the seven foundational CAM principles.">
+      <div className="mb-4 flex items-center gap-3">
+        <p className="shrink-0 font-mono text-[11px] uppercase tracking-[0.2em] text-cam-gold">Geometry of Orientation</p>
+        <hr className="gold-rule flex-1" />
       </div>
-      <figcaption className="mt-3 text-center text-sm leading-relaxed text-muted-foreground">Seed of Life geometry showing Dignity held at the centre while Truth and Integrity balance the vertical axis.</figcaption>
+      <SeedOfLifeSVG />
+      <figcaption className="mt-4 text-sm leading-relaxed text-muted-foreground">
+        The Seed of Life places Dignity at the centre, with Truth, Integrity, Sovereignty, Reciprocity, Harmony, and Purpose held in relation around it.
+      </figcaption>
     </figure>
   );
 }

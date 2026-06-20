@@ -1,13 +1,13 @@
-// Reporting form options are intentionally narrow and sourced from VIGIL registry/schema-observed values.
-// TODO: replace this fallback with a build-time extractor from https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Schema.json when network access is available in CI.
+// Fallback generated from CAM-Initiative/Vigil vigil/VIGIL.Schema.json system_context_rules
+// allowed_platform_or_vendor_values and allowed_product_or_service_values (schema version 2.1-cam-eq2026-operations-003-sup-01).
 export const vigilSchemaOptions = {
   record_type: ["observation", "failure_mode", "proposal", "patch"],
-  evidence_confidence: ["anecdotal", "corroborated", "documented", "emerging", "observed", "unknown", "unverified", "user-reported", "verified"],
-  source_type: ["first-party user report", "follow-up-observation", "governance-note", "governance-observation", "governance-text-amendment", "linked-failure-mode", "linked-observation", "linked-patch-note", "linked-proposal", "news-report", "official-source", "other", "platform-behaviour-observation", "platform-documentation", "platform-status-context", "platform-status-page", "repository-observation", "repository-source", "social-platform-observation"],
-  platform_or_vendor: ["CAM Initiative", "Multi Vendor", "OpenAI", "Other", "X", "xAI"],
-  product_or_service: ["Other"],
-  canonical_failure_group: ["arbitration", "economic-legitimacy", "execution", "governance", "infrastructure-continuity", "relational", "state-context"],
-  repair_status: ["unrepaired", "partial", "in-progress", "repaired", "unknown"],
-  proposal_resolution_status: ["proposed", "under-review", "deferred", "accepted", "rejected", "implemented"],
-  source_url_status: ["live", "archived", "paywalled", "removed", "unknown"],
+  evidence_confidence: ["verified", "externally corroborated", "corroborated", "unverified", "anecdotal", "disputed", "unknown", "not applicable", "to be assessed", "maintainer-reported implemented"],
+  source_type: ["linked-observation", "linked-failure-mode", "news-report", "official-source", "social-platform-observation", "platform-behaviour-observation", "third-party-report", "research-source", "standards-source", "repository-source", "linked-proposal", "repository-observation", "governance-note", "deep-research-agent", "academic preprint / empirical audit", "civil society safety assessment / public-interest report", "news report / regulatory reporting", "repository source", "other", "not applicable"],
+  platform_or_vendor: ["OpenAI", "xAI", "Anthropic", "Meta", "Google", "DeepSeek", "Kimi", "Sesame", "Cohere", "Perplexity", "Mistral", "Microsoft", "GitHub", "TikTok", "Apple", "Amazon", "Nvidia", "Hugging Face", "Stability AI", "Runway", "Midjourney", "Adobe", "Character.AI", "Replit", "Notion", "Cursor", "Replika", "Nomi", "Chai", "Chub.ai", "Candy AI", "Kindroid", "Pi", "HammerAI", "Snap", "Google Play", "CAM Initiative", "Multi Vendor", "Other", "Unknown", "Not applicable"],
+  product_or_service: ["ChatGPT", "Claude", "Gemini", "Grok", "Copilot", "Codex", "Claude Code", "Deep Research", "Perplexity Assistant", "Llama", "Le Chat", "GitHub Copilot", "TikTok", "X", "Replit Agent", "Cursor", "Midjourney", "Runway", "Firefly", "Character.AI", "Replika", "Nomi", "Chai", "Chub.ai", "Candy AI", "Kindroid", "Pi", "HammerAI", "Snapchat", "Google Play", "Caelestis Architecture Model", "VIGIL", "Other", "Unknown", "Not applicable"],
+  canonical_failure_group: ["execution", "arbitration", "epistemic", "relational", "security-integrity", "state-context", "ux-representation", "governance", "infrastructure-continuity", "classification", "economic-legitimacy", "provisional"],
+  repair_status: ["unrepaired", "partially-repaired", "repaired", "superseded", "not-actionable"],
+  proposal_resolution_status: ["open", "routed", "resolved-by-patch", "deferred", "superseded", "closed-no-action"],
+  source_url_status: ["available", "available / canonical main-branch confirmed", "available / canonical main-branch confirmation pending exact line review", "VIGIL local / pending public record URL if applicable", "available / pending archive and evidence verification", "inaccessible", "not applicable", "missing_url_requires_research", "not applicable — repository/internal observation", "not available", "local / pending canonical repository confirmation", "available to authenticated account holder", "not applicable — direct incident testimony"],
 } as const;

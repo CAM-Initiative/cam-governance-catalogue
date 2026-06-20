@@ -18,7 +18,7 @@ const citations = [
   {
     label: "CAM governance corpus citation",
     citation:
-      "O’Rourke, M. V. (2026). CAM governance corpus. https://doi.org/10.5281/zenodo.19779351",
+      "O’Rourke, M. V. (2026). Caelestis Architecture Model / CAM governance corpus. Zenodo. https://zenodo.org/records/20686316",
   },
 ];
 
@@ -201,6 +201,9 @@ export default function About() {
               <p>
                 Aeon Governance Lab is a project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to the administration of associated marks, assets, publications, or operational infrastructure.
               </p>
+              <p>
+                The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/.
+              </p>
             </div>
           </article>
         </motion.section>
@@ -227,7 +230,7 @@ export default function About() {
                 </p>
               </AboutDetails>
 
-              <section className="relative overflow-hidden rounded-2xl p-5 shadow-sm" style={goldPanelStyle} aria-labelledby="foundational-principles-heading">
+              <section className="relative overflow-hidden rounded-2xl border border-border/70 bg-background/30 p-5 shadow-sm" aria-labelledby="foundational-principles-heading">
                 <img
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-8 top-4 h-36 w-36 opacity-[0.045]"
