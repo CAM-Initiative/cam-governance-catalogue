@@ -12,12 +12,13 @@ type SortConfig = { key: SortKey; direction: SortDirection };
 
 type FilterOption = { value: string; label: string };
 type DetailLoadState = { status: "loading" } | { status: "ready"; raw: UnknownRecord; displayRecord: VigilIndexRecord } | { status: "error"; error: string };
+type PendingJsonAction = { action: "copy" | "download"; record: VigilIndexRecord; recordKey: string; exportText: string } | null;
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
 const exportNotice = "Filtered VIGIL index-entry export from the CAM Governance Interface. Full canonical records remain in CAM-Initiative/Vigil and are loaded per record on demand.";
 const vigilRecommendedCitation = "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil";
 const camInitiativeCitationHeader = "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
-const vigilReuseNotice = "This is public-benefit governance infrastructure. Please cite VIGIL if you use this export. Public access does not imply unrestricted reuse; applicable licence and reuse terms apply.";
+const vigilReuseNotice = "This is public-benefit governance infrastructure. Please cite VIGIL if you use this record or export. Public access does not imply unrestricted reuse. If this work is useful to you, please consider supporting CAM Initiative.";
 const vigilSupportUrl = "https://buymeacoffee.com/cam_initiative";
 const vigilCitation = {
   recommended_citation: vigilRecommendedCitation,
@@ -488,6 +489,7 @@ export default function Vigil() {
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [expandedRecordKeys, setExpandedRecordKeys] = useState<Set<string>>(() => new Set());
   const [copiedRecordKey, setCopiedRecordKey] = useState<string | null>(null);
+  const [pendingJsonAction, setPendingJsonAction] = useState<PendingJsonAction>(null);
   const [detailLoads, setDetailLoads] = useState<Record<string, DetailLoadState>>({});
   const detailLoadPromises = useRef<Partial<Record<string, Promise<UnknownRecord>>>>({});
 
@@ -589,10 +591,7 @@ export default function Vigil() {
     return detailPromise;
   }
 
-  async function copyRecordJson(record: VigilIndexRecord, recordKey: string) {
-    const detailJson = await ensureRecordDetail(record, recordKey);
-    const exportText = recordExportText(JSON.stringify(detailJson, null, 2));
-
+  async function performRecordCopy(exportText: string, recordKey: string) {
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(exportText);
@@ -618,9 +617,7 @@ export default function Vigil() {
     }
   }
 
-  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
-    const detailJson = await ensureRecordDetail(record, recordKey);
-    const exportText = recordExportText(JSON.stringify(detailJson, null, 2));
+  function performRecordDownload(record: VigilIndexRecord, exportText: string) {
     const blob = new Blob([exportText], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -630,6 +627,28 @@ export default function Vigil() {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
+  }
+
+  async function copyRecordJson(record: VigilIndexRecord, recordKey: string) {
+    const detailJson = await ensureRecordDetail(record, recordKey);
+    const exportText = recordExportText(JSON.stringify(detailJson, null, 2));
+    setPendingJsonAction({ action: "copy", record, recordKey, exportText });
+  }
+
+  async function downloadRecordJson(record: VigilIndexRecord, recordKey: string) {
+    const detailJson = await ensureRecordDetail(record, recordKey);
+    const exportText = recordExportText(JSON.stringify(detailJson, null, 2));
+    setPendingJsonAction({ action: "download", record, recordKey, exportText });
+  }
+
+  async function continuePendingJsonAction() {
+    if (!pendingJsonAction) return;
+    if (pendingJsonAction.action === "copy") {
+      await performRecordCopy(pendingJsonAction.exportText, pendingJsonAction.recordKey);
+    } else {
+      performRecordDownload(pendingJsonAction.record, pendingJsonAction.exportText);
+    }
+    setPendingJsonAction(null);
   }
 
   function toggleExpandedRecord(record: VigilIndexRecord, recordKey: string) {
@@ -702,6 +721,7 @@ export default function Vigil() {
             <div className="space-y-2">
               <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
               <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+              <a className="inline-flex rounded-xl border border-cam-gold/30 bg-card/70 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold transition hover:border-cam-gold/55 hover:text-foreground" href="/observatory/report">VIGIL Submissions</a>
             </div>
 
 
@@ -776,12 +796,11 @@ export default function Vigil() {
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">VIGIL export</p>
               <h2 id="vigil-export-dialog-title" className="font-serif text-2xl leading-snug text-foreground">Export current VIGIL view</h2>
               <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
-                <p>This export contains public VIGIL registry records filtered by the current search and filter settings.</p>
+                <p>{vigilReuseNotice}</p>
                 <div className="rounded-xl border border-border bg-card/55 p-3">
                   <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Please cite VIGIL if you use this data</p>
                   <p className="font-mono text-xs leading-relaxed text-foreground">{vigilRecommendedCitation}</p>
                 </div>
-                <p>This is public-benefit governance infrastructure. If this work is useful, support helps cover infrastructure, archival, publication, and maintenance costs.</p>
               </div>
               <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                 <button
@@ -796,14 +815,67 @@ export default function Vigil() {
                   type="button"
                   onClick={openSupportLink}
                 >
-                  Support this work
+                  Support CAM Initiative
                 </button>
                 <button
                   className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25"
                   type="button"
                   onClick={exportCurrentView}
                 >
-                  Download JSON
+                  Continue to download
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {pendingJsonAction && (
+          <div
+            aria-labelledby="vigil-json-action-dialog-title"
+            aria-modal="true"
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-background/70 px-4 py-6 backdrop-blur-sm"
+            role="dialog"
+          >
+            <div className="w-full max-w-lg rounded-2xl border border-primary/25 bg-[hsl(36_48%_95%)] p-5 text-foreground shadow-2xl md:p-6">
+              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">VIGIL record JSON</p>
+              <h2 id="vigil-json-action-dialog-title" className="font-serif text-2xl leading-snug text-foreground">Public infrastructure notice</h2>
+              <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                <p>{vigilReuseNotice}</p>
+                <div className="rounded-xl border border-border bg-card/55 p-3">
+                  <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Recommended citation</p>
+                  <p className="font-mono text-xs leading-relaxed text-foreground">{vigilRecommendedCitation}</p>
+                </div>
+              </div>
+              <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <button
+                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={() => setPendingJsonAction(null)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                  type="button"
+                  onClick={openSupportLink}
+                >
+                  Support CAM Initiative
+                </button>
+                <button
+                  className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
+                  type="button"
+                  disabled={pendingJsonAction.action !== "copy"}
+                  onClick={() => void continuePendingJsonAction()}
+                >
+                  Continue to copy
+                </button>
+                <button
+                  className="rounded-lg border border-primary/40 bg-primary/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
+                  type="button"
+                  disabled={pendingJsonAction.action !== "download"}
+                  onClick={() => void continuePendingJsonAction()}
+                >
+                  Continue to download
                 </button>
               </div>
             </div>
@@ -993,10 +1065,6 @@ export default function Vigil() {
                         )}
 
                         <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
-                          <button type="button" className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void copyRecordJson(record, recordKey); }}>
-                            {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
-                          </button>
-                          <button type="button" className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void downloadRecordJson(record, recordKey); }}>Download JSON</button>
                           <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
                         </div>
                       </div>
@@ -1008,10 +1076,6 @@ export default function Vigil() {
                         <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
                         <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
                         <div className="flex flex-wrap justify-end gap-1.5">
-                          <button type="button" className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void copyRecordJson(record, recordKey); }}>
-                            {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
-                          </button>
-                          <button type="button" className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={(event) => { event.stopPropagation(); void downloadRecordJson(record, recordKey); }}>Download JSON</button>
                           <span className="rounded-md border border-border bg-background/40 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground/80">{record.record_state}</span>
                         </div>
                       </div>

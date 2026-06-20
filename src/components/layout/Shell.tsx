@@ -8,6 +8,7 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
+  { href: "/privacy", label: "Privacy", internal: true },
 ];
 
 const mobileLinks = [
@@ -16,6 +17,7 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "Observatory / VIGIL", internal: true },
+  { href: "/observatory/report", label: "VIGIL Submissions", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -30,15 +32,20 @@ const constitutionLinks = [
   { href: "/constitution/transition", label: "Transitional Architecture" },
 ];
 
+const observatoryLinks = [
+  { href: "/observatory", label: "VIGIL Ledger" },
+  { href: "/observatory/report", label: "VIGIL Submissions" },
+];
+
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about";
   const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
+  const isObservatoryActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 
   const links = [
     { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
-    { href: "/vigil", label: "Observatory", active: location === "/vigil" || location === "/observatory" },
   ];
 
   useEffect(() => {
@@ -143,6 +150,35 @@ export function Shell({ children }: { children: ReactNode }) {
                 {link.label}
               </Link>
             ))}
+            <div className="group relative">
+              <Link
+                href="/observatory"
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
+                  isObservatoryActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Observatory
+              </Link>
+              <div className="invisible absolute left-0 top-full min-w-60 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
+                  {observatoryLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
+                        location === link.href || (link.href === "/observatory" && location === "/vigil")
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-card hover:text-foreground"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
             <a
               href="https://github.com/CAM-Initiative/Caelestis"
               target="_blank"
@@ -199,7 +235,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved. Public access is subject to citation and applicable licence terms.
+                © 2026 CAM Initiative. All rights reserved.
               </p>
             </div>
 

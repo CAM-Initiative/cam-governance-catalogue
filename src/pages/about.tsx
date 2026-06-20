@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
+import { SeedOfLifePrinciples } from "@/components/SeedOfLifePrinciples";
 
 const citations = [
   {
@@ -17,7 +18,7 @@ const citations = [
   {
     label: "CAM governance corpus citation",
     citation:
-      "O’Rourke, M. V. (2026). CAM governance corpus. https://doi.org/10.5281/zenodo.19779351",
+      "O’Rourke, M. V. (2026). Caelestis Architecture Model / CAM governance corpus. Zenodo. https://zenodo.org/records/20686316",
   },
 ];
 
@@ -144,14 +145,14 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
 
 function AboutDetails({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <details className="group cam-parchment-card overflow-hidden rounded-2xl text-sm shadow-sm transition-colors hover:border-cam-gold/40">
+    <details className="group overflow-hidden rounded-2xl text-sm shadow-sm transition-colors hover:border-cam-gold/40" style={goldPanelStyle}>
       <summary className="cursor-pointer list-none p-4 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
           <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
         </span>
       </summary>
-      <div className="mx-4 mb-4 rounded-xl p-4 text-base font-light leading-relaxed text-muted-foreground" style={goldPanelStyle}>
+      <div className="mx-4 mb-4 rounded-xl border border-cam-gold/20 bg-background/20 p-4 text-base font-light leading-relaxed text-muted-foreground">
         {children}
       </div>
     </details>
@@ -200,6 +201,9 @@ export default function About() {
               <p>
                 Aeon Governance Lab is a project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to the administration of associated marks, assets, publications, or operational infrastructure.
               </p>
+              <p>
+                The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/.
+              </p>
             </div>
           </article>
         </motion.section>
@@ -226,7 +230,7 @@ export default function About() {
                 </p>
               </AboutDetails>
 
-              <section className="relative overflow-hidden rounded-2xl p-5 shadow-sm" style={goldPanelStyle} aria-labelledby="foundational-principles-heading">
+              <section className="relative overflow-hidden rounded-2xl border border-border/70 bg-background/30 p-5 shadow-sm" aria-labelledby="foundational-principles-heading">
                 <img
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-8 top-4 h-36 w-36 opacity-[0.045]"
@@ -237,6 +241,9 @@ export default function About() {
                   <p className="text-base font-light leading-relaxed text-muted-foreground md:text-[17px]" id="foundational-principles-heading">
                     The seven foundational principles form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the framework.
                   </p>
+                </div>
+                <div className="mb-5">
+                  <SeedOfLifePrinciples />
                 </div>
                 <div className="grid gap-3 md:grid-cols-2">
                   {archivedPrinciples.map((principle) => (
