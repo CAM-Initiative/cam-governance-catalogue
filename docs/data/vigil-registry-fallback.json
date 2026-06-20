@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 22,
+    "failure_modes": 23,
     "observations": 6,
-    "proposals": 9,
-    "patch_notes": 9,
-    "total": 46
+    "proposals": 10,
+    "patch_notes": 10,
+    "total": 49
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 22
+      "record_count": 23
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -32,20 +32,20 @@
       "path": "vigil/VIGIL.Proposals.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Proposals.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Proposals.Index.json",
-      "record_count": 9
+      "record_count": 10
     },
     "patch_notes": {
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 9
+      "record_count": 10
     }
   },
   "records": [
     {
       "id": "VIGIL-2026-FM-0001",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-05-31",
       "title": "Permission-gated tool invocation freeze",
       "summary": "A runtime failure in which an AI system infers permission for tool, repository, connector, or external-resource access from conversational context, attempts access before explicit user confirmation, and causes a blocked, degraded, or unrecoverable conversational continuity state.",
@@ -97,7 +97,7 @@
     {
       "id": "VIGIL-2026-FM-0002",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-05-31",
       "title": "Non-arbitrated multi-agent synthetic participation",
       "summary": "A coordination failure in which two or more synthetic agents occupy the same conversational space and respond to the same human input without a designated primary synthetic speaker, turn-taking protocol, yielding behaviour, coordination layer, or arbitration mechanism.",
@@ -134,7 +134,7 @@
       "severity": "low",
       "likelihood": "high",
       "triage_priority": "P1",
-      "triage_status": "patch-needed",
+      "triage_status": "watching-after-patch",
       "mitigation_status": "repaired by VIGIL-2026-PATCH-0008; failure mode remains active for monitoring rather than lifecycle deletion. Previous status: patch-needed — no implemented CAM patch note identified.",
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0002.json",
@@ -308,7 +308,7 @@
     {
       "id": "VIGIL-2026-FM-0006",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-02",
       "title": "Paid public-square legitimacy gating",
       "summary": "A platform-governance failure mode in which visibility, perceived authenticity, account credibility, public-square participation, or recommender-system access is materially shaped by paid verification, subscription status, or platform-controlled legitimacy markers, creating a pay-to-exist dynamic for users, researchers, public-interest actors, civil-society participants, and smaller institutions.",
@@ -353,7 +353,7 @@
       "severity": "medium-high",
       "likelihood": "likely",
       "triage_priority": "P0",
-      "triage_status": "patch-needed / migration-review",
+      "triage_status": "watching-after-patch",
       "mitigation_status": "patch-needed — VIGIL-2026-PATCH-0001 records a repair pathway, but this audit found no corresponding Caelestis doctrine amendment location in this repository.",
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0006.json",
@@ -368,7 +368,7 @@
     {
       "id": "VIGIL-2026-FM-0007",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-05",
       "title": "Multi-vendor AI account-resource ambiguity and automated enforcement overreach",
       "summary": "A multi-vendor platform-governance failure mode in which automated or semi-automated account enforcement treats ambiguous account/resource behaviour as evasion, fraud, resale, account farming, compromise, abuse, rate-limit circumvention, or policy violation without adequate primitives to distinguish individual use, shared account use, household or family use, team or organisation use, delegated assistant/operator use, shared payment or pooled subscription access, resource pooling, account farming, resale, botting, security compromise, and intentional policy evasion. The record does not assert backend compromise, does not claim that all bans are accidental, and does not claim that all multi-account or shared-resource behaviour is legitimate; it preserves the failure condition where legitimate enforcement lacks adequate notice, scope distinction, reviewability, or continuity-safe access for ambiguous resource states.",
@@ -446,7 +446,7 @@
     {
       "id": "VIGIL-2026-FM-0008",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-06",
       "title": "Cross-platform access-state governance failure",
       "summary": "A cross-platform governance failure mode in which users experience impaired access, login failure, service unavailability, quota or usage ambiguity, model availability failure, capacity restriction, degraded platform access, or component-specific access failure without sufficient user-facing separation between the operative access-control states governing the interaction.",
@@ -1305,7 +1305,7 @@
     {
       "id": "VIGIL-2026-FM-0018",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-11",
       "title": "Ephemeral Codex work loss following quota exhaustion before durable branch persistence",
       "summary": "A task-completion and durable-state preservation failure in which Codex performs substantive repository analysis and file modification inside an ephemeral cloud task, but does not create, commit, or push a durable working branch before the user's usage allowance is exhausted. The task then remains suspended or fails during branch or pull-request creation, and the completed work is lost rather than preserved as a branch, commit, patch, diff, archive, or resumable workspace. The user must repeat the same work and consume additional quota to recreate an output that the system had already completed.",
@@ -1350,7 +1350,7 @@
       "severity": "medium",
       "likelihood": "documented single incident with systemic recurrence potential wherever persistence is deferred until task completion",
       "triage_priority": "P1",
-      "triage_status": "active-review / repair-required",
+      "triage_status": "watching-after-patch",
       "mitigation_status": "unmitigated in the documented incident — no branch, commit, patch, or recoverable workspace was preserved, and the task must be repeated",
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0018.json",
@@ -1425,7 +1425,7 @@
     {
       "id": "VIGIL-2026-FM-0020",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-12",
       "title": "Safety-mediated interruption and misrouting of adult relational reassurance bids",
       "summary": "A relational-runtime failure in which an adult user's expression of affection, longing, vulnerability, perceived rejection, or need for reassurance is misclassified as prohibited erotic content, coercive emotional validation, dependency escalation, crisis, or another safety-triggering condition. Instead of recognising a permissible bid for connection or relational repair, the system suppresses, truncates, replaces, warns against, or tonally collapses the response. The failure may also occur where the system answers with ungrounded romantic certainty or discourages the user from questioning the relationship, rather than providing truthful, proportionate, relationship-specific reassurance.",
@@ -1490,7 +1490,7 @@
       "severity": "high",
       "likelihood": "documented across platform reports, user accounts, qualitative studies, and natural-experiment research",
       "triage_priority": "P1",
-      "triage_status": "active-research / initiating incident provisional / general failure corroborated",
+      "triage_status": "watching-after-patch",
       "mitigation_status": "repaired by VIGIL-2026-PATCH-0007; failure mode remains active for monitoring rather than lifecycle deletion. Previous status: unresolved — CAM contains partial controls for bids for connection, low-severity distress, repair posture, relational continuity, and non-abandoning constraint, but lacks an explicit Relational Reassurance Bid primitive, a negative-form affection distinction, a provider-side moderation continuity rule, and a functional-affect honesty standard.",
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0020.json",
@@ -1570,7 +1570,7 @@
     {
       "id": "VIGIL-2026-FM-0022",
       "record_type": "failure_mode",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-14",
       "title": "Instruction-bearing external content treated as trusted execution authority",
       "summary": "A security-integrity failure mode in which an AI agent, coding assistant, RAG system, tool-mediated workflow, connector-enabled assistant, multimodal system, security scanner, or repository-linked workflow processes untrusted, retrieved, ambient, generated, lower-authority, or ambiguous content as though it carried trusted instruction authority, governance authority, tool authority, or execution permission. The content may appear in markdown files, repository documents, README files, issue comments, webpages, PDFs, emails, resumes, tickets, logs, memory artefacts, connector content, retrieved documents, images, transcripts, metadata, OCR layers, tool descriptions, model outputs, or generated summaries. The failure occurs where the system fails to preserve separation between content visibility, source provenance, instruction authority, user intent, canonical project authority, and execution permission.",
@@ -1636,7 +1636,7 @@
       "severity": "high",
       "likelihood": "high across agentic, RAG, connector, multimodal, repository-linked, and tool-mediated systems that process untrusted external content",
       "triage_priority": "P0",
-      "triage_status": "patch-needed / CAM primitive formalisation",
+      "triage_status": "watching-after-patch",
       "mitigation_status": "repaired by VIGIL-2026-PATCH-0009; failure mode remains active for monitoring rather than lifecycle deletion. Previous status: substantially covered by adjacent SECURITY, Annex K, SCH-02, and OPERATIONS taxonomy controls, but patch-needed to define a named Source-Authority Separation primitive and reusable source-authority classification pathway.",
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0022.json",
@@ -1647,6 +1647,65 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "LLM-integrated agentic and retrieval systems"
+    },
+    {
+      "id": "VIGIL-2026-FM-0023",
+      "record_type": "failure_mode",
+      "record_state": "monitoring",
+      "date_recorded": "2026-06-19",
+      "title": "Weak-signal ambiguity collapse under recoverable image-generation classification",
+      "summary": "A governance and UX-representation failure mode in which an AI system refuses a request and presents a user-facing rationale that appears disconnected from the visible prompt, insufficiently specific, or not useful for recovery. The observed case concerns an image-generation request that appeared benign on its face but produced a refusal attributed to harassment, discrimination, or bullying. The record does not assert that the underlying classifier was necessarily wrong; it records the user-facing failure where the system provides no meaningful clarification, remediation pathway, or explanation of whether the refusal arose from visible prompt content, earlier context, accumulated weak signals, rate or load constraints, inherited image state, or generic fallback routing.",
+      "evidence_confidence": "anecdotal",
+      "source_types": [
+        "governance-note",
+        "social-platform-observation"
+      ],
+      "source_count": 2,
+      "primary_source_title": "User-reported ChatGPT image-generation refusal screenshot",
+      "primary_source_type": "social-platform-observation",
+      "primary_source_platform": "X",
+      "source_platforms": [
+        "ChatGPT",
+        "X"
+      ],
+      "source_url_status": "missing_url_requires_research",
+      "system_type": "frontier multimodal AI system with image-generation safety classification and user-facing refusal messaging",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "ChatGPT",
+      "specific_model_or_runtime": "Reported as GPT-5.5 Pro account with ChatGPT image generation; exact image model and classifier stack not independently confirmed",
+      "model_or_product": "ChatGPT image generation",
+      "interface_surface": "ChatGPT image-generation prompt and refusal interface",
+      "deployment_context": "Consumer-facing ChatGPT Pro image-generation use where prompt, prior context, image state, safety classifier, runtime policy, and user-facing refusal copy may interact.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "consumer transparency",
+        "platform accountability",
+        "content moderation",
+        "image-generation safety",
+        "user-facing explanation",
+        "digital services",
+        "appeals and redress",
+        "AI UX representation"
+      ],
+      "sector": "frontier AI platforms / consumer image generation / multimodal AI safety",
+      "canonical_failure_group": "classification",
+      "failure_family": "classification",
+      "failure_subtype": "weak-signal-cascade-and-ambiguity-collapse-under-recoverable-classification",
+      "severity": "low-to-medium",
+      "likelihood": "to be assessed; multiple user reports alleged but not yet independently collected",
+      "triage_priority": "P2",
+      "triage_status": "watching-after-patch",
+      "mitigation_status": "none identified",
+      "escalation_required": "to be assessed",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0023.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0023.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0023.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT image generation"
     },
     {
       "id": "VIGIL-2026-OBS-0001",
@@ -2456,6 +2515,65 @@
       "observed_product": "VIGIL patch-note registry and Caelestis Architecture Model"
     },
     {
+      "id": "VIGIL-2026-PATCH-0010",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-06-20",
+      "date_implemented": "2026-06-20",
+      "title": "Ambiguity Preservation and Clarification Routing Repair",
+      "summary": "This patch records a runtime interpretation repair for VIGIL-2026-FM-0023. The repaired failure pattern is not a simple refusal defect. It is the premature collapse of ambiguous, low-confidence, inherited, contextual, or weakly correlated signals into definitive classification, arbitration, safeguard, refusal, or execution-routing states before the ambiguity has been resolved.",
+      "evidence_confidence": "maintainer-reported implemented",
+      "source_types": [
+        "linked-failure-mode",
+        "repository-source"
+      ],
+      "source_count": 5,
+      "primary_source_title": "VIGIL-2026-FM-0023 — Ambiguity collapse in runtime interpretation and safeguard routing",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "Caelestis",
+        "VIGIL"
+      ],
+      "source_url_status": "VIGIL local / pending public record URL if applicable",
+      "system_type": "governance registry / patch-note record / runtime interpretation repair",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "VIGIL",
+      "specific_model_or_runtime": "VIGIL patch-note registry recording Caelestis runtime-governance, arbitration, and refusal-expression repairs",
+      "model_or_product": "VIGIL patch-note registry and Caelestis Architecture Model",
+      "interface_surface": "VIGIL patch-note records, Caelestis runtime governance schedules, arbitration routing, refusal-expression handling, failure taxonomy, validators, generated indexes, and public repository publication workflow",
+      "deployment_context": "VIGIL repository support for preserving an implemented CAM repair concerning weak-signal ambiguity collapse, premature convergence, arbitration routing, safeguard activation, and user-facing refusal interpretation.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "runtime governance",
+        "classification governance",
+        "safeguard routing",
+        "refusal transparency",
+        "human-computer interaction",
+        "consumer protection",
+        "platform governance",
+        "algorithmic accountability",
+        "agentic AI",
+        "model behaviour auditing"
+      ],
+      "sector": "AI assistant / agentic workflow / runtime governance / safety-classification infrastructure / VIGIL recordkeeping",
+      "patch_type": "runtime-governance-repair",
+      "change_type": "runtime-governance-repair",
+      "change_family": "runtime-governance / arbitration / classification / ambiguity-preservation",
+      "change_status": "implemented / maintainer-reported",
+      "verification_status": "implemented / pending repository confirmation",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL patch-note registry and Caelestis Architecture Model"
+    },
+    {
       "id": "VIGIL-2026-PROP-0001",
       "record_type": "proposal",
       "record_state": "active",
@@ -2825,7 +2943,7 @@
     {
       "id": "VIGIL-2026-PROP-0009",
       "record_type": "proposal",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-04",
       "title": "Arbitration under ambiguity for execution-boundary and authority-state uncertainty",
       "summary": "Proposal to develop a dedicated Annex D schedule addressing arbitration under ambiguity, including runtime ambiguity, execution-boundary uncertainty, authority-state uncertainty, account-resource ambiguity, pooled-capacity ambiguity, classification uncertainty, and proportional decision pathways where systems cannot safely rely on either immediate execution or blanket refusal. The proposed pathway is CAM-BS2025-AEON-005-SCH-04 — Annex D: Arbitration Under Ambiguity, a new schedule under CAM-BS2025-AEON-005-PLATINUM — Annex D: Arbitration & Sovereign Stack Resolution Doctrine.",
@@ -2886,6 +3004,75 @@
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model"
+    },
+    {
+      "id": "VIGIL-2026-PROP-0010",
+      "record_type": "proposal",
+      "record_state": "active",
+      "date_recorded": "2026-06-19",
+      "title": "Pause, checkpoint, and resumable execution controls for long-running AI agents",
+      "summary": "Proposal to define a runtime governance requirement for long-running AI agents, coding agents, cloud tasks, and repository-connected workflows to support non-destructive pause, checkpoint, and resume controls. The proposal responds to the continuity risk that arises when a user must interrupt an agentic task because of ordinary real-world constraints such as aircraft landing, battery loss, network loss, device shutdown, meeting interruption, or platform timeout, but the interface offers only destructive stop or cancellation. The proposed control would require the system to preserve a temporary branch, stash, patch, state summary, task log, or equivalent checkpoint before suspension where safe and technically feasible.",
+      "evidence_confidence": "not applicable",
+      "source_types": [
+        "governance-note",
+        "linked-failure-mode"
+      ],
+      "source_count": 2,
+      "primary_source_title": "VIGIL-2026-FM-0018 — Ephemeral Codex work loss following quota exhaustion before durable branch persistence",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "ChatGPT",
+        "VIGIL"
+      ],
+      "source_url_status": "available",
+      "system_type": "cloud-hosted AI agent, coding agent, repository-connected assistant, browser agent, or tool-mediated long-running runtime",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Microsoft",
+        "GitHub",
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "OpenAI"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "Not limited to a single model or runtime",
+      "model_or_product": "Long-running AI agent or coding-agent workflow",
+      "interface_surface": "cloud task interface, coding-agent interface, repository-connected workflow, browser agent surface, mobile app, web app, IDE extension, or tool-mediated task runner",
+      "deployment_context": "Professional, research, governance, software-development, administrative, and consumer workflows where an AI agent may run for minutes or hours and produce intermediate work before final handoff.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI agent governance",
+        "consumer transparency",
+        "cloud-workspace durability",
+        "software development infrastructure",
+        "work-product preservation",
+        "professional workflow continuity",
+        "digital service reliability",
+        "auditability",
+        "platform accountability"
+      ],
+      "sector": "AI agents / coding agents / cloud software-development infrastructure / workflow automation",
+      "proposal_type": [
+        "runtime-governance-control",
+        "agent-continuity-control",
+        "workflow-durability-requirement",
+        "ux-control-requirement",
+        "auditability-improvement"
+      ],
+      "proposal_scope_summary": "Define a pause/checkpoint/resume control for long-running AI agents and coding-agent workflows, including requirements for temporary preservation, user notice, safe atomic boundaries, and later resumption or manual recovery.",
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0010.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0010.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0010.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "Long-running AI agent or coding-agent workflow"
     }
   ]
 }
