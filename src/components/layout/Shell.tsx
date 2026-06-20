@@ -235,7 +235,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved. Public access is subject to citation and applicable licence terms.
+                © 2026 CAM Initiative. All rights reserved.
               </p>
             </div>
 

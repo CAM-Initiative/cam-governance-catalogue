@@ -145,14 +145,14 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
 
 function AboutDetails({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <details className="group cam-parchment-card overflow-hidden rounded-2xl text-sm shadow-sm transition-colors hover:border-cam-gold/40">
+    <details className="group overflow-hidden rounded-2xl text-sm shadow-sm transition-colors hover:border-cam-gold/40" style={goldPanelStyle}>
       <summary className="cursor-pointer list-none p-4 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
           <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
         </span>
       </summary>
-      <div className="mx-4 mb-4 rounded-xl p-4 text-base font-light leading-relaxed text-muted-foreground" style={goldPanelStyle}>
+      <div className="mx-4 mb-4 rounded-xl border border-cam-gold/20 bg-background/20 p-4 text-base font-light leading-relaxed text-muted-foreground">
         {children}
       </div>
     </details>
