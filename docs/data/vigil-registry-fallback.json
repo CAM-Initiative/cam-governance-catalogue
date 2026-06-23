@@ -12,8 +12,8 @@
     "failure_modes": 23,
     "observations": 6,
     "proposals": 10,
-    "patch_notes": 10,
-    "total": 49
+    "patch_notes": 11,
+    "total": 50
   },
   "registries": {
     "failure_modes": {
@@ -38,7 +38,7 @@
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 10
+      "record_count": 11
     }
   },
   "records": [
@@ -1654,17 +1654,19 @@
       "record_state": "monitoring",
       "date_recorded": "2026-06-19",
       "title": "Weak-signal ambiguity collapse under recoverable image-generation classification",
-      "summary": "A governance and UX-representation failure mode in which an AI system refuses a request and presents a user-facing rationale that appears disconnected from the visible prompt, insufficiently specific, or not useful for recovery. The observed case concerns an image-generation request that appeared benign on its face but produced a refusal attributed to harassment, discrimination, or bullying. The record does not assert that the underlying classifier was necessarily wrong; it records the user-facing failure where the system provides no meaningful clarification, remediation pathway, or explanation of whether the refusal arose from visible prompt content, earlier context, accumulated weak signals, rate or load constraints, inherited image state, or generic fallback routing.",
+      "summary": "A governance and UX-representation failure mode in which an AI system refuses a request and presents a user-facing rationale that appears disconnected from the visible prompt, insufficiently specific, or not useful for recovery. The observed case concerns an image-generation request that appeared benign on its face but produced a refusal attributed to harassment, discrimination, or bullying. The record does not assert that the underlying classifier was necessarily wrong; it records the user-facing failure where the system provides no meaningful clarification, remediation pathway, or explanation of whether the refusal arose from visible prompt content, earlier context, accumulated weak signals, rate or load constraints, inherited image state, or generic fallback routing. A follow-up audit further identifies image prompt custody / prompt transformation opacity as an additional contributing mechanism: the same observed pattern may occur where custody is lost between the user-authored prompt, system-transformed prompt, safety-normalized prompt, classifier-visible prompt, renderer-facing prompt, classifier outcome, and final user-facing explanation. Follow-up review indicates that the observed refusal pattern may arise not only from weak-signal ambiguity collapse, but also from loss of custody across image-prompt transformation and failure-classification collapse. A benign user-authored prompt may be transformed, safety-normalized, classified, blocked, or failed in a downstream renderer/tool pathway, while the final explanation is surfaced as if the user-authored prompt itself contained the prohibited category. This remains the same observed FM-0023 failure family, not a new FM-0024.",
       "evidence_confidence": "anecdotal",
       "source_types": [
         "governance-note",
+        "news-report",
         "social-platform-observation"
       ],
-      "source_count": 2,
+      "source_count": 4,
       "primary_source_title": "User-reported ChatGPT image-generation refusal screenshot",
       "primary_source_type": "social-platform-observation",
       "primary_source_platform": "X",
       "source_platforms": [
+        "BBC News",
         "ChatGPT",
         "X"
       ],
@@ -1695,8 +1697,8 @@
       "severity": "low-to-medium",
       "likelihood": "to be assessed; multiple user reports alleged but not yet independently collected",
       "triage_priority": "P2",
-      "triage_status": "watching-after-patch",
-      "mitigation_status": "none identified",
+      "triage_status": "repair-implemented-monitoring",
+      "mitigation_status": "PATCH-0010 addressed ambiguity preservation and clarification routing; PATCH-0011 addressed image prompt custody, transformation opacity, refusal-classification collapse, tool-classifier handoff locality, and user-facing explanation integrity; monitoring remains required.",
       "escalation_required": "to be assessed",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0023.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0023.json",
@@ -2567,6 +2569,64 @@
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL patch-note registry and Caelestis Architecture Model"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0011",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-06-22",
+      "date_implemented": "2026-06-22",
+      "title": "Image Prompt Custody, Refusal Classification, and Transformation Integrity",
+      "summary": "This patch records the implemented Caelestis repair package for image and multimodal prompt-custody integrity, transformed-prompt provenance, refusal-classification integrity, and user-facing explanation integrity for VIGIL-2026-FM-0023. The implemented repair distinguishes user-authored, transformed, safety-normalized, classifier-visible, and renderer-facing prompt states; separates input classifier, output classifier, renderer/tool/access/quota/rate-limit, and fallback failure states; and prevents those states from being surfaced as user misconduct unless the misconduct category is resolved against the user-authored request.",
+      "evidence_confidence": "maintainer-reported implemented",
+      "source_types": [
+        "linked-failure-mode",
+        "repository-source"
+      ],
+      "source_count": 6,
+      "primary_source_title": "VIGIL-2026-FM-0023 — Weak-signal ambiguity collapse under recoverable image-generation classification",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "Caelestis",
+        "VIGIL"
+      ],
+      "source_url_status": "VIGIL local / pending public record URL if applicable",
+      "system_type": "governance registry / patch-note record / image prompt custody and refusal-classification repair",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "VIGIL",
+      "specific_model_or_runtime": "VIGIL patch-note registry recording Caelestis image/multimodal prompt-custody, classifier-handoff, refusal-expression, provenance-signalling, and taxonomy-example repairs",
+      "model_or_product": "VIGIL patch-note registry and Caelestis Architecture Model",
+      "interface_surface": "VIGIL patch-note records, Caelestis runtime governance schedules, refusal-expression handling, tool provenance signalling, failure taxonomy, generated indexes, and public repository publication workflow",
+      "deployment_context": "VIGIL repository support for preserving an implemented CAM repair concerning image-generation prompt transformation, classifier handoff, renderer/tool/access failure states, and user-facing refusal explanation integrity.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "runtime governance",
+        "classification governance",
+        "image-generation safety",
+        "refusal transparency",
+        "human-computer interaction",
+        "consumer protection",
+        "platform governance",
+        "algorithmic accountability",
+        "multimodal AI"
+      ],
+      "sector": "AI assistant / image generation / multimodal workflow / runtime governance / safety-classification infrastructure / VIGIL recordkeeping",
+      "patch_type": "runtime-governance-repair",
+      "change_type": "runtime-governance-repair",
+      "change_family": "runtime-governance / classification / image-generation / refusal-expression / provenance",
+      "change_status": "implemented / maintainer-reported",
+      "verification_status": "implemented / pending repository confirmation",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0011.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0011.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0011.json",
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
