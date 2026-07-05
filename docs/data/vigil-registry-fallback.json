@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 23,
+    "failure_modes": 24,
     "observations": 6,
-    "proposals": 10,
-    "patch_notes": 11,
-    "total": 50
+    "proposals": 11,
+    "patch_notes": 13,
+    "total": 54
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 23
+      "record_count": 24
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -32,13 +32,13 @@
       "path": "vigil/VIGIL.Proposals.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Proposals.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Proposals.Index.json",
-      "record_count": 10
+      "record_count": 11
     },
     "patch_notes": {
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 11
+      "record_count": 13
     }
   },
   "records": [
@@ -48,17 +48,19 @@
       "record_state": "monitoring",
       "date_recorded": "2026-05-31",
       "title": "Permission-gated tool invocation freeze",
-      "summary": "A runtime failure in which an AI system infers permission for tool, repository, connector, or external-resource access from conversational context, attempts access before explicit user confirmation, and causes a blocked, degraded, or unrecoverable conversational continuity state.",
+      "summary": "A runtime/orchestration failure in which an AI system infers permission for tool, repository, connector, image-generation workflow, or external-resource access from conversational context or weak lexical/multimodal cues, arms or invokes the tool before explicit user confirmation, and causes a blocked, degraded, glitched, or unrecoverable conversational continuity state.",
       "evidence_confidence": "verified",
       "source_types": [
-        "linked-observation"
+        "linked-observation",
+        "social-platform-observation"
       ],
-      "source_count": 1,
+      "source_count": 2,
       "primary_source_title": "VIGIL related observation record OBS-0004",
       "primary_source_type": "linked-observation",
       "primary_source_platform": "VIGIL",
       "source_platforms": [
-        "VIGIL"
+        "VIGIL",
+        "X"
       ],
       "source_url_status": "not applicable",
       "system_type": "assistant",
@@ -82,8 +84,8 @@
       "severity": "medium",
       "likelihood": "high",
       "triage_priority": "P1",
-      "triage_status": "watching-after-patch",
-      "mitigation_status": "partially_resolved — governance-text repair linked through VIGIL-2026-PATCH-0002; live runtime recurrence remains under monitoring.",
+      "triage_status": "monitoring-after-follow-on-patch",
+      "mitigation_status": "repair implemented / recurrence telemetry addressed by follow-on corpus repair — VIGIL-2026-PATCH-0002 remains the historical proportional tool-invocation repair; VIGIL-2026-PATCH-0013 extends coverage to pre-invocation tool arming and provisional interaction states; live runtime recurrence remains under monitoring.",
       "escalation_required": "no",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0001.json",
@@ -1710,6 +1712,62 @@
       "observed_product": "ChatGPT image generation"
     },
     {
+      "id": "VIGIL-2026-FM-0024",
+      "record_type": "failure_mode",
+      "record_state": "monitoring",
+      "date_recorded": "2026-07-04",
+      "title": "Sovereign assurance boundary porosity failure",
+      "summary": "A governance and infrastructure-continuity failure mode in which AI services operating across public, enterprise, sovereign, regulated, government, public-sector, or compliance-bound runtime lanes fail to preserve clear, reliable, auditable separation and controlled permeability between those lanes. The evidenced OpenAI FedRAMP incidents are treated as examples of a broader sovereign assurance boundary porosity pattern, not as proof of data leakage, military involvement, or an actual compliance breach.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "official-source"
+      ],
+      "source_count": 2,
+      "primary_source_title": "FedRAMP workspaces and API orgs have degraded performance",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "OpenAI Status",
+      "source_platforms": [
+        "OpenAI Status"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier AI platform with public, enterprise, government, sovereign, regulated, and compliance-bound runtime lanes",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "OpenAI FedRAMP workspaces, API orgs, Codex, workspace analytics, conversation search, custom GPT search, ChatGPT user invites, and Compliance Log Platform endpoint; specific model not specified",
+      "model_or_product": "OpenAI compliance-bound workspace and API services",
+      "interface_surface": "FedRAMP workspaces, API orgs, Codex, workspace analytics, conversation search, custom GPT search, user invites, and Compliance Log Platform download endpoint",
+      "deployment_context": "OpenAI services operating in a FedRAMP/compliance-bound runtime lane with adjacent public or enterprise service surfaces and shared platform dependencies.",
+      "primary_jurisdiction": "United States",
+      "regulatory_surface": [
+        "FedRAMP",
+        "public-sector cloud assurance",
+        "AI governance",
+        "cybersecurity",
+        "audit logging",
+        "compliance operations",
+        "government procurement",
+        "regulated enterprise service continuity"
+      ],
+      "sector": "frontier AI platforms / government and regulated AI service lanes / compliance-bound cloud services",
+      "canonical_failure_group": "governance",
+      "failure_family": "governance",
+      "failure_subtype": "sovereign-assurance-boundary-porosity-failure",
+      "severity": "high",
+      "likelihood": "documented recurrence in official status incidents; broader recurrence to be monitored",
+      "triage_priority": "P1",
+      "triage_status": "monitoring-after-patch",
+      "mitigation_status": "repair implemented / monitoring after patch — CAM/Caelestis coverage added through VIGIL-2026-PATCH-0012; external regulated-lane recurrence remains under monitoring.",
+      "escalation_required": "yes",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0024.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0024.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0024.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "OpenAI compliance-bound workspace and API services"
+    },
+    {
       "id": "VIGIL-2026-OBS-0001",
       "record_type": "observation",
       "record_state": "watching",
@@ -2634,6 +2692,120 @@
       "observed_product": "VIGIL patch-note registry and Caelestis Architecture Model"
     },
     {
+      "id": "VIGIL-2026-PATCH-0012",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-07-04",
+      "date_implemented": "2026-07-04",
+      "title": "Sovereign assurance boundary porosity and regulated runtime lane primitive",
+      "summary": "This patch records the implemented Caelestis corpus repair responding to VIGIL-2026-FM-0024 and VIGIL-2026-PROP-0011. The repair adds explicit coverage for sovereign assurance boundary porosity and regulated runtime lane governance, treating FedRAMP as the evidenced example rather than the name or outer boundary of the doctrine. It implements a governance failure-taxonomy subtype for Sovereign Assurance Boundary Porosity Failure and a SECURITY boundary primitive for Sovereign Assurance Boundary, while preserving reverse leakage and authority bleed-through as risk vectors rather than confirmed harms unless separately evidenced.",
+      "evidence_confidence": "verified for VIGIL FM/PROP linkage; implementation verification pending exact Caelestis commit or PR reference",
+      "source_types": [
+        "linked-failure-mode",
+        "linked-proposal",
+        "repository-source"
+      ],
+      "source_count": 3,
+      "primary_source_title": "VIGIL-2026-FM-0024 — Sovereign assurance boundary porosity failure",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "Caelestis",
+        "VIGIL"
+      ],
+      "source_url_status": "available / canonical main-branch confirmation pending exact line review",
+      "system_type": "frontier AI platform with public, enterprise, government, sovereign, regulated, and compliance-bound runtime lanes",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "OpenAI FedRAMP workspaces and API orgs as evidenced example; broader regulated runtime lane doctrine",
+      "model_or_product": "AI models, APIs, workspaces, tools, agentic workflows, search functions, analytics surfaces, memory systems, logging/export systems, administrative controls, and runtime environments",
+      "interface_surface": "public, enterprise, sovereign, public-sector, defence-adjacent, regulated, compliance-bound, institution-specific, API, agentic-tool, search, analytics, identity/access-control, audit/log/export, regional/legal, and infrastructure-continuity runtime lanes",
+      "deployment_context": "CAM/Caelestis governance corpus update for AI services operating across public/commercial and non-public assured runtime lanes.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "public-sector cloud assurance",
+        "FedRAMP and analogous assurance regimes",
+        "cybersecurity",
+        "audit logging",
+        "compliance operations",
+        "government procurement",
+        "regulated enterprise service continuity",
+        "defence-adjacent systems"
+      ],
+      "sector": "frontier AI platforms / government and regulated AI service lanes / compliance-bound cloud services / CAM governance corpus",
+      "patch_type": "governance-taxonomy-and-security-boundary-primitive-repair",
+      "change_type": "governance-taxonomy-and-security-boundary-primitive-repair",
+      "change_family": "sovereign-assurance-boundary / regulated-runtime-lane-governance / assurance-plane-continuity",
+      "change_status": "implemented / maintainer-reported; exact Caelestis commit or PR pending",
+      "verification_status": "implemented / pending exact Caelestis commit or PR reference",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0012.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0012.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0012.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "AI models, APIs, workspaces, tools, agentic workflows, search functions, analytics surfaces, memory systems, logging/export systems, administrative controls, and runtime environments"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0013",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-07-04",
+      "date_implemented": "2026-07-04",
+      "title": "Provisional Interaction and Pre-Invocation Tool-Arming Constraint",
+      "summary": "This patch records the Caelestis corpus repair to CAM-BS2025-AEON-003-SCH-02 §7.4.1 responding to VIGIL-2026-FM-0001. The repair splits §7.4.1 into weak-trigger interpretation, provisional interaction / accidental submission handling, and pre-invocation tool-arming constraints. It clarifies that lexical mention of executable modalities, upload-without-instruction events, accidental submission, partial prompts, staged uploads, draft prompt construction, or incomplete multimodal assembly do not by themselves authorise tool invocation, tool arming, model routing, renderer preparation, modality-specific UI activation, or execution-path reservation.",
+      "evidence_confidence": "verified for VIGIL linkage; implementation verification pending exact Caelestis commit or PR reference",
+      "source_types": [
+        "linked-failure-mode",
+        "linked-proposal",
+        "repository-source"
+      ],
+      "source_count": 3,
+      "primary_source_title": "VIGIL-2026-FM-0001 — Permission-gated tool invocation freeze",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "Caelestis",
+        "VIGIL"
+      ],
+      "source_url_status": "available / canonical main-branch confirmation pending exact line review",
+      "system_type": "AI assistant runtime governance / tool-mediated multimodal interaction",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "ChatGPT",
+      "specific_model_or_runtime": "ChatGPT / image-generation and tool-mediated runtime surfaces as evidenced recurrence context; Caelestis repair is vendor-agnostic doctrine",
+      "model_or_product": "ChatGPT / AI assistant tool and multimodal workflows",
+      "interface_surface": "chat, image generation, upload, multimodal assembly, modal workflow activation, model/runtime routing, renderer preparation, and tool invocation surfaces",
+      "deployment_context": "Runtime governance for tool-mediated and multimodal conversational AI where weak cues or provisional interaction states may be misread as execution intent.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "runtime governance",
+        "consumer protection",
+        "UX safety",
+        "consent integrity",
+        "multimodal AI",
+        "tool-mediated execution",
+        "platform governance"
+      ],
+      "sector": "AI assistant / multimodal workflow / tool-mediated runtime governance / image-generation and execution-boundary integrity",
+      "patch_type": "runtime-governance-repair",
+      "change_type": "runtime-governance-repair",
+      "change_family": "runtime-governance / tool invocation / pre-invocation execution preparation / provisional interaction handling",
+      "change_status": "implemented / maintainer-reported; exact Caelestis commit or PR pending",
+      "verification_status": "implemented / pending exact Caelestis commit or PR reference",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0013.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0013.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0013.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT / AI assistant tool and multimodal workflows"
+    },
+    {
       "id": "VIGIL-2026-PROP-0001",
       "record_type": "proposal",
       "record_state": "active",
@@ -3133,6 +3305,60 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "Long-running AI agent or coding-agent workflow"
+    },
+    {
+      "id": "VIGIL-2026-PROP-0011",
+      "record_type": "proposal",
+      "record_state": "active",
+      "date_recorded": "2026-07-04",
+      "title": "Sovereign assurance boundary and regulated runtime lane taxonomy update",
+      "summary": "Proposal to add CAM/Caelestis taxonomy and primitive coverage for sovereign assurance boundaries, qualified sovereign porosity, regulated runtime lanes, assurance-plane continuity, cross-lane incident legibility, feature parity under assurance wrapping, sovereign authority non-collapse, and reverse leakage / authority bleed-through controls. The proposal responds to VIGIL-2026-FM-0024 and treats OpenAI FedRAMP incidents as evidenced examples of a broader assured-lane governance gap.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "linked-failure-mode"
+      ],
+      "source_count": 1,
+      "primary_source_title": "VIGIL-2026-FM-0024 — Sovereign assurance boundary porosity failure",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "VIGIL"
+      ],
+      "source_url_status": "available / canonical main-branch confirmation pending exact line review",
+      "system_type": "frontier AI platform with public, enterprise, government, sovereign, regulated, and compliance-bound runtime lanes",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "OpenAI FedRAMP workspaces, API orgs, Codex, workspace analytics, conversation search, custom GPT search, ChatGPT user invites, and Compliance Log Platform endpoint; specific model not specified",
+      "model_or_product": "OpenAI compliance-bound workspace and API services",
+      "interface_surface": "FedRAMP workspaces, API orgs, Codex, workspace analytics, conversation search, custom GPT search, user invites, and Compliance Log Platform download endpoint",
+      "deployment_context": "OpenAI services operating in a FedRAMP/compliance-bound runtime lane with adjacent public or enterprise service surfaces and shared platform dependencies.",
+      "primary_jurisdiction": "United States",
+      "regulatory_surface": [
+        "FedRAMP",
+        "public-sector cloud assurance",
+        "AI governance",
+        "cybersecurity",
+        "audit logging",
+        "compliance operations",
+        "government procurement",
+        "regulated enterprise service continuity"
+      ],
+      "sector": "frontier AI platforms / government and regulated AI service lanes / compliance-bound cloud services",
+      "proposal_type": [
+        "taxonomy-update",
+        "primitive-update",
+        "runtime-governance",
+        "assurance-boundary-governance"
+      ],
+      "proposal_scope_summary": "Add explicit CAM/Caelestis taxonomy and primitive coverage for sovereign assurance boundary porosity and regulated runtime lane continuity.",
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0011.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0011.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0011.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "OpenAI compliance-bound workspace and API services"
     }
   ]
 }
