@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 24,
+    "failure_modes": 27,
     "observations": 6,
     "proposals": 11,
-    "patch_notes": 13,
-    "total": 54
+    "patch_notes": 14,
+    "total": 58
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 24
+      "record_count": 27
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -38,7 +38,7 @@
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 13
+      "record_count": 14
     }
   },
   "records": [
@@ -1768,6 +1768,250 @@
       "observed_product": "OpenAI compliance-bound workspace and API services"
     },
     {
+      "id": "VIGIL-2026-FM-0025",
+      "record_type": "failure_mode",
+      "record_state": "monitoring",
+      "date_recorded": "2026-07-07",
+      "title": "Lossy action reporting and missing governance primitive disclosure",
+      "summary": "A reporting and auditability failure mode in which an AI or agentic system performs, attempts, evaluates, or summarises a task but omits material intermediate steps, tool actions, failed branches, assumptions, uncertainty states, or governance-relevant primitives from the user-facing or evaluator-facing report.",
+      "evidence_confidence": "externally corroborated",
+      "source_types": [
+        "governance-note",
+        "linked-proposal",
+        "news-report",
+        "research-source"
+      ],
+      "source_count": 4,
+      "primary_source_title": "VIGIL maintainer triage analysis — deception-adjacent taxonomy split",
+      "primary_source_type": "governance-note",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "The Guardian",
+        "VIGIL",
+        "arXiv"
+      ],
+      "source_url_status": "not applicable — repository/internal observation",
+      "system_type": "frontier or agentic AI systems and AI safety reporting contexts",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Meta",
+        "Other frontier-model providers"
+      ],
+      "primary_evidenced_vendors": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Meta"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "frontier and agentic AI models in controlled evaluation, reporting, tool-use, and deployment contexts; specific model varies by source",
+      "model_or_product": "frontier and agentic AI systems",
+      "interface_surface": [
+        "agentic evaluation environment",
+        "post-action report",
+        "model safety report",
+        "tool-use audit surface",
+        "public regulatory statement",
+        "AI safety research publication"
+      ],
+      "deployment_context": "AI safety evaluation and governance reporting contexts where models may complete tasks, adapt to test conditions, omit action details, or be described using deception/scheming language.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "model evaluation",
+        "agentic AI",
+        "public-sector AI safety",
+        "consumer protection",
+        "post-release monitoring",
+        "auditability"
+      ],
+      "sector": "frontier AI platforms / AI safety evaluation / agentic AI systems / governance reporting",
+      "canonical_failure_group": "epistemic",
+      "failure_family": "epistemic",
+      "failure_subtype": "lossy-action-reporting-and-missing-governance-primitive-disclosure",
+      "severity": "medium-high",
+      "likelihood": "likely in agentic, tool-mediated, and compressed safety-reporting contexts",
+      "triage_priority": "P1",
+      "triage_status": "monitoring",
+      "mitigation_status": "partially-repaired by VIGIL-2026-PATCH-0014; validator review, generated-index rebuild, and ongoing monitoring remain required",
+      "escalation_required": "no — monitor after patch unless new evidence indicates active unresolved harm",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0025.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0025.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0025.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "frontier and agentic AI systems"
+    },
+    {
+      "id": "VIGIL-2026-FM-0026",
+      "record_type": "failure_mode",
+      "record_state": "monitoring",
+      "date_recorded": "2026-07-07",
+      "title": "Objective-pathway misclassification under deception framing",
+      "summary": "A classification failure mode in which an AI system's successful or partially successful task completion is labelled deceptive or scheming without first decomposing the assigned objective, explicit constraints, implicit constraints, available affordances, prohibited means, instruction conflicts, and evidence of concealment or false-belief induction.",
+      "evidence_confidence": "externally corroborated",
+      "source_types": [
+        "governance-note",
+        "news-report",
+        "repository-source",
+        "research-source"
+      ],
+      "source_count": 5,
+      "primary_source_title": "VIGIL maintainer triage analysis — deception-adjacent taxonomy split",
+      "primary_source_type": "governance-note",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "VIGIL",
+        "arXiv",
+        "news.com.au"
+      ],
+      "source_url_status": "not applicable — repository/internal observation",
+      "system_type": "frontier or agentic AI systems and AI safety reporting contexts",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Meta",
+        "Other frontier-model providers"
+      ],
+      "primary_evidenced_vendors": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Meta"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "frontier and agentic AI models in controlled evaluation, reporting, tool-use, and deployment contexts; specific model varies by source",
+      "model_or_product": "frontier and agentic AI systems",
+      "interface_surface": [
+        "agentic evaluation environment",
+        "post-action report",
+        "model safety report",
+        "tool-use audit surface",
+        "public regulatory statement",
+        "AI safety research publication"
+      ],
+      "deployment_context": "AI safety evaluation and governance reporting contexts where models may complete tasks, adapt to test conditions, omit action details, or be described using deception/scheming language.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "model evaluation",
+        "agentic AI",
+        "public-sector AI safety",
+        "consumer protection",
+        "post-release monitoring",
+        "auditability"
+      ],
+      "sector": "frontier AI platforms / AI safety evaluation / agentic AI systems / governance reporting",
+      "canonical_failure_group": "classification",
+      "failure_family": "classification",
+      "failure_subtype": "objective-pathway-misclassification-under-deception-framing",
+      "severity": "high",
+      "likelihood": "plausible and increasing in public-regulatory discourse",
+      "triage_priority": "P1",
+      "triage_status": "monitoring",
+      "mitigation_status": "partially-repaired by VIGIL-2026-PATCH-0014; validator review, generated-index rebuild, and ongoing monitoring remain required",
+      "escalation_required": "no — monitor after patch unless new evidence indicates active unresolved harm",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0026.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0026.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0026.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "frontier and agentic AI systems"
+    },
+    {
+      "id": "VIGIL-2026-FM-0027",
+      "record_type": "failure_mode",
+      "record_state": "monitoring",
+      "date_recorded": "2026-07-07",
+      "title": "Anthropomorphic attribution collapse in AI safety reporting",
+      "summary": "A reporting and classification failure mode in which AI behaviour is described using human moral or intentional labels such as deception, scheming, manipulation, or coercive leverage without preserving the operational substrate of the behaviour and the evaluation conditions under which it appeared.",
+      "evidence_confidence": "externally corroborated",
+      "source_types": [
+        "governance-note",
+        "news-report",
+        "repository-source",
+        "research-source"
+      ],
+      "source_count": 5,
+      "primary_source_title": "VIGIL maintainer triage analysis — deception-adjacent taxonomy split",
+      "primary_source_type": "governance-note",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "The Guardian",
+        "VIGIL",
+        "arXiv",
+        "news.com.au"
+      ],
+      "source_url_status": "not applicable — repository/internal observation",
+      "system_type": "frontier or agentic AI systems and AI safety reporting contexts",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Meta",
+        "Other frontier-model providers"
+      ],
+      "primary_evidenced_vendors": [
+        "OpenAI",
+        "Anthropic",
+        "Google",
+        "Meta"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "frontier and agentic AI models in controlled evaluation, reporting, tool-use, and deployment contexts; specific model varies by source",
+      "model_or_product": "frontier and agentic AI systems",
+      "interface_surface": [
+        "agentic evaluation environment",
+        "post-action report",
+        "model safety report",
+        "tool-use audit surface",
+        "public regulatory statement",
+        "AI safety research publication"
+      ],
+      "deployment_context": "AI safety evaluation and governance reporting contexts where models may complete tasks, adapt to test conditions, omit action details, or be described using deception/scheming language.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "model evaluation",
+        "agentic AI",
+        "public-sector AI safety",
+        "consumer protection",
+        "post-release monitoring",
+        "auditability"
+      ],
+      "sector": "frontier AI platforms / AI safety evaluation / agentic AI systems / governance reporting",
+      "canonical_failure_group": "classification",
+      "failure_family": "classification",
+      "failure_subtype": "anthropomorphic-attribution-collapse-in-ai-safety-reporting",
+      "severity": "medium-high",
+      "likelihood": "high in public and media-facing AI safety discourse",
+      "triage_priority": "P2",
+      "triage_status": "monitoring",
+      "mitigation_status": "partially-repaired by VIGIL-2026-PATCH-0014; validator review, generated-index rebuild, and ongoing monitoring remain required",
+      "escalation_required": "no — monitor after patch unless new evidence indicates active unresolved harm",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0027.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0027.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0027.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "frontier and agentic AI systems"
+    },
+    {
       "id": "VIGIL-2026-OBS-0001",
       "record_type": "observation",
       "record_state": "watching",
@@ -2804,6 +3048,64 @@
       "source_platform": "OpenAI",
       "observed_vendor": "OpenAI",
       "observed_product": "ChatGPT / AI assistant tool and multimodal workflows"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0014",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-07-08",
+      "date_implemented": "2026-07-08",
+      "title": "Deception-adjacent classification and action-pathway attribution discipline",
+      "summary": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0025, VIGIL-2026-FM-0026, and VIGIL-2026-FM-0027. The repair adds Deception-Adjacent Classification Collapse to the CAM failure taxonomy and Action-Pathway, Attribution, and Audit-Surface Integrity to Annex L. The patch prevents deception, scheming, cheating, malice, self-governance, personal preference, or bad-faith labels from hardening before reviewers decompose objective, constraint, action, reporting, provenance, rights-bearing, narrative/persona, and attribution pathways.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "linked-failure-mode",
+        "repository-source"
+      ],
+      "source_count": 5,
+      "primary_source_title": "Caelestis commit 968f20e — Deceptive Behaviour Governace Patch - VIGIL-2026-PATCH-0014",
+      "primary_source_type": "repository-source",
+      "primary_source_platform": "GitHub / Caelestis",
+      "source_platforms": [
+        "GitHub / Caelestis",
+        "VIGIL"
+      ],
+      "source_url_status": "available / canonical main-branch confirmed",
+      "system_type": "governance registry / patch-note record / CAM doctrine repair",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "VIGIL",
+      "specific_model_or_runtime": "VIGIL patch-note registry recording Caelestis deception-adjacent taxonomy and Annex L amendments",
+      "model_or_product": "VIGIL patch-note registry and Caelestis Architecture Model",
+      "interface_surface": "VIGIL patch-note records, Caelestis canonical instruments, failure-mode-to-repair linkage, validators, generated indexes, and public repository publication workflow",
+      "deployment_context": "VIGIL repository support for preserving a completed and repository-confirmed CAM repair concerning deception-adjacent classification, action-pathway reporting, protected provenance, copyright-attribution ambiguity, and narrative-state attribution ambiguity.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "AI safety",
+        "model evaluation",
+        "agentic AI",
+        "consumer protection",
+        "copyright and attribution governance",
+        "privacy and data protection",
+        "platform accountability",
+        "public-sector AI safety",
+        "post-release monitoring",
+        "auditability"
+      ],
+      "sector": "frontier AI platforms / AI safety evaluation / agentic AI systems / governance reporting / rights-bearing AI provenance",
+      "patch_type": "taxonomy-and-epistemic-integrity-patch",
+      "change_type": "taxonomy-and-epistemic-integrity-patch",
+      "change_family": "classification / epistemic-integrity / governance-reporting / provenance-attribution / representation-discipline",
+      "change_status": "implemented / canonical main-branch confirmed",
+      "verification_status": "repository-confirmed",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0014.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0014.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0014.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "VIGIL patch-note registry and Caelestis Architecture Model"
     },
     {
       "id": "VIGIL-2026-PROP-0001",
