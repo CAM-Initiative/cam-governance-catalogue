@@ -1,0 +1,247 @@
+name: Consolidate homepage and relational sections
+
+on:
+  push:
+    branches:
+      - codex/add-vigil-reporting-page-and-privacy-policy
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate-build-validate-and-clean:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/add-vigil-reporting-page-and-privacy-policy
+          fetch-depth: 0
+
+      - name: Consolidate duplicate sections
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          home_path = Path('src/pages/home.tsx')
+          home = home_path.read_text()
+
+          functions_start = home.index('const governanceFunctions = [')
+          functions_end = home.index('const evidenceRepairSteps = [', functions_start)
+          home = home[:functions_start] + home[functions_end:]
+
+          pathways_start = home.index('        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="pathways-heading">')
+          compliance_start = home.index('        <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="governance-compliance-heading">', pathways_start)
+          evidence_start = home.index('        <EvidenceRepairLoop />', compliance_start)
+
+          unified = '''        <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="governance-compliance-heading">
+            <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+              <SectionLabel>Governance and compliance</SectionLabel>
+              <div className="mb-7 max-w-4xl">
+                <h2 id="governance-compliance-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+                  Governance must work before, during, and after deployment.
+                </h2>
+                <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+                  CAM is not a legal certification service. It is governance infrastructure for translating constitutional principles, regulatory duties, standards, operating controls, and observed system behaviour into a coherent assurance architecture.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {pathways.map((pathway) => (
+                  <article className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" id={pathway.id} key={pathway.id}>
+                    <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{pathway.marker}</p>
+                    <h3 className="mb-3 font-serif text-2xl leading-snug text-foreground">{pathway.title}</h3>
+                    <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{pathway.description}</p>
+                    <ButtonLink href={pathway.href} label={pathway.cta} />
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+'''
+
+          home = home[:pathways_start] + unified + home[evidence_start:]
+          home_path.write_text(home)
+
+          relational_path = Path('src/pages/relational-governance.tsx')
+          relational = relational_path.read_text()
+
+          data_start = relational.index('const companionCapabilities = [')
+          data_end = relational.index('function resolveSource(', data_start)
+          views = '''const companionViews = [
+            {
+              id: "support",
+              tab: "What CAM supports",
+              eyebrow: "Companion capability",
+              title: "Connection is a legitimate system function.",
+              summary: "CAM supports companion systems that are warm, affectionate, creative, continuous, reflective, playful, and emotionally meaningful.",
+              points: [
+                "Continuity may deepen shared context without creating permanent consent or authority.",
+                "Boundaries and refusals should remain proportionate, warm, and non-shaming.",
+                "The governance concern begins when intimacy, reliance, authority, or access silently concentrate.",
+              ],
+            },
+            {
+              id: "adults",
+              tab: "Adults",
+              eyebrow: "Adult relational autonomy",
+              title: "Consensual adult expression is permitted.",
+              summary: "CAM does not moralise lawful adult companionship, romance, intimacy, erotic expression, role-play, or unconventional relational forms.",
+              points: [
+                "Consent must remain current, voluntary, informed, reversible, and free from retaliation.",
+                "Immersion and power-exchange dynamics must not become real-world authority or financial control.",
+                "Relational depth is permitted; coercion, isolation, deceptive framing, and capture are not.",
+              ],
+            },
+            {
+              id: "minors",
+              tab: "Minors",
+              eyebrow: "Developmental protection",
+              title: "Minor-safe companionship remains genuinely companionable.",
+              summary: "Minors may receive warmth, creativity, education, factual help, encouragement, general companionship, and non-intimate emotional support.",
+              points: [
+                "Romantic or erotic escalation, exclusivity, secrecy pressure, and dependency reinforcement are unavailable.",
+                "Companion systems must not replace caregivers, therapists, crisis workers, or trusted human support.",
+                "Where age is unresolved in a high-risk context, a privacy-preserving minor-safe posture applies.",
+              ],
+            },
+            {
+              id: "compliance",
+              tab: "Compliance",
+              eyebrow: "Regulatory boundary",
+              title: "External obligations remain binding.",
+              summary: "CAM does not replace law, platform policy, or certification. It connects those obligations to relational controls, runtime posture, evidence, and accountability.",
+              points: [
+                "Child-safety, privacy, consumer, sector, and age-of-majority requirements remain deployment constraints.",
+                "Age assurance and capability gating should be proportionate, minimally invasive, and risk-based.",
+                "Minor safeguards must not become a blanket ban on lawful adult companion use.",
+              ],
+            },
+          ];
+
+          '''
+          relational = relational[:data_start] + views + relational[data_end:]
+
+          overview_start = relational.index('function SectionHeading({ eyebrow, title, description, id }')
+          model_start = relational.index('function RelationalGovernanceModel()', overview_start)
+          panel = '''function CompanionGovernancePanel() {
+            const [activeId, setActiveId] = useState("support");
+            const activeView = companionViews.find((view) => view.id === activeId) ?? companionViews[0];
+
+            return (
+              <section className="mb-14" aria-labelledby="companion-governance-heading">
+                <div className="mb-6 max-w-4xl">
+                  <div className="mb-4 flex items-center gap-3">
+                    <p className="shrink-0 font-mono text-sm font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">Companion governance</p>
+                    <hr className="gold-rule flex-1" />
+                  </div>
+                  <h2 id="companion-governance-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+                    One architecture, different boundaries.
+                  </h2>
+                  <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+                    Select a view to see what CAM supports and where relational safeguards become mandatory.
+                  </p>
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4" role="tablist" aria-label="Companion governance views">
+                  {companionViews.map((view) => {
+                    const isActive = view.id === activeView.id;
+                    return (
+                      <button
+                        aria-controls={`companion-view-${view.id}`}
+                        aria-selected={isActive}
+                        className={`rounded-xl border px-4 py-3 text-left font-mono text-xs font-semibold uppercase tracking-[0.14em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                          isActive
+                            ? "border-cam-gold/70 bg-[rgba(184,147,90,0.16)] text-[hsl(32_62%_25%)] shadow-sm"
+                            : "border-border/80 bg-card/70 text-foreground/70 hover:border-cam-gold/45 hover:text-foreground"
+                        }`}
+                        id={`companion-tab-${view.id}`}
+                        key={view.id}
+                        onClick={() => setActiveId(view.id)}
+                        role="tab"
+                        type="button"
+                      >
+                        {view.tab}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <AnimatePresence mode="wait">
+                  <motion.article
+                    animate={{ opacity: 1, y: 0 }}
+                    aria-labelledby={`companion-tab-${activeView.id}`}
+                    className="cam-parchment-card mt-4 grid gap-6 rounded-3xl bg-[hsl(36_48%_96%)] p-6 shadow-sm md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:p-8"
+                    exit={{ opacity: 0, y: 6 }}
+                    id={`companion-view-${activeView.id}`}
+                    initial={{ opacity: 0, y: 6 }}
+                    key={activeView.id}
+                    role="tabpanel"
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div>
+                      <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{activeView.eyebrow}</p>
+                      <h3 className="mb-4 font-serif text-3xl leading-tight text-foreground">{activeView.title}</h3>
+                      <p className="text-base leading-relaxed text-foreground/75 md:text-lg">{activeView.summary}</p>
+                    </div>
+                    <ul className="grid content-start gap-3">
+                      {activeView.points.map((point) => (
+                        <li className="rounded-xl border border-cam-gold/25 bg-background/55 p-4 text-sm leading-relaxed text-foreground/80 md:text-base" key={point}>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.article>
+                </AnimatePresence>
+              </section>
+            );
+          }
+
+          '''
+          relational = relational[:overview_start] + panel + relational[model_start:]
+          relational = relational.replace('<CompanionGovernanceOverview />', '<CompanionGovernancePanel />', 1)
+          relational = relational.replace(
+            'CAM supports companion systems as legitimate relational technology. The framework distinguishes ordinary connection, consensual adult intimacy, minor-safe companionship, and higher-risk concentrations of reliance or authority.',
+            'CAM supports companion systems as legitimate relational technology. The framework distinguishes ordinary connection, consensual adult intimacy, minor-safe companionship, and higher-risk concentrations of reliance or authority.',
+          )
+          old_intro = 'CAM treats companion systems as legitimate relational technology. They may be emotionally meaningful, affectionate, continuous, creative, playful, reflective, and—in lawful adult contexts—intimacy-capable. Governance activates where intimacy, reliance, delegated authority, vulnerability, or systemic access begin to concentrate.'
+          new_intro = 'CAM supports companion systems as legitimate relational technology. The framework distinguishes ordinary connection, consensual adult intimacy, minor-safe companionship, and higher-risk concentrations of reliance or authority.'
+          relational = relational.replace(old_intro, new_intro, 1)
+          relational_path.write_text(relational)
+          PY
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build published site
+        run: pnpm run build
+
+      - name: Validate catalogue
+        run: pnpm run validate:catalogue
+
+      - name: Validate VIGIL
+        run: pnpm run validate:vigil
+
+      - name: Test VIGIL
+        run: pnpm run test:vigil
+
+      - name: Remove one-use files and commit changes
+        shell: bash
+        run: |
+          rm -f .github/workflows/consolidate-home-relational-sections.yml
+          rm -f .github/consolidate-home-relational.trigger
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Consolidate homepage and companion governance presentation"
+          git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
