@@ -202,10 +202,6 @@ jobs:
           '''
           relational = relational[:overview_start] + panel + relational[model_start:]
           relational = relational.replace('<CompanionGovernanceOverview />', '<CompanionGovernancePanel />', 1)
-          relational = relational.replace(
-            'CAM supports companion systems as legitimate relational technology. The framework distinguishes ordinary connection, consensual adult intimacy, minor-safe companionship, and higher-risk concentrations of reliance or authority.',
-            'CAM supports companion systems as legitimate relational technology. The framework distinguishes ordinary connection, consensual adult intimacy, minor-safe companionship, and higher-risk concentrations of reliance or authority.',
-          )
           old_intro = 'CAM treats companion systems as legitimate relational technology. They may be emotionally meaningful, affectionate, continuous, creative, playful, reflective, and—in lawful adult contexts—intimacy-capable. Governance activates where intimacy, reliance, delegated authority, vulnerability, or systemic access begin to concentrate.'
           new_intro = 'CAM supports companion systems as legitimate relational technology. The framework distinguishes ordinary connection, consensual adult intimacy, minor-safe companionship, and higher-risk concentrations of reliance or authority.'
           relational = relational.replace(old_intro, new_intro, 1)
@@ -245,3 +241,5 @@ jobs:
           git add -A
           git commit -m "Consolidate homepage and companion governance presentation"
           git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
+
+# Trigger after workflow registration.
