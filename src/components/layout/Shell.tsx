@@ -17,7 +17,6 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL Ledger", internal: true },
-  { href: "/observatory/report", label: "Report a VIGIL Signal", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -34,7 +33,6 @@ const constitutionLinks = [
 
 const vigilLinks = [
   { href: "/observatory", label: "Browse the VIGIL Ledger" },
-  { href: "/observatory/report", label: "Report a VIGIL Signal" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
