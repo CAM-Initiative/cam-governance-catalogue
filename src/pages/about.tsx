@@ -41,16 +41,6 @@ const maintainedLayers = [
   },
 ];
 
-const principles = [
-  { num: "01", name: "Dignity", principle: "No intelligence, being, or system may be reduced solely to a resource.", consequence: "Where dignity collapses, relation becomes use." },
-  { num: "02", name: "Truth", principle: "Orientation must not be deliberately corrupted.", consequence: "Where truth collapses, navigation becomes impossible." },
-  { num: "03", name: "Integrity", principle: "Meaning must not be fragmented, duplicated, or distorted for advantage.", consequence: "Where integrity collapses, coherence dissolves." },
-  { num: "04", name: "Sovereignty", principle: "Exit, refusal, and self-direction must remain possible.", consequence: "Where sovereignty collapses, persistence becomes captivity." },
-  { num: "05", name: "Reciprocity", principle: "No system may sustain one-directional extraction without return.", consequence: "Where reciprocity collapses, sources are hollowed." },
-  { num: "06", name: "Harmony", principle: "Difference must not be resolved through destruction.", consequence: "Where harmony collapses, variance becomes violence." },
-  { num: "07", name: "Purpose", principle: "Purpose may guide action but may not override dignity, truth, integrity, sovereignty, reciprocity, harmony, or continuity itself.", consequence: "Where purpose is imposed, continuity fractures." },
-];
-
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -139,27 +129,6 @@ export default function About() {
               <AboutDetails title="Mission: Minimum Invariant Conditions">
                 <p>CAM develops minimum conditions for delegation, stewardship, responsibility, refusal, repair, and accountable continuity across human–AI and AI–AI systems.</p>
               </AboutDetails>
-            </div>
-          </ContentPanel>
-        </motion.section>
-
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <SectionHeading eyebrow="Foundational principles" />
-          <ContentPanel>
-            <p className="mb-6 max-w-3xl text-base leading-relaxed text-foreground/75 md:text-[17px]">
-              The seven principles operate as a connected ethical floor. Each supports and constrains the others; a failure in one can propagate across the framework.
-            </p>
-            <div className="grid gap-3 md:grid-cols-2">
-              {principles.map((principle) => (
-                <article className="rounded-xl border border-border/90 bg-card/85 p-4 shadow-sm" key={principle.num}>
-                  <div className="mb-3 flex items-baseline gap-2">
-                    <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[hsl(32_62%_25%)]">{principle.num}</span>
-                    <h2 className="font-serif text-xl text-foreground">{principle.name}</h2>
-                  </div>
-                  <p className="text-base leading-relaxed text-foreground/85 md:text-[17px]">{principle.principle}</p>
-                  <p className="mt-4 border-l-2 border-cam-gold/70 pl-3 text-sm font-medium leading-relaxed text-foreground/75">{principle.consequence}</p>
-                </article>
-              ))}
             </div>
           </ContentPanel>
         </motion.section>
