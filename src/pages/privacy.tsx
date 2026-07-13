@@ -1,15 +1,12 @@
 import { Shell } from "@/components/layout/Shell";
 
 const sections = [
-  ["Overview", "This policy explains the current CAM Initiative website and VIGIL reporting workflow. The site is published as a static website and does not silently submit, store, or transmit a VIGIL report while you type into the form."],
-  ["Browser-local report preparation", "The VIGIL reporting page prepares a structured report package in your browser. Nothing reaches CAM Initiative until you open the pre-addressed email, attach the report package and any evidence, and press Send in your email application."],
-  ["Where reports are sent", "The current reporting workflow sends email to ethics@cam-initiative.org. The website has no submission server and cannot automatically attach files or confirm email delivery."],
-  ["Public evidence and private contact details", "The report package separates the public-record candidate from optional contact details. A name, pseudonym, or contact email is supplied for correspondence only and should not be included in a public VIGIL record without explicit agreement."],
-  ["Public attribution and sender identity", "Public attribution is optional. Leaving the contact fields blank can prevent a name or contact address from being included in the public-record candidate, but the email account used to send the report will still be visible to the CAM Initiative inbox and may be processed by email and network providers."],
-  ["Evidence, screenshots, and third-party information", "Screenshots and evidence may contain personal information. Avoid unnecessary personal, sensitive, confidential, medical, credential, address, or third-party information. Remove unrelated identifying details and document metadata where practicable."],
-  ["How submitted information may be used", "Material you send may be used to review a VIGIL signal, assess evidence, request clarification, route a governance issue, identify related records, or prepare a public record if accepted."],
-  ["Public-record review", "A submitted report package is not automatically a public VIGIL record. Accepted material may be classified, edited, summarised, cross-referenced, or redacted during maintainer review. Contact details should not be published unless explicitly agreed or already public and materially relevant."],
-  ["Email and attachments", "The website cannot attach files automatically. Attach the downloaded JSON report package and any screenshots or files manually before sending. Your email provider and network may store or transmit the message under their own terms."],
+  ["Overview", "This policy explains the current CAM Initiative website. The site is published as a static public website and does not provide an online VIGIL submission portal, user accounts, or a private evidence-upload service."],
+  ["Information you choose to send", "The website includes contact links that open your email application. Nothing is transmitted merely by visiting the site or selecting a contact link. Information reaches CAM Initiative only when you choose to send an email."],
+  ["Evidence and correction enquiries", "Evidence, correction, or governance enquiries may be sent to ethics@cam-initiative.org. Email is not an anonymous channel: the sending address and technical delivery metadata may be visible to CAM Initiative and relevant email or network providers."],
+  ["Sensitive and third-party information", "Do not send unnecessary personal, sensitive, confidential, medical, credential, address, or third-party information. Remove unrelated identifying details and document or image metadata where practicable."],
+  ["How correspondence may be used", "Correspondence may be used to assess an enquiry, review supporting evidence, request clarification, identify related governance records, correct published information, or inform future CAM or VIGIL work."],
+  ["Public-record review", "Material received by email is not automatically a public VIGIL record. Any later publication is subject to maintainer review, classification, evidence assessment, and redaction where appropriate. Contact details should not be published without explicit agreement unless already public and materially relevant."],
   ["Third-party services and technical logs", "GitHub Pages, domain services, browsers, networks, email providers, and linked third-party services may process technical metadata such as IP address, user agent, timestamps, logs, account identifiers, or delivery data under their own policies."],
   ["Access, correction, redaction, and removal", "You may request access, correction, contributor-detail redaction, or removal where practicable. Public repository history, forks, archives, email delivery, evidence-integrity needs, legal obligations, or public-interest retention may limit what can be changed."],
   ["Non-affiliation", "The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/."],
@@ -24,7 +21,7 @@ export default function Privacy() {
         <div className="mb-8">
           <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">Privacy</p>
           <h1 className="mb-4 font-serif text-4xl text-foreground md:text-5xl">Privacy Policy</h1>
-          <p className="text-base leading-relaxed text-foreground/75 md:text-lg">Plain-language privacy information for the CAM Initiative website and VIGIL reporting workflow. It explains current site behaviour and is not a claim of legal certification or regulatory compliance.</p>
+          <p className="text-base leading-relaxed text-foreground/75 md:text-lg">Plain-language privacy information for the CAM Initiative public website and email correspondence. It explains current site behaviour and is not a claim of legal certification or regulatory compliance.</p>
         </div>
         <div className="space-y-4">
           {sections.map(([title, body]) => (
