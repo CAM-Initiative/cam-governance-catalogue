@@ -1,0 +1,56 @@
+name: Finalize consolidated site build
+
+on:
+  push:
+    branches:
+      - codex/add-vigil-reporting-page-and-privacy-policy
+
+permissions:
+  contents: write
+
+jobs:
+  build-validate-and-clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/add-vigil-reporting-page-and-privacy-policy
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build published site
+        run: pnpm run build
+
+      - name: Validate catalogue
+        run: pnpm run validate:catalogue
+
+      - name: Validate VIGIL
+        run: pnpm run validate:vigil
+
+      - name: Test VIGIL
+        run: pnpm run test:vigil
+
+      - name: Remove one-time workflow and commit build
+        shell: bash
+        run: |
+          rm -f .github/workflows/finalize-consolidated-site.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Rebuild site after removing VIGIL submission form"
+          git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
