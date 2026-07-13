@@ -51,3 +51,5 @@ jobs:
           git add -A
           git commit -m "Rebuild site after restoring homepage architecture"
           git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
+
+# Trigger rebuild after workflow registration.
