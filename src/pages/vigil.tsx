@@ -187,8 +187,6 @@ function SummaryBlock({ title, entries, defaultOpen = false }: { title: string; 
   );
 }
 
-
-
 function hasMeaningfulValue(value: unknown): boolean {
   if (value === null || value === undefined) return false;
   if (typeof value === "string") return isMeaningfulText(value);
@@ -558,7 +556,6 @@ export default function Vigil() {
     setFilters((current) => ({ ...current, [key]: value }));
   }
 
-
   function updateSort(key: SortKey) {
     setSortConfig((current) => ({
       key,
@@ -721,9 +718,7 @@ export default function Vigil() {
             <div className="space-y-2">
               <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
               <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
-              <a className="inline-flex rounded-xl border border-cam-gold/30 bg-card/70 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold transition hover:border-cam-gold/55 hover:text-foreground" href="/observatory/report">VIGIL Submissions</a>
             </div>
-
 
             <div>
               <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">From evidence to repair:</p>
@@ -783,7 +778,6 @@ export default function Vigil() {
             </div>
           </div>
         </details>
-
 
         {isExportDialogOpen && (
           <div
@@ -882,7 +876,6 @@ export default function Vigil() {
           </div>
         )}
 
-
         <section className="space-y-4" data-result-range-example="Showing 1–20">
           <div className="cam-parchment-card rounded-xl p-4 shadow-sm">
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -970,214 +963,214 @@ export default function Vigil() {
             )}
           </div>
 
-            {loadState === "loading" && <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">Loading VIGIL records from <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>…</div>}
+          {loadState === "loading" && <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">Loading VIGIL records from <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>…</div>}
 
-            {loadState === "error" && (
-              <div className="cam-parchment-card rounded-xl p-5 shadow-sm">
-                <p className="font-mono text-xs uppercase tracking-[0.18em] text-red-700">Records unavailable</p>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{errorMessage || `VIGIL registry could not be loaded from the live registry source. Attempted ${VIGIL_REGISTRY_SOURCE.registry_index_url}.`}</p>
+          {loadState === "error" && (
+            <div className="cam-parchment-card rounded-xl p-5 shadow-sm">
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-red-700">Records unavailable</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{errorMessage || `VIGIL registry could not be loaded from the live registry source. Attempted ${VIGIL_REGISTRY_SOURCE.registry_index_url}.`}</p>
+            </div>
+          )}
+
+          {loadState === "ready" && loadNotice && (
+            <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">{loadNotice}</div>
+          )}
+
+          {loadState === "ready" && records.length === 0 && (
+            <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">No VIGIL records are currently published in <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>.</div>
+          )}
+
+          {loadState === "ready" && filtered.length > 0 && (
+            <p className="font-sans text-sm leading-relaxed text-muted-foreground">Select any entry to expand record details and inspect raw JSON. Click a column heading to sort records.</p>
+          )}
+
+          <div className="space-y-2">
+            {loadState === "ready" && filtered.length > 0 && (
+              <div className="hidden gap-2 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem]" role="row">
+                {sortableColumns.map((column) => {
+                  const isActive = sortConfig.key === column.key;
+                  return (
+                    <div key={column.key} role="columnheader" aria-sort={isActive ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}>
+                      <button
+                        type="button"
+                        className={`inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-left transition hover:bg-background/70 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background ${isActive ? "text-cam-gold" : "text-muted-foreground"}`}
+                        onClick={() => updateSort(column.key)}
+                        aria-label={`Sort VIGIL records by ${column.label} ${isActive && sortConfig.direction === "asc" ? "descending" : "ascending"}`}
+                      >
+                        <span>{column.label}</span>
+                        <span className={isActive ? "text-cam-gold" : "text-muted-foreground/60"} aria-hidden="true">{isActive ? (sortConfig.direction === "asc" ? "↑" : "↓") : "↕"}</span>
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
             )}
 
-            {loadState === "ready" && loadNotice && (
-              <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">{loadNotice}</div>
-            )}
-
-            {loadState === "ready" && records.length === 0 && (
-              <div className="cam-parchment-card rounded-xl p-5 text-sm text-muted-foreground shadow-sm">No VIGIL records are currently published in <code>{VIGIL_REGISTRY_SOURCE.registry_index_url}</code>.</div>
-            )}
-
-            {loadState === "ready" && filtered.length > 0 && (
-              <p className="font-sans text-sm leading-relaxed text-muted-foreground">Select any entry to expand record details and inspect raw JSON. Click a column heading to sort records.</p>
-            )}
-
-            <div className="space-y-2">
-              {loadState === "ready" && filtered.length > 0 && (
-                <div className="hidden gap-2 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem]" role="row">
-                  {sortableColumns.map((column) => {
-                    const isActive = sortConfig.key === column.key;
-                    return (
-                      <div key={column.key} role="columnheader" aria-sort={isActive ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}>
-                        <button
-                          type="button"
-                          className={`inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 text-left transition hover:bg-background/70 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background ${isActive ? "text-cam-gold" : "text-muted-foreground"}`}
-                          onClick={() => updateSort(column.key)}
-                          aria-label={`Sort VIGIL records by ${column.label} ${isActive && sortConfig.direction === "asc" ? "descending" : "ascending"}`}
-                        >
-                          <span>{column.label}</span>
-                          <span className={isActive ? "text-cam-gold" : "text-muted-foreground/60"} aria-hidden="true">{isActive ? (sortConfig.direction === "asc" ? "↑" : "↓") : "↕"}</span>
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {pagedRecords.map((record, index) => {
-                const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
-                const sourceHref = sourceRecordUrl(record);
-                const rawHref = sourceRawUrl(record);
-                const recordKey = recordKeyFor(record, recordPageStart + index);
-                const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
-                const isExpanded = expandedRecordKeys.has(recordKey);
-                const detailLoad = detailLoads[recordKey];
-                const detailRecord = detailLoad?.status === "ready" ? detailLoad.displayRecord : record;
-                const detailRecordDate = detailRecord.date_recorded ?? detailRecord.date_implemented ?? "Date not specified";
-                const displayRecordId = record.id;
-                return (
+            {pagedRecords.map((record, index) => {
+              const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
+              const sourceHref = sourceRecordUrl(record);
+              const rawHref = sourceRawUrl(record);
+              const recordKey = recordKeyFor(record, recordPageStart + index);
+              const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
+              const isExpanded = expandedRecordKeys.has(recordKey);
+              const detailLoad = detailLoads[recordKey];
+              const detailRecord = detailLoad?.status === "ready" ? detailLoad.displayRecord : record;
+              const detailRecordDate = detailRecord.date_recorded ?? detailRecord.date_implemented ?? "Date not specified";
+              const displayRecordId = record.id;
+              return (
                 <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
                   {!isExpanded && (
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    aria-expanded={isExpanded}
-                    aria-controls={detailsPanelId}
-                    className="cursor-pointer px-3 py-2.5 text-sm transition md:px-4"
-                    onClick={() => toggleExpandedRecord(record, recordKey)}
-                    onKeyDown={(event) => handleRecordRowKeyDown(event, record, recordKey)}
-                  >
-                    <div className="font-sans">
-                      <div className="space-y-3 md:hidden">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Record ID</p>
-                            <p className="mt-1 break-words font-mono text-[11px] text-cam-gold">{displayRecordId}</p>
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={isExpanded}
+                      aria-controls={detailsPanelId}
+                      className="cursor-pointer px-3 py-2.5 text-sm transition md:px-4"
+                      onClick={() => toggleExpandedRecord(record, recordKey)}
+                      onKeyDown={(event) => handleRecordRowKeyDown(event, record, recordKey)}
+                    >
+                      <div className="font-sans">
+                        <div className="space-y-3 md:hidden">
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Record ID</p>
+                              <p className="mt-1 break-words font-mono text-[11px] text-cam-gold">{displayRecordId}</p>
+                            </div>
+                            <span className="shrink-0 rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                              {isExpanded ? "Collapse" : "Expand"}
+                            </span>
                           </div>
-                          <span className="shrink-0 rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                            {isExpanded ? "Collapse" : "Expand"}
-                          </span>
+
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Title</p>
+                            <h2 className="mt-1 break-words font-mono text-base font-normal leading-snug text-foreground/90">{record.title}</h2>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
+                            <Field label="Record Type" value={record.type_label} />
+                            <Field label="Record Status" value={record.record_state} />
+                            <Field label="Record Date" value={recordDate} />
+                            <Field label="Affected Platform" value={record.platform_label} />
+                          </div>
+
+                          {previewText(record.summary) && record.summary !== record.title && (
+                            <p className="text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 220)}</p>
+                          )}
+
+                          <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
+                            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
+                          </div>
                         </div>
 
-                        <div>
-                          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Title</p>
-                          <h2 className="mt-1 break-words font-mono text-base font-normal leading-snug text-foreground/90">{record.title}</h2>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
-                          <Field label="Record Type" value={record.type_label} />
-                          <Field label="Record Status" value={record.record_state} />
-                          <Field label="Record Date" value={recordDate} />
-                          <Field label="Affected Platform" value={record.platform_label} />
-                        </div>
-
-                        {previewText(record.summary) && record.summary !== record.title && (
-                          <p className="text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 220)}</p>
-                        )}
-
-                        <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
-                          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
-                        </div>
-                      </div>
-
-                      <div className="hidden gap-2 md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem] md:items-center">
-                        <div className="break-words font-mono text-[11px] leading-snug text-cam-gold">{displayRecordId}</div>
-                        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
-                        <div className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
-                        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
-                        <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
-                        <div className="flex flex-wrap justify-end gap-1.5">
-                          <span className="rounded-md border border-border bg-background/40 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground/80">{record.record_state}</span>
+                        <div className="hidden gap-2 md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem] md:items-center">
+                          <div className="break-words font-mono text-[11px] leading-snug text-cam-gold">{displayRecordId}</div>
+                          <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
+                          <div className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
+                          <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
+                          <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
+                          <div className="flex flex-wrap justify-end gap-1.5">
+                            <span className="rounded-md border border-border bg-background/40 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground/80">{record.record_state}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
                   )}
 
                   {isExpanded && (
-                  <div id={detailsPanelId} className="px-3 py-4 md:px-4">
-                    <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
-                      <div className="min-w-0">
-                        <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
-                        <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {[detailRecord.type_label, detailRecord.record_state, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value) => (
-                            <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>
-                          ))}
+                    <div id={detailsPanelId} className="px-3 py-4 md:px-4">
+                      <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
+                        <div className="min-w-0">
+                          <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
+                          <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {[detailRecord.type_label, detailRecord.record_state, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value) => (
+                              <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex shrink-0 flex-wrap gap-2">
-                        <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
-                          {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
-                        </button>
-                        <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`}>Download JSON</button>
-                        <button
-                          type="button"
-                          className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                          onClick={() => toggleExpandedRecord(record, recordKey)}
-                          aria-expanded={isExpanded}
-                          aria-controls={detailsPanelId}
-                        >
-                          Collapse record −
-                        </button>
-                      </div>
-                    </div>
-
-                    {detailLoad?.status === "loading" && (
-                      <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-xs leading-relaxed text-muted-foreground" role="status">
-                        Loading canonical VIGIL record detail…
-                      </div>
-                    )}
-
-                    {detailLoad?.status === "error" && (
-                      <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800" role="alert">
-                        Detailed canonical record could not be loaded. Showing the registry index entry instead. {detailLoad.error}
-                      </div>
-                    )}
-
-                    {previewText(detailRecord.summary) && detailRecord.summary !== detailRecord.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{detailRecord.summary}</p>}
-
-                    <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
-                      <Field label="Date Recorded" value={detailRecord.record_type === "patch_note" ? undefined : detailRecordDate} />
-                      <Field label="Date Implemented" value={detailRecord.record_type === "patch_note" ? detailRecord.date_implemented : undefined} />
-                      <Field label="Evidence Confidence" value={detailRecord.record_type === "patch_note" ? undefined : detailRecord.evidence_confidence} />
-                      <Field label="Next Action" value={["observation", "proposal"].includes(detailRecord.record_type) ? detailRecord.next_action : undefined} />
-                      <Field label="Source Platform" value={detailRecord.source_platform} />
-                      <Field label="Source Type" value={detailRecord.source_types?.join("; ")} />
-                      <Field label="Observed System Vendor" value={detailRecord.observed_vendor} />
-                      <Field label="Observed Model / Product" value={detailRecord.observed_product} />
-                    </div>
-
-                    <CuratedRecordDetail record={detailRecord} />
-
-                    <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
-                      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>
-                      <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                        <p className="text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
                         <div className="flex shrink-0 flex-wrap gap-2">
-                          <button
-                            type="button"
-                            className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                            onClick={() => copyRecordJson(record, recordKey)}
-                            aria-label={`Copy raw JSON for ${detailRecord.id}`}
-                          >
+                          <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
                             {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
                           </button>
+                          <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`}>Download JSON</button>
                           <button
                             type="button"
-                            className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                            onClick={() => downloadRecordJson(record, recordKey)}
-                            aria-label={`Download raw JSON for ${detailRecord.id}`}
+                            className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                            onClick={() => toggleExpandedRecord(record, recordKey)}
+                            aria-expanded={isExpanded}
+                            aria-controls={detailsPanelId}
                           >
-                            Download JSON
+                            Collapse record −
                           </button>
                         </div>
                       </div>
-                      <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(detailRecord.raw, null, 2)}</pre>
-                    </details>
 
-                    {(record.path || sourceHref || rawHref) && (
-                      <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3 md:flex-row md:items-center md:justify-between">
-                        <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record path: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
-                        {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open record →</a>}
+                      {detailLoad?.status === "loading" && (
+                        <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-xs leading-relaxed text-muted-foreground" role="status">
+                          Loading canonical VIGIL record detail…
+                        </div>
+                      )}
+
+                      {detailLoad?.status === "error" && (
+                        <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800" role="alert">
+                          Detailed canonical record could not be loaded. Showing the registry index entry instead. {detailLoad.error}
+                        </div>
+                      )}
+
+                      {previewText(detailRecord.summary) && detailRecord.summary !== detailRecord.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{detailRecord.summary}</p>}
+
+                      <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
+                        <Field label="Date Recorded" value={detailRecord.record_type === "patch_note" ? undefined : detailRecordDate} />
+                        <Field label="Date Implemented" value={detailRecord.record_type === "patch_note" ? detailRecord.date_implemented : undefined} />
+                        <Field label="Evidence Confidence" value={detailRecord.record_type === "patch_note" ? undefined : detailRecord.evidence_confidence} />
+                        <Field label="Next Action" value={["observation", "proposal"].includes(detailRecord.record_type) ? detailRecord.next_action : undefined} />
+                        <Field label="Source Platform" value={detailRecord.source_platform} />
+                        <Field label="Source Type" value={detailRecord.source_types?.join("; ")} />
+                        <Field label="Observed System Vendor" value={detailRecord.observed_vendor} />
+                        <Field label="Observed Model / Product" value={detailRecord.observed_product} />
                       </div>
-                    )}
-                  </div>
+
+                      <CuratedRecordDetail record={detailRecord} />
+
+                      <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
+                        <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>
+                        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                          <p className="text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
+                          <div className="flex shrink-0 flex-wrap gap-2">
+                            <button
+                              type="button"
+                              className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                              onClick={() => copyRecordJson(record, recordKey)}
+                              aria-label={`Copy raw JSON for ${detailRecord.id}`}
+                            >
+                              {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
+                            </button>
+                            <button
+                              type="button"
+                              className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
+                              onClick={() => downloadRecordJson(record, recordKey)}
+                              aria-label={`Download raw JSON for ${detailRecord.id}`}
+                            >
+                              Download JSON
+                            </button>
+                          </div>
+                        </div>
+                        <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(detailRecord.raw, null, 2)}</pre>
+                      </details>
+
+                      {(record.path || sourceHref || rawHref) && (
+                        <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3 md:flex-row md:items-center md:justify-between">
+                          <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record path: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
+                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open record →</a>}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </article>
-                );
-              })}
-            </div>
-          </section>
+              );
+            })}
+          </div>
+        </section>
       </div>
     </Shell>
   );
