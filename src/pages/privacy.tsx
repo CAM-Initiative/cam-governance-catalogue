@@ -10,7 +10,7 @@ const sections = [
   ["Third-party services and technical logs", "GitHub Pages, domain services, browsers, networks, email providers, and linked third-party services may process technical metadata such as IP address, user agent, timestamps, logs, account identifiers, or delivery data under their own policies."],
   ["Access, correction, redaction, and removal", "You may request access, correction, contributor-detail redaction, or removal where practicable. Public repository history, forks, archives, email delivery, evidence-integrity needs, legal obligations, or public-interest retention may limit what can be changed."],
   ["Non-affiliation", "The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/."],
-  ["Contact", "For privacy questions or requests, contact ethics@cam-initiative.org."],
+  ["Contact", "For privacy, evidence, or correction enquiries, contact ethics@cam-initiative.org."],
   ["Last updated", "13 July 2026."],
 ];
 
