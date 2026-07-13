@@ -45,25 +45,6 @@ const pathways = [
   },
 ];
 
-const governanceFunctions = [
-  {
-    title: "Governance architecture",
-    text: "Constitutional instruments, operating rules, relational safeguards, assurance boundaries, and accountability structures for multiple AI domains.",
-  },
-  {
-    title: "Regulatory and standards alignment",
-    text: "A structured way to interpret external obligations, identify coverage and implementation gaps, and connect laws, standards, policies, and governance controls.",
-  },
-  {
-    title: "Operational assurance",
-    text: "Traceable governance for runtime behaviour, institutional responsibility, system transitions, auditability, and implementation review.",
-  },
-  {
-    title: "Evidence and repair",
-    text: "VIGIL preserves public signals and failure patterns so they can inform diagnosis, corrective patches, standards work, and future-system design.",
-  },
-];
-
 const evidenceRepairSteps = [
   { label: "Observe", text: "Identify a real-world signal, incident, compliance gap, or governance breakdown." },
   { label: "Record", text: "Preserve evidence, context, affected systems, and relevant obligations." },
@@ -217,23 +198,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="pathways-heading">
-          <SectionLabel>Four pathways into CAM</SectionLabel>
-          <p id="pathways-heading" className="mb-6 max-w-3xl text-base leading-relaxed text-foreground/75 md:text-lg">
-            Enter through the part of the architecture most relevant to your work. Each pathway remains connected to the same wider governance system.
-          </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {pathways.map((pathway) => (
-              <article className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" id={pathway.id} key={pathway.id}>
-                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{pathway.marker}</p>
-                <h2 className="mb-3 font-serif text-2xl leading-snug text-foreground">{pathway.title}</h2>
-                <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{pathway.description}</p>
-                <ButtonLink href={pathway.href} label={pathway.cta} />
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="governance-compliance-heading">
           <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
             <SectionLabel>Governance and compliance</SectionLabel>
@@ -246,10 +210,12 @@ export default function Home() {
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              {governanceFunctions.map((item) => (
-                <article className="rounded-2xl border border-border/80 bg-card/85 p-5 shadow-sm" key={item.title}>
-                  <h3 className="mb-2 font-serif text-2xl text-foreground">{item.title}</h3>
-                  <p className="text-base leading-relaxed text-foreground/75">{item.text}</p>
+              {pathways.map((pathway) => (
+                <article className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" id={pathway.id} key={pathway.id}>
+                  <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{pathway.marker}</p>
+                  <h3 className="mb-3 font-serif text-2xl leading-snug text-foreground">{pathway.title}</h3>
+                  <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{pathway.description}</p>
+                  <ButtonLink href={pathway.href} label={pathway.cta} />
                 </article>
               ))}
             </div>
