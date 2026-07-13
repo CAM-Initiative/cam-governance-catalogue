@@ -1,0 +1,87 @@
+name: Reconcile main into consolidated website branch
+
+on:
+  push:
+    branches:
+      - codex/add-vigil-reporting-page-and-privacy-policy
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile-build-and-clean:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/add-vigil-reporting-page-and-privacy-policy
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main and resolve generated registry files
+        shell: bash
+        run: |
+          git fetch origin main
+          set +e
+          git merge --no-ff --no-commit origin/main
+          merge_status=$?
+          set -e
+
+          generated_files=(
+            docs/data/cam-governance-fallback.json
+            docs/data/cam-governance-sync-meta.json
+            docs/data/vigil-registry-fallback.json
+            docs/data/vigil-registry-sync-meta.json
+          )
+
+          git checkout origin/main -- "${generated_files[@]}"
+          git add "${generated_files[@]}"
+
+          unresolved="$(git diff --name-only --diff-filter=U)"
+          if [ -n "$unresolved" ]; then
+            echo "Unexpected unresolved merge conflicts remain:"
+            echo "$unresolved"
+            exit 1
+          fi
+
+          if [ "$merge_status" -ne 0 ] && [ ! -f .git/MERGE_HEAD ]; then
+            echo "Merge failed without leaving a resolvable merge state."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild published site
+        run: pnpm run build
+
+      - name: Validate catalogue
+        run: pnpm run validate:catalogue
+
+      - name: Validate VIGIL
+        run: pnpm run validate:vigil
+
+      - name: Test VIGIL
+        run: pnpm run test:vigil
+
+      - name: Commit merge, rebuilt output, and remove one-use workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/reconcile-main-into-pr58.yml
+          git add -A
+          git commit -m "Merge main into consolidated website branch"
+          git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
