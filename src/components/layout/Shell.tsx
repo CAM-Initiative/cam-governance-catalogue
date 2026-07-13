@@ -16,8 +16,8 @@ const mobileLinks = [
   { href: "/about", label: "About", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
-  { href: "/vigil", label: "Observatory / VIGIL", internal: true },
-  { href: "/observatory/report", label: "VIGIL Submissions", internal: true },
+  { href: "/vigil", label: "VIGIL Ledger", internal: true },
+  { href: "/observatory/report", label: "Report a VIGIL Signal", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -32,9 +32,9 @@ const constitutionLinks = [
   { href: "/constitution/transition", label: "Transitional Architecture" },
 ];
 
-const observatoryLinks = [
-  { href: "/observatory", label: "VIGIL Ledger" },
-  { href: "/observatory/report", label: "VIGIL Submissions" },
+const vigilLinks = [
+  { href: "/observatory", label: "Browse the VIGIL Ledger" },
+  { href: "/observatory/report", label: "Report a VIGIL Signal" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -42,7 +42,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about";
   const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
-  const isObservatoryActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
+  const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 
   const links = [
     { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
@@ -59,12 +59,12 @@ export function Shell({ children }: { children: ReactNode }) {
           <Link href="/" className="flex items-center gap-3 group">
             <img
               src={`${import.meta.env.BASE_URL}favicon.svg`}
-              alt="Aeon Governance Lab"
+              alt="CAM Initiative"
               className="w-7 h-7 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
               style={{ filter: "drop-shadow(0 0 1px rgba(184,147,90,0.3))" }}
             />
             <span className="font-mono text-[12px] tracking-[0.18em] uppercase text-primary font-semibold">
-              Aeon Governance Lab
+              CAM Initiative
             </span>
           </Link>
 
@@ -154,16 +154,16 @@ export function Shell({ children }: { children: ReactNode }) {
               <Link
                 href="/observatory"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isObservatoryActive
+                  isVigilActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Observatory
+                VIGIL
               </Link>
-              <div className="invisible absolute left-0 top-full min-w-60 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <div className="invisible absolute left-0 top-full min-w-64 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                 <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
-                  {observatoryLinks.map((link) => (
+                  {vigilLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
@@ -199,7 +199,9 @@ export function Shell({ children }: { children: ReactNode }) {
                     key={link.href}
                     href={link.href}
                     className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
-                      location === link.href || (link.href === "/constitution" && isConstitutionActive)
+                      location === link.href ||
+                      (link.href === "/constitution" && isConstitutionActive) ||
+                      (link.href === "/vigil" && isVigilActive)
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-card hover:text-foreground"
                     }`}
