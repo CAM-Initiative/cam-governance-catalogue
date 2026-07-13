@@ -85,3 +85,5 @@ jobs:
           git add -A
           git commit -m "Merge main into consolidated website branch"
           git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
+
+# Trigger reconciliation after workflow registration.
