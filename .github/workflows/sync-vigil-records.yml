@@ -1,12 +1,12 @@
 name: Sync VIGIL records
 
 on:
+  push:
+    branches:
+      - codex/add-vigil-reporting-page-and-privacy-policy
   workflow_dispatch:
   schedule:
     - cron: "17 3 * * *"
-  # Future cross-repository automation: configure a VIGIL-side token/webhook to
-  # send repository_dispatch type "vigil-records-updated" after generated
-  # registers are rebuilt. This receiver is intentionally secret-free here.
   repository_dispatch:
     types: [vigil-records-updated]
 
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -39,15 +41,26 @@ jobs:
       - name: Build CAM interface for GitHub Pages
         run: pnpm run deploy:docs
 
-      - name: Commit changed generated files
-        run: |
-          if [ -z "$(git status --porcelain -- docs)" ]; then
-            echo "No generated file changes to commit."
-            exit 0
-          fi
+      - name: Validate catalogue
+        run: pnpm run validate:catalogue
 
+      - name: Validate VIGIL
+        run: pnpm run validate:vigil
+
+      - name: Test VIGIL
+        run: pnpm run test:vigil
+
+      - name: Restore canonical workflow and commit build
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/sync-vigil-records.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
-          git commit -m "chore: sync VIGIL registers"
-          git push
+          git add docs .github/workflows/sync-vigil-records.yml
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Rebuild site after consolidating governance presentation"
+          git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
