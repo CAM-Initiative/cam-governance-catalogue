@@ -7,7 +7,6 @@ import Transition from "@/pages/transition";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import About from "@/pages/about";
-import VigilReport from "@/pages/vigil-report";
 import Privacy from "@/pages/privacy";
 
 function Router() {
@@ -21,8 +20,6 @@ function Router() {
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
       <Route path="/privacy" component={Privacy} />
-      <Route path="/observatory/report" component={VigilReport} />
-      <Route path="/vigil/report" component={VigilReport} />
       <Route path="/observatory" component={Vigil} />
       <Route path="/vigil" component={Vigil} />
       <Route component={NotFound} />
