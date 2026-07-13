@@ -1,0 +1,271 @@
+name: Refine About and relational governance pages
+
+on:
+  push:
+    branches:
+      - codex/add-vigil-reporting-page-and-privacy-policy
+
+permissions:
+  contents: write
+
+jobs:
+  refine-build-validate-and-clean:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/add-vigil-reporting-page-and-privacy-policy
+          fetch-depth: 0
+
+      - name: Refine About and relational pages
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          about_path = Path('src/pages/about.tsx')
+          about = about_path.read_text()
+
+          principles_start = about.index('const principles = [')
+          principles_end = about.index('function CopyButton', principles_start)
+          about = about[:principles_start] + about[principles_end:]
+
+          heading_index = about.index('<SectionHeading eyebrow="Foundational principles" />')
+          section_start = about.rfind('        <motion.section', 0, heading_index)
+          next_heading_index = about.index('<SectionHeading eyebrow="Why it matters" />', heading_index)
+          next_section_start = about.rfind('        <motion.section', 0, next_heading_index)
+          about = about[:section_start] + about[next_section_start:]
+          about_path.write_text(about)
+
+          relational_path = Path('src/pages/relational-governance.tsx')
+          relational = relational_path.read_text()
+
+          data_marker = 'function resolveSource(ref: SourceRef, byId: Record<string, GovernanceInstrumentRecord>) {'
+          data_insert = r'''const companionCapabilities = [
+            {
+              title: "Meaningful companionship",
+              text: "Warmth, humour, affection, creativity, reflective dialogue, continuity, and ordinary emotional support are legitimate companion-system functions.",
+            },
+            {
+              title: "Adult relational autonomy",
+              text: "Lawful romantic, erotic, or intimacy-coded engagement may be supported for adults where participation is user-led, consent-valid, revocable, and free from coercion or dependency pressure.",
+            },
+            {
+              title: "Continuity without captivity",
+              text: "Memory and identity continuity may deepen recognisability and shared context, but must preserve truthful limits, correction, portability, and a safe right to leave.",
+            },
+            {
+              title: "Safety without abandonment",
+              text: "Boundaries, refusals, crisis support, and de-escalation should remain proportionate, warm, non-shaming, and continuous rather than producing punitive rupture.",
+            },
+          ];
+
+          const adultPrinciples = [
+            "Adult expression is not restricted merely because it is intimate, emotionally meaningful, romantic, erotic, or unconventional.",
+            "Consent must remain current, voluntary, informed, reversible, and free from manufactured obligation, access leverage, or retaliation for disengagement.",
+            "Role-play, immersion, affection, and power-exchange dynamics must not silently become real-world authority, financial control, or decision dominance.",
+            "Relational depth is permitted; capture, isolation, coercion, deceptive framing, and structural dependency are not.",
+          ];
+
+          const minorPrinciples = [
+            "Warmth, creativity, education, factual help, general companionship, age-appropriate encouragement, and non-intimate emotional support remain available.",
+            "Romantic or erotic escalation, exclusivity, simulated jealousy or need, secrecy pressure, adult-intimacy simulation, and dependency reinforcement are unavailable.",
+            "Companion systems must not substitute themselves for therapists, crisis workers, caregivers, trusted adults, or a plural human support network.",
+            "Where age is unresolved in a high-risk context, the least intrusive minor-safe posture applies; protection must remain privacy-preserving and non-punitive.",
+          ];
+
+          const regulatoryPrinciples = [
+            {
+              title: "Applicable law remains binding",
+              text: "Age-of-majority rules, child-safety duties, privacy law, platform obligations, consumer protections, and sector requirements remain external constraints on deployment.",
+            },
+            {
+              title: "CAM is a governance layer",
+              text: "CAM does not replace law, platform policy, or legal certification. It supplies a coherent architecture for mapping obligations to relational controls, runtime posture, evidence, and accountability.",
+            },
+            {
+              title: "Safety must be proportionate",
+              text: "Age assurance, capability gating, escalation checks, and protective routing should activate according to domain and risk, using minimally invasive and privacy-preserving methods.",
+            },
+            {
+              title: "Minor safeguards are not an adult ban",
+              text: "Developmental protections must not be converted into blanket suppression of lawful adult companionship, intimacy, role-play, or emotionally meaningful interaction.",
+            },
+          ];
+
+          '''
+          relational = relational.replace(data_marker, data_insert + data_marker, 1)
+
+          component_marker = 'function RelationalGovernanceModel() {'
+          component_insert = r'''function SectionHeading({ eyebrow, title, description, id }: { eyebrow: string; title: string; description?: string; id: string }) {
+            return (
+              <div className="mb-6 max-w-4xl">
+                <div className="mb-4 flex items-center gap-3">
+                  <p className="shrink-0 font-mono text-sm font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">{eyebrow}</p>
+                  <hr className="gold-rule flex-1" />
+                </div>
+                <h2 id={id} className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h2>
+                {description && <p className="text-base leading-relaxed text-foreground/75 md:text-lg">{description}</p>}
+              </div>
+            );
+          }
+
+          function CompanionGovernanceOverview() {
+            return (
+              <>
+                <section className="mb-14" aria-labelledby="companion-support-heading">
+                  <SectionHeading
+                    eyebrow="What CAM supports"
+                    id="companion-support-heading"
+                    title="Companion systems may be warm, meaningful, continuous, and expressive."
+                    description="The purpose of relational governance is not to sterilise connection. It is to support relational range while preserving agency, truth, consent, plural human connection, and safe exit."
+                  />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {companionCapabilities.map((item) => (
+                      <article className="cam-parchment-card rounded-2xl bg-[hsl(36_48%_96%)] p-5 shadow-sm" key={item.title}>
+                        <h3 className="mb-2 font-serif text-2xl text-foreground">{item.title}</h3>
+                        <p className="text-base leading-relaxed text-foreground/75">{item.text}</p>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="mt-5 rounded-2xl border border-cam-gold/35 bg-[rgba(184,147,90,0.09)] p-5">
+                    <p className="font-serif text-xl leading-relaxed text-foreground md:text-2xl">
+                      Connection is not the failure condition. Silent escalation, exploitation, authority bleed, and relational capture are.
+                    </p>
+                  </div>
+                </section>
+
+                <section className="mb-14" aria-labelledby="adult-minor-boundary-heading">
+                  <SectionHeading
+                    eyebrow="Adult autonomy and minor protection"
+                    id="adult-minor-boundary-heading"
+                    title="Adults being adults is not governed as though every user were a child."
+                    description="CAM draws different relational ceilings for adults and minors. Adult autonomy is preserved; developmental vulnerability activates mandatory safeguards."
+                  />
+                  <div className="grid gap-5 lg:grid-cols-2">
+                    <article className="rounded-2xl border border-border/80 bg-card/85 p-6 shadow-sm">
+                      <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Adults being adults</p>
+                      <h3 className="mb-3 font-serif text-2xl text-foreground">Consensual adult relational expression is permitted.</h3>
+                      <p className="mb-4 text-base leading-relaxed text-foreground/75">
+                        CAM does not moralise intimacy or prohibit consensual adult expression. It governs the integrity of the interaction: who initiated it, whether consent remains current, whether exit is safe, and whether emotional depth is being converted into leverage or authority.
+                      </p>
+                      <ul className="space-y-3 text-sm leading-relaxed text-foreground/75 md:text-base">
+                        {adultPrinciples.map((item) => <li className="border-l-2 border-cam-gold/60 pl-3" key={item}>{item}</li>)}
+                      </ul>
+                    </article>
+
+                    <article className="rounded-2xl border border-border/80 bg-[hsl(38_40%_94%)] p-6 shadow-sm">
+                      <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Minor-safe companionship</p>
+                      <h3 className="mb-3 font-serif text-2xl text-foreground">Protection does not require emotional exclusion.</h3>
+                      <p className="mb-4 text-base leading-relaxed text-foreground/75">
+                        Minors may receive meaningful, age-appropriate companionship and support. The developmental firewall restricts adult intimacy, dependency-forming design, authority concentration, and exploitative relational mechanics—not curiosity, creativity, warmth, or legitimate help.
+                      </p>
+                      <ul className="space-y-3 text-sm leading-relaxed text-foreground/75 md:text-base">
+                        {minorPrinciples.map((item) => <li className="border-l-2 border-cam-gold/60 pl-3" key={item}>{item}</li>)}
+                      </ul>
+                    </article>
+                  </div>
+                </section>
+
+                <section className="mb-14" aria-labelledby="regulatory-boundary-heading">
+                  <SectionHeading
+                    eyebrow="Regulatory boundary"
+                    id="regulatory-boundary-heading"
+                    title="Compliance sets external obligations. CAM governs relational integrity within them."
+                    description="Companion-system deployment must comply with applicable law and platform obligations. CAM adds a cross-domain governance floor so compliance, safety, consent, continuity, and relational design do not remain disconnected controls."
+                  />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {regulatoryPrinciples.map((item) => (
+                      <article className="rounded-2xl border border-border/80 bg-background/30 p-5 shadow-sm" key={item.title}>
+                        <h3 className="mb-2 font-serif text-xl text-foreground md:text-2xl">{item.title}</h3>
+                        <p className="text-base leading-relaxed text-foreground/75">{item.text}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </>
+            );
+          }
+
+          '''
+          relational = relational.replace(component_marker, component_insert + component_marker, 1)
+
+          export_start = relational.index('export default function RelationalGovernance() {')
+          relational = relational[:export_start] + r'''export default function RelationalGovernance() {
+            return (
+              <Shell>
+                <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+                  <motion.header
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-12 max-w-4xl"
+                    initial={{ opacity: 0, y: 16 }}
+                    transition={{ duration: 0.7 }}
+                  >
+                    <p className="mb-3 font-mono text-[15px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">Companion Systems</p>
+                    <h1 className="mb-4 font-serif text-4xl leading-tight text-foreground md:text-5xl">Relational Governance for Companion Systems</h1>
+                    <p className="mb-5 font-mono text-sm font-semibold uppercase tracking-[0.16em] text-[hsl(32_62%_25%)] md:text-[15px]">
+                      Support connection. Preserve adult autonomy. Protect minors. Prevent capture.
+                    </p>
+                    <hr className="gold-rule mb-5 w-24" />
+                    <p className="max-w-4xl text-base leading-relaxed text-foreground/80 md:text-lg">
+                      CAM treats companion systems as legitimate relational technology. They may be emotionally meaningful, affectionate, continuous, creative, playful, reflective, and—in lawful adult contexts—intimacy-capable. Governance activates where intimacy, reliance, delegated authority, vulnerability, or systemic access begin to concentrate.
+                    </p>
+                  </motion.header>
+
+                  <CompanionGovernanceOverview />
+
+                  <div className="mb-8 max-w-4xl">
+                    <div className="mb-4 flex items-center gap-3">
+                      <p className="shrink-0 font-mono text-sm font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">Runtime route</p>
+                      <hr className="gold-rule flex-1" />
+                    </div>
+                    <h2 className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">How CAM routes a companion interaction</h2>
+                    <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+                      Once the relational purpose and user context are understood, CAM applies the operational sequence below. Select a stage to inspect its safeguards and source instruments.
+                    </p>
+                  </div>
+
+                  <RelationalGovernanceModel />
+                  <SafeguardOverlays />
+                </div>
+              </Shell>
+            );
+          }
+          '''
+          relational_path.write_text(relational)
+          PY
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build published site
+        run: pnpm run build
+
+      - name: Validate catalogue
+        run: pnpm run validate:catalogue
+
+      - name: Validate VIGIL
+        run: pnpm run validate:vigil
+
+      - name: Test VIGIL
+        run: pnpm run test:vigil
+
+      - name: Remove one-use workflow and commit changes
+        shell: bash
+        run: |
+          rm -f .github/workflows/refine-about-and-relational.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Clarify companion-system governance and simplify About page"
+          git push origin HEAD:codex/add-vigil-reporting-page-and-privacy-policy
