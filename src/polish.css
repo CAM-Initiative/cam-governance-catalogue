@@ -1,0 +1,4 @@
+section[aria-labelledby="governance-stack-heading"] .overflow-x-auto .grid > button:first-child span > span:last-child {
+  display: block;
+  transform: translateY(9px);
+}
