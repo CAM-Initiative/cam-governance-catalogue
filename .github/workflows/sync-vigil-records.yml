@@ -200,12 +200,13 @@ const pyramidTopRightInsets = ["50%", "76.471%", "84%", "87.879%", "90.244%", "9
 
       - name: Restore canonical workflow and commit changes
         run: |
+          rm -f .github/refine-constitutional-stack.trigger
           git fetch origin main
           git checkout origin/main -- .github/workflows/sync-vigil-records.yml
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src docs .github/workflows/sync-vigil-records.yml
+          git add src docs .github/workflows/sync-vigil-records.yml .github/refine-constitutional-stack.trigger
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
@@ -214,5 +215,3 @@ const pyramidTopRightInsets = ["50%", "76.471%", "84%", "87.879%", "90.244%", "9
 
           git commit -m "Refine constitutional stack and privacy navigation"
           git push
-
-# Registered workflow trigger refresh
