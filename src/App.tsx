@@ -1,10 +1,11 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
+import "./polish.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
-import RelationalGovernance from "@/pages/relational-governance";
+import RelationalGovernance from "@/pages/relational-governance-polished";
 import Provenance from "@/pages/provenance";
-import Transition from "@/pages/transition";
+import Transition from "@/pages/transition-polished";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import About from "@/pages/about";
