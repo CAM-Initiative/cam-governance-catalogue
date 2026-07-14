@@ -1,14 +1,10 @@
 name: Sync VIGIL records
 
 on:
+  push:
+    branches:
+      - feature/explore-ai-governance-and-constitutional-stack
   workflow_dispatch:
-  schedule:
-    - cron: "17 3 * * *"
-  # Future cross-repository automation: configure a VIGIL-side token/webhook to
-  # send repository_dispatch type "vigil-records-updated" after generated
-  # registers are rebuilt. This receiver is intentionally secret-free here.
-  repository_dispatch:
-    types: [vigil-records-updated]
 
 permissions:
   contents: write
@@ -19,6 +15,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -31,23 +29,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Sync VIGIL generated registers
-        run: pnpm run sync:vigil
-        env:
-          VIGIL_SYNC_STRICT: "1"
-
       - name: Build CAM interface for GitHub Pages
         run: pnpm run deploy:docs
 
-      - name: Commit changed generated files
+      - name: Validate catalogue data
+        run: pnpm run validate:catalogue
+
+      - name: Validate VIGIL registry sources
+        run: pnpm run validate:vigil
+
+      - name: Test VIGIL observatory
+        run: pnpm run test:vigil
+
+      - name: Restore canonical workflow and commit generated files
         run: |
-          if [ -z "$(git status --porcelain -- docs)" ]; then
-            echo "No generated file changes to commit."
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/sync-vigil-records.yml
+
+          if [ -z "$(git status --porcelain -- docs .github/workflows/sync-vigil-records.yml)" ]; then
+            echo "No generated or workflow restoration changes to commit."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
-          git commit -m "chore: sync VIGIL registers"
+          git add docs .github/workflows/sync-vigil-records.yml
+          git commit -m "Rebuild site after homepage and stack refinement"
           git push
