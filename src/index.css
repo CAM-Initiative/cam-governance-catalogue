@@ -193,6 +193,11 @@ section[aria-labelledby="constitutional-interfaces-heading"] button[aria-pressed
   box-shadow: 0 4px 12px rgba(80, 55, 20, 0.12);
 }
 
+/* The substrate apex is intentionally label-light so its title remains legible. */
+section[aria-labelledby="governance-stack-heading"] .overflow-x-auto button:first-child > span > span:first-child {
+  display: none;
+}
+
 a {
   color: hsl(var(--primary));
 }
