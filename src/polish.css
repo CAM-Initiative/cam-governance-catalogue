@@ -2,3 +2,26 @@ section[aria-labelledby="governance-stack-heading"] .overflow-x-auto .grid > but
   display: block;
   transform: translateY(9px);
 }
+
+section[aria-labelledby="governance-stack-heading"] > div.rounded-3xl > div:first-child > p:last-child {
+  display: none;
+}
+
+section[aria-labelledby="governance-stack-heading"] > div.rounded-3xl > .overflow-x-auto {
+  position: relative;
+  padding-bottom: 2.6rem;
+}
+
+section[aria-labelledby="governance-stack-heading"] > div.rounded-3xl > .overflow-x-auto::after {
+  content: "Explicit implementation";
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.55rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: hsl(var(--foreground) / 0.5);
+  white-space: nowrap;
+}
