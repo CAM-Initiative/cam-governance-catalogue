@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowDown, ChevronDown } from "lucide-react";
 import { RuntimeModelContent } from "@/components/RuntimeModelContent";
 import {
   groupGovernanceInstruments,
@@ -14,7 +14,6 @@ import {
   type GovernanceInstrumentRecord,
 } from "@/lib/governanceRegistry";
 
-const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.06)";
 
 const constitutionalStack = [
@@ -74,7 +73,7 @@ const constitutionalStack = [
   },
 ] as const;
 
-const pyramidWidths = ["54%", "63%", "72%", "81%", "90%", "100%"];
+const pyramidWidths = [18, 34, 50, 66, 82, 100];
 
 type GovernanceGroupKey = (typeof constitutionalStack)[number]["groupKey"];
 
@@ -242,32 +241,38 @@ export default function Constitution() {
               <p className="text-right font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/50 sm:block">Explicit implementation</p>
             </div>
 
-            <div className="mx-auto grid w-full max-w-5xl justify-items-center gap-2 py-2">
-              {constitutionalStack.map((layer, index) => {
-                const isActive = layer.id === activeLayer.id;
-                return (
-                  <motion.button
-                    animate={{ opacity: isActive ? 1 : 0.84, scale: isActive ? 1.012 : 1 }}
-                    aria-pressed={isActive}
-                    className="group relative flex min-h-[72px] items-center justify-center overflow-hidden px-6 py-3 text-center text-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cam-gold/35"
-                    key={layer.id}
-                    onClick={() => selectLayer(layer.id)}
-                    style={{
-                      width: pyramidWidths[index],
-                      backgroundColor: layer.color,
-                      clipPath: "polygon(6% 0%, 94% 0%, 100% 100%, 0% 100%)",
-                      filter: isActive ? `drop-shadow(0 5px 9px ${layer.color}55)` : "none",
-                    }}
-                    transition={{ duration: 0.18 }}
-                    type="button"
-                  >
-                    <span>
-                      <span className="mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-white/75">Layer {layer.layer}</span>
-                      <span className="block font-serif text-base leading-tight sm:text-xl">{layer.label}</span>
-                    </span>
-                  </motion.button>
-                );
-              })}
+            <div className="overflow-x-auto pb-2">
+              <div className="mx-auto grid w-full min-w-[620px] max-w-3xl justify-items-center gap-[3px] py-2">
+                {constitutionalStack.map((layer, index) => {
+                  const isActive = layer.id === activeLayer.id;
+                  const width = pyramidWidths[index];
+                  const previousWidth = index === 0 ? 0 : pyramidWidths[index - 1];
+                  const topInset = ((width - previousWidth) / (2 * width)) * 100;
+
+                  return (
+                    <motion.button
+                      animate={{ opacity: isActive ? 1 : 0.84 }}
+                      aria-pressed={isActive}
+                      className="group relative flex min-h-[68px] items-center justify-center overflow-hidden px-5 py-3 text-center text-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cam-gold/35"
+                      key={layer.id}
+                      onClick={() => selectLayer(layer.id)}
+                      style={{
+                        width: `${width}%`,
+                        backgroundColor: layer.color,
+                        clipPath: `polygon(${topInset}% 0%, ${100 - topInset}% 0%, 100% 100%, 0% 100%)`,
+                        filter: isActive ? `drop-shadow(0 5px 9px ${layer.color}55)` : "none",
+                      }}
+                      transition={{ duration: 0.18 }}
+                      type="button"
+                    >
+                      <span>
+                        <span className="mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-white/75">Layer {layer.layer}</span>
+                        <span className="block font-serif text-base leading-tight sm:text-xl">{layer.label}</span>
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
 
             <AnimatePresence mode="wait">
@@ -315,18 +320,8 @@ export default function Constitution() {
           </div>
         </section>
 
-        <div className="mb-16 -mx-6 md:-mx-10" id="runtime-model">
+        <div className="-mx-6 md:-mx-10" id="runtime-model">
           <RuntimeModelContent />
-        </div>
-
-        <div className="flex justify-end">
-          <a
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card/85 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            href="/catalogue"
-          >
-            Browse the full instrument catalogue
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </a>
         </div>
       </div>
     </Shell>
