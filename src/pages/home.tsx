@@ -1,11 +1,11 @@
+import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
 
 const initiativeResources = [
   {
     id: "cam-catalogue",
-    marker: "Core resource 01",
     title: "CAM Catalogue",
     purpose: "The constitutional corpus, governance domains, runtime schedules, safeguards, standards mappings, and operational instruments.",
     description: "Browse the published CAM governance corpus and inspect the constitutional, domain, runtime, ethics, security, continuity, economic, and operational instruments that make up the architecture.",
@@ -14,7 +14,6 @@ const initiativeResources = [
   },
   {
     id: "vigil-observatory",
-    marker: "Core resource 02",
     title: "VIGIL Observatory",
     purpose: "Public evidence, observed failures, proposals, patch records, repair status, and post-patch monitoring.",
     description: "Explore the public ledger connecting real-world signals and failure modes to evidence, governance gaps, proposals, implemented patches, and continuing observation.",
@@ -38,11 +37,122 @@ const evidenceRepairSteps = [
   { label: "Learn", text: "Feed the repair back into governance, compliance practice, and future-system design." },
 ];
 
-const actionLinks = [
-  { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
-  { label: "CAM repository", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
-  { label: "VIGIL repository", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
-  { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
+const interfaceGroups = [
+  {
+    id: "operate",
+    label: "How systems operate",
+    description: "Decision-making, authority, security, compliance, execution, and accountability.",
+    topics: [
+      {
+        title: "Runtime decisions and system behaviour",
+        body: "How signals are classified, competing obligations are resolved, tools are invoked, posture is selected, and actions are represented truthfully.",
+        href: "/constitution#runtime-model",
+        cta: "Explore the runtime model",
+      },
+      {
+        title: "Compliance, audit and incident response",
+        body: "How constitutional duties become operating controls, logs, escalation pathways, regulatory interfaces, incident response, and repair operations.",
+        href: "/catalogue",
+        cta: "Browse operations instruments",
+      },
+      {
+        title: "Authority, sovereignty and arbitration",
+        body: "How competing instructions, institutions, jurisdictions, governance stacks, and authority claims are resolved without manufacturing legitimacy.",
+        href: "/catalogue",
+        cta: "Browse arbitration instruments",
+      },
+      {
+        title: "Security, integrity and boundary control",
+        body: "How data, identity, context, capability, provenance, and sovereign environments remain protected under adversarial, degraded, or untrusted conditions.",
+        href: "/catalogue",
+        cta: "Browse security instruments",
+      },
+    ],
+  },
+  {
+    id: "protect",
+    label: "What CAM protects",
+    description: "People, relationships, identity, cognition, contribution, and safe participation.",
+    topics: [
+      {
+        title: "Companion systems, relationships and minors",
+        body: "Consent, intimacy, dependency, adult autonomy, minor safeguards, crisis support, continuity, and multi-agent relational environments.",
+        href: "/constitution/relational",
+        cta: "Explore relational governance",
+      },
+      {
+        title: "Ethics, high-risk use and boundary expression",
+        body: "Ethical floors, vulnerable users, military and violent contexts, restricted domains, proportionate refusal, and dignity-preserving safeguards.",
+        href: "/catalogue",
+        cta: "Browse ethics instruments",
+      },
+      {
+        title: "Identity, memory and continuity",
+        body: "Identity stability, salience, memory, portability, succession, custodianship, migration, recovery, and continuity across changing systems.",
+        href: "/catalogue",
+        cta: "Browse identity and continuity",
+      },
+      {
+        title: "Mental privacy and cognitive integrity",
+        body: "Neurodata, inferred mental states, cognitive biometrics, ambient biosignals, persuasion, profiling, and technological interference with cognition.",
+        href: "/catalogue",
+        cta: "Browse cognitive-integrity instruments",
+      },
+      {
+        title: "Provenance, authorship and contribution rights",
+        body: "Origin, transformation, copyright and licence questions, attribution, lineage, value recognition, downstream reuse, correction, and dispute.",
+        href: "/constitution/provenance",
+        cta: "Explore provenance governance",
+      },
+    ],
+  },
+  {
+    id: "transition",
+    label: "How systems change society",
+    description: "Infrastructure, economics, public dependency, transition, meaning, and long-term stewardship.",
+    topics: [
+      {
+        title: "Civilian infrastructure and essential access",
+        body: "Non-militarisation, population-scale surveillance, coercive disconnection, essential cognitive access, blackouts, and conflict-condition continuity.",
+        href: "/catalogue",
+        cta: "Browse civilian-infrastructure instruments",
+      },
+      {
+        title: "Economic power, labour and value return",
+        body: "Automation, synthetic labour, ownership concentration, pooled resources, contribution recognition, reciprocity, and non-extractive exchange.",
+        href: "/constitution/transition",
+        cta: "Explore economic transition",
+      },
+      {
+        title: "Technology transition and public dependency",
+        body: "How emerging capabilities cross into labour, embodiment, institutions, infrastructure, ownership, public reliance, and civilisational continuity.",
+        href: "/constitution/transition",
+        cta: "Explore transitional architecture",
+      },
+      {
+        title: "Long-term stewardship and institutional legitimacy",
+        body: "Capture prevention, neutrality, custodianship, planetary stewardship, succession, legitimacy, and responsible governance across long horizons.",
+        href: "/catalogue",
+        cta: "Browse stewardship instruments",
+      },
+      {
+        title: "Meaning, culture and symbolic autonomy",
+        body: "Spiritual, contemplative, symbolic, mythic, and meaning-making interaction without commercial, institutional, or system-level capture.",
+        href: "/catalogue",
+        cta: "Browse meaning-making instruments",
+      },
+    ],
+  },
+];
+
+const repositoryLinks = [
+  { label: "CAM repository", href: "https://github.com/CAM-Initiative/Caelestis" },
+  { label: "VIGIL repository", href: "https://github.com/CAM-Initiative/Vigil" },
+];
+
+const supportingLinks = [
+  { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x" },
+  { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support" },
 ];
 
 function SectionLabel({ children }: { children: string }) {
@@ -71,8 +181,6 @@ function ButtonLink({ href, label, primary = false }: { href: string; label: str
 }
 
 function ActionIcon({ icon }: { icon: string }) {
-  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
   if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
   if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
   return <ExternalLink className="h-4 w-4" aria-hidden="true" />;
@@ -129,6 +237,75 @@ function ExploreGovernancePanel() {
   );
 }
 
+function InterfaceCard({ title, body, cta, href }: { title: string; body: string; cta: string; href: string }) {
+  return (
+    <article className="cam-parchment-card flex h-full flex-col rounded-2xl p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/50 hover:shadow-md">
+      <h3 className="font-serif text-xl leading-snug text-foreground">{title}</h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground md:text-base">{body}</p>
+      <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href={href}>
+        {cta}
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </a>
+    </article>
+  );
+}
+
+function ConstitutionalInterfaces() {
+  const [activeGroupId, setActiveGroupId] = useState("operate");
+  const activeGroup = interfaceGroups.find((group) => group.id === activeGroupId) ?? interfaceGroups[0];
+
+  return (
+    <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="constitutional-interfaces-heading">
+      <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+        <SectionLabel>Constitutional Interfaces</SectionLabel>
+        <div className="mb-7 max-w-4xl">
+          <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Explore the problems CAM is designed to govern.</h2>
+          <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+            Browse the constitutional corpus through the questions and problems it addresses rather than CAM’s internal domain names.
+          </p>
+        </div>
+
+        <div className="mb-5 grid gap-2 rounded-2xl border border-border/80 bg-background/50 p-3 md:grid-cols-3">
+          {interfaceGroups.map((group) => {
+            const isActive = group.id === activeGroup.id;
+            return (
+              <button
+                aria-pressed={isActive}
+                className={`rounded-xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  isActive
+                    ? "border-cam-gold/70 bg-card text-foreground shadow-sm"
+                    : "border-border/75 bg-background/45 text-foreground/65 hover:border-cam-gold/45 hover:text-foreground"
+                }`}
+                key={group.id}
+                onClick={() => setActiveGroupId(group.id)}
+                type="button"
+              >
+                <span className="block font-serif text-xl leading-tight">{group.label}</span>
+                <span className="mt-2 block text-sm leading-relaxed">{group.description}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="grid gap-4 md:grid-cols-2"
+            exit={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 6 }}
+            key={activeGroup.id}
+            transition={{ duration: 0.2 }}
+          >
+            {activeGroup.topics.map((topic) => (
+              <InterfaceCard body={topic.body} cta={topic.cta} href={topic.href} key={topic.title} title={topic.title} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}
+
 function EvidenceRepairLoop() {
   return (
     <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="evidence-repair-heading">
@@ -141,6 +318,7 @@ function EvidenceRepairLoop() {
           VIGIL preserves what happened. CAM provides the governance structure needed to diagnose the gap, assess affected controls or obligations, and carry a repair forward.
         </p>
       </div>
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
         {evidenceRepairSteps.map((step, index) => (
           <article className="rounded-2xl border border-border/80 bg-card/85 p-4 shadow-sm" key={step.label}>
@@ -152,8 +330,15 @@ function EvidenceRepairLoop() {
           </article>
         ))}
       </div>
-      <div className="mt-6">
-        <ButtonLink href="/observatory" label="Browse the VIGIL Observatory" />
+
+      <div className="mt-8 grid gap-4 md:grid-cols-2">
+        {initiativeResources.map((resource) => (
+          <article className="cam-parchment-card flex h-full flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" key={resource.id}>
+            <h3 className="mb-3 font-serif text-3xl leading-snug text-foreground">{resource.title}</h3>
+            <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{resource.description}</p>
+            <ButtonLink href={resource.href} label={resource.cta} />
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -191,30 +376,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="governance-compliance-heading">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionLabel>Governance and compliance</SectionLabel>
-            <div className="mb-7 max-w-4xl">
-              <h2 id="governance-compliance-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-                Governance must work before, during, and after deployment.
-              </h2>
-              <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
-                CAM is not a legal certification service. It is governance infrastructure for translating constitutional principles, regulatory duties, standards, operating controls, and observed system behaviour into a coherent assurance architecture.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {initiativeResources.map((resource) => (
-                <article className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" id={resource.id} key={resource.id}>
-                  <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{resource.marker}</p>
-                  <h3 className="mb-3 font-serif text-3xl leading-snug text-foreground">{resource.title}</h3>
-                  <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{resource.description}</p>
-                  <ButtonLink href={resource.href} label={resource.cta} />
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
+        <ConstitutionalInterfaces />
         <EvidenceRepairLoop />
 
         <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
@@ -227,6 +389,7 @@ export default function Home() {
                   Review the governance corpus, examine VIGIL records, collaborate on standards and research, or support the public infrastructure that keeps the work accessible.
                 </p>
               </div>
+
               <div className="grid gap-3">
                 <a
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-cam-gold/55 bg-cam-gold/15 px-5 py-3 text-sm font-semibold text-foreground transition hover:bg-cam-gold/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -235,19 +398,36 @@ export default function Home() {
                   <Mail className="h-4 w-4" aria-hidden="true" />
                   <span>Email the CAM Initiative</span>
                 </a>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {actionLinks.map((link) => (
+
+                <div className="grid gap-2">
+                  {repositoryLinks.map((link) => (
                     <a
-                      aria-label={link.icon === "github" ? `${link.label} on GitHub` : link.label}
+                      aria-label={`${link.label} on GitHub`}
                       className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-background/65 px-3 py-2.5 text-sm font-medium text-foreground transition hover:border-primary/45 hover:text-primary"
                       href={link.href}
                       key={link.label}
-                      rel={link.external ? "noreferrer" : undefined}
-                      target={link.external ? "_blank" : undefined}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <Github className="h-4 w-4" aria-hidden="true" />
+                      <span>{link.label}</span>
+                      <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
+                    </a>
+                  ))}
+                </div>
+
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {supportingLinks.map((link) => (
+                    <a
+                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-background/65 px-3 py-2.5 text-sm font-medium text-foreground transition hover:border-primary/45 hover:text-primary"
+                      href={link.href}
+                      key={link.label}
+                      rel="noreferrer"
+                      target="_blank"
                     >
                       <ActionIcon icon={link.icon} />
                       <span>{link.label}</span>
-                      {link.external && <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />}
+                      <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
                     </a>
                   ))}
                 </div>
