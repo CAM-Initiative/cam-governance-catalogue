@@ -238,40 +238,59 @@ export default function RelationalGovernance() {
           <div className="border-t border-border/70 bg-[hsl(38_40%_94%)] px-5 py-7 md:px-8 md:py-9">
             <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Runtime route</p>
+                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Relational runtime route</p>
                 <h3 className="font-serif text-2xl leading-tight text-foreground md:text-3xl">How CAM governs the interaction</h3>
               </div>
               <p className="max-w-xl text-sm leading-relaxed text-foreground/65 md:text-base">
-                Select a stage to inspect the operational question it resolves.
+                Follow the flow from signal interpretation to continuity. Select a phase to inspect its operational purpose.
               </p>
             </div>
 
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-6">
-              {runtimeStages.map((stage) => {
-                const isActive = stage.id === activeStage.id;
-                return (
-                  <button
-                    aria-pressed={isActive}
-                    className={`rounded-xl border p-3 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                      isActive
-                        ? "border-cam-gold/70 bg-card text-foreground shadow-sm"
-                        : "border-border/80 bg-background/50 text-foreground/65 hover:border-cam-gold/45 hover:text-foreground"
-                    }`}
-                    key={stage.id}
-                    onClick={() => setActiveStageId(stage.id)}
-                    type="button"
-                  >
-                    <span className="mb-2 block font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-[hsl(32_62%_25%)]">{stage.step}</span>
-                    <span className="block font-serif text-lg leading-tight">{stage.label}</span>
-                  </button>
-                );
-              })}
+            <div className="mb-4 flex items-center gap-3">
+              <p className="shrink-0 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Runtime flow</p>
+              <hr className="gold-rule flex-1" />
+              <p className="hidden shrink-0 font-mono text-[10px] uppercase tracking-[0.14em] text-foreground/45 sm:block">scroll →</p>
+            </div>
+
+            <div className="-mx-5 overflow-x-auto px-5 pb-3 md:-mx-8 md:px-8">
+              <div className="flex min-w-[1020px] items-stretch">
+                {runtimeStages.map((stage, index) => {
+                  const isActive = stage.id === activeStage.id;
+                  return (
+                    <div className="flex items-center" key={stage.id}>
+                      <button
+                        aria-pressed={isActive}
+                        className={`group flex min-h-[150px] w-[150px] flex-col rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                          isActive
+                            ? "border-cam-gold/75 bg-card text-foreground shadow-md"
+                            : "border-cam-gold/25 bg-background/60 text-foreground/70 hover:-translate-y-0.5 hover:border-cam-gold/55 hover:bg-card"
+                        }`}
+                        onClick={() => setActiveStageId(stage.id)}
+                        type="button"
+                      >
+                        <span className="mb-4 flex h-8 w-8 items-center justify-center rounded-full border border-cam-gold/45 bg-[rgba(184,147,90,0.10)] font-mono text-[11px] font-semibold text-[hsl(32_62%_25%)]">
+                          {stage.step}
+                        </span>
+                        <span className="font-serif text-xl leading-tight">{stage.label}</span>
+                        <span className="mt-auto pt-4 font-mono text-[9px] uppercase tracking-[0.14em] text-foreground/45">
+                          Inspect phase
+                        </span>
+                      </button>
+                      {index < runtimeStages.length - 1 && (
+                        <div className="flex w-10 items-center justify-center" aria-hidden="true">
+                          <ArrowRight className="h-5 w-5 text-cam-gold/65" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <AnimatePresence mode="wait">
               <motion.div
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-4 grid gap-4 rounded-2xl border border-cam-gold/30 bg-card/80 p-5 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]"
+                className="mt-3 grid gap-4 rounded-2xl border border-cam-gold/35 bg-card/85 p-5 shadow-sm md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]"
                 exit={{ opacity: 0, y: 5 }}
                 initial={{ opacity: 0, y: 5 }}
                 key={activeStage.id}
