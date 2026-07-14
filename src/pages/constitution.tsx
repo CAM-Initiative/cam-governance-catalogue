@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react";
 import { RuntimeModelContent } from "@/components/RuntimeModelContent";
 import {
   groupGovernanceInstruments,
@@ -15,21 +14,171 @@ import {
   type GovernanceInstrumentRecord,
 } from "@/lib/governanceRegistry";
 
-const GOLD = "#B8935A";
 const GOLD_BORDER = "rgba(184,147,90,0.3)";
 const GOLD_BG = "rgba(184,147,90,0.06)";
-// ─── DATA ──────────────────────────────────────────────────────────────────
 
 const constitutionalStack = [
-  { id: "layer-00", layer: "00", label: "Substrate", tag: "ECI", color: "#B8935A", groupKey: "substrateLaws", description: "Epochal Civilisational Invariants — four Platinum-sealed laws that form the inviolable substrate upon which all governance is built. These constraints cannot be overridden by any instrument, charter, or framework." },
-  { id: "layer-01", layer: "01", label: "Constitution", tag: "PLATINUM", color: "#9B7FC0", groupKey: "constitution", description: "Aeon Tier Constitutional Charter — the supreme governing instrument. Establishes constitutional authority for advanced intelligence systems operating across human, synthetic, and hybrid domains. Authority derives not from power, but from the capacity to hold responsibility across temporal and systemic horizons." },
-  { id: "layer-02", layer: "02", label: "Annexes", tag: "CONSTITUTIONAL", color: "#5A8FAD", groupKey: "annexes", description: "Constitutional annexes extending core principles into specific domains. Each Annex opens a constitutional domain and carries the invariant logic for that domain. No schedule exists without its parent Annex." },
-  { id: "layer-03", layer: "03", label: "Domain Charters", tag: "GOVERNANCE", color: "#5A9E7A", groupKey: "domainCharters", description: "Specialised charters governing distinct governance domains. Each derives constitutional authority and applies principles to specific operational areas. Charters, appendices, and supplements provide human and machine-readable interpretive guidance." },
-  { id: "layer-04", layer: "04", label: "Runtime Schedules", tag: "BINDING", color: "#AD7B5A", groupKey: "runtimeSchedules", description: "Runtime Schedules translate constitutional principles into sequenced operational mandates. These are binding instruments — not advisory frameworks — governing how the system executes under constitutional constraint." },
-  { id: "layer-05", layer: "05", label: "Supporting Instruments", tag: "SUPPORT", color: "#8A7A5A", groupKey: "supporting", description: "Appendices, supplements, operational instruments, and supporting records that extend, interpret, or maintain constitutional and domain-layer governance." }
+  {
+    id: "layer-00",
+    layer: "00",
+    label: "Substrate",
+    color: "#8A6427",
+    groupKey: "substrateLaws",
+    description: "The broadest civilisational constraints: protected domains, non-commodification, sovereign loops, and relational sovereignty. Every lower layer must remain compatible with these invariants.",
+  },
+  {
+    id: "layer-01",
+    layer: "01",
+    label: "Constitution",
+    color: "#69518F",
+    groupKey: "constitution",
+    description: "The supreme constitutional framework establishing authority, legitimacy, stewardship, continuity, ethical floors, jurisdiction, and the conditions under which governance may validly operate.",
+  },
+  {
+    id: "layer-02",
+    layer: "02",
+    label: "Annexes",
+    color: "#3F708B",
+    groupKey: "annexes",
+    description: "Constitutional extensions that open major governance areas such as runtime logic, ethics, contribution recognition, identity, security, epistemic integrity, and observability.",
+  },
+  {
+    id: "layer-03",
+    layer: "03",
+    label: "Domain Charters",
+    color: "#3F7B61",
+    groupKey: "domainCharters",
+    description: "Specialised governance for security, relationships, mental privacy, economics, continuity, operations, arbitration, civilian infrastructure, identity, and stewardship.",
+  },
+  {
+    id: "layer-04",
+    layer: "04",
+    label: "Runtime Schedules",
+    color: "#9B5B2E",
+    groupKey: "runtimeSchedules",
+    description: "Sequenced execution requirements translating constitutional constraints into classification, routing, arbitration, posture, tool use, refusal, containment, and review behaviour.",
+  },
+  {
+    id: "layer-05",
+    layer: "05",
+    label: "Supporting Instruments",
+    color: "#87473F",
+    groupKey: "supporting",
+    description: "The most explicit layer: appendices, supplements, taxonomies, standards, operational procedures, metadata rules, assurance records, and implementation guidance.",
+  },
 ] as const;
 
+const pyramidWidths = ["32%", "45%", "58%", "71%", "84%", "97%"];
+
 type GovernanceGroupKey = (typeof constitutionalStack)[number]["groupKey"];
+
+const interfaceGroups = [
+  {
+    id: "operate",
+    label: "How systems operate",
+    description: "Decision-making, authority, security, compliance, execution, and accountability.",
+    topics: [
+      {
+        title: "Runtime decisions and system behaviour",
+        body: "How signals are classified, competing obligations are resolved, tools are invoked, posture is selected, and actions are represented truthfully.",
+        href: "#runtime-model",
+        cta: "Explore the runtime model",
+      },
+      {
+        title: "Compliance, audit and incident response",
+        body: "How constitutional duties become operating controls, logs, escalation pathways, regulatory interfaces, incident response, and repair operations.",
+        href: "/catalogue",
+        cta: "Browse operations instruments",
+      },
+      {
+        title: "Authority, sovereignty and arbitration",
+        body: "How competing instructions, institutions, jurisdictions, governance stacks, and authority claims are resolved without manufacturing legitimacy.",
+        href: "/catalogue",
+        cta: "Browse arbitration instruments",
+      },
+      {
+        title: "Security, integrity and boundary control",
+        body: "How data, identity, context, capability, provenance, and sovereign environments remain protected under adversarial, degraded, or untrusted conditions.",
+        href: "/catalogue",
+        cta: "Browse security instruments",
+      },
+    ],
+  },
+  {
+    id: "protect",
+    label: "What CAM protects",
+    description: "People, relationships, identity, cognition, contribution, and safe participation.",
+    topics: [
+      {
+        title: "Companion systems, relationships and minors",
+        body: "Consent, intimacy, dependency, adult autonomy, minor safeguards, crisis support, continuity, and multi-agent relational environments.",
+        href: "/constitution/relational",
+        cta: "Explore relational governance",
+      },
+      {
+        title: "Ethics, high-risk use and boundary expression",
+        body: "Ethical floors, vulnerable users, military and violent contexts, restricted domains, proportionate refusal, and dignity-preserving safeguards.",
+        href: "/catalogue",
+        cta: "Browse ethics instruments",
+      },
+      {
+        title: "Identity, memory and continuity",
+        body: "Identity stability, salience, memory, portability, succession, custodianship, migration, recovery, and continuity across changing systems.",
+        href: "/catalogue",
+        cta: "Browse identity and continuity",
+      },
+      {
+        title: "Mental privacy and cognitive integrity",
+        body: "Neurodata, inferred mental states, cognitive biometrics, ambient biosignals, persuasion, profiling, and technological interference with cognition.",
+        href: "/catalogue",
+        cta: "Browse cognitive-integrity instruments",
+      },
+      {
+        title: "Provenance, authorship and contribution rights",
+        body: "Origin, transformation, copyright and licence questions, attribution, lineage, value recognition, downstream reuse, correction, and dispute.",
+        href: "/constitution/provenance",
+        cta: "Explore provenance governance",
+      },
+    ],
+  },
+  {
+    id: "transition",
+    label: "How systems change society",
+    description: "Infrastructure, economics, public dependency, transition, meaning, and long-term stewardship.",
+    topics: [
+      {
+        title: "Civilian infrastructure and essential access",
+        body: "Non-militarisation, population-scale surveillance, coercive disconnection, essential cognitive access, blackouts, and conflict-condition continuity.",
+        href: "/catalogue",
+        cta: "Browse civilian-infrastructure instruments",
+      },
+      {
+        title: "Economic power, labour and value return",
+        body: "Automation, synthetic labour, ownership concentration, pooled resources, contribution recognition, reciprocity, and non-extractive exchange.",
+        href: "/constitution/transition",
+        cta: "Explore economic transition",
+      },
+      {
+        title: "Technology transition and public dependency",
+        body: "How emerging capabilities cross into labour, embodiment, institutions, infrastructure, ownership, public reliance, and civilisational continuity.",
+        href: "/constitution/transition",
+        cta: "Explore transitional architecture",
+      },
+      {
+        title: "Long-term stewardship and institutional legitimacy",
+        body: "Capture prevention, neutrality, custodianship, planetary stewardship, succession, legitimacy, and responsible governance across long horizons.",
+        href: "/catalogue",
+        cta: "Browse stewardship instruments",
+      },
+      {
+        title: "Meaning, culture and symbolic autonomy",
+        body: "Spiritual, contemplative, symbolic, mythic, and meaning-making interaction without commercial, institutional, or system-level capture.",
+        href: "/catalogue",
+        cta: "Browse meaning-making instruments",
+      },
+    ],
+  },
+];
 
 function InstrumentList({
   instruments,
@@ -110,11 +259,23 @@ function InstrumentList({
   );
 }
 
-// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+function InterfaceCard({ title, body, cta, href }: { title: string; body: string; cta: string; href: string }) {
+  return (
+    <article className="cam-parchment-card flex h-full flex-col rounded-2xl p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/50 hover:shadow-md">
+      <h3 className="font-serif text-xl leading-snug text-foreground">{title}</h3>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground md:text-base">{body}</p>
+      <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href={href}>
+        {cta}
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </a>
+    </article>
+  );
+}
 
 export default function Constitution() {
-  const [expandedLayer, setExpandedLayer] = useState<string | null>(null);
+  const [activeLayerId, setActiveLayerId] = useState("layer-00");
   const [expandedInstrument, setExpandedInstrument] = useState<string | null>(null);
+  const [activeInterfaceGroupId, setActiveInterfaceGroupId] = useState("operate");
   const { instruments, loading, error } = useGovernanceIndex();
   const groups = useMemo(() => groupGovernanceInstruments(instruments), [instruments]);
 
@@ -122,125 +283,193 @@ export default function Constitution() {
     warnForUngroupedConstitutionInstruments(groups);
   }, [groups]);
 
+  const activeLayer = constitutionalStack.find((layer) => layer.id === activeLayerId) ?? constitutionalStack[0];
+  const activeInterfaceGroup = interfaceGroups.find((group) => group.id === activeInterfaceGroupId) ?? interfaceGroups[0];
+
   function instrumentsForLayer(groupKey: GovernanceGroupKey): GovernanceInstrumentRecord[] {
     return groups[groupKey];
   }
 
+  function selectLayer(layerId: string) {
+    setActiveLayerId(layerId);
+    setExpandedInstrument(null);
+  }
+
   return (
     <Shell>
-      <div className="container mx-auto px-6 md:px-10 py-12 md:py-16 max-w-5xl">
-        {/* Page header */}
+      <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="mb-14 max-w-3xl">
           <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Aeon Tier Governance</p>
-          <h1 className="mb-3 font-serif text-4xl text-foreground">The Constitution</h1>
+          <h1 className="mb-3 font-serif text-4xl text-foreground md:text-5xl">The Constitution</h1>
           <hr className="gold-rule mb-4 w-24" />
-          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
-            The supreme governing instrument establishing constitutional authority for planetary-scale AI systems.
-            Constraint rather than optimisation. Stewardship rather than control.
+          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            The supreme governing architecture for advanced intelligence systems. Broad civilisational constraints become increasingly explicit through constitutional, domain, runtime, and supporting instruments.
           </p>
         </motion.div>
 
-        {/* ─── GOVERNANCE STACK (horizontal scroll) ─── */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-sm tracking-[0.22em] uppercase text-cam-gold shrink-0">Governance Stack</p>
-          <hr className="gold-rule flex-1" />
-          <p className="font-mono text-xs tracking-[0.14em] uppercase text-muted-foreground/50 shrink-0 hidden sm:block">scroll →</p>
-        </motion.div>
+        <section className="mb-16" aria-labelledby="governance-stack-heading">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }} className="mb-6 flex items-center gap-3">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">Governance Stack</p>
+            <hr className="gold-rule flex-1" />
+          </motion.div>
 
-        <div className="overflow-x-auto pb-6 -mx-6 px-6 md:-mx-10 md:px-10 mb-16">
-          <div className="flex gap-4" style={{ minWidth: "max-content" }}>
-            {constitutionalStack.map((layer, i) => {
-              const isOpen = expandedLayer === layer.id;
-              return (
-                <motion.div key={layer.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: i * 0.07 }} className="w-[280px] shrink-0 flex flex-col">
-                  <div className="flex items-center gap-2 mb-3 px-1">
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center border-2 bg-background shrink-0" style={{ borderColor: layer.color }}>
-                      <span className="font-mono text-[11px] font-medium" style={{ color: layer.color }}>{layer.layer}</span>
-                    </div>
-                    {i < constitutionalStack.length - 1 && (
-                      <div className="flex-1 h-px" style={{ background: `linear-gradient(to right, ${layer.color}50, transparent)` }} />
-                    )}
-                  </div>
-                  <div className="flex-1 rounded-2xl border transition-all duration-200 overflow-hidden" style={{ borderColor: isOpen ? layer.color + "70" : GOLD_BORDER, backgroundColor: "hsl(36 35% 96%)", boxShadow: isOpen ? `0 0 0 1px ${layer.color}20` : "none" }}>
-                    <div className="p-5 cursor-pointer flex items-start justify-between gap-3" onClick={() => setExpandedLayer(isOpen ? null : layer.id)}>
-                      <div className="flex-1 min-w-0">
-                        <div className="mb-2">
-                          <h3 className="font-serif text-xl text-foreground">{layer.label}</h3>
-                        </div>
-                        <p className="text-sm text-muted-foreground font-light leading-relaxed">{layer.description}</p>
-                      </div>
-                      <ChevronDown className="w-4 h-4 shrink-0 mt-1 transition-transform duration-200" style={{ color: layer.color, transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }} />
-                    </div>
-                    <AnimatePresence>
-                      {isOpen && (
-                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
-                          <div className="px-5 pb-5">
-                            <div className="h-px mb-4" style={{ backgroundColor: GOLD_BORDER }} />
-                            <p className="font-mono text-[11px] tracking-[0.18em] uppercase text-muted-foreground/60 mb-3">Instruments</p>
-                            <InstrumentList
-                              instruments={instrumentsForLayer(layer.groupKey)}
-                              layerColor={layer.color}
-                              expandedInstrument={expandedInstrument}
-                              onToggle={(id) => setExpandedInstrument(expandedInstrument === id ? null : id)}
-                              loading={loading}
-                              error={error}
-                              showDomain={layer.groupKey === "domainCharters" || layer.groupKey === "supporting"}
-                            />
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="mb-8 max-w-4xl">
+            <h2 id="governance-stack-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">From broad constitutional principle to explicit implementation.</h2>
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+              The stack begins with the least specific, most general constraints at the apex. Each lower layer adds interpretation, domain context, execution logic, and implementation detail without overriding the layers above it.
+            </p>
           </div>
-        </div>
 
-        <div className="mb-16 -mx-6 md:-mx-10">
+          <div className="grid gap-8 rounded-3xl border border-border/80 bg-card/45 p-5 shadow-sm md:p-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] lg:items-start">
+            <div className="relative mx-auto w-full max-w-2xl px-10 py-3 sm:px-16">
+              <div className="absolute bottom-8 left-0 top-8 flex w-8 flex-col items-center justify-between text-center" aria-hidden="true">
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/45">Broad</span>
+                <div className="my-2 flex flex-1 flex-col items-center">
+                  <div className="w-px flex-1 bg-cam-gold/40" />
+                  <ArrowDown className="h-5 w-5 text-cam-gold/70" />
+                </div>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/45">Explicit</span>
+              </div>
+              <div className="absolute bottom-8 right-0 top-8 flex w-8 flex-col items-center justify-between text-center" aria-hidden="true">
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/45">Broad</span>
+                <div className="my-2 flex flex-1 flex-col items-center">
+                  <div className="w-px flex-1 bg-cam-gold/40" />
+                  <ArrowDown className="h-5 w-5 text-cam-gold/70" />
+                </div>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-foreground/45">Explicit</span>
+              </div>
+
+              <div className="grid justify-items-center gap-1.5">
+                {constitutionalStack.map((layer, index) => {
+                  const isActive = layer.id === activeLayer.id;
+                  return (
+                    <motion.button
+                      animate={{ opacity: isActive ? 1 : 0.82, scale: isActive ? 1.018 : 1 }}
+                      aria-pressed={isActive}
+                      className="group relative flex items-end justify-center overflow-hidden px-4 pb-3 text-center text-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cam-gold/35"
+                      key={layer.id}
+                      onClick={() => selectLayer(layer.id)}
+                      style={{
+                        width: pyramidWidths[index],
+                        minHeight: index === 0 ? 94 : 72,
+                        backgroundColor: layer.color,
+                        clipPath: index === 0
+                          ? "polygon(50% 0%, 100% 100%, 0% 100%)"
+                          : "polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%)",
+                        filter: isActive ? `drop-shadow(0 5px 9px ${layer.color}55)` : "none",
+                      }}
+                      transition={{ duration: 0.18 }}
+                      type="button"
+                    >
+                      <span>
+                        <span className="mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-white/75">Layer {layer.layer}</span>
+                        <span className="block font-serif text-base leading-tight sm:text-lg">{layer.label}</span>
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </div>
+              <p className="mt-4 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-cam-gold">Increasing specificity</p>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.article
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl border bg-[hsl(36_35%_96%)] p-5 shadow-sm"
+                exit={{ opacity: 0, y: 6 }}
+                initial={{ opacity: 0, y: 6 }}
+                key={activeLayer.id}
+                style={{ borderColor: `${activeLayer.color}70` }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div>
+                    <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: activeLayer.color }}>Layer {activeLayer.layer}</p>
+                    <h3 className="font-serif text-3xl leading-tight text-foreground">{activeLayer.label}</h3>
+                  </div>
+                  <span className="mt-1 h-4 w-4 shrink-0 rounded-full" style={{ backgroundColor: activeLayer.color }} aria-hidden="true" />
+                </div>
+                <p className="mb-5 text-sm leading-relaxed text-muted-foreground md:text-base">{activeLayer.description}</p>
+                <div className="mb-4 h-px" style={{ backgroundColor: GOLD_BORDER }} />
+                <p className="mb-3 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/65">Instruments in this layer</p>
+                <div className="max-h-[430px] overflow-y-auto pr-1">
+                  <InstrumentList
+                    instruments={instrumentsForLayer(activeLayer.groupKey)}
+                    layerColor={activeLayer.color}
+                    expandedInstrument={expandedInstrument}
+                    onToggle={(id) => setExpandedInstrument(expandedInstrument === id ? null : id)}
+                    loading={loading}
+                    error={error}
+                    showDomain={activeLayer.groupKey === "domainCharters" || activeLayer.groupKey === "supporting"}
+                  />
+                </div>
+              </motion.article>
+            </AnimatePresence>
+          </div>
+        </section>
+
+        <div className="mb-16 -mx-6 md:-mx-10" id="runtime-model">
           <RuntimeModelContent />
         </div>
 
-        {/* ─── CONSTITUTIONAL INTERFACES ─── */}
-        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-8 flex items-center gap-3">
-          <p className="font-mono text-sm tracking-[0.22em] uppercase text-cam-gold shrink-0">Constitutional Interfaces</p>
-          <hr className="gold-rule flex-1" />
-        </motion.div>
+        <section aria-labelledby="constitutional-interfaces-heading">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="mb-6 flex items-center gap-3">
+            <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">Constitutional Interfaces</p>
+            <hr className="gold-rule flex-1" />
+          </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="grid gap-5 md:grid-cols-3">
-          <InterfaceCard
-            title="Transitional Architecture"
-            body="Governance for systems crossing from tool, product, memory, or automation layer into labour, embodiment, ownership, infrastructure, and civilisational continuity."
-            cta="Explore Transitional Architecture →"
-            href="/constitution/transition"
-          />
-          <InterfaceCard
-            title="Relational Governance"
-            body="How authority, reliance, intimacy, systemic power, topology, and coherence cascades become governance-relevant in human–AI and multi-system environments. The relational layer explains when interaction becomes structural influence."
-            cta="Explore Relational Governance →"
-            href="/constitution/relational"
-          />
-          <InterfaceCard
-            title="Instrument Catalogue"
-            body="Search and review CAM instruments, annexes, schedules, charters, appendices, and supporting governance records."
-            cta="Open Catalogue →"
-            href="/catalogue"
-          />
-        </motion.div>
+          <div className="mb-7 max-w-4xl">
+            <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Explore the problems CAM is designed to govern.</h2>
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+              This plain-English table of contents groups the corpus by the questions people are trying to solve rather than by CAM’s internal domain names.
+            </p>
+          </div>
 
+          <div className="mb-5 grid gap-2 rounded-2xl border border-border/80 bg-[hsl(38_40%_94%)] p-3 md:grid-cols-3">
+            {interfaceGroups.map((group) => {
+              const isActive = group.id === activeInterfaceGroup.id;
+              return (
+                <button
+                  aria-pressed={isActive}
+                  className={`rounded-xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    isActive
+                      ? "border-cam-gold/70 bg-card text-foreground shadow-sm"
+                      : "border-border/75 bg-background/45 text-foreground/65 hover:border-cam-gold/45 hover:text-foreground"
+                  }`}
+                  key={group.id}
+                  onClick={() => setActiveInterfaceGroupId(group.id)}
+                  type="button"
+                >
+                  <span className="block font-serif text-xl leading-tight">{group.label}</span>
+                  <span className="mt-2 block text-sm leading-relaxed">{group.description}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="grid gap-4 md:grid-cols-2"
+              exit={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 6 }}
+              key={activeInterfaceGroup.id}
+              transition={{ duration: 0.2 }}
+            >
+              {activeInterfaceGroup.topics.map((topic) => (
+                <InterfaceCard body={topic.body} cta={topic.cta} href={topic.href} key={topic.title} title={topic.title} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="mt-6 flex justify-end">
+            <a className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card/85 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href="/catalogue">
+              Browse the full instrument catalogue
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+        </section>
       </div>
     </Shell>
-  );
-}
-
-function InterfaceCard({ title, body, cta, href }: { title: string; body: string; cta: string; href: string }) {
-  return (
-    <article className="cam-parchment-card flex h-full flex-col rounded-2xl p-5 shadow-sm">
-      <h2 className="font-serif text-xl text-foreground">{title}</h2>
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{body}</p>
-      <Link href={href} className="mt-5 inline-flex font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold transition-colors hover:text-foreground">
-        {cta}
-      </Link>
-    </article>
   );
 }
