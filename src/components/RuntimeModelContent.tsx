@@ -1,10 +1,17 @@
-import { useState, useRef, useEffect } from "react";
-import { Shell } from "@/components/layout/Shell";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import runtimeData from "@/data/runtimeTrace.json";
+import {
+  instrumentDescription,
+  instrumentHref,
+  instrumentStatus,
+  useGovernanceIndex,
+  warnForMissingRuntimeInstruments,
+  type GovernanceInstrumentRecord,
+} from "@/lib/governanceRegistry";
 
-const GOLD = "#B8935A";
+const GOLD = "#9A6F2F";
 const GOLD_LIGHT = "#D4AA72";
 const GOLD_BG = "rgba(184,147,90,0.08)";
 const GOLD_BORDER = "rgba(184,147,90,0.35)";
@@ -45,15 +52,9 @@ interface RuntimeInstrument {
   link?: string;
 }
 
-type GovernanceInstrument = Record<string, string>;
-
-function instrumentDescription(it: GovernanceInstrument, fallback: string) {
-  return it.purpose || it.summary || fallback;
-}
-
 function mergeRuntimeInstrument(
   inst: RuntimeInstrument,
-  governanceIndex: Record<string, GovernanceInstrument>,
+  governanceIndex: Record<string, GovernanceInstrumentRecord>,
 ): RuntimeInstrument {
   const current = governanceIndex[inst.id];
 
@@ -64,9 +65,9 @@ function mergeRuntimeInstrument(
   return {
     ...inst,
     title: current.title || inst.title,
-    status: current.status || inst.status,
+    status: instrumentStatus(current, inst.status),
     description: instrumentDescription(current, inst.description),
-    link: current.link || inst.link,
+    link: instrumentHref(current) || inst.link,
   };
 }
 
@@ -215,35 +216,21 @@ const SUBHEADINGS: Record<string, string> = {
   "Example 3": EXAMPLES[2].subheading,
 };
 
-export default function Runtime() {
+export function RuntimeModelContent() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("Runtime Explained");
-  const [governanceIndex, setGovernanceIndex] = useState<Record<string, GovernanceInstrument>>({});
+  const { byId: governanceIndex } = useGovernanceIndex();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const referencedInstrumentIds = useMemo(
+    () => runtimeData.phases.flatMap((phase) => phase.instruments.map((instrument) => instrument.id)),
+    [],
+  );
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}data/cam-governance.json`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Unable to load governance registry (${response.status})`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const items: GovernanceInstrument[] = Array.isArray(data)
-          ? data
-          : Array.isArray(data.items)
-            ? data.items
-            : [];
-
-        setGovernanceIndex(
-          Object.fromEntries(items.filter((item) => item.id).map((item) => [item.id, item])),
-        );
-      })
-      .catch(() => {
-        setGovernanceIndex({});
-      });
-  }, []);
+    if (Object.keys(governanceIndex).length > 0) {
+      warnForMissingRuntimeInstruments(referencedInstrumentIds, governanceIndex);
+    }
+  }, [governanceIndex, referencedInstrumentIds]);
 
   // Collapse all cards when switching tabs
   useEffect(() => {
@@ -270,8 +257,7 @@ export default function Runtime() {
   }
 
   return (
-    <Shell>
-      <div className="relative flex flex-col">
+    <div className="relative flex flex-col">
         {/* ── Header: title + tabs + subheading ── */}
         <div className="shrink-0 pt-6 pb-0 px-6 md:px-10 border-b border-border/60">
           <motion.div
@@ -336,7 +322,7 @@ export default function Runtime() {
         {/* ── Runtime Flow section divider ── */}
         <div className="shrink-0 px-6 md:px-10 pt-5 pb-2">
           <div className="flex items-center gap-3">
-            <p className="font-mono text-sm tracking-[0.22em] uppercase text-primary shrink-0">Runtime Flow</p>
+            <p className="font-mono text-sm tracking-[0.22em] uppercase text-cam-gold shrink-0">Runtime Flow</p>
             <hr className="gold-rule flex-1" />
           </div>
         </div>
@@ -506,7 +492,7 @@ export default function Runtime() {
                                         </h4>
                                         {currentInstrument.link ? (
                                           <a
-                                            href={`https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/${currentInstrument.link}`}
+                                            href={currentInstrument.link}
                                             target="_blank"
                                             rel="noreferrer"
                                             className="font-mono text-xs text-cam-gold mb-3 block break-words transition-colors hover:text-primary/80"
@@ -593,7 +579,6 @@ export default function Runtime() {
             background: "linear-gradient(to left, hsl(38 40% 93%), transparent)",
           }}
         />
-      </div>
-    </Shell>
+    </div>
   );
 }

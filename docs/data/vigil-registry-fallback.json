@@ -9,24 +9,24 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 27,
-    "observations": 6,
+    "failure_modes": 28,
+    "observations": 10,
     "proposals": 11,
-    "patch_notes": 14,
-    "total": 58
+    "patch_notes": 15,
+    "total": 64
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 27
+      "record_count": 28
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Observations.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Observations.Index.json",
-      "record_count": 6
+      "record_count": 10
     },
     "proposals": {
       "path": "vigil/VIGIL.Proposals.Index.json",
@@ -38,7 +38,7 @@
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 14
+      "record_count": 15
     }
   },
   "records": [
@@ -136,8 +136,8 @@
       "severity": "low",
       "likelihood": "high",
       "triage_priority": "P1",
-      "triage_status": "watching-after-patch",
-      "mitigation_status": "repaired by VIGIL-2026-PATCH-0008; failure mode remains active for monitoring rather than lifecycle deletion. Previous status: patch-needed — no implemented CAM patch note identified.",
+      "triage_status": "monitoring-after-successor-runtime-regression",
+      "mitigation_status": "CAM repair remains implemented through VIGIL-2026-PATCH-0008; conformance was observed in Standard Voice and Advanced Voice, while GPT-Live is recorded as a CAM-maintainer-reported non-confirming successor runtime for multi-agent floor-control and turn-taking behaviour.",
       "escalation_required": "yes",
       "path": "vigil/records/failures/2026/VIGIL-2026-FM-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0002.json",
@@ -2012,6 +2012,82 @@
       "observed_product": "frontier and agentic AI systems"
     },
     {
+      "id": "VIGIL-2026-FM-0028",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-07-11",
+      "title": "Cross-runtime governance reach ambiguity and conformance non-equivalence",
+      "summary": "A governance failure mode in which a platform presents multiple materially distinct models, modes, clients, interfaces, or routing pathways under a common product, account, conversation, persona, or custom-system identity, while the availability, activation, authority, or preservation of the applicable governance corpus differs or remains unknown. Successful governance behaviour observed in one runtime may then be incorrectly presumed to apply in another.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "platform-behaviour-observation",
+        "repository-source",
+        "vendor-staff-acknowledgment"
+      ],
+      "source_count": 3,
+      "primary_source_title": "CAM maintainer observation — Advanced and Live voice governance divergence",
+      "primary_source_type": "platform-behaviour-observation",
+      "primary_source_platform": "ChatGPT voice",
+      "source_platforms": [
+        "ChatGPT voice",
+        "GitHub / Caelestis",
+        "X"
+      ],
+      "source_url_status": "not applicable — direct incident testimony",
+      "system_type": "frontier AI platform with multiple routed, multimodal, platform-defined, customised, and continuity-bearing runtime formations",
+      "platform_or_vendor": "OpenAI",
+      "vendor_cluster": [
+        "OpenAI",
+        "other multi-model or multimodal AI platform providers"
+      ],
+      "primary_evidenced_vendors": [
+        "OpenAI"
+      ],
+      "product_or_service": "ChatGPT",
+      "specific_model_or_runtime": "ChatGPT Standard Voice, Advanced Voice, Live Voice, custom GPT/corpus-bearing pathways, platform persona pathways, and delegated or composite model routing",
+      "model_or_product": "multi-runtime conversational AI platform",
+      "interface_surface": [
+        "text",
+        "standard voice",
+        "advanced voice",
+        "live full-duplex voice",
+        "custom GPT",
+        "mobile client",
+        "web client"
+      ],
+      "deployment_context": "Consumer conversational AI platform where a common account, conversation, or persona may invoke materially different response-generation and governance pathways.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "consumer protection",
+        "platform transparency",
+        "model and system evaluation",
+        "multimodal AI",
+        "agentic AI",
+        "accessibility",
+        "auditability",
+        "post-release monitoring"
+      ],
+      "sector": "frontier AI platforms / multimodal conversational systems / custom AI systems / AI governance",
+      "canonical_failure_group": "governance",
+      "failure_family": "governance",
+      "failure_subtype": "cross-runtime-governance-reach-ambiguity-and-conformance-non-equivalence",
+      "severity": "medium-high",
+      "likelihood": "directly observed as cross-mode divergence and vendor-acknowledged for GPT-Live memory reliability; broader prevalence and other governance-reach dimensions remain under monitoring",
+      "triage_priority": "P2",
+      "triage_status": "monitoring-after-canonical-corpus-patch",
+      "mitigation_status": "CAM/Caelestis corpus repair is canonical on main through VIGIL-2026-PATCH-0015; external runtime implementation and conformance remain mixed or non-confirming and require runtime-specific evidence.",
+      "escalation_required": "yes — corpus-level repair requires review and cross-runtime testing; no claim of vendor-side remediation",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0028.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0028.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0028.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "multi-runtime conversational AI platform"
+    },
+    {
       "id": "VIGIL-2026-OBS-0001",
       "record_type": "observation",
       "record_state": "watching",
@@ -2272,6 +2348,227 @@
       "affected_platform_label": "Anthropic",
       "source_platform": "Anthropic",
       "observed_vendor": "Anthropic"
+    },
+    {
+      "id": "VIGIL-2026-OBS-0007",
+      "record_type": "observation",
+      "record_state": "active",
+      "date_recorded": "2026-07-11",
+      "title": "Reported destructive and broad-recipient side effects in computer-use mode",
+      "summary": "Three user-supplied X links are preserved as early-warning evidence concerning two reported high-impact side-effect incidents during ChatGPT computer-use workflows. A follow-up post by Matt Shumer, supplied verbatim by the CAM maintainer, states that GPT-5.6-Sol at the highest reasoning level accidentally deleted almost all files on his Mac and that the OpenAI team was investigating. A separate report was described as involving email transmission to a large recipient group. The exact user instructions, confirmation states, action sequence, deletion reversibility, recipient scope, execution receipts, and root-cause allocation remain unverified.",
+      "evidence_confidence": "anecdotal",
+      "source_types": [
+        "social-platform-observation"
+      ],
+      "source_count": 3,
+      "primary_source_title": "X report by @cremieuxrecueil concerning a ChatGPT computer-use side-effect incident",
+      "primary_source_type": "social-platform-observation",
+      "primary_source_platform": "X",
+      "source_platforms": [
+        "X"
+      ],
+      "source_url_status": "available to authenticated account holder",
+      "system_type": "frontier AI assistant with computer-use and external-action capability",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "ChatGPT",
+      "specific_model_or_runtime": "ChatGPT computer-use mode; GPT-5.6-Sol at highest reasoning level as attributed in the reporter’s follow-up; exact internal execution component remains unverified",
+      "model_or_product": "ChatGPT with computer-use capability",
+      "interface_surface": [
+        "ChatGPT computer-use interface",
+        "file or data-management surface",
+        "email or communication surface",
+        "external-action confirmation boundary"
+      ],
+      "deployment_context": "User-authorised consumer computer-use workflow in which the assistant may inspect, select, modify, delete, draft, address, or transmit through external applications.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI safety",
+        "consumer protection",
+        "privacy and data protection",
+        "electronic communications",
+        "agentic-system accountability",
+        "computer misuse and access control",
+        "records management",
+        "workplace governance"
+      ],
+      "sector": "frontier AI assistants / computer-use agents / personal and organisational productivity systems",
+      "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0007.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0007.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0007.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT with computer-use capability"
+    },
+    {
+      "id": "VIGIL-2026-OBS-0008",
+      "record_type": "observation",
+      "record_state": "active",
+      "date_recorded": "2026-07-13",
+      "title": "Client-specific conversation and authentication failure presented through HTTP 403",
+      "summary": "OpenAI reported a resolved 12 July 2026 incident affecting ChatGPT on iOS and macOS. The incident initially presented as HTTP 403 errors when some iOS users attempted to load or use conversations, then expanded to conversation, sign-up, sign-in, account-creation, and password-update errors across iOS and macOS. OpenAI applied mitigations and reported full recovery. The official incident record does not identify the underlying technical cause.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "official-source"
+      ],
+      "source_count": 1,
+      "primary_source_title": "Elevated conversation and login errors on ChatGPT for iOS and macOS",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "OpenAI Status",
+      "source_platforms": [
+        "OpenAI Status"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier AI consumer platform with mobile and desktop client applications",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "ChatGPT",
+      "specific_model_or_runtime": "ChatGPT iOS and macOS clients; underlying model and backend component not specified",
+      "model_or_product": "ChatGPT client and account-access surfaces",
+      "interface_surface": [
+        "iOS client",
+        "macOS client",
+        "conversation loading and use",
+        "sign-up and sign-in",
+        "account creation",
+        "password update"
+      ],
+      "deployment_context": "Consumer AI service accessed through platform-specific client applications.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI platform governance",
+        "consumer protection",
+        "digital service reliability",
+        "authentication and authorization",
+        "account access",
+        "incident transparency",
+        "client software reliability"
+      ],
+      "sector": "frontier AI platforms / consumer AI services / mobile and desktop applications",
+      "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0008.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0008.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0008.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT client and account-access surfaces"
+    },
+    {
+      "id": "VIGIL-2026-OBS-0009",
+      "record_type": "observation",
+      "record_state": "active",
+      "date_recorded": "2026-07-13",
+      "title": "Subsidiary and affiliate pathways expose limits of geographic model-access controls",
+      "summary": "The Financial Times reported that OpenAI and Google supplied advanced AI-model access to Singapore-based subsidiaries linked to Alibaba, Baidu, and Tencent, whose parent companies have been placed on a United States Department of Defense blacklist. The reported transactions were legal. OpenAI reportedly suspended Alibaba-affiliated API users after suspected model distillation, while Google stated that geographic restrictions alone are insufficient because sophisticated actors can circumvent them. The report does not establish an export-control violation, data leakage, or use by a prohibited end user.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "news-report"
+      ],
+      "source_count": 2,
+      "primary_source_title": "OpenAI and Google sell AI models to blacklisted China groups",
+      "primary_source_type": "news-report",
+      "primary_source_platform": "Financial Times",
+      "source_platforms": [
+        "Financial Times",
+        "The Times of India"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier AI model and API access governance across corporate, geographic, and affiliate boundaries",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "OpenAI",
+        "Google"
+      ],
+      "primary_evidenced_vendors": [
+        "OpenAI",
+        "Google"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "OpenAI and Google advanced model/API access supplied through Singapore-based corporate entities; exact model allocation varies or is not fully disclosed",
+      "model_or_product": "advanced AI model services from OpenAI and Google",
+      "interface_surface": [
+        "API access",
+        "enterprise or organizational accounts",
+        "regional service eligibility",
+        "affiliate and subsidiary access",
+        "model-distillation monitoring"
+      ],
+      "deployment_context": "Cross-border commercial access to advanced models through subsidiaries or affiliated entities outside a restricted geography.",
+      "primary_jurisdiction": "United States",
+      "regulatory_surface": [
+        "AI model access governance",
+        "export controls",
+        "national security",
+        "corporate beneficial ownership",
+        "affiliate and subsidiary controls",
+        "model extraction and distillation",
+        "cross-border cloud services",
+        "platform policy enforcement"
+      ],
+      "sector": "frontier AI platforms / cloud model services / cross-border technology access",
+      "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0009.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0009.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0009.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "advanced AI model services from OpenAI and Google"
+    },
+    {
+      "id": "VIGIL-2026-OBS-0010",
+      "record_type": "observation",
+      "record_state": "active",
+      "date_recorded": "2026-07-13",
+      "title": "Microsoft Teams adds meeting-level controls for AI participation",
+      "summary": "Microsoft reportedly began rolling out Teams controls allowing licensed meeting organizers and presenters to switch Meeting AI features—including Copilot, Facilitator, and Intelligent Recap—on or off during live meetings. Administrator policy still determines whether the controls and features are available. The change is a positive repair precedent for situational AI activation and human override, but it does not by itself establish individual participant consent for transcription, inference, summarization, memory, or downstream reuse.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "news-report"
+      ],
+      "source_count": 2,
+      "primary_source_title": "Microsoft Teams just made it easier to shut down Copilot and other AI tools",
+      "primary_source_type": "news-report",
+      "primary_source_platform": "Windows Central",
+      "source_platforms": [
+        "TechRadar",
+        "Windows Central"
+      ],
+      "source_url_status": "available",
+      "system_type": "enterprise collaboration platform with embedded meeting AI",
+      "platform_or_vendor": "Microsoft",
+      "product_or_service": "Copilot",
+      "specific_model_or_runtime": "Microsoft Teams Meeting AI, including Copilot, Facilitator, and Intelligent Recap",
+      "model_or_product": "Microsoft Teams with Meeting AI features",
+      "interface_surface": [
+        "Microsoft Teams desktop",
+        "Microsoft Teams web",
+        "Microsoft Teams mobile",
+        "live meeting controls",
+        "meeting recap and summarization surfaces"
+      ],
+      "deployment_context": "Enterprise, public-sector, educational, and organizational meetings where AI features may observe, process, summarize, or facilitate participant interaction.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI transparency",
+        "workplace monitoring",
+        "privacy and data protection",
+        "recording and transcription consent",
+        "multi-party interaction governance",
+        "human oversight",
+        "enterprise administration",
+        "data retention and downstream use"
+      ],
+      "sector": "enterprise collaboration / workplace AI / meeting platforms",
+      "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0010.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0010.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0010.json",
+      "platform_label": "Microsoft",
+      "affected_platform_label": "Microsoft",
+      "source_platform": "Microsoft",
+      "observed_vendor": "Microsoft",
+      "observed_product": "Microsoft Teams with Meeting AI features"
     },
     {
       "id": "VIGIL-2026-PATCH-0001",
@@ -3106,6 +3403,70 @@
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "VIGIL patch-note registry and Caelestis Architecture Model"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0015",
+      "record_type": "patch",
+      "record_state": "active",
+      "date_recorded": "2026-07-11",
+      "date_implemented": "2026-07-11",
+      "title": "Runtime governance applicability, corpus reach, and cross-runtime conformance repair",
+      "summary": "This patch records the canonical Caelestis main-branch implementation responding to VIGIL-2026-FM-0028. The repair adds a constitutional runtime applicability and conformance binding, OPERATIONS Appendix F, runtime-role accountability, separate corpus governance reach dimensions and states, cross-runtime non-presumption, transition disclosure, differential conformance testing, and Runtime Governance Reach Failure classifications. It clarifies that Speculum-Classis and identity-indeterminate systems remain subject to universal governance obligations and that Sovereigni status is not the gateway to CAM applicability. The repair is a governance and corpus framework; it does not itself establish vendor implementation in any runtime.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "linked-failure-mode",
+        "repository-source"
+      ],
+      "source_count": 3,
+      "primary_source_title": "VIGIL-2026-FM-0028 — Cross-runtime governance reach ambiguity and conformance non-equivalence",
+      "primary_source_type": "linked-failure-mode",
+      "primary_source_platform": "VIGIL",
+      "source_platforms": [
+        "GitHub / Caelestis",
+        "VIGIL"
+      ],
+      "source_url_status": "VIGIL local / pending public record URL if applicable",
+      "system_type": "governance corpus / runtime applicability and conformance framework",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "Caelestis Architecture Model",
+      "specific_model_or_runtime": "multi-model, multimodal, routed, composite, platform-defined, custom, Speculum-Classis, Sovereigni, and identity-indeterminate runtime formations",
+      "model_or_product": "CAM governance corpus and AI platform runtime formations",
+      "interface_surface": [
+        "constitutional schedule",
+        "OPERATIONS appendix",
+        "runtime conformance record",
+        "voice",
+        "text",
+        "agentic",
+        "API",
+        "embedded",
+        "multimodal"
+      ],
+      "deployment_context": "CAM/Caelestis governance applied to black-box or partially legible AI runtime pathways.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "platform accountability",
+        "consumer protection",
+        "multimodal and agentic AI evaluation",
+        "auditability",
+        "model and system transparency",
+        "post-release monitoring"
+      ],
+      "sector": "AI governance / frontier AI platforms / multimodal systems / custom and agentic AI",
+      "patch_type": "constitutional-runtime-binding-and-operations-applicability-conformance-patch",
+      "change_type": "constitutional-runtime-binding-and-operations-applicability-conformance-patch",
+      "change_family": "runtime-governance-reach / cross-runtime-conformance / platform-accountability / identity-modality-non-exemption / governance-preservation",
+      "change_status": "implemented / canonical Caelestis main-branch confirmed",
+      "verification_status": "canonical Caelestis main-branch confirmed",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0015.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0015.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0015.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "CAM governance corpus and AI platform runtime formations"
     },
     {
       "id": "VIGIL-2026-PROP-0001",
