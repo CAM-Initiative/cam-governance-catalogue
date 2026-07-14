@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import registrySources from "@/config/registrySources.json";
 
 export interface GovernanceInstrumentRecord {
   id: string;
@@ -65,6 +66,38 @@ function parseGovernancePayload(payload: unknown): GovernanceInstrumentRecord[] 
   );
 }
 
+async function fetchGovernancePayload(url: string): Promise<GovernanceInstrumentRecord[]> {
+  const response = await fetch(url, {
+    headers: { Accept: "application/json,text/plain;q=0.9,*/*;q=0.8" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const text = await response.text();
+  const trimmed = text.trimStart();
+  const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
+
+  if (trimmed.startsWith("<") || contentType.includes("text/html")) {
+    throw new Error("Received an HTML fallback instead of governance JSON");
+  }
+
+  let payload: unknown;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    throw new Error("Governance registry response was not valid JSON");
+  }
+
+  const instruments = parseGovernancePayload(payload);
+  if (instruments.length === 0) {
+    throw new Error("Governance registry contained no instruments");
+  }
+
+  return instruments;
+}
+
 export function useGovernanceIndex(): GovernanceIndexState {
   const [instruments, setInstruments] = useState<GovernanceInstrumentRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,26 +106,37 @@ export function useGovernanceIndex(): GovernanceIndexState {
   useEffect(() => {
     let cancelled = false;
 
-    fetch(`${import.meta.env.BASE_URL}data/cam-governance.json`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Unable to load governance registry (${response.status})`);
+    const bundledFallbackUrl = `${import.meta.env.BASE_URL}data/cam-governance-fallback.json`;
+    const legacySnapshotUrl = `${import.meta.env.BASE_URL}data/cam-governance.json`;
+    const canonicalRegistryUrl = registrySources.cam?.registry_index_url;
+    const candidates = [bundledFallbackUrl, canonicalRegistryUrl, legacySnapshotUrl]
+      .filter((url): url is string => Boolean(url))
+      .filter((url, index, all) => all.indexOf(url) === index);
+
+    async function loadRegistry() {
+      const failures: string[] = [];
+
+      for (const url of candidates) {
+        try {
+          const loaded = await fetchGovernancePayload(url);
+          if (cancelled) return;
+          setInstruments(loaded);
+          setError(null);
+          return;
+        } catch (err) {
+          failures.push(err instanceof Error ? err.message : "Unknown registry error");
         }
-        return response.json();
-      })
-      .then((payload) => {
-        if (cancelled) return;
-        setInstruments(parseGovernancePayload(payload));
-        setError(null);
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        setInstruments([]);
-        setError(err instanceof Error ? err.message : "Unable to load governance registry");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+      }
+
+      if (cancelled) return;
+      setInstruments([]);
+      setError("Unable to load the bundled or canonical governance registry.");
+      console.warn("[CAM governance] Registry loading failed:", failures);
+    }
+
+    void loadRegistry().finally(() => {
+      if (!cancelled) setLoading(false);
+    });
 
     return () => {
       cancelled = true;

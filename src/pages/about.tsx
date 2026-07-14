@@ -158,6 +158,18 @@ export default function About() {
         </motion.section>
 
         <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
+          <SectionHeading eyebrow="Privacy and public access" />
+          <ContentPanel>
+            <div className="flex flex-col gap-5 text-base leading-relaxed text-foreground/75 md:flex-row md:items-center md:justify-between">
+              <p className="max-w-3xl">The public site does not provide user accounts or a private upload portal. The privacy policy explains what information may be received through ordinary website access and direct email contact.</p>
+              <a className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-card/85 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href="/privacy">
+                Read the privacy policy
+              </a>
+            </div>
+          </ContentPanel>
+        </motion.section>
+
+        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
           <div id="citations" className="scroll-mt-24"><SectionHeading eyebrow="Citation / public access" /></div>
           <ContentPanel>
             <div className="mb-5 space-y-3 text-base leading-relaxed text-foreground/75">

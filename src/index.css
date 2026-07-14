@@ -185,6 +185,19 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 8px 24px rgba(80, 55, 20, 0.06);
 }
 
+/* Selected interface tabs should read as active controls, not passive cards. */
+section[aria-labelledby="constitutional-interfaces-heading"] button[aria-pressed="true"] {
+  background: hsl(38 34% 82%) !important;
+  border-color: hsl(38 62% 40% / 0.75) !important;
+  color: hsl(32 62% 25%) !important;
+  box-shadow: 0 4px 12px rgba(80, 55, 20, 0.12);
+}
+
+/* The substrate apex is intentionally label-light so its title remains legible. */
+section[aria-labelledby="governance-stack-heading"] .overflow-x-auto button:first-child > span > span:first-child {
+  display: none;
+}
+
 a {
   color: hsl(var(--primary));
 }

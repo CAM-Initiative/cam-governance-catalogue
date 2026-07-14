@@ -8,12 +8,12 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
-  { href: "/privacy", label: "Privacy", internal: true },
 ];
 
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
+  { href: "/privacy", label: "Privacy", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL Ledger", internal: true },
@@ -23,6 +23,7 @@ const mobileLinks = [
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about", label: "About" },
+  { href: "/privacy", label: "Privacy" },
 ];
 
 const constitutionLinks = [
@@ -38,7 +39,7 @@ const vigilLinks = [
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about";
+  const isHomeActive = location === "/" || location === "/about" || location === "/privacy";
   const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
   const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 

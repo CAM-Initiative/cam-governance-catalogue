@@ -1,9 +1,11 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
+import "./polish.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
-import RelationalGovernance from "@/pages/relational-governance";
-import Transition from "@/pages/transition";
+import RelationalGovernance from "@/pages/relational-governance-final";
+import Provenance from "@/pages/provenance";
+import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import About from "@/pages/about";
@@ -16,6 +18,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/constitution/runtime" component={Constitution} />
       <Route path="/constitution/relational" component={RelationalGovernance} />
+      <Route path="/constitution/provenance" component={Provenance} />
       <Route path="/constitution/transition" component={Transition} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
