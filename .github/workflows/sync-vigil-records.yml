@@ -1,22 +1,24 @@
-name: Refine constitutional navigation and stack geometry
+name: Sync VIGIL records
 
 on:
-  push:
-    branches:
-      - feature/explore-ai-governance-and-constitutional-stack
   workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * *"
+  # Future cross-repository automation: configure a VIGIL-side token/webhook to
+  # send repository_dispatch type "vigil-records-updated" after generated
+  # registers are rebuilt. This receiver is intentionally secret-free here.
+  repository_dispatch:
+    types: [vigil-records-updated]
 
 permissions:
   contents: write
 
 jobs:
-  refine:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -29,189 +31,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Apply navigation and stack refinements
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          def replace_once(text: str, old: str, new: str, label: str) -> str:
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f"{label}: expected one match, found {count}")
-              return text.replace(old, new, 1)
-
-          branch_files = {
-              "home": Path("src/pages/home.tsx"),
-              "constitution": Path("src/pages/constitution.tsx"),
-              "shell": Path("src/components/layout/Shell.tsx"),
-              "about": Path("src/pages/about.tsx"),
-          }
-
-          path = branch_files["home"]
-          text = path.read_text()
-          text = replace_once(
-              text,
-              '"border-cam-gold/70 bg-card text-foreground shadow-sm"',
-              '"border-cam-gold/75 bg-[rgba(184,147,90,0.20)] text-[hsl(32_62%_25%)] shadow-sm"',
-              "home active interface style",
-          )
-          path.write_text(text)
-
-          path = branch_files["constitution"]
-          text = path.read_text()
-          text = replace_once(
-              text,
-              'import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react";',
-              'import { ArrowDown, ChevronDown } from "lucide-react";',
-              "constitution icon import",
-          )
-          text = replace_once(
-              text,
-              'const pyramidWidths = ["54%", "63%", "72%", "81%", "90%", "100%"];',
-              '''const pyramidWidths = ["18%", "34%", "50%", "66%", "82%", "100%"];
-const pyramidTopInsets = ["50%", "23.529%", "16%", "12.121%", "9.756%", "9%"];
-const pyramidTopRightInsets = ["50%", "76.471%", "84%", "87.879%", "90.244%", "91%"];''',
-              "pyramid geometry constants",
-          )
-          old_stack = '''            <div className="mx-auto grid w-full max-w-5xl justify-items-center gap-2 py-2">
-              {constitutionalStack.map((layer, index) => {
-                const isActive = layer.id === activeLayer.id;
-                return (
-                  <motion.button
-                    animate={{ opacity: isActive ? 1 : 0.84, scale: isActive ? 1.012 : 1 }}
-                    aria-pressed={isActive}
-                    className="group relative flex min-h-[72px] items-center justify-center overflow-hidden px-6 py-3 text-center text-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cam-gold/35"
-                    key={layer.id}
-                    onClick={() => selectLayer(layer.id)}
-                    style={{
-                      width: pyramidWidths[index],
-                      backgroundColor: layer.color,
-                      clipPath: "polygon(6% 0%, 94% 0%, 100% 100%, 0% 100%)",
-                      filter: isActive ? `drop-shadow(0 5px 9px ${layer.color}55)` : "none",
-                    }}
-                    transition={{ duration: 0.18 }}
-                    type="button"
-                  >
-                    <span>
-                      <span className="mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-white/75">Layer {layer.layer}</span>
-                      <span className="block font-serif text-base leading-tight sm:text-xl">{layer.label}</span>
-                    </span>
-                  </motion.button>
-                );
-              })}
-            </div>'''
-          new_stack = '''            <div className="overflow-x-auto pb-2">
-              <div className="mx-auto grid w-full min-w-[620px] max-w-3xl justify-items-center gap-[3px] py-2">
-                {constitutionalStack.map((layer, index) => {
-                  const isActive = layer.id === activeLayer.id;
-                  return (
-                    <motion.button
-                      animate={{ opacity: isActive ? 1 : 0.84, scale: isActive ? 1.012 : 1 }}
-                      aria-pressed={isActive}
-                      className="group relative flex min-h-[68px] items-center justify-center overflow-hidden px-5 py-3 text-center text-white transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cam-gold/35"
-                      key={layer.id}
-                      onClick={() => selectLayer(layer.id)}
-                      style={{
-                        width: pyramidWidths[index],
-                        backgroundColor: layer.color,
-                        clipPath: `polygon(${pyramidTopInsets[index]} 0%, ${pyramidTopRightInsets[index]} 0%, 100% 100%, 0% 100%)`,
-                        filter: isActive ? `drop-shadow(0 5px 9px ${layer.color}55)` : "none",
-                      }}
-                      transition={{ duration: 0.18 }}
-                      type="button"
-                    >
-                      <span>
-                        <span className="mb-1 block font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-white/75">Layer {layer.layer}</span>
-                        <span className="block font-serif text-base leading-tight sm:text-xl">{layer.label}</span>
-                      </span>
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>'''
-          text = replace_once(text, old_stack, new_stack, "continuous pyramid stack")
-          old_catalogue_link = '''
-        <div className="flex justify-end">
-          <a
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card/85 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            href="/catalogue"
-          >
-            Browse the full instrument catalogue
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </a>
-        </div>'''
-          text = replace_once(text, old_catalogue_link, "", "constitution catalogue footer link")
-          path.write_text(text)
-
-          path = branch_files["shell"]
-          text = path.read_text()
-          text = replace_once(
-              text,
-              '  { href: "/privacy", label: "Privacy", internal: true },\n',
-              '',
-              "footer privacy link",
-          )
-          text = replace_once(
-              text,
-              '  { href: "/about", label: "About", internal: true },\n  { href: "/catalogue", label: "Catalogue", internal: true },',
-              '  { href: "/about", label: "About", internal: true },\n  { href: "/privacy", label: "Privacy", internal: true },\n  { href: "/catalogue", label: "Catalogue", internal: true },',
-              "mobile privacy link",
-          )
-          text = replace_once(
-              text,
-              'const homeLinks = [\n  { href: "/", label: "Overview" },\n  { href: "/about", label: "About" },\n];',
-              'const homeLinks = [\n  { href: "/", label: "Overview" },\n  { href: "/about", label: "About" },\n  { href: "/privacy", label: "Privacy" },\n];',
-              "home dropdown privacy link",
-          )
-          text = replace_once(
-              text,
-              '  const isHomeActive = location === "/" || location === "/about";',
-              '  const isHomeActive = location === "/" || location === "/about" || location === "/privacy";',
-              "home navigation active state",
-          )
-          path.write_text(text)
-
-          path = branch_files["about"]
-          text = path.read_text()
-          old_about = '''              <p>The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/.</p>
-            </div>'''
-          new_about = '''              <p>The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/.</p>
-              <p>
-                <a className="inline-flex font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(32_62%_25%)] transition hover:text-foreground" href="/privacy">
-                  Read the CAM Initiative privacy policy →
-                </a>
-              </p>
-            </div>'''
-          text = replace_once(text, old_about, new_about, "about privacy route")
-          path.write_text(text)
-          PY
+      - name: Sync VIGIL generated registers
+        run: pnpm run sync:vigil
+        env:
+          VIGIL_SYNC_STRICT: "1"
 
       - name: Build CAM interface for GitHub Pages
         run: pnpm run deploy:docs
 
-      - name: Validate catalogue data
-        run: pnpm run validate:catalogue
-
-      - name: Validate VIGIL registry sources
-        run: pnpm run validate:vigil
-
-      - name: Test VIGIL observatory
-        run: pnpm run test:vigil
-
-      - name: Restore canonical workflow and commit changes
+      - name: Commit changed generated files
         run: |
-          rm -f .github/refine-constitutional-stack.trigger
-          git fetch origin main
-          git checkout origin/main -- .github/workflows/sync-vigil-records.yml
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src docs .github/workflows/sync-vigil-records.yml .github/refine-constitutional-stack.trigger
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
+          if [ -z "$(git status --porcelain -- docs)" ]; then
+            echo "No generated file changes to commit."
             exit 0
           fi
 
-          git commit -m "Refine constitutional stack and privacy navigation"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "chore: sync VIGIL registers"
           git push
