@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Coffee, FileText, Mail } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const footerLinks = [
@@ -8,7 +7,8 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
-  { href: "/privacy", label: "Privacy", internal: true },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "GitHub" },
+  { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
 const mobileLinks = [
@@ -16,7 +16,8 @@ const mobileLinks = [
   { href: "/about", label: "About", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
-  { href: "/vigil", label: "VIGIL Ledger", internal: true },
+  { href: "/vigil", label: "Observatory / VIGIL", internal: true },
+  { href: "https://github.com/CAM-Initiative/Caelestis", label: "Governance / GitHub" },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -27,12 +28,8 @@ const homeLinks = [
 
 const constitutionLinks = [
   { href: "/constitution", label: "Overview" },
+  { href: "/constitution/runtime", label: "Runtime Model" },
   { href: "/constitution/relational", label: "Relational Governance" },
-  { href: "/constitution/transition", label: "Transitional Architecture" },
-];
-
-const vigilLinks = [
-  { href: "/observatory", label: "Browse the VIGIL Ledger" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -40,10 +37,10 @@ export function Shell({ children }: { children: ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about";
   const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
-  const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 
   const links = [
     { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
+    { href: "/vigil", label: "Observatory", active: location === "/vigil" || location === "/observatory" },
   ];
 
   useEffect(() => {
@@ -57,12 +54,12 @@ export function Shell({ children }: { children: ReactNode }) {
           <Link href="/" className="flex items-center gap-3 group">
             <img
               src={`${import.meta.env.BASE_URL}favicon.svg`}
-              alt="CAM Initiative"
+              alt="Aeon Governance Lab"
               className="w-7 h-7 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
               style={{ filter: "drop-shadow(0 0 1px rgba(184,147,90,0.3))" }}
             />
             <span className="font-mono text-[12px] tracking-[0.18em] uppercase text-primary font-semibold">
-              CAM Initiative
+              Aeon Governance Lab
             </span>
           </Link>
 
@@ -89,7 +86,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Home
               </Link>
               <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
+                <div className="rounded-xl border border-border/80 bg-card p-2 shadow-xl">
                   {homeLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -118,7 +115,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Constitution
               </Link>
               <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
+                <div className="rounded-xl border border-border/80 bg-card p-2 shadow-xl">
                   {constitutionLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -148,42 +145,13 @@ export function Shell({ children }: { children: ReactNode }) {
                 {link.label}
               </Link>
             ))}
-            <div className="group relative">
-              <Link
-                href="/observatory"
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isVigilActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                VIGIL
-              </Link>
-              <div className="invisible absolute left-0 top-full min-w-64 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
-                  {vigilLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href || (link.href === "/observatory" && location === "/vigil")
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-card hover:text-foreground"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
             <a
               href="https://github.com/CAM-Initiative/Caelestis"
               target="_blank"
               rel="noreferrer"
               className="text-[12px] font-mono tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
             >
-              GitHub ↗
+              Governance ↗
             </a>
           </nav>
         </div>
@@ -197,9 +165,7 @@ export function Shell({ children }: { children: ReactNode }) {
                     key={link.href}
                     href={link.href}
                     className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
-                      location === link.href ||
-                      (link.href === "/constitution" && isConstitutionActive) ||
-                      (link.href === "/vigil" && isVigilActive)
+                      location === link.href || (link.href === "/constitution" && isConstitutionActive)
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-card hover:text-foreground"
                     }`}
@@ -232,22 +198,22 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
             <div className="max-w-2xl space-y-2 text-center md:text-left">
               <p className="text-base font-semibold leading-relaxed text-foreground md:text-[17px]">
-                Governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
+                Public governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved.
+                © 2026 CAM Initiative. All rights reserved. Public access is subject to citation and applicable licence terms.
               </p>
             </div>
 
             <div className="flex flex-col items-center gap-4 rounded-xl border border-primary/15 bg-card/55 px-5 py-4 shadow-sm md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0 md:shadow-none">
-              <nav aria-label="Footer" className="flex flex-nowrap justify-center gap-x-4 gap-y-2 md:justify-end md:gap-x-6">
+              <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-3 md:justify-end md:gap-x-7">
                 {footerLinks.map((link) => (
                   link.internal ? (
-                    <Link key={link.href} href={link.href} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
+                    <Link key={link.href} href={link.href} className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
                       {link.label}
                     </Link>
                   ) : (
-                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
+                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
                       {link.label}
                     </a>
                   )
@@ -255,18 +221,15 @@ export function Shell({ children }: { children: ReactNode }) {
               </nav>
 
               <address className="not-italic">
-                <div className="flex flex-wrap justify-center gap-3 md:justify-end">
-                  <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <Mail className="h-4 w-4" aria-hidden="true" />
+                <div className="flex flex-wrap justify-center gap-x-5 gap-y-2.5 md:justify-end md:gap-x-6">
+                  <a href="mailto:ethics@cam-initiative.org" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
+                    ethics@cam-initiative.org
                   </a>
-                  <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>
+                  <a href="https://x.com/CAM_Initiative" target="_blank" rel="noreferrer" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
+                    @CAM_Initiative
                   </a>
-                  <Link href="/about#citations" aria-label="Citations" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <FileText className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <Coffee className="h-4 w-4" aria-hidden="true" />
+                  <a href="https://buymeacoffee.com/cam_initiative" target="_blank" rel="noreferrer" className="font-mono text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-[15px]">
+                    Support
                   </a>
                 </div>
               </address>

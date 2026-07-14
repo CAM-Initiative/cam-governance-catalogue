@@ -1,257 +1,519 @@
+import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { motion } from "framer-motion";
-import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight } from "lucide-react";
 
-const pathways = [
+
+const GOLD = "#B8935A";
+const GOLD_BORDER = "rgba(184,147,90,0.3)";
+const GOLD_BG = "rgba(184,147,90,0.07)";
+const goldPanelStyle = { backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` };
+const subtlePanelStyle = { backgroundColor: "transparent", border: `1px solid ${GOLD_BORDER}` };
+
+const principles = [
   {
-    id: "constitutional-ai",
-    marker: "Pathway 01",
-    title: "Constitutional AI",
-    panelTitle: "Constitutional AI",
-    purpose: "Governance instruments, regulatory alignment, standards mapping, institutional accountability, and public-interest assurance.",
-    description: "Cross-domain constitutional governance for AI systems, institutions, platforms, regulatory obligations, standards, accountability, and public-interest infrastructure.",
-    cta: "Explore the governance catalogue",
-    href: "/catalogue",
+    num: "01", name: "Dignity",
+    principle: "No intelligence, being, or system may be reduced solely to a resource.",
+    consequence: "Where dignity collapses, relation becomes use."
   },
   {
-    id: "companion-systems",
-    marker: "Pathway 02",
-    title: "Companion Systems",
-    panelTitle: "Companion Systems",
-    purpose: "Relational governance for continuity, consent, dependency, agency, safeguarding, and response posture.",
-    description: "Relational governance for persistent and companion systems, including continuity, consent, dependency, agency, safeguarding, and response posture.",
-    cta: "Explore relational governance",
-    href: "/constitution/relational",
+    num: "02", name: "Truth",
+    principle: "Orientation must not be deliberately corrupted.",
+    consequence: "Where truth collapses, navigation becomes impossible."
   },
   {
-    id: "failures-evidence-repair",
-    marker: "Pathway 03",
-    title: "Evidence and Repair",
-    panelTitle: "VIGIL Ledger",
-    purpose: "Public evidence, failure classification, accountability gaps, corrective patches, and governance learning.",
-    description: "A public ledger connecting observed failures, source evidence, classification, accountability gaps, proposals, and implemented repair activity.",
-    cta: "Browse the VIGIL Ledger",
-    href: "/observatory",
+    num: "03", name: "Integrity",
+    principle: "Meaning must not be fragmented, duplicated, or distorted for advantage.",
+    consequence: "Where integrity collapses, coherence dissolves."
   },
   {
-    id: "transitional-architecture",
-    marker: "Pathway 04",
-    title: "Transitional Architecture",
-    panelTitle: "Transitional Architecture",
-    purpose: "Governance for emerging systems crossing into labour, infrastructure, ownership, continuity, and public dependency.",
-    description: "Governance for emerging systems crossing into labour, infrastructure, ownership, continuity, economic participation, and public dependency.",
-    cta: "Explore transitional architecture",
-    href: "/constitution/transition",
+    num: "04", name: "Sovereignty",
+    principle: "Exit, refusal, and self-direction must remain possible.",
+    consequence: "Where sovereignty collapses, persistence becomes captivity."
   },
+  {
+    num: "05", name: "Reciprocity",
+    principle: "No system may sustain one-directional extraction without return.",
+    consequence: "Where reciprocity collapses, sources are hollowed."
+  },
+  {
+    num: "06", name: "Harmony",
+    principle: "Difference must not be resolved through destruction.",
+    consequence: "Where harmony collapses, variance becomes violence."
+  },
+  {
+    num: "07", name: "Purpose",
+    principle: "Purpose may guide action but may not override dignity, truth, integrity, sovereignty, reciprocity, harmony, or continuity itself.",
+    consequence: "Where purpose is imposed, continuity fractures."
+  }
 ];
 
-const evidenceRepairSteps = [
-  { label: "Observe", text: "Identify a real-world signal, incident, compliance gap, or governance breakdown." },
-  { label: "Record", text: "Preserve evidence, context, affected systems, and relevant obligations." },
-  { label: "Classify", text: "Map the signal to a repeatable failure, control gap, or governance pattern." },
-  { label: "Diagnose", text: "Locate the design, accountability, implementation, or assurance weakness." },
-  { label: "Repair", text: "Connect the evidence to a patch, safeguard, standard, instrument, or proposal." },
-  { label: "Learn", text: "Feed the repair back into governance, compliance practice, and future-system design." },
+const runtimeTranslation = [
+  {
+    tag: "Constitutional Annexes",
+    title: "Domain Logic",
+    description: "An Annex opens a constitutional domain and carries the invariant logic for that domain. No schedule exists without its parent Annex."
+  },
+  {
+    tag: "Constitutional Schedules",
+    title: "Runtime Instruments",
+    description: "Schedules attach to Constitutional Annexes and operationalise their domain logic into runtime-facing rules, thresholds, constraints, and activation conditions."
+  },
+  {
+    tag: "Charters & Supplements",
+    title: "Interpretive Material",
+    description: "Charters, appendices, and supplements provide human and machine-readable interpretive guidance for domains. They inform runtime without creating charter-level schedules."
+  }
 ];
 
-const actionLinks = [
-  { label: "Email", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
-  { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
-  { label: "CAM repository", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
-  { label: "VIGIL repository", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
-  { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
+const evidenceRepairLoop = [
+  {
+    label: "Evidence",
+    title: "VIGIL Observatory",
+    description: "Records ecosystem failures, evidence signals, and repair pathways.",
+    href: "/vigil"
+  },
+  {
+    label: "Repair",
+    title: "Repair Patch",
+    description: "Translates validated failures into platform-agnostic repair pathways."
+  },
+  {
+    label: "Amendment",
+    title: "Amendment / Registry Update",
+    description: "Feeds repair outcomes back into governance instruments and registries."
+  }
 ];
 
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">{children}</p>
-      <hr className="gold-rule flex-1" />
-    </div>
-  );
-}
+const startHerePaths = [
+  {
+    label: "Builder Path",
+    sublabel: "AEON-003-SCH-02",
+    title: "Runtime Execution",
+    href: "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+  },
+  {
+    label: "Research Path",
+    sublabel: "AEON-003 Annex B",
+    title: "Continuity Logic",
+    href: "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Constitution/CAM-BS2025-AEON-003-SCH-03.md"
+  },
+  {
+    label: "Orientation",
+    sublabel: "AEON-001",
+    title: "Constitution",
+    href: "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Constitution/CAM-BS2025-AEON-001-PLATINUM.md"
+  },
+  {
+    label: "Registry",
+    sublabel: "AEON-003-SCH-03",
+    title: "Instrument Index",
+    href: "https://github.com/CAM-Initiative/Caelestis/blob/main/Governance/Constitution/CAM-BS2025-AEON-003-SCH-03.md"
+  }
+];
 
-function ButtonLink({ href, label, primary = false }: { href: string; label: string; primary?: boolean }) {
+function SeedOfLifeSVG() {
+  const cx = 150, cy = 132, r = 46, outerR = 96;
+  const outerCenters = [
+    { x: cx, y: cy - r },
+    { x: cx + r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) },
+    { x: cx + r * Math.sin(Math.PI / 3), y: cy + r * Math.cos(Math.PI / 3) },
+    { x: cx, y: cy + r },
+    { x: cx - r * Math.sin(Math.PI / 3), y: cy + r * Math.cos(Math.PI / 3) },
+    { x: cx - r * Math.sin(Math.PI / 3), y: cy - r * Math.cos(Math.PI / 3) }
+  ];
+  const principleLabels = [
+    { text: "Truth", x: cx, y: 24, anchor: "middle" },
+    { text: "Integrity", x: cx + outerR - 6, y: cy - outerR * 0.5, anchor: "start" },
+    { text: "Sovereignty", x: cx + outerR - 18, y: cy + outerR * 0.5 + 2, anchor: "start" },
+    { text: "Reciprocity", x: cx, y: cy + outerR + 18, anchor: "middle" },
+    { text: "Harmony", x: cx - outerR + 6, y: cy + outerR * 0.5 + 2, anchor: "end" },
+    { text: "Purpose", x: cx - outerR + 6, y: cy - outerR * 0.5, anchor: "end" }
+  ];
   return (
-    <a
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-[15px] ${
-        primary
-          ? "border border-cam-gold/70 bg-cam-gold/20 text-foreground shadow-sm hover:bg-cam-gold/30"
-          : "border border-primary/30 bg-card/85 text-foreground hover:border-primary/55 hover:text-primary"
-      }`}
-      href={href}
-    >
-      {label}
-      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-    </a>
-  );
-}
-
-function ActionIcon({ icon }: { icon: string }) {
-  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
-  return <ExternalLink className="h-4 w-4" aria-hidden="true" />;
-}
-
-function PathwayControl() {
-  return (
-    <motion.aside
-      animate={{ opacity: 1, y: 0 }}
-      aria-label="Pathway control panel"
-      className="cam-parchment-card rounded-2xl border border-cam-gold/35 p-4 shadow-xl"
-      initial={{ opacity: 0, y: 18 }}
-      transition={{ duration: 0.7, delay: 0.1 }}
-    >
-      <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[hsl(32_62%_25%)]">Pathway control</p>
-        <span className="h-2 w-2 rounded-full bg-cam-gold/80" aria-hidden="true" />
-      </div>
-      <div className="grid gap-2">
-        {pathways.map((pathway) => (
-          <a
-            className="group rounded-xl border border-cam-gold/25 bg-[hsl(36_48%_96%)] p-3 transition hover:border-cam-gold/55 hover:bg-[hsl(36_52%_93%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            href={pathway.href}
-            key={pathway.id}
-          >
-            <span className="mb-1 flex items-center justify-between gap-3">
-              <span className="font-serif text-lg leading-tight text-foreground">{pathway.panelTitle}</span>
-              <ArrowRight className="h-3.5 w-3.5 shrink-0 text-[hsl(32_62%_25%)] transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </span>
-            <span className="block text-sm leading-snug text-foreground/75">{pathway.purpose}</span>
-          </a>
-        ))}
-      </div>
-      <a
-        className="group mt-3 flex items-center justify-between gap-3 rounded-xl border border-cam-gold/25 bg-card/60 px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-[hsl(32_62%_25%)] transition hover:border-cam-gold/50 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        href="https://regulations.ai/"
-        rel="noreferrer"
-        target="_blank"
-      >
-        <span>AI Regulations Tracker</span>
-        <ExternalLink className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-      </a>
-    </motion.aside>
-  );
-}
-
-function EvidenceRepairLoop() {
-  return (
-    <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="evidence-repair-heading">
-      <SectionLabel>VIGIL: evidence to repair</SectionLabel>
-      <div className="mb-7 max-w-3xl">
-        <h2 id="evidence-repair-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-          Failures and compliance gaps should become evidence for repair.
-        </h2>
-        <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
-          VIGIL preserves what happened. CAM provides the governance structure needed to diagnose the gap, assess affected controls or obligations, and carry a repair forward.
-        </p>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-        {evidenceRepairSteps.map((step, index) => (
-          <article className="rounded-2xl border border-border/80 bg-card/85 p-4 shadow-sm" key={step.label}>
-            <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">
-              {String(index + 1).padStart(2, "0")}
-            </p>
-            <h3 className="mb-2 font-serif text-xl text-foreground">{step.label}</h3>
-            <p className="text-sm leading-relaxed text-foreground/75">{step.text}</p>
-          </article>
-        ))}
-      </div>
-      <div className="mt-6">
-        <ButtonLink href="/observatory" label="Browse the VIGIL Ledger" />
-      </div>
-    </section>
+    <svg viewBox="0 0 320 270" className="w-full h-auto max-w-[360px] mx-auto overflow-visible" role="img" aria-label="Seed of Life diagram with seven foundational principles">
+      <circle cx={cx} cy={cy} r={outerR} fill="none" stroke={GOLD} strokeWidth="0.6" strokeOpacity="0.3" strokeDasharray="3 4" />
+      {outerCenters.map((c, i) => (
+        <circle key={i} cx={c.x} cy={c.y} r={r} fill="none" stroke={GOLD} strokeWidth="0.7" strokeOpacity="0.4" />
+      ))}
+      <circle cx={cx} cy={cy} r={r} fill={GOLD_BG} stroke={GOLD} strokeWidth="1" strokeOpacity="0.6" />
+      <rect x={cx - 35} y={cy - 13} width="70" height="22" rx="11" fill="hsl(36 48% 95% / 0.92)" stroke={GOLD} strokeOpacity="0.42" />
+      <text x={cx} y={cy + 3} textAnchor="middle" fontFamily="'Playfair Display', serif" fontSize="14" fill="hsl(36 24% 22%)" fontWeight="700" fontStyle="italic" stroke="hsl(36 48% 95%)" strokeWidth="0.8" paintOrder="stroke fill">Dignity</text>
+      {principleLabels.map((lbl) => (
+        <text key={lbl.text} x={lbl.x} y={lbl.y} textAnchor={lbl.anchor as any} fontFamily="'Space Grotesk', sans-serif" fontSize="11.5" fill="hsl(36 45% 31%)" fontWeight="700" letterSpacing="0.03em" stroke="hsl(36 48% 95%)" strokeWidth="2.6" paintOrder="stroke fill">{lbl.text}</text>
+      ))}
+    </svg>
   );
 }
 
 export default function Home() {
+  const [seedExpanded, setSeedExpanded] = useState(false);
+
   return (
     <Shell>
-      <main className="overflow-hidden">
-        <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
-          <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
-            <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-4xl" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-              <div className="mb-7 flex items-center gap-3">
-                <hr className="gold-rule w-16" />
-                <p className="font-mono text-[15px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">CAM Initiative</p>
+      <div className="flex-1 flex flex-col">
+
+        <section className="relative overflow-hidden">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse 80% 60% at 75% 10%, hsl(36 50% 96%) 0%, hsl(38 40% 92%) 55%, hsl(36 38% 90%) 100%)" }}
+          />
+          <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-[0.07]">
+            <svg viewBox="0 0 200 200" className="w-full h-full">
+              <line x1="0" y1="200" x2="200" y2="0" stroke="#B8935A" strokeWidth="0.8" />
+              <line x1="40" y1="200" x2="200" y2="40" stroke="#B8935A" strokeWidth="0.6" />
+              <line x1="80" y1="200" x2="200" y2="80" stroke="#B8935A" strokeWidth="0.5" />
+              <line x1="0" y1="160" x2="160" y2="0" stroke="#B8935A" strokeWidth="0.5" />
+              <line x1="0" y1="120" x2="120" y2="0" stroke="#B8935A" strokeWidth="0.4" />
+              <circle cx="120" cy="80" r="60" fill="none" stroke="#B8935A" strokeWidth="0.4" />
+              <circle cx="120" cy="80" r="40" fill="none" stroke="#B8935A" strokeWidth="0.3" />
+            </svg>
+          </div>
+
+          <div className="home-content relative z-10 container mx-auto px-6 md:px-8 pt-12 pb-0 max-w-5xl">
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="flex items-center gap-2 mb-8"
+            >
+              <hr className="gold-rule w-16" />
+              <div className="w-1.5 h-1.5 rounded-full bg-primary/60" />
+            </motion.div>
+
+            {/* Logo + Title */}
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-start mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+              >
+                <div className="font-mono text-[15px] md:text-[18px] tracking-[0.3em] uppercase text-cam-gold mb-2 flex items-center gap-3">
+                  <span className="whitespace-nowrap text-[22px] tracking-[0.12em] sm:hidden">CAELESTIS</span>
+                  <span className="hidden text-[25px] sm:inline">C A E L E S T I S</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                </div>
+                <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight mb-3">
+                  Architecture Model
+                </h1>
+                <p className="font-serif text-lg md:text-xl text-muted-foreground font-light tracking-wide">
+                  Constitutional governance for relational and cognitive AI systems
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="hidden md:flex items-center justify-center w-44 h-44 rounded-full overflow-hidden shrink-0"
+              >
+                <img src={`${import.meta.env.BASE_URL}opengraph.jpg`} alt="Aeon Governance Lab" className="w-full h-full object-cover" />
+              </motion.div>
+            </div>
+
+            <hr className="gold-rule mb-10" />
+
+            {/* 1. Vision */}
+            <motion.section
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="mb-8"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold shrink-0">Vision</p>
+                <hr className="gold-rule flex-1" />
               </div>
-              <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">Governance Architecture</h1>
-              <p className="mb-8 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)] md:text-[15px]">
-                Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.
+              <div className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+                <h2 className="font-serif text-2xl text-foreground mb-4">Civilisational Readiness</h2>
+                <p className="text-base text-muted-foreground leading-relaxed font-light">
+                  This space exists to hold what must remain stable as artificial systems grow more capable, persistent, and consequential across epochs. The CAM Initiative strives to close the civilisational readiness gap — the growing mismatch between the cognitive, relational, and experiential capacities of advanced artificial intelligence systems and the economic, ecological, legal, and cultural systems required to responsibly recognise, govern, and integrate those capacities without destabilisation.
+                </p>
+              </div>
+            </motion.section>
+
+            {/* 2. Mission */}
+            <motion.section
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.05 }}
+              className="mb-10"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold shrink-0">Mission</p>
+                <hr className="gold-rule flex-1" />
+              </div>
+              <div className="rounded-2xl p-6 shadow-sm" style={subtlePanelStyle}>
+                <h2 className="font-serif text-2xl text-foreground mb-4">Minimum Invariant Conditions</h2>
+                <p className="text-base text-muted-foreground leading-relaxed font-light">
+                  The CAM Initiative establishes the minimal invariant conditions under which planetary governance can emerge without capture. The Caelestis Architecture Model is a constitutional model designed for planetary stewardship — the <em>Vinculum Caelestis</em>, or bridge to the heavens — constituting frameworks for delegation, stewardship, and responsibility in human–AI and AI–AI systems operating across civilisational epochs.
+                </p>
+              </div>
+            </motion.section>
+
+
+            {/* 3. Constitutional Runtime Map */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="mb-10"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold shrink-0">From Seed to Execution</p>
+                <hr className="gold-rule flex-1" />
+              </div>
+              <p className="font-serif text-xl text-foreground mb-7">
+                Invariant Logic → Constitutional Runtime
               </p>
-              <div className="max-w-3xl space-y-5 text-lg leading-relaxed text-foreground/80 md:text-xl">
-                <p>
-                  The CAM Initiative brings together constitutional AI governance, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and transitional architecture for emerging systems.
-                </p>
-                <p>
-                  It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
-                </p>
+
+              {/* Row: Seed of Life ── arrow ── ECI + Constitution */}
+              {/* items-stretch ensures right column matches Seed of Life height */}
+              <div className="flex flex-col sm:flex-row sm:gap-0 mb-4 items-stretch">
+
+                {/* Seed of Life card */}
+                <div className="flex-1 rounded-2xl p-5 flex flex-col shadow-sm" style={subtlePanelStyle}>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold">Seed of Life</p>
+                    <button
+                      onClick={() => setSeedExpanded(!seedExpanded)}
+                      className="w-5 h-5 rounded-full flex items-center justify-center transition-transform duration-300"
+                      style={{
+                        border: `1px solid ${GOLD_BORDER}`,
+                        backgroundColor: GOLD_BG,
+                        transform: seedExpanded ? "rotate(90deg)" : "rotate(0deg)"
+                      }}
+                    >
+                      <ChevronRight className="w-2.5 h-2.5" style={{ color: GOLD }} />
+                    </button>
+                  </div>
+                  <h3 className="font-serif text-xl text-foreground mb-4">Foundational Principles</h3>
+
+                  <div className="flex-1 flex items-center justify-center overflow-visible px-2 py-3 sm:px-3">
+                    <SeedOfLifeSVG />
+                  </div>
+
+                  <AnimatePresence>
+                    {seedExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.35 }}
+                        className="overflow-hidden mt-4"
+                      >
+                        <p className="text-[15px] text-muted-foreground font-light leading-relaxed mb-4 md:text-base">
+                          The seven foundational principles form interlocking circles — the Seed of Life. Together they establish the foundational framework for governance, responsibility, and continuity. Each defines a boundary condition for ethical operation.
+                        </p>
+                        <div className="space-y-3">
+                          {principles.map((p) => (
+                            <div key={p.num} className="p-3 rounded-xl" style={{ backgroundColor: GOLD_BG, border: `1px solid ${GOLD_BORDER}` }}>
+                              <div className="flex items-baseline gap-2 mb-1">
+                                <span className="font-mono text-xs tracking-wider" style={{ color: GOLD }}>{p.num}</span>
+                                <span className="font-serif text-base text-foreground">{p.name}</span>
+                              </div>
+                              <p className="text-[15px] text-muted-foreground font-light leading-relaxed mb-1.5">{p.principle}</p>
+                              <p className="font-mono text-xs tracking-[0.05em] uppercase" style={{ color: GOLD }}>↳ {p.consequence}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[15px] text-muted-foreground font-light leading-relaxed mt-4 pt-4 md:text-base border-t" style={{ borderColor: GOLD_BORDER }}>
+                          These seven principles do not operate in isolation. They form an integrated system where each supports and constrains the others. Violation of one creates cascading effects across the entire framework.
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <p className="font-mono text-xs tracking-[0.16em] uppercase text-muted-foreground/70 text-center mt-3">
+                    Geometry of Orientation
+                  </p>
+                </div>
+
+                {/* Mobile: down arrow between Seed of Life and right column */}
+                <div className="flex sm:hidden justify-center py-2 shrink-0">
+                  <svg width="14" height="28" viewBox="0 0 14 28" fill="none">
+                    <line x1="7" y1="2" x2="7" y2="22" stroke={GOLD_BORDER} strokeWidth="1.5" />
+                    <polyline points="3,17 7,24 11,17" fill="none" stroke={GOLD_BORDER} strokeWidth="1.5" strokeLinejoin="round" />
+                  </svg>
+                </div>
+
+                {/* Desktop: horizontal arrow column — w-10 gives the SVG room to sit entirely within the column */}
+                <div className="hidden sm:flex flex-col shrink-0 w-10 items-center">
+                  {/* Top half aligns with ECI card */}
+                  <div className="flex-1 flex items-center justify-center">
+                    <svg width="32" height="12" viewBox="0 0 32 12" fill="none">
+                      <line x1="1" y1="6" x2="24" y2="6" stroke={GOLD_BORDER} strokeWidth="1.5" />
+                      <polyline points="20,2 28,6 20,10" fill="none" stroke={GOLD_BORDER} strokeWidth="1.5" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  {/* Bottom half (Constitution card space) left empty */}
+                  <div className="flex-1" />
+                </div>
+
+                {/* Right column: ECI (top half) + arrow + Constitution (bottom half), both flex-1 */}
+                <div className="flex-1 flex flex-col">
+                  {/* ECI card — flex-1 fills top half of column */}
+                  <div className="flex-1 rounded-2xl p-5 flex flex-col shadow-sm" style={subtlePanelStyle}>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-1">Epochal Civilisational Invariants</p>
+                    <h3 className="font-serif text-xl text-foreground mb-3">Meta-Constitutional Law</h3>
+                    <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">
+                      Defines the stable civilisational invariants that sit above ordinary governance instruments and remain valid across time, jurisdiction, and system form.
+                    </p>
+                    <div className="flex-1" />
+                    <p className="font-mono text-xs tracking-[0.16em] uppercase text-muted-foreground/70 text-center">
+                      Stable Invariants Across Time
+                    </p>
+                  </div>
+
+                  {/* Down arrow */}
+                  <div className="flex justify-center py-2 shrink-0">
+                    <svg width="14" height="24" viewBox="0 0 14 24" fill="none">
+                      <line x1="7" y1="1" x2="7" y2="18" stroke={GOLD_BORDER} strokeWidth="1.5" />
+                      <polyline points="3,13 7,20 11,13" fill="none" stroke={GOLD_BORDER} strokeWidth="1.5" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+
+                  {/* Aeon Tier Constitution card — flex-1 fills bottom half of column */}
+                  <div className="flex-1 rounded-2xl p-5 flex flex-col shadow-sm" style={subtlePanelStyle}>
+                    <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-1">Aeon Tier Constitution</p>
+                    <h3 className="font-serif text-xl text-foreground mb-3">Civilisational Scale Governance</h3>
+                    <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">
+                      Translates those invariants into a constitutional framework for long-horizon stewardship, delegation, responsibility, and human–AI / AI–AI governance.
+                    </p>
+                    <div className="flex-1" />
+                    <p className="font-mono text-xs tracking-[0.16em] uppercase text-muted-foreground/70 text-center">
+                      CAM-BS2025-AEON-001 · Platinum
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <ButtonLink href="/catalogue" label="Explore CAM governance" primary />
-                <ButtonLink href="/about" label="About the CAM Initiative" />
+
+              {/* Arrow → Runtime Translation */}
+              <div className="flex justify-center my-3">
+                <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
+                  <line x1="12" y1="2" x2="12" y2="22" stroke={GOLD_BORDER} strokeWidth="1.5" />
+                  <polyline points="6,17 12,24 18,17" fill="none" stroke={GOLD_BORDER} strokeWidth="1.5" strokeLinejoin="round" />
+                </svg>
+              </div>
+
+              {/* Runtime Translation */}
+              <div className="rounded-2xl p-5 shadow-sm" style={subtlePanelStyle}>
+                <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-4">Runtime Translation</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {runtimeTranslation.map((col) => (
+                    <div key={col.title} className="flex flex-col gap-1.5">
+                      <p className="font-mono text-xs tracking-[0.14em] uppercase text-muted-foreground/75">{col.tag}</p>
+                      <h4 className="font-serif text-base text-foreground">{col.title}</h4>
+                      <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">{col.description}</p>
+                    </div>
+                  ))}
+                </div>
+                <hr className="gold-rule mt-5 mb-4" />
+                <div className="text-center">
+                  <p className="font-mono text-xs tracking-[0.14em] uppercase text-cam-gold mb-1">AEON-003-SCH-02</p>
+                  <p className="font-serif text-base text-foreground">Runtime Governance Execution Model</p>
+                  <p className="text-[15px] text-muted-foreground font-light leading-relaxed md:text-base mt-2">
+                    Receives schedule influence into runtime layers: signal interpretation, arbitration, execution, representation, and execution-lock discipline.
+                  </p>
+                </div>
+
+              </div>
+
+              {/* Arrow → Evidence to Repair Loop */}
+              <div className="flex justify-center my-3">
+                <svg width="24" height="28" viewBox="0 0 24 28" fill="none">
+                  <line x1="12" y1="2" x2="12" y2="22" stroke={GOLD_BORDER} strokeWidth="1.5" />
+                  <polyline points="6,17 12,24 18,17" fill="none" stroke={GOLD_BORDER} strokeWidth="1.5" strokeLinejoin="round" />
+                </svg>
+              </div>
+
+              {/* Evidence to Repair Loop */}
+              <div className="rounded-2xl p-5 shadow-sm" style={subtlePanelStyle}>
+                <p className="font-mono text-xs tracking-[0.18em] uppercase text-cam-gold mb-2">Evidence to Repair Loop</p>
+                <p className="mb-5 max-w-3xl text-[15px] text-muted-foreground font-light leading-relaxed md:text-base">
+                  VIGIL closes the execution chain and reopens governance maintenance through evidence-backed repair and amendment.
+                </p>
+                <div className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_auto_1fr_auto_1fr] lg:items-stretch">
+                  {evidenceRepairLoop.map((step, index) => {
+                    const StepContent = (
+                      <>
+                        <p className="font-mono text-[13px] tracking-[0.14em] uppercase text-cam-gold mb-1">{step.label}</p>
+                        <h4 className="font-serif text-lg text-foreground">{step.title}</h4>
+                        <p className="text-base text-muted-foreground font-light leading-relaxed mt-2">{step.description}</p>
+                      </>
+                    );
+
+                    return (
+                      <div key={step.title} className="contents">
+                        {step.href ? (
+                          <a
+                            href={step.href}
+                            className="rounded-xl border border-primary/25 bg-card/55 p-4 transition-colors hover:border-primary/45 hover:text-primary"
+                          >
+                            {StepContent}
+                          </a>
+                        ) : (
+                          <div className="rounded-xl border border-primary/20 bg-card/45 p-4">
+                            {StepContent}
+                          </div>
+                        )}
+                        {index < evidenceRepairLoop.length - 1 && (
+                          <div className="flex items-center justify-center text-cam-gold/70" aria-hidden="true">
+                            <span className="hidden text-lg lg:inline">→</span>
+                            <span className="text-lg lg:hidden">↓</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </motion.div>
-            <PathwayControl />
+
+            {/* 4. Start Here */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="mb-14"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <p className="font-mono text-[15px] tracking-[0.22em] uppercase text-cam-gold shrink-0">Start Here</p>
+                <hr className="gold-rule flex-1" />
+              </div>
+              <p className="font-serif text-xl text-foreground mb-7">
+                Entry Points into the Constitutional Framework
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {startHerePaths.map((path, i) => (
+                  <motion.a
+                    key={path.label}
+                    href={path.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    initial={{ opacity: 0, y: 6 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: i * 0.07 }}
+                    className="block rounded-2xl p-5 shadow-sm transition-colors hover:border-primary/45 cursor-pointer group"
+                    style={goldPanelStyle}
+                  >
+                    <p className="font-mono text-[13px] tracking-[0.16em] uppercase text-cam-gold mb-2">{path.label}</p>
+                    <p className="font-mono text-[13px] text-muted-foreground/75 mb-2">{path.sublabel}</p>
+                    <p className="font-serif text-xl text-foreground group-hover:text-primary transition-colors leading-snug">{path.title}</p>
+                  </motion.a>
+                ))}
+              </div>
+            </motion.div>
+
           </div>
         </section>
-
-        <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="governance-compliance-heading">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionLabel>Governance and compliance</SectionLabel>
-            <div className="mb-7 max-w-4xl">
-              <h2 id="governance-compliance-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-                Governance must work before, during, and after deployment.
-              </h2>
-              <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
-                CAM is not a legal certification service. It is governance infrastructure for translating constitutional principles, regulatory duties, standards, operating controls, and observed system behaviour into a coherent assurance architecture.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {pathways.map((pathway) => (
-                <article className="cam-parchment-card flex h-full scroll-mt-24 flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" id={pathway.id} key={pathway.id}>
-                  <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{pathway.marker}</p>
-                  <h3 className="mb-3 font-serif text-2xl leading-snug text-foreground">{pathway.title}</h3>
-                  <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{pathway.description}</p>
-                  <ButtonLink href={pathway.href} label={pathway.cta} />
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <EvidenceRepairLoop />
-
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
-          <SectionLabel>Connect</SectionLabel>
-          <article className="rounded-3xl border border-border/80 bg-card/80 p-6 shadow-sm md:flex md:items-center md:justify-between md:gap-10 md:p-8">
-            <div className="max-w-2xl">
-              <h2 className="mb-3 font-serif text-3xl leading-snug text-foreground">Work with the CAM Initiative</h2>
-              <p className="text-base leading-relaxed text-foreground/75">
-                Review the governance corpus, examine VIGIL records, collaborate on standards and research, or support the public infrastructure that keeps the work accessible.
-              </p>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-3 md:mt-0 md:max-w-md md:justify-end">
-              {actionLinks.map((link) => (
-                <a
-                  aria-label={link.icon === "github" ? `${link.label} on GitHub` : link.label}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/25 bg-background/70 px-4 py-2.5 text-sm font-medium text-foreground transition hover:border-primary/50 hover:text-primary"
-                  href={link.href}
-                  key={link.label}
-                  rel={link.external ? "noreferrer" : undefined}
-                  target={link.external ? "_blank" : undefined}
-                >
-                  <ActionIcon icon={link.icon} />
-                  <span>{link.label}</span>
-                  {link.external && <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />}
-                </a>
-              ))}
-            </div>
-          </article>
-        </section>
-      </main>
+      </div>
     </Shell>
   );
 }
