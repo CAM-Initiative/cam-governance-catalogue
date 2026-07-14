@@ -5,7 +5,7 @@ import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
 import RelationalGovernance from "@/pages/relational-governance-final";
 import Provenance from "@/pages/provenance";
-import Transition from "@/pages/transition-final";
+import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import About from "@/pages/about";
