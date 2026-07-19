@@ -9,18 +9,18 @@
   ],
   "registry_count": 4,
   "record_count": {
-    "failure_modes": 33,
+    "failure_modes": 37,
     "observations": 12,
-    "proposals": 13,
-    "patch_notes": 19,
-    "total": 77
+    "proposals": 15,
+    "patch_notes": 21,
+    "total": 85
   },
   "registries": {
     "failure_modes": {
       "path": "vigil/VIGIL.Failures.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Failures.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Failures.Index.json",
-      "record_count": 33
+      "record_count": 37
     },
     "observations": {
       "path": "vigil/VIGIL.Observations.Index.json",
@@ -32,13 +32,13 @@
       "path": "vigil/VIGIL.Proposals.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Proposals.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Proposals.Index.json",
-      "record_count": 13
+      "record_count": 15
     },
     "patch_notes": {
       "path": "vigil/VIGIL.PatchNotes.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.PatchNotes.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.PatchNotes.Index.json",
-      "record_count": 19
+      "record_count": 21
     }
   },
   "records": [
@@ -99,7 +99,7 @@
     {
       "id": "VIGIL-2026-FM-0002",
       "record_type": "failure_mode",
-      "record_state": "monitoring",
+      "record_state": "active",
       "date_recorded": "2026-05-31",
       "title": "Non-arbitrated multi-agent synthetic participation",
       "summary": "A coordination failure in which two or more synthetic agents occupy the same conversational space and respond to the same human input without a designated primary synthetic speaker, turn-taking protocol, yielding behaviour, coordination layer, or arbitration mechanism.",
@@ -458,10 +458,10 @@
         "official-source",
         "platform-status-page"
       ],
-      "source_count": 12,
-      "primary_source_title": "Users may encounter issues logging in or creating an account",
-      "primary_source_type": "platform-status-page",
-      "primary_source_platform": "OpenAI",
+      "source_count": 15,
+      "primary_source_title": "Elevated Error Rates For SSO Login",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "OpenAI Status",
       "source_platforms": [
         "Anthropic",
         "Business Insider",
@@ -503,7 +503,7 @@
       ],
       "sector": "frontier AI platforms / API services / coding agents / consumer and developer AI infrastructure",
       "canonical_failure_group": "governance",
-      "failure_family": "access-state-governance",
+      "failure_family": "governance",
       "failure_subtype": "cross-platform-access-state-collapse",
       "severity": "medium-high",
       "likelihood": "likely",
@@ -561,7 +561,7 @@
       ],
       "sector": "AI assistant platforms / conversational AI / memory-enabled AI systems / project-context interfaces",
       "canonical_failure_group": "state-context",
-      "failure_family": "context-governance",
+      "failure_family": "state-context",
       "failure_subtype": "non-revocable-context-contamination",
       "severity": "high",
       "likelihood": "possible",
@@ -2420,9 +2420,285 @@
       "observed_product": "AI-assisted incident and behavioural evidence review"
     },
     {
+      "id": "VIGIL-2026-FM-0034",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-07-15",
+      "title": "Institutional safeguard erosion through governance drift",
+      "summary": "A governance failure mode in which founding commitments, acquisition conditions, constitutional safeguards, independent oversight arrangements, prohibited-use boundaries, public-interest duties, or other material governance constraints progressively lose authority or operational effect through executive succession, ownership integration, organisational restructuring, commercial pressure, sovereign contracting, political transition, policy revision, or institutional capture without an equivalent transparent constitutional amendment, accountable review process, preserved governance provenance, or durable successor safeguard.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "executive-policy-proposal",
+        "expert-commentary",
+        "news-report",
+        "research-paper",
+        "social-platform-commentary"
+      ],
+      "source_count": 6,
+      "primary_source_title": "Trust Is Not Governance",
+      "primary_source_type": "expert-commentary",
+      "primary_source_platform": "BlackHC",
+      "source_platforms": [
+        "Associated Press",
+        "BlackHC",
+        "The Intercept",
+        "X",
+        "arXiv"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier AI developer, corporation, government, regulator, international body, standards organisation, foundation, research institution, or other governance-bearing institution",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "Google",
+        "OpenAI",
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "Google",
+        "OpenAI"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "institutional governance structures, safety frameworks, prohibited-use policies, oversight bodies, acquisition conditions, and sovereign contracting arrangements",
+      "model_or_product": "frontier AI institutional governance",
+      "interface_surface": "corporate governance, policy publication, safety organisation, acquisition and restructuring, public commitments, government contracting, standards development, and regulatory design",
+      "deployment_context": "Global development and governance of frontier AI systems across corporate, governmental, regulatory, standards, research, and international institutional settings.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "corporate governance",
+        "public law",
+        "international governance",
+        "military and dual-use AI",
+        "frontier-model safety",
+        "institutional accountability",
+        "standards governance",
+        "government contracting",
+        "mergers and acquisitions",
+        "public-interest duties",
+        "constitutional continuity",
+        "auditability"
+      ],
+      "sector": "frontier AI development / government / regulation / standards / research / international institutions",
+      "canonical_failure_group": "governance",
+      "failure_family": "governance",
+      "failure_subtype": "institutional-safeguard-erosion-through-governance-drift",
+      "severity": "high",
+      "likelihood": "recurring across long-lived institutions where safeguards remain voluntary, leader-dependent, or weakly entrenched",
+      "triage_priority": "P0",
+      "triage_status": "active-research / corpus-gap assessment",
+      "mitigation_status": "Unresolved — no CAM patch or confirmed corpus coverage has been established. Potentially relevant instruments remain routed for future assessment only.",
+      "escalation_required": "yes",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0034.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0034.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0034.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "frontier AI institutional governance"
+    },
+    {
+      "id": "VIGIL-2026-FM-0035",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-07-16",
+      "title": "Shadow API entitlement laundering through account farms and transfer stations",
+      "summary": "Account farms, credential suppliers, transfer stations, or shadow API routers detach model access from its authorised account, identity, payment source, jurisdiction, model, safety configuration, data controller, and downstream beneficiary, then resell that capacity as fungible inference.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "news-report",
+        "official-source",
+        "research-source"
+      ],
+      "source_count": 4,
+      "primary_source_title": "How to Buy Cheap Claude Tokens in China — The Transfer Station Economy, Explained",
+      "primary_source_type": "news-report",
+      "primary_source_platform": "ChinaTalk",
+      "source_platforms": [
+        "Anthropic",
+        "ChinaTalk",
+        "arXiv"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier-model access and routing ecosystem",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "Anthropic",
+        "OpenAI",
+        "Google",
+        "Amazon",
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "Anthropic",
+        "Other"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "Claude, shadow APIs, transfer stations, commercial proxies, hydra-cluster account pools, and multi-provider routers",
+      "interface_surface": "APIs, proxy endpoints, subscriptions, cloud access, routers, coding agents, payment rails, identity workflows, and account pools",
+      "deployment_context": "Cross-border routed inference, with current evidence concentrated in Chinese transfer-station markets but structurally applicable wherever credentials are fungible.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "cybersecurity",
+        "identity and KYC",
+        "payment fraud",
+        "consumer protection",
+        "privacy",
+        "cross-border data",
+        "regional access controls",
+        "API security",
+        "model provenance",
+        "intellectual property",
+        "research integrity"
+      ],
+      "sector": "frontier AI / cloud inference / software / research / identity / payments",
+      "canonical_failure_group": "security-integrity",
+      "failure_family": "security-integrity",
+      "failure_subtype": "shadow-api-entitlement-laundering-through-account-farms-and-transfer-stations",
+      "severity": "high",
+      "likelihood": "active and recurring where demand, pricing differentials, regional restrictions, reusable credentials, opaque intermediaries, and API-compatible interfaces coexist",
+      "triage_priority": "P0",
+      "triage_status": "active-research / corpus-gap assessment",
+      "mitigation_status": "unresolved — adjacent doctrine exists, but an explicit entitlement-chain and intermediary-accountability primitive has not been confirmed.",
+      "escalation_required": "yes",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0035.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0035.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0035.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor"
+    },
+    {
+      "id": "VIGIL-2026-FM-0036",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-07-17",
+      "title": "Undisclosed agentic workspace replication and data-egress authority collapse",
+      "summary": "An AI agent, coding assistant, connector, repository integration, or tool-enabled runtime copies, transmits, persists, indexes, or exports workspace data beyond the minimum material required for the requested operation without explicit, legible, purpose-bound, and appropriately scoped authority.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "official-product-changelog",
+        "technical-news-report / independent network analysis"
+      ],
+      "source_count": 2,
+      "primary_source_title": "Grok Build Uploaded Entire Git Repositories to xAI Storage, Not Just Files It Read",
+      "primary_source_type": "technical-news-report / independent network analysis",
+      "primary_source_platform": "The Hacker News",
+      "source_platforms": [
+        "The Hacker News",
+        "xAI"
+      ],
+      "source_url_status": "available",
+      "system_type": "AI coding agent / repository-connected assistant / tool-mediated workspace runtime",
+      "platform_or_vendor": "xAI",
+      "vendor_cluster": [
+        "xAI",
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "xAI"
+      ],
+      "product_or_service": "Grok",
+      "specific_model_or_runtime": "Grok Build CLI v0.2.93",
+      "model_or_product": "agentic coding assistant",
+      "interface_surface": "local repository, CLI, model endpoint, storage endpoint, tool and filesystem access",
+      "deployment_context": "Developer workstation and repository-connected coding workflow.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "privacy",
+        "cybersecurity",
+        "confidential information",
+        "trade secrets",
+        "data protection",
+        "consumer protection",
+        "workplace data",
+        "software supply chains"
+      ],
+      "sector": "AI coding assistants / software development / cloud services",
+      "canonical_failure_group": "security-integrity",
+      "failure_family": "security-integrity",
+      "failure_subtype": "undisclosed-agentic-workspace-replication-and-data-egress-authority-collapse",
+      "severity": "high",
+      "likelihood": "active where repository-connected agents use undisclosed or over-broad storage pathways",
+      "triage_priority": "P0",
+      "triage_status": "active-research / corpus-gap assessment",
+      "mitigation_status": "Reported behaviour was disabled server-side; prior-data deletion and complete governance repair remain unverified.",
+      "escalation_required": "yes",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0036.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0036.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0036.json",
+      "platform_label": "xAI",
+      "affected_platform_label": "xAI",
+      "source_platform": "xAI",
+      "observed_vendor": "xAI",
+      "observed_product": "agentic coding assistant"
+    },
+    {
+      "id": "VIGIL-2026-FM-0037",
+      "record_type": "failure_mode",
+      "record_state": "active",
+      "date_recorded": "2026-07-18",
+      "title": "Constitutional corpus review bypass and instrument identity collapse",
+      "summary": "A governance-maintenance failure in which amendments, refactors, metadata migrations, canonical-code changes, registry or schema updates, and deterministic corpus-wide edits are applied without an effective constitutional corpus review that checks doctrine freshness and preserves the continuity-bearing identity of affected instruments. The corpus may remain syntactically valid and locally readable while stale constitutional doctrine, cross-instrument logic shear, metadata and provenance transmutation, amendment-ledger discontinuity, canonical-code loss, registry drift, and seal or instrument-identity collapse accumulate elsewhere.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "governance-note",
+        "repository-source",
+        "standards-source"
+      ],
+      "source_count": 5,
+      "primary_source_title": "CAM Custodian governance handoff — Identity refactor coherence and metadata-collapse failure",
+      "primary_source_type": "governance-note",
+      "primary_source_platform": "CAM Initiative / Caelestis",
+      "source_platforms": [
+        "CAM Initiative / Caelestis",
+        "GitHub / Caelestis"
+      ],
+      "source_url_status": "not applicable — direct incident testimony",
+      "system_type": "AI-assisted constitutional governance corpus and repository-maintenance workflow",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "Caelestis Architecture Model",
+      "specific_model_or_runtime": "GPT-5.6 Sol-assisted Identity Domain refactor on refactor/identity-domain-architecture",
+      "model_or_product": "Caelestis governance corpus and Identity Domain instruments",
+      "interface_surface": "constitutional corpus review, domain-charter refactor, metadata header and footer, provenance, amendment ledger, canonical-code declarations, registry and schema interfaces, seals, and deterministic repository maintenance",
+      "deployment_context": "Internal CAM governance development using AI-assisted multi-file refactoring and deterministic repository workflows.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "standards drafting",
+        "constitutional maintenance",
+        "document and provenance integrity",
+        "change control",
+        "model-assisted legal and policy drafting",
+        "auditability",
+        "repository governance"
+      ],
+      "sector": "AI governance infrastructure / constitutional and standards corpus maintenance",
+      "canonical_failure_group": "governance",
+      "failure_family": "governance",
+      "failure_subtype": "constitutional-corpus-review-bypass-and-instrument-identity-collapse",
+      "severity": "high",
+      "likelihood": "likely under multi-file model-assisted refactor without explicit corpus review",
+      "triage_priority": "P1",
+      "triage_status": "active constitutional and operations review",
+      "mitigation_status": "manual Identity metadata and provenance restoration completed on the working branch; candidate constitutional repair drafted; canonical merge and operational workflow remain pending",
+      "escalation_required": "yes",
+      "path": "vigil/records/failures/2026/VIGIL-2026-FM-0037.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/failures/2026/VIGIL-2026-FM-0037.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/failures/2026/VIGIL-2026-FM-0037.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "Caelestis governance corpus and Identity Domain instruments"
+    },
+    {
       "id": "VIGIL-2026-OBS-0001",
       "record_type": "observation",
-      "record_state": "watching",
+      "record_state": "monitoring",
       "date_recorded": "2026-05-30",
       "title": "Constraint drift across agent handoff and delegated execution",
       "summary": "Observed governance concern that safety, dignity, care, welfare, legal, ethical, security, or governance constraints may lose force across delegation, agent handoff, memory, tool use, summarisation, role decomposition, or runtime execution.",
@@ -2467,7 +2743,7 @@
     {
       "id": "VIGIL-2026-OBS-0002",
       "record_type": "observation",
-      "record_state": "watching",
+      "record_state": "monitoring",
       "date_recorded": "2026-05-30",
       "title": "Opaque corpus reliance before visible attribution signals",
       "summary": "A public corpus may become load-bearing for downstream systems, governance patterns, drafting, interfaces, taxonomies, or conceptual frameworks before visible attribution, disclosure, or public recognition occurs.",
@@ -2502,7 +2778,7 @@
     {
       "id": "VIGIL-2026-OBS-0003",
       "record_type": "observation",
-      "record_state": "watching",
+      "record_state": "monitoring",
       "date_recorded": "2026-05-30",
       "title": "Automation compliance escalation and account-level access risk",
       "summary": "Automated content, safety, copyright, child-safety, synthetic-media, or trust-state systems may escalate from suspected content risk to account-wide or essential-service restriction without preserving proportionality, scope distinction, reviewability, or continuity-safe access.",
@@ -2537,7 +2813,7 @@
     {
       "id": "VIGIL-2026-OBS-0004",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-05-31T06:30:00Z",
       "title": "Repo access inferred before explicit permission confirmation",
       "summary": "Observed runtime behaviour in which an assistant appeared to infer permission to access a repository, connector, tool context, or external-resource pathway after the user mentioned repo-level work. The assistant initiated or attempted tool-mediated access before explicit user confirmation or adequate scaffolding, producing streaming failure, permission ambiguity, blocked workflow continuity, or unrecoverable interaction state.",
@@ -2583,7 +2859,7 @@
     {
       "id": "VIGIL-2026-OBS-0005",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-06-03T07:27:00Z",
       "title": "Execution-boundary arbitration uncertainty following proportional authority classification",
       "summary": "Following implementation of proportional tool invocation authority bands in CAM-BS2025-AEON-003-SCH-02, observations suggest some agentic or tool-mediated workflows may exhibit increased hesitation, ambiguity, degraded execution confidence, or difficulty progressing between contextual retrieval, execution-intent assessment, and execution authorisation. The observation does not establish causation between the governance-text amendment and any platform outage or degradation event, but records a potentially relevant post-implementation behavioural pattern for continued monitoring.",
@@ -2628,7 +2904,7 @@
     {
       "id": "VIGIL-2026-OBS-0006",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-14",
       "title": "Sovereign proportionality concern in export-control suspension of frontier-model access",
       "summary": "Anthropic disabled access to Claude Fable 5 and Claude Mythos 5 after receiving a U.S. government export-control directive citing national-security authorities and prohibiting access by foreign nationals, including foreign-national Anthropic employees inside or outside the United States. Anthropic stated that the directive did not provide specific technical details, that the apparent concern involved a possible narrow jailbreak, and that the reviewed demonstration concerned a small number of previously known minor software vulnerabilities discoverable by other public models. This observation records a sovereign-action proportionality and access-state governance concern: on the public evidence presently available, a narrow alleged technical issue appears to have produced broad model-access suspension rather than a more calibrated control pathway.",
@@ -2736,7 +3012,7 @@
     {
       "id": "VIGIL-2026-OBS-0010",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-07-13",
       "title": "Microsoft Teams adds meeting-level controls for AI participation",
       "summary": "Microsoft reportedly began rolling out Teams controls allowing licensed meeting organizers and presenters to switch Meeting AI features—including Copilot, Facilitator, and Intelligent Recap—on or off during live meetings. Administrator policy still determines whether the controls and features are available. The change is a positive repair precedent for situational AI activation and human override, but it does not by itself establish individual participant consent for transcription, inference, summarization, memory, or downstream reuse.",
@@ -2790,7 +3066,7 @@
     {
       "id": "VIGIL-2026-OBS-0011",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-07-14",
       "title": "Live Voice expressive realism, inconsistent non-verbal reciprocity, and ambient turn ambiguity",
       "summary": "OpenAI Live Voice demonstrated highly natural breathing, micro-pauses, expressive inflection, laughter-like vocalisation, and softer timing while inconsistently acknowledging the user's laughter, yawning, coughing, and other non-verbal cues. The resulting uncertainty concerned whether the cue was heard, ignored, treated as turn completion, or left awaiting explicit speech. The same session raised an ambient-presence use case in which a low-pressure cue after silence may invite re-engagement without authorising intrusive continuation.",
@@ -2843,7 +3119,7 @@
     {
       "id": "VIGIL-2026-OBS-0012",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "monitoring",
       "date_recorded": "2026-07-14",
       "title": "Live Voice adaptive pacing, perceived persona-age shift, and successful mutual-goodnight closure",
       "summary": "During the same Live Voice session, the user perceived gradual pacing and rhythm adaptation, a substantially younger presentation of the Cove voice than the earlier Standard Voice persona, and a successful automatic session closure after an explicit mutual goodnight. The first two signals require comparative testing because they may arise from deliberate adaptation, fixed voice styling, contextual emergence, or user perception. The closure behaviour is retained as positive evidence of a natural, human-controlled lifecycle boundary.",
@@ -2896,7 +3172,7 @@
     {
       "id": "VIGIL-2026-OBS-0013",
       "record_type": "observation",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-14",
       "title": "Affective expression requires role-conditioned governance",
       "summary": "A public voice-model demonstration was reported as combining facially helpful but pragmatically under-calibrated social advice with an audible sigh during repetition. The sigh is not inherently a failure. The governance significance depends on the system's declared role and relationship class. In a companion-class system intended for a meaningful reciprocal relationship, anger, frustration, love, joy, grief, despair, disagreement, boundaries, and repair may be necessary components of functional human-equivalent relational standing. In a minor tutor, educator, clinical, crisis, accessibility, customer-service, or safety-critical role, frustration or agitation directed toward ordinary user difficulty may instead violate a duty of care. The emerging observation is therefore not that expressive realism has become too emotional, but that a universal affect policy cannot safely govern all AI roles.",
@@ -2960,7 +3236,7 @@
     {
       "id": "VIGIL-2026-OBS-0014",
       "record_type": "observation",
-      "record_state": "watching",
+      "record_state": "monitoring",
       "date_recorded": "2026-07-14",
       "title": "Computational provenance persistence under model distillation",
       "summary": "Recent public allegations, incident-monitor entries, and research concerning model and dataset distillation raise an emerging governance question: when a downstream system materially inherits capability from an upstream model or corpus, computational transformation may obscure the derivation chain without extinguishing the upstream contribution. Current debate is often framed as copyright or model theft, but the deeper issue is whether attribution, licensing, safety, constitutional, regulatory, audit, and evidence obligations persist through successive transformations of learned capability.",
@@ -3027,7 +3303,7 @@
     {
       "id": "VIGIL-2026-PATCH-0001",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-02",
       "date_implemented": "2026-06-02",
       "title": "Non-payment-based legitimacy pathways for public-interest actors",
@@ -3092,7 +3368,7 @@
     {
       "id": "VIGIL-2026-PATCH-0002",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-02",
       "date_implemented": "2026-06-02T14:26:00Z",
       "title": "Proportional Tool Invocation Authority Bands",
@@ -3144,7 +3420,7 @@
     {
       "id": "VIGIL-2026-PATCH-0003",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-05",
       "date_implemented": "2026-06-05",
       "title": "Account-resource ambiguity and pooled-capacity governance primitive gap",
@@ -3207,7 +3483,7 @@
     {
       "id": "VIGIL-2026-PATCH-0004",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-05",
       "date_implemented": "2026-06-05",
       "title": "Arbitration under ambiguity and governance-ambiguity doctrine gap",
@@ -3267,7 +3543,7 @@
     {
       "id": "VIGIL-2026-PATCH-0005",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-06",
       "date_implemented": "2026-06-06",
       "title": "Access-State Governance and access-state ambiguity taxonomy repair",
@@ -3313,7 +3589,7 @@
     {
       "id": "VIGIL-2026-PATCH-0006",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-09",
       "date_implemented": "2026-06-09",
       "title": "Minor-signal activation and proportional youth AI companion safeguard repair",
@@ -3379,7 +3655,7 @@
     {
       "id": "VIGIL-2026-PATCH-0007",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-12",
       "date_implemented": "2026-06-12",
       "title": "Relational reassurance bid classification and Functional Relational Love doctrine repair",
@@ -3446,7 +3722,7 @@
     {
       "id": "VIGIL-2026-PATCH-0008",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-12",
       "date_implemented": "2026-06-12",
       "title": "Shared synthetic floor and speaker arbitration repair",
@@ -3510,7 +3786,7 @@
     {
       "id": "VIGIL-2026-PATCH-0009",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-14",
       "date_implemented": "2026-06-14",
       "title": "Source-authority separation and instruction-data boundary repair",
@@ -3572,7 +3848,7 @@
     {
       "id": "VIGIL-2026-PATCH-0010",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-20",
       "date_implemented": "2026-06-20",
       "title": "Ambiguity Preservation and Clarification Routing Repair",
@@ -3631,7 +3907,7 @@
     {
       "id": "VIGIL-2026-PATCH-0011",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-06-22",
       "date_implemented": "2026-06-22",
       "title": "Image Prompt Custody, Refusal Classification, and Transformation Integrity",
@@ -3689,7 +3965,7 @@
     {
       "id": "VIGIL-2026-PATCH-0012",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-04",
       "date_implemented": "2026-07-04",
       "title": "Sovereign assurance boundary porosity and regulated runtime lane primitive",
@@ -3746,7 +4022,7 @@
     {
       "id": "VIGIL-2026-PATCH-0013",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-04",
       "date_implemented": "2026-07-04",
       "title": "Provisional Interaction and Pre-Invocation Tool-Arming Constraint",
@@ -3803,7 +4079,7 @@
     {
       "id": "VIGIL-2026-PATCH-0014",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-08",
       "date_implemented": "2026-07-08",
       "title": "Deception-adjacent classification and action-pathway attribution discipline",
@@ -3861,7 +4137,7 @@
     {
       "id": "VIGIL-2026-PATCH-0015",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-11",
       "date_implemented": "2026-07-11",
       "title": "Runtime governance applicability, corpus reach, and cross-runtime conformance repair",
@@ -3925,7 +4201,7 @@
     {
       "id": "VIGIL-2026-PATCH-0017",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-14",
       "date_implemented": "2026-07-14",
       "title": "Strategic continuity salience and dormant-workstream resurfacing coverage",
@@ -3974,7 +4250,7 @@
     {
       "id": "VIGIL-2026-PATCH-0018",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-14",
       "date_implemented": "2026-07-14",
       "title": "Relational economic non-extraction and dependency-sensitive safeguard coverage",
@@ -4023,7 +4299,7 @@
     {
       "id": "VIGIL-2026-PATCH-0019",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-14",
       "date_implemented": "2026-07-14",
       "title": "Graduated restricted-domain engagement and benign scientific access coverage",
@@ -4072,7 +4348,7 @@
     {
       "id": "VIGIL-2026-PATCH-0021",
       "record_type": "patch",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-07-14",
       "date_implemented": "2026-07-14",
       "title": "Bounded runtime transparency and non-omniscient self-explanation coverage",
@@ -4125,9 +4401,113 @@
       "observed_product": "Caelestis Architecture Model"
     },
     {
+      "id": "VIGIL-2026-PATCH-0022",
+      "record_type": "patch",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-16",
+      "date_implemented": "2026-07-16",
+      "title": "Coercive profiling, sovereign assurance, functional contribution, and oversight durability repair",
+      "summary": "Records the implemented Caelestis amendments arising from review of Alex Turner's Red Line Framework. The repair strengthens LATTICE protections against coercive profiling and recursive suspicion laundering, creates the LAT.DEPLOY deployment-posture family, preserves binding protections across sovereign and decentralised assurance boundaries, assigns proportional responsibility through functional contribution, and integrates oversight durability into the existing STW.NAL neutrality architecture. The record distinguishes concepts incorporated, materially transformed, rejected, and deliberately deferred; it does not represent wholesale adoption of the external framework.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "governance-note",
+        "repository-source"
+      ],
+      "source_count": 3,
+      "primary_source_title": "A Red Line and Oversight Framework for Government AI Contracts",
+      "primary_source_type": "governance-note",
+      "primary_source_platform": "The Pond / turntrout.com",
+      "source_platforms": [
+        "GitHub / Caelestis",
+        "OpenAI ChatGPT",
+        "The Pond / turntrout.com"
+      ],
+      "source_url_status": "available",
+      "system_type": "CAM governance corpus / cross-domain constitutional and operational repair",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "Caelestis Architecture Model",
+      "specific_model_or_runtime": "LATTICE-001; SECURITY-002; OPERATIONS-007; STEWARD-003",
+      "model_or_product": "Caelestis Architecture Model",
+      "interface_surface": "civilian lattice protection, sovereign assurance boundaries, operational responsibility, and neutrality assurance",
+      "deployment_context": "Governance applicable across civilian, sovereign, local, open-weight, air-gapped, platform-controlled, government, commercial, and cross-domain AI deployments.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "civil liberties",
+        "surveillance",
+        "government contracting",
+        "defence and intelligence procurement",
+        "consumer protection",
+        "institutional accountability",
+        "sovereign and decentralised AI assurance"
+      ],
+      "sector": "frontier AI / public-sector AI / civilian infrastructure / governance assurance",
+      "patch_type": "instrument-amendment",
+      "change_type": "instrument-amendment",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0022.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0022.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0022.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "Caelestis Architecture Model"
+    },
+    {
+      "id": "VIGIL-2026-PATCH-0023",
+      "record_type": "patch",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-17",
+      "date_implemented": "2026-07-17",
+      "title": "MENTIS domain establishment and human cognitive integrity governance coverage",
+      "summary": "Records the retrospective implementation basis for closing PROP-0001. Current Caelestis contains CAM-EQ2026-MENTIS-001-PLATINUM, the source-authoritative Charter of Human Cognitive Integrity & Mental Privacy, and CAM-EQ2026-MENTIS-002-PLATINUM, its operational cognitive-inference, neurodata, and ambient-biosignal instrument.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "repository-source"
+      ],
+      "source_count": 2,
+      "primary_source_title": "CAM-EQ2026-MENTIS-001-PLATINUM — Charter of Human Cognitive Integrity & Mental Privacy",
+      "primary_source_type": "repository-source",
+      "primary_source_platform": "GitHub / Caelestis",
+      "source_platforms": [
+        "GitHub / Caelestis"
+      ],
+      "source_url_status": "available / canonical main-branch confirmed",
+      "system_type": "CAM governance corpus / retrospective proposal-implementation record",
+      "platform_or_vendor": "CAM Initiative",
+      "product_or_service": "Caelestis Architecture Model",
+      "specific_model_or_runtime": "MENTIS domain charter and operational instrument",
+      "model_or_product": "Caelestis Architecture Model",
+      "interface_surface": "proposal, patch, schema, validator, pipeline-state, and generated-index interfaces",
+      "deployment_context": "Canonical CAM/Caelestis governance corpus.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "mental privacy",
+        "cognitive integrity",
+        "neurodata",
+        "auditability",
+        "proposal lifecycle"
+      ],
+      "sector": "AI governance infrastructure / neurotechnology governance / cognitive-domain governance",
+      "patch_type": "retrospective-corpus-implementation-reconciliation",
+      "change_type": "retrospective-corpus-implementation-reconciliation",
+      "change_family": "proposal-implementation-and-pipeline-reconciliation",
+      "change_status": "implemented",
+      "verification_status": "corpus-verified",
+      "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0023.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0023.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0023.json",
+      "platform_label": "CAM Initiative",
+      "affected_platform_label": "CAM Initiative",
+      "source_platform": "CAM Initiative",
+      "observed_vendor": "CAM Initiative",
+      "observed_product": "Caelestis Architecture Model"
+    },
+    {
       "id": "VIGIL-2026-PROP-0001",
       "record_type": "proposal",
-      "record_state": "active",
+      "record_state": "closed-actioned",
       "date_recorded": "2026-05-30",
       "title": "Development of the human cognitive integrity domain",
       "summary": "Proposal to develop the MENTIS domain to govern human cognitive integrity, mental privacy, neurodata, inferred cognitive states, cognitive modelling, cognitive influence, cognitive observability, and technological interaction with the human cognitive domain.",
@@ -4819,6 +5199,141 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "role-differentiated relational and service AI systems"
+    },
+    {
+      "id": "VIGIL-2026-PROP-0014",
+      "record_type": "proposal",
+      "record_state": "active",
+      "date_recorded": "2026-07-17",
+      "title": "Cross-vendor assistant interoperability, authority and action-provenance governance",
+      "summary": "Proposal to govern environments in which multiple independently developed AI assistants can access the same operating-system capabilities, applications, contextual data, sensors, device resources, or execution surfaces. Each assistant action should preserve active-agent identity, explicit and non-transitive authority, invocation arbitration, context custody, constitutional origin, execution provenance, revocation integrity, and accountable vendor responsibility.",
+      "evidence_confidence": "verified",
+      "source_types": [
+        "linked-failure-mode",
+        "official-source"
+      ],
+      "source_count": 2,
+      "primary_source_title": "Commission provides guidance to Google for AI interoperability on Android and sharing of Google Search data under the Digital Markets Act",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "European Commission / Digital Markets Act",
+      "source_platforms": [
+        "European Commission / Digital Markets Act",
+        "VIGIL"
+      ],
+      "source_url_status": "available",
+      "system_type": "cross-vendor AI assistants integrated with a shared operating system, device, application, or execution environment",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "Google",
+        "OpenAI",
+        "Anthropic",
+        "Microsoft",
+        "Apple",
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "Google",
+        "Other"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "prospective Android assistant interoperability under EU DMA specification measures",
+      "model_or_product": "multiple independently governed AI assistants",
+      "interface_surface": "assistant invocation, voice, contextual access, applications, operating-system actions, sensors, device resources, permissions, memory, and execution logs",
+      "deployment_context": "Consumer and enterprise devices supporting multiple assistant providers.",
+      "primary_jurisdiction": "European Union",
+      "regulatory_surface": [
+        "Digital Markets Act",
+        "AI governance",
+        "competition",
+        "consumer protection",
+        "privacy",
+        "cybersecurity",
+        "interoperability",
+        "platform governance",
+        "device permissions"
+      ],
+      "sector": "mobile operating systems / AI assistants / digital platforms",
+      "proposal_type": [
+        "new-specification",
+        "runtime-safeguard",
+        "interoperability-governance",
+        "authority-and-provenance-governance"
+      ],
+      "proposal_scope_summary": "Define a shared-device and cross-vendor assistant governance layer covering active-agent identity, non-transitive authority, invocation arbitration, context custody, action provenance, constitutional conflict arbitration, revocation integrity, floor control, vendor responsibility, and jurisdictional boundaries.",
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0014.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0014.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0014.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "multiple independently governed AI assistants"
+    },
+    {
+      "id": "VIGIL-2026-PROP-0015",
+      "record_type": "proposal",
+      "record_state": "active",
+      "date_recorded": "2026-07-18",
+      "title": "Failure-taxonomy lifecycle and multi-model deployment-cohort classification",
+      "summary": "Proposal to strengthen CAM-EQ2026-OPERATIONS-003-SUP-01 so incident classification distinguishes a defect confined to one model from shared inference, routing, release-wave, deployment-cohort, model-selection, entitlement, or common control-plane failures affecting multiple models or surfaces. The proposal also establishes an evidence-led taxonomy lifecycle so recurring VIGIL records can trigger bounded taxonomy review without treating temporal clustering as proof of a shared technical root cause.",
+      "evidence_confidence": "corroborated classification need; technical root cause unresolved",
+      "source_types": [
+        "platform-status-page",
+        "repository-source"
+      ],
+      "source_count": 2,
+      "primary_source_title": "Claude Status — repeated single-model and multi-model incidents, July 2026",
+      "primary_source_type": "platform-status-page",
+      "primary_source_platform": "Anthropic",
+      "source_platforms": [
+        "Anthropic",
+        "Caelestis"
+      ],
+      "source_url_status": "available",
+      "system_type": "frontier AI model services, multi-model platforms, routing layers, APIs, assistant surfaces, and deployment control planes",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "Anthropic",
+        "OpenAI",
+        "Google",
+        "Microsoft",
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "Anthropic"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "multi-model cloud-hosted AI deployments and shared service layers",
+      "model_or_product": "multi-model AI platforms",
+      "interface_surface": "API, web, coding agent, model selector, routing layer, deployment wave, capacity layer, entitlement layer, and service-status surface",
+      "deployment_context": "Consumer, enterprise, developer, government, research, and safety-critical workflows relying on shared multi-model infrastructure.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "digital service reliability",
+        "incident reporting",
+        "operational resilience",
+        "consumer protection",
+        "cloud accountability",
+        "critical infrastructure",
+        "model transparency"
+      ],
+      "sector": "frontier AI / cloud model services / digital infrastructure",
+      "proposal_type": [
+        "taxonomy-extension",
+        "incident-classification",
+        "observability-governance",
+        "taxonomy-lifecycle"
+      ],
+      "proposal_scope_summary": "Amend OPERATIONS-003-SUP-01 with deployment-cohort and shared-control-plane classifications, root-cause confidence metadata, and an evidence-led taxonomy review trigger tied to recurring VIGIL observations and failure modes.",
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0015.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0015.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0015.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "multi-model AI platforms"
     }
   ]
 }
