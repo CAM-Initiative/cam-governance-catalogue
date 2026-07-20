@@ -9,6 +9,7 @@ import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import About from "@/pages/about";
+import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/constitution/transition" component={Transition} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
+      <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/observatory" component={Vigil} />
       <Route path="/vigil" component={Vigil} />
