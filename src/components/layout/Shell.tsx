@@ -7,6 +7,7 @@ const footerLinks = [
   { href: "/about", label: "About", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
+  { href: "/policy", label: "Policy", internal: true },
   { href: "/vigil", label: "VIGIL", internal: true },
 ];
 
@@ -16,6 +17,7 @@ const mobileLinks = [
   { href: "/privacy", label: "Privacy", internal: true },
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
+  { href: "/policy", label: "Policy Papers", internal: true },
   { href: "/vigil", label: "VIGIL Ledger", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
@@ -45,6 +47,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
   const links = [
     { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
+    { href: "/policy", label: "Policy", active: location === "/policy" || location.startsWith("/policy/") },
   ];
 
   useEffect(() => {
