@@ -20,6 +20,14 @@ const initiativeResources = [
     cta: "Browse the VIGIL Observatory",
     href: "/observatory",
   },
+  {
+    id: "policy-papers",
+    title: "Policy Papers",
+    purpose: "Public policy proposals translating CAM governance architecture into implementable institutional design.",
+    description: "Read CAM Initiative policy papers applying governance primitives to law, public administration, market design, and technology transition.",
+    cta: "Browse CAM Policy Papers",
+    href: "/policy",
+  },
 ];
 
 const externalResources = [
@@ -332,7 +340,7 @@ function EvidenceRepairLoop() {
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
-        {initiativeResources.map((resource) => (
+        {initiativeResources.filter((resource) => resource.id !== "policy-papers").map((resource) => (
           <article className="cam-parchment-card flex h-full flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" key={resource.id}>
             <h3 className="mb-3 font-serif text-3xl leading-snug text-foreground">{resource.title}</h3>
             <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{resource.description}</p>
