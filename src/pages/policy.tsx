@@ -1,6 +1,18 @@
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { ArrowRight, FileText, Landmark, Network, Scale, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  Download,
+  ExternalLink,
+  FileText,
+  Landmark,
+  Network,
+  Scale,
+  ShieldCheck,
+} from "lucide-react";
+
+const policyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf`;
 
 const recommendations = [
   {
@@ -83,6 +95,9 @@ const architecture = [
   },
 ];
 
+const suggestedCitation =
+  "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Human Custodian-of-Record: Dr Michelle Vivian O’Rourke. AI Agent: Sol 5.6 Extra High thinking.";
+
 function SectionHeading({ eyebrow, title, body }: { eyebrow: string; title: string; body?: string }) {
   return (
     <div className="mb-7 max-w-4xl">
@@ -115,171 +130,183 @@ export default function Policy() {
           </div>
         </section>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="policy-publications-heading">
+        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="policy-records-heading">
           <SectionHeading
-            eyebrow="Current publication"
-            title="Independent policy proposals grounded in inspectable governance architecture."
-            body="Policy papers are institutional outputs of the CAM Initiative. They apply CAM primitives to specific public problems without presenting the CAELESTIS corpus itself as legislation, economic modelling, or legal authority."
+            eyebrow="Policy records"
+            title="Independent proposals grounded in inspectable governance architecture."
+            body="Select a policy record to inspect its proposition, recommendations, architecture, publication details, citation, and source document. Additional papers can be added to this collection using the same expandable record structure."
           />
 
-          <motion.article
-            className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/40 shadow-xl"
-            id="policy-proposal-01-2026"
-            initial={{ opacity: 0, y: 14 }}
-            transition={{ duration: 0.65 }}
-            viewport={{ once: true }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
-            <div className="border-b border-cam-gold/30 bg-[hsl(36_48%_94%)] px-6 py-5 md:px-8">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Policy Proposal 01/2026</p>
-                <span className="rounded-full border border-primary/25 bg-card/75 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/70">
-                  Independent public policy proposal
-                </span>
-              </div>
-            </div>
+          <motion.div initial={{ opacity: 0, y: 14 }} transition={{ duration: 0.65 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
+            <details className="group overflow-hidden rounded-3xl border border-cam-gold/40 bg-card shadow-xl">
+              <summary className="cursor-pointer list-none bg-card p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring md:p-8 [&::-webkit-details-marker]:hidden">
+                <div className="flex items-start justify-between gap-5">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-4 flex flex-wrap items-center gap-2">
+                      <span className="rounded-full border border-cam-gold/45 bg-cam-gold/10 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-[hsl(32_62%_25%)]">
+                        Policy Proposal 01/2026
+                      </span>
+                      <span className="rounded-full border border-primary/20 bg-background/70 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/65">
+                        Independent public policy proposal
+                      </span>
+                    </div>
 
-            <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_300px]">
-              <div>
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">20 July 2026</p>
-                <h2 id="policy-publications-heading" className="font-serif text-4xl leading-tight text-foreground md:text-5xl">
-                  AI Training, Contribution &amp; Copyright Scheme
-                </h2>
-                <p className="mt-4 text-lg font-medium leading-relaxed text-foreground/75">
-                  Copyright permission, contribution valuation and sovereign value return
-                </p>
+                    <h2 id="policy-records-heading" className="font-serif text-3xl leading-tight text-foreground md:text-5xl">
+                      AI Training, Contribution &amp; Copyright Scheme
+                    </h2>
+                    <p className="mt-3 text-base font-medium leading-relaxed text-foreground/70 md:text-lg">
+                      Copyright permission, contribution valuation and sovereign value return
+                    </p>
 
-                <blockquote className="mt-7 rounded-2xl border-l-4 border-cam-gold bg-[hsl(36_45%_96%)] p-5 text-lg leading-relaxed text-foreground shadow-sm md:text-xl">
-                  Permission is the legal basis. Utility, dependency and stewardship determine value.
-                </blockquote>
+                    <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] font-semibold uppercase tracking-[0.13em] text-foreground/55">
+                      <span>20 July 2026</span>
+                      <span>13 pages</span>
+                      <span>Australia</span>
+                      <span>Human–AI co-creation</span>
+                    </div>
 
-                <div className="mt-7 space-y-4 text-base leading-relaxed text-foreground/78 md:text-lg">
-                  <p>
-                    Australia should establish a two-sided AI training and contribution scheme. The first side secures lawful permission and collects proportionate contributions from covered AI providers. The second allocates value to verified rights holders and accredited corpus stewards according to contribution, utility, dependency, and continuing stewardship.
-                  </p>
-                  <p>
-                    The proposal separates the legal question of whether protected material may be used from the economic question of how different human contributions should be valued. A levy or public fund must never be mistaken for blanket permission to ingest protected material.
-                  </p>
-                  <p>
-                    It also combines domestic training regulation with a proportionate Australian market-access obligation so that equivalent models trained offshore do not receive an avoidance advantage.
-                  </p>
+                    <p className="mt-6 max-w-4xl border-l-3 border-cam-gold pl-4 text-base leading-relaxed text-foreground/78 md:text-lg">
+                      Permission is the legal basis. Utility, dependency and stewardship determine value.
+                    </p>
+                  </div>
+
+                  <span className="mt-1 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cam-gold/35 bg-[hsl(36_48%_96%)] text-[hsl(32_62%_25%)] transition-transform duration-200 group-open:rotate-90" aria-hidden="true">
+                    <ChevronRight className="h-5 w-5" />
+                  </span>
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-3">
+                <p className="mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-[hsl(32_62%_25%)]">
+                  Select to inspect the complete policy record
+                </p>
+              </summary>
+
+              <div className="border-t border-cam-gold/30 bg-[hsl(38_40%_94%)] p-5 md:p-8">
+                <div className="mb-8 flex flex-wrap gap-3">
                   <a
                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-cam-gold/70 bg-cam-gold/20 px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-cam-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    href="#recommendations"
+                    download
+                    href={policyPdfHref}
                   >
-                    Read the policy overview
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    <Download className="h-4 w-4" aria-hidden="true" />
+                    Download PDF
                   </a>
                   <a
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card/85 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    href="mailto:ethics@cam-initiative.org?subject=CAM%20Policy%20Proposal%2001%2F2026"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    href={policyPdfHref}
+                    rel="noreferrer"
+                    target="_blank"
                   >
-                    Discuss the proposal
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    Open PDF in browser
+                    <ExternalLink className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </div>
+
+                <section className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm md:p-8" aria-labelledby="policy-overview-heading">
+                  <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Policy proposition</p>
+                  <h3 id="policy-overview-heading" className="font-serif text-2xl leading-tight text-foreground md:text-3xl">
+                    A two-sided scheme for lawful permission and proportionate value return.
+                  </h3>
+                  <div className="mt-5 space-y-4 text-base leading-relaxed text-foreground/78 md:text-lg">
+                    <p>
+                      Australia should establish an AI training and contribution scheme in which lawful permission and provider contributions are secured on one side, while verified rights holders and accredited corpus stewards receive value according to contribution, utility, dependency, and continuing stewardship on the other.
+                    </p>
+                    <p>
+                      Copyright permission determines whether protected material may be used. It does not, by itself, determine the relative value of a novel, specialist research collection, safety-evaluation corpus, or continuously maintained governance corpus. Conversely, payment into a levy or public fund must never be treated as blanket authority to ingest protected material.
+                    </p>
+                    <p>
+                      The proposal combines domestic training regulation with a proportionate Australian market-access obligation so that materially capable models trained offshore cannot obtain an avoidance advantage when supplied into the Australian market.
+                    </p>
+                  </div>
+                </section>
+
+                <section className="mt-8" aria-labelledby="recommendations-heading">
+                  <SectionHeading eyebrow="Recommendations at a glance" title="Ten design choices for lawful permission and proportionate value return." />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {recommendations.map((recommendation, index) => (
+                      <article className="rounded-2xl border border-border/80 bg-card p-5 shadow-sm" key={recommendation.title}>
+                        <div className="mb-3 flex items-start gap-3">
+                          <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cam-gold/45 bg-cam-gold/10 font-mono text-xs font-semibold text-[hsl(32_62%_25%)]">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <h3 id={index === 0 ? "recommendations-heading" : undefined} className="font-serif text-xl leading-snug text-foreground">{recommendation.title}</h3>
+                        </div>
+                        <p className="pl-11 text-sm leading-relaxed text-foreground/75 md:text-base">{recommendation.effect}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+
+                <section className="mt-8" aria-labelledby="architecture-heading">
+                  <SectionHeading
+                    eyebrow="Proposed national architecture"
+                    title="Seven connected scheme limbs, with permission and value return kept legally distinct."
+                    body="The architecture combines domestic training authority, corpus clearance, market-access duties, provider contributions, allocation mechanisms, and downstream durability."
+                  />
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {architecture.map((item, index) => {
+                      const Icon = item.icon;
+                      return (
+                        <article className={`rounded-2xl border border-border/80 bg-card p-5 shadow-sm ${index === architecture.length - 1 ? "lg:col-start-2" : ""}`} key={item.title}>
+                          <Icon className="mb-4 h-5 w-5 text-[hsl(32_62%_25%)]" aria-hidden="true" />
+                          <h3 id={index === 0 ? "architecture-heading" : undefined} className="font-serif text-xl leading-snug text-foreground">{item.title}</h3>
+                          <p className="mt-3 text-sm leading-relaxed text-foreground/75 md:text-base">{item.body}</p>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
+
+                <section className="mt-8 rounded-2xl border border-border/80 bg-card p-6 shadow-sm md:p-8" aria-labelledby="publication-details-heading">
+                  <div className="grid gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
+                    <div>
+                      <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Publication details</p>
+                      <dl className="space-y-4 text-sm leading-relaxed">
+                        <div>
+                          <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Proposed by</dt>
+                          <dd className="mt-1 text-foreground">CAM Initiative</dd>
+                        </div>
+                        <div>
+                          <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Human Custodian-of-Record</dt>
+                          <dd className="mt-1 text-foreground">Dr Michelle Vivian O’Rourke</dd>
+                        </div>
+                        <div>
+                          <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">AI Agent</dt>
+                          <dd className="mt-1 text-foreground">Sol 5.6 Extra High thinking</dd>
+                        </div>
+                        <div>
+                          <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Project identity</dt>
+                          <dd className="mt-1 text-foreground">Aeon Governance Lab™</dd>
+                        </div>
+                        <div>
+                          <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Status</dt>
+                          <dd className="mt-1 text-foreground">Independent public policy proposal</dd>
+                        </div>
+                      </dl>
+                    </div>
+
+                    <div>
+                      <p id="publication-details-heading" className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Suggested citation</p>
+                      <blockquote className="rounded-xl border border-border/80 bg-background/60 p-5 font-mono text-sm leading-relaxed text-foreground md:text-[15px]">
+                        {suggestedCitation}
+                      </blockquote>
+
+                      <div className="mt-5 rounded-xl border border-primary/20 bg-background/45 p-5">
+                        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Governance posture</p>
+                        <p className="mt-2 text-sm leading-relaxed text-foreground/75 md:text-base">
+                          This is an independent public policy proposal. It does not constitute legal, taxation, or investment advice. Indicative bands and implementation periods require empirical testing and legislative design.
+                        </p>
+                      </div>
+
+                      <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="mailto:ethics@cam-initiative.org?subject=CAM%20Policy%20Proposal%2001%2F2026">
+                        Discuss the proposal
+                        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    </div>
+                  </div>
+                </section>
               </div>
-
-              <aside className="h-fit rounded-2xl border border-border/80 bg-card/75 p-5 shadow-sm" aria-label="Publication details">
-                <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Publication details</p>
-                <dl className="space-y-4 text-sm leading-relaxed">
-                  <div>
-                    <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Proposed by</dt>
-                    <dd className="mt-1 text-foreground">CAM Initiative</dd>
-                  </div>
-                  <div>
-                    <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Human Custodian-of-Record</dt>
-                    <dd className="mt-1 text-foreground">Dr Michelle Vivian O’Rourke</dd>
-                  </div>
-                  <div>
-                    <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Project identity</dt>
-                    <dd className="mt-1 text-foreground">Aeon Governance Lab™</dd>
-                  </div>
-                  <div>
-                    <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Publication</dt>
-                    <dd className="mt-1 text-foreground">Policy Proposal 01/2026 · 13 pages</dd>
-                  </div>
-                  <div>
-                    <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Themes</dt>
-                    <dd className="mt-2 flex flex-wrap gap-2">
-                      {["Copyright", "AI training", "Market access", "Contribution valuation", "Living corpora"].map((theme) => (
-                        <span className="rounded-full border border-primary/20 bg-background/70 px-2.5 py-1 text-xs text-foreground/75" key={theme}>{theme}</span>
-                      ))}
-                    </dd>
-                  </div>
-                </dl>
-              </aside>
-            </div>
-          </motion.article>
-        </section>
-
-        <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" id="recommendations">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionHeading
-              eyebrow="Recommendations at a glance"
-              title="Ten design choices for lawful permission and proportionate value return."
-            />
-            <div className="grid gap-4 md:grid-cols-2">
-              {recommendations.map((recommendation, index) => (
-                <article className="rounded-2xl border border-border/80 bg-card/85 p-5 shadow-sm" key={recommendation.title}>
-                  <div className="mb-3 flex items-start gap-3">
-                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-cam-gold/45 bg-cam-gold/10 font-mono text-xs font-semibold text-[hsl(32_62%_25%)]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="font-serif text-xl leading-snug text-foreground">{recommendation.title}</h3>
-                  </div>
-                  <p className="pl-11 text-sm leading-relaxed text-foreground/75 md:text-base">{recommendation.effect}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-          <SectionHeading
-            eyebrow="Proposed national architecture"
-            title="Seven connected scheme limbs, with permission and value return kept legally distinct."
-            body="The architecture combines domestic training authority, corpus clearance, market-access duties, provider contributions, allocation mechanisms, and downstream durability."
-          />
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {architecture.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <article className={`rounded-2xl border border-border/80 bg-card/85 p-5 shadow-sm ${index === architecture.length - 1 ? "lg:col-start-2" : ""}`} key={item.title}>
-                  <Icon className="mb-4 h-5 w-5 text-[hsl(32_62%_25%)]" aria-hidden="true" />
-                  <h3 className="font-serif text-xl leading-snug text-foreground">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-foreground/75 md:text-base">{item.body}</p>
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="border-t border-border/60 bg-[hsl(38_40%_94%)]">
-          <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-            <SectionHeading eyebrow="Citation and status" title="A permanent public record for policy engagement." />
-            <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-              <article className="rounded-2xl border border-border/80 bg-card/85 p-6 shadow-sm">
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Suggested citation</p>
-                <blockquote className="border-l-2 border-cam-gold/70 pl-4 font-mono text-sm leading-relaxed text-foreground md:text-[15px]">
-                  CAM Initiative. (2026). AI Training, Contribution &amp; Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Human Custodian-of-Record: Dr Michelle Vivian O’Rourke.
-                </blockquote>
-              </article>
-              <article className="rounded-2xl border border-primary/25 bg-background/55 p-6 shadow-sm">
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Governance posture</p>
-                <p className="text-sm leading-relaxed text-foreground/75 md:text-base">
-                  This is an independent public policy proposal. It does not constitute legal, taxation, or investment advice. Indicative bands and implementation periods require empirical testing and legislative design.
-                </p>
-                <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="mailto:ethics@cam-initiative.org?subject=CAM%20Policy%20Proposal%2001%2F2026">
-                  Discuss the proposal
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </a>
-              </article>
-            </div>
-          </div>
+            </details>
+          </motion.div>
         </section>
       </main>
     </Shell>
