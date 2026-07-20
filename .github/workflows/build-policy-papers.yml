@@ -1,0 +1,57 @@
+name: Build Policy Papers branch
+
+on:
+  push:
+    branches:
+      - feature/policy-papers
+    paths:
+      - .policy-pdf/READY
+
+permissions:
+  contents: write
+
+jobs:
+  build-policy-papers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out policy branch
+        uses: actions/checkout@v4
+
+      - name: Reconstruct policy paper PDF
+        run: |
+          mkdir -p docs/publications
+          cat .policy-pdf/part-* | base64 --decode > docs/publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf
+          echo "8a3fc346a7ca45c114ae41dbd7e369b795cf808be102324dfc79833b8abf6399  docs/publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf" | sha256sum --check
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check source
+        run: pnpm exec tsc --noEmit
+
+      - name: Build GitHub Pages output
+        run: |
+          rm -rf docs/assets
+          pnpm exec vite build
+          node scripts/prepare-github-pages.js
+
+      - name: Remove temporary staging files
+        run: |
+          rm -rf .policy-pdf
+          rm -f .github/workflows/build-policy-papers.yml
+
+      - name: Commit completed Policy Papers website
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: publish Policy Papers section"
+          git push
