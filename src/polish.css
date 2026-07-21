@@ -98,3 +98,13 @@ aside[aria-label="Explore AI governance"] > div:last-child a:hover {
 header img[alt="CAM Initiative"] {
   content: url("/.well-known/bimi/cam-initiative.svg?v=1");
 }
+
+/* Keep all six VIGIL evidence-to-repair cards aligned. */
+section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article {
+  height: 13.5rem;
+  min-height: 13.5rem;
+}
+
+section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + div[aria-hidden="true"] {
+  height: 13.5rem;
+}
