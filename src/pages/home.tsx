@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronRight, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const initiativeResources = [
   {
@@ -201,7 +201,7 @@ const connectionLinks = [
 function SectionLabel({ children }: { children: string }) {
   return (
     <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">{children}</p>
+      <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">{children}</p>
       <hr className="gold-rule flex-1" />
     </div>
   );
@@ -242,7 +242,7 @@ function ExploreGovernancePanel() {
       transition={{ duration: 0.7, delay: 0.1 }}
     >
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-[hsl(32_62%_25%)]">Explore AI Governance</p>
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cam-gold">Explore AI Governance</p>
         <span className="h-2 w-2 rounded-full bg-cam-gold/80" aria-hidden="true" />
       </div>
 
@@ -255,7 +255,7 @@ function ExploreGovernancePanel() {
           >
             <span className="mb-1 flex items-center justify-between gap-3">
               <span className="font-serif text-xl leading-tight text-foreground">{resource.title}</span>
-              <ArrowRight className="h-4 w-4 shrink-0 text-[hsl(32_62%_25%)] transition-transform group-hover:translate-x-1" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
             <span className="block text-sm leading-snug text-foreground/75">{resource.purpose}</span>
           </a>
@@ -267,7 +267,7 @@ function ExploreGovernancePanel() {
         <div className="grid gap-2">
           {externalResources.map((resource) => (
             <a
-              className="group flex items-center justify-between gap-3 rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group flex items-center justify-between gap-3 rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               href={resource.href}
               key={resource.label}
               rel="noreferrer"
@@ -306,7 +306,7 @@ function ConstitutionalInterfaces() {
         <SectionLabel>Constitutional Interfaces</SectionLabel>
         <div className="mb-7 max-w-4xl">
           <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Explore the problems CAM is designed to govern.</h2>
-          <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
             Browse the constitutional corpus through the questions and problems it addresses rather than CAM’s internal domain names.
           </p>
         </div>
@@ -354,48 +354,70 @@ function ConstitutionalInterfaces() {
 
 function EvidenceRepairLoop() {
   return (
-    <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="evidence-repair-heading">
-      <SectionLabel>VIGIL: evidence to repair</SectionLabel>
-      <div className="mb-9 max-w-4xl">
-        <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-          Failures and compliance gaps should become evidence for repair.
-        </h2>
-        <div className="space-y-4 text-base leading-relaxed text-foreground/75 md:text-lg">
-          <p>
-            VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
-          </p>
-          <p>
-            Each record preserves the connection between what happened and what should change. VIGIL turns scattered signals into structured evidence, links diagnosed failures to the relevant CAM controls or governance gaps, and maintains a visible history of whether a proposed repair was implemented, closed, or remains under observation.
-          </p>
+    <section className="py-12 md:py-16" aria-labelledby="evidence-repair-heading">
+      <div className="container mx-auto max-w-6xl px-6 md:px-10">
+        <SectionLabel>VIGIL: evidence to repair</SectionLabel>
+        <div className="mb-9 max-w-4xl">
+          <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+            Failures and compliance gaps should become evidence for repair.
+          </h2>
+          <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
+            <p>
+              VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
+            </p>
+            <p>
+              Each record preserves the connection between what happened and what should change. VIGIL turns scattered signals into structured evidence, links diagnosed failures to the relevant CAM controls or governance gaps, and maintains a visible history of whether a proposed repair was implemented, closed, or remains under observation.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-        <div className="absolute left-[7%] right-[7%] top-7 hidden h-px bg-cam-gold/45 lg:block" aria-hidden="true" />
-        {evidenceRepairSteps.map((step, index) => (
-          <article className="relative z-10 flex h-full flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-sm" key={step.label}>
-            <div className="mb-4 flex items-center justify-between">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cam-gold/55 bg-[hsl(36_48%_96%)] font-mono text-xs font-semibold text-[hsl(32_62%_25%)] shadow-sm">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              {index < evidenceRepairSteps.length - 1 ? (
-                <ArrowRight className="absolute -right-[18px] top-5 hidden h-4 w-4 text-cam-gold lg:block" aria-hidden="true" />
-              ) : null}
-            </div>
-            <h3 className="mb-2 font-serif text-xl text-foreground">{step.label}</h3>
-            <p className="text-sm leading-relaxed text-foreground/75">{step.text}</p>
-          </article>
-        ))}
+      <div className="overflow-x-auto overflow-y-hidden pb-4">
+        <div className="mx-auto flex min-w-[1816px] items-start px-12 pb-8 pt-5">
+          {evidenceRepairSteps.map((step, index) => {
+            const isLast = index === evidenceRepairSteps.length - 1;
+            return (
+              <div className="flex items-start" key={step.label}>
+                <motion.article
+                  animate={{ opacity: 1, y: 0 }}
+                  className="cam-parchment-card flex min-h-[230px] w-[240px] flex-col rounded-2xl border border-cam-gold/35 p-5 shadow-[0_1px_4px_rgba(120,80,20,0.07)]"
+                  initial={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.45, delay: index * 0.06 }}
+                >
+                  <div className="mb-2.5 flex items-center justify-between">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">Step {String(index + 1).padStart(2, "0")}</span>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-cam-gold/35 bg-cam-gold/10" aria-hidden="true">
+                      <ChevronRight className="h-3 w-3 text-cam-gold" />
+                    </span>
+                  </div>
+                  <h3 className="font-serif text-xl leading-snug text-foreground">{step.label}</h3>
+                  <p className="mt-3 text-sm font-light leading-relaxed text-muted-foreground">{step.text}</p>
+                </motion.article>
+
+                {!isLast ? (
+                  <div className="flex h-[230px] w-14 shrink-0 items-center justify-center" aria-hidden="true">
+                    <svg width="36" height="14" viewBox="0 0 36 14" fill="none">
+                      <line x1="2" y1="7" x2="28" y2="7" stroke="#D4AA72" strokeWidth="1" />
+                      <polyline points="24,3 32,7 24,11" fill="none" stroke="#D4AA72" strokeWidth="1" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2">
-        {initiativeResources.filter((resource) => resource.id !== "policy-papers").map((resource) => (
-          <article className="cam-parchment-card flex h-full flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" key={resource.id}>
-            <h3 className="mb-3 font-serif text-3xl leading-snug text-foreground">{resource.title}</h3>
-            <p className="mb-5 flex-1 text-base leading-relaxed text-foreground/75">{resource.description}</p>
-            <ButtonLink href={resource.href} label={resource.cta} />
-          </article>
-        ))}
+      <div className="container mx-auto max-w-6xl px-6 md:px-10">
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          {initiativeResources.filter((resource) => resource.id !== "policy-papers").map((resource) => (
+            <article className="cam-parchment-card flex h-full flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" key={resource.id}>
+              <h3 className="mb-3 font-serif text-3xl leading-snug text-foreground">{resource.title}</h3>
+              <p className="mb-5 flex-1 text-base leading-relaxed text-muted-foreground">{resource.description}</p>
+              <ButtonLink href={resource.href} label={resource.cta} />
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -408,9 +430,9 @@ function ConnectPanel() {
       <article className="cam-parchment-card rounded-3xl border border-cam-gold/35 p-5 shadow-xl md:p-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
           <div className="max-w-2xl">
-            <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">CAM Initiative channels</p>
+            <p className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">CAM Initiative channels</p>
             <h2 className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
-            <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
               Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL accessible.
             </p>
           </div>
@@ -427,7 +449,7 @@ function ConnectPanel() {
                   rel={link.external ? "noreferrer" : undefined}
                   target={link.external ? "_blank" : undefined}
                 >
-                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cam-gold/35 bg-card text-[hsl(32_62%_25%)]">
+                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cam-gold/35 bg-card text-cam-gold">
                     <ConnectionIcon icon={link.icon} />
                   </span>
                   <span className="min-w-0 flex-1">
@@ -454,12 +476,10 @@ export default function Home() {
         <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
           <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
             <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-4xl" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-              <div className="mb-7 flex items-center gap-3">
-                <hr className="gold-rule w-16" />
-                <p className="font-mono text-[15px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">CAM Initiative</p>
-              </div>
-              <h1 className="mb-5 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">Governance Architecture</h1>
-              <p className="mb-8 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)] md:text-[15px]">
+              <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">CAM Initiative</p>
+              <h1 className="mb-3 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">Governance Architecture</h1>
+              <hr className="gold-rule mb-5 w-24" />
+              <p className="mb-8 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold md:text-[15px]">
                 Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.
               </p>
               <div className="max-w-3xl space-y-5 text-lg leading-relaxed text-foreground/80 md:text-xl">
