@@ -1,29 +1,32 @@
 import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const initiativeResources = [
   {
-    id: "cam-catalogue",
-    title: "CAM Catalogue",
-    purpose: "The constitutional corpus, governance domains, runtime schedules, safeguards, standards mappings, and operational instruments.",
-    description: "Browse the published CAM governance corpus and inspect the constitutional, domain, runtime, ethics, security, continuity, economic, and operational instruments that make up the architecture.",
-    cta: "Browse the CAM Catalogue",
-    href: "/catalogue",
-  },
-  {
     id: "vigil-observatory",
     title: "VIGIL Observatory",
+    subtitle: "Evidence-to-repair governance ledger",
     purpose: "Public evidence, observed failures, proposals, patch records, repair status, and post-patch monitoring.",
     description: "Explore the public ledger connecting real-world signals and failure modes to evidence, governance gaps, proposals, implemented patches, and continuing observation.",
     cta: "Browse the VIGIL Observatory",
     href: "/observatory",
   },
   {
+    id: "constitution-corpus",
+    title: "Constitution Corpus",
+    subtitle: "Constitutional governance architecture",
+    purpose: "The constitutional corpus, governance domains, runtime schedules, safeguards, standards mappings, and operational instruments.",
+    description: "Browse the published CAM governance corpus and inspect the constitutional, domain, runtime, ethics, security, continuity, economic, and operational instruments that make up the architecture.",
+    cta: "Browse the Constitution Corpus",
+    href: "/catalogue",
+  },
+  {
     id: "policy-papers",
     title: "Policy Papers",
-    purpose: "Public policy proposals translating CAM governance architecture into implementable institutional design.",
+    subtitle: "Public policy proposals and submissions",
+    purpose: "Policy proposals translating CAM governance architecture into implementable institutional, legal, economic, and administrative design.",
     description: "Read CAM Initiative policy papers applying governance primitives to law, public administration, market design, and technology transition.",
     cta: "Browse CAM Policy Papers",
     href: "/policy",
@@ -169,7 +172,7 @@ const connectionLinks = [
     external: true,
   },
   {
-    label: "CAM repository",
+    label: "Constitution Corpus repository",
     description: "Canonical governance corpus and source instruments",
     href: "https://github.com/CAM-Initiative/Caelestis",
     icon: "github",
@@ -253,11 +256,12 @@ function ExploreGovernancePanel() {
             href={resource.href}
             key={resource.id}
           >
-            <span className="mb-1 flex items-center justify-between gap-3">
+            <span className="flex items-center justify-between gap-3">
               <span className="font-serif text-xl leading-tight text-foreground">{resource.title}</span>
               <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
-            <span className="block text-sm leading-snug text-foreground/75">{resource.purpose}</span>
+            <span className="mt-1.5 block font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-cam-gold">{resource.subtitle}</span>
+            <span className="mt-2 block text-sm leading-snug text-foreground/75">{resource.purpose}</span>
           </a>
         ))}
       </div>
@@ -404,14 +408,35 @@ function EvidenceRepairLoop() {
       </div>
 
       <div className="container mx-auto max-w-6xl px-6 md:px-10">
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {initiativeResources.filter((resource) => resource.id !== "policy-papers").map((resource) => (
-            <article className="cam-parchment-card flex h-full flex-col rounded-2xl bg-[hsl(36_48%_96%)] p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/55 hover:shadow-md" key={resource.id}>
-              <h3 className="mb-3 font-serif text-3xl leading-snug text-foreground">{resource.title}</h3>
-              <p className="mb-5 flex-1 text-base leading-relaxed text-muted-foreground">{resource.description}</p>
-              <ButtonLink href={resource.href} label={resource.cta} />
-            </article>
-          ))}
+        <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_5rem_minmax(0,1fr)] lg:items-center">
+          <article className="cam-parchment-card relative flex h-full flex-col rounded-2xl border border-cam-gold/40 p-6 shadow-sm before:absolute before:-top-8 before:left-1/2 before:hidden before:h-8 before:w-px before:-translate-x-1/2 before:bg-cam-gold/40 lg:before:block">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Steps 01–03 · Evidence formation</p>
+            <h3 className="mt-3 font-serif text-3xl leading-snug text-foreground">VIGIL Observatory</h3>
+            <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
+              VIGIL observes, records, and classifies real-world signals so incidents and recurring failures become structured, reviewable evidence rather than isolated reports.
+            </p>
+            <a className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="/observatory">
+              Browse the VIGIL Observatory
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          </article>
+
+          <div className="flex flex-col items-center justify-center gap-2 py-1 text-cam-gold" aria-label="Bidirectional evidence and repair exchange">
+            <ArrowLeftRight className="h-6 w-6 rotate-90 lg:rotate-0" aria-hidden="true" />
+            <span className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.14em]">Evidence ↔ repair</span>
+          </div>
+
+          <article className="cam-parchment-card relative flex h-full flex-col rounded-2xl border border-cam-gold/40 p-6 shadow-sm before:absolute before:-top-8 before:left-1/2 before:hidden before:h-8 before:w-px before:-translate-x-1/2 before:bg-cam-gold/40 lg:before:block">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Steps 04–06 · Governance response</p>
+            <h3 className="mt-3 font-serif text-3xl leading-snug text-foreground">Constitution Corpus</h3>
+            <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
+              The Constitution Corpus supports diagnosis, repair, and learning by connecting evidence to governing duties, safeguards, arbitration rules, operational instruments, and amendments.
+            </p>
+            <a className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="/catalogue">
+              Browse the Constitution Corpus
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+            </a>
+          </article>
         </div>
       </div>
     </section>
