@@ -1,0 +1,66 @@
+name: Rebuild GitHub Pages output
+
+on:
+  push:
+    branches:
+      - main
+      - fix/pages-deployment-pipeline
+    paths:
+      - "src/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "vite.config.ts"
+      - "scripts/prepare-github-pages.js"
+      - ".github/workflows/publish-pages-output.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-output-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rebuild-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild published site
+        run: |
+          rm -rf docs/assets
+          pnpm exec vite build
+          node scripts/prepare-github-pages.js
+
+      - name: Validate generated Pages output
+        run: python scripts/validate-docs-published-output.py --base HEAD~1
+
+      - name: Commit rebuilt docs output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --cached --quiet; then
+            echo "Published /docs output is already current."
+          else
+            git commit -m "chore: rebuild GitHub Pages output [skip ci]"
+            git push
+          fi
