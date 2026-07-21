@@ -3,7 +3,7 @@
 
 This repository publishes GitHub Pages from docs/. The guard is intentionally
 repo-level and diff-based: when website source files change in a branch or local
-working tree, the same diff must include a docs/ change.
+working tree, the same diff must include the corresponding generated output.
 """
 
 from __future__ import annotations
@@ -17,6 +17,13 @@ from pathlib import Path
 from typing import Iterable
 
 DOCS_OUTPUT_PREFIX = "docs/"
+GENERATED_ASSET_PREFIX = "docs/assets/"
+GENERATED_ENTRYPOINTS = {
+    "docs/index.html",
+    "docs/404.html",
+}
+PUBLIC_SOURCE_PREFIX = "src/public/"
+SOURCE_ENTRYPOINT = "src/index.html"
 
 # The website is a Vite app rooted at src/ (see vite.config.ts). Keep this list
 # intentionally focused on files that feed the published site, and avoid VIGIL
@@ -150,6 +157,25 @@ def is_website_source(path: str) -> bool:
     return any(normalized.startswith(prefix) for prefix in WEBSITE_SOURCE_PREFIXES)
 
 
+def is_bundle_source(path: str) -> bool:
+    normalized = normalize(path)
+    if normalized in WEBSITE_SOURCE_FILES:
+        return True
+    return (
+        normalized.startswith("src/")
+        and not normalized.startswith(PUBLIC_SOURCE_PREFIX)
+        and normalized != SOURCE_ENTRYPOINT
+    )
+
+
+def expected_public_output(path: str) -> str | None:
+    normalized = normalize(path)
+    if not normalized.startswith(PUBLIC_SOURCE_PREFIX):
+        return None
+    relative_path = normalized.removeprefix(PUBLIC_SOURCE_PREFIX)
+    return f"docs/{relative_path}"
+
+
 def format_paths(paths: Iterable[str]) -> str:
     sorted_paths = sorted(paths)
     if not sorted_paths:
@@ -173,28 +199,70 @@ def main() -> int:
     base_ref = resolve_base_ref(args.base)
     changed_paths = committed_changed_paths(base_ref) | local_changed_paths()
 
-    website_source_changes = {path for path in changed_paths if is_website_source(path)}
-    docs_changes = {path for path in changed_paths if is_docs_output(path)}
+    normalized_changes = {normalize(path) for path in changed_paths}
+    website_source_changes = {path for path in normalized_changes if is_website_source(path)}
+    docs_changes = {path for path in normalized_changes if is_docs_output(path)}
+    bundle_source_changes = {path for path in website_source_changes if is_bundle_source(path)}
+    generated_asset_changes = {
+        path for path in docs_changes if path.startswith(GENERATED_ASSET_PREFIX)
+    }
+    entrypoint_source_changed = SOURCE_ENTRYPOINT in website_source_changes
+    generated_entrypoint_changes = docs_changes & GENERATED_ENTRYPOINTS
+    expected_public_outputs = {
+        output
+        for path in website_source_changes
+        if (output := expected_public_output(path)) is not None
+    }
+    missing_public_outputs = expected_public_outputs - docs_changes
 
     print(f"Docs publication validator base ref: {base_ref}")
     print(f"Website source changes detected: {len(website_source_changes)}")
+    print(f"Bundle-producing source changes detected: {len(bundle_source_changes)}")
+    print(f"Generated asset changes detected: {len(generated_asset_changes)}")
     print(f"/docs output changes detected: {len(docs_changes)}")
 
+    errors: list[str] = []
+
     if website_source_changes and not docs_changes:
+        errors.append(
+            "Website source files changed, but `/docs` was not updated at all."
+        )
+
+    if bundle_source_changes and not generated_asset_changes:
+        errors.append(
+            "Application source changed, but no rebuilt file under `docs/assets/` is present. "
+            "A PDF, favicon, sitemap, or other unrelated `/docs` change cannot satisfy the build guard."
+        )
+
+    if entrypoint_source_changed and not generated_entrypoint_changes:
+        errors.append(
+            "`src/index.html` changed, but neither `docs/index.html` nor `docs/404.html` was regenerated."
+        )
+
+    if missing_public_outputs:
+        errors.append(
+            "Files under `src/public/` changed without their matching published `/docs` files."
+        )
+
+    if errors:
+        print("\nERROR: Published GitHub Pages output is stale or incomplete.\n", file=sys.stderr)
+        for error in errors:
+            print(f"- {error}", file=sys.stderr)
+        print("\nWebsite source changes:", file=sys.stderr)
+        print(format_paths(website_source_changes), file=sys.stderr)
+        print("\nGenerated asset changes:", file=sys.stderr)
+        print(format_paths(generated_asset_changes), file=sys.stderr)
+        if missing_public_outputs:
+            print("\nMissing public outputs:", file=sys.stderr)
+            print(format_paths(missing_public_outputs), file=sys.stderr)
         print(
-            "\nERROR: Website source files changed, but `/docs` was not updated. "
-            "This repository publishes GitHub Pages from `/docs`; run the site "
-            "build/export step or manually propagate the published output before "
-            "reporting completion.\n",
+            "\nRun the site build/export step before reporting the website update as complete.",
             file=sys.stderr,
         )
-        print("Website source changes:", file=sys.stderr)
-        print(format_paths(website_source_changes), file=sys.stderr)
-        print("\nExpected at least one changed path under docs/.", file=sys.stderr)
         return 1
 
-    if website_source_changes and docs_changes:
-        print("PASS: website source and /docs output both changed.")
+    if website_source_changes:
+        print("PASS: website source changes have corresponding generated Pages output.")
     elif docs_changes:
         print("PASS: /docs output changed without website source changes.")
     else:
