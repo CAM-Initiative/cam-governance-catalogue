@@ -93,3 +93,8 @@ aside[aria-label="Explore AI governance"] > div:last-child a:hover {
   background-color: hsl(36 52% 90%);
   border-color: hsl(var(--cam-gold) / 0.6);
 }
+
+/* Use the stable pure-vector CAM mark for the inline header brand image. */
+header img[alt="CAM Initiative"] {
+  content: url("/.well-known/bimi/cam-initiative.svg?v=1");
+}
