@@ -8,7 +8,7 @@ const initiativeResources = [
     id: "vigil-observatory",
     title: "VIGIL Observatory",
     subtitle: "Evidence-to-repair governance ledger",
-    purpose: "Public evidence, observed failures, proposals, patch records, repair status, and post-patch monitoring.",
+    purpose: "Evidence, failure modes, proposals, patches and post-patch monitoring.",
     description: "Explore the public ledger connecting real-world signals and failure modes to evidence, governance gaps, proposals, implemented patches, and continuing observation.",
     cta: "Browse the VIGIL Observatory",
     href: "/observatory",
@@ -17,7 +17,7 @@ const initiativeResources = [
     id: "constitution-corpus",
     title: "Constitution Corpus",
     subtitle: "Constitutional governance architecture",
-    purpose: "The constitutional corpus, governance domains, runtime schedules, safeguards, standards mappings, and operational instruments.",
+    purpose: "Constitutional instruments, runtime schedules, safeguards, standards mappings and operational controls.",
     description: "Browse the published CAM governance corpus and inspect the constitutional, domain, runtime, ethics, security, continuity, economic, and operational instruments that make up the architecture.",
     cta: "Browse the Constitution Corpus",
     href: "/catalogue",
@@ -26,7 +26,7 @@ const initiativeResources = [
     id: "policy-papers",
     title: "Policy Papers",
     subtitle: "Public policy proposals and submissions",
-    purpose: "Policy proposals translating CAM governance architecture into implementable institutional, legal, economic, and administrative design.",
+    purpose: "Proposals applying CAM governance to institutional, legal, economic and administrative design.",
     description: "Read CAM Initiative policy papers applying governance primitives to law, public administration, market design, and technology transition.",
     cta: "Browse CAM Policy Papers",
     href: "/policy",
@@ -37,6 +37,7 @@ const externalResources = [
   { label: "AI Regulations Tracker", href: "https://regulations.ai/" },
   { label: "AI Incident Database", href: "https://incidentdatabase.ai/" },
   { label: "OECD AI Incidents Monitor", href: "https://oecd.ai/en/incidents" },
+  { label: "NIST AI Resource Center", href: "https://airc.nist.gov/" },
 ];
 
 const evidenceRepairSteps = [
@@ -261,7 +262,7 @@ function ExploreGovernancePanel() {
               <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
             <span className="mt-1.5 block font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-cam-gold">{resource.subtitle}</span>
-            <span className="mt-2 block text-sm leading-snug text-foreground/75">{resource.purpose}</span>
+            <span className="mt-2 block text-sm leading-snug text-muted-foreground">{resource.purpose}</span>
           </a>
         ))}
       </div>
@@ -443,6 +444,39 @@ function EvidenceRepairLoop() {
   );
 }
 
+function PolicyPapersPanel() {
+  return (
+    <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="policy-papers-home-heading" id="policy-papers">
+      <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+        <SectionLabel>Policy Papers</SectionLabel>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
+          <div className="max-w-3xl">
+            <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+              From governance architecture to public policy.
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+              CAM Initiative policy papers translate governance principles into proposals for institutions, legislation, public administration, economic design, and accountable technology transition. Each publication preserves its status, submission history, citation, and downloadable source document.
+            </p>
+          </div>
+
+          <a
+            className="cam-parchment-card group rounded-2xl border border-cam-gold/40 p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/60 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            href="/policy"
+          >
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Current publication · Policy Proposal 01/2026</p>
+            <h3 className="mt-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">AI Training, Contribution &amp; Copyright Scheme</h3>
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">Copyright permission, contribution valuation and sovereign value return.</p>
+            <span className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition group-hover:text-foreground">
+              Browse CAM Policy Papers
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ConnectPanel() {
   return (
     <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
@@ -521,6 +555,7 @@ export default function Home() {
 
         <ConstitutionalInterfaces />
         <EvidenceRepairLoop />
+        <PolicyPapersPanel />
         <ConnectPanel />
       </main>
     </Shell>
