@@ -60,7 +60,7 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="container mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <img
-              src={`${import.meta.env.BASE_URL}favicon.svg`}
+              src="/cam-triskelion.svg"
               alt="CAM Initiative"
               className="w-7 h-7 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
               style={{ filter: "drop-shadow(0 0 1px rgba(184,147,90,0.3))" }}
