@@ -12,11 +12,11 @@ function SectionHeading({ eyebrow, title, body }: { eyebrow: string; title: stri
   return (
     <div className="mb-7 max-w-4xl">
       <div className="mb-4 flex items-center gap-3">
-        <p className="shrink-0 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">{eyebrow}</p>
+        <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">{eyebrow}</p>
         <hr className="gold-rule flex-1" />
       </div>
       <h2 className="font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h2>
-      {body ? <p className="mt-3 text-base leading-relaxed text-foreground/75 md:text-lg">{body}</p> : null}
+      {body ? <p className="mt-3 text-base leading-relaxed text-muted-foreground md:text-lg">{body}</p> : null}
     </div>
   );
 }
@@ -37,7 +37,7 @@ function CitationCopyButton() {
   return (
     <button
       aria-label="Copy policy citation"
-      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/20 bg-card px-2.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[hsl(32_62%_25%)] transition hover:border-primary/45 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/20 bg-card px-2.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-cam-gold transition hover:border-primary/45 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       onClick={copyCitation}
       type="button"
     >
@@ -50,23 +50,22 @@ function CitationCopyButton() {
 export default function Policy() {
   return (
     <Shell>
-      <main className="overflow-hidden">
-        <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
-          <div className="container mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-20">
-            <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-              <div className="mb-6 flex items-center gap-3">
-                <hr className="gold-rule w-16" />
-                <p className="font-mono text-[15px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">CAM Initiative · Public Policy</p>
-              </div>
-              <h1 className="mb-6 font-serif text-5xl leading-[1.02] text-foreground md:text-7xl">Policy Papers</h1>
-              <p className="max-w-4xl text-lg leading-relaxed text-foreground/80 md:text-xl">
-                Public policy proposals translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
-              </p>
-            </motion.div>
-          </div>
-        </section>
+      <main className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+        <motion.header
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-14 max-w-3xl"
+          initial={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.7 }}
+        >
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">CAM Initiative Public Policy</p>
+          <h1 className="mb-3 font-serif text-4xl text-foreground md:text-5xl">Policy Papers</h1>
+          <hr className="gold-rule mb-4 w-24" />
+          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            Public policy proposals translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
+          </p>
+        </motion.header>
 
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="policy-publications-heading">
+        <section className="mb-4" aria-labelledby="policy-publications-heading">
           <SectionHeading
             eyebrow="Current publication"
             title="Independent policy proposals grounded in inspectable governance architecture."
@@ -83,7 +82,7 @@ export default function Policy() {
           >
             <div className="border-b border-cam-gold/25 bg-card px-6 py-5 md:px-8">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Policy Proposal 01/2026</p>
+                <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">Policy Proposal 01/2026</p>
                 <span className="rounded-full border border-primary/20 bg-background/70 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/65">
                   Independent public policy proposal
                 </span>
@@ -92,7 +91,7 @@ export default function Policy() {
 
             <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_340px]">
               <div>
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">20 July 2026</p>
+                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">20 July 2026</p>
                 <h2 id="policy-publications-heading" className="font-serif text-4xl leading-tight text-foreground md:text-5xl">
                   AI Training, Contribution &amp; Copyright Scheme
                 </h2>
@@ -138,7 +137,7 @@ export default function Policy() {
               </div>
 
               <aside className="h-fit rounded-2xl border border-border/80 bg-background/55 p-5 shadow-sm" aria-label="Publication details">
-                <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Publication details</p>
+                <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">Publication details</p>
                 <dl className="space-y-4 text-sm leading-relaxed">
                   <div>
                     <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Proposed by</dt>
