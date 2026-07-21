@@ -54,3 +54,42 @@ main:has(#impact-lenses-heading) > header > p:nth-of-type(2) {
   order: 5;
   margin-top: 0;
 }
+
+/* Homepage sequence: VIGIL first, then constitutional interfaces, policy papers, and connection channels. */
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) {
+  display: flex;
+  flex-direction: column;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child {
+  order: 0;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section[aria-labelledby="evidence-repair-heading"] {
+  order: 1;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section[aria-labelledby="constitutional-interfaces-heading"] {
+  order: 2;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section#policy-papers {
+  order: 3;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section#connect {
+  order: 4;
+}
+
+/* Match the External tools label to the Explore AI Governance heading and strengthen link hover feedback. */
+aside[aria-label="Explore AI governance"] > div:last-child > p {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.2em;
+  color: hsl(var(--cam-gold));
+}
+
+aside[aria-label="Explore AI governance"] > div:last-child a:hover {
+  background-color: hsl(36 52% 90%);
+  border-color: hsl(var(--cam-gold) / 0.6);
+}
