@@ -1,3 +1,4 @@
+// Published output synchronisation for PR #63; removed by the next full Vite rebuild.
 (() => {
   const oldFooter = "Governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems";
   const newFooter = "Governance architecture, evidence-led repair, and public policy for artificial intelligence and synthetic agents.";
