@@ -3,8 +3,7 @@ name: Rebuild GitHub Pages output
 on:
   push:
     branches:
-      - main
-      - fix/pages-deployment-pipeline
+      - "**"
     paths:
       - "src/**"
       - "package.json"
