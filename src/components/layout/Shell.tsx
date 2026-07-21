@@ -236,7 +236,7 @@ export function Shell({ children }: { children: ReactNode }) {
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
             <div className="max-w-2xl space-y-2 text-center md:text-left">
               <p className="text-base font-semibold leading-relaxed text-foreground md:text-[17px]">
-                Governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems
+                Governance architecture, evidence-led repair, and public policy for artificial intelligence and synthetic agents.
               </p>
               <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
                 © 2026 CAM Initiative. All rights reserved.
