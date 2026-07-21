@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Coffee, ExternalLink, Github, Mail } from "lucide-react";
+import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const initiativeResources = [
   {
@@ -38,11 +38,11 @@ const externalResources = [
 
 const evidenceRepairSteps = [
   { label: "Observe", text: "Identify a real-world signal, incident, compliance gap, or governance breakdown." },
-  { label: "Record", text: "Preserve evidence, context, affected systems, and relevant obligations." },
-  { label: "Classify", text: "Map the signal to a repeatable failure, control gap, or governance pattern." },
+  { label: "Record", text: "Preserve evidence, context, affected systems, sources, and relevant obligations." },
+  { label: "Classify", text: "Map the signal to a repeatable failure mode, control gap, or governance pattern." },
   { label: "Diagnose", text: "Locate the design, accountability, implementation, or assurance weakness." },
   { label: "Repair", text: "Connect the evidence to a patch, safeguard, standard, instrument, or proposal." },
-  { label: "Learn", text: "Feed the repair back into governance, compliance practice, and future-system design." },
+  { label: "Learn", text: "Track outcomes and feed the repair back into governance and future-system design." },
 ];
 
 const interfaceGroups = [
@@ -153,14 +153,49 @@ const interfaceGroups = [
   },
 ];
 
-const repositoryLinks = [
-  { label: "CAM repository", href: "https://github.com/CAM-Initiative/Caelestis" },
-  { label: "VIGIL repository", href: "https://github.com/CAM-Initiative/Vigil" },
-];
-
-const supportingLinks = [
-  { label: "Updates", href: "https://x.com/CAM_Initiative", icon: "x" },
-  { label: "Support", href: "https://buymeacoffee.com/cam_initiative", icon: "support" },
+const connectionLinks = [
+  {
+    label: "Email",
+    description: "Direct correspondence with the CAM Initiative",
+    href: "mailto:ethics@cam-initiative.org",
+    icon: "mail",
+    external: false,
+  },
+  {
+    label: "Substack",
+    description: "Essays, policy commentary, and longer-form updates",
+    href: "https://substack.com",
+    icon: "substack",
+    external: true,
+  },
+  {
+    label: "CAM repository",
+    description: "Canonical governance corpus and source instruments",
+    href: "https://github.com/CAM-Initiative/Caelestis",
+    icon: "github",
+    external: true,
+  },
+  {
+    label: "VIGIL repository",
+    description: "Evidence ledger, records, schemas, and repair history",
+    href: "https://github.com/CAM-Initiative/Vigil",
+    icon: "github",
+    external: true,
+  },
+  {
+    label: "Updates on X",
+    description: "Current observations, releases, and public discussion",
+    href: "https://x.com/CAM_Initiative",
+    icon: "x",
+    external: true,
+  },
+  {
+    label: "Support",
+    description: "Support the public infrastructure and ongoing work",
+    href: "https://buymeacoffee.com/cam_initiative",
+    icon: "support",
+    external: true,
+  },
 ];
 
 function SectionLabel({ children }: { children: string }) {
@@ -188,10 +223,13 @@ function ButtonLink({ href, label, primary = false }: { href: string; label: str
   );
 }
 
-function ActionIcon({ icon }: { icon: string }) {
+function ConnectionIcon({ icon }: { icon: string }) {
+  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "substack") return <Newspaper className="h-4 w-4" aria-hidden="true" />;
   if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
   if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
-  return <ExternalLink className="h-4 w-4" aria-hidden="true" />;
+  return <BookOpen className="h-4 w-4" aria-hidden="true" />;
 }
 
 function ExploreGovernancePanel() {
@@ -318,21 +356,32 @@ function EvidenceRepairLoop() {
   return (
     <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" aria-labelledby="evidence-repair-heading">
       <SectionLabel>VIGIL: evidence to repair</SectionLabel>
-      <div className="mb-7 max-w-3xl">
-        <h2 id="evidence-repair-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+      <div className="mb-9 max-w-4xl">
+        <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
           Failures and compliance gaps should become evidence for repair.
         </h2>
-        <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
-          VIGIL preserves what happened. CAM provides the governance structure needed to diagnose the gap, assess affected controls or obligations, and carry a repair forward.
-        </p>
+        <div className="space-y-4 text-base leading-relaxed text-foreground/75 md:text-lg">
+          <p>
+            VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
+          </p>
+          <p>
+            Each record preserves the connection between what happened and what should change. VIGIL turns scattered signals into structured evidence, links diagnosed failures to the relevant CAM controls or governance gaps, and maintains a visible history of whether a proposed repair was implemented, closed, or remains under observation.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+      <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="absolute left-[7%] right-[7%] top-7 hidden h-px bg-cam-gold/45 lg:block" aria-hidden="true" />
         {evidenceRepairSteps.map((step, index) => (
-          <article className="rounded-2xl border border-border/80 bg-card/85 p-4 shadow-sm" key={step.label}>
-            <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">
-              {String(index + 1).padStart(2, "0")}
-            </p>
+          <article className="relative z-10 flex h-full flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-sm" key={step.label}>
+            <div className="mb-4 flex items-center justify-between">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cam-gold/55 bg-[hsl(36_48%_96%)] font-mono text-xs font-semibold text-[hsl(32_62%_25%)] shadow-sm">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {index < evidenceRepairSteps.length - 1 ? (
+                <ArrowRight className="absolute -right-[18px] top-5 hidden h-4 w-4 text-cam-gold lg:block" aria-hidden="true" />
+              ) : null}
+            </div>
             <h3 className="mb-2 font-serif text-xl text-foreground">{step.label}</h3>
             <p className="text-sm leading-relaxed text-foreground/75">{step.text}</p>
           </article>
@@ -348,6 +397,52 @@ function EvidenceRepairLoop() {
           </article>
         ))}
       </div>
+    </section>
+  );
+}
+
+function ConnectPanel() {
+  return (
+    <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
+      <SectionLabel>Connect</SectionLabel>
+      <article className="cam-parchment-card rounded-3xl border border-cam-gold/35 p-5 shadow-xl md:p-8">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
+          <div className="max-w-2xl">
+            <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">CAM Initiative channels</p>
+            <h2 className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
+            <p className="text-base leading-relaxed text-foreground/75 md:text-lg">
+              Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL accessible.
+            </p>
+          </div>
+
+          <nav aria-label="Connect with the CAM Initiative" className="overflow-hidden rounded-2xl border border-cam-gold/30 bg-[hsl(36_48%_96%)] shadow-sm">
+            <div className="grid sm:grid-cols-2">
+              {connectionLinks.map((link, index) => (
+                <a
+                  className={`group flex min-h-24 items-start gap-3 p-4 transition hover:bg-[hsl(36_52%_93%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${
+                    index % 2 === 0 ? "sm:border-r sm:border-cam-gold/25" : ""
+                  } ${index < connectionLinks.length - 2 ? "border-b border-cam-gold/25" : ""}`}
+                  href={link.href}
+                  key={link.label}
+                  rel={link.external ? "noreferrer" : undefined}
+                  target={link.external ? "_blank" : undefined}
+                >
+                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cam-gold/35 bg-card text-[hsl(32_62%_25%)]">
+                    <ConnectionIcon icon={link.icon} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center justify-between gap-3">
+                      <span className="font-serif text-xl leading-tight text-foreground">{link.label}</span>
+                      {link.external ? <ExternalLink className="h-3.5 w-3.5 shrink-0 text-foreground/45 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0 text-foreground/45 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />}
+                    </span>
+                    <span className="mt-1 block text-sm leading-snug text-foreground/65">{link.description}</span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </article>
     </section>
   );
 }
@@ -386,63 +481,7 @@ export default function Home() {
 
         <ConstitutionalInterfaces />
         <EvidenceRepairLoop />
-
-        <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
-          <SectionLabel>Connect</SectionLabel>
-          <article className="rounded-3xl border border-border/80 bg-card/80 p-6 shadow-sm md:p-8">
-            <div className="grid gap-7 md:grid-cols-[minmax(0,1fr)_minmax(300px,0.85fr)] md:items-center">
-              <div className="max-w-2xl">
-                <h2 className="mb-3 font-serif text-3xl leading-snug text-foreground">Work with the CAM Initiative</h2>
-                <p className="text-base leading-relaxed text-foreground/75">
-                  Review the governance corpus, examine VIGIL records, collaborate on standards and research, or support the public infrastructure that keeps the work accessible.
-                </p>
-              </div>
-
-              <div className="grid gap-3">
-                <a
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-cam-gold/55 bg-cam-gold/15 px-5 py-3 text-sm font-semibold text-foreground transition hover:bg-cam-gold/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  href="mailto:ethics@cam-initiative.org"
-                >
-                  <Mail className="h-4 w-4" aria-hidden="true" />
-                  <span>Email the CAM Initiative</span>
-                </a>
-
-                <div className="grid gap-2">
-                  {repositoryLinks.map((link) => (
-                    <a
-                      aria-label={`${link.label} on GitHub`}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-background/65 px-3 py-2.5 text-sm font-medium text-foreground transition hover:border-primary/45 hover:text-primary"
-                      href={link.href}
-                      key={link.label}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <Github className="h-4 w-4" aria-hidden="true" />
-                      <span>{link.label}</span>
-                      <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-                    </a>
-                  ))}
-                </div>
-
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {supportingLinks.map((link) => (
-                    <a
-                      className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/20 bg-background/65 px-3 py-2.5 text-sm font-medium text-foreground transition hover:border-primary/45 hover:text-primary"
-                      href={link.href}
-                      key={link.label}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <ActionIcon icon={link.icon} />
-                      <span>{link.label}</span>
-                      <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </article>
-        </section>
+        <ConnectPanel />
       </main>
     </Shell>
   );
