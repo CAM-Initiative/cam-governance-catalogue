@@ -94,11 +94,6 @@ aside[aria-label="Explore AI governance"] > div:last-child a:hover {
   border-color: hsl(var(--cam-gold) / 0.6);
 }
 
-/* Use the verified transparent gold website mark for the inline header brand image. */
-header img[alt="CAM Initiative"] {
-  content: url("/favicon.svg?v=5");
-}
-
 /* Keep all six VIGIL evidence-to-repair step cards and connectors aligned. */
 section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article {
   height: 13.5rem;
