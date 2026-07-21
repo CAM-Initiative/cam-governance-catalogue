@@ -57,7 +57,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       aria-label="Copy citation"
-      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-[hsl(32_62%_25%)] transition-colors hover:bg-background/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold transition-colors hover:bg-background/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       onClick={handleCopy}
       type="button"
     >
@@ -70,7 +70,7 @@ function CopyButton({ text }: { text: string }) {
 function SectionHeading({ eyebrow }: { eyebrow: string }) {
   return (
     <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-sm font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">{eyebrow}</p>
+      <p className="shrink-0 font-mono text-sm font-semibold uppercase tracking-[0.22em] text-cam-gold">{eyebrow}</p>
       <hr className="gold-rule flex-1" />
     </div>
   );
@@ -79,7 +79,7 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
 function AboutDetails({ title, children }: { title: string; children: ReactNode }) {
   return (
     <details className="group overflow-hidden rounded-xl border border-border/80 bg-card/75 text-sm shadow-sm">
-      <summary className="cursor-pointer list-none p-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-[hsl(32_62%_25%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+      <summary className="cursor-pointer list-none p-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
           <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
@@ -99,12 +99,8 @@ export default function About() {
     <Shell>
       <main className="container mx-auto max-w-5xl px-6 py-12 md:px-10 md:py-16">
         <motion.header animate={{ opacity: 1, y: 0 }} className="mb-14" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-          <div className="mb-6 flex items-center gap-2">
-            <hr className="gold-rule w-16" />
-            <div className="h-1.5 w-1.5 rounded-full bg-primary/60" />
-          </div>
-          <p className="mb-4 font-mono text-[15px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">Public-benefit governance infrastructure</p>
-          <h1 className="mb-6 font-serif text-4xl leading-tight text-foreground md:text-5xl">About the CAM Initiative</h1>
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Public-benefit governance infrastructure</p>
+          <h1 className="mb-3 font-serif text-4xl leading-tight text-foreground md:text-5xl">About the CAM Initiative</h1>
           <hr className="gold-rule mb-8 w-24" />
         </motion.header>
 
@@ -149,7 +145,7 @@ export default function About() {
           <div className="grid gap-4 md:grid-cols-2">
             {maintainedLayers.map((layer, index) => (
               <motion.article className="rounded-2xl border border-border/80 bg-card/80 p-5 shadow-sm" initial={{ opacity: 0, y: 8 }} key={layer.label} transition={{ duration: 0.45, delay: index * 0.06 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{layer.eyebrow}</p>
+                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">{layer.eyebrow}</p>
                 <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">{layer.label}</h2>
                 <p className="text-base leading-relaxed text-foreground/75">{layer.body}</p>
               </motion.article>
@@ -180,7 +176,7 @@ export default function About() {
               {citations.map((item) => (
                 <div className="rounded-xl border border-border/90 bg-card/85 p-4" key={item.label}>
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">{item.label}</p>
+                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">{item.label}</p>
                     <CopyButton text={item.citation} />
                   </div>
                   <blockquote className="border-l-2 border-cam-gold/70 pl-4 font-mono text-sm leading-relaxed text-foreground md:text-[15px]">{item.citation}</blockquote>

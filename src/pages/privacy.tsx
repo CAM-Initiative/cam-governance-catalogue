@@ -18,10 +18,11 @@ export default function Privacy() {
   return (
     <Shell>
       <main className="container mx-auto max-w-4xl px-6 py-12 md:px-10 md:py-16">
-        <div className="mb-8">
-          <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-[0.22em] text-[hsl(32_62%_25%)]">Privacy</p>
-          <h1 className="mb-4 font-serif text-4xl text-foreground md:text-5xl">Privacy Policy</h1>
-          <p className="text-base leading-relaxed text-foreground/75 md:text-lg">Plain-language privacy information for the CAM Initiative public website and email correspondence. It explains current site behaviour and is not a claim of legal certification or regulatory compliance.</p>
+        <div className="mb-10">
+          <p className="mb-3 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">Privacy</p>
+          <h1 className="mb-3 font-serif text-4xl text-foreground md:text-5xl">Privacy Policy</h1>
+          <hr className="gold-rule mb-4 w-24" />
+          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">Plain-language privacy information for the CAM Initiative public website and email correspondence. It explains current site behaviour and is not a claim of legal certification or regulatory compliance.</p>
         </div>
         <div className="space-y-4">
           {sections.map(([title, body]) => (
