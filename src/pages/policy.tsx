@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { ArrowRight, Download, ExternalLink } from "lucide-react";
+import { Check, Copy, Download, ExternalLink } from "lucide-react";
 
 const policyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf`;
 
@@ -17,6 +18,32 @@ function SectionHeading({ eyebrow, title, body }: { eyebrow: string; title: stri
       <h2 className="font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h2>
       {body ? <p className="mt-3 text-base leading-relaxed text-foreground/75 md:text-lg">{body}</p> : null}
     </div>
+  );
+}
+
+function CitationCopyButton() {
+  const [copied, setCopied] = useState(false);
+
+  const copyCitation = async () => {
+    try {
+      await navigator.clipboard.writeText(suggestedCitation);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <button
+      aria-label="Copy policy citation"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/20 bg-card px-2.5 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-[hsl(32_62%_25%)] transition hover:border-primary/45 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      onClick={copyCitation}
+      type="button"
+    >
+      {copied ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
+      {copied ? "Copied" : "Copy"}
+    </button>
   );
 }
 
@@ -63,7 +90,7 @@ export default function Policy() {
               </div>
             </div>
 
-            <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="grid gap-8 p-6 md:p-8 lg:grid-cols-[minmax(0,1fr)_340px]">
               <div>
                 <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">20 July 2026</p>
                 <h2 id="policy-publications-heading" className="font-serif text-4xl leading-tight text-foreground md:text-5xl">
@@ -141,30 +168,17 @@ export default function Policy() {
                       ))}
                     </dd>
                   </div>
+                  <div className="border-t border-border/80 pt-4">
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <dt className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground/50">Suggested citation</dt>
+                      <CitationCopyButton />
+                    </div>
+                    <dd className="rounded-xl border border-border/80 bg-card p-4 font-mono text-xs leading-relaxed text-foreground/80">
+                      {suggestedCitation}
+                    </dd>
+                  </div>
                 </dl>
               </aside>
-            </div>
-
-            <div className="border-t border-border/80 bg-card p-6 md:p-8">
-              <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-                <section aria-labelledby="policy-citation-heading">
-                  <p id="policy-citation-heading" className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Suggested citation</p>
-                  <blockquote className="rounded-2xl border border-border/80 bg-background/55 p-5 font-mono text-sm leading-relaxed text-foreground shadow-sm md:text-[15px]">
-                    {suggestedCitation}
-                  </blockquote>
-                </section>
-
-                <section className="rounded-2xl border border-border/80 bg-background/55 p-5 shadow-sm" aria-labelledby="policy-posture-heading">
-                  <p id="policy-posture-heading" className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[hsl(32_62%_25%)]">Governance posture</p>
-                  <p className="text-sm leading-relaxed text-foreground/75 md:text-base">
-                    This is an independent public policy proposal. It does not constitute legal, taxation, or investment advice. Indicative bands and implementation periods require empirical testing and legislative design.
-                  </p>
-                  <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="mailto:ethics@cam-initiative.org?subject=CAM%20Policy%20Proposal%2001%2F2026">
-                    Discuss the proposal
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </a>
-                </section>
-              </div>
             </div>
           </motion.article>
         </section>
