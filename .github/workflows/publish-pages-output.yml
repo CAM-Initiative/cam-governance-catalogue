@@ -2,6 +2,7 @@ name: Rebuild GitHub Pages output
 
 on:
   push:
+    # Build source changes on feature branches as well as main so PRs carry current /docs output.
     branches:
       - "**"
     paths:
