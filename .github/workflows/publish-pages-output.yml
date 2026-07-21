@@ -2,6 +2,7 @@ name: Rebuild GitHub Pages output
 
 on:
   push:
+    # Build source changes on feature branches as well as main so PRs carry current /docs output.
     branches:
       - "**"
     paths:
@@ -29,40 +30,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Apply requested homepage polish
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-
-          shell = Path("src/components/layout/Shell.tsx")
-          text = shell.read_text()
-          old = "Governance infrastructure for artificial intelligence, synthetic agents, and runtime governance systems"
-          new = "Governance architecture, evidence-led repair, and public policy for artificial intelligence and synthetic agents."
-          if old not in text:
-              raise SystemExit("Expected footer statement was not found")
-          shell.write_text(text.replace(old, new, 1))
-
-          polish = Path("src/polish.css")
-          css = polish.read_text()
-          marker = "/* Keep all six VIGIL evidence-to-repair cards aligned. */"
-          block = '''
-
-/* Keep all six VIGIL evidence-to-repair cards aligned. */
-section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article {
-  height: 13.5rem;
-  min-height: 13.5rem;
-}
-
-section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + div[aria-hidden="true"] {
-  height: 13.5rem;
-}
-'''
-          if marker not in css:
-              polish.write_text(css.rstrip() + block)
-
-          Path(".github/workflows/apply-final-home-polish.yml").unlink(missing_ok=True)
-          PY
-
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -86,11 +53,14 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + 
       - name: Validate generated Pages output
         run: python scripts/validate-docs-published-output.py --base HEAD~1
 
-      - name: Restore permanent workflow and commit
+      - name: Commit rebuilt docs output
         run: |
-          git checkout HEAD^ -- .github/workflows/publish-pages-output.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/components/layout/Shell.tsx src/polish.css docs .github/workflows
-          git commit -m "polish VIGIL cards and footer copy"
-          git push
+          git add docs
+          if git diff --cached --quiet; then
+            echo "Published /docs output is already current."
+          else
+            git commit -m "chore: rebuild GitHub Pages output [skip ci]"
+            git push
+          fi
