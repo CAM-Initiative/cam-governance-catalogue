@@ -26,7 +26,7 @@ const initiativeResources = [
     id: "policy-papers",
     title: "Policy Papers",
     subtitle: "Public policy proposals and submissions",
-    purpose: "Proposals applying CAM governance to institutional, legal, economic and administrative design.",
+    purpose: "Proposals applying CAM governance to institutional, legal and administrative design.",
     description: "Read CAM Initiative policy papers applying governance primitives to law, public administration, market design, and technology transition.",
     cta: "Browse CAM Policy Papers",
     href: "/policy",
@@ -531,8 +531,13 @@ export default function Home() {
           <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
             <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-4xl" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
               <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Governance</p>
-              <h1 className="mb-3 max-w-4xl font-serif text-4xl leading-[1.02] text-foreground sm:text-5xl md:text-6xl">C A E L E S T I S</h1>
-              <h3 className="mb-3 max-w-4xl font-serif text-4xl leading-[1.02] text-foreground sm:text-5xl md:text-6xl">Architecture Model</h3>
+              <h1 className="mb-4 inline-flex max-w-full flex-col font-sans font-light uppercase leading-none text-foreground">
+                <span className="block whitespace-nowrap text-4xl tracking-[0.22em] sm:text-5xl md:text-6xl">CAELESTIS</span>
+                <span className="mt-2 flex w-full items-center justify-between text-sm tracking-[0.11em] sm:text-base md:text-lg">
+                  <span>Architecture</span>
+                  <span>Model</span>
+                </span>
+              </h1>
               <hr className="gold-rule mb-5 w-24" />
               <p className="mb-8 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold md:text-[15px]">
                 Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.
