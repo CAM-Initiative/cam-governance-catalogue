@@ -531,12 +531,9 @@ export default function Home() {
           <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
             <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-4xl" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
               <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Governance</p>
-              <h1 className="mb-4 inline-flex max-w-full flex-col font-sans font-light uppercase leading-none text-foreground">
-                <span className="block whitespace-nowrap text-4xl tracking-[0.22em] sm:text-5xl md:text-6xl">CAELESTIS</span>
-                <span className="mt-2 flex w-full items-center justify-between text-sm tracking-[0.11em] sm:text-base md:text-lg">
-                  <span>Architecture</span>
-                  <span>Model</span>
-                </span>
+              <h1 className="mb-4 max-w-4xl font-serif leading-[0.98] text-foreground">
+                <span className="block whitespace-nowrap text-5xl tracking-[0.06em] sm:text-6xl md:text-7xl">CAELESTIS</span>
+                <span className="mt-2 block text-3xl tracking-normal sm:text-4xl md:text-5xl">Architecture Model</span>
               </h1>
               <hr className="gold-rule mb-5 w-24" />
               <p className="mb-8 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold md:text-[15px]">
