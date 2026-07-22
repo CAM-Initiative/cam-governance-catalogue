@@ -62,8 +62,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <img
               src="/cam-triskelion.svg"
               alt="CAM Initiative"
-              className="w-7 h-7 object-contain opacity-90 group-hover:opacity-100 transition-opacity"
-              style={{ filter: "drop-shadow(0 0 1px rgba(184,147,90,0.3))" }}
+              className="w-8 h-8 object-contain opacity-95 group-hover:opacity-100 transition-opacity"
             />
             <span className="font-mono text-[12px] tracking-[0.18em] uppercase text-primary font-semibold">
               CAM Initiative
