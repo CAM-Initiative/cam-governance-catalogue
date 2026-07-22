@@ -26,7 +26,7 @@ const initiativeResources = [
     id: "policy-papers",
     title: "Policy Papers",
     subtitle: "Public policy proposals and submissions",
-    purpose: "Proposals applying CAM governance to institutional, legal and administrative design.",
+    purpose: "Proposals applying CAM governance to institutional, legal, economic and administrative design.",
     description: "Read CAM Initiative policy papers applying governance primitives to law, public administration, market design, and technology transition.",
     cta: "Browse CAM Policy Papers",
     href: "/policy",
