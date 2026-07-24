@@ -87,21 +87,19 @@ For a non-doctrinal repair, the record MUST state prominently:
 
 It MUST then identify what was repaired and, for reliance on pre-existing coverage, quote and link the relevant provision.
 
-## Closed—actioned guard
+## Lifecycle fidelity and implementation-detail guard
 
-The interface MUST NOT publicly present a PATCH as `Closed—actioned` or equivalent unless one of the following conditions is satisfied:
+The interface MUST reproduce the lifecycle state recorded in VIGIL faithfully. `Closed—actioned` means the record is completed or implemented and no longer sits in the active work queue. It MUST NOT be reinterpreted as secret, withheld, suppressed, or hidden.
 
-1. every corpus amendment has a traceable instrument, section, action, literal repair text, and canonical path or URL; or
-2. the record explicitly declares that no corpus text changed and explains the non-doctrinal repair or pre-existing control relied upon.
+Lifecycle state and public implementation completeness are separate claims. Where a closed—actioned PATCH does not yet expose complete structured implementation detail, the interface MUST:
 
-A narrative description such as “updated AEON-003,” a list of instrument codes, a section description without adopted wording, or `doctrine_change: none` without a coherent no-change declaration does not satisfy this contract.
-
-When the contract is not satisfied, the interface MUST:
-
-- display `Actioned status withheld`;
+- retain the source lifecycle label `Closed—actioned`;
+- separately display `Implementation details incomplete`;
 - identify the missing implementation detail;
 - retain access to the source JSON for audit;
 - avoid inventing or paraphrasing adopted wording.
+
+A narrative description such as “updated AEON-003,” a list of instrument codes, a section description without adopted wording, or `doctrine_change: none` without a coherent no-change declaration does not satisfy the implementation-detail contract. It does not, however, authorise the interface to rewrite the source lifecycle state.
 
 ## Canonical structured implementation block
 
