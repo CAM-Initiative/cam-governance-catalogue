@@ -1,4 +1,5 @@
 import { githubBlobUrlForRecord, rawUrlForRecord, type UnknownRecord } from "@/lib/vigilRegistry";
+import { deriveVigilPublicDisplay, type PublicRecordDisplay } from "@/lib/vigilPublicDisplay";
 
 export type SummaryEntry = { label: string; value: string };
 
@@ -54,6 +55,7 @@ export type VigilIndexRecord = {
   implementation_mode?: string;
   verification_status?: string;
   changed_domains?: string[];
+  publicDisplay: PublicRecordDisplay;
   summaries: Record<string, SummaryEntry[]>;
   searchText: string;
 };
@@ -506,12 +508,14 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
   const platform_label = normalizePlatformLabel(resolvePlatformValue(record)) ?? "Not specified";
   const github_blob_url = githubBlobUrlForRecord({ github_blob_url: getOptionalField(record, ["github_blob_url", "githubBlobUrl"]), path }) ?? "";
   const raw_url = rawUrlForRecord({ raw_url: getOptionalField(record, ["raw_url", "rawUrl"]), path }) ?? "";
+  const record_state = normalizeStatus(getOptionalField(record, ["record_state", "status", "state"]));
+  const publicDisplay = deriveVigilPublicDisplay(record, { recordType: record_type, id, recordState: record_state });
 
   const normalized: VigilIndexRecord = {
     raw: record,
     id,
     record_type,
-    record_state: normalizeStatus(getOptionalField(record, ["record_state", "status", "state"])),
+    record_state,
     date_recorded: getOptionalField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
     date_implemented: getOptionalField(record, ["date_implemented", "dateImplemented", "implemented_date", "implementedDate"]),
     title: resolveRecordTitle(record, id, path, index),
@@ -521,7 +525,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
       ?? "",
     platform_label,
     type_label: recordTypeBadge(record_type),
-    affected_domains: arrayFrom(record.affected_domains ?? record.affectedDomains),
+    affected_domains: arrayFrom(record.affected_domains ?? record.affectedDomains) ?? publicDisplay.domains,
     affected_instruments: arrayFrom(record.affected_instruments ?? record.affectedInstruments),
     affected_annexes: arrayFrom(record.affected_annexes ?? record.affectedAnnexes),
     path,
@@ -562,11 +566,12 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     implementation_mode: getNestedField(record, ["change_summary.implementation_mode", "implementation_mode"]),
     verification_status: getNestedField(record, ["verification_summary.verification_status", "verification_status"]),
     changed_domains: arrayFrom(getNestedField(record, ["cam_summary.changed_domains", "change_summary.changed_domain", "change_summary.changed_domains", "changed_domain", "changed_domains"])),
+    publicDisplay,
     summaries,
     searchText: "",
   };
 
-  normalized.searchText = [
+  const searchText = [
     normalized.id,
     normalized.title,
     normalized.summary,
@@ -578,8 +583,10 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     normalized.platform_label,
     normalized.source_record_hint,
     normalized.type_label,
+    ...normalized.publicDisplay.searchTokens,
     ...searchSummaryNames.flatMap((name) => normalized.summaries[name]?.flatMap((entry) => [entry.label, entry.value]) ?? []),
   ].filter(isMeaningfulText).join(" ").toLowerCase();
+  normalized.searchText = `${searchText} ${searchText.replace(/§/g, "section ")}`;
 
   return normalized;
 }

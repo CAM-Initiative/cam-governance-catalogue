@@ -26,16 +26,20 @@ async function loadVigilModules() {
   const tempDir = await mkdtemp(join(tmpdir(), "vigil-observatory-test-"));
   const config = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
   const registryPath = join(tempDir, "vigilRegistry.mjs");
+  const publicDisplayPath = join(tempDir, "vigilPublicDisplay.mjs");
   const presentationPath = join(tempDir, "vigilPresentation.mjs");
 
   await transpileModuleToTemp("src/lib/vigilRegistry.ts", registryPath, (source) => source
     .replace('import registrySources from "@/config/registrySources.json";', `const registrySources = ${JSON.stringify(config)};`)
     .replace(/import\.meta\.env\.BASE_URL/g, '"/"'));
+  await transpileModuleToTemp("src/lib/vigilPublicDisplay.ts", publicDisplayPath);
   await transpileModuleToTemp("src/lib/vigilPresentation.ts", presentationPath, (source) => source
-    .replace('import { githubBlobUrlForRecord, rawUrlForRecord, type UnknownRecord } from "@/lib/vigilRegistry";', 'import { githubBlobUrlForRecord, rawUrlForRecord } from "./vigilRegistry.mjs";'));
+    .replace('import { githubBlobUrlForRecord, rawUrlForRecord, type UnknownRecord } from "@/lib/vigilRegistry";', 'import { githubBlobUrlForRecord, rawUrlForRecord } from "./vigilRegistry.mjs";')
+    .replace('import { deriveVigilPublicDisplay, type PublicRecordDisplay } from "@/lib/vigilPublicDisplay";', 'import { deriveVigilPublicDisplay } from "./vigilPublicDisplay.mjs";'));
 
   const modules = {
     registry: await import(registryPath),
+    publicDisplay: await import(publicDisplayPath),
     presentation: await import(presentationPath),
   };
   return { tempDir, modules };
@@ -206,6 +210,159 @@ test("VIGIL normalization supports lean index entries without detailed summary o
   }
 });
 
+test("PATCH public display exposes complete literal corpus amendments", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const { matchesVigilSearch } = modules.publicDisplay;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-PATCH-0099",
+      record_type: "patch",
+      record_state: "closed-actioned",
+      title: "Exact runtime repair",
+      summary: "A literal runtime repair was adopted.",
+      corpus_implementation: {
+        implementation_outcome: "corpus-amendment",
+        amendments: [{
+          instrument_id: "CAM-BS2025-AEON-003-SCH-02",
+          canonical_file_path: "Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+          section: "§7.4.1",
+          section_heading: "Weak Trigger and Premature Tool Invocation Constraint",
+          action: "amended",
+          final_adopted_wording: "Tool invocation SHALL remain proportionate to the active task authority.",
+          implemented_date: "2026-07-20",
+          verified_against: "0123456789abcdef0123456789abcdef01234567",
+          verification_status: "verified",
+          current_status: "current",
+        }],
+      },
+    });
+
+    assert.equal(record.publicDisplay.patch.contractStatus, "complete-amendment");
+    assert.equal(record.publicDisplay.patch.withholdActionedStatus, false);
+    assert.equal(record.publicDisplay.lifecycleLabel, "Closed—actioned");
+    assert.equal(record.publicDisplay.corpusProvisions[0].complete, true);
+    assert.equal(record.publicDisplay.corpusProvisions[0].finalWording, "Tool invocation SHALL remain proportionate to the active task authority.");
+    assert.equal(matchesVigilSearch(record.searchText, "AEON-003 §7.4.1"), true);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("PATCH public display withholds actioned status when implementation text is incomplete", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-PATCH-0100",
+      record_type: "patch",
+      record_state: "closed-actioned",
+      title: "Description without literal wording",
+      change_details: {
+        changed_instruments: ["CAM-BS2025-AEON-003-SCH-02"],
+        implemented_changes: [{
+          section: "§7.4.1",
+          description: "The section was updated.",
+        }],
+      },
+    });
+
+    assert.equal(record.publicDisplay.patch.contractStatus, "incomplete");
+    assert.equal(record.publicDisplay.patch.withholdActionedStatus, true);
+    assert.equal(record.publicDisplay.lifecycleLabel, "Actioned status withheld");
+    assert.equal(record.publicDisplay.repairState, "Actioned status withheld");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("PATCH public display accepts an explicit no-corpus-change declaration", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-PATCH-0101",
+      record_type: "patch",
+      record_state: "closed-actioned",
+      title: "Verified pre-existing coverage",
+      corpus_implementation: {
+        implementation_outcome: "pre-existing-control",
+        no_corpus_text_changed: true,
+        no_corpus_change_explanation: "The PATCH verified and linked an existing control.",
+      },
+      repair_provenance: {
+        retrospective_synthesis: true,
+        instruments_amended: [],
+        instruments_relied_upon_without_amendment: ["CAM-BS2025-AEON-006-SCH-07"],
+        coverage_origin: [{
+          instrument_id: "CAM-BS2025-AEON-006-SCH-07",
+          relevant_sections: ["§3"],
+          action: "relied-upon",
+        }],
+      },
+    });
+
+    assert.equal(record.publicDisplay.patch.contractStatus, "complete-no-corpus-change");
+    assert.equal(record.publicDisplay.patch.explicitNoCorpusTextChange, true);
+    assert.equal(record.publicDisplay.patch.withholdActionedStatus, false);
+    assert.equal(record.publicDisplay.lifecycleLabel, "Closed—actioned");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL page implements dedicated public views and CAELESTIS authority notice", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /function ObservationDetailView/);
+  assert.match(page, /function FailureModeDetailView/);
+  assert.match(page, /function ProposalDetailView/);
+  assert.match(page, /function PatchDetailView/);
+  assert.match(page, /Applied corpus repairs/);
+  assert.match(page, /CAELESTIS remains the authoritative governance corpus/);
+  assert.match(page, /Closed—actioned status is withheld from the public display/);
+});
+
+test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));
+
+  assert.ok(expandedRecord.indexOf("<RecordChainView") < expandedRecord.indexOf("<CompactRecordMetadata"));
+  assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
+  assert.doesNotMatch(page, /title="Linked Records"/);
+  assert.doesNotMatch(page, /label: "Source repair status"/);
+});
+
+test("failure repair status projects a clean status and next action from structured data", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-FM-0999",
+      record_type: "failure_mode",
+      record_state: "closed-actioned",
+      repair_status: {
+        status: "closed",
+        next_action: "Incorporated into PATCH-0099.",
+      },
+    });
+
+    assert.equal(record.publicDisplay.repairState, "Closed");
+    assert.equal(record.publicDisplay.failure.repairStatus, "closed");
+    assert.equal(record.publicDisplay.failure.repairNextAction, "Incorporated into PATCH-0099.");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL fallback sync projects corpus search fields without copying literal implementation blocks", async () => {
+  const syncScript = await readFile(resolve(repoRoot, "scripts/sync-vigil-records.mjs"), "utf8");
+  assert.match(syncScript, /"corpus_implementation"/);
+  assert.match(syncScript, /"public_display"/);
+  assert.match(syncScript, /principal_instruments/);
+  assert.match(syncScript, /principal_sections/);
+  assert.match(syncScript, /corpus_search_terms/);
+  assert.match(syncScript, /display_contract_status/);
+});
 
 test("generated VIGIL fallback keeps lean records with projected platform metadata", async () => {
   const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
@@ -228,6 +385,12 @@ test("generated VIGIL fallback keeps lean records with projected platform metada
     "verification_summary",
     "impact_summary",
     "cam_summary",
+    "corpus_implementation",
+    "public_display",
+    "relevant_corpus_provisions",
+    "applied_corpus_repairs",
+    "proposed_amendments",
+    "proposed_corpus_amendments",
   ]);
 
   for (const entry of fallback.records) {
