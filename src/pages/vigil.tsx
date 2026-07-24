@@ -151,6 +151,52 @@ function findingSentence(text?: string, limit = 240) {
   return previewText(firstSentence, limit);
 }
 
+function InlineMarkdown({ text }: { text?: string }) {
+  if (!isMeaningfulText(text)) return null;
+  return (
+    <>
+      {text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => (
+        part.startsWith("**") && part.endsWith("**")
+          ? <strong key={`${part}-${index}`} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>
+          : part
+      ))}
+    </>
+  );
+}
+
+function lifecycleTone(label?: string) {
+  const value = String(label ?? "").toLocaleLowerCase();
+  if (value.includes("closed—actioned") || value.includes("closed-actioned") || value === "implemented") {
+    return "border-blue-300 bg-blue-50 text-blue-900";
+  }
+  if (value.includes("closed") || value.includes("no action")) {
+    return "border-slate-300 bg-slate-100 text-slate-800";
+  }
+  if (value.includes("active") || value === "open" || value.includes("watching")) {
+    return "border-emerald-300 bg-emerald-50 text-emerald-900";
+  }
+  if (value.includes("deferred") || value.includes("triage")) {
+    return "border-amber-300 bg-amber-50 text-amber-950";
+  }
+  if (value.includes("superseded")) {
+    return "border-violet-300 bg-violet-50 text-violet-900";
+  }
+  return "border-border bg-background/60 text-muted-foreground";
+}
+
+const chipTones = [
+  "border-amber-300 bg-amber-50 text-amber-950",
+  "border-emerald-300 bg-emerald-50 text-emerald-950",
+  "border-blue-300 bg-blue-50 text-blue-950",
+  "border-violet-300 bg-violet-50 text-violet-950",
+  "border-rose-300 bg-rose-50 text-rose-950",
+];
+
+function chipTone(value: string) {
+  const hash = [...value].reduce((total, character) => total + character.charCodeAt(0), 0);
+  return chipTones[hash % chipTones.length];
+}
+
 function detailDisplayRecord(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
   const normalized = normalizeRecords([{
     ...detail,
@@ -167,8 +213,8 @@ function Field({ label, value }: { label: string; value?: string }) {
 
   return (
     <div>
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
-      <p className="mt-1 text-sm leading-relaxed text-foreground">{value}</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
+      <p className="mt-1 text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={value} /></p>
     </div>
   );
 }
@@ -234,7 +280,7 @@ function LinkValue({ value }: { value: unknown }) {
   if (/^https?:\/\//i.test(text)) {
     return <a className="break-words text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4 hover:text-cam-gold" href={text} target="_blank" rel="noreferrer">{text}</a>;
   }
-  return <span>{text}</span>;
+  return <span><InlineMarkdown text={text} /></span>;
 }
 
 function ValueField({ label, value }: { label: string; value: unknown }) {
@@ -245,9 +291,9 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
     if (chips.length) {
       return (
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
           <div className="mt-1 flex flex-wrap gap-1.5">
-            {chips.map((item, index) => <span key={`${item}-${index}`} className="rounded-full border border-border bg-card/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">{item}</span>)}
+            {chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${chipTone(item)}`}>{item}</span>)}
           </div>
         </div>
       );
@@ -259,8 +305,8 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
     if (!entries.length) return null;
     return (
       <div>
-        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
-        <div className="mt-1 space-y-1.5 text-sm leading-relaxed text-foreground">
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
+        <div className="mt-1 space-y-1.5 text-[15px] leading-relaxed text-foreground">
           {entries.map(([key, item]) => (
             <p key={key}><span className="font-medium text-foreground/80">{humanLabel(key)}:</span> <LinkValue value={item} /></p>
           ))}
@@ -271,8 +317,8 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
 
   return (
     <div>
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/60">{label}</p>
-      <p className="mt-1 text-sm leading-relaxed text-foreground"><LinkValue value={value} /></p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
+      <p className="mt-1 text-[15px] leading-relaxed text-foreground"><LinkValue value={value} /></p>
     </div>
   );
 }
@@ -281,7 +327,7 @@ function DetailSection({ title, children, defaultOpen = false, show = true }: { 
   if (!show || !children) return null;
   return (
     <details className="group rounded-lg border border-border bg-background/35 px-3 py-2" open={defaultOpen}>
-      <summary className="cursor-pointer list-none font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
+      <summary className="cursor-pointer list-none font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
         <span className="inline-flex w-full items-center gap-3">
           <span className="inline-block h-0 w-0 shrink-0 border-y-[0.3rem] border-l-[0.45rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
           <span>{title}</span>
@@ -307,8 +353,8 @@ function ParagraphFields({ entries }: { entries: Array<{ key: string; label: str
     <div className="space-y-4">
       {entries.map((entry) => (
         <div key={entry.key}>
-          <p className="mb-1 font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">{entry.label}</p>
-          <div className="text-sm leading-relaxed text-foreground"><ValueBody value={entry.value} /></div>
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{entry.label}</p>
+          <div className="text-[15px] leading-relaxed text-foreground"><ValueBody value={entry.value} /></div>
         </div>
       ))}
     </div>
@@ -318,13 +364,13 @@ function ParagraphFields({ entries }: { entries: Array<{ key: string; label: str
 function ValueBody({ value }: { value: unknown }) {
   if (Array.isArray(value)) {
     const chips = isPrimitiveList(value) ? primitiveItems(value) : [];
-    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className="rounded-full border border-border bg-card/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">{item}</span>)}</div>;
+    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${chipTone(item)}`}>{item}</span>)}</div>;
   }
   if (isObject(value)) {
     const entries = Object.entries(value).filter(([, item]) => hasMeaningfulValue(item));
     return <div className="grid gap-2 md:grid-cols-2">{entries.map(([key, item]) => <ValueField key={key} label={humanLabel(key)} value={item} />)}</div>;
   }
-  return <p>{compactText(value)}</p>;
+  return <p><InlineMarkdown text={compactText(value)} /></p>;
 }
 
 function CompactObjectCards({ items, keys, titleKeys = [] }: { items: unknown; keys: string[]; titleKeys?: string[] }) {
@@ -338,7 +384,7 @@ function CompactObjectCards({ items, keys, titleKeys = [] }: { items: unknown; k
         const sourceUrl = compactText(item.source_url ?? item.url);
         const archiveUrl = compactText(item.archive_url);
         return (
-          <article key={`${title ?? "record"}-${index}`} className="rounded-lg border border-border bg-card/45 p-3">
+          <article key={`${title ?? "record"}-${index}`} className="rounded-lg border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3">
             {title && <h4 className="mb-2 font-serif text-base leading-snug text-foreground">{title}</h4>}
             <FieldGrid entries={entries} />
             {(sourceUrl || archiveUrl) && (
@@ -357,11 +403,11 @@ function CompactObjectCards({ items, keys, titleKeys = [] }: { items: unknown; k
 function TextList({ items }: { items: string[] }) {
   if (!items.length) return null;
   return (
-    <ul className="space-y-2 text-sm leading-relaxed text-foreground">
+    <ul className="space-y-2 text-[15px] leading-relaxed text-foreground">
       {items.map((item, index) => (
         <li key={`${item}-${index}`} className="flex gap-2">
           <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-cam-gold" aria-hidden="true" />
-          <span>{item}</span>
+          <span><InlineMarkdown text={item} /></span>
         </li>
       ))}
     </ul>
@@ -389,34 +435,40 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
         const commitUrl = implementationCommitUrl(provision);
         const exactRepair = provision.finalWording ?? (provision.action?.toLocaleLowerCase().includes("repeal") ? provision.previousWording : undefined);
         return (
-          <article key={`${provision.instrumentId ?? "instrument"}-${provision.section ?? index}`} className="rounded-xl border border-border bg-card/60 p-4">
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <article key={`${provision.instrumentId ?? "instrument"}-${provision.section ?? index}`} className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
+            <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
               <div className="min-w-0">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/65">Instrument</p>
-                <h4 className="mt-1 break-words font-serif text-lg leading-snug text-foreground">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Instrument</p>
+                <h4 className="mt-0.5 break-words font-serif text-base leading-snug text-foreground md:text-lg">
                   {provision.instrumentId ?? "Instrument not identified"}
                 </h4>
-                {provision.instrumentTitle && provision.instrumentTitle !== provision.instrumentId && <p className="mt-1 text-sm text-muted-foreground">{provision.instrumentTitle}</p>}
+                {provision.instrumentTitle && provision.instrumentTitle !== provision.instrumentId && <p className="mt-0.5 text-sm text-muted-foreground">{provision.instrumentTitle}</p>}
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {provision.action && <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{titleizeValue(provision.action)}</span>}
-                {patchMode && <span className={`rounded-full border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${provision.complete ? "border-emerald-300 bg-emerald-50 text-emerald-800" : "border-amber-300 bg-amber-50 text-amber-900"}`}>{provision.complete ? "Traceable repair" : "Details incomplete"}</span>}
+                {provision.action && <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-[hsl(32_62%_25%)]">{titleizeValue(provision.action)}</span>}
+                {patchMode && <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] ${provision.complete ? "border-emerald-300 bg-emerald-50 text-emerald-800" : "border-amber-300 bg-amber-50 text-amber-900"}`}>{provision.complete ? "Traceable repair" : "Details incomplete"}</span>}
               </div>
             </div>
 
-            <div className="mt-4 grid gap-3 rounded-lg border border-border/70 bg-background/35 p-3 md:grid-cols-2">
-              <ValueField label="Section" value={provision.section} />
-              <ValueField label="Heading" value={provision.heading} />
-              <ValueField label={patchMode ? "Current status" : "Relationship to failure"} value={patchMode ? provision.currentStatus : provision.relationship} />
-              <ValueField label={patchMode ? "Implemented" : "Corpus relationship"} value={patchMode ? provision.implementedDate : provision.action} />
-              {patchMode && <ValueField label="Verified against" value={provision.verifiedAgainst} />}
-              {patchMode && <ValueField label="Verification status" value={provision.verificationStatus} />}
-            </div>
+            <dl className="mt-2.5 flex flex-wrap gap-x-5 gap-y-2 border-y border-[hsl(38_25%_80%)] py-2 text-sm leading-relaxed">
+              {[
+                ["Section", provision.section],
+                ["Heading", provision.heading],
+                [patchMode ? "Implemented" : "Relationship", patchMode ? provision.implementedDate : provision.relationship],
+                [patchMode ? "Verification" : "Corpus action", patchMode ? provision.verificationStatus : provision.action],
+                ...(patchMode ? [["Verified against", provision.verifiedAgainst]] : []),
+              ].filter(([, value]) => hasMeaningfulValue(value)).map(([label, value]) => (
+                <div key={String(label)} className="min-w-0">
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">{label}</dt>
+                  <dd className="mt-0.5 break-words text-[15px] text-foreground"><InlineMarkdown text={compactText(value)} /></dd>
+                </div>
+              ))}
+            </dl>
 
             {patchMode && exactRepair && (
               <div className="mt-4">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
-                <blockquote className="mt-2 whitespace-pre-wrap rounded-lg border-l-4 border-cam-gold bg-background/60 px-4 py-3 font-serif text-sm leading-7 text-foreground">{exactRepair}</blockquote>
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
+                <blockquote className="mt-2 whitespace-pre-wrap rounded-lg border-l-4 border-cam-gold bg-[hsl(40_55%_97%)] px-4 py-3 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
               </div>
             )}
 
@@ -429,7 +481,7 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
 
             {(corpusUrl || commitUrl || provision.canonicalPath) && (
               <div className="mt-4 flex flex-col gap-2 border-t border-border/70 pt-3 sm:flex-row sm:items-center sm:justify-between">
-                {provision.canonicalPath && <p className="break-words font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70">{provision.canonicalPath}</p>}
+                {provision.canonicalPath && <p className="break-words font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground/70">{provision.canonicalPath}</p>}
                 <div className="flex shrink-0 flex-wrap gap-2">
                   {corpusUrl && <a className="rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:text-cam-gold" href={corpusUrl} target="_blank" rel="noreferrer">Current CAELESTIS provision →</a>}
                   {commitUrl && <a className="rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:text-cam-gold" href={commitUrl} target="_blank" rel="noreferrer">Implementation record →</a>}
@@ -451,22 +503,24 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
     { label: "PATCH", records: chain.patches },
   ];
   return (
-    <div className="rounded-xl border border-border bg-background/35 p-3">
-      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/65">Evidence-to-repair record chain</p>
+    <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
+      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
-        {stages.map((stage, index) => (
-          <div key={stage.label} className="relative rounded-lg border border-border/70 bg-card/55 p-3">
-            <div className="flex items-center justify-between gap-2">
-              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-cam-gold">{index + 1}. {stage.label}</p>
-              {index < stages.length - 1 && <span className="hidden text-cam-gold/70 md:inline" aria-hidden="true">→</span>}
+        {stages.map((stage, index) => {
+          const isCurrentStage = stage.records.includes(currentId);
+          return (
+          <div key={stage.label} className={`relative rounded-lg border p-3 ${isCurrentStage ? "border-cam-gold/70 bg-[hsl(43_62%_86%)] shadow-sm" : "border-[hsl(38_25%_80%)] bg-[hsl(40_48%_97%)]"}`}>
+            {index < stages.length - 1 && <span className="absolute -right-[0.58rem] top-1/2 z-10 hidden -translate-y-1/2 rounded-full bg-[hsl(38_48%_94%)] px-0.5 text-sm text-cam-gold md:inline" aria-hidden="true">→</span>}
+            <div className="flex min-h-5 items-center">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">{index + 1}. {stage.label}</p>
             </div>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {stage.records.length === 0 && <span className="text-xs text-muted-foreground/70">Not linked</span>}
+            <div className="mt-2 flex min-h-7 flex-wrap items-start gap-1.5">
+              {stage.records.length === 0 && <span className="text-sm text-muted-foreground/70">Not linked</span>}
               {stage.records.map((recordId) => (
                 <button
                   key={recordId}
                   type="button"
-                  className={`rounded-md border px-2 py-1 font-mono text-[9px] tracking-[0.06em] transition ${recordId === currentId ? "border-primary/35 bg-primary/10 text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
+                  className={`rounded-md border px-2 py-1 font-mono text-[10px] tracking-[0.04em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
                   onClick={() => recordId !== currentId && onNavigateRecord?.(recordId)}
                   disabled={recordId === currentId || !onNavigateRecord}
                   aria-label={recordId === currentId ? `${recordId}, current record` : `Find linked record ${recordId}`}
@@ -476,7 +530,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
               ))}
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </div>
   );
@@ -495,10 +549,10 @@ function CompactRecordMetadata({ record }: { record: VigilIndexRecord }) {
   if (!entries.length) return null;
 
   return (
-    <dl className="flex flex-wrap gap-x-5 gap-y-1.5 border-y border-border/70 py-2 text-[11px] leading-relaxed text-muted-foreground">
+    <dl className="flex flex-wrap gap-x-5 gap-y-1.5 border-y border-border/70 py-2 text-xs leading-relaxed text-muted-foreground">
       {entries.map((entry) => (
         <div key={entry.label} className="flex min-w-0 gap-1.5">
-          <dt className="shrink-0 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/65">{entry.label}</dt>
+          <dt className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground/70">{entry.label}</dt>
           <dd className="min-w-0 break-words text-foreground/80">{entry.value}</dd>
         </div>
       ))}
@@ -515,7 +569,7 @@ function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
   return (
     <div className="space-y-2">
       <DetailSection title="What was directly observed" defaultOpen show={Boolean(observation?.observed)}>
-        <p className="text-sm leading-relaxed text-foreground">{observation?.observed}</p>
+        <p className="text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={observation?.observed} /></p>
       </DetailSection>
       <DetailSection title="System and observation context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0 || Boolean(observation?.context)}>
         <div className="space-y-3">
@@ -560,7 +614,7 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
   return (
     <div className="space-y-2">
       <DetailSection title="Failure finding" defaultOpen show={Boolean(publicFailure?.definition)}>
-        <p className="text-sm leading-relaxed text-foreground">{publicFailure?.definition}</p>
+        <p className="text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={publicFailure?.definition} /></p>
       </DetailSection>
       <DetailSection title="Relevant corpus provisions" defaultOpen show>
         {record.publicDisplay.corpusProvisions.length > 0
@@ -683,7 +737,7 @@ function PatchDetailView({ record }: { record: VigilIndexRecord }) {
 
   return (
     <div className="space-y-2">
-      <section className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4" aria-labelledby={`${record.id}-applied-repairs`}>
+      <section className="rounded-xl border-2 border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4" aria-labelledby={`${record.id}-applied-repairs`}>
         <div className="flex flex-col gap-3 border-b border-primary/20 pb-3 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">Primary audit surface</p>
@@ -695,10 +749,10 @@ function PatchDetailView({ record }: { record: VigilIndexRecord }) {
         </div>
 
         <div className="mt-4 space-y-4">
-          {patch?.withholdActionedStatus && (
-            <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm leading-relaxed text-red-950" role="alert">
-              <p className="font-medium">Closed—actioned status is withheld from the public display.</p>
-              <p className="mt-1">{patch.contractMessage} The source JSON remains available for audit, but the interface will not present this repair as publicly verified.</p>
+          {patch?.contractStatus === "incomplete" && (
+            <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[15px] leading-relaxed text-amber-950" role="note">
+              <p className="font-medium">Implementation details incomplete.</p>
+              <p className="mt-1">{patch.contractMessage} The source lifecycle state remains visible exactly as recorded in VIGIL.</p>
             </div>
           )}
 
@@ -712,7 +766,7 @@ function PatchDetailView({ record }: { record: VigilIndexRecord }) {
           {!patch?.explicitNoCorpusTextChange && provisions.length > 0 && <CorpusProvisionCards provisions={provisions} patchMode />}
 
           {!patch?.explicitNoCorpusTextChange && provisions.length === 0 && (
-            <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm leading-relaxed text-red-950">No structured corpus amendment is available for public verification.</div>
+            <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[15px] leading-relaxed text-amber-950">No structured corpus amendment is available for public verification.</div>
           )}
 
           {patch?.explicitNoCorpusTextChange && provisions.length > 0 && (
@@ -1412,16 +1466,16 @@ export default function Vigil() {
                         <div className="space-y-3 md:hidden">
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Record ID</p>
-                              <p className="mt-1 break-words font-mono text-[11px] text-cam-gold">{displayRecordId}</p>
+                              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record ID</p>
+                              <p className="mt-1 break-words font-mono text-xs text-cam-gold">{displayRecordId}</p>
                             </div>
-                            <span className="shrink-0 rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                            <span className="shrink-0 rounded-full border border-border bg-card px-2 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                               {isExpanded ? "Collapse" : "Expand"}
                             </span>
                           </div>
 
                           <div>
-                            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">Title</p>
+                            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Title</p>
                             <h2 className="mt-1 break-words font-mono text-base font-normal leading-snug text-foreground/90">{record.title}</h2>
                           </div>
 
@@ -1433,7 +1487,7 @@ export default function Vigil() {
                           </div>
 
                           {findingSentence(publicFinding) && publicFinding !== record.title && (
-                            <p className="text-sm leading-relaxed text-muted-foreground">{findingSentence(publicFinding)}</p>
+                            <p className="text-[15px] leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding)} /></p>
                           )}
 
                           {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="rounded-lg border border-primary/20 bg-primary/5 p-2.5 font-mono text-[10px] leading-relaxed text-[hsl(32_62%_25%)]">Principal repair: {record.publicDisplay.principalRepair}</p>}
@@ -1444,18 +1498,18 @@ export default function Vigil() {
                         </div>
 
                         <div className="hidden gap-3 md:grid md:grid-cols-[8rem_7rem_minmax(0,1fr)_9rem] md:items-start">
-                          <div className="break-words font-mono text-[11px] leading-snug text-cam-gold">{displayRecordId}</div>
-                          <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
+                          <div className="break-words font-mono text-xs leading-snug text-cam-gold">{displayRecordId}</div>
+                          <div className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground/80">{recordDate}</div>
                           <div className="min-w-0">
                             <h2 className="whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
-                            <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
                               {[record.type_label, record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
                             </p>
-                            {findingSentence(publicFinding, 210) && publicFinding !== record.title && <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{findingSentence(publicFinding, 210)}</p>}
-                            {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[9px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
+                            {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
+                            {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[10px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
                           <div className="flex flex-col items-end gap-1.5 text-right">
-                            <span className={`rounded-md border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] ${record.publicDisplay.patch?.withholdActionedStatus ? "border-red-300 bg-red-50 text-red-800" : "border-border bg-background/40 text-muted-foreground/80"}`}>{publicLifecycle}</span>
+                            <span className={`rounded-md border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] ${lifecycleTone(publicLifecycle)}`}>{publicLifecycle}</span>
                           </div>
                         </div>
                       </div>
@@ -1470,7 +1524,7 @@ export default function Vigil() {
                           <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
                           <div className="mt-3 flex flex-wrap gap-2">
                             {[detailRecord.type_label, detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
-                              <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${value === "Actioned status withheld" ? "border-red-300 bg-red-50 text-red-800" : "border-border bg-card text-muted-foreground"}`}>{value}</span>
+                              <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] ${badgeIndex === 1 ? lifecycleTone(String(value)) : "border-border bg-card text-muted-foreground"}`}>{value}</span>
                             ))}
                           </div>
                         </div>
@@ -1506,8 +1560,8 @@ export default function Vigil() {
 
                       {previewText(detailRecord.publicDisplay.finding) && detailRecord.publicDisplay.finding !== detailRecord.title && (
                         <div className="mb-4 rounded-lg border border-border/70 bg-background/35 p-3">
-                          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cam-gold">Public finding</p>
-                          <p className="mt-2 text-sm leading-relaxed text-foreground">{detailRecord.publicDisplay.finding}</p>
+                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">Public finding</p>
+                          <p className="mt-2 text-base leading-relaxed text-foreground"><InlineMarkdown text={detailRecord.publicDisplay.finding} /></p>
                         </div>
                       )}
 
