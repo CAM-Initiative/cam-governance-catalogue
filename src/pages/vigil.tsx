@@ -289,6 +289,14 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
   if (Array.isArray(value)) {
     const chips = isPrimitiveList(value) ? primitiveItems(value) : [];
     if (chips.length) {
+      if (label === "Affected parties or interests") {
+        return (
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
+            <p className="mt-1 text-[15px] leading-relaxed text-foreground">{chips.join("; ")}</p>
+          </div>
+        );
+      }
       return (
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
@@ -468,6 +476,24 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
     <div className="space-y-3">
       {groups.map((group) => {
         const complete = group.provisions.every((provision) => provision.complete);
+        const instrumentLabels = [group.instrumentId, group.instrumentTitle]
+          .filter(isMeaningfulText)
+          .map((value) => value.replace(/\s+/g, " ").trim().toLocaleLowerCase());
+        const visibleProvisions = patchMode
+          ? group.provisions
+          : group.provisions.filter((provision) => {
+              const relationship = compactText(provision.relationship);
+              const relationshipIsInstrumentRepeat = relationship
+                ? instrumentLabels.includes(relationship.replace(/\s+/g, " ").trim().toLocaleLowerCase())
+                : false;
+              return [
+                provision.section,
+                provision.heading,
+                provision.action,
+                provision.currentStatus,
+                relationshipIsInstrumentRepeat ? undefined : relationship,
+              ].some(hasMeaningfulValue);
+            });
         return (
           <article key={group.key} className="overflow-hidden rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)]">
             <div className="flex flex-col gap-2 border-b border-[hsl(38_25%_80%)] px-3.5 py-3 md:flex-row md:items-center md:justify-between">
@@ -484,50 +510,58 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
               </div>
             </div>
 
-            <div className="hidden grid-cols-[minmax(15rem,2.25fr)_minmax(8rem,1fr)_minmax(11rem,1.3fr)_minmax(9rem,1fr)] gap-x-4 border-b border-[hsl(38_25%_82%)] bg-[hsl(40_42%_96%)] px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground/75 lg:grid">
-              <span>Section</span>
-              <span>Action</span>
-              <span>{patchMode ? "Implemented" : "Relationship"}</span>
-              <span>{patchMode ? "Verification" : "Status"}</span>
-            </div>
+            {visibleProvisions.length > 0 && (
+              <>
+                <div className="hidden grid-cols-[minmax(15rem,2.25fr)_minmax(8rem,1fr)_minmax(11rem,1.3fr)_minmax(9rem,1fr)] gap-x-4 border-b border-[hsl(38_25%_82%)] bg-[hsl(40_42%_96%)] px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground/75 lg:grid">
+                  <span>Section</span>
+                  <span>Action</span>
+                  <span>{patchMode ? "Implemented" : "Relationship"}</span>
+                  <span>{patchMode ? "Verification" : "Status"}</span>
+                </div>
 
-            <div className="divide-y divide-[hsl(38_25%_82%)]">
-              {group.provisions.map((provision, index) => {
-                const exactRepair = provision.finalWording ?? (provision.action?.toLocaleLowerCase().includes("repeal") ? provision.previousWording : undefined);
-                const verification = [provision.verificationStatus, provision.verifiedAgainst].filter(Boolean).join(" · ");
-                return (
-                  <section key={`${provision.section ?? "section"}-${index}`} className="bg-[hsl(40_48%_97%)] px-3.5 py-3">
-                    <dl className="grid gap-3 lg:grid-cols-[minmax(15rem,2.25fr)_minmax(8rem,1fr)_minmax(11rem,1.3fr)_minmax(9rem,1fr)] lg:gap-x-4">
-                      {[
-                        ["Section", [provision.section, provision.heading].filter(Boolean).join(" — ")],
-                        ["Action", provision.action],
-                        [patchMode ? "Implemented" : "Relationship", patchMode ? provision.implementedDate : provision.relationship],
-                        [patchMode ? "Verification" : "Status", patchMode ? verification : provision.currentStatus],
-                      ].map(([label, value]) => (
-                        <div key={String(label)} className="min-w-0">
-                          <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 lg:sr-only">{label}</dt>
-                          <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0"><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
-                        </div>
-                      ))}
-                    </dl>
+                <div className="divide-y divide-[hsl(38_25%_82%)]">
+                  {visibleProvisions.map((provision, index) => {
+                    const exactRepair = provision.finalWording ?? (provision.action?.toLocaleLowerCase().includes("repeal") ? provision.previousWording : undefined);
+                    const verification = [provision.verificationStatus, provision.verifiedAgainst].filter(Boolean).join(" · ");
+                    const relationship = compactText(provision.relationship);
+                    const displayRelationship = relationship && instrumentLabels.includes(relationship.replace(/\s+/g, " ").trim().toLocaleLowerCase())
+                      ? undefined
+                      : relationship;
+                    return (
+                      <section key={`${provision.section ?? "section"}-${index}`} className="bg-[hsl(40_48%_97%)] px-3.5 py-3">
+                        <dl className="grid gap-3 lg:grid-cols-[minmax(15rem,2.25fr)_minmax(8rem,1fr)_minmax(11rem,1.3fr)_minmax(9rem,1fr)] lg:gap-x-4">
+                          {[
+                            ["Section", [provision.section, provision.heading].filter(Boolean).join(" — ")],
+                            ["Action", provision.action],
+                            [patchMode ? "Implemented" : "Relationship", patchMode ? provision.implementedDate : displayRelationship],
+                            [patchMode ? "Verification" : "Status", patchMode ? verification : provision.currentStatus],
+                          ].map(([label, value]) => (
+                            <div key={String(label)} className="min-w-0">
+                              <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 lg:sr-only">{label}</dt>
+                              <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0"><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
+                            </div>
+                          ))}
+                        </dl>
 
-                    {patchMode && exactRepair && (
-                      <div className="mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
-                        <blockquote className="mt-2 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
-                      </div>
-                    )}
+                        {patchMode && exactRepair && (
+                          <div className="mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
+                            <blockquote className="mt-2 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
+                          </div>
+                        )}
 
-                    {patchMode && provision.previousWording && provision.previousWording !== exactRepair && (
-                      <details className="mt-3 border-t border-border/70 pt-2">
-                        <summary className="cursor-pointer font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Previous wording</summary>
-                        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{provision.previousWording}</p>
-                      </details>
-                    )}
-                  </section>
-                );
-              })}
-            </div>
+                        {patchMode && provision.previousWording && provision.previousWording !== exactRepair && (
+                          <details className="mt-3 border-t border-border/70 pt-2">
+                            <summary className="cursor-pointer font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Previous wording</summary>
+                            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{provision.previousWording}</p>
+                          </details>
+                        )}
+                      </section>
+                    );
+                  })}
+                </div>
+              </>
+            )}
 
             {group.implementationUrl && (
               <div className="border-t border-[hsl(38_25%_80%)] px-3.5 py-2 text-right">

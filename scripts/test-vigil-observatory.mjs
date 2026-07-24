@@ -323,6 +323,25 @@ test("VIGIL page implements dedicated public views and CAELESTIS authority notic
   assert.doesNotMatch(page, /Current CAELESTIS provision/);
 });
 
+test("VIGIL proposal targets suppress empty tables and repeated instrument relationships", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const visibleProvisions = patchMode/);
+  assert.match(page, /relationshipIsInstrumentRepeat/);
+  assert.match(page, /visibleProvisions\.length > 0/);
+  assert.match(page, /displayRelationship/);
+});
+
+test("affected parties render as readable text rather than coloured pills", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const affectedPartiesTreatment = page.slice(
+    page.indexOf('label === "Affected parties or interests"'),
+    page.indexOf("return (", page.indexOf('label === "Affected parties or interests"') + 50),
+  );
+  assert.match(page, /label === "Affected parties or interests"/);
+  assert.match(page, /chips\.join\("; "\)/);
+  assert.doesNotMatch(affectedPartiesTreatment, /chipTone/);
+});
+
 test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));

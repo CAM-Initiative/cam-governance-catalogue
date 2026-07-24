@@ -64,6 +64,12 @@ The public view MUST display:
 
 Proposed wording MUST be visibly labelled **not yet binding**.
 
+Where a proposal identifies an instrument but supplies no section-level action,
+status, or meaningful relationship, the public view SHOULD display the instrument
+bar without an empty detail table. A relationship value that merely repeats the
+instrument identifier is redundant and MUST NOT be presented as substantive
+section-level information.
+
 ### PATCH
 
 The PATCH view MUST prioritise **Applied corpus repairs** before background narrative.
