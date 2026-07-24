@@ -951,10 +951,6 @@ function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url">) {
   return record.github_blob_url || undefined;
 }
 
-function sourceRawUrl(record: Pick<VigilIndexRecord, "raw_url">) {
-  return record.raw_url || undefined;
-}
-
 function exportFileName(status: string) {
   const date = new Date().toISOString().slice(0, 10);
   const statusPart = (status || "all").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "");
@@ -1546,7 +1542,6 @@ export default function Vigil() {
             {pagedRecords.map((record, index) => {
               const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
               const sourceHref = sourceRecordUrl(record);
-              const rawHref = sourceRawUrl(record);
               const recordKey = recordKeyFor(record, recordPageStart + index);
               const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
               const isExpanded = expandedRecordKeys.has(recordKey);
@@ -1637,7 +1632,7 @@ export default function Vigil() {
                           </div>
                         </div>
                         <div className="flex shrink-0 flex-wrap gap-2">
-                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View complete JSON →</a>}
+                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View source record →</a>}
                           <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
                             {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
                           </button>
@@ -1677,38 +1672,6 @@ export default function Vigil() {
 
                       {detailReadyForPublicView && <CuratedRecordDetail record={detailRecord} onNavigateRecord={navigateToRecord} />}
 
-                      <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
-                        <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>
-                        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                          <p className="text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
-                          <div className="flex shrink-0 flex-wrap gap-2">
-                            <button
-                              type="button"
-                              className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                              onClick={() => copyRecordJson(record, recordKey)}
-                              aria-label={`Copy raw JSON for ${detailRecord.id}`}
-                            >
-                              {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
-                            </button>
-                            <button
-                              type="button"
-                              className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                              onClick={() => downloadRecordJson(record, recordKey)}
-                              aria-label={`Download raw JSON for ${detailRecord.id}`}
-                            >
-                              Download JSON
-                            </button>
-                          </div>
-                        </div>
-                        <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(detailRecord.raw, null, 2)}</pre>
-                      </details>
-
-                      {(record.path || sourceHref || rawHref) && (
-                        <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3 md:flex-row md:items-center md:justify-between">
-                          <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record path: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
-                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open record →</a>}
-                        </div>
-                      )}
                     </div>
                   )}
                 </article>

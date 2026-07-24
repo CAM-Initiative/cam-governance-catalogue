@@ -555,7 +555,10 @@ test("VIGIL page lazy-loads details and warns when canonical detail falls back t
   assert.match(page, /detailDisplayRecord\(record, raw\)/);
   assert.match(page, /detailRecord = detailLoad\?\.status === "ready" \? detailLoad\.displayRecord : record/);
   assert.match(page, /Detailed canonical record could not be loaded\. Showing the registry index entry instead\./);
-  assert.match(page, /JSON\.stringify\(detailRecord\.raw, null, 2\)/);
+  assert.match(page, /View source record/);
+  assert.doesNotMatch(page, /Technical JSON/);
+  assert.doesNotMatch(page, /Open record/);
+  assert.doesNotMatch(page, /Record path:/);
 });
 
 test("VIGIL per-record copy and download load canonical detail before exporting JSON", async () => {
