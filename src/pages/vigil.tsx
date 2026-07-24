@@ -185,12 +185,12 @@ function MarkdownBody({ source }: { source?: string }) {
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
-    blocks.push(<p key={`paragraph-${blocks.length}`} className="whitespace-pre-wrap text-[15px] leading-7 text-foreground/85"><MarkdownInline text={paragraph.join(" ").trim()} /></p>);
+    blocks.push(<p key={`paragraph-${blocks.length}`} className="whitespace-pre-wrap text-base leading-7 text-foreground/85"><MarkdownInline text={paragraph.join(" ").trim()} /></p>);
     paragraph = [];
   };
   const flushList = () => {
     if (!list.length) return;
-    blocks.push(<ul key={`list-${blocks.length}`} className="list-disc space-y-1 pl-6 text-[15px] leading-7 text-foreground/85">{list.map((item, index) => <li key={`${item}-${index}`}><MarkdownInline text={item} /></li>)}</ul>);
+    blocks.push(<ul key={`list-${blocks.length}`} className="list-disc space-y-1 pl-6 text-base leading-7 text-foreground/85">{list.map((item, index) => <li key={`${item}-${index}`}><MarkdownInline text={item} /></li>)}</ul>);
     list = [];
   };
   const flushCode = () => {
@@ -326,7 +326,7 @@ function Field({ label, value }: { label: string; value?: string }) {
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
-      <p className="mt-1 text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={value} /></p>
+      <p className="mt-1 text-base leading-relaxed text-foreground"><InlineMarkdown text={value} /></p>
     </div>
   );
 }
@@ -405,7 +405,7 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
         return (
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
-            <p className="mt-1 text-[15px] leading-relaxed text-foreground">{chips.join("; ")}</p>
+            <p className="mt-1 text-base leading-relaxed text-foreground">{chips.join("; ")}</p>
           </div>
         );
       }
@@ -426,7 +426,7 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
     return (
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
-        <div className="mt-1 space-y-1.5 text-[15px] leading-relaxed text-foreground">
+        <div className="mt-1 space-y-1.5 text-base leading-relaxed text-foreground">
           {entries.map(([key, item]) => (
             <p key={key}><span className="font-medium text-foreground/80">{humanLabel(key)}:</span> <LinkValue value={item} /></p>
           ))}
@@ -438,7 +438,7 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
   return (
     <div>
       <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
-      <p className="mt-1 text-[15px] leading-relaxed text-foreground"><LinkValue value={value} /></p>
+      <p className="mt-1 text-base leading-relaxed text-foreground"><LinkValue value={value} /></p>
     </div>
   );
 }
@@ -474,7 +474,7 @@ function ParagraphFields({ entries }: { entries: Array<{ key: string; label: str
       {entries.map((entry) => (
         <div key={entry.key}>
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{entry.label}</p>
-          <div className="text-[15px] leading-relaxed text-foreground"><ValueBody value={entry.value} label={entry.label} /></div>
+          <div className="text-base leading-relaxed text-foreground"><ValueBody value={entry.value} label={entry.label} /></div>
         </div>
       ))}
     </div>
@@ -523,7 +523,7 @@ function CompactObjectCards({ items, keys, titleKeys = [] }: { items: unknown; k
 function TextList({ items }: { items: string[] }) {
   if (!items.length) return null;
   return (
-    <ul className="space-y-2 text-[15px] leading-relaxed text-foreground">
+    <ul className="space-y-2 text-base leading-relaxed text-foreground">
       {items.map((item, index) => (
         <li key={`${item}-${index}`} className="flex gap-2">
           <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-cam-gold" aria-hidden="true" />
@@ -669,7 +669,7 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                           ].map(([label, value]) => (
                             <div key={String(label)} className="min-w-0">
                               <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 lg:sr-only">{label}</dt>
-                              <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0" title={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined} aria-label={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined}><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
+                              <dd className="mt-0.5 break-words text-base leading-relaxed text-foreground lg:mt-0" title={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined} aria-label={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined}><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
                             </div>
                           ))}
                         </dl>
@@ -728,8 +728,8 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
   return (
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
-        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-primary/35 bg-primary/10 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.11em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25">Generate report →</a>
+        <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground/70">Evidence-to-repair record chain</p>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-primary/35 bg-primary/10 px-2.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25">Generate report →</a>
       </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
@@ -738,7 +738,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
           <div key={stage.label} className={`relative rounded-lg border p-3 ${isCurrentStage ? "border-cam-gold/70 bg-[hsl(43_62%_86%)] shadow-sm" : "border-[hsl(38_25%_80%)] bg-[hsl(40_48%_97%)]"}`}>
             {index < stages.length - 1 && <span className="absolute -right-[0.58rem] top-1/2 z-10 hidden -translate-y-1/2 rounded-full bg-[hsl(38_48%_94%)] px-0.5 text-sm text-cam-gold md:inline" aria-hidden="true">→</span>}
             <div className="flex min-h-5 items-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-cam-gold">{index + 1}. {stage.label}</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-cam-gold">{index + 1}. {stage.label}</p>
             </div>
             <div className="mt-2 flex min-h-7 flex-wrap items-start gap-1.5">
               {stage.records.length === 0 && <span className="text-sm text-muted-foreground/70">Not linked</span>}
@@ -746,7 +746,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
                 <button
                   key={recordId}
                   type="button"
-                  className={`rounded-md border px-2 py-1 font-mono text-[10px] tracking-[0.04em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
+                  className={`rounded-md border px-2 py-1 font-mono text-[11px] tracking-[0.03em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
                   onClick={() => recordId !== currentId && onNavigateRecord?.(recordId)}
                   disabled={recordId === currentId || !onNavigateRecord}
                   aria-label={recordId === currentId ? `${recordId}, current record` : `Find linked record ${recordId}`}
@@ -771,11 +771,11 @@ function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
   return (
     <div className="space-y-2">
       <DetailSection title="What was directly observed" defaultOpen show={Boolean(observation?.observed)}>
-        <p className="text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={observation?.observed} /></p>
+        <p className="text-base leading-relaxed text-foreground"><InlineMarkdown text={observation?.observed} /></p>
       </DetailSection>
       <DetailSection title="System and observation context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0 || Boolean(observation?.context)}>
         <div className="space-y-3">
-          {observation?.context && <p className="text-sm leading-relaxed text-foreground">{observation.context}</p>}
+          {observation?.context && <p className="text-base leading-relaxed text-foreground">{observation.context}</p>}
           <FieldGrid entries={systemEntries} />
         </div>
       </DetailSection>
@@ -789,7 +789,7 @@ function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
         ].filter((entry) => hasMeaningfulValue(entry.value))} />
       </DetailSection>
       <DetailSection title="Interpretation — separate from observation" defaultOpen={Boolean(observation?.interpretation)} show={Boolean(observation?.interpretation)}>
-        <p className="text-sm leading-relaxed text-foreground">{observation?.interpretation}</p>
+        <p className="text-base leading-relaxed text-foreground">{observation?.interpretation}</p>
       </DetailSection>
     </div>
   );
@@ -816,7 +816,7 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
   return (
     <div className="space-y-2">
       <DetailSection title="Failure finding" defaultOpen show={Boolean(publicFailure?.definition)}>
-        <p className="text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={publicFailure?.definition} /></p>
+        <p className="text-base leading-relaxed text-foreground"><InlineMarkdown text={publicFailure?.definition} /></p>
       </DetailSection>
       <DetailSection title="Relevant corpus provisions" defaultOpen show>
         {record.publicDisplay.corpusProvisions.length > 0
@@ -839,9 +839,9 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
         </div>
       </DetailSection>
       <DetailSection title="Repair status" defaultOpen={repairPatches.length > 0} show>
-        <div className="space-y-2 text-sm leading-relaxed">
+        <div className="space-y-2 text-base leading-relaxed">
           {repairPatches.length > 0 ? (
-            <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-sm leading-relaxed text-emerald-950">
+            <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-base leading-relaxed text-emerald-950">
               <p className="font-medium">{publicFailure?.repairStatus ? `${titleizeValue(publicFailure.repairStatus)} — ` : ""}repair documented through {repairPatches.join(", ")}.</p>
               {record.publicDisplay.principalRepair && <p className="mt-1">Corpus basis: {record.publicDisplay.principalRepair}</p>}
               <div className="mt-2 flex flex-wrap gap-2">
@@ -1767,13 +1767,13 @@ export default function Vigil() {
                       </div>
 
                       {detailLoad?.status === "loading" && (
-                        <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-xs leading-relaxed text-muted-foreground" role="status">
+                        <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-sm leading-relaxed text-muted-foreground" role="status">
                           Loading canonical VIGIL record detail…
                         </div>
                       )}
 
                       {detailLoad?.status === "error" && (
-                        <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-xs leading-relaxed text-red-800" role="alert">
+                        <div className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm leading-relaxed text-red-800" role="alert">
                           Detailed canonical record could not be loaded. Showing the registry index entry instead. {detailLoad.error}
                         </div>
                       )}
