@@ -103,3 +103,27 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article {
 section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + div[aria-hidden="true"] {
   height: 13.5rem;
 }
+@media print {
+  @page { margin: 1.35cm; }
+  .report-page { max-width: none !important; padding: 0 !important; }
+  .report-page > div { display: block !important; }
+  .report-cover { break-after: page; }
+  .report-step-index { display: none !important; }
+  .report-section { margin-top: 0 !important; break-before: page; break-inside: auto !important; page-break-inside: auto !important; box-shadow: none !important; border-radius: 0 !important; background: transparent !important; padding: 0 !important; }
+  .report-section:first-of-type { break-before: auto; }
+  .report-section > div:first-child { break-after: avoid; page-break-after: avoid; }
+  .report-record { break-inside: avoid; page-break-inside: avoid; }
+  .report-citations { break-inside: auto !important; page-break-inside: auto !important; }
+  .report-record a { display: none !important; }
+  .report-label { color: #665b4f !important; }
+  .report-page footer { break-before: auto; }
+}
+
+.report-label {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.72);
+}

@@ -160,6 +160,30 @@ test("VIGIL detail loader fetches canonical record JSON from raw_url", async () 
   }
 });
 
+test("VIGIL detail loader parses Markdown research records as front matter plus body", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    let jsonCalled = false;
+    const detail = await loadVigilRecordDetail({ id: "lean-index", raw_url: "https://example.test/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md" }, async (url, init) => ({
+      ok: true,
+      text: async () => "---\nid: VIGIL-2026-RESEARCH-0002\nrecord_type: research\ntitle: Red-team governance research\ndomains: [OPERATIONS, SECURITY]\nsources:\n  - https://example.test/source\n---\n\n# Research finding\n\nThe Markdown body remains available for public reading.\n",
+      json: async () => { jsonCalled = true; return {}; },
+    }));
+
+    assert.equal(jsonCalled, false);
+    assert.equal(detail.id, "VIGIL-2026-RESEARCH-0002");
+    assert.equal(detail.record_type, "research");
+    assert.equal(detail.title, "Red-team governance research");
+    assert.deepEqual(detail.domains, ["OPERATIONS", "SECURITY"]);
+    assert.deepEqual(detail.sources, ["https://example.test/source"]);
+    assert.match(detail._canonical_markdown_body, /# Research finding/);
+    assert.match(detail._canonical_markdown_body, /Markdown body remains available/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL detail loader derives canonical raw URL from path", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -453,14 +477,58 @@ test("literal PATCH wording is present but collapsed by default", async () => {
   assert.doesNotMatch(wordingDisclosure, /<details[^>]*\sopen(?:=|>)/);
 });
 
-test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
+test("VIGIL detail hierarchy leads with the chain and omits the redundant metadata bundle", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));
 
-  assert.ok(expandedRecord.indexOf("<RecordChainView") < expandedRecord.indexOf("<CompactRecordMetadata"));
+  assert.match(expandedRecord, /<RecordChainView/);
+  assert.doesNotMatch(page, /CompactRecordMetadata/);
+  assert.match(page, /Generate report/);
   assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
   assert.doesNotMatch(page, /title="Linked Records"/);
   assert.doesNotMatch(page, /label: "Source repair status"/);
+});
+
+test("Evidence Chain Report is a dedicated print-friendly route and preserves incomplete stages", async () => {
+  const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+
+  assert.match(app, /path="\/observatory\/reports\/:recordId"/);
+  assert.match(report, /Print \/ Save as PDF/);
+  assert.match(report, /not yet linked/);
+  assert.match(report, /Observation \/ Research/);
+  assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
+  assert.match(report, /function RecordLedger/);
+  assert.match(report, /function ObservationStage/);
+  assert.match(report, /function ClassificationStage/);
+  assert.match(report, /function DiagnoseStage/);
+  assert.match(report, /function RepairStage/);
+  assert.match(report, /function LearnStage/);
+  assert.doesNotMatch(report, /function ReportRecord/);
+  assert.match(report, /four-record evidence chain/);
+});
+
+test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+
+  assert.doesNotMatch(report, /report-step-index/);
+  assert.match(report, /function collectCitations/);
+  assert.match(report, /function Citations/);
+  assert.match(report, /Source observations/);
+  assert.doesNotMatch(report, /Affected domains.*record\.affected_domains/);
+  assert.doesNotMatch(report, /Affected parties or interests.*record\.publicDisplay\.failure/);
+  assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
+  assert.doesNotMatch(report, /Proposal type.*record\.proposal_type/);
+  assert.doesNotMatch(report, /External relevance.*record\.external_relevance/);
+  assert.doesNotMatch(report, /Proposed outcome/);
+  assert.match(report, /chain\.patches\.length > 0/);
+});
+
+test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);
+  assert.match(page, /Verification detail/);
+  assert.doesNotMatch(page, /patchMode \? verification : provision\.currentStatus/);
 });
 
 test("failure repair status projects a clean status and next action from structured data", async () => {
@@ -542,7 +610,10 @@ test("VIGIL page lazy-loads details and warns when canonical detail falls back t
   assert.match(page, /detailDisplayRecord\(record, raw\)/);
   assert.match(page, /detailRecord = detailLoad\?\.status === "ready" \? detailLoad\.displayRecord : record/);
   assert.match(page, /Detailed canonical record could not be loaded\. Showing the registry index entry instead\./);
-  assert.match(page, /JSON\.stringify\(detailRecord\.raw, null, 2\)/);
+  assert.match(page, /View source record/);
+  assert.doesNotMatch(page, /Technical JSON/);
+  assert.doesNotMatch(page, /Open record/);
+  assert.doesNotMatch(page, /Record path:/);
 });
 
 test("VIGIL per-record copy and download load canonical detail before exporting JSON", async () => {

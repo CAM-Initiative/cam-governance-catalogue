@@ -8,6 +8,7 @@ import Provenance from "@/pages/provenance";
 import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
+import EvidenceChainReport from "@/pages/evidence-chain-report";
 import About from "@/pages/about";
 import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/observatory" component={Vigil} />
+      <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
       <Route path="/vigil" component={Vigil} />
       <Route component={NotFound} />
     </Switch>

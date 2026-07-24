@@ -35,6 +35,71 @@ async function fetchJson(fetcher: FetchLike, url: string) {
   return response.json() as Promise<unknown>;
 }
 
+function isMarkdownUrl(url: string) {
+  return new URL(url).pathname.toLowerCase().endsWith(".md");
+}
+
+function parseYamlScalar(value: string): unknown {
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  if (trimmed === "null" || trimmed === "~") return null;
+  if (trimmed === "true") return true;
+  if (trimmed === "false") return false;
+  if (/^-?\d+(\.\d+)?$/.test(trimmed)) return Number(trimmed);
+  if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+    return trimmed.slice(1, -1).replace(/\\([\\"'])/g, "$1");
+  }
+  if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+    return trimmed.slice(1, -1).split(",").map((item) => parseYamlScalar(item)).filter((item) => item !== undefined);
+  }
+  return trimmed;
+}
+
+function parseResearchMarkdown(source: string): UnknownRecord {
+  const lines = source.replace(/^\uFEFF/, "").split(/\r?\n/);
+  const hasFrontMatter = lines[0]?.trim() === "---";
+  if (!hasFrontMatter) return { _canonical_format: "markdown", _canonical_markdown_body: source };
+
+  const end = lines.findIndex((line, index) => index > 0 && /^(---|\.\.\.)\s*$/.test(line.trim()));
+  if (end < 0) return { _canonical_format: "markdown", _canonical_markdown_body: source };
+
+  const metadata: UnknownRecord = {};
+  let pendingListKey: string | undefined;
+  for (const line of lines.slice(1, end)) {
+    if (!line.trim() || line.trim().startsWith("#")) continue;
+    const listItem = line.match(/^\s*-\s+(.*)$/);
+    if (listItem && pendingListKey) {
+      const existing = Array.isArray(metadata[pendingListKey]) ? metadata[pendingListKey] as unknown[] : [];
+      existing.push(parseYamlScalar(listItem[1]));
+      metadata[pendingListKey] = existing;
+      continue;
+    }
+    const entry = line.match(/^\s*([A-Za-z0-9_.-]+):\s*(.*)$/);
+    if (!entry) continue;
+    const [, key, rawValue] = entry;
+    if (rawValue.trim()) {
+      metadata[key] = parseYamlScalar(rawValue);
+      pendingListKey = undefined;
+    } else {
+      metadata[key] = [];
+      pendingListKey = key;
+    }
+  }
+
+  return {
+    ...metadata,
+    _canonical_format: "markdown",
+    _canonical_markdown_body: lines.slice(end + 1).join("\\n").replace(/^\s+|\s+$/g, ""),
+  };
+}
+
+async function fetchCanonicalDetail(fetcher: FetchLike, url: string): Promise<unknown> {
+  const response = await fetcher(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Unable to load ${url} (${response.status})`);
+  if (isMarkdownUrl(url)) return parseResearchMarkdown(await response.text());
+  return response.json() as Promise<unknown>;
+}
+
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -152,7 +217,7 @@ export async function loadVigilRecordDetail(
   }
 
   try {
-    const payload = await fetchJson(fetcher, cacheBustUrl(detailUrl));
+    const payload = await fetchCanonicalDetail(fetcher, cacheBustUrl(detailUrl));
     if (!isObject(payload)) {
       throw new Error("canonical record JSON must be a top-level object");
     }
