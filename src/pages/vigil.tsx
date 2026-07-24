@@ -197,6 +197,31 @@ function chipTone(value: string) {
   return chipTones[hash % chipTones.length];
 }
 
+const vendorTones: Array<[RegExp, string]> = [
+  [/\bopenai\b|\bchatgpt\b/i, "border-emerald-300 bg-emerald-50 text-emerald-950"],
+  [/\banthropic\b|\bclaude\b/i, "border-amber-300 bg-amber-50 text-amber-950"],
+  [/\bxai\b|\bgrok\b/i, "border-slate-400 bg-slate-100 text-slate-950"],
+  [/\bgoogle\b|\bdeepmind\b|\bgemini\b/i, "border-blue-300 bg-blue-50 text-blue-950"],
+  [/\bmeta\b|\bllama\b/i, "border-indigo-300 bg-indigo-50 text-indigo-950"],
+  [/\bmicrosoft\b|\bazure\b|\bcopilot\b/i, "border-cyan-300 bg-cyan-50 text-cyan-950"],
+  [/\breplit\b/i, "border-orange-300 bg-orange-50 text-orange-950"],
+  [/\bmistral\b/i, "border-rose-300 bg-rose-50 text-rose-950"],
+  [/\bcam initiative\b/i, "border-yellow-500 bg-yellow-50 text-yellow-950"],
+  [/\bmulti[\s-]*vendor\b|\bmultiple\b|\bother .*providers?\b/i, "border-violet-300 bg-violet-50 text-violet-950"],
+];
+
+function vendorTone(value: string) {
+  return vendorTones.find(([pattern]) => pattern.test(value))?.[1] ?? chipTone(value);
+}
+
+function isVendorPillLabel(label?: string) {
+  return Boolean(label && /vendor|provider/i.test(label));
+}
+
+function pillTone(label: string | undefined, value: string) {
+  return isVendorPillLabel(label) ? vendorTone(value) : chipTone(value);
+}
+
 function detailDisplayRecord(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
   const normalized = normalizeRecords([{
     ...detail,
@@ -301,7 +326,7 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
           <div className="mt-1 flex flex-wrap gap-1.5">
-            {chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${chipTone(item)}`}>{item}</span>)}
+            {chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${pillTone(label, item)}`}>{item}</span>)}
           </div>
         </div>
       );
@@ -362,17 +387,17 @@ function ParagraphFields({ entries }: { entries: Array<{ key: string; label: str
       {entries.map((entry) => (
         <div key={entry.key}>
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{entry.label}</p>
-          <div className="text-[15px] leading-relaxed text-foreground"><ValueBody value={entry.value} /></div>
+          <div className="text-[15px] leading-relaxed text-foreground"><ValueBody value={entry.value} label={entry.label} /></div>
         </div>
       ))}
     </div>
   );
 }
 
-function ValueBody({ value }: { value: unknown }) {
+function ValueBody({ value, label }: { value: unknown; label?: string }) {
   if (Array.isArray(value)) {
     const chips = isPrimitiveList(value) ? primitiveItems(value) : [];
-    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${chipTone(item)}`}>{item}</span>)}</div>;
+    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${pillTone(label, item)}`}>{item}</span>)}</div>;
   }
   if (isObject(value)) {
     const entries = Object.entries(value).filter(([, item]) => hasMeaningfulValue(item));
@@ -562,10 +587,16 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                         </dl>
 
                         {patchMode && exactRepair && (
-                          <div className="mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{removesText ? "Literal wording removed" : "Final adopted wording"}</p>
-                            <blockquote className="mt-2 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
-                          </div>
+                          <details className="group/wording mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
+                            <summary className="cursor-pointer list-none rounded-md font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-[hsl(40_48%_97%)] [&::-webkit-details-marker]:hidden">
+                              <span className="inline-flex items-center gap-2">
+                                <span className="inline-block h-0 w-0 shrink-0 border-y-[0.28rem] border-l-[0.42rem] border-y-transparent border-l-current transition-transform duration-200 group-open/wording:rotate-90" aria-hidden="true" />
+                                <span>{removesText ? "Literal wording removed" : "Final adopted wording"}</span>
+                                <span className="text-[9px] text-muted-foreground/70">Show wording</span>
+                              </span>
+                            </summary>
+                            <blockquote className="mt-3 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
+                          </details>
                         )}
 
                         {patchMode && provision.previousWording && provision.previousWording !== exactRepair && (

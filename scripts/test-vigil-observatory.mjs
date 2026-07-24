@@ -426,6 +426,33 @@ test("affected parties render as readable text rather than coloured pills", asyn
   assert.doesNotMatch(affectedPartiesTreatment, /chipTone/);
 });
 
+test("vendor pills use stable vendor-specific colours", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const vendorTones/);
+  assert.match(page, /\\bopenai\\b/);
+  assert.match(page, /\\banthropic\\b/);
+  assert.match(page, /\\bxai\\b/);
+  assert.match(page, /\\bgoogle\\b/);
+  assert.match(page, /\\bmeta\\b/);
+  assert.match(page, /\\bmicrosoft\\b/);
+  assert.match(page, /\\breplit\\b/);
+  assert.match(page, /function pillTone/);
+  assert.match(page, /pillTone\(label, item\)/);
+});
+
+test("literal PATCH wording is present but collapsed by default", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const wordingDisclosure = page.slice(
+    page.indexOf('<details className="group/wording'),
+    page.indexOf("{patchMode && provision.previousWording"),
+  );
+  assert.match(wordingDisclosure, /<summary/);
+  assert.match(wordingDisclosure, /Final adopted wording/);
+  assert.match(wordingDisclosure, /Literal wording removed/);
+  assert.match(wordingDisclosure, /<blockquote/);
+  assert.doesNotMatch(wordingDisclosure, /<details[^>]*\sopen(?:=|>)/);
+});
+
 test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));
