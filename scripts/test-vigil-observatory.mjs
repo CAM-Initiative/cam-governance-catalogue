@@ -160,6 +160,30 @@ test("VIGIL detail loader fetches canonical record JSON from raw_url", async () 
   }
 });
 
+test("VIGIL detail loader parses Markdown research records as front matter plus body", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    let jsonCalled = false;
+    const detail = await loadVigilRecordDetail({ id: "lean-index", raw_url: "https://example.test/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md" }, async (url, init) => ({
+      ok: true,
+      text: async () => "---\nid: VIGIL-2026-RESEARCH-0002\nrecord_type: research\ntitle: Red-team governance research\ndomains: [OPERATIONS, SECURITY]\nsources:\n  - https://example.test/source\n---\n\n# Research finding\n\nThe Markdown body remains available for public reading.\n",
+      json: async () => { jsonCalled = true; return {}; },
+    }));
+
+    assert.equal(jsonCalled, false);
+    assert.equal(detail.id, "VIGIL-2026-RESEARCH-0002");
+    assert.equal(detail.record_type, "research");
+    assert.equal(detail.title, "Red-team governance research");
+    assert.deepEqual(detail.domains, ["OPERATIONS", "SECURITY"]);
+    assert.deepEqual(detail.sources, ["https://example.test/source"]);
+    assert.match(detail._canonical_markdown_body, /# Research finding/);
+    assert.match(detail._canonical_markdown_body, /Markdown body remains available/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL detail loader derives canonical raw URL from path", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {

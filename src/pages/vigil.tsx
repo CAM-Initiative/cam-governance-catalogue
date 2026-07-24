@@ -164,6 +164,93 @@ function InlineMarkdown({ text }: { text?: string }) {
   );
 }
 
+function MarkdownInline({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\([^\)]+\)|\*\*[^*]+\*\*)/g);
+  return <>{parts.map((part, index) => {
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\)]+)\)$/);
+    if (link) return <a key={`${part}-${index}`} href={link[2]} target="_blank" rel="noreferrer" className="text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary">{link[1]}</a>;
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={`${part}-${index}`} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>;
+    return <span key={`${part}-${index}`}>{part}</span>;
+  })}</>;
+}
+
+function MarkdownBody({ source }: { source?: string }) {
+  if (!isMeaningfulText(source)) return null;
+  const lines = source.split(/\r?\n/);
+  const blocks: ReactNode[] = [];
+  let paragraph: string[] = [];
+  let list: string[] = [];
+  let code: string[] = [];
+  let inCode = false;
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    blocks.push(<p key={`paragraph-${blocks.length}`} className="whitespace-pre-wrap text-[15px] leading-7 text-foreground/85"><MarkdownInline text={paragraph.join(" ").trim()} /></p>);
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (!list.length) return;
+    blocks.push(<ul key={`list-${blocks.length}`} className="list-disc space-y-1 pl-6 text-[15px] leading-7 text-foreground/85">{list.map((item, index) => <li key={`${item}-${index}`}><MarkdownInline text={item} /></li>)}</ul>);
+    list = [];
+  };
+  const flushCode = () => {
+    if (!code.length) return;
+    blocks.push(<pre key={`code-${blocks.length}`} className="overflow-x-auto rounded-lg border border-border bg-card/80 p-3 font-mono text-xs leading-relaxed text-foreground"><code>{code.join("\n")}</code></pre>);
+    code = [];
+  };
+
+  for (const line of lines) {
+    if (line.trim().startsWith("```")) {
+      flushParagraph();
+      flushList();
+      if (inCode) flushCode();
+      inCode = !inCode;
+      continue;
+    }
+    if (inCode) {
+      code.push(line);
+      continue;
+    }
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      flushList();
+      const level = Math.min(heading[1].length, 4);
+      const className = level === 1 ? "font-serif text-2xl text-foreground" : level === 2 ? "font-serif text-xl text-foreground" : "font-serif text-lg text-foreground";
+      blocks.push(<h3 key={`heading-${blocks.length}`} className={`${className} pt-3`}>{<MarkdownInline text={heading[2]} />}</h3>);
+      continue;
+    }
+    const bullet = line.match(/^\s*(?:[-*+] |\d+\. )(.+)$/);
+    if (bullet) {
+      flushParagraph();
+      list.push(bullet[1]);
+      continue;
+    }
+    if (/^\s*>/.test(line)) {
+      flushParagraph();
+      flushList();
+      blocks.push(<blockquote key={`quote-${blocks.length}`} className="border-l-4 border-cam-gold/45 pl-4 font-serif text-base italic leading-7 text-foreground/75"><MarkdownInline text={line.replace(/^\s*>\s?/, "")} /></blockquote>);
+      continue;
+    }
+    if (!line.trim()) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+    if (/^\s*(---+|\*\*\*+)\s*$/.test(line)) {
+      flushParagraph();
+      flushList();
+      blocks.push(<hr key={`rule-${blocks.length}`} className="border-cam-gold/30" />);
+      continue;
+    }
+    paragraph.push(line.trim());
+  }
+  flushParagraph();
+  flushList();
+  flushCode();
+  return <div className="space-y-4">{blocks}</div>;
+}
+
 function lifecycleTone(label?: string) {
   const value = String(label ?? "").toLocaleLowerCase();
   if (value.includes("closed—actioned") || value.includes("closed-actioned") || value === "implemented") {
@@ -942,11 +1029,34 @@ function GenericDetailView({ record }: { record: VigilIndexRecord }) {
   );
 }
 
+function ResearchDetailView({ record }: { record: VigilIndexRecord }) {
+  const body = typeof record.raw._canonical_markdown_body === "string" ? record.raw._canonical_markdown_body : undefined;
+  const metadata = Object.entries(record.raw)
+    .filter(([key, value]) => !key.startsWith("_") && key !== "path" && key !== "raw_url" && key !== "github_blob_url" && hasMeaningfulValue(value))
+    .filter(([key]) => !["id", "title", "record_type", "summary"].includes(key));
+
+  return (
+    <div className="space-y-4">
+      {metadata.length > 0 && (
+        <DetailSection title="Research record metadata" defaultOpen={false}>
+          <FieldGrid entries={metadata.map(([key, value]) => ({ key, label: humanLabel(key), value: textFrom(value) })).filter((entry) => hasMeaningfulValue(entry.value))} />
+        </DetailSection>
+      )}
+      <section className="rounded-xl border-2 border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4" aria-labelledby={`${record.id}-research-content`}>
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">Canonical research artefact</p>
+        <h3 id={`${record.id}-research-content`} className="mt-1 font-serif text-xl text-foreground">Research content</h3>
+        <div className="mt-4 border-t border-primary/20 pt-4"><MarkdownBody source={body} /></div>
+      </section>
+    </div>
+  );
+}
+
 function CuratedRecordDetail({ record, onNavigateRecord }: { record: VigilIndexRecord; onNavigateRecord?: (recordId: string) => void }) {
   if (record.record_type === "observation") return <ObservationDetailView record={record} />;
   if (record.record_type === "failure_mode") return <FailureModeDetailView record={record} onNavigateRecord={onNavigateRecord} />;
   if (record.record_type === "proposal") return <ProposalDetailView record={record} onNavigateRecord={onNavigateRecord} />;
   if (record.record_type === "patch_note") return <PatchDetailView record={record} />;
+  if (record.record_type === "research") return <ResearchDetailView record={record} />;
   return <GenericDetailView record={record} />;
 }
 

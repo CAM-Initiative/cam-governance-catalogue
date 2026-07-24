@@ -251,6 +251,7 @@ export function normalizeRecordType(input: UnknownRecord | string | undefined): 
     if (["fm", "failure_mode", "failure_modes", "failuremode", "failure_mode_observation"].includes(normalized) || /(^|_)fm(_|$)/.test(normalized)) return "failure_mode";
     if (["prop", "proposal", "proposals", "proposal_development_expansion"].includes(normalized) || /(^|_)prop(_|$)/.test(normalized)) return "proposal";
     if (["patch", "patches", "patch_note", "patch_notes", "patchnote", "implemented_patch_note"].includes(normalized) || /(^|_)patch(_|$)/.test(normalized)) return "patch_note";
+    if (["research", "research_record", "research_artifact", "research_paper"].includes(normalized) || /(^|_)research(_|$)/.test(normalized)) return "research";
   }
 
   const explicit = candidates.find(isMeaningfulText)?.trim().toLowerCase().replace(/[-\s]+/g, "_");
@@ -263,6 +264,7 @@ export function normalizeRecordTypeLabel(value: string | undefined) {
   if (normalized === "failure_mode") return "Failure Modes";
   if (normalized === "proposal") return "Proposals";
   if (normalized === "patch_note") return "Patch Notes";
+  if (normalized === "research") return "Research";
   return value ? titleizeValue(value) : "Unclassified";
 }
 
@@ -426,6 +428,7 @@ export function recordTypeBadge(recordType: string) {
   if (recordType === "proposal") return "PROP";
   if (recordType === "patch_note") return "PATCH";
   if (recordType === "patch") return "PATCH";
+  if (recordType === "research") return "RESEARCH";
   return recordType;
 }
 
