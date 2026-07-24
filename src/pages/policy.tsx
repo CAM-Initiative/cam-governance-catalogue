@@ -195,8 +195,14 @@ export default function Policy() {
                   <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
                     <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Themes</dt>
                     <dd className="mt-2 flex flex-wrap gap-2">
-                      {["Copyright", "AI training", "Market access", "Contribution valuation", "Living corpora"].map((theme) => (
-                        <span className="rounded-full border border-primary/20 bg-background/70 px-2.5 py-1 text-xs text-foreground/75" key={theme}>{theme}</span>
+                      {[
+                        ["Copyright", "border-amber-300 bg-amber-50 text-amber-950"],
+                        ["AI training", "border-blue-300 bg-blue-50 text-blue-950"],
+                        ["Market access", "border-emerald-300 bg-emerald-50 text-emerald-950"],
+                        ["Contribution valuation", "border-violet-300 bg-violet-50 text-violet-950"],
+                        ["Living corpora", "border-rose-300 bg-rose-50 text-rose-950"],
+                      ].map(([theme, tone]) => (
+                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${tone}`} key={theme}>{theme}</span>
                       ))}
                     </dd>
                   </div>

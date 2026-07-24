@@ -239,7 +239,6 @@ test("PATCH public display exposes complete literal corpus amendments", async ()
     });
 
     assert.equal(record.publicDisplay.patch.contractStatus, "complete-amendment");
-    assert.equal(record.publicDisplay.patch.withholdActionedStatus, false);
     assert.equal(record.publicDisplay.lifecycleLabel, "Closed—actioned");
     assert.equal(record.publicDisplay.corpusProvisions[0].complete, true);
     assert.equal(record.publicDisplay.corpusProvisions[0].finalWording, "Tool invocation SHALL remain proportionate to the active task authority.");
@@ -249,7 +248,7 @@ test("PATCH public display exposes complete literal corpus amendments", async ()
   }
 });
 
-test("PATCH public display withholds actioned status when implementation text is incomplete", async () => {
+test("PATCH public display preserves actioned lifecycle while identifying incomplete implementation detail", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
     const { normalizeVigilRecord } = modules.presentation;
@@ -268,9 +267,8 @@ test("PATCH public display withholds actioned status when implementation text is
     });
 
     assert.equal(record.publicDisplay.patch.contractStatus, "incomplete");
-    assert.equal(record.publicDisplay.patch.withholdActionedStatus, true);
-    assert.equal(record.publicDisplay.lifecycleLabel, "Actioned status withheld");
-    assert.equal(record.publicDisplay.repairState, "Actioned status withheld");
+    assert.equal(record.publicDisplay.lifecycleLabel, "Closed—actioned");
+    assert.equal(record.publicDisplay.repairState, "Actioned · implementation details incomplete");
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -304,7 +302,6 @@ test("PATCH public display accepts an explicit no-corpus-change declaration", as
 
     assert.equal(record.publicDisplay.patch.contractStatus, "complete-no-corpus-change");
     assert.equal(record.publicDisplay.patch.explicitNoCorpusTextChange, true);
-    assert.equal(record.publicDisplay.patch.withholdActionedStatus, false);
     assert.equal(record.publicDisplay.lifecycleLabel, "Closed—actioned");
   } finally {
     await rm(tempDir, { recursive: true, force: true });
@@ -317,9 +314,32 @@ test("VIGIL page implements dedicated public views and CAELESTIS authority notic
   assert.match(page, /function FailureModeDetailView/);
   assert.match(page, /function ProposalDetailView/);
   assert.match(page, /function PatchDetailView/);
+  assert.match(page, /function groupCorpusProvisions/);
   assert.match(page, /Applied corpus repairs/);
   assert.match(page, /CAELESTIS remains the authoritative governance corpus/);
-  assert.match(page, /Closed—actioned status is withheld from the public display/);
+  assert.doesNotMatch(page, /Actioned status withheld/);
+  assert.match(page, /Implementation details incomplete/);
+  assert.match(page, /View current instrument/);
+  assert.doesNotMatch(page, /Current CAELESTIS provision/);
+});
+
+test("VIGIL proposal targets suppress empty tables and repeated instrument relationships", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const visibleProvisions = patchMode/);
+  assert.match(page, /relationshipIsInstrumentRepeat/);
+  assert.match(page, /visibleProvisions\.length > 0/);
+  assert.match(page, /displayRelationship/);
+});
+
+test("affected parties render as readable text rather than coloured pills", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const affectedPartiesTreatment = page.slice(
+    page.indexOf('label === "Affected parties or interests"'),
+    page.indexOf("return (", page.indexOf('label === "Affected parties or interests"') + 50),
+  );
+  assert.match(page, /label === "Affected parties or interests"/);
+  assert.match(page, /chips\.join\("; "\)/);
+  assert.doesNotMatch(affectedPartiesTreatment, /chipTone/);
 });
 
 test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {

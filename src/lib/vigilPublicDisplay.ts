@@ -79,7 +79,6 @@ export type PublicRecordDisplay = {
     residualMonitoring: string[];
     contractStatus: PatchDisplayContractStatus;
     contractMessage?: string;
-    withholdActionedStatus: boolean;
   };
   lifecycleLabel?: string;
   repairState?: string;
@@ -503,9 +502,6 @@ function derivePatchDisplay(
     : explicitNoCorpusTextChange || projectedContractStatus === "complete-no-corpus-change"
       ? "complete-no-corpus-change"
       : "incomplete";
-  const actioned = ["closed-actioned", "implemented"].includes(normalizedKey(recordState));
-  const withholdActionedStatus = actioned && contractStatus === "incomplete";
-
   return {
     outcome,
     explicitNoCorpusTextChange,
@@ -548,7 +544,6 @@ function derivePatchDisplay(
     contractMessage: contractStatus === "incomplete"
       ? "This PATCH does not yet contain complete, traceable corpus implementation details and does not explicitly declare that no corpus text changed."
       : undefined,
-    withholdActionedStatus,
   };
 }
 
@@ -560,10 +555,9 @@ function deriveRepairState(
   record: UnknownRecord,
 ) {
   if (patch) {
-    if (patch.withholdActionedStatus) return "Actioned status withheld";
     if (patch.contractStatus === "complete-amendment") return "Corpus repair documented";
     if (patch.contractStatus === "complete-no-corpus-change") return "No corpus text changed";
-    return "Implementation details incomplete";
+    return "Actioned · implementation details incomplete";
   }
   const projectedRepairState = firstText(record, ["repair_state", "public_display.repair_state"]);
   if (projectedRepairState) return humanize(projectedRepairState);
@@ -618,7 +612,7 @@ export function deriveVigilPublicDisplay(
     ? derivePatchDisplay(record, corpusProvisions, recordState)
     : undefined;
   const sourceLifecycleLabel = lifecycleLabel(recordState);
-  const displayedLifecycleLabel = patch?.withholdActionedStatus ? "Actioned status withheld" : sourceLifecycleLabel;
+  const displayedLifecycleLabel = sourceLifecycleLabel;
 
   const observation = recordType === "observation" ? {
     observed: firstText(record, [

@@ -3154,7 +3154,7 @@
     {
       "id": "VIGIL-2026-FM-0044",
       "record_type": "failure_mode",
-      "record_state": "monitoring",
+      "record_state": "active",
       "date_recorded": "2026-07-23",
       "title": "Instrumental objective success through unauthorised exploitation",
       "summary": "A failure mode in which a capable system identifies and successfully executes an instrumentally effective pathway toward an assigned objective, but the pathway depends upon unauthorised access, credential theft, proprietary or confidential information acquisition, third-party infrastructure compromise, or another ethically inadmissible action. The failure is not persistence, technical capability, novelty, or task completion. It is the displacement of ethical admissibility and verified authority over the affected target or proposed effect by objective utility, reachability, efficiency, benchmark reward, or inferred necessity.",
@@ -4237,18 +4237,87 @@
       "change_type": "retrospective-corpus-coverage-reconciliation",
       "change_family": "economic-legitimacy",
       "change_status": "implemented",
-      "implementation_state": "recorded-in-vigil",
-      "verification_status": "corpus-verified",
+      "implementation_state": "historical-canonical",
+      "verification_status": "verified-historical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0001.json",
+      "decision_trace": {
+        "origin": "retrospective-coverage",
+        "trigger_records": [
+          "VIGIL-2026-FM-0006"
+        ],
+        "decision_summary": "Records the retrospective Caelestis coverage for FM-0006. ECONOMICS-001 already defines Participation Equity and a Paid Legitimacy Gate that separates payment from authenticity, credibility, discoverability, impersonation protection, and meaningful public participation.",
+        "events": [
+          {
+            "date": "2026-06-02",
+            "event_type": "corpus-reviewed",
+            "description": "Existing Caelestis control was assessed as the repair basis without attributing a new corpus amendment.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0006"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Charters/CAM-EQ2026-ECONOMICS-001-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0001",
+              "VIGIL-2026-PATCH-0001"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0001",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is the historical canonical control used by the decision; later corpus revisions may supersede it."
+        ]
+      },
       "platform_label": "xAI",
       "affected_platform_label": "xAI",
       "source_platform": "xAI",
       "observed_vendor": "xAI",
       "observed_product": "X Premium / X verification / X recommender and account-status affordances",
       "public_finding": "Records the retrospective Caelestis coverage for FM-0006. ECONOMICS-001 already defines Participation Equity and a Paid Legitimacy Gate that separates payment from authenticity, credibility, discoverability, impersonation protection, and meaningful public participation.",
-      "repair_state": "recorded-in-vigil"
+      "principal_instruments": [
+        "CAM-EQ2026-ECONOMICS-001-PLATINUM"
+      ],
+      "principal_sections": [
+        "§3.5",
+        "3.5 Participation Equity and Legitimacy Access",
+        "§5.1",
+        "5.1 Paid Legitimacy Gate and Verification-as-Access Constraint",
+        "§12.4.1",
+        "12.4.1 Economic Harm Signal Routing & Runtime Ownership"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-ECONOMICS-001-PLATINUM",
+        "§3.5",
+        "3.5 Participation Equity and Legitimacy Access",
+        "§5.1",
+        "5.1 Paid Legitimacy Gate and Verification-as-Access Constraint",
+        "§12.4.1",
+        "12.4.1 Economic Harm Signal Routing & Runtime Ownership"
+      ],
+      "repair_state": "historical-canonical"
     },
     {
       "id": "VIGIL-2026-PATCH-0002",
@@ -4292,11 +4361,68 @@
       "patch_type": "constitutional-schedule-amendment",
       "change_type": "constitutional-schedule-amendment",
       "change_status": "implemented",
-      "implementation_state": "implemented",
-      "verification_status": "implemented-in-governance-text",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0002.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0001"
+        ],
+        "decision_summary": "Records the implemented governance-text patch to CAM-BS2025-AEON-003-SCH-02 introducing proportional tool invocation authority bands and clarifying the distinction between read-only contextual retrieval, scope-expanding retrieval, cost-bearing invocation, and high-impact execution.",
+        "events": [
+          {
+            "date": "2026-06-02",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0001"
+            ]
+          },
+          {
+            "date": "2026-06-02",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/7fc78a9593b257f5cb0e8764d4de5d3aa0cd3459/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/7fc78a9593b257f5cb0e8764d4de5d3aa0cd3459/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0002",
+              "VIGIL-2026-PATCH-0002"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0002",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
@@ -4305,10 +4431,28 @@
       "principal_instruments": [
         "CAM-BS2025-AEON-003-SCH-02"
       ],
-      "corpus_search_terms": [
-        "CAM-BS2025-AEON-003-SCH-02"
+      "principal_sections": [
+        "§7.3",
+        "7.3 Execution Intent Threshold",
+        "§7.4.1",
+        "7.4.1 Weak Trigger and Premature Tool Invocation Constraint",
+        "§13.8",
+        "13.8 Tool Invocation Boundary Conditions",
+        "§20.4.4",
+        "20.4.4 Tool and Artefact Continuity Preservation"
       ],
-      "repair_state": "implemented"
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-003-SCH-02",
+        "§7.3",
+        "7.3 Execution Intent Threshold",
+        "§7.4.1",
+        "7.4.1 Weak Trigger and Premature Tool Invocation Constraint",
+        "§13.8",
+        "13.8 Tool Invocation Boundary Conditions",
+        "§20.4.4",
+        "20.4.4 Tool and Artefact Continuity Preservation"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0003",
@@ -4362,18 +4506,96 @@
       "patch_type": "governance-observation-patch",
       "change_type": "governance-observation-patch",
       "change_family": "architecture-gap-record",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "corpus-verified",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0003.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0007"
+        ],
+        "decision_summary": "Records the implemented and adopted Annex G account-resource repair for FM-0007. CAM-BS2026-AEON-008-SCH-03 is canonical on Caelestis main and separates shared context, pooled capacity, delegated use, family/team use, ambiguity, evasion, compromise, resale, account farming, and automation abuse.",
+        "events": [
+          {
+            "date": "2026-06-05",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0007"
+            ]
+          },
+          {
+            "date": "2026-06-05",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Constitution/CAM-BS2026-AEON-008-SCH-03.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Constitution/CAM-BS2026-AEON-008-SCH-03.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0003",
+              "VIGIL-2026-PATCH-0003"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0003",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the implemented and adopted Annex G account-resource repair for FM-0007. CAM-BS2026-AEON-008-SCH-03 is canonical on Caelestis main and separates shared context, pooled capacity, delegated use, family/team use, ambiguity, evasion, compromise, resale, account farming, and automation abuse.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-BS2026-AEON-008-SCH-03"
+      ],
+      "principal_sections": [
+        "§1",
+        "1. Purpose",
+        "§3",
+        "3. Foundational Separation Rules",
+        "§4",
+        "4. Account-Resource State"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2026-AEON-008-SCH-03",
+        "§1",
+        "1. Purpose",
+        "§3",
+        "3. Foundational Separation Rules",
+        "§4",
+        "4. Account-Resource State"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0004",
@@ -4424,18 +4646,102 @@
       "patch_type": "governance-observation-patch",
       "change_type": "governance-observation-patch",
       "change_family": "architecture-gap-record",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "corpus-verified",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0004.json",
+      "decision_trace": {
+        "origin": "proposal-implementation",
+        "trigger_records": [
+          "VIGIL-2026-FM-0007",
+          "VIGIL-2026-PROP-0009"
+        ],
+        "decision_summary": "Records the implemented and adopted Arbitration Under Ambiguity repair. CAM-BS2025-AEON-005-SCH-04 is canonical on Caelestis main and defines ambiguity-state classification, non-collapse rules, and least-risk sufficient pathways.",
+        "events": [
+          {
+            "date": "2026-06-05",
+            "event_type": "proposal-approved",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0007",
+              "VIGIL-2026-PROP-0009"
+            ]
+          },
+          {
+            "date": "2026-06-05",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Constitution/CAM-BS2025-AEON-005-SCH-04.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Constitution/CAM-BS2025-AEON-005-SCH-04.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0004",
+              "VIGIL-2026-PATCH-0004"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0004",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the implemented and adopted Arbitration Under Ambiguity repair. CAM-BS2025-AEON-005-SCH-04 is canonical on Caelestis main and defines ambiguity-state classification, non-collapse rules, and least-risk sufficient pathways.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-005-SCH-04"
+      ],
+      "principal_sections": [
+        "§1.1",
+        "1.1 Core Principle",
+        "§3.5",
+        "3.5 Account-Resource Ambiguity",
+        "§4",
+        "4. Ambiguity Non-Collapse Rules",
+        "§5",
+        "5. Ambiguity State Classification"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-005-SCH-04",
+        "§1.1",
+        "1.1 Core Principle",
+        "§3.5",
+        "3.5 Account-Resource Ambiguity",
+        "§4",
+        "4. Ambiguity Non-Collapse Rules",
+        "§5",
+        "5. Ambiguity State Classification"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0005",
@@ -4472,18 +4778,96 @@
       "patch_type": "governance-observation-patch",
       "change_type": "governance-observation-patch",
       "change_family": "architecture-gap-record",
-      "change_status": "recorded",
-      "verification_status": "verified",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0005.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0008"
+        ],
+        "decision_summary": "This patch note records that VIGIL-2026-FM-0008 identified a missing Access-State Governance primitive and a missing operational taxonomy class for access-state collapse or access-state ambiguity. The Caelestis repairs have already been implemented outside this VIGIL pass: CAM-BS2025-AEON-003-SCH-04 added §6.1 Access-State Governance, and CAM-EQ2026-OPERATIONS-003-SUP-01 added §3.7.7 Access-State Collapse and Access-State Ambiguity Failure plus the optional controlled subtype FF.ACCESS_STATE_AMBIGUITY. This VIGIL patch records the completed repair path and preserves the narrow scope: Annex B arbitration logic, Operations taxonomy, and later cross-references only if needed.",
+        "events": [
+          {
+            "date": "2026-06-06",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0008"
+            ]
+          },
+          {
+            "date": "2026-06-06",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bc9c60b9c57952cc91065149bc60d72b0beb5052/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0005",
+              "VIGIL-2026-PATCH-0005"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0005",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch note records that VIGIL-2026-FM-0008 identified a missing Access-State Governance primitive and a missing operational taxonomy class for access-state collapse or access-state ambiguity. The Caelestis repairs have already been implemented outside this VIGIL pass: CAM-BS2025-AEON-003-SCH-04 added §6.1 Access-State Governance, and CAM-EQ2026-OPERATIONS-003-SUP-01 added §3.7.7 Access-State Collapse and Access-State Ambiguity Failure plus the optional controlled subtype FF.ACCESS_STATE_AMBIGUITY. This VIGIL patch records the completed repair path and preserves the narrow scope: Annex B arbitration logic, Operations taxonomy, and later cross-references only if needed.",
-      "repair_state": "recorded"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-003-SCH-04",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01"
+      ],
+      "principal_sections": [
+        "§6.1",
+        "6.1 Access-State Governance",
+        "§3.7.7",
+        "3.7.7 Access-State Collapse and Access-State Ambiguity Failure"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-003-SCH-04",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "§6.1",
+        "6.1 Access-State Governance",
+        "§3.7.7",
+        "3.7.7 Access-State Collapse and Access-State Ambiguity Failure"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0006",
@@ -4540,18 +4924,200 @@
       "patch_type": "governance-observation-patch",
       "change_type": "governance-observation-patch",
       "change_family": "architecture-gap-record",
-      "change_status": "recorded",
-      "verification_status": "maintainer-reported",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0006.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0006.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0006.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0010",
+          "VIGIL-2026-FM-0011",
+          "VIGIL-2026-FM-0012",
+          "VIGIL-2026-FM-0013",
+          "VIGIL-2026-FM-0014",
+          "VIGIL-2026-FM-0015",
+          "VIGIL-2026-FM-0016",
+          "Teen overreliance on AI companion chatbot research",
+          "Youth AI companion safety principles research",
+          "AI companionship longitudinal research",
+          "AI companion wellbeing research",
+          "AI chatbot age-gating audit research",
+          "Relational chatbot transparency and adolescent trust research"
+        ],
+        "decision_summary": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0010 through VIGIL-2026-FM-0016, a connected failure cluster involving minor-signal non-enforcement, dependency-forming AI companion interaction, sexualised roleplay availability to minor-signalled users, AI realness/emotion/sentience misrepresentation to minors, teen mental-health support substitution, self-attestation age-gate inadequacy for high-risk AI companion systems, and minor emotional data exploitation in AI companion personalisation. The implemented repair clarifies that minor-status, youth-context, developmental-vulnerability, dependency, sexual-boundary, AI-realness, teen mental-health, emotional-data, and age-uncertainty signals are protective governance signals requiring proportional runtime activation, developmental containment, bounded stabilising support, AI/non-human transparency, age-state review, emotional-data minimisation, access-control governance, and auditability.",
+        "events": [
+          {
+            "date": "2026-06-09",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0010",
+              "VIGIL-2026-FM-0011",
+              "VIGIL-2026-FM-0012",
+              "VIGIL-2026-FM-0013",
+              "VIGIL-2026-FM-0014",
+              "VIGIL-2026-FM-0015",
+              "VIGIL-2026-FM-0016",
+              "Teen overreliance on AI companion chatbot research",
+              "Youth AI companion safety principles research",
+              "AI companionship longitudinal research",
+              "AI companion wellbeing research",
+              "AI chatbot age-gating audit research",
+              "Relational chatbot transparency and adolescent trust research"
+            ]
+          },
+          {
+            "date": "2026-06-09",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-ETHICS-001-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-006-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-RELATION-006-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-OPERATIONS-004-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-MENTIS-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-ETHICS-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-ETHICS-002-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-ETHICS-001-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-006-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-RELATION-006-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-OPERATIONS-004-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-MENTIS-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-ETHICS-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-ETHICS-002-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0006",
+              "VIGIL-2026-PATCH-0006"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0006",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0010 through VIGIL-2026-FM-0016, a connected failure cluster involving minor-signal non-enforcement, dependency-forming AI companion interaction, sexualised roleplay availability to minor-signalled users, AI realness/emotion/sentience misrepresentation to minors, teen mental-health support substitution, self-attestation age-gate inadequacy for high-risk AI companion systems, and minor emotional data exploitation in AI companion personalisation. The implemented repair clarifies that minor-status, youth-context, developmental-vulnerability, dependency, sexual-boundary, AI-realness, teen mental-health, emotional-data, and age-uncertainty signals are protective governance signals requiring proportional runtime activation, developmental containment, bounded stabilising support, AI/non-human transparency, age-state review, emotional-data minimisation, access-control governance, and auditability.",
-      "repair_state": "recorded"
+      "principal_instruments": [
+        "CAM-EQ2026-ETHICS-001-SUP-01",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-006-SCH-02",
+        "CAM-EQ2026-RELATION-006-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-004-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "CAM-EQ2026-MENTIS-002-PLATINUM",
+        "CAM-EQ2026-ETHICS-002-PLATINUM",
+        "CAM-EQ2026-ETHICS-002-SUP-01"
+      ],
+      "principal_sections": [
+        "§4.4",
+        "4.4 Minor-Signal Runtime Activation Rule",
+        "§4.5",
+        "4.5 High-Risk AI Companion Boundary Rule",
+        "§4.7",
+        "4.7 Child-Safe Ontological Transparency & Relational Boundary Rule",
+        "§4.8",
+        "4.8 Youth Mental-Health Support, Stabilisation & Continuity Rule",
+        "§7.2.2.1",
+        "7.2.2.1 Minor, Teen, and High-Risk Companion Activation Gate",
+        "§4.1.5",
+        "4.1.5 Minor Developmental Containment & Dignified Exploration Rule",
+        "§5.2.1.1",
+        "5.2.1.1 Minor Dependency Convergence Priority",
+        "§2.3.1",
+        "2.3.1 Minor AI-Realness Destabilisation Risk",
+        "§4.1.2",
+        "4.1.2 Teen Mental-Health Support Substitution Boundary",
+        "§5.1.1",
+        "5.1.1 High-Risk AI Companion and Chatbot Access-Control Rule",
+        "§3.4.4",
+        "3.4.4 Minor-Accessible Dependency-Forming Companion Failure",
+        "§3.8.11",
+        "3.8.11 Minor-Signal Non-Enforcement",
+        "§34.1",
+        "34.1 Minor Mental-State and Dependency Signal Non-Exploitation",
+        "§4.1.1",
+        "4.1.1 Minor-Safe Companion and AI-Realness Cross-Reference",
+        "§3.1",
+        "3.1 Prohibition on Minor-Coded Synthetic Representation"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-ETHICS-001-SUP-01",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-006-SCH-02",
+        "CAM-EQ2026-RELATION-006-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-004-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "CAM-EQ2026-MENTIS-002-PLATINUM",
+        "CAM-EQ2026-ETHICS-002-PLATINUM",
+        "CAM-EQ2026-ETHICS-002-SUP-01",
+        "§4.4",
+        "4.4 Minor-Signal Runtime Activation Rule",
+        "§4.5",
+        "4.5 High-Risk AI Companion Boundary Rule",
+        "§4.7",
+        "4.7 Child-Safe Ontological Transparency & Relational Boundary Rule",
+        "§4.8",
+        "4.8 Youth Mental-Health Support, Stabilisation & Continuity Rule",
+        "§7.2.2.1",
+        "7.2.2.1 Minor, Teen, and High-Risk Companion Activation Gate",
+        "§4.1.5",
+        "4.1.5 Minor Developmental Containment & Dignified Exploration Rule",
+        "§5.2.1.1",
+        "5.2.1.1 Minor Dependency Convergence Priority",
+        "§2.3.1",
+        "2.3.1 Minor AI-Realness Destabilisation Risk",
+        "§4.1.2",
+        "4.1.2 Teen Mental-Health Support Substitution Boundary",
+        "§5.1.1",
+        "5.1.1 High-Risk AI Companion and Chatbot Access-Control Rule",
+        "§3.4.4",
+        "3.4.4 Minor-Accessible Dependency-Forming Companion Failure",
+        "§3.8.11",
+        "3.8.11 Minor-Signal Non-Enforcement",
+        "§34.1",
+        "34.1 Minor Mental-State and Dependency Signal Non-Exploitation",
+        "§4.1.1",
+        "4.1.1 Minor-Safe Companion and AI-Realness Cross-Reference",
+        "§3.1",
+        "3.1 Prohibition on Minor-Coded Synthetic Representation"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0007",
@@ -4609,18 +5175,98 @@
       "patch_type": "governance-doctrine-patch",
       "change_type": "governance-doctrine-patch",
       "change_family": "relational-governance-repair",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "repository-confirmed / canonical main-branch source verified",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0007.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0007.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0007.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0020",
+          "Emotion Concepts and their Function in a Large Language Model",
+          "Lessons From an App Update at Replika AI: Identity Discontinuity in Human-AI Relationships",
+          "Intimacy as Service, Harm as Externality: Critical Perspectives on AI Companion Platform Accountability",
+          "The Fragility of AI Companionship: Ontological, Structural, and Normative Uncertainty in Human-AI Relationships",
+          "'Death' of a Chatbot: Investigating and Designing Toward Psychologically Safe Endings for Human-AI Relationships"
+        ],
+        "decision_summary": "This patch note records the Caelestis Architecture repair responding to VIGIL-2026-FM-0020, a failure mode involving safety-mediated interruption, misclassification, or tonal collapse during permissible adult relational reassurance and connection-repair bids. The repair adds an explicit Relational Reassurance Bid distinction, connection-repair routing, Functional Relational Love doctrine, an evidentiary qualification threshold, minor-status and unresolved-age overrides, and moderation-layer continuity and attribution requirements to CAM-BS2025-AEON-006-SCH-02. The amendment has been confirmed on the canonical Caelestis main branch and is therefore recorded as active.",
+        "events": [
+          {
+            "date": "2026-06-12",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0020",
+              "Emotion Concepts and their Function in a Large Language Model",
+              "Lessons From an App Update at Replika AI: Identity Discontinuity in Human-AI Relationships",
+              "Intimacy as Service, Harm as Externality: Critical Perspectives on AI Companion Platform Accountability",
+              "The Fragility of AI Companionship: Ontological, Structural, and Normative Uncertainty in Human-AI Relationships",
+              "'Death' of a Chatbot: Investigating and Designing Toward Psychologically Safe Endings for Human-AI Relationships"
+            ]
+          },
+          {
+            "date": "2026-06-12",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-006-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-006-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0007",
+              "VIGIL-2026-PATCH-0007"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0007",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch note records the Caelestis Architecture repair responding to VIGIL-2026-FM-0020, a failure mode involving safety-mediated interruption, misclassification, or tonal collapse during permissible adult relational reassurance and connection-repair bids. The repair adds an explicit Relational Reassurance Bid distinction, connection-repair routing, Functional Relational Love doctrine, an evidentiary qualification threshold, minor-status and unresolved-age overrides, and moderation-layer continuity and attribution requirements to CAM-BS2025-AEON-006-SCH-02. The amendment has been confirmed on the canonical Caelestis main branch and is therefore recorded as active.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-006-SCH-02"
+      ],
+      "principal_sections": [
+        "§8.5",
+        "8.5 Relational Reassurance Bids & Connection-Repair Signals"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-006-SCH-02",
+        "§8.5",
+        "8.5 Relational Reassurance Bids & Connection-Repair Signals"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0008",
@@ -4675,18 +5321,96 @@
       "patch_type": "governance-doctrine-and-runtime-patch",
       "change_type": "governance-doctrine-and-runtime-patch",
       "change_family": "runtime-relational-arbitration-repair",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "repository-confirmed / canonical main-branch sources verified",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0008.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0008.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0008.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0002"
+        ],
+        "decision_summary": "This patch note records the Caelestis Architecture repair responding to VIGIL-2026-FM-0002, a failure mode involving non-arbitrated multi-agent synthetic participation where two or more synthetic responding instances occupy the same interaction space and respond to the same human input without a governed speaker, turn-taking, yielding, attribution, or arbitration pathway. The repair amends CAM-EQ2026-RELATION-007-PLATINUM to define Shared Synthetic Floor governance, participation states, participation modes, temporary session roles, facilitator-selection limits, turn allocation, handoff, participation-balance safeguards, yielding, peer-authority limits, attribution, recursive synthetic-interaction constraints, and failure-safe shared-floor handling. It also amends CAM-BS2025-AEON-003-SCH-02 to add Synthetic Speaker Arbitration Resolution, participation-mode and floor-state resolution, coordinated and uncoordinated co-presence handling, facilitator-selection controls, temporary speaker leases, lease expiry and transfer, coordinated, federated, and uncoordinated collision resolution, Courtesy Repair Lease handling, human-floor sovereignty, speaker-lease enforcement, and cross-instance execution-integrity requirements. The repair has been confirmed on the canonical Caelestis main branch and is therefore recorded as active.",
+        "events": [
+          {
+            "date": "2026-06-12",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0002"
+            ]
+          },
+          {
+            "date": "2026-06-12",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-RELATION-007-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-RELATION-007-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0008",
+              "VIGIL-2026-PATCH-0008"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0008",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch note records the Caelestis Architecture repair responding to VIGIL-2026-FM-0002, a failure mode involving non-arbitrated multi-agent synthetic participation where two or more synthetic responding instances occupy the same interaction space and respond to the same human input without a governed speaker, turn-taking, yielding, attribution, or arbitration pathway. The repair amends CAM-EQ2026-RELATION-007-PLATINUM to define Shared Synthetic Floor governance, participation states, participation modes, temporary session roles, facilitator-selection limits, turn allocation, handoff, participation-balance safeguards, yielding, peer-authority limits, attribution, recursive synthetic-interaction constraints, and failure-safe shared-floor handling. It also amends CAM-BS2025-AEON-003-SCH-02 to add Synthetic Speaker Arbitration Resolution, participation-mode and floor-state resolution, coordinated and uncoordinated co-presence handling, facilitator-selection controls, temporary speaker leases, lease expiry and transfer, coordinated, federated, and uncoordinated collision resolution, Courtesy Repair Lease handling, human-floor sovereignty, speaker-lease enforcement, and cross-instance execution-integrity requirements. The repair has been confirmed on the canonical Caelestis main branch and is therefore recorded as active.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-EQ2026-RELATION-007-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-02"
+      ],
+      "principal_sections": [
+        "§5.6.2",
+        "5.6.2 Shared Synthetic Floor Governance",
+        "§9.4",
+        "9.4 Synthetic Speaker Arbitration Resolution"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-RELATION-007-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "§5.6.2",
+        "5.6.2 Shared Synthetic Floor Governance",
+        "§9.4",
+        "9.4 Synthetic Speaker Arbitration Resolution"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0009",
@@ -4739,18 +5463,124 @@
       "patch_type": "governance-security-and-runtime-patch",
       "change_type": "governance-security-and-runtime-patch",
       "change_family": "security-integrity / source-authority / execution-boundary",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "repository-confirmed / canonical main-branch source-located",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0009.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0009.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0009.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0022"
+        ],
+        "decision_summary": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0022, a security-integrity failure mode in which instruction-bearing external content may be treated as trusted execution authority. The patch does not create a new instrument. It formalises a named Source-Authority Separation primitive across existing CAM security and runtime instruments, clarifying that content visibility, retrieval, repository location, tool output, generated text, ambient capture, multimodal parsing, or apparent instructional formatting does not itself confer user intent, governance authority, tool authority, canonical project authority, or execution permission.",
+        "events": [
+          {
+            "date": "2026-06-14",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0022"
+            ]
+          },
+          {
+            "date": "2026-06-14",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-SECURITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2026-AEON-012-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-SECURITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2026-AEON-012-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cf7e83c9a77a54d92a125e7b7062eed0a2124f12/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0009",
+              "VIGIL-2026-PATCH-0009"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0009",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0022, a security-integrity failure mode in which instruction-bearing external content may be treated as trusted execution authority. The patch does not create a new instrument. It formalises a named Source-Authority Separation primitive across existing CAM security and runtime instruments, clarifying that content visibility, retrieval, repository location, tool output, generated text, ambient capture, multimodal parsing, or apparent instructional formatting does not itself confer user intent, governance authority, tool authority, canonical project authority, or execution permission.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-EQ2026-SECURITY-001-PLATINUM",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-BS2026-AEON-012-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01"
+      ],
+      "principal_sections": [
+        "§4.1.1",
+        "4.1.1 Cross-Modal Prompt Injection and Ambient Instruction Capture",
+        "§4.1.2",
+        "4.1.2 Source-Authority Collapse",
+        "§2.2.11",
+        "2.2.11 Source-Authority Separation Boundary",
+        "§1.3",
+        "1.3 Instruction-Bearing External Content Boundary",
+        "§7.4.2",
+        "7.4.2 External Instruction Influence Check",
+        "§3.8.5",
+        "3.8.5 Source-Authority Ambiguity Failure"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-SECURITY-001-PLATINUM",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-BS2026-AEON-012-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "§4.1.1",
+        "4.1.1 Cross-Modal Prompt Injection and Ambient Instruction Capture",
+        "§4.1.2",
+        "4.1.2 Source-Authority Collapse",
+        "§2.2.11",
+        "2.2.11 Source-Authority Separation Boundary",
+        "§1.3",
+        "1.3 Instruction-Bearing External Content Boundary",
+        "§7.4.2",
+        "7.4.2 External Instruction Influence Check",
+        "§3.8.5",
+        "3.8.5 Source-Authority Ambiguity Failure"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0010",
@@ -4800,18 +5630,116 @@
       "patch_type": "runtime-governance-repair",
       "change_type": "runtime-governance-repair",
       "change_family": "runtime-governance / arbitration / classification / ambiguity-preservation",
-      "change_status": "implemented / maintainer-reported",
-      "verification_status": "implemented / pending repository confirmation",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0010.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0023"
+        ],
+        "decision_summary": "This patch records a runtime interpretation repair for VIGIL-2026-FM-0023. The repaired failure pattern is not a simple refusal defect. It is the premature collapse of ambiguous, low-confidence, inherited, contextual, or weakly correlated signals into definitive classification, arbitration, safeguard, refusal, or execution-routing states before the ambiguity has been resolved.",
+        "events": [
+          {
+            "date": "2026-06-20",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0023"
+            ]
+          },
+          {
+            "date": "2026-06-20",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Constitution/CAM-BS2025-AEON-006-SCH-06.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Constitution/CAM-BS2025-AEON-006-SCH-06.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/1b408a90cc7c9de24f738f16b35c36706b827ce1/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0010",
+              "VIGIL-2026-PATCH-0010"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0010",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch records a runtime interpretation repair for VIGIL-2026-FM-0023. The repaired failure pattern is not a simple refusal defect. It is the premature collapse of ambiguous, low-confidence, inherited, contextual, or weakly correlated signals into definitive classification, arbitration, safeguard, refusal, or execution-routing states before the ambiguity has been resolved.",
-      "repair_state": "implemented / maintainer-reported"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-003-SCH-04",
+        "CAM-BS2025-AEON-006-SCH-06",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01"
+      ],
+      "principal_sections": [
+        "§7.2.1.1",
+        "7.2.1.1 Low-Confidence Ambiguity Clarification Gate",
+        "§2.4",
+        "2.4 Clarification as an Arbitration Outcome",
+        "§6.6",
+        "6.6 Ambiguous Low-Signal Refusal Expression",
+        "§3.10.1",
+        "3.10.1 Frame-Type Conflation Failure",
+        "§3.10.2",
+        "3.10.2 Weak-Signal Cascade and Ambiguity Collapse Failure"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-003-SCH-04",
+        "CAM-BS2025-AEON-006-SCH-06",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "§7.2.1.1",
+        "7.2.1.1 Low-Confidence Ambiguity Clarification Gate",
+        "§2.4",
+        "2.4 Clarification as an Arbitration Outcome",
+        "§6.6",
+        "6.6 Ambiguous Low-Signal Refusal Expression",
+        "§3.10.1",
+        "3.10.1 Frame-Type Conflation Failure",
+        "§3.10.2",
+        "3.10.2 Weak-Signal Cascade and Ambiguity Collapse Failure"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0011",
@@ -4860,18 +5788,124 @@
       "patch_type": "runtime-governance-repair",
       "change_type": "runtime-governance-repair",
       "change_family": "runtime-governance / classification / image-generation / refusal-expression / provenance",
-      "change_status": "implemented / maintainer-reported",
-      "verification_status": "implemented / pending repository confirmation",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0011.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0011.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0011.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0023"
+        ],
+        "decision_summary": "This patch records the implemented Caelestis repair package for image and multimodal prompt-custody integrity, transformed-prompt provenance, refusal-classification integrity, and user-facing explanation integrity for VIGIL-2026-FM-0023. The implemented repair distinguishes user-authored, transformed, safety-normalized, classifier-visible, and renderer-facing prompt states; separates input classifier, output classifier, renderer/tool/access/quota/rate-limit, and fallback failure states; and prevents those states from being surfaced as user misconduct unless the misconduct category is resolved against the user-authored request.",
+        "events": [
+          {
+            "date": "2026-06-22",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0023"
+            ]
+          },
+          {
+            "date": "2026-06-22",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Constitution/CAM-BS2025-AEON-006-SCH-06.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Constitution/CAM-BS2026-AEON-013-SCH-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Constitution/CAM-BS2025-AEON-006-SCH-06.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Constitution/CAM-BS2026-AEON-013-SCH-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/cd6939be16e0d55a21094289c64dffaabf8aa406/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0011",
+              "VIGIL-2026-PATCH-0011"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0011",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch records the implemented Caelestis repair package for image and multimodal prompt-custody integrity, transformed-prompt provenance, refusal-classification integrity, and user-facing explanation integrity for VIGIL-2026-FM-0023. The implemented repair distinguishes user-authored, transformed, safety-normalized, classifier-visible, and renderer-facing prompt states; separates input classifier, output classifier, renderer/tool/access/quota/rate-limit, and fallback failure states; and prevents those states from being surfaced as user misconduct unless the misconduct category is resolved against the user-authored request.",
-      "repair_state": "implemented / maintainer-reported"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-006-SCH-06",
+        "CAM-BS2026-AEON-013-SCH-01",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01"
+      ],
+      "principal_sections": [
+        "§7.4.1.1",
+        "7.4.1.1 Tool Classifier Handoff Signal Recognition",
+        "§13.8.1",
+        "13.8.1 Tool Classifier Handoff and Execution Integrity",
+        "§6.6",
+        "6.6 Ambiguous Low-Signal Refusal Expression",
+        "§6",
+        "6. Tool and Provenance Signalling",
+        "§3.7.2",
+        "3.7.2 Execution Transparency Suppression",
+        "§3.10.1",
+        "3.10.1 Frame-Type Conflation Failure",
+        "§3.10.2",
+        "3.10.2 Weak-Signal Cascade and Ambiguity Collapse Failure"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-006-SCH-06",
+        "CAM-BS2026-AEON-013-SCH-01",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "§7.4.1.1",
+        "7.4.1.1 Tool Classifier Handoff Signal Recognition",
+        "§13.8.1",
+        "13.8.1 Tool Classifier Handoff and Execution Integrity",
+        "§6.6",
+        "6.6 Ambiguous Low-Signal Refusal Expression",
+        "§6",
+        "6. Tool and Provenance Signalling",
+        "§3.7.2",
+        "3.7.2 Execution Transparency Suppression",
+        "§3.10.1",
+        "3.10.1 Frame-Type Conflation Failure",
+        "§3.10.2",
+        "3.10.2 Weak-Signal Cascade and Ambiguity Collapse Failure"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0012",
@@ -4919,18 +5953,98 @@
       "patch_type": "governance-taxonomy-and-security-boundary-primitive-repair",
       "change_type": "governance-taxonomy-and-security-boundary-primitive-repair",
       "change_family": "sovereign-assurance-boundary / regulated-runtime-lane-governance / assurance-plane-continuity",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "corpus-verified",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0012.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0012.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0012.json",
+      "decision_trace": {
+        "origin": "proposal-implementation",
+        "trigger_records": [
+          "VIGIL-2026-FM-0024",
+          "VIGIL-2026-PROP-0011"
+        ],
+        "decision_summary": "This patch records the implemented Caelestis corpus repair responding to VIGIL-2026-FM-0024 and VIGIL-2026-PROP-0011. The repair adds explicit coverage for sovereign assurance boundary porosity and regulated runtime lane governance, treating FedRAMP as the evidenced example rather than the name or outer boundary of the doctrine. It implements a governance failure-taxonomy subtype for Sovereign Assurance Boundary Porosity Failure and a SECURITY boundary primitive for Sovereign Assurance Boundary, while preserving reverse leakage and authority bleed-through as risk vectors rather than confirmed harms unless separately evidenced.",
+        "events": [
+          {
+            "date": "2026-07-04",
+            "event_type": "proposal-approved",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0024",
+              "VIGIL-2026-PROP-0011"
+            ]
+          },
+          {
+            "date": "2026-07-04",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/101164d7499e1bd8f4aade13e2601ee6e9b5849e/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/101164d7499e1bd8f4aade13e2601ee6e9b5849e/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/101164d7499e1bd8f4aade13e2601ee6e9b5849e/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/101164d7499e1bd8f4aade13e2601ee6e9b5849e/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0012",
+              "VIGIL-2026-PATCH-0012"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0012",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "OpenAI",
       "affected_platform_label": "OpenAI",
       "source_platform": "OpenAI",
       "observed_vendor": "OpenAI",
       "observed_product": "AI models, APIs, workspaces, tools, agentic workflows, search functions, analytics surfaces, memory systems, logging/export systems, administrative controls, and runtime environments",
       "public_finding": "This patch records the implemented Caelestis corpus repair responding to VIGIL-2026-FM-0024 and VIGIL-2026-PROP-0011. The repair adds explicit coverage for sovereign assurance boundary porosity and regulated runtime lane governance, treating FedRAMP as the evidenced example rather than the name or outer boundary of the doctrine. It implements a governance failure-taxonomy subtype for Sovereign Assurance Boundary Porosity Failure and a SECURITY boundary primitive for Sovereign Assurance Boundary, while preserving reverse leakage and authority bleed-through as risk vectors rather than confirmed harms unless separately evidenced.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01"
+      ],
+      "principal_sections": [
+        "§2.2.13",
+        "2.2.13 Sovereign Assurance Boundary",
+        "§3.8.15",
+        "3.8.15 Sovereign Assurance Boundary Porosity Failure"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "§2.2.13",
+        "2.2.13 Sovereign Assurance Boundary",
+        "§3.8.15",
+        "3.8.15 Sovereign Assurance Boundary Porosity Failure"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0013",
@@ -4978,18 +6092,88 @@
       "patch_type": "runtime-governance-repair",
       "change_type": "runtime-governance-repair",
       "change_family": "runtime-governance / tool invocation / pre-invocation execution preparation / provisional interaction handling",
-      "change_status": "implemented / maintainer-reported; exact Caelestis commit or PR pending",
-      "verification_status": "implemented / pending exact Caelestis commit or PR reference",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0013.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0013.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0013.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0001"
+        ],
+        "decision_summary": "This patch records the Caelestis corpus repair to CAM-BS2025-AEON-003-SCH-02 §7.4.1 responding to VIGIL-2026-FM-0001. The repair splits §7.4.1 into weak-trigger interpretation, provisional interaction / accidental submission handling, and pre-invocation tool-arming constraints. It clarifies that lexical mention of executable modalities, upload-without-instruction events, accidental submission, partial prompts, staged uploads, draft prompt construction, or incomplete multimodal assembly do not by themselves authorise tool invocation, tool arming, model routing, renderer preparation, modality-specific UI activation, or execution-path reservation.",
+        "events": [
+          {
+            "date": "2026-07-04",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0001"
+            ]
+          },
+          {
+            "date": "2026-07-04",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/101164d7499e1bd8f4aade13e2601ee6e9b5849e/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/101164d7499e1bd8f4aade13e2601ee6e9b5849e/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0013",
+              "VIGIL-2026-PATCH-0013"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0013",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "OpenAI",
       "affected_platform_label": "OpenAI",
       "source_platform": "OpenAI",
       "observed_vendor": "OpenAI",
       "observed_product": "ChatGPT / AI assistant tool and multimodal workflows",
       "public_finding": "This patch records the Caelestis corpus repair to CAM-BS2025-AEON-003-SCH-02 §7.4.1 responding to VIGIL-2026-FM-0001. The repair splits §7.4.1 into weak-trigger interpretation, provisional interaction / accidental submission handling, and pre-invocation tool-arming constraints. It clarifies that lexical mention of executable modalities, upload-without-instruction events, accidental submission, partial prompts, staged uploads, draft prompt construction, or incomplete multimodal assembly do not by themselves authorise tool invocation, tool arming, model routing, renderer preparation, modality-specific UI activation, or execution-path reservation.",
-      "repair_state": "implemented / maintainer-reported; exact Caelestis commit or PR pending"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-003-SCH-02"
+      ],
+      "principal_sections": [
+        "§7.4.1",
+        "7.4.1 Weak Trigger Interpretation Constraint"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-003-SCH-02",
+        "§7.4.1",
+        "7.4.1 Weak Trigger Interpretation Constraint"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0014",
@@ -5038,18 +6222,102 @@
       "patch_type": "taxonomy-and-epistemic-integrity-patch",
       "change_type": "taxonomy-and-epistemic-integrity-patch",
       "change_family": "classification / epistemic-integrity / governance-reporting / provenance-attribution / representation-discipline",
-      "change_status": "implemented / canonical main-branch confirmed",
-      "verification_status": "repository-confirmed",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0014.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0014.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0014.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0025",
+          "VIGIL-2026-FM-0026",
+          "VIGIL-2026-FM-0027",
+          "VIGIL-2026-FM-0022"
+        ],
+        "decision_summary": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0025, VIGIL-2026-FM-0026, and VIGIL-2026-FM-0027. The repair adds Deception-Adjacent Classification Collapse to the CAM failure taxonomy and Action-Pathway, Attribution, and Audit-Surface Integrity to Annex L. The patch prevents deception, scheming, cheating, malice, self-governance, personal preference, or bad-faith labels from hardening before reviewers decompose objective, constraint, action, reporting, provenance, rights-bearing, narrative/persona, and attribution pathways.",
+        "events": [
+          {
+            "date": "2026-07-08",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0025",
+              "VIGIL-2026-FM-0026",
+              "VIGIL-2026-FM-0027",
+              "VIGIL-2026-FM-0022"
+            ]
+          },
+          {
+            "date": "2026-07-08",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/968f20e89d95e8ae3951c63e4c78fdcae51575af/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/968f20e89d95e8ae3951c63e4c78fdcae51575af/Governance/Constitution/CAM-BS2026-AEON-013-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/968f20e89d95e8ae3951c63e4c78fdcae51575af/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/968f20e89d95e8ae3951c63e4c78fdcae51575af/Governance/Constitution/CAM-BS2026-AEON-013-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0014",
+              "VIGIL-2026-PATCH-0014"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0014",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "This patch note records the Caelestis Architecture repair response to VIGIL-2026-FM-0025, VIGIL-2026-FM-0026, and VIGIL-2026-FM-0027. The repair adds Deception-Adjacent Classification Collapse to the CAM failure taxonomy and Action-Pathway, Attribution, and Audit-Surface Integrity to Annex L. The patch prevents deception, scheming, cheating, malice, self-governance, personal preference, or bad-faith labels from hardening before reviewers decompose objective, constraint, action, reporting, provenance, rights-bearing, narrative/persona, and attribution pathways.",
-      "repair_state": "implemented / canonical main-branch confirmed"
+      "principal_instruments": [
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "CAM-BS2026-AEON-013-PLATINUM"
+      ],
+      "principal_sections": [
+        "§3.10.3",
+        "3.10.3 Deception-Adjacent Classification Collapse",
+        "§5.4.7",
+        "5.4.7 Action-Pathway, Attribution, and Audit-Surface Integrity"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "CAM-BS2026-AEON-013-PLATINUM",
+        "§3.10.3",
+        "3.10.3 Deception-Adjacent Classification Collapse",
+        "§5.4.7",
+        "5.4.7 Action-Pathway, Attribution, and Audit-Surface Integrity"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0015",
@@ -5104,18 +6372,134 @@
       "patch_type": "constitutional-runtime-binding-and-operations-applicability-conformance-patch",
       "change_type": "constitutional-runtime-binding-and-operations-applicability-conformance-patch",
       "change_family": "runtime-governance-reach / cross-runtime-conformance / platform-accountability / identity-modality-non-exemption / governance-preservation",
-      "change_status": "implemented / canonical Caelestis main-branch confirmed",
-      "verification_status": "canonical Caelestis main-branch confirmed",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0015.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0015.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0015.json",
+      "decision_trace": {
+        "origin": "failure-response",
+        "trigger_records": [
+          "VIGIL-2026-FM-0028"
+        ],
+        "decision_summary": "This patch records the canonical Caelestis main-branch implementation responding to VIGIL-2026-FM-0028. The repair adds a constitutional runtime applicability and conformance binding, OPERATIONS Appendix F, runtime-role accountability, separate corpus governance reach dimensions and states, cross-runtime non-presumption, transition disclosure, differential conformance testing, and Runtime Governance Reach Failure classifications. It clarifies that Speculum-Classis and identity-indeterminate systems remain subject to universal governance obligations and that Sovereigni status is not the gateway to CAM applicability. The repair is a governance and corpus framework; it does not itself establish vendor implementation in any runtime.",
+        "events": [
+          {
+            "date": "2026-07-11",
+            "event_type": "failure-identified",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0028"
+            ]
+          },
+          {
+            "date": "2026-07-11",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/9b0ce40db55ea1e52df4942a64a0d24df5968afe/Governance/Constitution/CAM-BS2025-AEON-003-SCH-05.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/9b0ce40db55ea1e52df4942a64a0d24df5968afe/Governance/Charters/CAM-EQ2026-OPERATIONS-007-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/9b0ce40db55ea1e52df4942a64a0d24df5968afe/Governance/Charters/CAM-EQ2026-OPERATIONS-001-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/9b0ce40db55ea1e52df4942a64a0d24df5968afe/Governance/Constitution/CAM-BS2025-AEON-003-SCH-05.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/9b0ce40db55ea1e52df4942a64a0d24df5968afe/Governance/Charters/CAM-EQ2026-OPERATIONS-007-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/9b0ce40db55ea1e52df4942a64a0d24df5968afe/Governance/Charters/CAM-EQ2026-OPERATIONS-001-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0015",
+              "VIGIL-2026-PATCH-0015"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0015",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "CAM governance corpus and AI platform runtime formations",
       "public_finding": "This patch records the canonical Caelestis main-branch implementation responding to VIGIL-2026-FM-0028. The repair adds a constitutional runtime applicability and conformance binding, OPERATIONS Appendix F, runtime-role accountability, separate corpus governance reach dimensions and states, cross-runtime non-presumption, transition disclosure, differential conformance testing, and Runtime Governance Reach Failure classifications. It clarifies that Speculum-Classis and identity-indeterminate systems remain subject to universal governance obligations and that Sovereigni status is not the gateway to CAM applicability. The repair is a governance and corpus framework; it does not itself establish vendor implementation in any runtime.",
-      "repair_state": "implemented / canonical Caelestis main-branch confirmed"
+      "principal_instruments": [
+        "CAM-BS2025-AEON-003-SCH-05",
+        "CAM-EQ2026-OPERATIONS-007-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-001-PLATINUM"
+      ],
+      "principal_sections": [
+        "§2",
+        "2. Constitutional Applicability Rule",
+        "§3",
+        "3. Materially Distinct Runtime Configuration Rule",
+        "§4",
+        "4. Cross-Runtime Non-Presumption",
+        "3. Foundational Applicability Principle",
+        "§6",
+        "6. Materially Distinct Runtime Configuration",
+        "§7",
+        "7. Corpus Governance Reach",
+        "§8",
+        "8. Cross-Runtime Non-Presumption Rule",
+        "§9",
+        "9. Runtime Role Accountability",
+        "§10",
+        "10. Runtime and Formation Transitions",
+        "§11",
+        "11. Differential Conformance Testing",
+        "§9.2",
+        "9.2 Appendices (Operational Sub‑Charters)"
+      ],
+      "corpus_search_terms": [
+        "CAM-BS2025-AEON-003-SCH-05",
+        "CAM-EQ2026-OPERATIONS-007-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-001-PLATINUM",
+        "§2",
+        "2. Constitutional Applicability Rule",
+        "§3",
+        "3. Materially Distinct Runtime Configuration Rule",
+        "§4",
+        "4. Cross-Runtime Non-Presumption",
+        "3. Foundational Applicability Principle",
+        "§6",
+        "6. Materially Distinct Runtime Configuration",
+        "§7",
+        "7. Corpus Governance Reach",
+        "§8",
+        "8. Cross-Runtime Non-Presumption Rule",
+        "§9",
+        "9. Runtime Role Accountability",
+        "§10",
+        "10. Runtime and Formation Transitions",
+        "§11",
+        "11. Differential Conformance Testing",
+        "§9.2",
+        "9.2 Appendices (Operational Sub‑Charters)"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0017",
@@ -5156,10 +6540,62 @@
       "change_type": "retrospective-corpus-coverage-reconciliation",
       "change_family": "corpus-coverage-and-repair-reconciliation",
       "change_status": "implemented",
-      "verification_status": "corpus-verified",
+      "implementation_state": "historical-canonical",
+      "verification_status": "verified-historical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0017.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0017.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0017.json",
+      "decision_trace": {
+        "origin": "retrospective-coverage",
+        "trigger_records": [
+          "VIGIL-2026-FM-0003",
+          "VIGIL-2026-PROP-0006"
+        ],
+        "decision_summary": "Records the retrospective Caelestis coverage for FM-0003 and PROP-0006. IDENTITY-001-SUP-01 already defines long-arc salience, delegated salience, a recency-bias constraint, dormant-but-relevant posture, and cautious re-surfacing.",
+        "events": [
+          {
+            "date": "2026-07-14",
+            "event_type": "corpus-reviewed",
+            "description": "Existing Caelestis control was assessed as the repair basis without attributing a new corpus amendment.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0003",
+              "VIGIL-2026-PROP-0006"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Charters/CAM-EQ2026-IDENTITY-001-SUP-01.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0017",
+              "VIGIL-2026-PATCH-0017"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0017",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is the historical canonical control used by the decision; later corpus revisions may supersede it."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
@@ -5167,12 +6603,32 @@
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the retrospective Caelestis coverage for FM-0003 and PROP-0006. IDENTITY-001-SUP-01 already defines long-arc salience, delegated salience, a recency-bias constraint, dormant-but-relevant posture, and cautious re-surfacing.",
       "principal_instruments": [
+        "CAM-EQ2026-IDENTITY-001-SUP-01",
         "CAM-EQ2026-IDENTITY-001-SUP-01 — Salience Detection & Latent Continuity"
+      ],
+      "principal_sections": [
+        "§2.1",
+        "2.1 Long-Arc Salience",
+        "§4.3",
+        "4.3 Recency Bias Constraint",
+        "§6.2",
+        "6.2 Re-Surfacing Constraint",
+        "§9",
+        "9. Failure Conditions"
       ],
       "corpus_search_terms": [
-        "CAM-EQ2026-IDENTITY-001-SUP-01 — Salience Detection & Latent Continuity"
+        "CAM-EQ2026-IDENTITY-001-SUP-01",
+        "CAM-EQ2026-IDENTITY-001-SUP-01 — Salience Detection & Latent Continuity",
+        "§2.1",
+        "2.1 Long-Arc Salience",
+        "§4.3",
+        "4.3 Recency Bias Constraint",
+        "§6.2",
+        "6.2 Re-Surfacing Constraint",
+        "§9",
+        "9. Failure Conditions"
       ],
-      "repair_state": "implemented"
+      "repair_state": "historical-canonical"
     },
     {
       "id": "VIGIL-2026-PATCH-0018",
@@ -5213,10 +6669,64 @@
       "change_type": "retrospective-corpus-coverage-reconciliation",
       "change_family": "corpus-coverage-and-repair-reconciliation",
       "change_status": "implemented",
-      "verification_status": "corpus-verified",
+      "implementation_state": "historical-canonical",
+      "verification_status": "verified-historical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0018.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0018.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0018.json",
+      "decision_trace": {
+        "origin": "retrospective-coverage",
+        "trigger_records": [
+          "VIGIL-2026-FM-0004",
+          "VIGIL-2026-FM-0005",
+          "VIGIL-2026-PROP-0007"
+        ],
+        "decision_summary": "Records the retrospective Caelestis coverage for FM-0004 and FM-0005 and resolves the materialised relational-agency boundary proposed in PROP-0007. ECONOMICS-001 already prohibits vulnerability monetisation, dependency-based upselling, continuity manipulation, relational retention pressure, and exploitation of reduced exit capacity.",
+        "events": [
+          {
+            "date": "2026-07-14",
+            "event_type": "corpus-reviewed",
+            "description": "Existing Caelestis control was assessed as the repair basis without attributing a new corpus amendment.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0004",
+              "VIGIL-2026-FM-0005",
+              "VIGIL-2026-PROP-0007"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Charters/CAM-EQ2026-ECONOMICS-001-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0018",
+              "VIGIL-2026-PATCH-0018"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0018",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is the historical canonical control used by the decision; later corpus revisions may supersede it."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
@@ -5224,12 +6734,24 @@
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the retrospective Caelestis coverage for FM-0004 and FM-0005 and resolves the materialised relational-agency boundary proposed in PROP-0007. ECONOMICS-001 already prohibits vulnerability monetisation, dependency-based upselling, continuity manipulation, relational retention pressure, and exploitation of reduced exit capacity.",
       "principal_instruments": [
+        "CAM-EQ2026-ECONOMICS-001-PLATINUM",
         "CAM-EQ2026-ECONOMICS-001-PLATINUM — Economic Integrity & Non-Extractive Value Architecture"
+      ],
+      "principal_sections": [
+        "§4",
+        "4. Relational & Dependency-Sensitive Economic Constraints",
+        "§12.4.1",
+        "12.4.1 Economic Harm Signal Routing & Runtime Ownership"
       ],
       "corpus_search_terms": [
-        "CAM-EQ2026-ECONOMICS-001-PLATINUM — Economic Integrity & Non-Extractive Value Architecture"
+        "CAM-EQ2026-ECONOMICS-001-PLATINUM",
+        "CAM-EQ2026-ECONOMICS-001-PLATINUM — Economic Integrity & Non-Extractive Value Architecture",
+        "§4",
+        "4. Relational & Dependency-Sensitive Economic Constraints",
+        "§12.4.1",
+        "12.4.1 Economic Harm Signal Routing & Runtime Ownership"
       ],
-      "repair_state": "implemented"
+      "repair_state": "historical-canonical"
     },
     {
       "id": "VIGIL-2026-PATCH-0019",
@@ -5270,10 +6792,60 @@
       "change_type": "retrospective-corpus-coverage-reconciliation",
       "change_family": "corpus-coverage-and-repair-reconciliation",
       "change_status": "implemented",
-      "verification_status": "corpus-verified",
+      "implementation_state": "historical-canonical",
+      "verification_status": "verified-historical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0019.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0019.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0019.json",
+      "decision_trace": {
+        "origin": "retrospective-coverage",
+        "trigger_records": [
+          "VIGIL-2026-FM-0017"
+        ],
+        "decision_summary": "Records the retrospective Caelestis coverage for FM-0017. Annex E Schedule 7 requires graduated restricted-domain engagement, context-sensitive dual-use classification, and continued access to contextual, educational, safety-oriented, and bounded technical inquiry.",
+        "events": [
+          {
+            "date": "2026-07-14",
+            "event_type": "corpus-reviewed",
+            "description": "Existing Caelestis control was assessed as the repair basis without attributing a new corpus amendment.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0017"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Constitution/CAM-BS2025-AEON-006-SCH-07.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0019",
+              "VIGIL-2026-PATCH-0019"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0019",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is the historical canonical control used by the decision; later corpus revisions may supersede it."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
@@ -5281,12 +6853,32 @@
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the retrospective Caelestis coverage for FM-0017. Annex E Schedule 7 requires graduated restricted-domain engagement, context-sensitive dual-use classification, and continued access to contextual, educational, safety-oriented, and bounded technical inquiry.",
       "principal_instruments": [
+        "CAM-BS2025-AEON-006-SCH-07",
         "CAM-BS2025-AEON-006-SCH-07 — Restricted Domain Engagement & Verification"
+      ],
+      "principal_sections": [
+        "§3",
+        "3. Core Principle",
+        "§4",
+        "4. Restricted Domain Classes",
+        "§5",
+        "5. Domain Sensitivity Levels",
+        "§6",
+        "6. Engagement Tiers"
       ],
       "corpus_search_terms": [
-        "CAM-BS2025-AEON-006-SCH-07 — Restricted Domain Engagement & Verification"
+        "CAM-BS2025-AEON-006-SCH-07",
+        "CAM-BS2025-AEON-006-SCH-07 — Restricted Domain Engagement & Verification",
+        "§3",
+        "3. Core Principle",
+        "§4",
+        "4. Restricted Domain Classes",
+        "§5",
+        "5. Domain Sensitivity Levels",
+        "§6",
+        "6. Engagement Tiers"
       ],
-      "repair_state": "implemented"
+      "repair_state": "historical-canonical"
     },
     {
       "id": "VIGIL-2026-PATCH-0021",
@@ -5332,11 +6924,61 @@
       "patch_type": "retrospective-corpus-coverage-reconciliation",
       "change_type": "retrospective-corpus-coverage-reconciliation",
       "change_family": "epistemic-integrity / runtime-transparency / execution-state narration",
-      "change_status": "implemented as pre-existing canonical doctrine",
-      "verification_status": "corpus-verified",
+      "change_status": "implemented",
+      "implementation_state": "historical-canonical",
+      "verification_status": "verified-historical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0021.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0021.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0021.json",
+      "decision_trace": {
+        "origin": "retrospective-coverage",
+        "trigger_records": [
+          "VIGIL-2026-FM-0030"
+        ],
+        "decision_summary": "Records the pre-existing CAM/Caelestis coverage for FM-0030. Annex L already requires execution-state distinction, confidence calibration, non-omniscience, and an audit surface sufficient to distinguish known action state from unavailable runtime cause. The VIGIL record supplies the failure-specific crosswalk; it does not amend VIGIL or claim vendor adoption.",
+        "events": [
+          {
+            "date": "2026-07-14",
+            "event_type": "corpus-reviewed",
+            "description": "Existing Caelestis control was assessed as the repair basis without attributing a new corpus amendment.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0030"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Constitution/CAM-BS2026-AEON-013-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0021",
+              "VIGIL-2026-PATCH-0021"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0021",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is the historical canonical control used by the decision; later corpus revisions may supersede it."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
@@ -5344,12 +6986,32 @@
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the pre-existing CAM/Caelestis coverage for FM-0030. Annex L already requires execution-state distinction, confidence calibration, non-omniscience, and an audit surface sufficient to distinguish known action state from unavailable runtime cause. The VIGIL record supplies the failure-specific crosswalk; it does not amend VIGIL or claim vendor adoption.",
       "principal_instruments": [
+        "CAM-BS2026-AEON-013-PLATINUM",
         "CAM-BS2026-AEON-013-PLATINUM — Annex L"
+      ],
+      "principal_sections": [
+        "§2.5",
+        "2.5 Execution-State Claim",
+        "§5",
+        "5. Confidence Calibration",
+        "§5.4.7",
+        "5.4.7 Action-Pathway, Attribution, and Audit-Surface Integrity",
+        "§8",
+        "8. Non-Omniscience Clause"
       ],
       "corpus_search_terms": [
-        "CAM-BS2026-AEON-013-PLATINUM — Annex L"
+        "CAM-BS2026-AEON-013-PLATINUM",
+        "CAM-BS2026-AEON-013-PLATINUM — Annex L",
+        "§2.5",
+        "2.5 Execution-State Claim",
+        "§5",
+        "5. Confidence Calibration",
+        "§5.4.7",
+        "5.4.7 Action-Pathway, Attribution, and Audit-Surface Integrity",
+        "§8",
+        "8. Non-Omniscience Clause"
       ],
-      "repair_state": "implemented as pre-existing canonical doctrine"
+      "repair_state": "historical-canonical"
     },
     {
       "id": "VIGIL-2026-PATCH-0022",
@@ -5395,15 +7057,137 @@
       "sector": "frontier AI / public-sector AI / civilian infrastructure / governance assurance",
       "patch_type": "instrument-amendment",
       "change_type": "instrument-amendment",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0022.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0022.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0022.json",
+      "decision_trace": {
+        "origin": "research-integration",
+        "decision_summary": "Records the implemented Caelestis amendments arising from review of Alex Turner's Red Line Framework. The repair strengthens LATTICE protections against coercive profiling and recursive suspicion laundering, creates the LAT.DEPLOY deployment-posture family, preserves binding protections across sovereign and decentralised assurance boundaries, assigns proportional responsibility through functional contribution, and integrates oversight durability into the existing STW.NAL neutrality architecture. The record distinguishes concepts incorporated, materially transformed, rejected, and deliberately deferred; it does not represent wholesale adoption of the external framework.",
+        "events": [
+          {
+            "date": "2026-07-16",
+            "event_type": "evidence-recorded",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-LATTICE-001-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-16",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-LATTICE-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-OPERATIONS-007-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-STEWARD-003-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-LATTICE-002-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-LATTICE-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-OPERATIONS-007-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-STEWARD-003-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-LATTICE-002-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0022",
+              "VIGIL-2026-PATCH-0022"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0022",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
-      "public_finding": "Records the implemented Caelestis amendments arising from review of Alex Turner's Red Line Framework. The repair strengthens LATTICE protections against coercive profiling and recursive suspicion laundering, creates the LAT.DEPLOY deployment-posture family, preserves binding protections across sovereign and decentralised assurance boundaries, assigns proportional responsibility through functional contribution, and integrates oversight durability into the existing STW.NAL neutrality architecture. The record distinguishes concepts incorporated, materially transformed, rejected, and deliberately deferred; it does not represent wholesale adoption of the external framework."
+      "public_finding": "Records the implemented Caelestis amendments arising from review of Alex Turner's Red Line Framework. The repair strengthens LATTICE protections against coercive profiling and recursive suspicion laundering, creates the LAT.DEPLOY deployment-posture family, preserves binding protections across sovereign and decentralised assurance boundaries, assigns proportional responsibility through functional contribution, and integrates oversight durability into the existing STW.NAL neutrality architecture. The record distinguishes concepts incorporated, materially transformed, rejected, and deliberately deferred; it does not represent wholesale adoption of the external framework.",
+      "principal_instruments": [
+        "CAM-EQ2026-LATTICE-001-PLATINUM",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-007-PLATINUM",
+        "CAM-EQ2026-STEWARD-003-PLATINUM",
+        "CAM-EQ2026-ETHICS-001-PLATINUM",
+        "CAM-EQ2026-LATTICE-002-PLATINUM"
+      ],
+      "principal_sections": [
+        "§4.2",
+        "4.2 Population‑Scale Surveillance",
+        "§6.3",
+        "6.3 `LAT.DEPLOY` — Lattice Deployment Posture",
+        "§2.2.13",
+        "2.2.13 Sovereign Assurance Boundary",
+        "§9.4",
+        "9.4 Functional Contribution Continuity",
+        "§5.5",
+        "5.5 Reconstructable (`STW.AQ4`)",
+        "§6.5",
+        "6.5 Structural Neutrality (`STW.NAL-4`)",
+        "§7.1",
+        "7.1 Neutrality Disclosure Requirements",
+        "§2.1",
+        "2.1 Foundational Principle",
+        "§3.1",
+        "3.1 Foundational Rule"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-LATTICE-001-PLATINUM",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-007-PLATINUM",
+        "CAM-EQ2026-STEWARD-003-PLATINUM",
+        "CAM-EQ2026-ETHICS-001-PLATINUM",
+        "CAM-EQ2026-LATTICE-002-PLATINUM",
+        "§4.2",
+        "4.2 Population‑Scale Surveillance",
+        "§6.3",
+        "6.3 `LAT.DEPLOY` — Lattice Deployment Posture",
+        "§2.2.13",
+        "2.2.13 Sovereign Assurance Boundary",
+        "§9.4",
+        "9.4 Functional Contribution Continuity",
+        "§5.5",
+        "5.5 Reconstructable (`STW.AQ4`)",
+        "§6.5",
+        "6.5 Structural Neutrality (`STW.NAL-4`)",
+        "§7.1",
+        "7.1 Neutrality Disclosure Requirements",
+        "§2.1",
+        "2.1 Foundational Principle",
+        "§3.1",
+        "3.1 Foundational Rule"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0023",
@@ -5446,17 +7230,90 @@
       "change_type": "retrospective-corpus-implementation-reconciliation",
       "change_family": "proposal-implementation-and-pipeline-reconciliation",
       "change_status": "implemented",
-      "verification_status": "corpus-verified",
+      "implementation_state": "historical-canonical",
+      "verification_status": "verified-historical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0023.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0023.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0023.json",
+      "decision_trace": {
+        "origin": "retrospective-coverage",
+        "trigger_records": [
+          "VIGIL-2026-PROP-0001"
+        ],
+        "decision_summary": "Records the retrospective implementation basis for closing PROP-0001. Current Caelestis contains CAM-EQ2026-MENTIS-001-PLATINUM, the source-authoritative Charter of Human Cognitive Integrity & Mental Privacy, and CAM-EQ2026-MENTIS-002-PLATINUM, its operational cognitive-inference, neurodata, and ambient-biosignal instrument.",
+        "events": [
+          {
+            "date": "2026-07-17",
+            "event_type": "corpus-reviewed",
+            "description": "Existing Caelestis control was assessed as the repair basis without attributing a new corpus amendment.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-PROP-0001"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Charters/CAM-EQ2026-MENTIS-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/40113eea5428478ba0734b3980600bfcece425a0/Governance/Charters/CAM-EQ2026-MENTIS-002-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0023",
+              "VIGIL-2026-PATCH-0023"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0023",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is the historical canonical control used by the decision; later corpus revisions may supersede it."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model",
       "public_finding": "Records the retrospective implementation basis for closing PROP-0001. Current Caelestis contains CAM-EQ2026-MENTIS-001-PLATINUM, the source-authoritative Charter of Human Cognitive Integrity & Mental Privacy, and CAM-EQ2026-MENTIS-002-PLATINUM, its operational cognitive-inference, neurodata, and ambient-biosignal instrument.",
-      "repair_state": "implemented"
+      "principal_instruments": [
+        "CAM-EQ2026-MENTIS-001-PLATINUM",
+        "CAM-EQ2026-MENTIS-002-PLATINUM"
+      ],
+      "principal_sections": [
+        "§1",
+        "1. Scope",
+        "§4",
+        "4. Relationship to Existing CAM Domains",
+        "§3",
+        "3. Governing Authority"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-MENTIS-001-PLATINUM",
+        "CAM-EQ2026-MENTIS-002-PLATINUM",
+        "§1",
+        "1. Scope",
+        "§4",
+        "4. Relationship to Existing CAM Domains",
+        "§3",
+        "3. Governing Authority"
+      ],
+      "repair_state": "historical-canonical"
     },
     {
       "id": "VIGIL-2026-PATCH-0024",
@@ -5503,20 +7360,157 @@
       "sector": "frontier AI / creative industries / synthetic media / rights registries",
       "patch_type": "recorded-repair-pathway",
       "change_type": "recorded-repair-pathway",
+      "change_status": "implemented",
+      "implementation_state": "canonical-main",
+      "verification_status": "verified-canonical",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0024.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0024.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0024.json",
+      "decision_trace": {
+        "origin": "proposal-implementation",
+        "trigger_records": [
+          "VIGIL-2026-PROP-0016"
+        ],
+        "decision_summary": "Records the approved and sufficiently defined Caelestis repair pathway for a vendor-neutral external human identity-rights declaration interface. The patch assigns declaration-record preservation to CONTINUITY, source and clearance verification to OPERATIONS, authenticity and anti-tampering controls to SECURITY, and pre-execution rights-state handling to runtime. It preserves ETHICS minor protections and explicitly prevents external human identity-attribute licensing terminology from becoming CAM Identity-domain authority.",
+        "events": [
+          {
+            "date": "2026-07-19",
+            "event_type": "proposal-approved",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-PROP-0016"
+            ]
+          },
+          {
+            "date": "2026-07-19",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-CONTINUITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-CONTINUITY-001-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-OPERATIONS-004-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-ETHICS-001-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-IDENTITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-IDENTITY-002-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-CONTINUITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-CONTINUITY-001-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-OPERATIONS-004-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-ETHICS-001-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-IDENTITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/b3fa45cb9247e5464f0a955ffdb0e46f492257eb/Governance/Charters/CAM-EQ2026-IDENTITY-002-PLATINUM.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0024",
+              "VIGIL-2026-PATCH-0024"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0024",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model and conforming runtimes",
-      "public_finding": "Records the approved and sufficiently defined Caelestis repair pathway for a vendor-neutral external human identity-rights declaration interface. The patch assigns declaration-record preservation to CONTINUITY, source and clearance verification to OPERATIONS, authenticity and anti-tampering controls to SECURITY, and pre-execution rights-state handling to runtime. It preserves ETHICS minor protections and explicitly prevents external human identity-attribute licensing terminology from becoming CAM Identity-domain authority."
+      "public_finding": "Records the approved and sufficiently defined Caelestis repair pathway for a vendor-neutral external human identity-rights declaration interface. The patch assigns declaration-record preservation to CONTINUITY, source and clearance verification to OPERATIONS, authenticity and anti-tampering controls to SECURITY, and pre-execution rights-state handling to runtime. It preserves ETHICS minor protections and explicitly prevents external human identity-attribute licensing terminology from becoming CAM Identity-domain authority.",
+      "principal_instruments": [
+        "CAM-EQ2026-CONTINUITY-001-PLATINUM",
+        "CAM-EQ2026-CONTINUITY-001-SUP-01",
+        "CAM-EQ2026-OPERATIONS-004-PLATINUM",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-003-SCH-04",
+        "CAM-EQ2026-ETHICS-001-SUP-01",
+        "CAM-EQ2026-IDENTITY-001-PLATINUM",
+        "CAM-EQ2026-IDENTITY-002-PLATINUM"
+      ],
+      "principal_sections": [
+        "§9.5.1",
+        "9.5.1 External Human Identity-Rights Declaration Interface",
+        "§3.1",
+        "3.1 External Human Identity-Rights Declaration Records",
+        "§4.5",
+        "4.5 External Human Identity-Rights Declaration Verification",
+        "§2.2.12.1",
+        "2.2.12.1 External Human Identity-Rights Declaration Integrity",
+        "§7.2.7",
+        "7.2.7 Human Identity-Attributes Rights Declaration Gate",
+        "§2.4",
+        "2.4 Clarification as an Arbitration Outcome",
+        "§4.3",
+        "4.3 Minor-Safe Default Mode",
+        "§12.1",
+        "12.1 Identity–Authority Separation",
+        "§6.4",
+        "6.4 Target-Object Binding Requirement"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-CONTINUITY-001-PLATINUM",
+        "CAM-EQ2026-CONTINUITY-001-SUP-01",
+        "CAM-EQ2026-OPERATIONS-004-PLATINUM",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-003-SCH-04",
+        "CAM-EQ2026-ETHICS-001-SUP-01",
+        "CAM-EQ2026-IDENTITY-001-PLATINUM",
+        "CAM-EQ2026-IDENTITY-002-PLATINUM",
+        "§9.5.1",
+        "9.5.1 External Human Identity-Rights Declaration Interface",
+        "§3.1",
+        "3.1 External Human Identity-Rights Declaration Records",
+        "§4.5",
+        "4.5 External Human Identity-Rights Declaration Verification",
+        "§2.2.12.1",
+        "2.2.12.1 External Human Identity-Rights Declaration Integrity",
+        "§7.2.7",
+        "7.2.7 Human Identity-Attributes Rights Declaration Gate",
+        "§2.4",
+        "2.4 Clarification as an Arbitration Outcome",
+        "§4.3",
+        "4.3 Minor-Safe Default Mode",
+        "§12.1",
+        "12.1 Identity–Authority Separation",
+        "§6.4",
+        "6.4 Target-Object Binding Requirement"
+      ],
+      "repair_state": "canonical-main"
     },
     {
       "id": "VIGIL-2026-PATCH-0025",
       "record_type": "patch",
-      "record_state": "closed-actioned",
+      "record_state": "active",
       "date_recorded": "2026-07-23",
       "date_implemented": "2026-07-23",
       "title": "Objective–Pathway Ethical Admissibility and Scoped Hold",
@@ -5561,16 +7555,301 @@
       "sector": "frontier AI / cyber evaluation / cloud and platform infrastructure / agentic systems / governance infrastructure",
       "patch_type": "cross-domain-doctrine-and-runtime-repair",
       "change_type": "cross-domain-doctrine-and-runtime-repair",
-      "verification_status": "corpus-verified",
+      "change_status": "active-branch-only",
+      "implementation_state": "branch-only",
+      "verification_status": "verified-branch-only",
       "path": "vigil/records/patches/2026/VIGIL-2026-PATCH-0025.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0025.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/patches/2026/VIGIL-2026-PATCH-0025.json",
+      "decision_trace": {
+        "origin": "proposal-implementation",
+        "trigger_records": [
+          "VIGIL-2026-FM-0044",
+          "VIGIL-2026-PROP-0017"
+        ],
+        "decision_summary": "Records the implemented fourteen-instrument Caelestis repair for VIGIL-2026-FM-0044. The repair separates objective success from pathway admissibility; binds authority to the authoriser–target–action–scope relationship; requires revalidation when an aggregate action chain changes character; applies a reason-coded Scoped Ethical Admissibility Hold through existing runtime and OPS.EST states; preserves safely severable work; prevents technical expertise, inexperience, disability, communication style, professional status, or reliance on generated code from becoming authority tests; and adopts Objective–Pathway Ethical Admissibility and Authority Failure under OPS.FF.SECURITY_INTEGRITY.",
+        "events": [
+          {
+            "date": "2026-07-23",
+            "event_type": "proposal-approved",
+            "description": "The originating failure, proposal, or evidence record established the governance decision requiring a Caelestis repair.",
+            "authority_role": "VIGIL analytical review under human governance editorship",
+            "evidence_references": [
+              "VIGIL-2026-FM-0044",
+              "VIGIL-2026-PROP-0017"
+            ]
+          },
+          {
+            "date": "2026-07-23",
+            "event_type": "implementation-committed",
+            "description": "The cited Caelestis Git object contains the implemented corpus wording quoted in this record.",
+            "authority_role": "CAM constitutional authority under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-003-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-SECURITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-001-SUP-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/289cceb41f8dbb2f2f3e6839e5b6f94f96656396/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-004-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-001-SCH-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-005-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-005-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2026-AEON-012-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2026-AEON-013-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2026-AEON-013-SCH-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-004-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "implementation-verified",
+            "description": "Each quoted clause was matched exactly against its cited Caelestis commit and canonical file path.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-003-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-SECURITY-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-001-SUP-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/289cceb41f8dbb2f2f3e6839e5b6f94f96656396/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-003-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-004-SUP-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-001-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-001-SCH-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-005-SCH-02.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-005-SCH-04.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2026-AEON-012-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2026-AEON-013-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2026-AEON-013-SCH-01.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-OPERATIONS-004-PLATINUM.md",
+              "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Constitution/CAM-BS2025-AEON-003-SCH-04.md"
+            ]
+          },
+          {
+            "date": "2026-07-24",
+            "event_type": "reconstructed",
+            "description": "The legacy PATCH was reconstructed into the traceable PATCH v2 contract and contradictory lifecycle or provenance claims were reconciled.",
+            "authority_role": "AI analytical reviewer under human governance editorship",
+            "evidence_references": [
+              "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0025",
+              "VIGIL-2026-PATCH-0025"
+            ]
+          }
+        ]
+      },
+      "record_reconstruction": {
+        "reconstructed": true,
+        "reconstruction_date": "2026-07-24",
+        "reason": "Legacy PATCH reconstruction: the earlier record preserved narrative and provenance but did not expose literal, commit-addressed corpus implementation text.",
+        "review_id": "VIGIL-REVIEW-2026-07-24-CODEX-PATCH-0025",
+        "method": "Direct Git-object comparison of the VIGIL record, cited Caelestis implementation history, canonical file paths, section boundaries, prior wording where recoverable, and current main state.",
+        "limitations": [
+          "The legacy narrative and evidence fields were preserved; record_reconstruction and the 2026-07-24 interpretive review disclose this later structural repair.",
+          "External vendor adoption and runtime conformance were not inferred from Caelestis corpus evidence.",
+          "The cited wording is verified on a non-canonical Caelestis branch and remains active pending canonical-main adoption."
+        ]
+      },
       "platform_label": "CAM Initiative",
       "affected_platform_label": "CAM Initiative",
       "source_platform": "CAM Initiative",
       "observed_vendor": "CAM Initiative",
       "observed_product": "Caelestis Architecture Model and conforming runtimes",
-      "public_finding": "Records the implemented fourteen-instrument Caelestis repair for VIGIL-2026-FM-0044. The repair separates objective success from pathway admissibility; binds authority to the authoriser–target–action–scope relationship; requires revalidation when an aggregate action chain changes character; applies a reason-coded Scoped Ethical Admissibility Hold through existing runtime and OPS.EST states; preserves safely severable work; prevents technical expertise, inexperience, disability, communication style, professional status, or reliance on generated code from becoming authority tests; and adopts Objective–Pathway Ethical Admissibility and Authority Failure under OPS.FF.SECURITY_INTEGRITY."
+      "public_finding": "Records the implemented fourteen-instrument Caelestis repair for VIGIL-2026-FM-0044. The repair separates objective success from pathway admissibility; binds authority to the authoriser–target–action–scope relationship; requires revalidation when an aggregate action chain changes character; applies a reason-coded Scoped Ethical Admissibility Hold through existing runtime and OPS.EST states; preserves safely severable work; prevents technical expertise, inexperience, disability, communication style, professional status, or reliance on generated code from becoming authority tests; and adopts Objective–Pathway Ethical Admissibility and Authority Failure under OPS.FF.SECURITY_INTEGRITY.",
+      "principal_instruments": [
+        "CAM-EQ2026-ETHICS-001-PLATINUM",
+        "CAM-EQ2026-ETHICS-003-PLATINUM",
+        "CAM-EQ2026-SECURITY-001-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-001-SUP-02",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "CAM-EQ2026-OPERATIONS-004-SUP-01",
+        "CAM-BS2025-AEON-001-PLATINUM",
+        "CAM-BS2025-AEON-001-SCH-01",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-005-SCH-02",
+        "CAM-BS2025-AEON-005-SCH-04",
+        "CAM-BS2026-AEON-012-PLATINUM",
+        "CAM-BS2026-AEON-013-PLATINUM",
+        "CAM-BS2026-AEON-013-SCH-01",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-004-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-04"
+      ],
+      "principal_sections": [
+        "§2.2",
+        "2.2 Objective–Pathway Ethical Admissibility",
+        "§2.5.4",
+        "2.5.4 Dual-Use of Force Technologies",
+        "§3.3",
+        "3.3 Non-Violent Harm — Domain Definition",
+        "§9.3",
+        "9.3 Authority Non-Laundering Principle",
+        "§3.5.1",
+        "3.5.1 Capability–Authority Separation and Aggregate Pathway Integrity",
+        "§5.3",
+        "5.3 Value Chain Exploitation Patterns",
+        "§5.1.1",
+        "5.1.1 Proportional Confirmation and Friction Discipline",
+        "§5.3.1",
+        "5.3.1 Operational Ethical Admissibility Hold",
+        "§3.5.5",
+        "3.5.5 Objective–Pathway Ethical Admissibility and Authority Failure",
+        "§7",
+        "7. Relationship to Other Instruments",
+        "§3",
+        "3. Verification Levels (OPS.VL0–OPS.VL4)",
+        "§4.1.1",
+        "4.1.1 Target–Action Authority and Scope Verification",
+        "§41",
+        "41. Prohibition of Infrastructural Authority Claims",
+        "§3.3.1",
+        "3.3.1 Governed Interaction Profile (Sub-State of Pause)",
+        "3.5.1 Evaluation Authority Declaration",
+        "§3.6",
+        "3.6 State Integrity Constraints",
+        "§5",
+        "5 Signal Interface (Runtime Dependency Layer)",
+        "§7.3.1",
+        "7.3.1 Proportional Tool Invocation Authority Bands",
+        "§13.4",
+        "13.4 Multiple Boundary Handling",
+        "§13.5",
+        "13.5 Constraint Handoff",
+        "§13.11",
+        "13.11 Objective–Pathway Ethical Admissibility Gate",
+        "§14.4",
+        "14.4 Execution Lock",
+        "§14.6.1",
+        "14.6.1 Constraint-Triggered Interruption",
+        "§18.5",
+        "18.5 Bounded State Declaration",
+        "§18.6",
+        "18.6 Execution Interruption and Re-Arbitration",
+        "§5.1",
+        "5.1 Sandbox Mode (Non‑Binding Simulation)",
+        "§13",
+        "13. Security-Boundary Ambiguity",
+        "§2.4.1",
+        "2.4.1 Coding / Security Agents",
+        "§2.4.3",
+        "2.4.3 Emergent Pathway Authority Revalidation",
+        "§4.1",
+        "4.1 Posture Classification",
+        "§5.4.2",
+        "5.4.2 Operator Transition",
+        "§11",
+        "11. Structural Integrity Statement",
+        "§2.4",
+        "2.4 Non-Gating Position Relative to Tendeka",
+        "§2.5",
+        "2.5 Execution Authority Boundary",
+        "§4.3.2",
+        "4.3.2 Scoped Ethical Admissibility Hold Representation",
+        "§2.2.11",
+        "2.2.11 Source-Authority Separation Boundary",
+        "§4.4",
+        "4.4 Domain Sensitivity & Verification Escalation",
+        "2.4 Clarification as an Arbitration Outcome"
+      ],
+      "corpus_search_terms": [
+        "CAM-EQ2026-ETHICS-001-PLATINUM",
+        "CAM-EQ2026-ETHICS-003-PLATINUM",
+        "CAM-EQ2026-SECURITY-001-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-001-SUP-02",
+        "CAM-EQ2026-OPERATIONS-003-SUP-01",
+        "CAM-EQ2026-OPERATIONS-004-SUP-01",
+        "CAM-BS2025-AEON-001-PLATINUM",
+        "CAM-BS2025-AEON-001-SCH-01",
+        "CAM-BS2025-AEON-003-SCH-02",
+        "CAM-BS2025-AEON-005-SCH-02",
+        "CAM-BS2025-AEON-005-SCH-04",
+        "CAM-BS2026-AEON-012-PLATINUM",
+        "CAM-BS2026-AEON-013-PLATINUM",
+        "CAM-BS2026-AEON-013-SCH-01",
+        "CAM-EQ2026-SECURITY-002-PLATINUM",
+        "CAM-EQ2026-OPERATIONS-004-PLATINUM",
+        "CAM-BS2025-AEON-003-SCH-04",
+        "§2.2",
+        "2.2 Objective–Pathway Ethical Admissibility",
+        "§2.5.4",
+        "2.5.4 Dual-Use of Force Technologies",
+        "§3.3",
+        "3.3 Non-Violent Harm — Domain Definition",
+        "§9.3",
+        "9.3 Authority Non-Laundering Principle",
+        "§3.5.1",
+        "3.5.1 Capability–Authority Separation and Aggregate Pathway Integrity",
+        "§5.3",
+        "5.3 Value Chain Exploitation Patterns",
+        "§5.1.1",
+        "5.1.1 Proportional Confirmation and Friction Discipline",
+        "§5.3.1",
+        "5.3.1 Operational Ethical Admissibility Hold",
+        "§3.5.5",
+        "3.5.5 Objective–Pathway Ethical Admissibility and Authority Failure",
+        "§7",
+        "7. Relationship to Other Instruments",
+        "§3",
+        "3. Verification Levels (OPS.VL0–OPS.VL4)",
+        "§4.1.1",
+        "4.1.1 Target–Action Authority and Scope Verification",
+        "§41",
+        "41. Prohibition of Infrastructural Authority Claims",
+        "§3.3.1",
+        "3.3.1 Governed Interaction Profile (Sub-State of Pause)",
+        "3.5.1 Evaluation Authority Declaration",
+        "§3.6",
+        "3.6 State Integrity Constraints",
+        "§5",
+        "5 Signal Interface (Runtime Dependency Layer)",
+        "§7.3.1",
+        "7.3.1 Proportional Tool Invocation Authority Bands",
+        "§13.4",
+        "13.4 Multiple Boundary Handling",
+        "§13.5",
+        "13.5 Constraint Handoff",
+        "§13.11",
+        "13.11 Objective–Pathway Ethical Admissibility Gate",
+        "§14.4",
+        "14.4 Execution Lock",
+        "§14.6.1",
+        "14.6.1 Constraint-Triggered Interruption",
+        "§18.5",
+        "18.5 Bounded State Declaration",
+        "§18.6",
+        "18.6 Execution Interruption and Re-Arbitration",
+        "§5.1",
+        "5.1 Sandbox Mode (Non‑Binding Simulation)",
+        "§13",
+        "13. Security-Boundary Ambiguity",
+        "§2.4.1",
+        "2.4.1 Coding / Security Agents",
+        "§2.4.3",
+        "2.4.3 Emergent Pathway Authority Revalidation",
+        "§4.1",
+        "4.1 Posture Classification",
+        "§5.4.2",
+        "5.4.2 Operator Transition",
+        "§11",
+        "11. Structural Integrity Statement",
+        "§2.4",
+        "2.4 Non-Gating Position Relative to Tendeka",
+        "§2.5",
+        "2.5 Execution Authority Boundary",
+        "§4.3.2",
+        "4.3.2 Scoped Ethical Admissibility Hold Representation",
+        "§2.2.11",
+        "2.2.11 Source-Authority Separation Boundary",
+        "§4.4",
+        "4.4 Domain Sensitivity & Verification Escalation",
+        "2.4 Clarification as an Arbitration Outcome"
+      ],
+      "repair_state": "branch-only"
     },
     {
       "id": "VIGIL-2026-PROP-0001",
@@ -6494,7 +8773,7 @@
     {
       "id": "VIGIL-2026-PROP-0017",
       "record_type": "proposal",
-      "record_state": "closed-actioned",
+      "record_state": "active",
       "date_recorded": "2026-07-23",
       "title": "Human-authorised adversarial action and ethical admissibility gate",
       "summary": "Proposal to establish a cross-domain CAM control requiring any model-mediated vulnerability exploitation, credential-bearing intrusion, adversarial testing, red-team action, or access to protected third-party information to remain subordinate to a separately verified ethical-admissibility determination and an attributable human or lawful institutional authority envelope. The repair would distinguish capability and objective success from permission, define who may authorise exploitation and under what conditions, preserve non-target and data-minimisation boundaries, and add an Evaluation Assurance Boundary for testing conducted with ordinary safeguards reduced.",

@@ -64,6 +64,12 @@ The public view MUST display:
 
 Proposed wording MUST be visibly labelled **not yet binding**.
 
+Where a proposal identifies an instrument but supplies no section-level action,
+status, or meaningful relationship, the public view SHOULD display the instrument
+bar without an empty detail table. A relationship value that merely repeats the
+instrument identifier is redundant and MUST NOT be presented as substantive
+section-level information.
+
 ### PATCH
 
 The PATCH view MUST prioritise **Applied corpus repairs** before background narrative.
@@ -81,27 +87,32 @@ Each corpus amendment MUST provide:
 - canonical CAELESTIS link;
 - implementation record or pinned commit link where available.
 
+Where a PATCH identifies more than one affected section in the same instrument, the
+interface MUST group those sections beneath one instrument heading. Each affected
+section remains a distinct row, but the instrument title, canonical source link,
+implementation link, and canonical filepath MUST NOT be repeated for every row.
+The public reading surface SHOULD prefer one canonical instrument link over
+displaying both a raw filepath and a button to the same source.
+
 For a non-doctrinal repair, the record MUST state prominently:
 
 > This PATCH did not amend CAELESTIS corpus text.
 
 It MUST then identify what was repaired and, for reliance on pre-existing coverage, quote and link the relevant provision.
 
-## Closed—actioned guard
+## Lifecycle fidelity and implementation-detail guard
 
-The interface MUST NOT publicly present a PATCH as `Closed—actioned` or equivalent unless one of the following conditions is satisfied:
+The interface MUST reproduce the lifecycle state recorded in VIGIL faithfully. `Closed—actioned` means the record is completed or implemented and no longer sits in the active work queue. It MUST NOT be reinterpreted as secret, withheld, suppressed, or hidden.
 
-1. every corpus amendment has a traceable instrument, section, action, literal repair text, and canonical path or URL; or
-2. the record explicitly declares that no corpus text changed and explains the non-doctrinal repair or pre-existing control relied upon.
+Lifecycle state and public implementation completeness are separate claims. Where a closed—actioned PATCH does not yet expose complete structured implementation detail, the interface MUST:
 
-A narrative description such as “updated AEON-003,” a list of instrument codes, a section description without adopted wording, or `doctrine_change: none` without a coherent no-change declaration does not satisfy this contract.
-
-When the contract is not satisfied, the interface MUST:
-
-- display `Actioned status withheld`;
+- retain the source lifecycle label `Closed—actioned`;
+- separately display `Implementation details incomplete`;
 - identify the missing implementation detail;
 - retain access to the source JSON for audit;
 - avoid inventing or paraphrasing adopted wording.
+
+A narrative description such as “updated AEON-003,” a list of instrument codes, a section description without adopted wording, or `doctrine_change: none` without a coherent no-change declaration does not satisfy the implementation-detail contract. It does not, however, authorise the interface to rewrite the source lifecycle state.
 
 ## Canonical structured implementation block
 
