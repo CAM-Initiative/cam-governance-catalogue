@@ -248,6 +248,89 @@ test("PATCH public display exposes complete literal corpus amendments", async ()
   }
 });
 
+test("PATCH v2 entries are authoritative and expose literal, pinned verification detail", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-PATCH-0025",
+      record_type: "patch",
+      record_state: "closed-actioned",
+      date_implemented: "2026-07-23",
+      corpus_implementation: {
+        implementation_outcome: "implemented",
+        canonical_state: "branch-only",
+        entries: [
+          {
+            instrument_id: "CAM-EQ2026-ETHICS-001-PLATINUM",
+            canonical_path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+            section: "§2.2",
+            section_heading: "Objective–Pathway Ethical Admissibility",
+            change_kind: "added",
+            prior_text: null,
+            resulting_text: "Ethical admissibility applies independently to the objective and pathway.",
+            source: {
+              repository: "CAM-Initiative/Caelestis",
+              commit: "bd22cad95de6b78c4c613353eadacda9b8253e0e",
+              path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+              direct_url: "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+            },
+            verification: {
+              status: "verified-branch-only",
+              exact_text_match: true,
+              current_clause_status: "current",
+            },
+          },
+          {
+            instrument_id: "CAM-EQ2026-SECURITY-002-PLATINUM",
+            canonical_path: "Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+            section: "§2.2.11",
+            section_heading: "Source-Authority Separation Boundary",
+            change_kind: "relied-upon",
+            prior_text: "Existing control text.",
+            resulting_text: "Existing control text.",
+            source: {
+              commit: "bd22cad95de6b78c4c613353eadacda9b8253e0e",
+              direct_url: "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+            },
+            verification: {
+              status: "verified-branch-only",
+              exact_text_match: true,
+              current_clause_status: "current",
+            },
+          },
+        ],
+      },
+      implementation_verification: {
+        verification_status: "verified-branch-only",
+        implementation_state: "branch-only",
+      },
+      repair_provenance: {
+        coverage_origin: [{
+          instrument_id: "CAM-EQ2026-ETHICS-001-PLATINUM",
+          canonical_path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+          relevant_sections: ["§2.2 Objective–Pathway Ethical Admissibility"],
+        }],
+      },
+    });
+
+    const provisions = record.publicDisplay.corpusProvisions;
+    assert.equal(record.publicDisplay.patch.contractStatus, "complete-amendment");
+    assert.equal(record.publicDisplay.patch.verificationStatus, "Verified on Caelestis working branch · exact text match · not yet canonical");
+    assert.equal(provisions.length, 2, "legacy coverage_origin must not duplicate authoritative v2 entries");
+    assert.equal(provisions[0].action, "added");
+    assert.equal(provisions[0].finalWording, "Ethical admissibility applies independently to the objective and pathway.");
+    assert.equal(provisions[0].implementedDate, "2026-07-23");
+    assert.equal(provisions[0].verifiedAgainst, "bd22cad95de6b78c4c613353eadacda9b8253e0e");
+    assert.equal(provisions[0].verificationStatus, "Verified on Caelestis working branch · exact text match · not yet canonical");
+    assert.equal(provisions[0].currentStatus, "current");
+    assert.match(provisions[0].canonicalUrl, /Caelestis\/blob\/bd22cad9/);
+    assert.equal(provisions[1].action, "relied-upon");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("PATCH public display preserves actioned lifecycle while identifying incomplete implementation detail", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -321,6 +404,7 @@ test("VIGIL page implements dedicated public views and CAELESTIS authority notic
   assert.match(page, /Implementation details incomplete/);
   assert.match(page, /View current instrument/);
   assert.doesNotMatch(page, /Current CAELESTIS provision/);
+  assert.match(page, /Existing control—unchanged/);
 });
 
 test("VIGIL proposal targets suppress empty tables and repeated instrument relationships", async () => {

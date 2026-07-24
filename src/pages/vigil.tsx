@@ -434,6 +434,18 @@ function implementationCommitUrl(provision: CorpusProvision) {
   return commit ? `https://github.com/CAM-Initiative/Caelestis/commit/${commit}` : undefined;
 }
 
+function corpusActionLabel(action?: string) {
+  const key = String(action ?? "").trim().toLocaleLowerCase().replace(/[_\s]+/g, "-");
+  const labels: Record<string, string> = {
+    added: "Added",
+    amended: "Amended",
+    removed: "Removed",
+    repealed: "Removed",
+    "relied-upon": "Existing control—unchanged",
+  };
+  return labels[key] ?? action;
+}
+
 type CorpusProvisionGroup = {
   key: string;
   instrumentId?: string;
@@ -521,8 +533,14 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
 
                 <div className="divide-y divide-[hsl(38_25%_82%)]">
                   {visibleProvisions.map((provision, index) => {
-                    const exactRepair = provision.finalWording ?? (provision.action?.toLocaleLowerCase().includes("repeal") ? provision.previousWording : undefined);
-                    const verification = [provision.verificationStatus, provision.verifiedAgainst].filter(Boolean).join(" · ");
+                    const actionKey = provision.action?.toLocaleLowerCase() ?? "";
+                    const removesText = actionKey.includes("repeal") || actionKey.includes("remove");
+                    const exactRepair = provision.finalWording ?? (removesText ? provision.previousWording : undefined);
+                    const verification = [
+                      provision.verificationStatus,
+                      provision.currentStatus ? `Clause ${titleizeValue(provision.currentStatus)}` : undefined,
+                      provision.verifiedAgainst ? `Commit ${provision.verifiedAgainst.slice(0, 8)}` : undefined,
+                    ].filter(Boolean).join(" · ");
                     const relationship = compactText(provision.relationship);
                     const displayRelationship = relationship && instrumentLabels.includes(relationship.replace(/\s+/g, " ").trim().toLocaleLowerCase())
                       ? undefined
@@ -532,7 +550,7 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                         <dl className="grid gap-3 lg:grid-cols-[minmax(15rem,2.25fr)_minmax(8rem,1fr)_minmax(11rem,1.3fr)_minmax(9rem,1fr)] lg:gap-x-4">
                           {[
                             ["Section", [provision.section, provision.heading].filter(Boolean).join(" — ")],
-                            ["Action", provision.action],
+                            ["Action", corpusActionLabel(provision.action)],
                             [patchMode ? "Implemented" : "Relationship", patchMode ? provision.implementedDate : displayRelationship],
                             [patchMode ? "Verification" : "Status", patchMode ? verification : provision.currentStatus],
                           ].map(([label, value]) => (
@@ -545,7 +563,7 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
 
                         {patchMode && exactRepair && (
                           <div className="mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
+                            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{removesText ? "Literal wording removed" : "Final adopted wording"}</p>
                             <blockquote className="mt-2 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
                           </div>
                         )}
