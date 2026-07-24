@@ -474,6 +474,14 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /not yet linked/);
   assert.match(report, /Observation \/ Research/);
   assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
+  assert.match(report, /function RecordLedger/);
+  assert.match(report, /function ObservationStage/);
+  assert.match(report, /function ClassificationStage/);
+  assert.match(report, /function DiagnoseStage/);
+  assert.match(report, /function RepairStage/);
+  assert.match(report, /function LearnStage/);
+  assert.doesNotMatch(report, /function ReportRecord/);
+  assert.match(report, /four-record evidence chain/);
 });
 
 test("failure repair status projects a clean status and next action from structured data", async () => {
