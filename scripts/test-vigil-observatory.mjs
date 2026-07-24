@@ -453,14 +453,27 @@ test("literal PATCH wording is present but collapsed by default", async () => {
   assert.doesNotMatch(wordingDisclosure, /<details[^>]*\sopen(?:=|>)/);
 });
 
-test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
+test("VIGIL detail hierarchy leads with the chain and omits the redundant metadata bundle", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));
 
-  assert.ok(expandedRecord.indexOf("<RecordChainView") < expandedRecord.indexOf("<CompactRecordMetadata"));
+  assert.match(expandedRecord, /<RecordChainView/);
+  assert.doesNotMatch(page, /CompactRecordMetadata/);
+  assert.match(page, /Generate report/);
   assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
   assert.doesNotMatch(page, /title="Linked Records"/);
   assert.doesNotMatch(page, /label: "Source repair status"/);
+});
+
+test("Evidence Chain Report is a dedicated print-friendly route and preserves incomplete stages", async () => {
+  const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+
+  assert.match(app, /path="\/observatory\/reports\/:recordId"/);
+  assert.match(report, /Print \/ Save as PDF/);
+  assert.match(report, /not yet linked/);
+  assert.match(report, /Observation \/ Research/);
+  assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
 });
 
 test("failure repair status projects a clean status and next action from structured data", async () => {

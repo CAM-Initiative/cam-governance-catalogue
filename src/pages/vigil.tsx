@@ -633,7 +633,10 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
   ];
   return (
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-primary/35 bg-primary/10 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.11em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25">Generate report →</a>
+      </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
           const isCurrentStage = stage.records.includes(currentId);
@@ -662,30 +665,6 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
         )})}
       </div>
     </div>
-  );
-}
-
-function CompactRecordMetadata({ record }: { record: VigilIndexRecord }) {
-  const entries = [
-    { label: "First observed", value: record.publicDisplay.dates.firstObserved },
-    { label: "Published", value: record.publicDisplay.dates.published ?? record.date_recorded },
-    { label: "Updated", value: record.publicDisplay.dates.lastUpdated },
-    { label: "Implemented", value: record.publicDisplay.dates.implemented },
-    { label: "Domains", value: record.publicDisplay.domains.join("; ") },
-    { label: "System", value: record.publicDisplay.systems.join("; ") || record.platform_label },
-  ].filter((entry) => isMeaningfulText(entry.value));
-
-  if (!entries.length) return null;
-
-  return (
-    <dl className="flex flex-wrap gap-x-5 gap-y-1.5 border-y border-border/70 py-2 text-xs leading-relaxed text-muted-foreground">
-      {entries.map((entry) => (
-        <div key={entry.label} className="flex min-w-0 gap-1.5">
-          <dt className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground/70">{entry.label}</dt>
-          <dd className="min-w-0 break-words text-foreground/80">{entry.value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 
@@ -1695,8 +1674,6 @@ export default function Vigil() {
                       )}
 
                       {detailReadyForPublicView && <div className="mb-3"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
-
-                      <div className="mb-4"><CompactRecordMetadata record={detailRecord} /></div>
 
                       {detailReadyForPublicView && <CuratedRecordDetail record={detailRecord} onNavigateRecord={navigateToRecord} />}
 
