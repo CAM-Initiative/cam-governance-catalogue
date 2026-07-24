@@ -246,7 +246,7 @@ function ExploreGovernancePanel() {
       transition={{ duration: 0.7, delay: 0.1 }}
     >
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
-        <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-cam-gold">Explore AI Governance</p>
+        <p className="font-mono text-sm font-semibold uppercase tracking-[0.18em] text-cam-gold">Explore AI Governance</p>
         <span className="h-2 w-2 rounded-full bg-cam-gold/80" aria-hidden="true" />
       </div>
 
@@ -528,7 +528,7 @@ export default function Home() {
     <Shell>
       <main className="overflow-hidden">
         <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
-          <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-center">
+          <div className="container mx-auto grid max-w-7xl gap-14 px-6 py-14 md:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_430px] lg:items-center">
             <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-4xl" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
               <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Governance</p>
               <h1 className="mb-4 max-w-4xl font-serif leading-[0.98] text-foreground">

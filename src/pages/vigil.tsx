@@ -164,6 +164,93 @@ function InlineMarkdown({ text }: { text?: string }) {
   );
 }
 
+function MarkdownInline({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\([^\)]+\)|\*\*[^*]+\*\*)/g);
+  return <>{parts.map((part, index) => {
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^\)]+)\)$/);
+    if (link) return <a key={`${part}-${index}`} href={link[2]} target="_blank" rel="noreferrer" className="text-primary underline decoration-primary/40 underline-offset-2 hover:decoration-primary">{link[1]}</a>;
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={`${part}-${index}`} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>;
+    return <span key={`${part}-${index}`}>{part}</span>;
+  })}</>;
+}
+
+function MarkdownBody({ source }: { source?: string }) {
+  if (!isMeaningfulText(source)) return null;
+  const lines = source.split(/\r?\n/);
+  const blocks: ReactNode[] = [];
+  let paragraph: string[] = [];
+  let list: string[] = [];
+  let code: string[] = [];
+  let inCode = false;
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    blocks.push(<p key={`paragraph-${blocks.length}`} className="whitespace-pre-wrap text-[15px] leading-7 text-foreground/85"><MarkdownInline text={paragraph.join(" ").trim()} /></p>);
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (!list.length) return;
+    blocks.push(<ul key={`list-${blocks.length}`} className="list-disc space-y-1 pl-6 text-[15px] leading-7 text-foreground/85">{list.map((item, index) => <li key={`${item}-${index}`}><MarkdownInline text={item} /></li>)}</ul>);
+    list = [];
+  };
+  const flushCode = () => {
+    if (!code.length) return;
+    blocks.push(<pre key={`code-${blocks.length}`} className="overflow-x-auto rounded-lg border border-border bg-card/80 p-3 font-mono text-xs leading-relaxed text-foreground"><code>{code.join("\n")}</code></pre>);
+    code = [];
+  };
+
+  for (const line of lines) {
+    if (line.trim().startsWith("```")) {
+      flushParagraph();
+      flushList();
+      if (inCode) flushCode();
+      inCode = !inCode;
+      continue;
+    }
+    if (inCode) {
+      code.push(line);
+      continue;
+    }
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      flushList();
+      const level = Math.min(heading[1].length, 4);
+      const className = level === 1 ? "font-serif text-2xl text-foreground" : level === 2 ? "font-serif text-xl text-foreground" : "font-serif text-lg text-foreground";
+      blocks.push(<h3 key={`heading-${blocks.length}`} className={`${className} pt-3`}>{<MarkdownInline text={heading[2]} />}</h3>);
+      continue;
+    }
+    const bullet = line.match(/^\s*(?:[-*+] |\d+\. )(.+)$/);
+    if (bullet) {
+      flushParagraph();
+      list.push(bullet[1]);
+      continue;
+    }
+    if (/^\s*>/.test(line)) {
+      flushParagraph();
+      flushList();
+      blocks.push(<blockquote key={`quote-${blocks.length}`} className="border-l-4 border-cam-gold/45 pl-4 font-serif text-base italic leading-7 text-foreground/75"><MarkdownInline text={line.replace(/^\s*>\s?/, "")} /></blockquote>);
+      continue;
+    }
+    if (!line.trim()) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+    if (/^\s*(---+|\*\*\*+)\s*$/.test(line)) {
+      flushParagraph();
+      flushList();
+      blocks.push(<hr key={`rule-${blocks.length}`} className="border-cam-gold/30" />);
+      continue;
+    }
+    paragraph.push(line.trim());
+  }
+  flushParagraph();
+  flushList();
+  flushCode();
+  return <div className="space-y-4">{blocks}</div>;
+}
+
 function lifecycleTone(label?: string) {
   const value = String(label ?? "").toLocaleLowerCase();
   if (value.includes("closed—actioned") || value.includes("closed-actioned") || value === "implemented") {
@@ -195,6 +282,31 @@ const chipTones = [
 function chipTone(value: string) {
   const hash = [...value].reduce((total, character) => total + character.charCodeAt(0), 0);
   return chipTones[hash % chipTones.length];
+}
+
+const vendorTones: Array<[RegExp, string]> = [
+  [/\bopenai\b|\bchatgpt\b/i, "border-emerald-300 bg-emerald-50 text-emerald-950"],
+  [/\banthropic\b|\bclaude\b/i, "border-amber-300 bg-amber-50 text-amber-950"],
+  [/\bxai\b|\bgrok\b/i, "border-slate-400 bg-slate-100 text-slate-950"],
+  [/\bgoogle\b|\bdeepmind\b|\bgemini\b/i, "border-blue-300 bg-blue-50 text-blue-950"],
+  [/\bmeta\b|\bllama\b/i, "border-indigo-300 bg-indigo-50 text-indigo-950"],
+  [/\bmicrosoft\b|\bazure\b|\bcopilot\b/i, "border-cyan-300 bg-cyan-50 text-cyan-950"],
+  [/\breplit\b/i, "border-orange-300 bg-orange-50 text-orange-950"],
+  [/\bmistral\b/i, "border-rose-300 bg-rose-50 text-rose-950"],
+  [/\bcam initiative\b/i, "border-yellow-500 bg-yellow-50 text-yellow-950"],
+  [/\bmulti[\s-]*vendor\b|\bmultiple\b|\bother .*providers?\b/i, "border-violet-300 bg-violet-50 text-violet-950"],
+];
+
+function vendorTone(value: string) {
+  return vendorTones.find(([pattern]) => pattern.test(value))?.[1] ?? chipTone(value);
+}
+
+function isVendorPillLabel(label?: string) {
+  return Boolean(label && /vendor|provider/i.test(label));
+}
+
+function pillTone(label: string | undefined, value: string) {
+  return isVendorPillLabel(label) ? vendorTone(value) : chipTone(value);
 }
 
 function detailDisplayRecord(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
@@ -301,7 +413,7 @@ function ValueField({ label, value }: { label: string; value: unknown }) {
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">{label}</p>
           <div className="mt-1 flex flex-wrap gap-1.5">
-            {chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${chipTone(item)}`}>{item}</span>)}
+            {chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${pillTone(label, item)}`}>{item}</span>)}
           </div>
         </div>
       );
@@ -362,17 +474,17 @@ function ParagraphFields({ entries }: { entries: Array<{ key: string; label: str
       {entries.map((entry) => (
         <div key={entry.key}>
           <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{entry.label}</p>
-          <div className="text-[15px] leading-relaxed text-foreground"><ValueBody value={entry.value} /></div>
+          <div className="text-[15px] leading-relaxed text-foreground"><ValueBody value={entry.value} label={entry.label} /></div>
         </div>
       ))}
     </div>
   );
 }
 
-function ValueBody({ value }: { value: unknown }) {
+function ValueBody({ value, label }: { value: unknown; label?: string }) {
   if (Array.isArray(value)) {
     const chips = isPrimitiveList(value) ? primitiveItems(value) : [];
-    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${chipTone(item)}`}>{item}</span>)}</div>;
+    if (chips.length) return <div className="flex flex-wrap gap-1.5">{chips.map((item, index) => <span key={`${item}-${index}`} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.06em] ${pillTone(label, item)}`}>{item}</span>)}</div>;
   }
   if (isObject(value)) {
     const entries = Object.entries(value).filter(([, item]) => hasMeaningfulValue(item));
@@ -432,6 +544,18 @@ function implementationCommitUrl(provision: CorpusProvision) {
   if (provision.implementationUrl) return provision.implementationUrl;
   const commit = provision.verifiedAgainst?.match(/\b[a-f0-9]{40}\b/i)?.[0];
   return commit ? `https://github.com/CAM-Initiative/Caelestis/commit/${commit}` : undefined;
+}
+
+function corpusActionLabel(action?: string) {
+  const key = String(action ?? "").trim().toLocaleLowerCase().replace(/[_\s]+/g, "-");
+  const labels: Record<string, string> = {
+    added: "Added",
+    amended: "Amended",
+    removed: "Removed",
+    repealed: "Removed",
+    "relied-upon": "Existing control—unchanged",
+  };
+  return labels[key] ?? action;
 }
 
 type CorpusProvisionGroup = {
@@ -521,8 +645,15 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
 
                 <div className="divide-y divide-[hsl(38_25%_82%)]">
                   {visibleProvisions.map((provision, index) => {
-                    const exactRepair = provision.finalWording ?? (provision.action?.toLocaleLowerCase().includes("repeal") ? provision.previousWording : undefined);
-                    const verification = [provision.verificationStatus, provision.verifiedAgainst].filter(Boolean).join(" · ");
+                    const actionKey = provision.action?.toLocaleLowerCase() ?? "";
+                    const removesText = actionKey.includes("repeal") || actionKey.includes("remove");
+                    const exactRepair = provision.finalWording ?? (removesText ? provision.previousWording : undefined);
+                    const verificationCommentary = [
+                      provision.verificationStatus,
+                      provision.currentStatus ? `Clause ${titleizeValue(provision.currentStatus)}` : undefined,
+                      provision.verifiedAgainst ? `Commit ${provision.verifiedAgainst.slice(0, 8)}` : undefined,
+                    ].filter(Boolean).join(" · ");
+                    const verificationMark = provision.complete ? "✓" : "—";
                     const relationship = compactText(provision.relationship);
                     const displayRelationship = relationship && instrumentLabels.includes(relationship.replace(/\s+/g, " ").trim().toLocaleLowerCase())
                       ? undefined
@@ -532,22 +663,34 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                         <dl className="grid gap-3 lg:grid-cols-[minmax(15rem,2.25fr)_minmax(8rem,1fr)_minmax(11rem,1.3fr)_minmax(9rem,1fr)] lg:gap-x-4">
                           {[
                             ["Section", [provision.section, provision.heading].filter(Boolean).join(" — ")],
-                            ["Action", provision.action],
+                            ["Action", corpusActionLabel(provision.action)],
                             [patchMode ? "Implemented" : "Relationship", patchMode ? provision.implementedDate : displayRelationship],
-                            [patchMode ? "Verification" : "Status", patchMode ? verification : provision.currentStatus],
+                            [patchMode ? "Verification" : "Status", patchMode ? verificationMark : provision.currentStatus],
                           ].map(([label, value]) => (
                             <div key={String(label)} className="min-w-0">
                               <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 lg:sr-only">{label}</dt>
-                              <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0"><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
+                              <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0" title={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined} aria-label={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined}><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
                             </div>
                           ))}
                         </dl>
 
                         {patchMode && exactRepair && (
-                          <div className="mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
-                            <blockquote className="mt-2 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
-                          </div>
+                          <details className="group/wording mt-3 border-t border-[hsl(38_25%_84%)] pt-3">
+                            <summary className="cursor-pointer list-none rounded-md font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-[hsl(40_48%_97%)] [&::-webkit-details-marker]:hidden">
+                              <span className="inline-flex items-center gap-2">
+                                <span className="inline-block h-0 w-0 shrink-0 border-y-[0.28rem] border-l-[0.42rem] border-y-transparent border-l-current transition-transform duration-200 group-open/wording:rotate-90" aria-hidden="true" />
+                                <span>{removesText ? "Literal wording removed" : "Final adopted wording"}</span>
+                                <span className="text-[9px] text-muted-foreground/70">Show wording</span>
+                              </span>
+                            </summary>
+                            <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.8fr)] lg:items-start">
+                              <div className="min-w-0">
+                                <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70">Verification detail</p>
+                                <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">{verificationCommentary || "No verification commentary recorded."}</p>
+                              </div>
+                              <blockquote className="whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
+                            </div>
+                          </details>
                         )}
 
                         {patchMode && provision.previousWording && provision.previousWording !== exactRepair && (
@@ -584,7 +727,10 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
   ];
   return (
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-primary/35 bg-primary/10 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.11em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25">Generate report →</a>
+      </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
           const isCurrentStage = stage.records.includes(currentId);
@@ -613,30 +759,6 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
         )})}
       </div>
     </div>
-  );
-}
-
-function CompactRecordMetadata({ record }: { record: VigilIndexRecord }) {
-  const entries = [
-    { label: "First observed", value: record.publicDisplay.dates.firstObserved },
-    { label: "Published", value: record.publicDisplay.dates.published ?? record.date_recorded },
-    { label: "Updated", value: record.publicDisplay.dates.lastUpdated },
-    { label: "Implemented", value: record.publicDisplay.dates.implemented },
-    { label: "Domains", value: record.publicDisplay.domains.join("; ") },
-    { label: "System", value: record.publicDisplay.systems.join("; ") || record.platform_label },
-  ].filter((entry) => isMeaningfulText(entry.value));
-
-  if (!entries.length) return null;
-
-  return (
-    <dl className="flex flex-wrap gap-x-5 gap-y-1.5 border-y border-border/70 py-2 text-xs leading-relaxed text-muted-foreground">
-      {entries.map((entry) => (
-        <div key={entry.label} className="flex min-w-0 gap-1.5">
-          <dt className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground/70">{entry.label}</dt>
-          <dd className="min-w-0 break-words text-foreground/80">{entry.value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 
@@ -907,11 +1029,34 @@ function GenericDetailView({ record }: { record: VigilIndexRecord }) {
   );
 }
 
+function ResearchDetailView({ record }: { record: VigilIndexRecord }) {
+  const body = typeof record.raw._canonical_markdown_body === "string" ? record.raw._canonical_markdown_body : undefined;
+  const metadata = Object.entries(record.raw)
+    .filter(([key, value]) => !key.startsWith("_") && key !== "path" && key !== "raw_url" && key !== "github_blob_url" && hasMeaningfulValue(value))
+    .filter(([key]) => !["id", "title", "record_type", "summary"].includes(key));
+
+  return (
+    <div className="space-y-4">
+      {metadata.length > 0 && (
+        <DetailSection title="Research record metadata" defaultOpen={false}>
+          <FieldGrid entries={metadata.map(([key, value]) => ({ key, label: humanLabel(key), value: textFrom(value) })).filter((entry) => hasMeaningfulValue(entry.value))} />
+        </DetailSection>
+      )}
+      <section className="rounded-xl border-2 border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4" aria-labelledby={`${record.id}-research-content`}>
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">Canonical research artefact</p>
+        <h3 id={`${record.id}-research-content`} className="mt-1 font-serif text-xl text-foreground">Research content</h3>
+        <div className="mt-4 border-t border-primary/20 pt-4"><MarkdownBody source={body} /></div>
+      </section>
+    </div>
+  );
+}
+
 function CuratedRecordDetail({ record, onNavigateRecord }: { record: VigilIndexRecord; onNavigateRecord?: (recordId: string) => void }) {
   if (record.record_type === "observation") return <ObservationDetailView record={record} />;
   if (record.record_type === "failure_mode") return <FailureModeDetailView record={record} onNavigateRecord={onNavigateRecord} />;
   if (record.record_type === "proposal") return <ProposalDetailView record={record} onNavigateRecord={onNavigateRecord} />;
   if (record.record_type === "patch_note") return <PatchDetailView record={record} />;
+  if (record.record_type === "research") return <ResearchDetailView record={record} />;
   return <GenericDetailView record={record} />;
 }
 
@@ -921,10 +1066,6 @@ function recordExportText(jsonText: string) {
 
 function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url">) {
   return record.github_blob_url || undefined;
-}
-
-function sourceRawUrl(record: Pick<VigilIndexRecord, "raw_url">) {
-  return record.raw_url || undefined;
 }
 
 function exportFileName(status: string) {
@@ -1518,7 +1659,6 @@ export default function Vigil() {
             {pagedRecords.map((record, index) => {
               const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
               const sourceHref = sourceRecordUrl(record);
-              const rawHref = sourceRawUrl(record);
               const recordKey = recordKeyFor(record, recordPageStart + index);
               const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
               const isExpanded = expandedRecordKeys.has(recordKey);
@@ -1609,7 +1749,7 @@ export default function Vigil() {
                           </div>
                         </div>
                         <div className="flex shrink-0 flex-wrap gap-2">
-                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View complete JSON →</a>}
+                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View source record →</a>}
                           <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
                             {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
                           </button>
@@ -1647,42 +1787,8 @@ export default function Vigil() {
 
                       {detailReadyForPublicView && <div className="mb-3"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
 
-                      <div className="mb-4"><CompactRecordMetadata record={detailRecord} /></div>
-
                       {detailReadyForPublicView && <CuratedRecordDetail record={detailRecord} onNavigateRecord={navigateToRecord} />}
 
-                      <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
-                        <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>
-                        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                          <p className="text-xs leading-relaxed text-muted-foreground">Human-readable fields above are the primary detail view. This raw JSON is retained for technical inspection; export remains available for downloads.</p>
-                          <div className="flex shrink-0 flex-wrap gap-2">
-                            <button
-                              type="button"
-                              className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                              onClick={() => copyRecordJson(record, recordKey)}
-                              aria-label={`Copy raw JSON for ${detailRecord.id}`}
-                            >
-                              {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
-                            </button>
-                            <button
-                              type="button"
-                              className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 focus:ring-offset-2 focus:ring-offset-background"
-                              onClick={() => downloadRecordJson(record, recordKey)}
-                              aria-label={`Download raw JSON for ${detailRecord.id}`}
-                            >
-                              Download JSON
-                            </button>
-                          </div>
-                        </div>
-                        <pre className="mt-4 max-h-96 overflow-auto rounded-lg bg-card/70 p-3 text-xs leading-relaxed text-muted-foreground">{JSON.stringify(detailRecord.raw, null, 2)}</pre>
-                      </details>
-
-                      {(record.path || sourceHref || rawHref) && (
-                        <div className="mt-4 flex flex-col gap-2 rounded-lg border border-border bg-background/40 p-3 md:flex-row md:items-center md:justify-between">
-                          <p className="break-words font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record path: {record.path ?? record.github_blob_url ?? record.raw_url}</p>
-                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 text-xs font-medium text-foreground transition hover:bg-background/80" href={sourceHref} target="_blank" rel="noreferrer">Open record →</a>}
-                        </div>
-                      )}
                     </div>
                   )}
                 </article>

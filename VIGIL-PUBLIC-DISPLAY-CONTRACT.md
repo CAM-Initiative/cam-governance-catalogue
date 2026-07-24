@@ -94,6 +94,11 @@ implementation link, and canonical filepath MUST NOT be repeated for every row.
 The public reading surface SHOULD prefer one canonical instrument link over
 displaying both a raw filepath and a button to the same source.
 
+The complete literal wording MUST remain available on the section row, but MAY be
+collapsed by default to preserve a usable overview where a PATCH contains many
+repairs. Its disclosure label MUST clearly identify final adopted wording or
+literal wording removed, and the control MUST remain keyboard accessible.
+
 For a non-doctrinal repair, the record MUST state prominently:
 
 > This PATCH did not amend CAELESTIS corpus text.

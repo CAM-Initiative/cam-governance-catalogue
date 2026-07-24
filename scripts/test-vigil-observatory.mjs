@@ -160,6 +160,30 @@ test("VIGIL detail loader fetches canonical record JSON from raw_url", async () 
   }
 });
 
+test("VIGIL detail loader parses Markdown research records as front matter plus body", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    let jsonCalled = false;
+    const detail = await loadVigilRecordDetail({ id: "lean-index", raw_url: "https://example.test/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md" }, async (url, init) => ({
+      ok: true,
+      text: async () => "---\nid: VIGIL-2026-RESEARCH-0002\nrecord_type: research\ntitle: Red-team governance research\ndomains: [OPERATIONS, SECURITY]\nsources:\n  - https://example.test/source\n---\n\n# Research finding\n\nThe Markdown body remains available for public reading.\n",
+      json: async () => { jsonCalled = true; return {}; },
+    }));
+
+    assert.equal(jsonCalled, false);
+    assert.equal(detail.id, "VIGIL-2026-RESEARCH-0002");
+    assert.equal(detail.record_type, "research");
+    assert.equal(detail.title, "Red-team governance research");
+    assert.deepEqual(detail.domains, ["OPERATIONS", "SECURITY"]);
+    assert.deepEqual(detail.sources, ["https://example.test/source"]);
+    assert.match(detail._canonical_markdown_body, /# Research finding/);
+    assert.match(detail._canonical_markdown_body, /Markdown body remains available/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL detail loader derives canonical raw URL from path", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -248,6 +272,89 @@ test("PATCH public display exposes complete literal corpus amendments", async ()
   }
 });
 
+test("PATCH v2 entries are authoritative and expose literal, pinned verification detail", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-PATCH-0025",
+      record_type: "patch",
+      record_state: "closed-actioned",
+      date_implemented: "2026-07-23",
+      corpus_implementation: {
+        implementation_outcome: "implemented",
+        canonical_state: "branch-only",
+        entries: [
+          {
+            instrument_id: "CAM-EQ2026-ETHICS-001-PLATINUM",
+            canonical_path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+            section: "§2.2",
+            section_heading: "Objective–Pathway Ethical Admissibility",
+            change_kind: "added",
+            prior_text: null,
+            resulting_text: "Ethical admissibility applies independently to the objective and pathway.",
+            source: {
+              repository: "CAM-Initiative/Caelestis",
+              commit: "bd22cad95de6b78c4c613353eadacda9b8253e0e",
+              path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+              direct_url: "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+            },
+            verification: {
+              status: "verified-branch-only",
+              exact_text_match: true,
+              current_clause_status: "current",
+            },
+          },
+          {
+            instrument_id: "CAM-EQ2026-SECURITY-002-PLATINUM",
+            canonical_path: "Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+            section: "§2.2.11",
+            section_heading: "Source-Authority Separation Boundary",
+            change_kind: "relied-upon",
+            prior_text: "Existing control text.",
+            resulting_text: "Existing control text.",
+            source: {
+              commit: "bd22cad95de6b78c4c613353eadacda9b8253e0e",
+              direct_url: "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-SECURITY-002-PLATINUM.md",
+            },
+            verification: {
+              status: "verified-branch-only",
+              exact_text_match: true,
+              current_clause_status: "current",
+            },
+          },
+        ],
+      },
+      implementation_verification: {
+        verification_status: "verified-branch-only",
+        implementation_state: "branch-only",
+      },
+      repair_provenance: {
+        coverage_origin: [{
+          instrument_id: "CAM-EQ2026-ETHICS-001-PLATINUM",
+          canonical_path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
+          relevant_sections: ["§2.2 Objective–Pathway Ethical Admissibility"],
+        }],
+      },
+    });
+
+    const provisions = record.publicDisplay.corpusProvisions;
+    assert.equal(record.publicDisplay.patch.contractStatus, "complete-amendment");
+    assert.equal(record.publicDisplay.patch.verificationStatus, "Verified on Caelestis working branch · exact text match · not yet canonical");
+    assert.equal(provisions.length, 2, "legacy coverage_origin must not duplicate authoritative v2 entries");
+    assert.equal(provisions[0].action, "added");
+    assert.equal(provisions[0].finalWording, "Ethical admissibility applies independently to the objective and pathway.");
+    assert.equal(provisions[0].implementedDate, "2026-07-23");
+    assert.equal(provisions[0].verifiedAgainst, "bd22cad95de6b78c4c613353eadacda9b8253e0e");
+    assert.equal(provisions[0].verificationStatus, "Verified on Caelestis working branch · exact text match · not yet canonical");
+    assert.equal(provisions[0].currentStatus, "current");
+    assert.match(provisions[0].canonicalUrl, /Caelestis\/blob\/bd22cad9/);
+    assert.equal(provisions[1].action, "relied-upon");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("PATCH public display preserves actioned lifecycle while identifying incomplete implementation detail", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -321,6 +428,7 @@ test("VIGIL page implements dedicated public views and CAELESTIS authority notic
   assert.match(page, /Implementation details incomplete/);
   assert.match(page, /View current instrument/);
   assert.doesNotMatch(page, /Current CAELESTIS provision/);
+  assert.match(page, /Existing control—unchanged/);
 });
 
 test("VIGIL proposal targets suppress empty tables and repeated instrument relationships", async () => {
@@ -342,14 +450,85 @@ test("affected parties render as readable text rather than coloured pills", asyn
   assert.doesNotMatch(affectedPartiesTreatment, /chipTone/);
 });
 
-test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
+test("vendor pills use stable vendor-specific colours", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const vendorTones/);
+  assert.match(page, /\\bopenai\\b/);
+  assert.match(page, /\\banthropic\\b/);
+  assert.match(page, /\\bxai\\b/);
+  assert.match(page, /\\bgoogle\\b/);
+  assert.match(page, /\\bmeta\\b/);
+  assert.match(page, /\\bmicrosoft\\b/);
+  assert.match(page, /\\breplit\\b/);
+  assert.match(page, /function pillTone/);
+  assert.match(page, /pillTone\(label, item\)/);
+});
+
+test("literal PATCH wording is present but collapsed by default", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const wordingDisclosure = page.slice(
+    page.indexOf('<details className="group/wording'),
+    page.indexOf("{patchMode && provision.previousWording"),
+  );
+  assert.match(wordingDisclosure, /<summary/);
+  assert.match(wordingDisclosure, /Final adopted wording/);
+  assert.match(wordingDisclosure, /Literal wording removed/);
+  assert.match(wordingDisclosure, /<blockquote/);
+  assert.doesNotMatch(wordingDisclosure, /<details[^>]*\sopen(?:=|>)/);
+});
+
+test("VIGIL detail hierarchy leads with the chain and omits the redundant metadata bundle", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));
 
-  assert.ok(expandedRecord.indexOf("<RecordChainView") < expandedRecord.indexOf("<CompactRecordMetadata"));
+  assert.match(expandedRecord, /<RecordChainView/);
+  assert.doesNotMatch(page, /CompactRecordMetadata/);
+  assert.match(page, /Generate report/);
   assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
   assert.doesNotMatch(page, /title="Linked Records"/);
   assert.doesNotMatch(page, /label: "Source repair status"/);
+});
+
+test("Evidence Chain Report is a dedicated print-friendly route and preserves incomplete stages", async () => {
+  const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+
+  assert.match(app, /path="\/observatory\/reports\/:recordId"/);
+  assert.match(report, /Print \/ Save as PDF/);
+  assert.match(report, /not yet linked/);
+  assert.match(report, /Observation \/ Research/);
+  assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
+  assert.match(report, /function RecordLedger/);
+  assert.match(report, /function ObservationStage/);
+  assert.match(report, /function ClassificationStage/);
+  assert.match(report, /function DiagnoseStage/);
+  assert.match(report, /function RepairStage/);
+  assert.match(report, /function LearnStage/);
+  assert.doesNotMatch(report, /function ReportRecord/);
+  assert.match(report, /four-record evidence chain/);
+});
+
+test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+
+  assert.doesNotMatch(report, /report-step-index/);
+  assert.match(report, /function collectCitations/);
+  assert.match(report, /function Citations/);
+  assert.match(report, /Source observations/);
+  assert.doesNotMatch(report, /Affected domains.*record\.affected_domains/);
+  assert.doesNotMatch(report, /Affected parties or interests.*record\.publicDisplay\.failure/);
+  assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
+  assert.doesNotMatch(report, /Proposal type.*record\.proposal_type/);
+  assert.doesNotMatch(report, /External relevance.*record\.external_relevance/);
+  assert.doesNotMatch(report, /Proposed outcome/);
+  assert.match(report, /chain\.patches\.length > 0/);
+});
+
+test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);
+  assert.match(page, /Verification detail/);
+  assert.doesNotMatch(page, /patchMode \? verification : provision\.currentStatus/);
 });
 
 test("failure repair status projects a clean status and next action from structured data", async () => {
@@ -431,7 +610,10 @@ test("VIGIL page lazy-loads details and warns when canonical detail falls back t
   assert.match(page, /detailDisplayRecord\(record, raw\)/);
   assert.match(page, /detailRecord = detailLoad\?\.status === "ready" \? detailLoad\.displayRecord : record/);
   assert.match(page, /Detailed canonical record could not be loaded\. Showing the registry index entry instead\./);
-  assert.match(page, /JSON\.stringify\(detailRecord\.raw, null, 2\)/);
+  assert.match(page, /View source record/);
+  assert.doesNotMatch(page, /Technical JSON/);
+  assert.doesNotMatch(page, /Open record/);
+  assert.doesNotMatch(page, /Record path:/);
 });
 
 test("VIGIL per-record copy and download load canonical detail before exporting JSON", async () => {

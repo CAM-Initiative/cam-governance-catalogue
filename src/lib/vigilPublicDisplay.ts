@@ -278,12 +278,13 @@ function expandProvisionItem(value: unknown): UnknownRecord[] {
 function provisionFromObject(item: UnknownRecord, defaults: Partial<CorpusProvision> = {}): CorpusProvision {
   const instrumentId = firstText(item, ["instrument_id", "instrument_code", "instrument", "code"]) ?? defaults.instrumentId;
   const instrumentTitle = firstText(item, ["instrument_title", "document_title", "title"]) ?? defaults.instrumentTitle;
-  const canonicalPath = firstText(item, ["canonical_file_path", "canonical_path", "file_path", "path"]) ?? defaults.canonicalPath;
+  const canonicalPath = firstText(item, ["canonical_file_path", "canonical_path", "file_path", "path", "source.path"]) ?? defaults.canonicalPath;
   const section = firstText(item, ["section", "section_number", "clause", "relevant_section", "field"]) ?? defaults.section;
   const heading = firstText(item, ["section_heading", "section_title", "heading", "clause_heading"]) ?? defaults.heading;
   const action = firstText(item, ["action", "change_kind", "amendment_type", "change_type", "coverage_type"]) ?? defaults.action;
   const relationship = firstText(item, ["relationship_to_failure", "relationship", "relevance", "failure_relevance", "description"]) ?? defaults.relationship;
   const finalWording = firstText(item, [
+    "resulting_text",
     "final_adopted_wording",
     "implemented_text",
     "adopted_wording",
@@ -295,14 +296,23 @@ function provisionFromObject(item: UnknownRecord, defaults: Partial<CorpusProvis
     "implemented_value",
     "value",
   ]) ?? defaults.finalWording;
-  const previousWording = firstText(item, ["previous_wording", "prior_wording", "removed_wording", "before_text"]) ?? defaults.previousWording;
+  const previousWording = firstText(item, ["prior_text", "previous_wording", "prior_wording", "removed_wording", "before_text"]) ?? defaults.previousWording;
   const implementedDate = firstText(item, ["implemented_date", "date_implemented", "effective_date"]) ?? defaults.implementedDate;
-  const verifiedAgainst = firstText(item, ["verified_against", "corpus_commit", "commit_sha", "version"]) ?? defaults.verifiedAgainst;
-  const verificationStatus = firstText(item, ["verification_status", "verification_state", "verified"]) ?? defaults.verificationStatus;
-  const currentStatus = firstText(item, ["current_status", "provision_status", "status"]) ?? defaults.currentStatus;
-  const canonicalUrl = firstText(item, ["canonical_source_url", "canonical_url", "corpus_url", "source_url"]) ?? defaults.canonicalUrl;
+  const verifiedAgainst = firstText(item, ["verified_against", "corpus_commit", "commit_sha", "source.commit", "version"]) ?? defaults.verifiedAgainst;
+  const rawVerificationStatus = firstText(item, ["verification.status", "verification_status", "verification_state", "verified"]);
+  const exactTextMatch = explicitBoolean(item, ["verification.exact_text_match", "exact_text_match"]);
+  const verificationStatus = normalizedKey(rawVerificationStatus) === "verified-branch-only"
+    ? [
+        "Verified on Caelestis working branch",
+        exactTextMatch === true ? "exact text match" : undefined,
+        "not yet canonical",
+      ].filter(Boolean).join(" · ")
+    : rawVerificationStatus ?? defaults.verificationStatus;
+  const currentStatus = firstText(item, ["verification.current_clause_status", "current_status", "provision_status", "status"]) ?? defaults.currentStatus;
+  const canonicalUrl = firstText(item, ["source.direct_url", "canonical_source_url", "canonical_url", "corpus_url", "source_url"]) ?? defaults.canonicalUrl;
   const implementationUrl = firstText(item, ["implementation_record_url", "implementation_commit_url", "commit_url", "amendment_url"]) ?? defaults.implementationUrl;
-  const exactRepair = finalWording || (normalizedKey(action).includes("repeal") ? previousWording : undefined);
+  const actionKey = normalizedKey(action);
+  const exactRepair = finalWording || (actionKey.includes("repeal") || actionKey.includes("remove") ? previousWording : undefined);
 
   return {
     instrumentId,
@@ -353,7 +363,10 @@ function mergeProvision(target: CorpusProvision, source: CorpusProvision): Corpu
 
 function deriveCorpusProvisions(record: UnknownRecord): CorpusProvision[] {
   const provisions: CorpusProvision[] = [];
+  const patchV2Entries = valueAt(record, "corpus_implementation.entries");
+  const hasPatchV2Entries = Array.isArray(patchV2Entries) && patchV2Entries.length > 0;
   const structuredPaths = [
+    "corpus_implementation.entries",
     "corpus_implementation.amendments",
     "corpus_implementation.corpus_amendments",
     "corpus_implementation.applied_repairs",
@@ -365,13 +378,16 @@ function deriveCorpusProvisions(record: UnknownRecord): CorpusProvision[] {
     "proposal_details.target_provisions",
     "cam_internal.target_instruments",
     "existing_cam_coverage",
-    "repair_provenance.coverage_origin",
+    ...(hasPatchV2Entries ? [] : ["repair_provenance.coverage_origin"]),
   ];
 
   for (const path of structuredPaths) {
     const value = valueAt(record, path);
     const items = Array.isArray(value) ? value : hasValue(value) ? [value] : [];
-    for (const item of items.flatMap(expandProvisionItem)) provisions.push(provisionFromObject(item));
+    const defaults = path === "corpus_implementation.entries"
+      ? { implementedDate: firstText(record, ["date_implemented", "corpus_implementation.date_implemented"]) }
+      : {};
+    for (const item of items.flatMap(expandProvisionItem)) provisions.push(provisionFromObject(item, defaults));
   }
 
   const implementedChanges = valueAt(record, "change_details.implemented_changes");
@@ -480,6 +496,27 @@ function derivePatchDisplay(
     || noChangeOutcome
     || projectedContractStatus === "complete-no-corpus-change"
     || (retrospective && amendedInstruments.length === 0 && reliedUpon.length > 0);
+  const rawVerificationStatus = firstText(record, [
+    "corpus_implementation.verification.verification_status",
+    "corpus_implementation.verification_status",
+    "implementation_verification.verification_status",
+    "verification_status",
+  ]);
+  const patchV2Entries = valueAt(record, "corpus_implementation.entries");
+  const allEntriesExact = Array.isArray(patchV2Entries)
+    && patchV2Entries.length > 0
+    && patchV2Entries.every((entry) => isObject(entry) && explicitBoolean(entry, ["verification.exact_text_match"]) === true);
+  const branchOnly = normalizedKey(firstText(record, [
+    "corpus_implementation.canonical_state",
+    "implementation_verification.implementation_state",
+  ])) === "branch-only";
+  const publicVerificationStatus = normalizedKey(rawVerificationStatus) === "verified-branch-only" && branchOnly
+    ? [
+        "Verified on Caelestis working branch",
+        allEntriesExact ? "exact text match" : undefined,
+        "not yet canonical",
+      ].filter(Boolean).join(" · ")
+    : rawVerificationStatus;
 
   let outcome: NonNullable<PublicRecordDisplay["patch"]>["outcome"] = "unknown";
   if (explicitNoCorpusTextChange && (retrospective || reliedUpon.length > 0 || outcomeKey.includes("pre-existing"))) outcome = "pre-existing-control";
@@ -521,12 +558,7 @@ function derivePatchDisplay(
       "corpus_implementation.date_implemented",
       "date_implemented",
     ]),
-    verificationStatus: firstText(record, [
-      "corpus_implementation.verification.verification_status",
-      "corpus_implementation.verification_status",
-      "implementation_verification.verification_status",
-      "verification_status",
-    ]),
+    verificationStatus: publicVerificationStatus,
     verifiedAgainst: firstText(record, [
       "corpus_implementation.verification.verified_against",
       "corpus_implementation.verified_against",
