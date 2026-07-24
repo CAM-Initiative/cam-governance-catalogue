@@ -81,6 +81,13 @@ Each corpus amendment MUST provide:
 - canonical CAELESTIS link;
 - implementation record or pinned commit link where available.
 
+Where a PATCH identifies more than one affected section in the same instrument, the
+interface MUST group those sections beneath one instrument heading. Each affected
+section remains a distinct row, but the instrument title, canonical source link,
+implementation link, and canonical filepath MUST NOT be repeated for every row.
+The public reading surface SHOULD prefer one canonical instrument link over
+displaying both a raw filepath and a button to the same source.
+
 For a non-doctrinal repair, the record MUST state prominently:
 
 > This PATCH did not amend CAELESTIS corpus text.

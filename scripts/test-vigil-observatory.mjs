@@ -314,10 +314,13 @@ test("VIGIL page implements dedicated public views and CAELESTIS authority notic
   assert.match(page, /function FailureModeDetailView/);
   assert.match(page, /function ProposalDetailView/);
   assert.match(page, /function PatchDetailView/);
+  assert.match(page, /function groupCorpusProvisions/);
   assert.match(page, /Applied corpus repairs/);
   assert.match(page, /CAELESTIS remains the authoritative governance corpus/);
   assert.doesNotMatch(page, /Actioned status withheld/);
   assert.match(page, /Implementation details incomplete/);
+  assert.match(page, /View current instrument/);
+  assert.doesNotMatch(page, /Current CAELESTIS provision/);
 });
 
 test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
