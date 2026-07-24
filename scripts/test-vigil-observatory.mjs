@@ -322,6 +322,38 @@ test("VIGIL page implements dedicated public views and CAELESTIS authority notic
   assert.match(page, /Closed—actioned status is withheld from the public display/);
 });
 
+test("VIGIL detail hierarchy leads with the chain and keeps metadata compact", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const expandedRecord = page.slice(page.indexOf('{isExpanded && ('), page.indexOf('<details className="mt-4'));
+
+  assert.ok(expandedRecord.indexOf("<RecordChainView") < expandedRecord.indexOf("<CompactRecordMetadata"));
+  assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
+  assert.doesNotMatch(page, /title="Linked Records"/);
+  assert.doesNotMatch(page, /label: "Source repair status"/);
+});
+
+test("failure repair status projects a clean status and next action from structured data", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-FM-0999",
+      record_type: "failure_mode",
+      record_state: "closed-actioned",
+      repair_status: {
+        status: "closed",
+        next_action: "Incorporated into PATCH-0099.",
+      },
+    });
+
+    assert.equal(record.publicDisplay.repairState, "Closed");
+    assert.equal(record.publicDisplay.failure.repairStatus, "closed");
+    assert.equal(record.publicDisplay.failure.repairNextAction, "Incorporated into PATCH-0099.");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL fallback sync projects corpus search fields without copying literal implementation blocks", async () => {
   const syncScript = await readFile(resolve(repoRoot, "scripts/sync-vigil-records.mjs"), "utf8");
   assert.match(syncScript, /"corpus_implementation"/);

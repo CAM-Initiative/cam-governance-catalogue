@@ -43,9 +43,7 @@ const evidenceRepairSteps = [
 const sortableColumns: Array<{ key: SortKey; label: string }> = [
   { key: "id", label: "Record ID" },
   { key: "date", label: "Date" },
-  { key: "platform", label: "Platform" },
-  { key: "type", label: "Type" },
-  { key: "title", label: "Title" },
+  { key: "title", label: "Record" },
   { key: "status", label: "Status" },
 ];
 
@@ -484,6 +482,30 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
   );
 }
 
+function CompactRecordMetadata({ record }: { record: VigilIndexRecord }) {
+  const entries = [
+    { label: "First observed", value: record.publicDisplay.dates.firstObserved },
+    { label: "Published", value: record.publicDisplay.dates.published ?? record.date_recorded },
+    { label: "Updated", value: record.publicDisplay.dates.lastUpdated },
+    { label: "Implemented", value: record.publicDisplay.dates.implemented },
+    { label: "Domains", value: record.publicDisplay.domains.join("; ") },
+    { label: "System", value: record.publicDisplay.systems.join("; ") || record.platform_label },
+  ].filter((entry) => isMeaningfulText(entry.value));
+
+  if (!entries.length) return null;
+
+  return (
+    <dl className="flex flex-wrap gap-x-5 gap-y-1.5 border-y border-border/70 py-2 text-[11px] leading-relaxed text-muted-foreground">
+      {entries.map((entry) => (
+        <div key={entry.label} className="flex min-w-0 gap-1.5">
+          <dt className="shrink-0 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/65">{entry.label}</dt>
+          <dd className="min-w-0 break-words text-foreground/80">{entry.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
   const raw = record.raw;
   const observation = record.publicDisplay.observation;
@@ -525,7 +547,6 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
   const triage = isObject(raw.triage) ? raw.triage : raw;
   const jurisdiction = isObject(raw.jurisdictional_context) ? raw.jurisdictional_context : raw;
   const camInternal = isObject(raw.cam_internal) ? raw.cam_internal : raw;
-  const linkedRecords = isObject(raw.linked_records) ? raw.linked_records : undefined;
 
   const systemEntries = valuesForKeys(systemContext, ["system_type", "platform_or_vendor", "vendor_cluster", "primary_evidenced_vendors", "product_or_service", "interface_surface", "deployment_context", "user_role", "affected_population"], raw);
   const classificationEntries = valuesForKeys(failureClassification, ["failure_family", "failure_subtype", "harm_vectors", "severity", "likelihood", "confidence", "affected_rights_or_interests", "failure_scope", "recurrence_pattern", "taxonomy_reference", "related_failure_groups", "persistence", "reproducibility", "visibility"], raw);
@@ -533,7 +554,6 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
   const jurisdictionEntries = valuesForKeys(jurisdiction, ["primary_jurisdiction", "secondary_jurisdictions", "regulatory_surface"]);
   const impactEntries = valuesForKeys(raw, ["distinguishing_observations", "user_impact"]);
   const gapEntries = valuesForKeys(raw, ["governance_gap", "repair_hypothesis"]);
-  const linkedEntries = linkedRecords ? valuesForKeys(linkedRecords, ["predecessor_records", "related_observations", "related_failure_modes", "related_proposals", "related_patch_notes", "potential_child_records", "potential_patch_records", "external_reference_cluster"]) : valuesForKeys(raw, ["predecessor_records", "related_observations", "related_failure_modes", "related_proposals", "related_patch_notes", "potential_child_records", "potential_patch_records", "external_reference_cluster"]);
   const camEntries = valuesForKeys(camInternal, ["cam_relevance", "cam_failure_type", "cam_compliance_status", "cam_internal_failure_statement", "cam_expected_control", "cam_observed_failure", "cam_taxonomy_primary_group", "cam_taxonomy_secondary_groups", "cam_taxonomy_candidate_labels", "cam_controls_implicated", "recommended_cam_action"], raw);
   const repairPatches = record.publicDisplay.chain.patches;
 
@@ -563,20 +583,21 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
         </div>
       </DetailSection>
       <DetailSection title="Repair status" defaultOpen={repairPatches.length > 0} show>
-        <div className="space-y-3">
-          <FieldGrid entries={[
-            { key: "repair_state", label: "Repair state", value: record.publicDisplay.repairState },
-            { key: "source_repair_status", label: "Source repair status", value: publicFailure?.repairStatus },
-          ].filter((entry) => hasMeaningfulValue(entry.value))} />
+        <div className="space-y-2 text-sm leading-relaxed">
           {repairPatches.length > 0 ? (
             <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-sm leading-relaxed text-emerald-950">
-              <p className="font-medium">Repair implemented or documented through {repairPatches.join(", ")}.</p>
+              <p className="font-medium">{publicFailure?.repairStatus ? `${titleizeValue(publicFailure.repairStatus)} — ` : ""}repair documented through {repairPatches.join(", ")}.</p>
               {record.publicDisplay.principalRepair && <p className="mt-1">Corpus basis: {record.publicDisplay.principalRepair}</p>}
               <div className="mt-2 flex flex-wrap gap-2">
                 {repairPatches.map((patchId) => <button key={patchId} type="button" className="rounded-md border border-emerald-300 bg-white/70 px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-emerald-900" onClick={() => onNavigateRecord?.(patchId)}>View {patchId} →</button>)}
               </div>
             </div>
-          ) : <p className="text-sm leading-relaxed text-muted-foreground">No implemented PATCH is linked from this failure mode.</p>}
+          ) : (
+            <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-amber-950">
+              <p className="font-medium">{record.publicDisplay.repairState ?? "No implemented repair is linked."}</p>
+              {publicFailure?.repairNextAction && <p className="mt-1"><span className="font-medium">Next action:</span> {publicFailure.repairNextAction}</p>}
+            </div>
+          )}
         </div>
       </DetailSection>
       <DetailSection title="System Context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0}><FieldGrid entries={systemEntries} /></DetailSection>
@@ -597,7 +618,6 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
         </div>
       </DetailSection>
       <DetailSection title="Recommended Repair Path" show={hasMeaningfulValue(raw.recommended_repair_path)}><CompactObjectCards items={raw.recommended_repair_path} titleKeys={["repair_action"]} keys={["repair_action", "expected_control", "implementation_note"]} /></DetailSection>
-      <DetailSection title="Linked Records" show={linkedEntries.length > 0}><FieldGrid entries={linkedEntries} /></DetailSection>
       <DetailSection title="CAM Internal" show={camEntries.length > 0}><FieldGrid entries={camEntries} /></DetailSection>
     </div>
   );
@@ -1341,7 +1361,7 @@ export default function Vigil() {
 
           <div className="space-y-2">
             {loadState === "ready" && filtered.length > 0 && (
-              <div className="hidden gap-2 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[7rem_7rem_9rem_6rem_minmax(0,1fr)_9rem]" role="row">
+              <div className="hidden gap-3 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[8rem_7rem_minmax(0,1fr)_9rem]" role="row">
                 {sortableColumns.map((column) => {
                   const isActive = sortConfig.key === column.key;
                   return (
@@ -1376,7 +1396,6 @@ export default function Vigil() {
               const publicFinding = record.publicDisplay.finding ?? record.summary;
               const domainLabel = record.publicDisplay.domains.join("; ");
               const publicLifecycle = record.publicDisplay.lifecycleLabel ?? record.record_state;
-              const repairState = record.publicDisplay.repairState;
               return (
                 <article id={`vigil-record-${record.id.replace(/[^A-Za-z0-9_-]/g, "-")}`} key={recordKey} className="group cam-parchment-card scroll-mt-6 rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
                   {!isExpanded && (
@@ -1411,7 +1430,6 @@ export default function Vigil() {
                             <Field label="Lifecycle Status" value={publicLifecycle} />
                             <Field label="Record Date" value={recordDate} />
                             <Field label="Domain / System" value={domainLabel || record.platform_label} />
-                            <Field label="Repair State" value={repairState} />
                           </div>
 
                           {findingSentence(publicFinding) && publicFinding !== record.title && (
@@ -1425,22 +1443,19 @@ export default function Vigil() {
                           </div>
                         </div>
 
-                        <div className="hidden gap-2 md:grid md:grid-cols-[7rem_7rem_9rem_6rem_minmax(0,1fr)_9rem] md:items-start">
+                        <div className="hidden gap-3 md:grid md:grid-cols-[8rem_7rem_minmax(0,1fr)_9rem] md:items-start">
                           <div className="break-words font-mono text-[11px] leading-snug text-cam-gold">{displayRecordId}</div>
                           <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
-                          <div>
-                            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</p>
-                            {domainLabel && <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-muted-foreground">{domainLabel}</p>}
-                          </div>
-                          <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
                           <div className="min-w-0">
                             <h2 className="whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
+                            <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                              {[record.type_label, record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
+                            </p>
                             {findingSentence(publicFinding, 210) && publicFinding !== record.title && <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{findingSentence(publicFinding, 210)}</p>}
                             {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[9px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
                           <div className="flex flex-col items-end gap-1.5 text-right">
                             <span className={`rounded-md border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] ${record.publicDisplay.patch?.withholdActionedStatus ? "border-red-300 bg-red-50 text-red-800" : "border-border bg-background/40 text-muted-foreground/80"}`}>{publicLifecycle}</span>
-                            {repairState && <span className="text-[10px] leading-snug text-muted-foreground">{repairState}</span>}
                           </div>
                         </div>
                       </div>
@@ -1496,22 +1511,11 @@ export default function Vigil() {
                         </div>
                       )}
 
-                      <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
-                        <Field label="First Observed" value={detailRecord.publicDisplay.dates.firstObserved} />
-                        <Field label="Published" value={detailRecord.publicDisplay.dates.published ?? detailRecord.date_recorded} />
-                        <Field label="Last Updated" value={detailRecord.publicDisplay.dates.lastUpdated} />
-                        <Field label="Implemented" value={detailRecord.publicDisplay.dates.implemented} />
-                        <Field label="Relevant Domains" value={detailRecord.publicDisplay.domains.join("; ")} />
-                        <Field label="Relevant System" value={detailRecord.publicDisplay.systems.join("; ") || detailRecord.platform_label} />
-                        <Field label="Repair State" value={detailRecord.publicDisplay.repairState} />
-                        <Field label="Principal Corpus Basis" value={detailRecord.publicDisplay.principalRepair} />
-                      </div>
+                      {detailReadyForPublicView && <div className="mb-3"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
 
-                      {detailReadyForPublicView && detailRecord.record_type !== "patch_note" && <div className="mb-4"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
+                      <div className="mb-4"><CompactRecordMetadata record={detailRecord} /></div>
 
                       {detailReadyForPublicView && <CuratedRecordDetail record={detailRecord} onNavigateRecord={navigateToRecord} />}
-
-                      {detailReadyForPublicView && detailRecord.record_type === "patch_note" && <div className="mt-4"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
 
                       <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
                         <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>

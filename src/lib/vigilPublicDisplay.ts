@@ -59,6 +59,7 @@ export type PublicRecordDisplay = {
     affectedParties: string[];
     corpusRelationship?: string;
     repairStatus?: string;
+    repairNextAction?: string;
   };
   proposal?: {
     problem?: string;
@@ -571,7 +572,7 @@ function deriveRepairState(
   if (lifecycleKey === "deferred") return "Deferred";
   if (lifecycleKey === "superseded") return "Superseded";
   if (recordType === "failure_mode") {
-    const explicit = firstText(record, ["repair_status", "triage.mitigation_status", "mitigation_status"]);
+    const explicit = firstText(record, ["repair_status.status", "repair_status.state", "triage.mitigation_status", "mitigation_status"]);
     if (explicit) return humanize(explicit);
     if (chain.patches.length) return "Repair linked";
     if (["closed-actioned", "implemented"].includes(normalizedKey(recordState))) return "Repair stated; PATCH not linked";
@@ -684,9 +685,15 @@ export function deriveVigilPublicDisplay(
       "governance_gap_type",
     ]),
     repairStatus: firstText(record, [
-      "repair_status",
+      "repair_status.status",
+      "repair_status.state",
       "triage.mitigation_status",
       "mitigation_status",
+    ]),
+    repairNextAction: firstText(record, [
+      "repair_status.next_action",
+      "triage.recommended_next_step",
+      "recommended_next_step",
     ]),
   } : undefined;
 

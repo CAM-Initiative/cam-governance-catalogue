@@ -13,11 +13,13 @@ Every public record MUST make the following information readily visible:
 1. record ID and type;
 2. plain-language title;
 3. one-paragraph public finding;
-4. lifecycle status;
-5. first-observed, published, and last-updated dates where applicable;
-6. relevant domains and systems;
-7. the visible `Observation → Failure Mode → Proposal → PATCH` record chain;
+4. the visible `Observation → Failure Mode → Proposal → PATCH` record chain;
+5. lifecycle status;
+6. first-observed, published, and last-updated dates where applicable;
+7. relevant domains and systems;
 8. a link to the complete canonical VIGIL JSON record.
+
+The record chain MUST appear immediately after the public finding. Dates, domains, and system fields SHOULD use a compact metadata treatment rather than a dominant content panel. Relationship fields already represented by the record chain SHOULD NOT be repeated as a separate `Linked records` section.
 
 Technical metadata, reviewer history, integrity hashes, extended analysis, rejected alternatives, and full lifecycle events MAY remain in the JSON or in a subordinate audit-details view.
 
