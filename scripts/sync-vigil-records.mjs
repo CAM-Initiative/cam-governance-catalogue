@@ -29,6 +29,12 @@ const forbiddenIndexPayloadKeys = new Set([
   "verification_summary",
   "impact_summary",
   "cam_summary",
+  "corpus_implementation",
+  "public_display",
+  "relevant_corpus_provisions",
+  "applied_corpus_repairs",
+  "proposed_amendments",
+  "proposed_corpus_amendments",
 ]);
 
 function textFrom(value) {
@@ -57,6 +63,84 @@ function firstText(record, paths) {
     if (value) return value;
   }
   return undefined;
+}
+
+function listFrom(value) {
+  const values = Array.isArray(value) ? value : value === null || value === undefined ? [] : [value];
+  return values.flatMap((item) => {
+    if (typeof item === "string") return item.split(/\s*\|\s*|\s*;\s*/).map((entry) => entry.trim()).filter(Boolean);
+    const text = textFrom(item);
+    return text ? [text] : [];
+  });
+}
+
+function uniqueStrings(values) {
+  const seen = new Set();
+  return values.filter((value) => {
+    const cleaned = String(value ?? "").trim();
+    if (!cleaned) return false;
+    const key = cleaned.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function collectKeyedStrings(value, keyPattern, depth = 0) {
+  if (depth > 8 || value === null || value === undefined) return [];
+  if (Array.isArray(value)) return value.flatMap((item) => collectKeyedStrings(item, keyPattern, depth + 1));
+  if (!value || typeof value !== "object") return [];
+
+  return Object.entries(value).flatMap(([key, item]) => {
+    if (keyPattern.test(key)) return listFrom(item);
+    return collectKeyedStrings(item, keyPattern, depth + 1);
+  });
+}
+
+function publicSearchProjection(record) {
+  const detailBlocks = [
+    record.public_display,
+    record.corpus_implementation,
+    record.relevant_corpus_provisions,
+    record.applied_corpus_repairs,
+    record.proposed_amendments,
+    record.proposed_corpus_amendments,
+  ].filter(Boolean);
+  const instrumentPattern = /^(?:instrument_id|instrument_code|instrument_title|principal_instruments|changed_instruments|instruments_amended)$/i;
+  const sectionPattern = /^(?:section|section_number|section_heading|heading|principal_sections|relevant_sections)$/i;
+  const domainPattern = /^(?:domain|domains|relevant_domains|affected_domains|changed_domains|target_domains)$/i;
+  const searchPattern = /^(?:instrument_id|instrument_code|instrument_title|canonical_file_path|section|section_number|section_heading|heading|action|current_status|relationship_to_failure|relevant_domains|record_chain)$/i;
+
+  const principalInstruments = uniqueStrings([
+    ...listFrom(record.principal_instruments),
+    ...detailBlocks.flatMap((block) => collectKeyedStrings(block, instrumentPattern)),
+    ...listFrom(record.specific_model_or_runtime).filter((value) => /\bCAM-[A-Z0-9-]+\b/i.test(value)),
+  ]);
+  const principalSections = uniqueStrings([
+    ...listFrom(record.principal_sections),
+    ...detailBlocks.flatMap((block) => collectKeyedStrings(block, sectionPattern)),
+  ]);
+  const relevantDomains = uniqueStrings([
+    ...listFrom(record.relevant_domains),
+    ...detailBlocks.flatMap((block) => collectKeyedStrings(block, domainPattern)),
+  ]);
+  const corpusSearchTerms = uniqueStrings([
+    ...listFrom(record.corpus_search_terms),
+    ...principalInstruments,
+    ...principalSections,
+    ...relevantDomains,
+    ...detailBlocks.flatMap((block) => collectKeyedStrings(block, searchPattern)),
+  ]).slice(0, 160);
+
+  return {
+    public_finding: firstText(record, ["public_finding", "public_display.public_finding", "summary"]),
+    relevant_domains: relevantDomains.length ? relevantDomains : undefined,
+    principal_instruments: principalInstruments.length ? principalInstruments : undefined,
+    principal_sections: principalSections.length ? principalSections : undefined,
+    corpus_search_terms: corpusSearchTerms.length ? corpusSearchTerms : undefined,
+    repair_state: firstText(record, ["repair_state", "public_display.repair_state", "implementation_state", "change_status", "mitigation_status"]),
+    display_contract_status: firstText(record, ["display_contract_status", "public_display.display_contract_status"]),
+  };
 }
 
 function projectedPlatform(record) {
@@ -91,6 +175,7 @@ function projectLeanIndexRecord(record) {
   );
   const platform = projectedPlatform(record);
   const product = projectedProduct(record);
+  const publicProjection = publicSearchProjection(record);
 
   if (platform) {
     projected.platform_label = platform;
@@ -99,6 +184,9 @@ function projectLeanIndexRecord(record) {
     projected.observed_vendor = platform;
   }
   if (product) projected.observed_product = product;
+  for (const [key, value] of Object.entries(publicProjection)) {
+    if (value !== undefined) projected[key] = value;
+  }
 
   return projected;
 }

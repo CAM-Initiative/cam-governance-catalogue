@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNod
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
 import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { matchesVigilSearch, type CorpusProvision, type RecordChain } from "@/lib/vigilPublicDisplay";
 
 const VIGIL_PAGE_SIZE = 20;
 
@@ -142,7 +143,14 @@ function jsonFileName(record: VigilIndexRecord) {
 }
 
 function recordKeyFor(record: VigilIndexRecord, index = 0) {
-  return [record.id, record.path, record.raw_url, record.github_blob_url, String(index)].filter(isMeaningfulText).join("::");
+  const stableParts = [record.id, record.path, record.raw_url, record.github_blob_url].filter(isMeaningfulText);
+  return stableParts.length ? stableParts.join("::") : `vigil-record-${index}`;
+}
+
+function findingSentence(text?: string, limit = 240) {
+  if (!isMeaningfulText(text)) return undefined;
+  const firstSentence = text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text;
+  return previewText(firstSentence, limit);
 }
 
 function detailDisplayRecord(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
@@ -348,8 +356,170 @@ function CompactObjectCards({ items, keys, titleKeys = [] }: { items: unknown; k
   );
 }
 
-function FailureModeDetailView({ record }: { record: VigilIndexRecord }) {
+function TextList({ items }: { items: string[] }) {
+  if (!items.length) return null;
+  return (
+    <ul className="space-y-2 text-sm leading-relaxed text-foreground">
+      {items.map((item, index) => (
+        <li key={`${item}-${index}`} className="flex gap-2">
+          <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-cam-gold" aria-hidden="true" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function canonicalCorpusUrl(provision: CorpusProvision) {
+  if (provision.canonicalUrl) return provision.canonicalUrl;
+  if (!provision.canonicalPath || !provision.canonicalPath.includes("/")) return undefined;
+  return `https://github.com/CAM-Initiative/Caelestis/blob/main/${provision.canonicalPath.replace(/^\/+/, "")}`;
+}
+
+function implementationCommitUrl(provision: CorpusProvision) {
+  if (provision.implementationUrl) return provision.implementationUrl;
+  const commit = provision.verifiedAgainst?.match(/\b[a-f0-9]{40}\b/i)?.[0];
+  return commit ? `https://github.com/CAM-Initiative/Caelestis/commit/${commit}` : undefined;
+}
+
+function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: CorpusProvision[]; patchMode?: boolean }) {
+  if (!provisions.length) return null;
+  return (
+    <div className="space-y-3">
+      {provisions.map((provision, index) => {
+        const corpusUrl = canonicalCorpusUrl(provision);
+        const commitUrl = implementationCommitUrl(provision);
+        const exactRepair = provision.finalWording ?? (provision.action?.toLocaleLowerCase().includes("repeal") ? provision.previousWording : undefined);
+        return (
+          <article key={`${provision.instrumentId ?? "instrument"}-${provision.section ?? index}`} className="rounded-xl border border-border bg-card/60 p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+              <div className="min-w-0">
+                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/65">Instrument</p>
+                <h4 className="mt-1 break-words font-serif text-lg leading-snug text-foreground">
+                  {provision.instrumentId ?? "Instrument not identified"}
+                </h4>
+                {provision.instrumentTitle && provision.instrumentTitle !== provision.instrumentId && <p className="mt-1 text-sm text-muted-foreground">{provision.instrumentTitle}</p>}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {provision.action && <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{titleizeValue(provision.action)}</span>}
+                {patchMode && <span className={`rounded-full border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${provision.complete ? "border-emerald-300 bg-emerald-50 text-emerald-800" : "border-amber-300 bg-amber-50 text-amber-900"}`}>{provision.complete ? "Traceable repair" : "Details incomplete"}</span>}
+              </div>
+            </div>
+
+            <div className="mt-4 grid gap-3 rounded-lg border border-border/70 bg-background/35 p-3 md:grid-cols-2">
+              <ValueField label="Section" value={provision.section} />
+              <ValueField label="Heading" value={provision.heading} />
+              <ValueField label={patchMode ? "Current status" : "Relationship to failure"} value={patchMode ? provision.currentStatus : provision.relationship} />
+              <ValueField label={patchMode ? "Implemented" : "Corpus relationship"} value={patchMode ? provision.implementedDate : provision.action} />
+              {patchMode && <ValueField label="Verified against" value={provision.verifiedAgainst} />}
+              {patchMode && <ValueField label="Verification status" value={provision.verificationStatus} />}
+            </div>
+
+            {patchMode && exactRepair && (
+              <div className="mt-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{provision.action?.toLocaleLowerCase().includes("repeal") ? "Literal wording removed" : "Final adopted wording"}</p>
+                <blockquote className="mt-2 whitespace-pre-wrap rounded-lg border-l-4 border-cam-gold bg-background/60 px-4 py-3 font-serif text-sm leading-7 text-foreground">{exactRepair}</blockquote>
+              </div>
+            )}
+
+            {patchMode && provision.previousWording && provision.previousWording !== exactRepair && (
+              <details className="mt-3 rounded-lg border border-border bg-background/35 px-3 py-2">
+                <summary className="cursor-pointer font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Previous wording</summary>
+                <p className="mt-3 whitespace-pre-wrap border-t border-border/70 pt-3 text-sm leading-relaxed text-muted-foreground">{provision.previousWording}</p>
+              </details>
+            )}
+
+            {(corpusUrl || commitUrl || provision.canonicalPath) && (
+              <div className="mt-4 flex flex-col gap-2 border-t border-border/70 pt-3 sm:flex-row sm:items-center sm:justify-between">
+                {provision.canonicalPath && <p className="break-words font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70">{provision.canonicalPath}</p>}
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  {corpusUrl && <a className="rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:text-cam-gold" href={corpusUrl} target="_blank" rel="noreferrer">Current CAELESTIS provision →</a>}
+                  {commitUrl && <a className="rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:text-cam-gold" href={commitUrl} target="_blank" rel="noreferrer">Implementation record →</a>}
+                </div>
+              </div>
+            )}
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
+function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: RecordChain; currentId: string; onNavigateRecord?: (recordId: string) => void }) {
+  const stages = [
+    { label: "Observation", records: chain.observations },
+    { label: "Failure Mode", records: chain.failureModes },
+    { label: "Proposal", records: chain.proposals },
+    { label: "PATCH", records: chain.patches },
+  ];
+  return (
+    <div className="rounded-xl border border-border bg-background/35 p-3">
+      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground/65">Evidence-to-repair record chain</p>
+      <div className="mt-3 grid gap-2 md:grid-cols-4">
+        {stages.map((stage, index) => (
+          <div key={stage.label} className="relative rounded-lg border border-border/70 bg-card/55 p-3">
+            <div className="flex items-center justify-between gap-2">
+              <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-cam-gold">{index + 1}. {stage.label}</p>
+              {index < stages.length - 1 && <span className="hidden text-cam-gold/70 md:inline" aria-hidden="true">→</span>}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {stage.records.length === 0 && <span className="text-xs text-muted-foreground/70">Not linked</span>}
+              {stage.records.map((recordId) => (
+                <button
+                  key={recordId}
+                  type="button"
+                  className={`rounded-md border px-2 py-1 font-mono text-[9px] tracking-[0.06em] transition ${recordId === currentId ? "border-primary/35 bg-primary/10 text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
+                  onClick={() => recordId !== currentId && onNavigateRecord?.(recordId)}
+                  disabled={recordId === currentId || !onNavigateRecord}
+                  aria-label={recordId === currentId ? `${recordId}, current record` : `Find linked record ${recordId}`}
+                >
+                  {recordId}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
   const raw = record.raw;
+  const observation = record.publicDisplay.observation;
+  const systemContext = isObject(raw.system_context) ? raw.system_context : raw;
+  const systemEntries = valuesForKeys(systemContext, ["system_type", "platform_or_vendor", "product_or_service", "specific_model_or_runtime", "interface_surface", "deployment_context", "affected_population"], raw);
+
+  return (
+    <div className="space-y-2">
+      <DetailSection title="What was directly observed" defaultOpen show={Boolean(observation?.observed)}>
+        <p className="text-sm leading-relaxed text-foreground">{observation?.observed}</p>
+      </DetailSection>
+      <DetailSection title="System and observation context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0 || Boolean(observation?.context)}>
+        <div className="space-y-3">
+          {observation?.context && <p className="text-sm leading-relaxed text-foreground">{observation.context}</p>}
+          <FieldGrid entries={systemEntries} />
+        </div>
+      </DetailSection>
+      <DetailSection title="Evidence sources" defaultOpen show={hasMeaningfulValue(raw.source_records)}>
+        <CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_modality", "source_platform", "system_or_product", "public_access_status", "access_status", "source_url_status", "relevance_note"]} />
+      </DetailSection>
+      <DetailSection title="Evidence modality and access" show={Boolean(observation?.sourceModality.length || observation?.publicAccess)}>
+        <FieldGrid entries={[
+          { key: "source_modality", label: "Source modality", value: observation?.sourceModality },
+          { key: "public_access", label: "Public-access status", value: observation?.publicAccess },
+        ].filter((entry) => hasMeaningfulValue(entry.value))} />
+      </DetailSection>
+      <DetailSection title="Interpretation — separate from observation" defaultOpen={Boolean(observation?.interpretation)} show={Boolean(observation?.interpretation)}>
+        <p className="text-sm leading-relaxed text-foreground">{observation?.interpretation}</p>
+      </DetailSection>
+    </div>
+  );
+}
+
+function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilIndexRecord; onNavigateRecord?: (recordId: string) => void }) {
+  const raw = record.raw;
+  const publicFailure = record.publicDisplay.failure;
   const systemContext = isObject(raw.system_context) ? raw.system_context : raw;
   const failureClassification = isObject(raw.failure_classification) ? raw.failure_classification : raw;
   const triage = isObject(raw.triage) ? raw.triage : raw;
@@ -357,7 +527,6 @@ function FailureModeDetailView({ record }: { record: VigilIndexRecord }) {
   const camInternal = isObject(raw.cam_internal) ? raw.cam_internal : raw;
   const linkedRecords = isObject(raw.linked_records) ? raw.linked_records : undefined;
 
-  const sourceSummaryEntries = valuesForKeys(raw, ["summary", "why_it_matters_to_CAM", "failure_mode_definition", "failure_threshold"]);
   const systemEntries = valuesForKeys(systemContext, ["system_type", "platform_or_vendor", "vendor_cluster", "primary_evidenced_vendors", "product_or_service", "interface_surface", "deployment_context", "user_role", "affected_population"], raw);
   const classificationEntries = valuesForKeys(failureClassification, ["failure_family", "failure_subtype", "harm_vectors", "severity", "likelihood", "confidence", "affected_rights_or_interests", "failure_scope", "recurrence_pattern", "taxonomy_reference", "related_failure_groups", "persistence", "reproducibility", "visibility"], raw);
   const triageEntries = valuesForKeys(triage, ["triage_priority", "triage_owner", "triage_status", "mitigation_status", "escalation_required", "recommended_next_step"], raw);
@@ -366,11 +535,51 @@ function FailureModeDetailView({ record }: { record: VigilIndexRecord }) {
   const gapEntries = valuesForKeys(raw, ["governance_gap", "repair_hypothesis"]);
   const linkedEntries = linkedRecords ? valuesForKeys(linkedRecords, ["predecessor_records", "related_observations", "related_failure_modes", "related_proposals", "related_patch_notes", "potential_child_records", "potential_patch_records", "external_reference_cluster"]) : valuesForKeys(raw, ["predecessor_records", "related_observations", "related_failure_modes", "related_proposals", "related_patch_notes", "potential_child_records", "potential_patch_records", "external_reference_cluster"]);
   const camEntries = valuesForKeys(camInternal, ["cam_relevance", "cam_failure_type", "cam_compliance_status", "cam_internal_failure_statement", "cam_expected_control", "cam_observed_failure", "cam_taxonomy_primary_group", "cam_taxonomy_secondary_groups", "cam_taxonomy_candidate_labels", "cam_controls_implicated", "recommended_cam_action"], raw);
+  const repairPatches = record.publicDisplay.chain.patches;
 
   return (
     <div className="space-y-2">
+      <DetailSection title="Failure finding" defaultOpen show={Boolean(publicFailure?.definition)}>
+        <p className="text-sm leading-relaxed text-foreground">{publicFailure?.definition}</p>
+      </DetailSection>
+      <DetailSection title="Relevant corpus provisions" defaultOpen show>
+        {record.publicDisplay.corpusProvisions.length > 0
+          ? <CorpusProvisionCards provisions={record.publicDisplay.corpusProvisions} />
+          : <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm leading-relaxed text-amber-950">No exact CAELESTIS instrument and section is yet identified in this public record. Treat this as an unresolved corpus-basis gap, not as evidence that no relevant provision exists.</div>}
+      </DetailSection>
+      <DetailSection title="Triggers, manifestations, and significance" defaultOpen show={Boolean(publicFailure && (publicFailure.triggers.length || publicFailure.manifestations.length || publicFailure.significance || publicFailure.affectedParties.length))}>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div>
+            <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-cam-gold">Triggering conditions</p>
+            <TextList items={publicFailure?.triggers ?? []} />
+          </div>
+          <div>
+            <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-cam-gold">Observed manifestations</p>
+            <TextList items={publicFailure?.manifestations ?? []} />
+          </div>
+          {publicFailure?.significance && <ValueField label="Governance significance" value={publicFailure.significance} />}
+          {publicFailure?.affectedParties.length ? <ValueField label="Affected parties or interests" value={publicFailure.affectedParties} /> : null}
+          {publicFailure?.corpusRelationship && <ValueField label="Corpus relationship" value={publicFailure.corpusRelationship} />}
+        </div>
+      </DetailSection>
+      <DetailSection title="Repair status" defaultOpen={repairPatches.length > 0} show>
+        <div className="space-y-3">
+          <FieldGrid entries={[
+            { key: "repair_state", label: "Repair state", value: record.publicDisplay.repairState },
+            { key: "source_repair_status", label: "Source repair status", value: publicFailure?.repairStatus },
+          ].filter((entry) => hasMeaningfulValue(entry.value))} />
+          {repairPatches.length > 0 ? (
+            <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-sm leading-relaxed text-emerald-950">
+              <p className="font-medium">Repair implemented or documented through {repairPatches.join(", ")}.</p>
+              {record.publicDisplay.principalRepair && <p className="mt-1">Corpus basis: {record.publicDisplay.principalRepair}</p>}
+              <div className="mt-2 flex flex-wrap gap-2">
+                {repairPatches.map((patchId) => <button key={patchId} type="button" className="rounded-md border border-emerald-300 bg-white/70 px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-emerald-900" onClick={() => onNavigateRecord?.(patchId)}>View {patchId} →</button>)}
+              </div>
+            </div>
+          ) : <p className="text-sm leading-relaxed text-muted-foreground">No implemented PATCH is linked from this failure mode.</p>}
+        </div>
+      </DetailSection>
       <DetailSection title="System Context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0}><FieldGrid entries={systemEntries} /></DetailSection>
-      <DetailSection title="Source Record / Failure Summary" defaultOpen={sourceSummaryEntries.length > 0} show={sourceSummaryEntries.length > 0}><ParagraphFields entries={sourceSummaryEntries} /></DetailSection>
       <DetailSection title="Evidence & Sources" show={hasMeaningfulValue(raw.source_records)}><CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_platform", "system_or_product", "source_context", "relevance_note"]} /></DetailSection>
       <DetailSection title="Failure Classification" show={classificationEntries.length > 0}><FieldGrid entries={classificationEntries} /></DetailSection>
       <DetailSection title="Triage & Status" show={triageEntries.length > 0}><FieldGrid entries={triageEntries} /></DetailSection>
@@ -390,6 +599,131 @@ function FailureModeDetailView({ record }: { record: VigilIndexRecord }) {
       <DetailSection title="Recommended Repair Path" show={hasMeaningfulValue(raw.recommended_repair_path)}><CompactObjectCards items={raw.recommended_repair_path} titleKeys={["repair_action"]} keys={["repair_action", "expected_control", "implementation_note"]} /></DetailSection>
       <DetailSection title="Linked Records" show={linkedEntries.length > 0}><FieldGrid entries={linkedEntries} /></DetailSection>
       <DetailSection title="CAM Internal" show={camEntries.length > 0}><FieldGrid entries={camEntries} /></DetailSection>
+    </div>
+  );
+}
+
+function ProposalDetailView({ record, onNavigateRecord }: { record: VigilIndexRecord; onNavigateRecord?: (recordId: string) => void }) {
+  const raw = record.raw;
+  const proposal = record.publicDisplay.proposal;
+  const targetProvisions = record.publicDisplay.corpusProvisions;
+
+  return (
+    <div className="space-y-2">
+      <DetailSection title="Problem and proposed governance outcome" defaultOpen show={Boolean(proposal?.problem || proposal?.proposedOutcome)}>
+        <div className="space-y-4">
+          {proposal?.problem && <ValueField label="Problem being addressed" value={proposal.problem} />}
+          {proposal?.proposedOutcome && <ValueField label="Proposed governance outcome" value={proposal.proposedOutcome} />}
+        </div>
+      </DetailSection>
+      <DetailSection title="Proposed corpus targets" defaultOpen={targetProvisions.length > 0} show>
+        {targetProvisions.length > 0
+          ? <CorpusProvisionCards provisions={targetProvisions} />
+          : <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm leading-relaxed text-amber-950">The proposal does not yet identify an exact target instrument and section.</div>}
+      </DetailSection>
+      <DetailSection title="Proposed wording — not yet binding" defaultOpen={Boolean(proposal?.proposedWording)} show={Boolean(proposal?.proposedWording)}>
+        <div className="rounded-lg border border-amber-300 bg-amber-50 p-3">
+          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-amber-900">Draft only · not CAELESTIS authority</p>
+          <p className="mt-2 whitespace-pre-wrap font-serif text-sm leading-7 text-amber-950">{proposal?.proposedWording}</p>
+        </div>
+      </DetailSection>
+      <DetailSection title="Decision and implementation status" defaultOpen show>
+        <div className="space-y-3">
+          <FieldGrid entries={[
+            { key: "decision_status", label: "Decision status", value: proposal?.decisionStatus },
+            { key: "repair_state", label: "Implementation state", value: record.publicDisplay.repairState },
+          ].filter((entry) => hasMeaningfulValue(entry.value))} />
+          {proposal?.resultingPatches.length ? (
+            <div className="flex flex-wrap gap-2">
+              {proposal.resultingPatches.map((patchId) => <button key={patchId} type="button" className="rounded-md border border-primary/35 bg-primary/10 px-2.5 py-1.5 font-mono text-[9px] tracking-[0.08em] text-[hsl(32_62%_25%)]" onClick={() => onNavigateRecord?.(patchId)}>Resulting {patchId} →</button>)}
+            </div>
+          ) : <p className="text-sm leading-relaxed text-muted-foreground">No resulting PATCH is linked. Any proposed wording remains non-binding.</p>}
+        </div>
+      </DetailSection>
+      <DetailSection title="Evidence and rationale" show={hasMeaningfulValue(raw.source_records) || hasMeaningfulValue(raw.why_it_matters_to_CAM)}>
+        <div className="space-y-3">
+          {hasMeaningfulValue(raw.why_it_matters_to_CAM) && <ValueField label="Why it matters to CAM" value={raw.why_it_matters_to_CAM} />}
+          <CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_platform", "source_context", "relevance_note"]} />
+        </div>
+      </DetailSection>
+    </div>
+  );
+}
+
+function PatchDetailView({ record }: { record: VigilIndexRecord }) {
+  const raw = record.raw;
+  const patch = record.publicDisplay.patch;
+  const provisions = record.publicDisplay.corpusProvisions;
+  const implementationEntries = [
+    { key: "implementation_date", label: "Implemented", value: patch?.implementationDate ?? record.publicDisplay.dates.implemented },
+    { key: "verification_status", label: "Verification status", value: patch?.verificationStatus },
+    { key: "verified_against", label: "Verified against", value: patch?.verifiedAgainst },
+    { key: "source_status", label: "Source lifecycle status", value: record.record_state ? titleizeValue(record.record_state) : undefined },
+  ].filter((entry) => hasMeaningfulValue(entry.value));
+
+  return (
+    <div className="space-y-2">
+      <section className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4" aria-labelledby={`${record.id}-applied-repairs`}>
+        <div className="flex flex-col gap-3 border-b border-primary/20 pb-3 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">Primary audit surface</p>
+            <h3 id={`${record.id}-applied-repairs`} className="mt-1 font-serif text-xl text-foreground">Applied corpus repairs</h3>
+          </div>
+          <span className={`w-fit rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${patch?.contractStatus === "complete-amendment" ? "border-emerald-300 bg-emerald-50 text-emerald-800" : patch?.contractStatus === "complete-no-corpus-change" ? "border-blue-300 bg-blue-50 text-blue-900" : "border-red-300 bg-red-50 text-red-800"}`}>
+            {patch?.contractStatus === "complete-amendment" ? "Display contract satisfied" : patch?.contractStatus === "complete-no-corpus-change" ? "No corpus amendment" : "Display contract incomplete"}
+          </span>
+        </div>
+
+        <div className="mt-4 space-y-4">
+          {patch?.withholdActionedStatus && (
+            <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm leading-relaxed text-red-950" role="alert">
+              <p className="font-medium">Closed—actioned status is withheld from the public display.</p>
+              <p className="mt-1">{patch.contractMessage} The source JSON remains available for audit, but the interface will not present this repair as publicly verified.</p>
+            </div>
+          )}
+
+          {patch?.explicitNoCorpusTextChange && (
+            <div className="rounded-lg border border-blue-300 bg-blue-50 p-3 text-sm leading-relaxed text-blue-950">
+              <p className="font-medium">This PATCH did not amend CAELESTIS corpus text.</p>
+              <p className="mt-1">{patch.noCorpusChangeExplanation ?? "It records a non-doctrinal repair or verified reliance on pre-existing corpus coverage."}</p>
+            </div>
+          )}
+
+          {!patch?.explicitNoCorpusTextChange && provisions.length > 0 && <CorpusProvisionCards provisions={provisions} patchMode />}
+
+          {!patch?.explicitNoCorpusTextChange && provisions.length === 0 && (
+            <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm leading-relaxed text-red-950">No structured corpus amendment is available for public verification.</div>
+          )}
+
+          {patch?.explicitNoCorpusTextChange && provisions.length > 0 && (
+            <div>
+              <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Pre-existing provisions relied upon</p>
+              <CorpusProvisionCards provisions={provisions} patchMode />
+            </div>
+          )}
+
+          <div className="rounded-lg border border-border bg-background/55 p-3 text-xs leading-relaxed text-muted-foreground">
+            VIGIL reproduces adopted wording for auditability. <strong className="text-foreground">CAELESTIS remains the authoritative governance corpus.</strong> Where this record and the current corpus differ, the current CAELESTIS provision governs.
+          </div>
+        </div>
+      </section>
+
+      <DetailSection title="Implementation and verification" defaultOpen={implementationEntries.length > 0} show={implementationEntries.length > 0}>
+        <FieldGrid entries={implementationEntries} />
+      </DetailSection>
+      <DetailSection title="Repair summary and background" show={Boolean(patch?.repairSummary || hasMeaningfulValue(raw.why_it_matters_to_CAM))}>
+        <div className="space-y-4">
+          {patch?.repairSummary && <ValueField label="Repair summary" value={patch.repairSummary} />}
+          {hasMeaningfulValue(raw.why_it_matters_to_CAM) && <ValueField label="Why it matters to CAM" value={raw.why_it_matters_to_CAM} />}
+        </div>
+      </DetailSection>
+      <DetailSection title="Impact" show={hasMeaningfulValue(raw.impact_summary)}><ValueBody value={raw.impact_summary} /></DetailSection>
+      <DetailSection title="Residual monitoring" show={Boolean(patch?.residualMonitoring.length)}>
+        <TextList items={patch?.residualMonitoring ?? []} />
+      </DetailSection>
+      <DetailSection title="Evidence sources" show={hasMeaningfulValue(raw.source_records)}>
+        <CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_platform", "system_or_product", "source_context", "relevance_note"]} />
+      </DetailSection>
     </div>
   );
 }
@@ -419,8 +753,11 @@ function GenericDetailView({ record }: { record: VigilIndexRecord }) {
   );
 }
 
-function CuratedRecordDetail({ record }: { record: VigilIndexRecord }) {
-  if (record.record_type === "failure_mode") return <FailureModeDetailView record={record} />;
+function CuratedRecordDetail({ record, onNavigateRecord }: { record: VigilIndexRecord; onNavigateRecord?: (recordId: string) => void }) {
+  if (record.record_type === "observation") return <ObservationDetailView record={record} />;
+  if (record.record_type === "failure_mode") return <FailureModeDetailView record={record} onNavigateRecord={onNavigateRecord} />;
+  if (record.record_type === "proposal") return <ProposalDetailView record={record} onNavigateRecord={onNavigateRecord} />;
+  if (record.record_type === "patch_note") return <PatchDetailView record={record} />;
   return <GenericDetailView record={record} />;
 }
 
@@ -523,7 +860,7 @@ export default function Vigil() {
         const selectedKey = filterComparisonKey(filter.key, selected);
         return valuesForFilter(record, filter.key).some((value) => filterComparisonKey(filter.key, value) === selectedKey);
       });
-      const searchOk = !search.trim() || record.searchText.includes(search.trim().toLowerCase());
+      const searchOk = matchesVigilSearch(record.searchText, search);
       return filtersOk && searchOk;
     }).sort((a, b) => compareRecordsBySort(a, b, sortConfig)),
     [filters, records, search, sortConfig],
@@ -573,6 +910,7 @@ export default function Vigil() {
       .then((raw) => {
         const displayRecord = detailDisplayRecord(record, raw);
         setDetailLoads((current) => ({ ...current, [recordKey]: { status: "ready", raw, displayRecord } }));
+        setRecords((current) => current.map((item) => item.id === displayRecord.id ? displayRecord : item));
         return raw;
       })
       .catch((error) => {
@@ -662,6 +1000,22 @@ export default function Vigil() {
     if (shouldLoadDetail) void ensureRecordDetail(record, recordKey);
   }
 
+  function navigateToRecord(recordId: string) {
+    const targetIndex = records.findIndex((record) => record.id.toLocaleLowerCase() === recordId.toLocaleLowerCase());
+    setSearch(recordId);
+    setFilters({ recordType: "", affectedPlatform: "", status: "" });
+    setRecordPage(1);
+    if (targetIndex < 0) return;
+
+    const target = records[targetIndex];
+    const targetKey = recordKeyFor(target, targetIndex);
+    setExpandedRecordKeys(new Set([targetKey]));
+    void ensureRecordDetail(target, targetKey);
+    window.setTimeout(() => {
+      document.getElementById(`vigil-record-${target.id.replace(/[^A-Za-z0-9_-]/g, "-")}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  }
+
   function handleRecordRowKeyDown(event: KeyboardEvent<HTMLDivElement>, record: VigilIndexRecord, recordKey: string) {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
@@ -703,7 +1057,7 @@ export default function Vigil() {
           <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">Evidence-to-Repair Governance Ledger</p>
           <h1 className="mb-3 font-serif text-3xl text-foreground md:text-4xl">VIGIL Observatory</h1>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            VIGIL records observations, failure modes, CAM proposals, and implemented patch notes from the live VIGIL registry index with public-facing source, system, jurisdiction, classification, and routing summaries.
+            VIGIL records observations, failure modes, CAM proposals, and implemented repairs. Its public view prioritises the evidence, governance finding, exact CAELESTIS basis, literal repair, and current outcome.
           </p>
         </div>
 
@@ -718,6 +1072,7 @@ export default function Vigil() {
             <div className="space-y-2">
               <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
               <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+              <p><strong className="text-foreground">Public-display contract:</strong> the Observatory shows the evidence, finding, corpus basis, exact repair, and current outcome. Complete technical and review metadata remain available in each record’s JSON. CAELESTIS remains the authoritative governance corpus. <a className="text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4 hover:text-cam-gold" href="https://github.com/CAM-Initiative/cam-governance-catalogue/blob/main/VIGIL-PUBLIC-DISPLAY-CONTRACT.md" target="_blank" rel="noreferrer">Read the interface contract →</a></p>
             </div>
 
             <div>
@@ -757,7 +1112,7 @@ export default function Vigil() {
                 </div>
                 <div className="rounded-lg border border-border bg-background/35 p-3">
                   <p className="font-medium text-foreground">Patch Note — what changed.</p>
-                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A record of an implemented repair, registry update, schema change, validator change, interface fix, or governance-maintenance action.</p>
+                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A traceable record of the exact implemented corpus repair—or an explicit declaration that no CAELESTIS text changed.</p>
                 </div>
                 <div className="rounded-lg border border-border bg-background/35 p-3 md:col-span-2">
                   <p className="font-medium text-foreground">Source / Research — supporting context.</p>
@@ -769,7 +1124,7 @@ export default function Vigil() {
             <div className="grid gap-2 md:grid-cols-2">
               <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
                 <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Lifecycle note</p>
-                <p className="text-xs leading-relaxed md:text-sm">Records may move from observation to failure mode, proposal, patch note, monitoring, resolved, inactive, or superseded states. Not every observation becomes a proposal, and not every failure mode requires a new instrument.</p>
+                <p className="text-xs leading-relaxed md:text-sm">Records may move from observation to failure mode, proposal, patch note, monitoring, closed—actioned, closed—no action, deferred, or superseded states. Not every observation becomes a proposal, and not every failure mode requires a new instrument.</p>
               </div>
               <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
                 <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">What VIGIL is not</p>
@@ -881,7 +1236,7 @@ export default function Vigil() {
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search and narrow public records by type, affected platform, and status without changing the live VIGIL source data.</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, failure title, provider, domain, instrument, or section; narrow results by type, affected platform, and lifecycle status.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
@@ -913,7 +1268,7 @@ export default function Vigil() {
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search VIGIL records"
+                  placeholder="e.g. AEON-003 §7.4.1"
                 />
               </label>
               {filterConfig.map((filter) => (
@@ -981,12 +1336,12 @@ export default function Vigil() {
           )}
 
           {loadState === "ready" && filtered.length > 0 && (
-            <p className="font-sans text-sm leading-relaxed text-muted-foreground">Select any entry to expand record details and inspect raw JSON. Click a column heading to sort records.</p>
+            <p className="font-sans text-sm leading-relaxed text-muted-foreground">Select any entry to inspect its public finding, evidence-to-repair chain, corpus basis, and complete JSON. Click a column heading to sort records.</p>
           )}
 
           <div className="space-y-2">
             {loadState === "ready" && filtered.length > 0 && (
-              <div className="hidden gap-2 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem]" role="row">
+              <div className="hidden gap-2 rounded-lg border border-border bg-card/60 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:grid md:grid-cols-[7rem_7rem_9rem_6rem_minmax(0,1fr)_9rem]" role="row">
                 {sortableColumns.map((column) => {
                   const isActive = sortConfig.key === column.key;
                   return (
@@ -1015,10 +1370,15 @@ export default function Vigil() {
               const isExpanded = expandedRecordKeys.has(recordKey);
               const detailLoad = detailLoads[recordKey];
               const detailRecord = detailLoad?.status === "ready" ? detailLoad.displayRecord : record;
+              const detailReadyForPublicView = detailLoad?.status === "ready" || detailLoad?.status === "error";
               const detailRecordDate = detailRecord.date_recorded ?? detailRecord.date_implemented ?? "Date not specified";
               const displayRecordId = record.id;
+              const publicFinding = record.publicDisplay.finding ?? record.summary;
+              const domainLabel = record.publicDisplay.domains.join("; ");
+              const publicLifecycle = record.publicDisplay.lifecycleLabel ?? record.record_state;
+              const repairState = record.publicDisplay.repairState;
               return (
-                <article key={recordKey} className="group cam-parchment-card rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
+                <article id={`vigil-record-${record.id.replace(/[^A-Za-z0-9_-]/g, "-")}`} key={recordKey} className="group cam-parchment-card scroll-mt-6 rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
                   {!isExpanded && (
                     <div
                       role="button"
@@ -1048,28 +1408,39 @@ export default function Vigil() {
 
                           <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
                             <Field label="Record Type" value={record.type_label} />
-                            <Field label="Record Status" value={record.record_state} />
+                            <Field label="Lifecycle Status" value={publicLifecycle} />
                             <Field label="Record Date" value={recordDate} />
-                            <Field label="Affected Platform" value={record.platform_label} />
+                            <Field label="Domain / System" value={domainLabel || record.platform_label} />
+                            <Field label="Repair State" value={repairState} />
                           </div>
 
-                          {previewText(record.summary) && record.summary !== record.title && (
-                            <p className="text-sm leading-relaxed text-muted-foreground">{previewText(record.summary, 220)}</p>
+                          {findingSentence(publicFinding) && publicFinding !== record.title && (
+                            <p className="text-sm leading-relaxed text-muted-foreground">{findingSentence(publicFinding)}</p>
                           )}
+
+                          {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="rounded-lg border border-primary/20 bg-primary/5 p-2.5 font-mono text-[10px] leading-relaxed text-[hsl(32_62%_25%)]">Principal repair: {record.publicDisplay.principalRepair}</p>}
 
                           <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
                             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
                           </div>
                         </div>
 
-                        <div className="hidden gap-2 md:grid md:grid-cols-[7rem_7rem_8rem_6rem_minmax(0,1fr)_6rem] md:items-center">
+                        <div className="hidden gap-2 md:grid md:grid-cols-[7rem_7rem_9rem_6rem_minmax(0,1fr)_9rem] md:items-start">
                           <div className="break-words font-mono text-[11px] leading-snug text-cam-gold">{displayRecordId}</div>
                           <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{recordDate}</div>
-                          <div className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</div>
+                          <div>
+                            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">{record.platform_label}</p>
+                            {domainLabel && <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-muted-foreground">{domainLabel}</p>}
+                          </div>
                           <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground/80">{record.type_label}</div>
-                          <h2 className="min-w-0 whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
-                          <div className="flex flex-wrap justify-end gap-1.5">
-                            <span className="rounded-md border border-border bg-background/40 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground/80">{record.record_state}</span>
+                          <div className="min-w-0">
+                            <h2 className="whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
+                            {findingSentence(publicFinding, 210) && publicFinding !== record.title && <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{findingSentence(publicFinding, 210)}</p>}
+                            {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[9px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
+                          </div>
+                          <div className="flex flex-col items-end gap-1.5 text-right">
+                            <span className={`rounded-md border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] ${record.publicDisplay.patch?.withholdActionedStatus ? "border-red-300 bg-red-50 text-red-800" : "border-border bg-background/40 text-muted-foreground/80"}`}>{publicLifecycle}</span>
+                            {repairState && <span className="text-[10px] leading-snug text-muted-foreground">{repairState}</span>}
                           </div>
                         </div>
                       </div>
@@ -1083,12 +1454,13 @@ export default function Vigil() {
                           <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
                           <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
                           <div className="mt-3 flex flex-wrap gap-2">
-                            {[detailRecord.type_label, detailRecord.record_state, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value) => (
-                              <span key={value} className="rounded-full border border-border bg-card px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{value}</span>
+                            {[detailRecord.type_label, detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
+                              <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${value === "Actioned status withheld" ? "border-red-300 bg-red-50 text-red-800" : "border-border bg-card text-muted-foreground"}`}>{value}</span>
                             ))}
                           </div>
                         </div>
                         <div className="flex shrink-0 flex-wrap gap-2">
+                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View complete JSON →</a>}
                           <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
                             {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
                           </button>
@@ -1117,20 +1489,29 @@ export default function Vigil() {
                         </div>
                       )}
 
-                      {previewText(detailRecord.summary) && detailRecord.summary !== detailRecord.title && <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{detailRecord.summary}</p>}
+                      {previewText(detailRecord.publicDisplay.finding) && detailRecord.publicDisplay.finding !== detailRecord.title && (
+                        <div className="mb-4 rounded-lg border border-border/70 bg-background/35 p-3">
+                          <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cam-gold">Public finding</p>
+                          <p className="mt-2 text-sm leading-relaxed text-foreground">{detailRecord.publicDisplay.finding}</p>
+                        </div>
+                      )}
 
                       <div className="mb-4 grid gap-3 rounded-lg border border-border/70 bg-background/30 p-3 md:grid-cols-2 xl:grid-cols-4">
-                        <Field label="Date Recorded" value={detailRecord.record_type === "patch_note" ? undefined : detailRecordDate} />
-                        <Field label="Date Implemented" value={detailRecord.record_type === "patch_note" ? detailRecord.date_implemented : undefined} />
-                        <Field label="Evidence Confidence" value={detailRecord.record_type === "patch_note" ? undefined : detailRecord.evidence_confidence} />
-                        <Field label="Next Action" value={["observation", "proposal"].includes(detailRecord.record_type) ? detailRecord.next_action : undefined} />
-                        <Field label="Source Platform" value={detailRecord.source_platform} />
-                        <Field label="Source Type" value={detailRecord.source_types?.join("; ")} />
-                        <Field label="Observed System Vendor" value={detailRecord.observed_vendor} />
-                        <Field label="Observed Model / Product" value={detailRecord.observed_product} />
+                        <Field label="First Observed" value={detailRecord.publicDisplay.dates.firstObserved} />
+                        <Field label="Published" value={detailRecord.publicDisplay.dates.published ?? detailRecord.date_recorded} />
+                        <Field label="Last Updated" value={detailRecord.publicDisplay.dates.lastUpdated} />
+                        <Field label="Implemented" value={detailRecord.publicDisplay.dates.implemented} />
+                        <Field label="Relevant Domains" value={detailRecord.publicDisplay.domains.join("; ")} />
+                        <Field label="Relevant System" value={detailRecord.publicDisplay.systems.join("; ") || detailRecord.platform_label} />
+                        <Field label="Repair State" value={detailRecord.publicDisplay.repairState} />
+                        <Field label="Principal Corpus Basis" value={detailRecord.publicDisplay.principalRepair} />
                       </div>
 
-                      <CuratedRecordDetail record={detailRecord} />
+                      {detailReadyForPublicView && detailRecord.record_type !== "patch_note" && <div className="mb-4"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
+
+                      {detailReadyForPublicView && <CuratedRecordDetail record={detailRecord} onNavigateRecord={navigateToRecord} />}
+
+                      {detailReadyForPublicView && detailRecord.record_type === "patch_note" && <div className="mt-4"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
 
                       <details className="mt-4 rounded-lg border border-border bg-background/35 p-3">
                         <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background">Technical JSON</summary>
