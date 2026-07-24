@@ -496,6 +496,15 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
   assert.doesNotMatch(report, /Proposal type.*record\.proposal_type/);
   assert.doesNotMatch(report, /External relevance.*record\.external_relevance/);
+  assert.doesNotMatch(report, /Proposed outcome/);
+  assert.match(report, /chain\.patches\.length > 0/);
+});
+
+test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);
+  assert.match(page, /Verification detail/);
+  assert.doesNotMatch(page, /patchMode \? verification : provision\.currentStatus/);
 });
 
 test("failure repair status projects a clean status and next action from structured data", async () => {

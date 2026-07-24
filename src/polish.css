@@ -109,9 +109,11 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + 
   .report-page > div { display: block !important; }
   .report-cover { break-after: page; }
   .report-step-index { display: none !important; }
-  .report-section { margin-top: 0 !important; break-before: page; break-inside: auto; box-shadow: none !important; }
+  .report-section { margin-top: 0 !important; break-before: page; break-inside: auto !important; page-break-inside: auto !important; box-shadow: none !important; border-radius: 0 !important; background: transparent !important; padding: 0 !important; }
   .report-section:first-of-type { break-before: auto; }
+  .report-section > div:first-child { break-after: avoid; page-break-after: avoid; }
   .report-record { break-inside: avoid; page-break-inside: avoid; }
+  .report-citations { break-inside: auto !important; page-break-inside: auto !important; }
   .report-record a { display: none !important; }
   .report-label { color: #665b4f !important; }
   .report-page footer { break-before: auto; }

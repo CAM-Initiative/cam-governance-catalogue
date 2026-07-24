@@ -561,11 +561,12 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                     const actionKey = provision.action?.toLocaleLowerCase() ?? "";
                     const removesText = actionKey.includes("repeal") || actionKey.includes("remove");
                     const exactRepair = provision.finalWording ?? (removesText ? provision.previousWording : undefined);
-                    const verification = [
+                    const verificationCommentary = [
                       provision.verificationStatus,
                       provision.currentStatus ? `Clause ${titleizeValue(provision.currentStatus)}` : undefined,
                       provision.verifiedAgainst ? `Commit ${provision.verifiedAgainst.slice(0, 8)}` : undefined,
                     ].filter(Boolean).join(" · ");
+                    const verificationMark = provision.complete ? "✓" : "—";
                     const relationship = compactText(provision.relationship);
                     const displayRelationship = relationship && instrumentLabels.includes(relationship.replace(/\s+/g, " ").trim().toLocaleLowerCase())
                       ? undefined
@@ -577,11 +578,11 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                             ["Section", [provision.section, provision.heading].filter(Boolean).join(" — ")],
                             ["Action", corpusActionLabel(provision.action)],
                             [patchMode ? "Implemented" : "Relationship", patchMode ? provision.implementedDate : displayRelationship],
-                            [patchMode ? "Verification" : "Status", patchMode ? verification : provision.currentStatus],
+                            [patchMode ? "Verification" : "Status", patchMode ? verificationMark : provision.currentStatus],
                           ].map(([label, value]) => (
                             <div key={String(label)} className="min-w-0">
                               <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 lg:sr-only">{label}</dt>
-                              <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0"><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
+                              <dd className="mt-0.5 break-words text-[15px] leading-relaxed text-foreground lg:mt-0" title={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined} aria-label={patchMode && label === "Verification" ? verificationCommentary || "No verification commentary recorded." : undefined}><InlineMarkdown text={hasMeaningfulValue(value) ? compactText(value) : "—"} /></dd>
                             </div>
                           ))}
                         </dl>
@@ -595,7 +596,13 @@ function CorpusProvisionCards({ provisions, patchMode = false }: { provisions: C
                                 <span className="text-[9px] text-muted-foreground/70">Show wording</span>
                               </span>
                             </summary>
-                            <blockquote className="mt-3 whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
+                            <div className="mt-3 grid gap-4 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.8fr)] lg:items-start">
+                              <div className="min-w-0">
+                                <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70">Verification detail</p>
+                                <p className="mt-1 whitespace-pre-wrap text-xs leading-relaxed text-muted-foreground">{verificationCommentary || "No verification commentary recorded."}</p>
+                              </div>
+                              <blockquote className="whitespace-pre-wrap border-l-4 border-cam-gold bg-[hsl(40_55%_98%)] px-4 py-2.5 font-serif text-base leading-7 text-foreground"><InlineMarkdown text={exactRepair} /></blockquote>
+                            </div>
                           </details>
                         )}
 
