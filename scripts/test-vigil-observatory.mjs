@@ -484,6 +484,20 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /four-record evidence chain/);
 });
 
+test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+
+  assert.doesNotMatch(report, /report-step-index/);
+  assert.match(report, /function collectCitations/);
+  assert.match(report, /function Citations/);
+  assert.match(report, /Source observations/);
+  assert.doesNotMatch(report, /Affected domains.*record\.affected_domains/);
+  assert.doesNotMatch(report, /Affected parties or interests.*record\.publicDisplay\.failure/);
+  assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
+  assert.doesNotMatch(report, /Proposal type.*record\.proposal_type/);
+  assert.doesNotMatch(report, /External relevance.*record\.external_relevance/);
+});
+
 test("failure repair status projects a clean status and next action from structured data", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
