@@ -537,8 +537,11 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /function DiagnoseStage/);
   assert.match(report, /function RepairStage/);
   assert.match(report, /function LearnStage/);
+  assert.match(report, /function isExternalObservationEvidence/);
+  assert.match(report, /record\.record_type === "research"/);
+  assert.match(report, /observedVendor\.includes\("cam initiative"\)/);
   assert.doesNotMatch(report, /function ReportRecord/);
-  assert.match(report, /four-record evidence chain/);
+  assert.match(report, /primary linked VIGIL records/);
 });
 
 test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
