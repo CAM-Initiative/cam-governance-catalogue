@@ -173,8 +173,9 @@ function projectLeanIndexRecord(record) {
   const projected = Object.fromEntries(
     Object.entries(record).filter(([key]) => !forbiddenIndexPayloadKeys.has(key)),
   );
-  const platform = projectedPlatform(record);
-  const product = projectedProduct(record);
+  const researchRecord = record.record_type === "research";
+  const platform = projectedPlatform(record) ?? (researchRecord ? "VIGIL Research" : undefined);
+  const product = projectedProduct(record) ?? (researchRecord ? "Governance research record" : undefined);
   const publicProjection = publicSearchProjection(record);
 
   if (platform) {
