@@ -616,6 +616,18 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.match(report, /chain\.patches\.length > 0/);
 });
 
+test("generated reports suppress duplicated observation preambles", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+
+  assert.match(report, /function distinctObservationPreamble/);
+  assert.match(report, /normalizedNarrative\(preamble\) === normalizedNarrative\(observed\)/);
+  assert.match(report, /preamble && <p/);
+  assert.match(page, /Generate report →/);
+  assert.match(page, /bg-foreground/);
+  assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
+});
+
 test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);

@@ -78,6 +78,14 @@ function statusTone(label?: string) {
   return "border-border bg-background/60 text-muted-foreground";
 }
 function summary(record: VigilIndexRecord) { return record.publicDisplay.finding || record.summary || "No public finding is currently available for this record."; }
+function normalizedNarrative(value: unknown) {
+  return displayText(value)?.replace(/\s+/g, " ").trim().toLowerCase();
+}
+function distinctObservationPreamble(record: VigilIndexRecord) {
+  const preamble = summary(record);
+  const observed = record.publicDisplay.observation?.observed;
+  return normalizedNarrative(preamble) === normalizedNarrative(observed) ? undefined : preamble;
+}
 function typeLabel(record: VigilIndexRecord) { return record.type_label || record.record_type.replace(/_/g, " "); }
 function isExternalObservationEvidence(record: VigilIndexRecord) {
   // Research is a permitted evidence origin even when it is CAM-authored.
@@ -166,7 +174,10 @@ function RecordLedger({ records, chain, byId }: { records: VigilIndexRecord[]; c
 function ObservationStage({ records, evidenceRecords, citations }: { records: VigilIndexRecord[]; evidenceRecords: VigilIndexRecord[]; citations: Citation[] }) {
   const sourceRecords = evidenceRecords.flatMap(sourceEvidenceFor);
   return <div className="space-y-4">
-    {records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="What was observed" value={record.publicDisplay.observation?.observed} /><Narrative label="Context" value={record.publicDisplay.observation?.context} /><Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} /></div></article>)}
+    {records.map((record) => {
+      const preamble = distinctObservationPreamble(record);
+      return <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} />{preamble && <p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{preamble}</p>}<div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="What was observed" value={record.publicDisplay.observation?.observed} /><Narrative label="Context" value={record.publicDisplay.observation?.context} /><Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} /></div></article>;
+    })}
     {sourceRecords.length ? <article className="report-record report-break-inside-avoid rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/45 p-4"><div className="border-b border-border/60 pb-3"><p className="report-label">Source observations</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">Source records and research clippings attached to the linked chain are treated as observation-level evidence for this report.</p></div><div className="mt-3 space-y-3">{sourceRecords.map((source, index) => { const number = citationNumber(source, citations); return <div key={`${source.title}-${index}`} className="report-break-inside-avoid"><p className="font-serif text-base text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>{(source.publisher || source.date) && <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{source.description}</p>}</div>; })}</div></article> : null}
     {!records.length && !sourceRecords.length && <Incomplete text="Observation or research not yet linked." />}
   </div>;
