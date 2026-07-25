@@ -87,6 +87,7 @@ const searchSummaryNames = [
 
 const blankStrings = new Set(["", "[]", "{}"]);
 const unspecifiedStrings = new Set(["unknown", "not specified", "unspecified", "n/a", "na", "none", "null", "undefined"]);
+const vigilRecordIdPattern = /^VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}$/i;
 
 const canonicalFailureFamilyLabelMap: Record<string, string> = {
   execution: "Execution Failures",
@@ -347,7 +348,7 @@ export function arrayFrom(value: unknown): string[] | undefined {
 function recordFileName(path?: string) {
   if (!path) return undefined;
   const segment = path.split(/[\\/]/).filter(Boolean).pop();
-  return segment?.replace(/\.json$/i, "");
+  return segment?.replace(/\.(?:json|md)$/i, "");
 }
 
 function resolveRecordTitle(record: UnknownRecord, id: string, path?: string, index?: number) {
@@ -503,8 +504,10 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
   const path = getOptionalField(record, ["path", "filename", "file", "file_name", "fileName"]);
   const id = getNestedField(record, ["record_identity.id", "record_identity.record_id", "recordIdentity.id", "recordIdentity.recordId"])
     ?? getOptionalField(record, ["id", "record_id", "recordId", "ID"])
-    ?? recordFileName(path)
-    ?? `VIGIL-${index + 1}`;
+    ?? recordFileName(path);
+  if (!id || !vigilRecordIdPattern.test(id)) {
+    throw new Error(`VIGIL registry entry ${index + 1} does not contain a canonical record ID.`);
+  }
   const source_platform = getNestedField(record, ["source_platform", "source_summary.primary_source_platform", "source_summary.source_platform", "source.platform", "source_records.0.source_platform"]);
   const observed_vendor = resolveObservedVendor(record);
   const observed_product = resolveObservedProduct(record);
@@ -603,5 +606,14 @@ export function normalizeRecords(data: unknown): VigilIndexRecord[] {
         ? data.items
         : [];
 
-  return items.map((item, index) => normalizeVigilRecord(isObject(item) ? item : { summary: item }, index));
+  return items.flatMap((item, index) => {
+    try {
+      return [normalizeVigilRecord(isObject(item) ? item : { summary: item }, index)];
+    } catch {
+      // A registry-backed public view must never invent an identity for a
+      // malformed or incomplete entry. Invalid entries remain absent until
+      // their canonical VIGIL identifier is repaired at source.
+      return [];
+    }
+  });
 }

@@ -63,6 +63,26 @@ test("VIGIL normalization exposes human-readable title and only uses ID as last 
   }
 });
 
+test("VIGIL normalization never fabricates placeholder record identifiers", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeRecords, normalizeVigilRecord } = modules.presentation;
+    const records = normalizeRecords([
+      { summary: "Missing canonical identity" },
+      { id: "VIGIL-1", summary: "Malformed identity" },
+      { id: "VIGIL-2026-FM-0001", record_type: "failure_mode", title: "Canonical record" },
+    ]);
+
+    assert.deepEqual(records.map((record) => record.id), ["VIGIL-2026-FM-0001"]);
+    assert.throws(
+      () => normalizeVigilRecord({ summary: "Missing canonical identity" }),
+      /does not contain a canonical record ID/,
+    );
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL normalization resolves source and platform display fields", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -541,6 +561,7 @@ test("VIGIL detail hierarchy leads with the chain and omits the redundant metada
   assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
   assert.doesNotMatch(page, /title="Linked Records"/);
   assert.doesNotMatch(page, /label: "Source repair status"/);
+  assert.match(page, /md:hidden[^\n]*>↓</);
 });
 
 test("Evidence Chain Report is a dedicated print-friendly route and preserves incomplete stages", async () => {
@@ -550,6 +571,7 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(app, /path="\/observatory\/reports\/:recordId"/);
   assert.match(report, /Print \/ Save as PDF/);
   assert.match(report, /not yet linked/);
+  assert.match(report, /A repair may still be in development/);
   assert.match(report, /Observation \/ Research/);
   assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
   assert.match(report, /function RecordLedger/);
@@ -563,6 +585,19 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /observedVendor\.includes\("cam initiative"\)/);
   assert.doesNotMatch(report, /function ReportRecord/);
   assert.match(report, /primary linked VIGIL records/);
+  assert.match(report, /function reportChainWithKnownRecords/);
+});
+
+test("expanded VIGIL records keep all post-chain detail sections collapsed by default", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const detailStart = page.indexOf("function ObservationDetailView");
+  const detailEnd = page.indexOf("function recordExportText");
+  const detailViews = page.slice(detailStart, detailEnd);
+
+  assert.doesNotMatch(detailViews, /<DetailSection[^>]*\bdefaultOpen/);
+  assert.doesNotMatch(detailViews, /<SummaryBlock[^>]*\bdefaultOpen/);
+  assert.match(page, /Generated evidence-chain reports/);
+  assert.match(page, /The report does not follow contextual links/);
 });
 
 test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
