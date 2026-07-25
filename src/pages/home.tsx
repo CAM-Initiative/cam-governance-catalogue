@@ -261,8 +261,8 @@ function ExploreGovernancePanel() {
               <span className="font-serif text-xl leading-tight text-foreground">{resource.title}</span>
               <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
-            <span className="mt-1.5 block font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold">{resource.subtitle}</span>
-            <span className="mt-2 block text-base leading-snug text-muted-foreground">{resource.purpose}</span>
+            <span className="mt-1.5 block font-mono text-[13px] font-semibold uppercase tracking-[0.1em] text-cam-gold">{resource.subtitle}</span>
+            <span className="mt-2 block text-[17px] leading-relaxed text-muted-foreground">{resource.purpose}</span>
           </a>
         ))}
       </div>
@@ -272,7 +272,7 @@ function ExploreGovernancePanel() {
         <div className="grid gap-2">
           {externalResources.map((resource) => (
             <a
-              className="group flex items-center justify-between gap-3 rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group flex items-center justify-between gap-3 rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-cam-gold transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               href={resource.href}
               key={resource.label}
               rel="noreferrer"
