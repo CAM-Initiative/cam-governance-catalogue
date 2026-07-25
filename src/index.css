@@ -193,6 +193,24 @@ section[aria-labelledby="constitutional-interfaces-heading"] button[aria-pressed
   box-shadow: 0 4px 12px rgba(80, 55, 20, 0.12);
 }
 
+/* Selectable interface cards use the same darker parchment cue across public interfaces. */
+section[aria-labelledby="constitutional-interfaces-heading"] button[aria-pressed="false"]:hover,
+section[aria-labelledby="companion-map-heading"] button[aria-pressed="false"]:hover,
+section[aria-labelledby="relational-runtime-heading"] button[aria-pressed="false"]:hover,
+main:has(#impact-lenses-heading) button[aria-pressed="false"]:hover {
+  background: hsl(38 32% 88%) !important;
+  border-color: hsl(38 62% 40% / 0.62) !important;
+  color: hsl(32 50% 28%) !important;
+}
+
+section[aria-labelledby="companion-map-heading"] button[aria-pressed="true"],
+section[aria-labelledby="relational-runtime-heading"] button[aria-pressed="true"],
+main:has(#impact-lenses-heading) button[aria-pressed="true"] {
+  background: hsl(38 34% 82%) !important;
+  border-color: hsl(38 62% 40% / 0.75) !important;
+  color: hsl(32 62% 25%) !important;
+}
+
 /* The substrate apex is intentionally label-light so its title remains legible. */
 section[aria-labelledby="governance-stack-heading"] .overflow-x-auto button:first-child > span > span:first-child {
   display: none;
