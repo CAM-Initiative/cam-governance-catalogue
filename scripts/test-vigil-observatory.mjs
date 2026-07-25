@@ -628,6 +628,31 @@ test("generated reports suppress duplicated observation preambles", async () => 
   assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
 });
 
+test("public interface legibility pass standardises VIGIL typography, controls, and type labels", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const home = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
+  const indexCss = await readFile(resolve(repoRoot, "src/index.css"), "utf8");
+  const polishCss = await readFile(resolve(repoRoot, "src/polish.css"), "utf8");
+
+  assert.match(page, /className="vigil-about-panel/);
+  assert.match(page, /className="vigil-detail-surface/);
+  assert.match(page, /\{index \+ 1\}\. \{step\.label\}/);
+  assert.match(page, /cam-parchment-card rounded-lg border/);
+  assert.match(page, /failure_mode: "Failure Mode"/);
+  assert.match(page, /patch_note: "Patch"/);
+  assert.match(page, /border-rose-300 bg-rose-50/);
+  assert.match(page, /border-blue-300 bg-blue-50/);
+  assert.match(page, /border-violet-300 bg-violet-50/);
+  assert.match(page, /border-emerald-300 bg-emerald-50/);
+  assert.match(page, /bg-\[hsl\(38_34%_82%\)\].*Generate report/);
+  assert.doesNotMatch(page, /bg-foreground[^"]*">Generate report/);
+  assert.match(home, /text-\[17px\] leading-relaxed/);
+  assert.match(home, /font-mono text-sm font-semibold uppercase/);
+  assert.match(indexCss, /button\[aria-pressed="false"\]:hover/);
+  assert.match(polishCss, /\.vigil-detail-surface p:not/);
+  assert.match(polishCss, /font-size: 1rem !important/);
+});
+
 test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);
