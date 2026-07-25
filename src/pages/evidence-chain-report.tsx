@@ -199,25 +199,26 @@ export default function EvidenceChainReport() {
         const indexById = new Map(indexRecords.map((record) => [record.id, record]));
         const sourceIndexRecord = indexById.get(sourceId);
         if (!sourceIndexRecord) throw new Error(`The VIGIL registry does not contain ${sourceId}.`);
-        const details = new Map<string, VigilIndexRecord>();
-        const pending = [sourceIndexRecord];
-        const chain: RecordChain = { observations: [], failureModes: [], proposals: [], patches: [] };
-        while (pending.length) {
-          const indexRecord = pending.shift()!;
-          if (details.has(indexRecord.id)) continue;
+        let sourceRecord = sourceIndexRecord;
+        try { sourceRecord = normalizeVigilRecord(await loadVigilRecordDetail(sourceIndexRecord.raw)); } catch { /* index projection remains useful */ }
+        const chain: RecordChain = {
+          observations: [...sourceRecord.publicDisplay.chain.observations],
+          failureModes: [...sourceRecord.publicDisplay.chain.failureModes],
+          proposals: [...sourceRecord.publicDisplay.chain.proposals],
+          patches: [...sourceRecord.publicDisplay.chain.patches],
+        };
+        if (!chainIds(chain).includes(sourceId)) {
+          const targetKey = sourceRecord.record_type === "observation" || sourceRecord.record_type === "research" ? "observations" : sourceRecord.record_type === "failure_mode" ? "failureModes" : sourceRecord.record_type === "proposal" ? "proposals" : "patches";
+          chain[targetKey].unshift(sourceId);
+        }
+        const details = new Map<string, VigilIndexRecord>([[sourceRecord.id, sourceRecord]]);
+        await Promise.all(chainIds(chain).filter((id) => id !== sourceRecord.id).map(async (id) => {
+          const indexRecord = indexById.get(id);
+          if (!indexRecord) return;
           let record = indexRecord;
           try { record = normalizeVigilRecord(await loadVigilRecordDetail(indexRecord.raw)); } catch { /* index projection remains useful */ }
           details.set(record.id, record);
-          for (const stage of chainStages) for (const id of record.publicDisplay.chain[stage.key]) {
-            if (!chain[stage.key].includes(id)) chain[stage.key].push(id);
-            const linked = indexById.get(id);
-            if (linked && !details.has(id)) pending.push(linked);
-          }
-        }
-        if (!chainIds(chain).includes(sourceId)) {
-          const targetKey = sourceIndexRecord.record_type === "observation" ? "observations" : sourceIndexRecord.record_type === "failure_mode" ? "failureModes" : sourceIndexRecord.record_type === "proposal" ? "proposals" : "patches";
-          chain[targetKey].unshift(sourceId);
-        }
+        }));
         if (!cancelled) setState({ status: "ready", records: [...details.values()], chain, sourceId });
       } catch (error) { if (!cancelled) setState({ status: "error", message: error instanceof Error ? error.message : "The evidence chain report could not be loaded." }); }
     }
