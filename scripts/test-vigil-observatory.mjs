@@ -101,6 +101,41 @@ test("VIGIL normalization resolves source and platform display fields", async ()
   }
 });
 
+test("authoritative proposal chains include research and the declared failure, not contextual workstreams", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-PROP-0019",
+      record_type: "proposal",
+      linked_records: {
+        research: ["VIGIL-2026-RESEARCH-0002"],
+        related_failure_modes: ["VIGIL-2026-FM-0047"],
+        related_proposals: ["VIGIL-2026-PROP-0017"],
+        contextual_relations: [{
+          record_id: "VIGIL-2026-PROP-0017",
+          relationship: "separate-workstream",
+          chain_inclusion: false,
+          rationale: "This workstream is adjacent but not a red-team repair.",
+        }],
+      },
+      repair_scope: {
+        primary_failure_mode: "VIGIL-2026-FM-0047",
+        additional_resolved_failure_modes: [],
+        multi_failure_mode_exception: false,
+        exception_rationale: null,
+      },
+    });
+
+    assert.deepEqual(record.publicDisplay.chain.observations, ["VIGIL-2026-RESEARCH-0002"]);
+    assert.deepEqual(record.publicDisplay.chain.failureModes, ["VIGIL-2026-FM-0047"]);
+    assert.deepEqual(record.publicDisplay.chain.proposals, ["VIGIL-2026-PROP-0019"]);
+    assert.deepEqual(record.publicDisplay.chain.patches, []);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("collapsed VIGIL row omits record-file link while keeping readable public fields", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
@@ -506,6 +541,8 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /function LearnStage/);
   assert.doesNotMatch(report, /function ReportRecord/);
   assert.match(report, /four-record evidence chain/);
+  assert.doesNotMatch(report, /while \(pending\.length\)/);
+  assert.match(report, /sourceRecord\.publicDisplay\.chain/);
 });
 
 test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
