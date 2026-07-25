@@ -217,6 +217,27 @@ test("VIGIL detail loader parses Markdown research records as front matter plus 
   }
 });
 
+test("VIGIL detail loader preserves JSON front matter used by canonical research artefacts", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    const detail = await loadVigilRecordDetail({ raw_url: "https://example.test/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md" }, async () => ({
+      ok: true,
+      text: async () => `---\n{\n  "id": "VIGIL-2026-RESEARCH-0002",\n  "record_type": "research",\n  "title": "Red-team governance research",\n  "summary": "A concise public research summary.",\n  "domains": ["ETHICS", "SECURITY"],\n  "linked_records": { "related_proposals": ["VIGIL-2026-PROP-0019"] }\n}\n---\n\n# Research finding\n\nThe canonical Markdown body remains available for public reading.`,
+      json: async () => { throw new Error("Markdown must not be parsed as JSON response data"); },
+    }));
+
+    assert.equal(detail.id, "VIGIL-2026-RESEARCH-0002");
+    assert.equal(detail.record_type, "research");
+    assert.equal(detail.summary, "A concise public research summary.");
+    assert.deepEqual(detail.domains, ["ETHICS", "SECURITY"]);
+    assert.deepEqual(detail.linked_records, { related_proposals: ["VIGIL-2026-PROP-0019"] });
+    assert.match(detail._canonical_markdown_body, /# Research finding\n\nThe canonical Markdown body/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL detail loader derives canonical raw URL from path", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {

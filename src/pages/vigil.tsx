@@ -1031,14 +1031,22 @@ function GenericDetailView({ record }: { record: VigilIndexRecord }) {
 
 function ResearchDetailView({ record }: { record: VigilIndexRecord }) {
   const body = typeof record.raw._canonical_markdown_body === "string" ? record.raw._canonical_markdown_body : undefined;
+  const researchBrief = valuesForKeys(record.raw, ["summary", "governance_purpose"]);
+  const researchMetadata = valuesForKeys(record.raw, ["date_recorded", "record_state", "status", "research_method", "evidence_confidence", "domains"]);
   const metadata = Object.entries(record.raw)
     .filter(([key, value]) => !key.startsWith("_") && key !== "path" && key !== "raw_url" && key !== "github_blob_url" && hasMeaningfulValue(value))
-    .filter(([key]) => !["id", "title", "record_type", "summary"].includes(key));
+    .filter(([key]) => !["id", "title", "record_type", "summary", "governance_purpose", "date_recorded", "record_state", "status", "research_method", "evidence_confidence", "domains", "linked_records"].includes(key));
 
   return (
     <div className="space-y-4">
+      <DetailSection title="Research brief" defaultOpen show={researchBrief.length > 0}>
+        <ParagraphFields entries={researchBrief} />
+      </DetailSection>
+      <DetailSection title="Research metadata" defaultOpen show={researchMetadata.length > 0}>
+        <FieldGrid entries={researchMetadata} />
+      </DetailSection>
       {metadata.length > 0 && (
-        <DetailSection title="Research record metadata" defaultOpen={false}>
+        <DetailSection title="Additional research metadata" defaultOpen={false}>
           <FieldGrid entries={metadata.map(([key, value]) => ({ key, label: humanLabel(key), value: textFrom(value) })).filter((entry) => hasMeaningfulValue(entry.value))} />
         </DetailSection>
       )}

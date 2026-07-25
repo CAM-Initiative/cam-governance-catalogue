@@ -196,7 +196,11 @@ function StepSection({ number, label, description, children }: { number: string;
 
 export default function EvidenceChainReport() {
   const [, params] = useRoute("/observatory/reports/:recordId");
-  const sourceId = decodeURIComponent(params?.recordId ?? "");
+  // Older Observatory pages could pass a Markdown filename after the research
+  // detail loader lost the front-matter ID. Treat that legacy route as the
+  // canonical VIGIL ID rather than asking the registry for a non-existent .md
+  // record identifier.
+  const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<ReportState>({ status: "loading" });
 
   useEffect(() => {

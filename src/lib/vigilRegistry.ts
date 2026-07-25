@@ -63,33 +63,50 @@ function parseResearchMarkdown(source: string): UnknownRecord {
   const end = lines.findIndex((line, index) => index > 0 && /^(---|\.\.\.)\s*$/.test(line.trim()));
   if (end < 0) return { _canonical_format: "markdown", _canonical_markdown_body: source };
 
-  const metadata: UnknownRecord = {};
-  let pendingListKey: string | undefined;
-  for (const line of lines.slice(1, end)) {
-    if (!line.trim() || line.trim().startsWith("#")) continue;
-    const listItem = line.match(/^\s*-\s+(.*)$/);
-    if (listItem && pendingListKey) {
-      const existing = Array.isArray(metadata[pendingListKey]) ? metadata[pendingListKey] as unknown[] : [];
-      existing.push(parseYamlScalar(listItem[1]));
-      metadata[pendingListKey] = existing;
-      continue;
+  const frontMatter = lines.slice(1, end).join("\n").trim();
+  let metadata: UnknownRecord = {};
+
+  // VIGIL research artefacts deliberately preserve their structured metadata as
+  // JSON inside Markdown front matter. Support that canonical form first, then
+  // retain the small YAML fallback for future hand-authored research records.
+  if (frontMatter.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(frontMatter) as unknown;
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) metadata = parsed as UnknownRecord;
+    } catch {
+      // Fall through to the conservative YAML parser below. The canonical body
+      // remains readable even if a future record has malformed front matter.
     }
-    const entry = line.match(/^\s*([A-Za-z0-9_.-]+):\s*(.*)$/);
-    if (!entry) continue;
-    const [, key, rawValue] = entry;
-    if (rawValue.trim()) {
-      metadata[key] = parseYamlScalar(rawValue);
-      pendingListKey = undefined;
-    } else {
-      metadata[key] = [];
-      pendingListKey = key;
+  }
+
+  if (!Object.keys(metadata).length) {
+    let pendingListKey: string | undefined;
+    for (const line of lines.slice(1, end)) {
+      if (!line.trim() || line.trim().startsWith("#")) continue;
+      const listItem = line.match(/^\s*-\s+(.*)$/);
+      if (listItem && pendingListKey) {
+        const existing = Array.isArray(metadata[pendingListKey]) ? metadata[pendingListKey] as unknown[] : [];
+        existing.push(parseYamlScalar(listItem[1]));
+        metadata[pendingListKey] = existing;
+        continue;
+      }
+      const entry = line.match(/^\s*([A-Za-z0-9_.-]+):\s*(.*)$/);
+      if (!entry) continue;
+      const [, key, rawValue] = entry;
+      if (rawValue.trim()) {
+        metadata[key] = parseYamlScalar(rawValue);
+        pendingListKey = undefined;
+      } else {
+        metadata[key] = [];
+        pendingListKey = key;
+      }
     }
   }
 
   return {
     ...metadata,
     _canonical_format: "markdown",
-    _canonical_markdown_body: lines.slice(end + 1).join("\\n").replace(/^\s+|\s+$/g, ""),
+    _canonical_markdown_body: lines.slice(end + 1).join("\n").replace(/^\s+|\s+$/g, ""),
   };
 }
 
