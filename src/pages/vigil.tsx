@@ -729,7 +729,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
-        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-primary/35 bg-primary/10 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.11em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25">Generate report →</a>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-[hsl(42_62%_50%)] bg-[hsl(146_35%_24%)] px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[hsl(42_58%_96%)] shadow-[0_4px_12px_hsl(146_35%_18%_/_0.28)] transition hover:bg-[hsl(146_35%_19%)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[hsl(42_62%_50%_/_0.7)] focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
       </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
