@@ -94,6 +94,21 @@ aside[aria-label="Explore AI governance"] > div:last-child a:hover {
   border-color: hsl(var(--cam-gold) / 0.6);
 }
 
+/* VIGIL reserves compact mono typography for labels; explanatory copy stays readable. */
+.vigil-about-panel p:not([class*="font-mono"]),
+.vigil-detail-surface p:not([class*="font-mono"]),
+.vigil-detail-surface li,
+.vigil-detail-surface dd,
+.vigil-detail-surface blockquote {
+  font-size: 1rem !important;
+  line-height: 1.65 !important;
+}
+
+/* Keep the collapsed record scale explicit so future polish layers do not shrink it again. */
+.vigil-record-card:not(:has(.vigil-detail-surface)) {
+  font-size: 1rem;
+}
+
 /* Keep all six VIGIL evidence-to-repair step cards and connectors aligned. */
 section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article {
   height: 13.5rem;

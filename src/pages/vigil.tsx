@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
-import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, recordTypeBadge, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch, type CorpusProvision, type RecordChain } from "@/lib/vigilPublicDisplay";
 
 const VIGIL_PAGE_SIZE = 20;
@@ -269,6 +269,30 @@ function lifecycleTone(label?: string) {
     return "border-violet-300 bg-violet-50 text-violet-900";
   }
   return "border-border bg-background/60 text-muted-foreground";
+}
+
+function recordTypeLabel(recordType?: string) {
+  const key = String(recordType ?? "").trim().toLocaleLowerCase().replace(/[\s-]+/g, "_");
+  const labels: Record<string, string> = {
+    failure_mode: "Failure Mode",
+    observation: "Observation",
+    proposal: "Proposal",
+    patch: "Patch",
+    patch_note: "Patch",
+    research: "Research",
+    source: "Source",
+  };
+  return labels[key] ?? titleizeValue(recordType);
+}
+
+function recordTypeTone(recordType?: string) {
+  const key = String(recordType ?? "").trim().toLocaleLowerCase().replace(/[\s-]+/g, "_");
+  if (key === "failure_mode") return "border-rose-300 bg-rose-50 text-rose-900";
+  if (key === "observation") return "border-blue-300 bg-blue-50 text-blue-900";
+  if (key === "proposal") return "border-violet-300 bg-violet-50 text-violet-900";
+  if (key === "patch" || key === "patch_note") return "border-emerald-300 bg-emerald-50 text-emerald-900";
+  if (key === "research" || key === "source") return "border-amber-300 bg-amber-50 text-amber-950";
+  return "border-border bg-card text-muted-foreground";
 }
 
 const chipTones = [
@@ -729,7 +753,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
-        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/55 bg-foreground px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[hsl(38_40%_95%)] shadow-sm transition hover:border-cam-gold/75 hover:bg-[hsl(28_25%_12%)] hover:text-white focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/70 bg-[hsl(38_34%_82%)] px-3 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-[hsl(32_62%_25%)] shadow-sm transition hover:border-cam-gold/85 hover:bg-[hsl(38_34%_76%)] hover:text-[hsl(32_62%_20%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
       </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
@@ -1369,7 +1393,7 @@ export default function Vigil() {
           </p>
         </div>
 
-        <details className="group cam-parchment-card mb-5 rounded-xl p-3 text-sm shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
+        <details className="vigil-about-panel group cam-parchment-card mb-5 rounded-xl p-4 text-base shadow-sm transition hover:border-primary/30 hover:bg-[hsl(36_48%_96%)]">
           <summary className="cursor-pointer list-none font-mono text-xs uppercase tracking-[0.18em] text-cam-gold focus:outline-none focus:ring-2 focus:ring-primary/20 focus:ring-offset-2 focus:ring-offset-background [&::-webkit-details-marker]:hidden">
             <span className="inline-flex w-full items-center gap-3">
               <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
@@ -1385,7 +1409,7 @@ export default function Vigil() {
 
             <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
               <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Generated evidence-chain reports</p>
-              <p className="text-xs leading-relaxed md:text-sm">Use <strong className="text-foreground">Generate report</strong> on an expanded record to create a standalone, deterministic account of its declared primary chain: observation or research, failure mode, proposal, and PATCH. The report does not follow contextual links. A report may remain incomplete where a proposal or PATCH is still in development.</p>
+              <p className="text-base leading-relaxed">Use <strong className="text-foreground">Generate report</strong> on an expanded record to create a standalone, deterministic account of its declared primary chain: observation or research, failure mode, proposal, and PATCH. The report does not follow contextual links. A report may remain incomplete where a proposal or PATCH is still in development.</p>
             </div>
 
             <div>
@@ -1393,9 +1417,9 @@ export default function Vigil() {
               <div className="grid gap-2 lg:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] lg:items-stretch">
                 {evidenceRepairSteps.map((step, index) => (
                   <div className="contents" key={step.label}>
-                    <div className="rounded-lg border border-border bg-background/35 p-3">
-                      <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">{step.label}</p>
-                      <p className="text-xs leading-relaxed md:text-sm">{step.text}</p>
+                    <div className="cam-parchment-card rounded-lg border border-[hsl(38_30%_78%)] p-3">
+                      <p className="mb-1 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">{index + 1}. {step.label}</p>
+                      <p className="text-base leading-relaxed">{step.text}</p>
                     </div>
                     {index < evidenceRepairSteps.length - 1 && (
                       <div className="flex items-center justify-center text-cam-gold/75" aria-hidden="true">
@@ -1413,23 +1437,23 @@ export default function Vigil() {
               <div className="grid gap-2 md:grid-cols-2">
                 <div className="rounded-lg border border-border bg-background/35 p-3">
                   <p className="font-medium text-foreground">Observation — what was seen.</p>
-                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A source-linked record of an observed AI-system behaviour, platform signal, governance gap, or emerging digital ecosystem event.</p>
+                  <p className="mt-1 text-base leading-relaxed">A source-linked record of an observed AI-system behaviour, platform signal, governance gap, or emerging digital ecosystem event.</p>
                 </div>
                 <div className="rounded-lg border border-border bg-background/35 p-3">
                   <p className="font-medium text-foreground">Failure Mode — the pattern.</p>
-                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A structured classification of a recurring, significant, or governance-relevant failure pattern.</p>
+                  <p className="mt-1 text-base leading-relaxed">A structured classification of a recurring, significant, or governance-relevant failure pattern.</p>
                 </div>
                 <div className="rounded-lg border border-border bg-background/35 p-3">
                   <p className="font-medium text-foreground">Proposal — what might change.</p>
-                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A candidate governance, schema, taxonomy, interface, operational, or doctrinal change. Proposals are exploratory unless implemented by a patch note.</p>
+                  <p className="mt-1 text-base leading-relaxed">A candidate governance, schema, taxonomy, interface, operational, or doctrinal change. Proposals are exploratory unless implemented by a patch note.</p>
                 </div>
                 <div className="rounded-lg border border-border bg-background/35 p-3">
                   <p className="font-medium text-foreground">Patch Note — what changed.</p>
-                  <p className="mt-1 text-xs leading-relaxed md:text-sm">A traceable record of the exact implemented corpus repair—or an explicit declaration that no CAELESTIS text changed.</p>
+                  <p className="mt-1 text-base leading-relaxed">A traceable record of the exact implemented corpus repair—or an explicit declaration that no CAELESTIS text changed.</p>
                 </div>
                 <div className="rounded-lg border border-border bg-background/35 p-3 md:col-span-2">
                   <p className="font-medium text-foreground">Source / Research — supporting context.</p>
-                  <p className="mt-1 text-xs leading-relaxed md:text-sm">Research notes, source records, or supporting evidence that may inform observations, proposals, or future governance work.</p>
+                  <p className="mt-1 text-base leading-relaxed">Research notes, source records, or supporting evidence that may inform observations, proposals, or future governance work.</p>
                 </div>
               </div>
             </div>
@@ -1437,11 +1461,11 @@ export default function Vigil() {
             <div className="grid gap-2 md:grid-cols-2">
               <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
                 <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Lifecycle note</p>
-                <p className="text-xs leading-relaxed md:text-sm">Records may move from observation to failure mode, proposal, patch note, monitoring, closed—actioned, closed—no action, deferred, or superseded states. Not every observation becomes a proposal, and not every failure mode requires a new instrument.</p>
+                <p className="text-base leading-relaxed">Records may move from observation to failure mode, proposal, patch note, monitoring, closed—actioned, closed—no action, deferred, or superseded states. Not every observation becomes a proposal, and not every failure mode requires a new instrument.</p>
               </div>
               <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
                 <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">What VIGIL is not</p>
-                <p className="text-xs leading-relaxed md:text-sm">VIGIL is not a regulator, legal determination system, safety certification body, or final incident adjudication authority. Records are governance artefacts intended to support analysis, review, and repair.</p>
+                <p className="text-base leading-relaxed">VIGIL is not a regulator, legal determination system, safety certification body, or final incident adjudication authority. Records are governance artefacts intended to support analysis, review, and repair.</p>
               </div>
             </div>
           </div>
@@ -1689,14 +1713,14 @@ export default function Vigil() {
               const domainLabel = record.publicDisplay.domains.join("; ");
               const publicLifecycle = record.publicDisplay.lifecycleLabel ?? record.record_state;
               return (
-                <article id={`vigil-record-${record.id.replace(/[^A-Za-z0-9_-]/g, "-")}`} key={recordKey} className="group cam-parchment-card scroll-mt-6 rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
+                <article id={`vigil-record-${record.id.replace(/[^A-Za-z0-9_-]/g, "-")}`} key={recordKey} className="vigil-record-card group cam-parchment-card scroll-mt-6 rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
                   {!isExpanded && (
                     <div
                       role="button"
                       tabIndex={0}
                       aria-expanded={isExpanded}
                       aria-controls={detailsPanelId}
-                      className="cursor-pointer px-3 py-2.5 text-sm transition md:px-4"
+                      className="cursor-pointer px-4 py-3.5 text-base transition md:px-5 md:py-4"
                       onClick={() => toggleExpandedRecord(record, recordKey)}
                       onKeyDown={(event) => handleRecordRowKeyDown(event, record, recordKey)}
                     >
@@ -1705,7 +1729,7 @@ export default function Vigil() {
                           <div className="flex items-start justify-between gap-3">
                             <div>
                               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/70">Record ID</p>
-                              <p className="mt-1 break-words font-mono text-xs text-cam-gold">{displayRecordId}</p>
+                              <p className="mt-1 break-words font-mono text-sm text-cam-gold">{displayRecordId}</p>
                             </div>
                             <span className="shrink-0 rounded-full border border-border bg-card px-2 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                               {isExpanded ? "Collapse" : "Expand"}
@@ -1718,7 +1742,7 @@ export default function Vigil() {
                           </div>
 
                           <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
-                            <Field label="Record Type" value={record.type_label} />
+                            <Field label="Record Type" value={recordTypeLabel(record.record_type)} />
                             <Field label="Lifecycle Status" value={publicLifecycle} />
                             <Field label="Record Date" value={recordDate} />
                             <Field label="Domain / System" value={domainLabel || record.platform_label} />
@@ -1736,14 +1760,14 @@ export default function Vigil() {
                         </div>
 
                         <div className="hidden gap-3 md:grid md:grid-cols-[8rem_7rem_minmax(0,1fr)_9rem] md:items-start">
-                          <div className="break-words font-mono text-xs leading-snug text-cam-gold">{displayRecordId}</div>
-                          <div className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground/80">{recordDate}</div>
+                          <div className="break-words font-mono text-sm leading-snug text-cam-gold">{displayRecordId}</div>
+                          <div className="font-mono text-sm uppercase tracking-[0.08em] text-muted-foreground/80">{recordDate}</div>
                           <div className="min-w-0">
                             <h2 className="whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
-                            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
-                              {[record.type_label, record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
+                            <p className="mt-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                              {[recordTypeLabel(record.record_type), record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
                             </p>
-                            {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
+                            {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-2 line-clamp-2 text-base leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
                             {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[10px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
                           <div className="flex flex-col items-end gap-1.5 text-right">
@@ -1755,14 +1779,15 @@ export default function Vigil() {
                   )}
 
                   {isExpanded && (
-                    <div id={detailsPanelId} className="px-3 py-4 md:px-4">
+                    <div id={detailsPanelId} className="vigil-detail-surface px-4 py-5 md:px-5">
                       <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
                         <div className="min-w-0">
                           <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
                           <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
                           <div className="mt-3 flex flex-wrap gap-2">
-                            {[detailRecord.type_label, detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
-                              <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] ${badgeIndex === 1 ? lifecycleTone(String(value)) : "border-border bg-card text-muted-foreground"}`}>{value}</span>
+                            <span className={`rounded-full border px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.08em] ${recordTypeTone(detailRecord.record_type)}`}>{recordTypeLabel(detailRecord.record_type)}</span>
+                            {[detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
+                              <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] ${badgeIndex === 0 ? lifecycleTone(String(value)) : "border-border bg-card text-muted-foreground"}`}>{value}</span>
                             ))}
                           </div>
                         </div>
