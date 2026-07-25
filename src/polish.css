@@ -104,6 +104,7 @@ aside[aria-label="Explore AI governance"] > div:last-child a:hover {
   line-height: 1.65 !important;
 }
 
+/* Keep the collapsed record scale explicit so future polish layers do not shrink it again. */
 .vigil-record-card:not(:has(.vigil-detail-surface)) {
   font-size: 1rem;
 }
