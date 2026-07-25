@@ -86,7 +86,7 @@ export type PublicRecordDisplay = {
   searchTokens: string[];
 };
 
-const VIGIL_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH)-\d+/gi;
+const VIGIL_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d+/gi;
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -202,7 +202,7 @@ function addRecordIds(target: string[], value: unknown) {
 
 function distributeRecordIds(chain: RecordChain, ids: string[]) {
   for (const id of ids) {
-    if (/-OBS-/i.test(id)) chain.observations.push(id);
+    if (/-OBS-|\-RESEARCH-/i.test(id)) chain.observations.push(id);
     else if (/-FM-/i.test(id)) chain.failureModes.push(id);
     else if (/-PROP-/i.test(id)) chain.proposals.push(id);
     else if (/-PATCH-/i.test(id)) chain.patches.push(id);
@@ -211,28 +211,33 @@ function distributeRecordIds(chain: RecordChain, ids: string[]) {
 
 function deriveRecordChain(record: UnknownRecord, recordType: string, id: string): RecordChain {
   const chain: RecordChain = { observations: [], failureModes: [], proposals: [], patches: [] };
-  const linkedSources = [
-    record,
-    record.linked_records,
-    record.record_chain,
-    valueAt(record, "public_display.record_chain"),
-  ].filter(isObject);
+  const linked = isObject(record.linked_records) ? record.linked_records : {};
+  const repairScope = isObject(record.repair_scope) ? record.repair_scope : undefined;
 
-  for (const linked of linkedSources) {
-    for (const key of ["related_observations", "source_observations", "observations"]) addRecordIds(chain.observations, linked[key]);
-    for (const key of ["related_failure_modes", "linked_failure_modes", "failure_modes", "target_failure_record"]) addRecordIds(chain.failureModes, linked[key]);
-    for (const key of ["related_proposals", "linked_proposals", "proposals"]) addRecordIds(chain.proposals, linked[key]);
-    for (const key of ["related_patch_notes", "related_patches", "resulting_patches", "patches"]) addRecordIds(chain.patches, linked[key]);
+  // Research and observations are evidence origins. Typed contextual relations
+  // are deliberately excluded from the authoritative chain.
+  for (const key of ["related_observations", "source_observations", "observations", "research"]) {
+    addRecordIds(chain.observations, linked[key]);
   }
 
-  distributeRecordIds(chain, recordIdsFrom(firstValue(record, [
-    "predecessor_records",
-    "linked_records.predecessor_records",
-    "linked_records.potential_child_records",
-    "linked_records.potential_patch_records",
-  ])));
+  // The explicit repair scope supersedes legacy related-failure links. The
+  // compatibility path keeps older unmigrated records readable without letting
+  // contextual relations become repair assertions.
+  if (repairScope) {
+    addRecordIds(chain.failureModes, repairScope.primary_failure_mode);
+    addRecordIds(chain.failureModes, repairScope.additional_resolved_failure_modes);
+  } else {
+    for (const key of ["related_failure_modes", "linked_failure_modes", "failure_modes", "target_failure_record"]) {
+      addRecordIds(chain.failureModes, linked[key]);
+    }
+  }
 
-  if (recordType === "observation") chain.observations.push(id);
+  if (recordType !== "proposal") {
+    for (const key of ["related_proposals", "linked_proposals", "proposals"]) addRecordIds(chain.proposals, linked[key]);
+  }
+  for (const key of ["related_patch_notes", "related_patches", "resulting_patches", "patches"]) addRecordIds(chain.patches, linked[key]);
+
+  if (recordType === "observation" || recordType === "research") chain.observations.push(id);
   if (recordType === "failure_mode") chain.failureModes.push(id);
   if (recordType === "proposal") chain.proposals.push(id);
   if (recordType === "patch_note" || recordType === "patch") chain.patches.push(id);

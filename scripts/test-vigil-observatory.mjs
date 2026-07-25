@@ -101,6 +101,39 @@ test("VIGIL normalization resolves source and platform display fields", async ()
   }
 });
 
+test("red-team proposal uses its declared chain and excludes contextual records", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const proposal = normalizeVigilRecord({
+      id: "VIGIL-2026-PROP-0019",
+      record_type: "proposal",
+      linked_records: {
+        related_failure_modes: ["VIGIL-2026-FM-0047"],
+        related_proposals: ["VIGIL-2026-PROP-0017"],
+        research: ["VIGIL-2026-RESEARCH-0002"],
+        contextual_relations: [
+          { record_id: "VIGIL-2026-FM-0002", relationship: "adjacent-control-problem", chain_inclusion: false },
+          { record_id: "VIGIL-2026-FM-0044", relationship: "supporting-mechanism", chain_inclusion: false },
+        ],
+      },
+      repair_scope: {
+        primary_failure_mode: "VIGIL-2026-FM-0047",
+        additional_resolved_failure_modes: [],
+      },
+    });
+
+    assert.deepEqual(proposal.publicDisplay.chain, {
+      observations: ["VIGIL-2026-RESEARCH-0002"],
+      failureModes: ["VIGIL-2026-FM-0047"],
+      proposals: ["VIGIL-2026-PROP-0019"],
+      patches: [],
+    });
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("collapsed VIGIL row omits record-file link while keeping readable public fields", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
