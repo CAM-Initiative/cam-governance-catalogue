@@ -246,7 +246,7 @@ function ExploreGovernancePanel() {
       transition={{ duration: 0.7, delay: 0.1 }}
     >
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
-        <p className="font-mono text-sm font-semibold uppercase tracking-[0.18em] text-cam-gold">Explore AI Governance</p>
+        <p className="font-mono text-base font-semibold uppercase tracking-[0.16em] text-cam-gold">Explore AI Governance</p>
         <span className="h-2 w-2 rounded-full bg-cam-gold/80" aria-hidden="true" />
       </div>
 
@@ -261,14 +261,14 @@ function ExploreGovernancePanel() {
               <span className="font-serif text-xl leading-tight text-foreground">{resource.title}</span>
               <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
-            <span className="mt-1.5 block font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-cam-gold">{resource.subtitle}</span>
-            <span className="mt-2 block text-sm leading-snug text-muted-foreground">{resource.purpose}</span>
+            <span className="mt-1.5 block font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold">{resource.subtitle}</span>
+            <span className="mt-2 block text-base leading-snug text-muted-foreground">{resource.purpose}</span>
           </a>
         ))}
       </div>
 
       <div className="mt-4 border-t border-cam-gold/25 pt-3">
-        <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground/55">External tools</p>
+        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-foreground/55">External tools</p>
         <div className="grid gap-2">
           {externalResources.map((resource) => (
             <a
