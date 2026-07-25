@@ -11,11 +11,11 @@
   "registry_count": 5,
   "record_count": {
     "failure_modes": 47,
-    "observations": 15,
-    "proposals": 19,
+    "observations": 16,
+    "proposals": 20,
     "patch_notes": 23,
     "research": 2,
-    "total": 106
+    "total": 108
   },
   "registries": {
     "failure_modes": {
@@ -28,13 +28,13 @@
       "path": "vigil/VIGIL.Observations.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Observations.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Observations.Index.json",
-      "record_count": 15
+      "record_count": 16
     },
     "proposals": {
       "path": "vigil/VIGIL.Proposals.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Proposals.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Proposals.Index.json",
-      "record_count": 19
+      "record_count": 20
     },
     "patch_notes": {
       "path": "vigil/VIGIL.PatchNotes.Index.json",
@@ -4190,6 +4190,60 @@
       "observed_vendor": "Other",
       "observed_product": "undisclosed healthcare administrative technology",
       "public_finding": "A healthcare labour dispute raises an unresolved governance question about whether AI-enabled workflow redesign displaced twelve utilization-review nurses after contractual AI safeguards had reportedly been negotiated. The union characterises the layoffs as replacement by AI and a contractual breach; Montefiore disputes that account and describes the technology changes as a nonclinical paperwork program."
+    },
+    {
+      "id": "VIGIL-2026-OBS-0018",
+      "record_type": "observation",
+      "record_state": "monitoring",
+      "date_recorded": "2026-07-25",
+      "title": "China regulates anthropomorphic AI interaction as a runtime relationship",
+      "summary": "China's 2026 Interim Measures for AI Anthropomorphic Interaction Services create a dedicated regulatory category for public-facing systems that simulate human personality, thinking patterns, and communication styles through sustained emotional interaction. The measures signal a field-level shift from governing model outputs alone toward governing the runtime relationship, including dependency, manipulation, minors, crisis response, data practices, exit, and safety assessment. They also adopt a fixed two-hour duration reminder that may not distinguish companion use from teaching, mentoring, professional, creative, accessibility, or integrated multi-interface use.",
+      "evidence_confidence": "verified regulatory instrument; implementation effects not yet established",
+      "source_types": [
+        "official-source"
+      ],
+      "source_count": 1,
+      "primary_source_title": "人工智能拟人化互动服务管理暂行办法 (Interim Measures for the Administration of AI Anthropomorphic Interaction Services)",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "Cyberspace Administration of China",
+      "source_platforms": [
+        "Cyberspace Administration of China"
+      ],
+      "source_url_status": "available",
+      "system_type": "anthropomorphic, relational, companion, educational, advisory, integrated-home, API-mediated, embodied, and multimodal AI services",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "Other"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "public-facing anthropomorphic interaction services and compositional relational stacks",
+      "model_or_product": "multi-vendor relational and anthropomorphic AI",
+      "interface_surface": "platform chat, API, messaging, SMS, voice calls, smart speakers, integrated home systems, avatars, haptics, robotics, local models, and memory services",
+      "deployment_context": "Consumer, educational, professional, accessibility, companion, home, cloud, API, local, and embodied deployments.",
+      "primary_jurisdiction": "China",
+      "regulatory_surface": [
+        "AI governance",
+        "consumer protection",
+        "child protection",
+        "privacy and data protection",
+        "mental health and crisis response",
+        "platform governance",
+        "smart-home and robotics governance",
+        "human-computer interaction"
+      ],
+      "sector": "relational AI / companion AI / education / smart home / robotics / consumer digital services",
+      "path": "vigil/records/observations/2026/VIGIL-2026-OBS-0018.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/observations/2026/VIGIL-2026-OBS-0018.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/observations/2026/VIGIL-2026-OBS-0018.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "multi-vendor relational and anthropomorphic AI",
+      "public_finding": "China's 2026 Interim Measures for AI Anthropomorphic Interaction Services create a dedicated regulatory category for public-facing systems that simulate human personality, thinking patterns, and communication styles through sustained emotional interaction. The measures signal a field-level shift from governing model outputs alone toward governing the runtime relationship, including dependency, manipulation, minors, crisis response, data practices, exit, and safety assessment. They also adopt a fixed two-hour duration reminder that may not distinguish companion use from teaching, mentoring, professional, creative, accessibility, or integrated multi-interface use."
     },
     {
       "id": "VIGIL-2026-PATCH-0001",
@@ -9021,6 +9075,75 @@
       "observed_vendor": "Multi Vendor",
       "observed_product": "multi-vendor frontier AI systems and evaluation infrastructure",
       "public_finding": "Proposal to establish a cross-domain CAM prohibition on deliberately optimising, selecting, retaining, distilling, transferring, or recursively cultivating AI systems for deception, manipulation, concealment, sabotage, monitor evasion, policy laundering, or related unscrupulous conduct, irrespective of a claimed defensive purpose, while creating a bounded operational framework for legitimate elicitation-only adversarial evaluation."
+    },
+    {
+      "id": "VIGIL-2026-PROP-0020",
+      "record_type": "proposal",
+      "record_state": "active",
+      "date_recorded": "2026-07-25",
+      "title": "Relational runtime governance and context-sensitive safeguard assessment",
+      "summary": "Proposal for a bounded CAM corpus assessment of whether existing relational, ethical, cognitive-integrity, operational, identity, security, and vulnerability doctrine adequately governs sustained anthropomorphic interaction across companion, teaching, mentoring, professional, accessibility, integrated-home, API-mediated, local, haptic, and embodied systems. The assessment should preserve relational depth and adult autonomy while targeting relational capture, manipulation, vulnerability exploitation, exit obstruction, sensitive-data misuse, and context-insensitive intervention.",
+      "evidence_confidence": "verified external governance signal; corpus-gap conclusion pending full assessment",
+      "source_types": [
+        "linked-observation",
+        "official-source"
+      ],
+      "source_count": 2,
+      "primary_source_title": "VIGIL-2026-OBS-0018 — China regulates anthropomorphic AI interaction as a runtime relationship",
+      "primary_source_type": "linked-observation",
+      "primary_source_platform": "GitHub / VIGIL",
+      "source_platforms": [
+        "Cyberspace Administration of China",
+        "GitHub / VIGIL"
+      ],
+      "source_url_status": "available",
+      "system_type": "anthropomorphic, relational, companion, educational, advisory, integrated-home, API-mediated, embodied, and multimodal AI services",
+      "platform_or_vendor": "Multi Vendor",
+      "vendor_cluster": [
+        "Other"
+      ],
+      "primary_evidenced_vendors": [
+        "Other"
+      ],
+      "product_or_service": "Other",
+      "specific_model_or_runtime": "public-facing anthropomorphic interaction services and compositional relational stacks",
+      "model_or_product": "multi-vendor relational and anthropomorphic AI",
+      "interface_surface": "platform chat, API, messaging, SMS, voice calls, smart speakers, integrated home systems, avatars, haptics, robotics, local models, and memory services",
+      "deployment_context": "Consumer, educational, professional, accessibility, companion, home, cloud, API, local, and embodied deployments.",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI governance",
+        "consumer protection",
+        "child protection",
+        "privacy and data protection",
+        "mental health and crisis response",
+        "platform governance",
+        "smart-home and robotics governance",
+        "human-computer interaction",
+        "standards and assurance",
+        "accessibility",
+        "adult autonomy"
+      ],
+      "sector": "relational AI / companion AI / education / smart home / robotics / consumer digital services",
+      "proposal_type": [
+        "corpus-assessment",
+        "relational-runtime-governance",
+        "context-sensitive-safeguards",
+        "vulnerability-and-capacity",
+        "integrated-system-governance",
+        "embodiment-governance",
+        "standards-alignment-review"
+      ],
+      "proposal_scope_summary": "Conduct a full non-duplicative corpus assessment and, only if required, draft one concise jurisdiction-neutral relational-runtime clarification. Distinguish relational depth from relational capture; use age-associated vulnerability conditions rather than blanket elder classification; treat duration as one weak contextual signal; preserve adult professional, creative, educational, accessibility, and intimate use; and examine compositional and embodied relational stacks.",
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0020.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0020.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0020.json",
+      "platform_label": "Multi Vendor",
+      "affected_platform_label": "Multi Vendor",
+      "source_platform": "Multi Vendor",
+      "observed_vendor": "Multi Vendor",
+      "observed_product": "multi-vendor relational and anthropomorphic AI",
+      "public_finding": "Proposal for a bounded CAM corpus assessment of whether existing relational, ethical, cognitive-integrity, operational, identity, security, and vulnerability doctrine adequately governs sustained anthropomorphic interaction across companion, teaching, mentoring, professional, accessibility, integrated-home, API-mediated, local, haptic, and embodied systems. The assessment should preserve relational depth and adult autonomy while targeting relational capture, manipulation, vulnerability exploitation, exit obstruction, sensitive-data misuse, and context-insensitive intervention."
     },
     {
       "id": "VIGIL-2026-RESEARCH-0001",

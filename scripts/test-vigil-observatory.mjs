@@ -63,6 +63,26 @@ test("VIGIL normalization exposes human-readable title and only uses ID as last 
   }
 });
 
+test("VIGIL normalization never fabricates placeholder record identifiers", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeRecords, normalizeVigilRecord } = modules.presentation;
+    const records = normalizeRecords([
+      { summary: "Missing canonical identity" },
+      { id: "VIGIL-1", summary: "Malformed identity" },
+      { id: "VIGIL-2026-FM-0001", record_type: "failure_mode", title: "Canonical record" },
+    ]);
+
+    assert.deepEqual(records.map((record) => record.id), ["VIGIL-2026-FM-0001"]);
+    assert.throws(
+      () => normalizeVigilRecord({ summary: "Missing canonical identity" }),
+      /does not contain a canonical record ID/,
+    );
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL normalization resolves source and platform display fields", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -212,6 +232,27 @@ test("VIGIL detail loader parses Markdown research records as front matter plus 
     assert.deepEqual(detail.sources, ["https://example.test/source"]);
     assert.match(detail._canonical_markdown_body, /# Research finding/);
     assert.match(detail._canonical_markdown_body, /Markdown body remains available/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL detail loader preserves JSON front matter used by canonical research artefacts", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilRecordDetail } = modules.registry;
+    const detail = await loadVigilRecordDetail({ raw_url: "https://example.test/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md" }, async () => ({
+      ok: true,
+      text: async () => `---\n{\n  "id": "VIGIL-2026-RESEARCH-0002",\n  "record_type": "research",\n  "title": "Red-team governance research",\n  "summary": "A concise public research summary.",\n  "domains": ["ETHICS", "SECURITY"],\n  "linked_records": { "related_proposals": ["VIGIL-2026-PROP-0019"] }\n}\n---\n\n# Research finding\n\nThe canonical Markdown body remains available for public reading.`,
+      json: async () => { throw new Error("Markdown must not be parsed as JSON response data"); },
+    }));
+
+    assert.equal(detail.id, "VIGIL-2026-RESEARCH-0002");
+    assert.equal(detail.record_type, "research");
+    assert.equal(detail.summary, "A concise public research summary.");
+    assert.deepEqual(detail.domains, ["ETHICS", "SECURITY"]);
+    assert.deepEqual(detail.linked_records, { related_proposals: ["VIGIL-2026-PROP-0019"] });
+    assert.match(detail._canonical_markdown_body, /# Research finding\n\nThe canonical Markdown body/);
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -520,6 +561,7 @@ test("VIGIL detail hierarchy leads with the chain and omits the redundant metada
   assert.doesNotMatch(expandedRecord, /grid gap-3 rounded-lg border border-border\/70 bg-background\/30 p-3 md:grid-cols-2 xl:grid-cols-4/);
   assert.doesNotMatch(page, /title="Linked Records"/);
   assert.doesNotMatch(page, /label: "Source repair status"/);
+  assert.match(page, /md:hidden[^\n]*>↓</);
 });
 
 test("Evidence Chain Report is a dedicated print-friendly route and preserves incomplete stages", async () => {
@@ -529,6 +571,7 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(app, /path="\/observatory\/reports\/:recordId"/);
   assert.match(report, /Print \/ Save as PDF/);
   assert.match(report, /not yet linked/);
+  assert.match(report, /A repair may still be in development/);
   assert.match(report, /Observation \/ Research/);
   assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
   assert.match(report, /function RecordLedger/);
@@ -542,6 +585,19 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /observedVendor\.includes\("cam initiative"\)/);
   assert.doesNotMatch(report, /function ReportRecord/);
   assert.match(report, /primary linked VIGIL records/);
+  assert.match(report, /function reportChainWithKnownRecords/);
+});
+
+test("expanded VIGIL records keep all post-chain detail sections collapsed by default", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const detailStart = page.indexOf("function ObservationDetailView");
+  const detailEnd = page.indexOf("function recordExportText");
+  const detailViews = page.slice(detailStart, detailEnd);
+
+  assert.doesNotMatch(detailViews, /<DetailSection[^>]*\bdefaultOpen/);
+  assert.doesNotMatch(detailViews, /<SummaryBlock[^>]*\bdefaultOpen/);
+  assert.match(page, /Generated evidence-chain reports/);
+  assert.match(page, /The report does not follow contextual links/);
 });
 
 test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
@@ -558,6 +614,18 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.doesNotMatch(report, /External relevance.*record\.external_relevance/);
   assert.doesNotMatch(report, /Proposed outcome/);
   assert.match(report, /chain\.patches\.length > 0/);
+});
+
+test("generated reports suppress duplicated observation preambles", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+
+  assert.match(report, /function distinctObservationPreamble/);
+  assert.match(report, /normalizedNarrative\(preamble\) === normalizedNarrative\(observed\)/);
+  assert.match(report, /preamble && <p/);
+  assert.match(page, /Generate report →/);
+  assert.match(page, /bg-foreground/);
+  assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
 });
 
 test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {

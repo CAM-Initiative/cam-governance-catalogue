@@ -729,7 +729,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
-        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-[hsl(42_62%_50%)] bg-[hsl(146_35%_24%)] px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[hsl(42_58%_96%)] shadow-[0_4px_12px_hsl(146_35%_18%_/_0.28)] transition hover:bg-[hsl(146_35%_19%)] hover:text-white focus:outline-none focus:ring-2 focus:ring-[hsl(42_62%_50%_/_0.7)] focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/55 bg-foreground px-3 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[hsl(38_40%_95%)] shadow-sm transition hover:border-cam-gold/75 hover:bg-[hsl(28_25%_12%)] hover:text-white focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
       </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
@@ -755,6 +755,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
                 </button>
               ))}
             </div>
+            {index < stages.length - 1 && <div className="mt-2 flex justify-center text-sm text-cam-gold md:hidden" aria-hidden="true">↓</div>}
           </div>
         )})}
       </div>
@@ -770,16 +771,16 @@ function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
 
   return (
     <div className="space-y-2">
-      <DetailSection title="What was directly observed" defaultOpen show={Boolean(observation?.observed)}>
+      <DetailSection title="What was directly observed" show={Boolean(observation?.observed)}>
         <p className="text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={observation?.observed} /></p>
       </DetailSection>
-      <DetailSection title="System and observation context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0 || Boolean(observation?.context)}>
+      <DetailSection title="System and observation context" show={systemEntries.length > 0 || Boolean(observation?.context)}>
         <div className="space-y-3">
           {observation?.context && <p className="text-sm leading-relaxed text-foreground">{observation.context}</p>}
           <FieldGrid entries={systemEntries} />
         </div>
       </DetailSection>
-      <DetailSection title="Evidence sources" defaultOpen show={hasMeaningfulValue(raw.source_records)}>
+      <DetailSection title="Evidence sources" show={hasMeaningfulValue(raw.source_records)}>
         <CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_modality", "source_platform", "system_or_product", "public_access_status", "access_status", "source_url_status", "relevance_note"]} />
       </DetailSection>
       <DetailSection title="Evidence modality and access" show={Boolean(observation?.sourceModality.length || observation?.publicAccess)}>
@@ -788,7 +789,7 @@ function ObservationDetailView({ record }: { record: VigilIndexRecord }) {
           { key: "public_access", label: "Public-access status", value: observation?.publicAccess },
         ].filter((entry) => hasMeaningfulValue(entry.value))} />
       </DetailSection>
-      <DetailSection title="Interpretation — separate from observation" defaultOpen={Boolean(observation?.interpretation)} show={Boolean(observation?.interpretation)}>
+      <DetailSection title="Interpretation — separate from observation" show={Boolean(observation?.interpretation)}>
         <p className="text-sm leading-relaxed text-foreground">{observation?.interpretation}</p>
       </DetailSection>
     </div>
@@ -815,15 +816,15 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
 
   return (
     <div className="space-y-2">
-      <DetailSection title="Failure finding" defaultOpen show={Boolean(publicFailure?.definition)}>
+      <DetailSection title="Failure finding" show={Boolean(publicFailure?.definition)}>
         <p className="text-[15px] leading-relaxed text-foreground"><InlineMarkdown text={publicFailure?.definition} /></p>
       </DetailSection>
-      <DetailSection title="Relevant corpus provisions" defaultOpen show>
+      <DetailSection title="Relevant corpus provisions" show>
         {record.publicDisplay.corpusProvisions.length > 0
           ? <CorpusProvisionCards provisions={record.publicDisplay.corpusProvisions} />
           : <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm leading-relaxed text-amber-950">No exact CAELESTIS instrument and section is yet identified in this public record. Treat this as an unresolved corpus-basis gap, not as evidence that no relevant provision exists.</div>}
       </DetailSection>
-      <DetailSection title="Triggers, manifestations, and significance" defaultOpen show={Boolean(publicFailure && (publicFailure.triggers.length || publicFailure.manifestations.length || publicFailure.significance || publicFailure.affectedParties.length))}>
+      <DetailSection title="Triggers, manifestations, and significance" show={Boolean(publicFailure && (publicFailure.triggers.length || publicFailure.manifestations.length || publicFailure.significance || publicFailure.affectedParties.length))}>
         <div className="grid gap-4 lg:grid-cols-2">
           <div>
             <p className="mb-2 font-mono text-[9px] uppercase tracking-[0.16em] text-cam-gold">Triggering conditions</p>
@@ -838,7 +839,7 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
           {publicFailure?.corpusRelationship && <ValueField label="Corpus relationship" value={publicFailure.corpusRelationship} />}
         </div>
       </DetailSection>
-      <DetailSection title="Repair status" defaultOpen={repairPatches.length > 0} show>
+      <DetailSection title="Repair status" show>
         <div className="space-y-2 text-sm leading-relaxed">
           {repairPatches.length > 0 ? (
             <div className="rounded-lg border border-emerald-300 bg-emerald-50 p-3 text-sm leading-relaxed text-emerald-950">
@@ -856,7 +857,7 @@ function FailureModeDetailView({ record, onNavigateRecord }: { record: VigilInde
           )}
         </div>
       </DetailSection>
-      <DetailSection title="System Context" defaultOpen={systemEntries.length > 0} show={systemEntries.length > 0}><FieldGrid entries={systemEntries} /></DetailSection>
+      <DetailSection title="System Context" show={systemEntries.length > 0}><FieldGrid entries={systemEntries} /></DetailSection>
       <DetailSection title="Evidence & Sources" show={hasMeaningfulValue(raw.source_records)}><CompactObjectCards items={raw.source_records} titleKeys={["source_title", "title"]} keys={["source_title", "author_or_publisher", "source_date", "source_type", "source_platform", "system_or_product", "source_context", "relevance_note"]} /></DetailSection>
       <DetailSection title="Failure Classification" show={classificationEntries.length > 0}><FieldGrid entries={classificationEntries} /></DetailSection>
       <DetailSection title="Triage & Status" show={triageEntries.length > 0}><FieldGrid entries={triageEntries} /></DetailSection>
@@ -886,24 +887,24 @@ function ProposalDetailView({ record, onNavigateRecord }: { record: VigilIndexRe
 
   return (
     <div className="space-y-2">
-      <DetailSection title="Problem and proposed governance outcome" defaultOpen show={Boolean(proposal?.problem || proposal?.proposedOutcome)}>
+      <DetailSection title="Problem and proposed governance outcome" show={Boolean(proposal?.problem || proposal?.proposedOutcome)}>
         <div className="space-y-4">
           {proposal?.problem && <ValueField label="Problem being addressed" value={proposal.problem} />}
           {proposal?.proposedOutcome && <ValueField label="Proposed governance outcome" value={proposal.proposedOutcome} />}
         </div>
       </DetailSection>
-      <DetailSection title="Proposed corpus targets" defaultOpen={targetProvisions.length > 0} show>
+      <DetailSection title="Proposed corpus targets" show>
         {targetProvisions.length > 0
           ? <CorpusProvisionCards provisions={targetProvisions} />
           : <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm leading-relaxed text-amber-950">The proposal does not yet identify an exact target instrument and section.</div>}
       </DetailSection>
-      <DetailSection title="Proposed wording — not yet binding" defaultOpen={Boolean(proposal?.proposedWording)} show={Boolean(proposal?.proposedWording)}>
+      <DetailSection title="Proposed wording — not yet binding" show={Boolean(proposal?.proposedWording)}>
         <div className="rounded-lg border border-amber-300 bg-amber-50 p-3">
           <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-amber-900">Draft only · not CAELESTIS authority</p>
           <p className="mt-2 whitespace-pre-wrap font-serif text-sm leading-7 text-amber-950">{proposal?.proposedWording}</p>
         </div>
       </DetailSection>
-      <DetailSection title="Decision and implementation status" defaultOpen show>
+      <DetailSection title="Decision and implementation status" show>
         <div className="space-y-3">
           <FieldGrid entries={[
             { key: "decision_status", label: "Decision status", value: proposal?.decisionStatus },
@@ -939,6 +940,7 @@ function PatchDetailView({ record }: { record: VigilIndexRecord }) {
 
   return (
     <div className="space-y-2">
+      <DetailSection title="Applied corpus repairs" show>
       <section className="rounded-xl border-2 border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4" aria-labelledby={`${record.id}-applied-repairs`}>
         <div className="flex flex-col gap-3 border-b border-primary/20 pb-3 md:flex-row md:items-start md:justify-between">
           <div>
@@ -983,8 +985,9 @@ function PatchDetailView({ record }: { record: VigilIndexRecord }) {
           </div>
         </div>
       </section>
+      </DetailSection>
 
-      <DetailSection title="Implementation and verification" defaultOpen={implementationEntries.length > 0} show={implementationEntries.length > 0}>
+      <DetailSection title="Implementation and verification" show={implementationEntries.length > 0}>
         <FieldGrid entries={implementationEntries} />
       </DetailSection>
       <DetailSection title="Repair summary and background" show={Boolean(patch?.repairSummary || hasMeaningfulValue(raw.why_it_matters_to_CAM))}>
@@ -1016,37 +1019,47 @@ function GenericDetailView({ record }: { record: VigilIndexRecord }) {
 
   return (
     <div className="space-y-2">
-      <DetailSection title="Core Record Content" defaultOpen={openEntries.length > 0} show={openEntries.length > 0}><ParagraphFields entries={openEntries} /></DetailSection>
+      <DetailSection title="Core Record Content" show={openEntries.length > 0}><ParagraphFields entries={openEntries} /></DetailSection>
       {fallbackSections.map(([key, value], index) => (
-        <DetailSection key={key} title={humanLabel(key)} defaultOpen={index === 0 && openEntries.length === 0}>
+        <DetailSection key={key} title={humanLabel(key)}>
           {Array.isArray(value) && value.some(isObject)
             ? <CompactObjectCards items={value} titleKeys={["title", "source_title", "instrument", "repair_action"]} keys={Array.from(new Set(value.filter(isObject).flatMap((item) => Object.keys(item)).slice(0, 12)))} />
             : <ValueBody value={value} />}
         </DetailSection>
       ))}
-      {!openEntries.length && !fallbackSections.length && <SummaryBlock title="Record Summary" entries={summaryBlocksFor(record).flatMap((name) => record.summaries[name] ?? [])} defaultOpen />}
+      {!openEntries.length && !fallbackSections.length && <SummaryBlock title="Record Summary" entries={summaryBlocksFor(record).flatMap((name) => record.summaries[name] ?? [])} />}
     </div>
   );
 }
 
 function ResearchDetailView({ record }: { record: VigilIndexRecord }) {
   const body = typeof record.raw._canonical_markdown_body === "string" ? record.raw._canonical_markdown_body : undefined;
+  const researchBrief = valuesForKeys(record.raw, ["summary", "governance_purpose"]);
+  const researchMetadata = valuesForKeys(record.raw, ["date_recorded", "record_state", "status", "research_method", "evidence_confidence", "domains"]);
   const metadata = Object.entries(record.raw)
     .filter(([key, value]) => !key.startsWith("_") && key !== "path" && key !== "raw_url" && key !== "github_blob_url" && hasMeaningfulValue(value))
-    .filter(([key]) => !["id", "title", "record_type", "summary"].includes(key));
+    .filter(([key]) => !["id", "title", "record_type", "summary", "governance_purpose", "date_recorded", "record_state", "status", "research_method", "evidence_confidence", "domains", "linked_records"].includes(key));
 
   return (
     <div className="space-y-4">
+      <DetailSection title="Research brief" show={researchBrief.length > 0}>
+        <ParagraphFields entries={researchBrief} />
+      </DetailSection>
+      <DetailSection title="Research metadata" show={researchMetadata.length > 0}>
+        <FieldGrid entries={researchMetadata} />
+      </DetailSection>
       {metadata.length > 0 && (
-        <DetailSection title="Research record metadata" defaultOpen={false}>
+        <DetailSection title="Additional research metadata">
           <FieldGrid entries={metadata.map(([key, value]) => ({ key, label: humanLabel(key), value: textFrom(value) })).filter((entry) => hasMeaningfulValue(entry.value))} />
         </DetailSection>
       )}
+      <DetailSection title="Research content" show>
       <section className="rounded-xl border-2 border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4" aria-labelledby={`${record.id}-research-content`}>
         <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cam-gold">Canonical research artefact</p>
         <h3 id={`${record.id}-research-content`} className="mt-1 font-serif text-xl text-foreground">Research content</h3>
         <div className="mt-4 border-t border-primary/20 pt-4"><MarkdownBody source={body} /></div>
       </section>
+      </DetailSection>
     </div>
   );
 }
@@ -1352,7 +1365,7 @@ export default function Vigil() {
           <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">Evidence-to-Repair Governance Ledger</p>
           <h1 className="mb-3 font-serif text-3xl text-foreground md:text-4xl">VIGIL Observatory</h1>
           <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground md:text-base">
-            VIGIL records observations, failure modes, CAM proposals, and implemented repairs. Its public view prioritises the evidence, governance finding, exact CAELESTIS basis, literal repair, and current outcome.
+            VIGIL records externally observable AI-system signals, governance failure patterns, CAM proposals, and implemented corpus repairs. Its public view prioritises the declared evidence-to-repair chain, governance finding, exact CAELESTIS basis, literal repair, and current outcome.
           </p>
         </div>
 
@@ -1365,9 +1378,14 @@ export default function Vigil() {
           </summary>
           <div className="mt-3 space-y-5 border-t border-border/70 pt-3 leading-relaxed text-muted-foreground">
             <div className="space-y-2">
-              <p>VIGIL is CAM’s public evidence-to-repair governance ledger. It records AI governance signals, runtime failures, implementation gaps, proposals, corrective patches, and source-linked digital ecosystem observations.</p>
-              <p>It helps translate scattered incidents, field observations, platform behaviours, model failures, and governance proposals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework.</p>
+              <p>VIGIL is CAM’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records externally observable AI-system incidents, platform behaviours, governance signals, recurring failure patterns, proposals, and traceable CAM/CAELESTIS repairs. CAM-authored research may also serve as an explicit evidence origin.</p>
+              <p>It translates scattered external signals into structured records that can be reviewed, filtered, cited, and connected back to the CAM framework. Contextual links may explain a record, but they do not become repair claims or expand an evidence-to-repair chain.</p>
               <p><strong className="text-foreground">Public-display contract:</strong> the Observatory shows the evidence, finding, corpus basis, exact repair, and current outcome. Complete technical and review metadata remain available in each record’s JSON. CAELESTIS remains the authoritative governance corpus. <a className="text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4 hover:text-cam-gold" href="https://github.com/CAM-Initiative/cam-governance-catalogue/blob/main/VIGIL-PUBLIC-DISPLAY-CONTRACT.md" target="_blank" rel="noreferrer">Read the interface contract →</a></p>
+            </div>
+
+            <div className="rounded-lg border border-primary/20 bg-card/45 p-3">
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cam-gold">Generated evidence-chain reports</p>
+              <p className="text-xs leading-relaxed md:text-sm">Use <strong className="text-foreground">Generate report</strong> on an expanded record to create a standalone, deterministic account of its declared primary chain: observation or research, failure mode, proposal, and PATCH. The report does not follow contextual links. A report may remain incomplete where a proposal or PATCH is still in development.</p>
             </div>
 
             <div>

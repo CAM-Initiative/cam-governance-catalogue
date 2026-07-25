@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords } from "@/lib/vigilRegistry";
-import { normalizeVigilRecord, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { normalizeRecords, normalizeVigilRecord, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import type { CorpusProvision, RecordChain } from "@/lib/vigilPublicDisplay";
 
 const chainStages: Array<{ key: keyof RecordChain; label: string; singular: string }> = [
@@ -38,6 +38,16 @@ type SourceEvidence = {
 type Citation = SourceEvidence & { number: number };
 
 function chainIds(chain: RecordChain) { return chainStages.flatMap(({ key }) => chain[key]); }
+function reportChainWithKnownRecords(chain: RecordChain, recordsById: Map<string, VigilIndexRecord>): RecordChain {
+  // A generated report is a registry-backed public artefact. Never render a
+  // stale, malformed, or future placeholder as though it were a VIGIL record.
+  return {
+    observations: chain.observations.filter((id) => recordsById.has(id)),
+    failureModes: chain.failureModes.filter((id) => recordsById.has(id)),
+    proposals: chain.proposals.filter((id) => recordsById.has(id)),
+    patches: chain.patches.filter((id) => recordsById.has(id)),
+  };
+}
 function chainState(chain: RecordChain) {
   // The four-record evidence chain ends at PATCH. A recorded PATCH is the
   // evidence-to-repair endpoint. Earlier stages may
@@ -68,6 +78,14 @@ function statusTone(label?: string) {
   return "border-border bg-background/60 text-muted-foreground";
 }
 function summary(record: VigilIndexRecord) { return record.publicDisplay.finding || record.summary || "No public finding is currently available for this record."; }
+function normalizedNarrative(value: unknown) {
+  return displayText(value)?.replace(/\s+/g, " ").trim().toLowerCase();
+}
+function distinctObservationPreamble(record: VigilIndexRecord) {
+  const preamble = summary(record);
+  const observed = record.publicDisplay.observation?.observed;
+  return normalizedNarrative(preamble) === normalizedNarrative(observed) ? undefined : preamble;
+}
 function typeLabel(record: VigilIndexRecord) { return record.type_label || record.record_type.replace(/_/g, " "); }
 function isExternalObservationEvidence(record: VigilIndexRecord) {
   // Research is a permitted evidence origin even when it is CAM-authored.
@@ -156,7 +174,10 @@ function RecordLedger({ records, chain, byId }: { records: VigilIndexRecord[]; c
 function ObservationStage({ records, evidenceRecords, citations }: { records: VigilIndexRecord[]; evidenceRecords: VigilIndexRecord[]; citations: Citation[] }) {
   const sourceRecords = evidenceRecords.flatMap(sourceEvidenceFor);
   return <div className="space-y-4">
-    {records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="What was observed" value={record.publicDisplay.observation?.observed} /><Narrative label="Context" value={record.publicDisplay.observation?.context} /><Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} /></div></article>)}
+    {records.map((record) => {
+      const preamble = distinctObservationPreamble(record);
+      return <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} />{preamble && <p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{preamble}</p>}<div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="What was observed" value={record.publicDisplay.observation?.observed} /><Narrative label="Context" value={record.publicDisplay.observation?.context} /><Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} /></div></article>;
+    })}
     {sourceRecords.length ? <article className="report-record report-break-inside-avoid rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/45 p-4"><div className="border-b border-border/60 pb-3"><p className="report-label">Source observations</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">Source records and research clippings attached to the linked chain are treated as observation-level evidence for this report.</p></div><div className="mt-3 space-y-3">{sourceRecords.map((source, index) => { const number = citationNumber(source, citations); return <div key={`${source.title}-${index}`} className="report-break-inside-avoid"><p className="font-serif text-base text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>{(source.publisher || source.date) && <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{source.description}</p>}</div>; })}</div></article> : null}
     {!records.length && !sourceRecords.length && <Incomplete text="Observation or research not yet linked." />}
   </div>;
@@ -176,14 +197,14 @@ function ProvisionTable({ provisions }: { provisions: CorpusProvision[] }) {
 }
 
 function RepairStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{summary(record)}</p><FieldGrid entries={[["Repair outcome", record.publicDisplay.patch?.outcome], ["Repair summary", record.publicDisplay.patch?.repairSummary], ["Implementation date", record.publicDisplay.patch?.implementationDate], ["Verification", record.publicDisplay.patch?.verificationStatus], ["Verified against", record.publicDisplay.patch?.verifiedAgainst], ["Residual monitoring", record.publicDisplay.patch?.residualMonitoring], ["Patch type", record.patch_type], ["Change scope", record.change_scope], ["Implementation mode", record.implementation_mode]]} /><ProvisionTable provisions={record.publicDisplay.corpusProvisions} /></article>) : <Incomplete text="PATCH not yet linked." />}</div>;
+  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{summary(record)}</p><FieldGrid entries={[["Repair outcome", record.publicDisplay.patch?.outcome], ["Repair summary", record.publicDisplay.patch?.repairSummary], ["Implementation date", record.publicDisplay.patch?.implementationDate], ["Verification", record.publicDisplay.patch?.verificationStatus], ["Verified against", record.publicDisplay.patch?.verifiedAgainst], ["Residual monitoring", record.publicDisplay.patch?.residualMonitoring], ["Patch type", record.patch_type], ["Change scope", record.change_scope], ["Implementation mode", record.implementation_mode]]} /><ProvisionTable provisions={record.publicDisplay.corpusProvisions} /></article>) : <Incomplete text="No PATCH is linked yet. A repair may still be in development — check back later." availabilityNote={false} />}</div>;
 }
 
 function LearnStage({ records }: { records: VigilIndexRecord[] }) {
   return <div className="space-y-3">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-mono text-xs text-cam-gold">{record.id}</p><p className="mt-1 font-serif text-lg text-foreground">{record.title}</p></div><span className={`w-fit rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] ${statusTone(statusFor(record))}`}>{statusFor(record)}</span></div><FieldGrid entries={[["Record type", typeLabel(record)], ["First observed", record.publicDisplay.dates.firstObserved], ["Published", record.publicDisplay.dates.published], ["Updated", record.publicDisplay.dates.lastUpdated], ["Implemented", record.publicDisplay.dates.implemented], ["Repair state", record.publicDisplay.repairState], ["Next action", record.next_action ?? record.publicDisplay.failure?.repairNextAction], ["Residual monitoring", record.publicDisplay.patch?.residualMonitoring], ["Verification", record.verification_status ?? record.publicDisplay.patch?.verificationStatus]]} /></article>) : <Incomplete text="No lifecycle or learning information has yet been recorded." />}</div>;
 }
 
-function Incomplete({ text }: { text: string }) { return <p className="rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/35 p-4 text-sm leading-relaxed text-muted-foreground">{text} This report remains available while the evidence chain is incomplete.</p>; }
+function Incomplete({ text, availabilityNote = true }: { text: string; availabilityNote?: boolean }) { return <p className="rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/35 p-4 text-sm leading-relaxed text-muted-foreground">{text}{availabilityNote ? " This report remains available while the evidence chain is incomplete." : null}</p>; }
 
 function Citations({ citations }: { citations: Citation[] }) {
   if (!citations.length) return null;
@@ -196,7 +217,11 @@ function StepSection({ number, label, description, children }: { number: string;
 
 export default function EvidenceChainReport() {
   const [, params] = useRoute("/observatory/reports/:recordId");
-  const sourceId = decodeURIComponent(params?.recordId ?? "");
+  // Older Observatory pages could pass a Markdown filename after the research
+  // detail loader lost the front-matter ID. Treat that legacy route as the
+  // canonical VIGIL ID rather than asking the registry for a non-existent .md
+  // record identifier.
+  const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<ReportState>({ status: "loading" });
 
   useEffect(() => {
@@ -204,7 +229,7 @@ export default function EvidenceChainReport() {
     async function load() {
       try {
         const registry = await loadVigilRegistryRecords();
-        const indexRecords = registry.records.map((record, index) => normalizeVigilRecord(record, index));
+        const indexRecords = normalizeRecords(registry.records);
         const indexById = new Map(indexRecords.map((record) => [record.id, record]));
         const sourceIndexRecord = indexById.get(sourceId);
         if (!sourceIndexRecord) throw new Error(`The VIGIL registry does not contain ${sourceId}.`);
@@ -213,16 +238,17 @@ export default function EvidenceChainReport() {
         const details = new Map<string, VigilIndexRecord>([[sourceRecord.id, sourceRecord]]);
         // A report is a declared chain, not a graph walk: load the source and
         // its direct authoritative links exactly once. Context never expands it.
-        const chain: RecordChain = {
+        const declaredChain: RecordChain = {
           observations: [...sourceRecord.publicDisplay.chain.observations],
           failureModes: [...sourceRecord.publicDisplay.chain.failureModes],
           proposals: [...sourceRecord.publicDisplay.chain.proposals],
           patches: [...sourceRecord.publicDisplay.chain.patches],
         };
-        if (!chainIds(chain).includes(sourceId)) {
+        if (!chainIds(declaredChain).includes(sourceId)) {
           const targetKey = sourceRecord.record_type === "observation" || sourceRecord.record_type === "research" ? "observations" : sourceRecord.record_type === "failure_mode" ? "failureModes" : sourceRecord.record_type === "proposal" ? "proposals" : "patches";
-          chain[targetKey].unshift(sourceId);
+          declaredChain[targetKey].unshift(sourceId);
         }
+        const chain = reportChainWithKnownRecords(declaredChain, indexById);
         for (const stage of chainStages) for (const id of chain[stage.key]) {
           if (details.has(id)) continue;
           const indexRecord = indexById.get(id);
