@@ -15,7 +15,7 @@ const chainStages: Array<{ key: keyof RecordChain; label: string; singular: stri
 
 const reportSteps = [
   { number: "01", label: "Observe", description: "The signal, incident, research basis, or governance breakdown that began the chain." },
-  { number: "02", label: "Record", description: "The four linked VIGIL records and the provenance preserved across the chain." },
+  { number: "02", label: "Record", description: "The primary linked VIGIL records and the provenance preserved across the chain." },
   { number: "03", label: "Classify", description: "The repeatable failure mode or governance pattern identified from the evidence." },
   { number: "04", label: "Diagnose", description: "The governance weakness, proposed response, and decision pathway." },
   { number: "05", label: "Repair", description: "The PATCH, corpus implementation, safeguards, and verification." },
@@ -69,6 +69,15 @@ function statusTone(label?: string) {
 }
 function summary(record: VigilIndexRecord) { return record.publicDisplay.finding || record.summary || "No public finding is currently available for this record."; }
 function typeLabel(record: VigilIndexRecord) { return record.type_label || record.record_type.replace(/_/g, " "); }
+function isExternalObservationEvidence(record: VigilIndexRecord) {
+  // Research is a permitted evidence origin even when it is CAM-authored.
+  if (record.record_type === "research") return true;
+  if (record.record_type !== "observation") return false;
+  const systemContext = record.raw.system_context as Record<string, unknown> | undefined;
+  const observedVendor = String(record.observed_vendor ?? record.raw.observed_vendor ?? systemContext?.platform_or_vendor ?? "").toLowerCase();
+  const observedProduct = String(record.observed_product ?? record.raw.observed_product ?? systemContext?.product_or_service ?? "").toLowerCase();
+  return !observedVendor.includes("cam initiative") && !observedProduct.includes("caelestis");
+}
 
 function sourceEvidenceFor(record: VigilIndexRecord): SourceEvidence[] {
   const rawSources = record.raw.source_records;
@@ -236,7 +245,7 @@ export default function EvidenceChainReport() {
     {state.status === "error" && <div className="cam-parchment-card rounded-xl p-6"><p className="font-mono text-xs uppercase tracking-[0.16em] text-red-700">Report unavailable</p><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{state.message}</p><Link href="/observatory" className="mt-4 inline-flex font-mono text-xs uppercase tracking-[0.12em] text-cam-gold underline underline-offset-4">Return to Observatory →</Link></div>}
     {state.status === "ready" && <div className="space-y-6">
       <header className="report-cover border-b border-border/70 pb-7"><div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between"><div><p className="font-mono text-[11px] uppercase tracking-[0.2em] text-cam-gold">VIGIL Evidence Chain Report</p><h1 className="mt-3 font-serif text-4xl leading-tight text-foreground md:text-5xl">Evidence to repair</h1><p className="mt-3 max-w-3xl text-base leading-relaxed text-muted-foreground">A deterministic public audit artefact that preserves the evidence chain and presents its substantive findings in a structured report.</p></div><div className="flex shrink-0 flex-wrap gap-2 print:hidden"><button type="button" onClick={() => window.print()} className="rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">Print / Save as PDF</button><Link href="/observatory" className="rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Back to Observatory</Link></div></div><div className="mt-6 grid gap-3 rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-4 sm:grid-cols-3"><div><p className="report-label">Report initiated from</p><p className="mt-1 font-mono text-sm text-cam-gold">{state.sourceId}</p></div><div><p className="report-label">Linked records</p><p className="mt-1 font-serif text-xl text-foreground">{chainIds(state.chain).length}</p></div><div><p className="report-label">Chain state</p><p className="mt-1 font-serif text-xl text-foreground">{chainState(state.chain)}</p></div></div></header>
-      <StepSection {...reportSteps[0]}><ObservationStage records={state.chain.observations.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} evidenceRecords={state.chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} citations={citations} /></StepSection>
+      <StepSection {...reportSteps[0]}><ObservationStage records={state.chain.observations.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)).filter(isExternalObservationEvidence)} evidenceRecords={state.chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} citations={citations} /></StepSection>
       <StepSection {...reportSteps[1]}><RecordLedger records={state.records} chain={state.chain} byId={byId} /></StepSection>
       <StepSection {...reportSteps[2]}><ClassificationStage records={state.chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} /></StepSection>
       <StepSection {...reportSteps[3]}><DiagnoseStage records={state.chain.proposals.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} /></StepSection>
