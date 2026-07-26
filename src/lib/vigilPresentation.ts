@@ -496,6 +496,32 @@ function addFallbackSummaries(record: UnknownRecord, summaries: Record<string, S
   if (!summaries.classification_summary?.length) summaries.classification_summary = classificationFallbackEntries(record);
 }
 
+const indexedSearchFields = [
+  "primary_source_title",
+  "primary_source_platform",
+  "primary_source_type",
+  "source_platforms",
+  "platform_or_vendor",
+  "vendor_cluster",
+  "primary_evidenced_vendors",
+  "product_or_service",
+  "specific_model_or_runtime",
+  "model_or_product",
+  "interface_surface",
+  "deployment_context",
+  "canonical_failure_group",
+  "failure_family",
+  "failure_subtype",
+  "sector",
+  "regulatory_surface",
+] as const;
+
+function searchValueParts(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(searchValueParts);
+  return [];
+}
+
 export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilIndexRecord {
   const record_type = normalizeRecordType(record);
   const summaries = Object.fromEntries(summaryNames.map((name) => [name, summaryEntries(record[name])])) as Record<string, SummaryEntry[]>;
@@ -591,6 +617,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     normalized.type_label,
     ...normalized.publicDisplay.searchTokens,
     ...searchSummaryNames.flatMap((name) => normalized.summaries[name]?.flatMap((entry) => [entry.label, entry.value]) ?? []),
+    ...indexedSearchFields.flatMap((key) => searchValueParts(record[key])),
   ].filter(isMeaningfulText).join(" ").toLowerCase();
   normalized.searchText = `${searchText} ${searchText.replace(/§/g, "section ")}`;
 
