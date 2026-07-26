@@ -50,6 +50,11 @@ type Citation =
       url?: string;
     };
 
+const caelestisArchiveCitation: SourceEvidence = {
+  title: "O'Rourke, M. (2026). Caelestis Architecture Model — Public Archive (Version 1.1.0) [Computer software]. Zenodo.",
+  url: "https://doi.org/10.5281/zenodo.20686316",
+};
+
 function chainIds(chain: RecordChain) { return chainStages.flatMap(({ key }) => chain[key]); }
 function reportChainWithKnownRecords(chain: RecordChain, recordsById: Map<string, VigilIndexRecord>): RecordChain {
   // A generated report is a registry-backed public artefact. Never render a
@@ -206,6 +211,7 @@ function collectCitations(records: VigilIndexRecord[]): Citation[] {
       ...(url ? { url } : {}),
     });
   }
+  citations.push({ ...caelestisArchiveCitation, number: citations.length + 1, kind: "source" });
   return citations;
 }
 
@@ -245,7 +251,7 @@ function Narrative({ label, value }: { label: string; value?: unknown }) {
 function SourceDetails({ source, citations }: { source: SourceEvidence; citations: Citation[] }) {
   const number = citationNumber(source, citations);
   return <div className="report-break-inside-avoid rounded-md border border-border/60 bg-white/55 p-3">
-    <p className="font-serif text-base text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>
+    <p className="font-serif text-lg font-semibold text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>
     {(source.publisher || source.date || source.sourceType || source.accessStatus) && <p className="mt-1 font-mono text-sm uppercase tracking-[0.1em] text-muted-foreground">{[source.publisher, source.date, source.sourceType, source.accessStatus].filter(Boolean).join(" · ")}</p>}
     {source.description && <div className="mt-3"><Narrative label="Source context" value={source.description} /></div>}
   </div>;
@@ -277,11 +283,9 @@ function SupportingEvidence({ sources, citations }: { sources: SupportingSource[
   return <article className="report-record report-break-inside-avoid rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/45 p-4">
     <div className="border-b border-border/60 pb-3">
       <p className="report-label">Supporting evidence</p>
-      <p className="mt-1 text-base leading-relaxed text-muted-foreground">Additional SOURCE entries attached to failure modes and other linked records are shown here. Repeated sources are consolidated, while their associated VIGIL records remain identified.</p>
     </div>
-    <div className="mt-4 space-y-3">{sources.map(({ source, records }, index) => <div key={`${sourceKey(source)}-${index}`} className="report-break-inside-avoid">
+    <div className="mt-4 space-y-3">{sources.map(({ source }, index) => <div key={`${sourceKey(source)}-${index}`} className="report-break-inside-avoid">
       <SourceDetails source={source} citations={citations} />
-      <div className="mt-2"><p className="report-label">Associated VIGIL records</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{records.map((record) => `${record.id} — ${record.title}`).join("; ")}</p></div>
     </div>)}</div>
   </article>;
 }
@@ -313,7 +317,7 @@ function ObservationStage({ records, supportingRecords, citations }: { records: 
 }
 
 function ClassificationStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-base leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Failure-mode definition" value={record.publicDisplay.failure?.definition} /><Narrative label="Why it matters" value={record.publicDisplay.failure?.significance} /><Narrative label="Triggers" value={record.publicDisplay.failure?.triggers} /><Narrative label="Observed manifestations" value={record.publicDisplay.failure?.manifestations} /></div><FieldGrid entries={[["Failure family", record.failure_family], ["Failure subtype", record.failure_subtype], ["Severity", record.severity], ["Likelihood", record.likelihood]]} /></article>) : <Incomplete text="Failure mode not yet linked." />}</div>;
+  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Failure-mode definition" value={record.publicDisplay.failure?.definition} /><Narrative label="Why it matters" value={record.publicDisplay.failure?.significance} /><div className="sm:col-span-2"><Narrative label="Triggers" value={record.publicDisplay.failure?.triggers} /></div><Narrative label="Observed manifestations" value={record.publicDisplay.failure?.manifestations} /></div><FieldGrid entries={[["Failure family", record.failure_family], ["Failure subtype", record.failure_subtype], ["Severity", record.severity], ["Likelihood", record.likelihood]]} /></article>) : <Incomplete text="Failure mode not yet linked." />}</div>;
 }
 
 function DiagnoseStage({ records }: { records: VigilIndexRecord[] }) {
