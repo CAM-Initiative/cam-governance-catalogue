@@ -50,6 +50,11 @@ type Citation =
       url?: string;
     };
 
+const caelestisArchiveCitation: SourceEvidence = {
+  title: "O'Rourke, M. (2026). Caelestis Architecture Model — Public Archive (Version 1.1.0) [Computer software]. Zenodo.",
+  url: "https://doi.org/10.5281/zenodo.20686316",
+};
+
 function chainIds(chain: RecordChain) { return chainStages.flatMap(({ key }) => chain[key]); }
 function reportChainWithKnownRecords(chain: RecordChain, recordsById: Map<string, VigilIndexRecord>): RecordChain {
   // A generated report is a registry-backed public artefact. Never render a
@@ -206,6 +211,7 @@ function collectCitations(records: VigilIndexRecord[]): Citation[] {
       ...(url ? { url } : {}),
     });
   }
+  citations.push({ ...caelestisArchiveCitation, number: citations.length + 1, kind: "source" });
   return citations;
 }
 
@@ -245,7 +251,7 @@ function Narrative({ label, value }: { label: string; value?: unknown }) {
 function SourceDetails({ source, citations }: { source: SourceEvidence; citations: Citation[] }) {
   const number = citationNumber(source, citations);
   return <div className="report-break-inside-avoid rounded-md border border-border/60 bg-white/55 p-3">
-    <p className="font-serif text-base text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>
+    <p className="font-serif text-lg font-semibold text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>
     {(source.publisher || source.date || source.sourceType || source.accessStatus) && <p className="mt-1 font-mono text-sm uppercase tracking-[0.1em] text-muted-foreground">{[source.publisher, source.date, source.sourceType, source.accessStatus].filter(Boolean).join(" · ")}</p>}
     {source.description && <div className="mt-3"><Narrative label="Source context" value={source.description} /></div>}
   </div>;
@@ -277,11 +283,9 @@ function SupportingEvidence({ sources, citations }: { sources: SupportingSource[
   return <article className="report-record report-break-inside-avoid rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/45 p-4">
     <div className="border-b border-border/60 pb-3">
       <p className="report-label">Supporting evidence</p>
-      <p className="mt-1 text-base leading-relaxed text-muted-foreground">Additional SOURCE entries attached to failure modes and other linked records are shown here. Repeated sources are consolidated, while their associated VIGIL records remain identified.</p>
     </div>
-    <div className="mt-4 space-y-3">{sources.map(({ source, records }, index) => <div key={`${sourceKey(source)}-${index}`} className="report-break-inside-avoid">
+    <div className="mt-4 space-y-3">{sources.map(({ source }, index) => <div key={`${sourceKey(source)}-${index}`} className="report-break-inside-avoid">
       <SourceDetails source={source} citations={citations} />
-      <div className="mt-2"><p className="report-label">Associated VIGIL records</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{records.map((record) => `${record.id} — ${record.title}`).join("; ")}</p></div>
     </div>)}</div>
   </article>;
 }
@@ -313,7 +317,7 @@ function ObservationStage({ records, supportingRecords, citations }: { records: 
 }
 
 function ClassificationStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-base leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Failure-mode definition" value={record.publicDisplay.failure?.definition} /><Narrative label="Why it matters" value={record.publicDisplay.failure?.significance} /><Narrative label="Triggers" value={record.publicDisplay.failure?.triggers} /><Narrative label="Observed manifestations" value={record.publicDisplay.failure?.manifestations} /></div><FieldGrid entries={[["Failure family", record.failure_family], ["Failure subtype", record.failure_subtype], ["Severity", record.severity], ["Likelihood", record.likelihood]]} /></article>) : <Incomplete text="Failure mode not yet linked." />}</div>;
+  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Failure-mode definition" value={record.publicDisplay.failure?.definition} /><Narrative label="Why it matters" value={record.publicDisplay.failure?.significance} /><div className="sm:col-span-2"><Narrative label="Triggers" value={record.publicDisplay.failure?.triggers} /></div><Narrative label="Observed manifestations" value={record.publicDisplay.failure?.manifestations} /></div><FieldGrid entries={[["Failure family", record.failure_family], ["Failure subtype", record.failure_subtype], ["Severity", record.severity], ["Likelihood", record.likelihood]]} /></article>) : <Incomplete text="Failure mode not yet linked." />}</div>;
 }
 
 function DiagnoseStage({ records }: { records: VigilIndexRecord[] }) {
@@ -335,13 +339,68 @@ function DiagnoseStage({ records }: { records: VigilIndexRecord[] }) {
   </article>) : <Incomplete text="Proposal not yet linked." />}</div>;
 }
 
+function provisionActionLabel(action?: string) {
+  const normalized = action?.trim().toLowerCase() ?? "";
+  if (normalized.includes("relied-upon") || normalized.includes("pre-existing") || normalized.includes("coverage")) return "Existing control — no amendment required";
+  if (normalized.includes("remov") || normalized.includes("repeal")) return "Removed";
+  if (normalized.includes("add")) return "Added";
+  if (normalized.includes("amend") || normalized.includes("modif") || normalized.includes("updat")) return "Amended";
+  return action || "Implementation recorded";
+}
+
+function provisionWordingLabel(action?: string) {
+  const normalized = action?.trim().toLowerCase() ?? "";
+  if (normalized.includes("relied-upon") || normalized.includes("pre-existing") || normalized.includes("coverage")) return "Existing applicable wording";
+  return normalized.includes("remov") || normalized.includes("repeal") ? "Literal wording removed" : "Final adopted wording";
+}
+
+function renderInlineMarkdown(value: string) {
+  return value.split(/(\*\*[^*\n]+\*\*|`[^`\n]+`|\*[^*\n]+\*)/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={index} className="rounded bg-black/5 px-1 py-0.5 font-mono text-[0.9em]">{part.slice(1, -1)}</code>;
+    if (part.startsWith("*") && part.endsWith("*")) return <em key={index}>{part.slice(1, -1)}</em>;
+    return part;
+  });
+}
+
+function CorpusWording({ value }: { value: string }) {
+  return <div className="mt-1 space-y-2.5 text-base leading-relaxed text-foreground/85">{value.split("\n").map((line, index) => {
+    if (!line.trim()) return <div key={index} className="h-1.5" aria-hidden="true" />;
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) return <h4 key={index} className="font-serif text-lg leading-snug text-foreground">{renderInlineMarkdown(heading[2])}</h4>;
+    const bullet = line.match(/^\s*[-*]\s+(.+)$/);
+    if (bullet) return <p key={index} className="flex gap-2"><span aria-hidden="true">•</span><span>{renderInlineMarkdown(bullet[1])}</span></p>;
+    const numbered = line.match(/^\s*(\d+)\.\s+(.+)$/);
+    if (numbered) return <p key={index} className="flex gap-2"><span aria-hidden="true">{numbered[1]}.</span><span>{renderInlineMarkdown(numbered[2])}</span></p>;
+    return <p key={index}>{renderInlineMarkdown(line)}</p>;
+  })}</div>;
+}
+
 function ProvisionTable({ provisions }: { provisions: CorpusProvision[] }) {
   if (!provisions.length) return null;
-  return <div className="mt-4 overflow-hidden rounded-lg border border-border/70 bg-white/55"><div className="border-b border-border/60 bg-white/45 px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-muted-foreground">Corpus implementation by instrument section</div><div className="divide-y divide-border/50">{provisions.map((provision, index) => <div key={`${provision.instrumentId ?? "provision"}-${provision.section ?? index}`} className="report-break-inside-avoid grid gap-3 px-4 py-3 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]"><div><p className="font-mono text-sm text-cam-gold">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>{provision.heading && <p className="mt-1 font-serif text-base text-foreground">{provision.heading}</p>}<p className="mt-1 text-sm text-muted-foreground">{provision.action ?? provision.relationship ?? "Implementation recorded"}{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p></div><div><p className="report-label">{provision.action?.toLowerCase().includes("remov") ? "Literal wording removed" : "Final adopted wording"}</p><p className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-foreground/85">{provision.finalWording ?? provision.previousWording ?? "Wording not supplied."}</p><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{[provision.verificationStatus, provision.verifiedAgainst, provision.currentStatus].filter(Boolean).join(" · ")}</p></div></div>)}</div></div>;
+  return <div className="mt-4 overflow-hidden rounded-lg border border-border/70 bg-white/55">
+    <div className="border-b border-[hsl(var(--cam-corpus-metadata-border)/0.9)] bg-[hsl(var(--cam-corpus-heading))] px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-[hsl(var(--cam-corpus-heading-foreground))]">Corpus implementation by instrument section</div>
+    <div className="divide-y divide-border/50">{provisions.map((provision, index) => {
+      const sourceUrl = provision.canonicalUrl ?? provision.implementationUrl;
+      const wording = provision.finalWording ?? provision.previousWording ?? "Wording not supplied.";
+      return <article key={`${provision.instrumentId ?? "provision"}-${provision.section ?? index}`} className="report-break-inside-avoid px-4 py-4">
+        <header className="-mx-4 -mt-4 mb-4 border-b border-[hsl(var(--cam-corpus-metadata-border)/0.85)] bg-[hsl(var(--cam-corpus-metadata))] px-4 py-4 text-[hsl(var(--cam-corpus-metadata-foreground))] shadow-sm">
+          <p className="font-mono text-sm text-[hsl(var(--cam-corpus-metadata-foreground))]">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>
+          {provision.heading && <h3 className="mt-1 font-serif text-lg leading-snug text-[hsl(var(--cam-corpus-metadata-foreground))]">{provision.heading}</h3>}
+          <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--cam-corpus-metadata-foreground))]/80"><span className="font-medium text-[hsl(var(--cam-corpus-metadata-foreground))]">{provisionActionLabel(provision.action)}</span>{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p>
+          {(provision.verificationStatus || provision.verifiedAgainst) && <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--cam-corpus-metadata-foreground))]/85"><span className="font-medium text-[hsl(var(--cam-corpus-metadata-foreground))]">Verification:</span>{provision.verificationStatus && ` ${provision.verificationStatus}`}{provision.verifiedAgainst && <>{provision.verificationStatus && " · "}{sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="font-mono text-cam-gold underline decoration-cam-gold/60 underline-offset-4">{provision.verifiedAgainst}</a> : provision.verifiedAgainst}</>}</p>}
+        </header>
+        <div>
+          <p className="report-label">{provisionWordingLabel(provision.action)}</p>
+          <CorpusWording value={wording} />
+        </div>
+      </article>;
+    })}</div>
+  </div>;
 }
 
 function RepairStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-base leading-relaxed text-foreground/85">{summary(record)}</p><FieldGrid entries={[["Repair outcome", record.publicDisplay.patch?.outcome], ["Repair summary", record.publicDisplay.patch?.repairSummary], ["Implementation date", record.publicDisplay.patch?.implementationDate], ["Verification", record.publicDisplay.patch?.verificationStatus], ["Verified against", record.publicDisplay.patch?.verifiedAgainst], ["Residual monitoring", record.publicDisplay.patch?.residualMonitoring], ["Patch type", record.patch_type], ["Change scope", record.change_scope], ["Implementation mode", record.implementation_mode]]} /><ProvisionTable provisions={record.publicDisplay.corpusProvisions} /></article>) : <Incomplete text="No PATCH is linked yet. A repair may still be in development — check back later." availabilityNote={false} />}</div>;
+  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><FieldGrid entries={[["Repair outcome", record.publicDisplay.patch?.outcome], ["Repair summary", record.publicDisplay.patch?.repairSummary], ["Implementation date", record.publicDisplay.patch?.implementationDate], ["Verification", record.publicDisplay.patch?.verificationStatus], ["Verified against", record.publicDisplay.patch?.verifiedAgainst], ["Patch type", record.patch_type], ["Change scope", record.change_scope], ["Implementation mode", record.implementation_mode]]} />{displayText(record.publicDisplay.patch?.residualMonitoring) && <div className="mt-4 border-t border-border/60 pt-3"><Narrative label="Residual monitoring" value={record.publicDisplay.patch?.residualMonitoring} /></div>}<ProvisionTable provisions={record.publicDisplay.corpusProvisions} /></article>) : <Incomplete text="No PATCH is linked yet. A repair may still be in development — check back later." availabilityNote={false} />}</div>;
 }
 
 function LearnStage({ records }: { records: VigilIndexRecord[] }) {

@@ -113,6 +113,18 @@
   --app-font-mono: 'IBM Plex Mono', monospace;
   --radius: 0.375rem;
 
+  /* CAM Corpus surfaces — shared by Constitutional Interfaces and VIGIL. */
+  --cam-corpus-selected: 38 34% 82%;
+  --cam-corpus-selected-foreground: 32 62% 25%;
+  --cam-corpus-selected-border: 38 62% 40%;
+  /* Evidence-to-Repair: the heading repeats the active Corpus surface.
+     The provision summary is one approved surface lighter—not a text token. */
+  --cam-corpus-heading: var(--cam-corpus-selected);
+  --cam-corpus-heading-foreground: var(--cam-corpus-selected-foreground);
+  --cam-corpus-metadata: var(--secondary);
+  --cam-corpus-metadata-foreground: var(--secondary-foreground);
+  --cam-corpus-metadata-border: var(--cam-corpus-selected-border);
+
   --shadow-sm: 0 1px 2px 0 rgba(80, 55, 20, 0.08);
   --shadow: 0 1px 3px 0 rgba(80, 55, 20, 0.1), 0 1px 2px -1px rgba(80, 55, 20, 0.06);
   --shadow-md: 0 4px 6px -1px rgba(80, 55, 20, 0.1), 0 2px 4px -2px rgba(80, 55, 20, 0.06);
@@ -187,9 +199,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Selected interface tabs should read as active controls, not passive cards. */
 section[aria-labelledby="constitutional-interfaces-heading"] button[aria-pressed="true"] {
-  background: hsl(38 34% 82%) !important;
-  border-color: hsl(38 62% 40% / 0.75) !important;
-  color: hsl(32 62% 25%) !important;
+  background: hsl(var(--cam-corpus-selected)) !important;
+  border-color: hsl(var(--cam-corpus-selected-border) / 0.75) !important;
+  color: hsl(var(--cam-corpus-selected-foreground)) !important;
   box-shadow: 0 4px 12px rgba(80, 55, 20, 0.12);
 }
 
@@ -206,9 +218,9 @@ main:has(#impact-lenses-heading) button[aria-pressed="false"]:hover {
 section[aria-labelledby="companion-map-heading"] button[aria-pressed="true"],
 section[aria-labelledby="relational-runtime-heading"] button[aria-pressed="true"],
 main:has(#impact-lenses-heading) button[aria-pressed="true"] {
-  background: hsl(38 34% 82%) !important;
-  border-color: hsl(38 62% 40% / 0.75) !important;
-  color: hsl(32 62% 25%) !important;
+  background: hsl(var(--cam-corpus-selected)) !important;
+  border-color: hsl(var(--cam-corpus-selected-border) / 0.75) !important;
+  color: hsl(var(--cam-corpus-selected-foreground)) !important;
 }
 
 /* The substrate apex is intentionally label-light so its title remains legible. */

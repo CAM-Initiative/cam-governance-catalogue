@@ -1607,30 +1607,10 @@ export default function Vigil() {
 
         <section className="space-y-4" data-result-range-example="Showing 1–20">
           <div className="cam-parchment-card rounded-xl p-4 shadow-sm">
-            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="mb-4">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, record or source title, publisher/platform, source type, provider, domain, instrument, section, or incident term; narrow results by type, affected platform, and lifecycle status. Multiple search terms must all match.</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                  type="button"
-                  onClick={() => {
-                    setSearch("");
-                    setFilters({ recordType: "", affectedPlatform: "", status: "" });
-                  }}
-                >
-                  Clear
-                </button>
-                <button
-                  className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
-                  type="button"
-                  onClick={() => setIsExportDialogOpen(true)}
-                  disabled={loadState !== "ready" || filtered.length === 0}
-                >
-                  Export current view
-                </button>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -1667,7 +1647,25 @@ export default function Vigil() {
                 <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground/75" aria-live="polite">
                   Showing {visibleRecordStart}–{visibleRecordEnd} of {filtered.length} VIGIL records.
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2" aria-label="VIGIL results actions">
+                  <button
+                    className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                    type="button"
+                    onClick={() => {
+                      setSearch("");
+                      setFilters({ recordType: "", affectedPlatform: "", status: "" });
+                    }}
+                  >
+                    Clear filters
+                  </button>
+                  <button
+                    className="rounded-md border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
+                    type="button"
+                    onClick={() => setIsExportDialogOpen(true)}
+                    disabled={loadState !== "ready" || filtered.length === 0}
+                  >
+                    Export current view
+                  </button>
                   <button
                     type="button"
                     className="rounded-lg border border-border bg-background px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition hover:bg-card hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-45"
@@ -1788,8 +1786,6 @@ export default function Vigil() {
                             <p className="text-[15px] leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding)} /></p>
                           )}
 
-                          {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="rounded-lg border border-primary/20 bg-primary/5 p-2.5 font-mono text-[10px] leading-relaxed text-[hsl(32_62%_25%)]">Principal repair: {record.publicDisplay.principalRepair}</p>}
-
                           <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
                             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
                           </div>
@@ -1807,7 +1803,6 @@ export default function Vigil() {
                               </p>
                             </div>
                             {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-2 line-clamp-2 text-base leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
-                            {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[10px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
                           <div className="flex flex-col items-end gap-1.5 text-right">
                             <span className={`rounded-md border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] ${lifecycleTone(publicLifecycle)}`}>{publicLifecycle}</span>
