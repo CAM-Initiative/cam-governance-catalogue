@@ -1788,8 +1788,6 @@ export default function Vigil() {
                             <p className="text-[15px] leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding)} /></p>
                           )}
 
-                          {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="rounded-lg border border-primary/20 bg-primary/5 p-2.5 font-mono text-[10px] leading-relaxed text-[hsl(32_62%_25%)]">Principal repair: {record.publicDisplay.principalRepair}</p>}
-
                           <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/70 pt-3">
                             <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">Details {isExpanded ? "−" : "+"}</span>
                           </div>
@@ -1807,7 +1805,6 @@ export default function Vigil() {
                               </p>
                             </div>
                             {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-2 line-clamp-2 text-base leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
-                            {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[10px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
                           <div className="flex flex-col items-end gap-1.5 text-right">
                             <span className={`rounded-md border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] ${lifecycleTone(publicLifecycle)}`}>{publicLifecycle}</span>
