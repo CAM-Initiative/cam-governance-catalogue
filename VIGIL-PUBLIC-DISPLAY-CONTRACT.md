@@ -175,6 +175,6 @@ Lean VIGIL registry entries SHOULD project the following public fields so the Ob
 - `corpus_search_terms`;
 - `display_contract_status`.
 
-Search MUST support record ID, failure title, provider or system, domain, lifecycle status, instrument code, and section number. Multi-term queries MUST match terms independently, so `AEON-003 §7.4.1` can find a record even when the instrument and section are stored in separate projected fields.
+Search MUST support record ID, failure title, provider or system, domain, lifecycle status, instrument code, section number, and high-value source metadata such as primary source title, publisher or platform, source type, and source domain where projected. Source metadata is an indexed discovery aid; it does not replace canonical `source_records` evidence or establish that the source was independently reviewed. Multi-term queries MUST match terms independently, so `AEON-003 §7.4.1` or `Hugging Face security incident` can find a record even when the terms are stored in separate projected fields. Exact source-title and publisher matches SHOULD rank ahead of broad contextual matches.
 
 Literal adopted wording MUST remain in the canonical record and detail view; it SHOULD NOT be copied into a lean registry index.
