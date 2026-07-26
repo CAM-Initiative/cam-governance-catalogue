@@ -339,9 +339,45 @@ function DiagnoseStage({ records }: { records: VigilIndexRecord[] }) {
   </article>) : <Incomplete text="Proposal not yet linked." />}</div>;
 }
 
+function provisionActionLabel(action?: string) {
+  const normalized = action?.trim().toLowerCase() ?? "";
+  if (normalized.includes("relied-upon") || normalized.includes("pre-existing") || normalized.includes("coverage")) return "Existing control — no amendment required";
+  if (normalized.includes("remov") || normalized.includes("repeal")) return "Removed";
+  if (normalized.includes("add")) return "Added";
+  if (normalized.includes("amend") || normalized.includes("modif") || normalized.includes("updat")) return "Amended";
+  return action || "Implementation recorded";
+}
+
+function provisionWordingLabel(action?: string) {
+  const normalized = action?.trim().toLowerCase() ?? "";
+  if (normalized.includes("relied-upon") || normalized.includes("pre-existing") || normalized.includes("coverage")) return "Existing applicable wording";
+  return normalized.includes("remov") || normalized.includes("repeal") ? "Literal wording removed" : "Final adopted wording";
+}
+
 function ProvisionTable({ provisions }: { provisions: CorpusProvision[] }) {
   if (!provisions.length) return null;
-  return <div className="mt-4 overflow-hidden rounded-lg border border-border/70 bg-white/55"><div className="border-b border-border/60 bg-white/45 px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-muted-foreground">Corpus implementation by instrument section</div><div className="divide-y divide-border/50">{provisions.map((provision, index) => <div key={`${provision.instrumentId ?? "provision"}-${provision.section ?? index}`} className="report-break-inside-avoid grid gap-3 px-4 py-3 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)]"><div><p className="font-mono text-sm text-cam-gold">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>{provision.heading && <p className="mt-1 font-serif text-base text-foreground">{provision.heading}</p>}<p className="mt-1 text-sm text-muted-foreground">{provision.action ?? provision.relationship ?? "Implementation recorded"}{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p></div><div><p className="report-label">{provision.action?.toLowerCase().includes("remov") ? "Literal wording removed" : "Final adopted wording"}</p><p className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-foreground/85">{provision.finalWording ?? provision.previousWording ?? "Wording not supplied."}</p><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{[provision.verificationStatus, provision.verifiedAgainst, provision.currentStatus].filter(Boolean).join(" · ")}</p></div></div>)}</div></div>;
+  return <div className="mt-4 overflow-hidden rounded-lg border border-border/70 bg-white/55">
+    <div className="border-b border-border/60 bg-white/45 px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-muted-foreground">Corpus implementation by instrument section</div>
+    <div className="divide-y divide-border/50">{provisions.map((provision, index) => {
+      const sourceUrl = provision.canonicalUrl ?? provision.implementationUrl;
+      const verification = [provision.verificationStatus, provision.verifiedAgainst, provision.currentStatus].filter(Boolean).join(" · ");
+      return <article key={`${provision.instrumentId ?? "provision"}-${provision.section ?? index}`} className="report-break-inside-avoid px-4 py-4">
+        <header>
+          <p className="font-mono text-sm text-cam-gold">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>
+          {provision.heading && <h3 className="mt-1 font-serif text-lg leading-snug text-foreground">{provision.heading}</h3>}
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground"><span className="font-medium text-foreground/80">{provisionActionLabel(provision.action)}</span>{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p>
+        </header>
+        <div className="mt-4 border-t border-border/50 pt-3">
+          <p className="report-label">{provisionWordingLabel(provision.action)}</p>
+          <p className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-foreground/85">{provision.finalWording ?? provision.previousWording ?? "Wording not supplied."}</p>
+        </div>
+        {(verification || sourceUrl) && <div className="mt-3 border-t border-border/50 pt-3 text-sm leading-relaxed text-muted-foreground">
+          {verification && <p><span className="font-medium text-foreground/80">Verification:</span> {verification}</p>}
+          {sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer" className="mt-1 inline-block text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">View verified corpus source</a>}
+        </div>}
+      </article>;
+    })}</div>
+  </div>;
 }
 
 function RepairStage({ records }: { records: VigilIndexRecord[] }) {

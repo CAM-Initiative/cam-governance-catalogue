@@ -756,6 +756,17 @@ test("responsive shell and evidence reports use available width and readable typ
   assert.match(polishCss, /font-size: 0\.75rem;/);
 });
 
+test("Repair corpus provisions use full-width entries with plain-English control labels", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  const provisions = report.slice(report.indexOf("function provisionActionLabel"), report.indexOf("function RepairStage"));
+
+  assert.match(provisions, /Existing control — no amendment required/);
+  assert.match(provisions, /Existing applicable wording/);
+  assert.match(provisions, /View verified corpus source/);
+  assert.match(provisions, /const sourceUrl = provision\.canonicalUrl \?\? provision\.implementationUrl/);
+  assert.doesNotMatch(provisions, /sm:grid-cols-\[minmax\(0,0\.8fr\)_minmax\(0,1fr\)\]/);
+});
+
 test("generated reports suppress duplicated observation preambles", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
