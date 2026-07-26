@@ -771,7 +771,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
                 <button
                   key={recordId}
                   type="button"
-                  className={`rounded-md border px-2 py-1 font-mono text-[10px] tracking-[0.04em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
+                  className={`rounded-md border px-2.5 py-1.5 font-mono text-sm tracking-[0.04em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
                   onClick={() => recordId !== currentId && onNavigateRecord?.(recordId)}
                   disabled={recordId === currentId || !onNavigateRecord}
                   aria-label={recordId === currentId ? `${recordId}, current record` : `Find linked record ${recordId}`}
@@ -1102,10 +1102,6 @@ function recordExportText(jsonText: string) {
   return `${camInitiativeCitationHeader}\n\n${vigilReuseNotice}\n\n${jsonText}\n`;
 }
 
-function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url">) {
-  return record.github_blob_url || undefined;
-}
-
 function exportFileName(status: string) {
   const date = new Date().toISOString().slice(0, 10);
   const statusPart = (status || "all").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "");
@@ -1139,6 +1135,25 @@ function defaultOpenSummaryNames(record: VigilIndexRecord) {
   const preferred = new Set((preferredByType[record.record_type] ?? []).filter((name) => meaningfulSummaries.includes(name as (typeof meaningfulSummaries)[number])));
   if (preferred.size > 0) return preferred;
   return new Set(meaningfulSummaries.slice(0, 1));
+}
+
+function searchRelevance(record: VigilIndexRecord, query: string) {
+  const normalizedQuery = query.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+  if (!normalizedQuery) return 0;
+  const terms = normalizedQuery.split(" ").filter(Boolean);
+  const exactPhraseScore = record.searchText.includes(normalizedQuery) ? 1000 : 0;
+  const termScore = terms.reduce((score, term) => {
+    let occurrences = 0;
+    let offset = 0;
+    while (offset < record.searchText.length) {
+      const index = record.searchText.indexOf(term, offset);
+      if (index < 0) break;
+      occurrences += 1;
+      offset = index + term.length;
+    }
+    return score + Math.min(100, occurrences * 10);
+  }, 0);
+  return exactPhraseScore + termScore;
 }
 
 export default function Vigil() {
@@ -1195,7 +1210,13 @@ export default function Vigil() {
       });
       const searchOk = matchesVigilSearch(record.searchText, search);
       return filtersOk && searchOk;
-    }).sort((a, b) => compareRecordsBySort(a, b, sortConfig)),
+    }).sort((a, b) => {
+      if (search.trim()) {
+        const relevanceDifference = searchRelevance(b, search) - searchRelevance(a, search);
+        if (relevanceDifference !== 0) return relevanceDifference;
+      }
+      return compareRecordsBySort(a, b, sortConfig);
+    }),
     [filters, records, search, sortConfig],
   );
 
@@ -1701,7 +1722,6 @@ export default function Vigil() {
 
             {pagedRecords.map((record, index) => {
               const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
-              const sourceHref = sourceRecordUrl(record);
               const recordKey = recordKeyFor(record, recordPageStart + index);
               const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
               const isExpanded = expandedRecordKeys.has(recordKey);
@@ -1784,7 +1804,18 @@ export default function Vigil() {
 
                   {isExpanded && (
                     <div id={detailsPanelId} className="vigil-detail-surface px-4 py-5 md:px-5">
-                      <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
+                      <div className="mb-3 flex justify-end gap-2 border-b border-border pb-3">
+                        <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
+                          {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
+                          <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
+                        </button>
+                        <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
+                        <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => toggleExpandedRecord(record, recordKey)} aria-expanded={isExpanded} aria-controls={detailsPanelId} title="Collapse record">
+                          <X size={16} strokeWidth={1.8} aria-hidden="true" />
+                          <span className="sr-only">Collapse record</span>
+                        </button>
+                      </div>
+                      <div className="mb-4 border-b border-border pb-4">
                         <div className="min-w-0">
                           <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
                           <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
@@ -1794,24 +1825,6 @@ export default function Vigil() {
                               <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] ${badgeIndex === 0 ? lifecycleTone(String(value)) : "border-border bg-card text-muted-foreground"}`}>{value}</span>
                             ))}
                           </div>
-                        </div>
-                        <div className="flex shrink-0 flex-wrap gap-2">
-                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View source record →</a>}
-                          <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
-                            {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
-                            <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
-                          </button>
-                          <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
-                          <button
-                            type="button"
-                            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                            onClick={() => toggleExpandedRecord(record, recordKey)}
-                            aria-expanded={isExpanded}
-                            aria-controls={detailsPanelId}
-                          >
-                            <X size={16} strokeWidth={1.8} aria-hidden="true" />
-                            <span className="sr-only">Collapse record</span>
-                          </button>
                         </div>
                       </div>
 
