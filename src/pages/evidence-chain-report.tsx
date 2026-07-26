@@ -354,27 +354,46 @@ function provisionWordingLabel(action?: string) {
   return normalized.includes("remov") || normalized.includes("repeal") ? "Literal wording removed" : "Final adopted wording";
 }
 
+function renderInlineMarkdown(value: string) {
+  return value.split(/(\*\*[^*\n]+\*\*|`[^`\n]+`|\*[^*\n]+\*)/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={index}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith("`") && part.endsWith("`")) return <code key={index} className="rounded bg-black/5 px-1 py-0.5 font-mono text-[0.9em]">{part.slice(1, -1)}</code>;
+    if (part.startsWith("*") && part.endsWith("*")) return <em key={index}>{part.slice(1, -1)}</em>;
+    return part;
+  });
+}
+
+function CorpusWording({ value }: { value: string }) {
+  return <div className="mt-1 space-y-2.5 text-base leading-relaxed text-foreground/85">{value.split("\n").map((line, index) => {
+    if (!line.trim()) return <div key={index} className="h-1.5" aria-hidden="true" />;
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) return <h4 key={index} className="font-serif text-lg leading-snug text-foreground">{renderInlineMarkdown(heading[2])}</h4>;
+    const bullet = line.match(/^\s*[-*]\s+(.+)$/);
+    if (bullet) return <p key={index} className="flex gap-2"><span aria-hidden="true">•</span><span>{renderInlineMarkdown(bullet[1])}</span></p>;
+    const numbered = line.match(/^\s*(\d+)\.\s+(.+)$/);
+    if (numbered) return <p key={index} className="flex gap-2"><span aria-hidden="true">{numbered[1]}.</span><span>{renderInlineMarkdown(numbered[2])}</span></p>;
+    return <p key={index}>{renderInlineMarkdown(line)}</p>;
+  })}</div>;
+}
+
 function ProvisionTable({ provisions }: { provisions: CorpusProvision[] }) {
   if (!provisions.length) return null;
   return <div className="mt-4 overflow-hidden rounded-lg border border-border/70 bg-white/55">
     <div className="border-b border-border/60 bg-white/45 px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-muted-foreground">Corpus implementation by instrument section</div>
     <div className="divide-y divide-border/50">{provisions.map((provision, index) => {
       const sourceUrl = provision.canonicalUrl ?? provision.implementationUrl;
-      const verification = [provision.verificationStatus, provision.verifiedAgainst, provision.currentStatus].filter(Boolean).join(" · ");
+      const wording = provision.finalWording ?? provision.previousWording ?? "Wording not supplied.";
       return <article key={`${provision.instrumentId ?? "provision"}-${provision.section ?? index}`} className="report-break-inside-avoid px-4 py-4">
-        <header>
-          <p className="font-mono text-sm text-cam-gold">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>
-          {provision.heading && <h3 className="mt-1 font-serif text-lg leading-snug text-foreground">{provision.heading}</h3>}
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground"><span className="font-medium text-foreground/80">{provisionActionLabel(provision.action)}</span>{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p>
+        <header className="-mx-4 -mt-4 mb-4 border-b border-[hsl(145_22%_21%)] bg-[hsl(145_28%_27%)] px-4 py-4 text-white shadow-sm">
+          <p className="font-mono text-sm text-[hsl(43_78%_75%)]">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>
+          {provision.heading && <h3 className="mt-1 font-serif text-lg leading-snug text-white">{provision.heading}</h3>}
+          <p className="mt-2 text-sm leading-relaxed text-white/80"><span className="font-medium text-white">{provisionActionLabel(provision.action)}</span>{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p>
+          {(provision.verificationStatus || provision.verifiedAgainst) && <p className="mt-2 text-sm leading-relaxed text-white/85"><span className="font-medium text-white">Verification:</span>{provision.verificationStatus && ` ${provision.verificationStatus}`}{provision.verifiedAgainst && <>{provision.verificationStatus && " · "}{sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="font-mono text-[hsl(43_78%_75%)] underline decoration-[hsl(43_78%_75%)]/60 underline-offset-4">{provision.verifiedAgainst}</a> : provision.verifiedAgainst}</>}</p>}
         </header>
-        <div className="mt-4 border-t border-border/50 pt-3">
+        <div>
           <p className="report-label">{provisionWordingLabel(provision.action)}</p>
-          <p className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-foreground/85">{provision.finalWording ?? provision.previousWording ?? "Wording not supplied."}</p>
+          <CorpusWording value={wording} />
         </div>
-        {(verification || sourceUrl) && <div className="mt-3 border-t border-border/50 pt-3 text-sm leading-relaxed text-muted-foreground">
-          {verification && <p><span className="font-medium text-foreground/80">Verification:</span> {verification}</p>}
-          {sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer" className="mt-1 inline-block text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">View verified corpus source</a>}
-        </div>}
       </article>;
     })}</div>
   </div>;
