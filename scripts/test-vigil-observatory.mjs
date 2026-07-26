@@ -63,6 +63,30 @@ test("VIGIL normalization exposes human-readable title and only uses ID as last 
   }
 });
 
+test("VIGIL search indexes source metadata as conjunctive discovery fields", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const { matchesVigilSearch } = modules.publicDisplay;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-OBS-0199",
+      record_type: "observation",
+      title: "Runtime security event",
+      summary: "A verified security incident involving an evaluation pathway.",
+      primary_source_title: "OpenAI and Hugging Face partner to address security incident",
+      primary_source_platform: "OpenAI",
+      source_platforms: ["OpenAI", "Hugging Face"],
+      source_types: ["official-source"],
+    });
+
+    assert.equal(matchesVigilSearch(record.searchText, "Hugging Face"), true);
+    assert.equal(matchesVigilSearch(record.searchText, "Hugging Face security incident"), true);
+    assert.equal(matchesVigilSearch(record.searchText, "Reuters"), false);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL normalization never fabricates placeholder record identifiers", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -164,6 +188,15 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
   assert.doesNotMatch(collapsedRow, /Open record/);
   assert.doesNotMatch(collapsedRow, /Raw JSON/);
   assert.doesNotMatch(collapsedRow, /record\.id/);
+});
+
+test("generated evidence reports use declared source evidence from observations and failure modes", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  assert.match(report, /External source evidence/);
+  assert.match(report, /state\.chain\.observations/);
+  assert.match(report, /state\.chain\.failureModes/);
+  assert.match(report, /uniqueSourceEvidence\(evidenceRecords\.flatMap\(sourceEvidenceFor\)\)/);
+  assert.match(report, /Open external source/);
 });
 
 test("VIGIL live registry resolver follows master child indexes without deprecated files", async () => {
