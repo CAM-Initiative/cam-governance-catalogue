@@ -4,7 +4,7 @@ The public CAM interface uses a warm parchment, archival-gold, and Corpus-surfac
 
 ## Shared Corpus selection surface
 
-`--cam-corpus-selected` is the selected-state surface for **Constitutional Interfaces**. It is also the background for an Evidence-to-Repair report's **Corpus implementation by instrument section** header. This keeps the Corpus visually coherent across the site.
+`--cam-corpus-selected` is the selected-state surface for **Constitutional Interfaces**. It keeps the Corpus selection state visually coherent across the site.
 
 Use the accompanying `--cam-corpus-selected-foreground` and `--cam-corpus-selected-border` tokens for text and borders on that surface.
 
