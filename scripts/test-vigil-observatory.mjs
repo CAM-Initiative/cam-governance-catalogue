@@ -735,6 +735,27 @@ test("home Evidence to Repair steps use readable cards within a horizontal scrol
   assert.doesNotMatch(page, /text-\[13px\] font-light/);
 });
 
+test("responsive shell and evidence reports use available width and readable type", async () => {
+  const shell = await readFile(resolve(repoRoot, "src/components/layout/Shell.tsx"), "utf8");
+  const home = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  const polishCss = await readFile(resolve(repoRoot, "src/polish.css"), "utf8");
+  const diagnosis = report.slice(report.indexOf("function DiagnoseStage"), report.indexOf("function ProvisionTable"));
+
+  assert.match(shell, /aria-label="Footer" className="flex w-full max-w-full flex-wrap/);
+  assert.doesNotMatch(shell, /aria-label="Footer" className="flex flex-nowrap/);
+  assert.match(home, /w-full max-w-\[100rem\]/);
+  assert.match(home, /lg:grid-cols-\[minmax\(0,1\.35fr\)_minmax\(27rem,0\.85fr\)\]/);
+  assert.match(report, /report-page container mx-auto w-full max-w-7xl px-4/);
+  assert.match(report, /<div className="sm:col-span-2"><Narrative label="Interpretation"/);
+  assert.doesNotMatch(report, /text-\[(?:9|10|11)px\]/);
+  assert.match(report, /text-base leading-relaxed text-foreground\/85/);
+  assert.doesNotMatch(diagnosis, /RecordHeading/);
+  assert.match(diagnosis, /Problem Diagnosed/);
+  assert.match(diagnosis, /VIGIL Proposal/);
+  assert.match(polishCss, /font-size: 0\.75rem;/);
+});
+
 test("generated reports suppress duplicated observation preambles", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
