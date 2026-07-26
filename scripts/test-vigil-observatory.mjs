@@ -682,6 +682,11 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
 
   assert.doesNotMatch(report, /report-step-index/);
   assert.match(report, /function collectCitations/);
+  assert.match(report, /record\.github_blob_url \|\| record\.raw_url \|\| undefined/);
+  assert.match(report, /const citation = record \? vigilCitationNumber\(record, citations\) : undefined/);
+  assert.match(report, /aria-label=.*Citation.*citation/);
+  assert.match(report, /citations=\{citations\}/);
+  assert.match(report, /VIGIL canonical record/);
   assert.match(report, /function Citations/);
   assert.match(report, /VIGIL Interpretation/);
   assert.match(report, /VIGIL CITATION/);
