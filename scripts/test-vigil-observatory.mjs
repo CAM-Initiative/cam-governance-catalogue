@@ -639,7 +639,7 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.doesNotMatch(report, /report-step-index/);
   assert.match(report, /function collectCitations/);
   assert.match(report, /function Citations/);
-  assert.match(report, /Source observations/);
+  assert.match(report, /External source evidence/);
   assert.doesNotMatch(report, /Affected domains.*record\.affected_domains/);
   assert.doesNotMatch(report, /Affected parties or interests.*record\.publicDisplay\.failure/);
   assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
