@@ -377,7 +377,7 @@ function EvidenceRepairLoop() {
         </div>
       </div>
 
-      <div className="overflow-x-auto overflow-y-hidden pb-4">
+      <div className="overflow-x-auto overflow-y-hidden pb-4" role="region" aria-label="VIGIL evidence-to-repair six-step method" tabIndex={0}>
         <div className="mx-auto flex w-max min-w-max items-start justify-center px-6 pb-6 pt-3 md:px-10">
           {evidenceRepairSteps.map((step, index) => {
             const isLast = index === evidenceRepairSteps.length - 1;
@@ -385,17 +385,17 @@ function EvidenceRepairLoop() {
               <div className="flex items-start" key={step.label}>
                 <motion.article
                   animate={{ opacity: 1, y: 0 }}
-                  className="cam-parchment-card flex min-h-[175px] w-[160px] flex-col rounded-2xl border border-cam-gold/35 p-4 shadow-[0_1px_4px_rgba(120,80,20,0.07)]"
+                  className="cam-parchment-card flex min-h-[220px] w-[260px] flex-col rounded-2xl border border-cam-gold/35 p-5 shadow-[0_1px_4px_rgba(120,80,20,0.07)]"
                   initial={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.45, delay: index * 0.06 }}
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cam-gold">Step {String(index + 1).padStart(2, "0")}</span>
+                  <span className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-cam-gold">Step {String(index + 1).padStart(2, "0")}</span>
                   <h3 className="mt-3 font-serif text-xl leading-snug text-foreground">{step.label}</h3>
-                  <p className="mt-3 text-[13px] font-light leading-relaxed text-muted-foreground">{step.text}</p>
+                  <p className="mt-3 text-base font-normal leading-relaxed text-muted-foreground">{step.text}</p>
                 </motion.article>
 
                 {!isLast ? (
-                  <div className="flex h-[175px] w-8 shrink-0 items-center justify-center" aria-hidden="true">
+                  <div className="flex h-[220px] w-10 shrink-0 items-center justify-center" aria-hidden="true">
                     <svg width="28" height="14" viewBox="0 0 28 14" fill="none">
                       <line x1="1" y1="7" x2="20" y2="7" stroke="#D4AA72" strokeWidth="1" />
                       <polyline points="16,3 24,7 16,11" fill="none" stroke="#D4AA72" strokeWidth="1" strokeLinejoin="round" />

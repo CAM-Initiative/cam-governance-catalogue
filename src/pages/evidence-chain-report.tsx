@@ -369,12 +369,7 @@ function Citations({ citations }: { citations: Citation[] }) {
     <span className="font-mono text-xs text-cam-gold">[{citation.number}]</span>
     <span className="min-w-0">
       {citation.kind === "vigil"
-        ? <><span className="font-medium">VIGIL canonical record</span><dl className="mt-1 grid gap-x-4 gap-y-1 text-xs text-muted-foreground sm:grid-cols-2">
-            <div><dt className="inline font-medium">Record ID: </dt><dd className="inline">{citation.recordId}</dd></div>
-            <div><dt className="inline font-medium">Record Title: </dt><dd className="inline">{citation.recordTitle}</dd></div>
-            <div><dt className="inline font-medium">Record Version: </dt><dd className="inline">{citation.recordVersion ?? "Not specified"}</dd></div>
-            <div><dt className="inline font-medium">Record Last Update: </dt><dd className="inline">{citation.recordLastUpdated ?? "Not specified"}</dd></div>
-          </dl></>
+        ? <cite className="not-italic"><span className="font-medium">{citation.recordId} — {citation.recordTitle}</span><span className="text-muted-foreground"> — VIGIL Observatory{citation.recordLastUpdated ? ` · ${citation.recordLastUpdated}` : ""}{citation.recordVersion ? `, Version ${citation.recordVersion}` : ""}{citation.url ? "," : "."}</span></cite>
         : <><span className="font-medium">{citation.title}</span>{[citation.publisher, citation.date].filter(Boolean).length ? <span className="text-muted-foreground"> — {[citation.publisher, citation.date].filter(Boolean).join(" · ")}</span> : null}</>}
       {citation.url ? <><br /><a href={citation.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{citation.url}</a></> : null}
     </span>
