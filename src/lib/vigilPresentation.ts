@@ -13,6 +13,8 @@ export type VigilIndexRecord = {
   id: string;
   record_type: string;
   record_state?: string;
+  record_version?: string;
+  record_last_updated?: string;
   date_recorded?: string;
   date_implemented?: string;
   title: string;
@@ -632,6 +634,10 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
   const github_blob_url = githubBlobUrlForRecord({ github_blob_url: getOptionalField(record, ["github_blob_url", "githubBlobUrl"]), path }) ?? "";
   const raw_url = rawUrlForRecord({ raw_url: getOptionalField(record, ["raw_url", "rawUrl"]), path }) ?? "";
   const record_state = normalizeStatus(getOptionalField(record, ["record_state", "status", "state"]));
+  const record_version = getOptionalField(record, ["record_version", "recordVersion", "version"])
+    ?? getNestedField(record, ["record_identity.version", "recordIdentity.version"]);
+  const record_last_updated = getOptionalField(record, ["record_last_updated", "recordLastUpdated", "last_updated", "lastUpdated", "updated_at", "date_updated"])
+    ?? getNestedField(record, ["record_identity.updated", "recordIdentity.updated"]);
   const publicDisplay = deriveVigilPublicDisplay(record, { recordType: record_type, id, recordState: record_state });
 
   const normalized: VigilIndexRecord = {
@@ -639,6 +645,8 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     id,
     record_type,
     record_state,
+    record_version,
+    record_last_updated,
     date_recorded: getOptionalField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
     date_implemented: getOptionalField(record, ["date_implemented", "dateImplemented", "implemented_date", "implementedDate"]),
     title: resolveRecordTitle(record, id, path, index),
