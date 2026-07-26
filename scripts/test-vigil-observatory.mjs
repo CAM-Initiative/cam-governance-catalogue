@@ -677,22 +677,33 @@ test("expanded VIGIL records keep all post-chain detail sections collapsed by de
   assert.match(page, /The report does not follow contextual links/);
 });
 
-test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
+test("Evidence Chain Report keeps citation details at the end and reflows diagnosis content", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
 
   assert.doesNotMatch(report, /report-step-index/);
   assert.match(report, /function collectCitations/);
+  assert.match(report, /function externalSourceEvidenceFor/);
+  assert.match(report, /for \(const record of records\) for \(const source of externalSourceEvidenceFor\(record\)\)/);
   assert.match(report, /record\.github_blob_url \|\| record\.raw_url \|\| undefined/);
+  assert.match(report, /recordTitle: record\.title/);
+  assert.match(report, /recordVersion: record\.record_version/);
+  assert.match(report, /recordLastUpdated: record\.record_last_updated/);
   assert.match(report, /const citation = record \? vigilCitationNumber\(record, citations\) : undefined/);
   assert.match(report, /aria-label=.*Citation.*citation/);
   assert.match(report, /citations=\{citations\}/);
   assert.match(report, /VIGIL canonical record/);
   assert.match(report, /function Citations/);
+  assert.match(report, /Record Version:/);
+  assert.match(report, /Record Last Update:/);
+  assert.match(report, /function normalizeReportRecord/);
   assert.match(report, /VIGIL Interpretation/);
-  assert.match(report, /VIGIL CITATION/);
+  assert.doesNotMatch(report, /function VigilCitation/);
+  assert.doesNotMatch(report, /VIGIL CITATION/);
   assert.match(report, /kind: "vigil"/);
   assert.match(report, /generatedAt: new Date\(\)\.toISOString\(\)/);
   assert.match(report, /type="checkbox"/);
+  assert.match(report, /Problem Diagnosed/);
+  assert.match(report, /VIGIL Proposal/);
   assert.doesNotMatch(report, /External source evidence/);
   assert.doesNotMatch(report, /The external source is shown first/);
   assert.doesNotMatch(report, /VIGIL observation record/);
