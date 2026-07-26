@@ -1765,9 +1765,12 @@ export default function Vigil() {
                           <div className="font-mono text-sm uppercase tracking-[0.08em] text-muted-foreground/80">{recordDate}</div>
                           <div className="min-w-0">
                             <h2 className="whitespace-normal break-words font-mono text-[15px] font-semibold leading-snug text-foreground lg:text-base">{record.title}</h2>
-                            <p className="mt-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                            <div className="mt-2 flex flex-wrap items-center gap-2">
+                              <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] ${recordTypeTone(record.record_type)}`}>{recordTypeLabel(record.record_type)}</span>
+                              <p className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
                               {[record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
-                            </p>
+                              </p>
+                            </div>
                             {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-2 line-clamp-2 text-base leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
                             {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[10px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
