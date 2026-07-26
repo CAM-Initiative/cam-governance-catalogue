@@ -657,7 +657,7 @@ test("generated reports suppress duplicated observation preambles", async () => 
   assert.match(report, /normalizedNarrative\(preamble\) === normalizedNarrative\(observed\)/);
   assert.match(report, /preamble && <p/);
   assert.match(page, /Generate report →/);
-  assert.match(page, /bg-foreground/);
+  assert.match(page, /bg-\\[hsl\\(38_34%_82%\\)\\]/);
   assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
 });
 
@@ -675,7 +675,7 @@ test("public interface legibility pass standardises VIGIL typography, controls, 
   assert.match(page, /patch_note: "Patch"/);
   assert.match(page, /border-rose-300 bg-rose-50/);
   assert.match(page, /border-blue-300 bg-blue-50/);
-  assert.match(page, /border-violet-300 bg-violet-50/);
+  assert.match(page, /border-orange-400 bg-orange-50/);
   assert.match(page, /border-emerald-300 bg-emerald-50/);
   assert.match(page, /bg-\[hsl\(38_34%_82%\)\].*Generate report/);
   assert.doesNotMatch(page, /bg-foreground[^"]*">Generate report/);
@@ -686,6 +686,18 @@ test("public interface legibility pass standardises VIGIL typography, controls, 
   assert.match(polishCss, /font-size: 1rem !important/);
 });
 
+test("expanded VIGIL header keeps the record ID with its icon controls and removes redundant search help", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const detailHeader = page.slice(page.indexOf('className="vigil-detail-surface'), page.indexOf('{detailLoad?.status === "loading"'));
+
+  assert.match(detailHeader, /flex flex-wrap items-center justify-between gap-3/);
+  assert.match(detailHeader, /detailRecord\\.id/);
+  assert.match(detailHeader, /Copy raw JSON/);
+  assert.match(detailHeader, /Download raw JSON/);
+  assert.match(detailHeader, /Collapse record/);
+  assert.doesNotMatch(page, /vigil-search-help/);
+  assert.doesNotMatch(page, /Source titles, publishers, source types, source platforms, vendors, jurisdictions, and source domains are searchable metadata/);
+});
 test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);
