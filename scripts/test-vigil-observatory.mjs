@@ -63,6 +63,50 @@ test("VIGIL normalization exposes human-readable title and only uses ID as last 
   }
 });
 
+test("VIGIL normalization exposes record citation version and last update", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-OBS-0020",
+      record_type: "observation",
+      record_identity: {
+        title: "Citation metadata observation",
+        version: "1.0",
+        updated: "2026-07-25",
+      },
+    });
+    assert.equal(record.record_version, "1.0");
+    assert.equal(record.record_last_updated, "2026-07-25");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("VIGIL search indexes source metadata as conjunctive discovery fields", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const { matchesVigilSearch } = modules.publicDisplay;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-OBS-0199",
+      record_type: "observation",
+      title: "Runtime security event",
+      summary: "A verified security incident involving an evaluation pathway.",
+      primary_source_title: "OpenAI and Hugging Face partner to address security incident",
+      primary_source_platform: "OpenAI",
+      source_platforms: ["OpenAI", "Hugging Face"],
+      source_types: ["official-source"],
+    });
+
+    assert.equal(matchesVigilSearch(record.searchText, "Hugging Face"), true);
+    assert.equal(matchesVigilSearch(record.searchText, "Hugging Face security incident"), true);
+    assert.equal(matchesVigilSearch(record.searchText, "Reuters"), false);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL normalization never fabricates placeholder record identifiers", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -159,11 +203,44 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
   const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
   assert.match(collapsedRow, /record\.title/);
   assert.match(collapsedRow, /record\.platform_label/);
-  assert.match(collapsedRow, /record\.type_label/);
+  assert.match(collapsedRow, /recordTypeLabel\(record\.record_type\)/);
   assert.doesNotMatch(collapsedRow, /Source ↗/);
   assert.doesNotMatch(collapsedRow, /Open record/);
   assert.doesNotMatch(collapsedRow, /Raw JSON/);
   assert.doesNotMatch(collapsedRow, /record\.id/);
+});
+
+test("generated evidence reports use declared source evidence from observations and failure modes", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  assert.match(report, /state\.chain\.observations/);
+  assert.match(report, /state\.chain\.failureModes/);
+  assert.match(report, /function ObservationEvidenceRecord/);
+  assert.match(report, /function SupportingEvidence/);
+  assert.match(report, /supportingSourceEvidence/);
+  assert.match(report, /function isVigilRecordCitationSource/);
+  assert.match(report, /if \(isVigilRecordCitationSource\(source\)\) continue/);
+  assert.match(report, /VIGIL Interpretation/);
+  assert.match(report, /VIGIL CITATION/);
+  assert.match(report, /function VigilCitation/);
+  assert.match(report, /<VigilCitation record=\{record\} number=\{citation\} \/>/);
+  assert.match(report, /record_version/);
+  assert.match(report, /record_last_updated/);
+  assert.match(report, /Record ID/);
+  assert.match(report, /Record Title/);
+  assert.match(report, /Record Version/);
+  assert.match(report, /Record Last Update/);
+  assert.match(report, /What was observed/);
+  assert.match(report, /Context/);
+  assert.match(report, /Interpretation/);
+  assert.match(report, /label: "Observation"/);
+  assert.match(report, /label: "Classification"/);
+  assert.match(report, /label: "Diagnosis"/);
+  assert.match(report, /A corpus PATCH or ecosystem-suggested repair grounded in existing corpus safeguards/);
+  assert.doesNotMatch(report, /External source evidence/);
+  assert.doesNotMatch(report, /The external source is shown first/);
+  assert.doesNotMatch(report, /VIGIL observation record/);
+  assert.doesNotMatch(report, /Open external source/);
+  assert.doesNotMatch(report, /View in Observatory/);
 });
 
 test("VIGIL live registry resolver follows master child indexes without deprecated files", async () => {
@@ -605,8 +682,20 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
 
   assert.doesNotMatch(report, /report-step-index/);
   assert.match(report, /function collectCitations/);
+  assert.match(report, /record\.github_blob_url \|\| record\.raw_url \|\| undefined/);
+  assert.match(report, /const citation = record \? vigilCitationNumber\(record, citations\) : undefined/);
+  assert.match(report, /aria-label=.*Citation.*citation/);
+  assert.match(report, /citations=\{citations\}/);
+  assert.match(report, /VIGIL canonical record/);
   assert.match(report, /function Citations/);
-  assert.match(report, /Source observations/);
+  assert.match(report, /VIGIL Interpretation/);
+  assert.match(report, /VIGIL CITATION/);
+  assert.match(report, /kind: "vigil"/);
+  assert.match(report, /generatedAt: new Date\(\)\.toISOString\(\)/);
+  assert.match(report, /type="checkbox"/);
+  assert.doesNotMatch(report, /External source evidence/);
+  assert.doesNotMatch(report, /The external source is shown first/);
+  assert.doesNotMatch(report, /VIGIL observation record/);
   assert.doesNotMatch(report, /Affected domains.*record\.affected_domains/);
   assert.doesNotMatch(report, /Affected parties or interests.*record\.publicDisplay\.failure/);
   assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
@@ -622,9 +711,10 @@ test("generated reports suppress duplicated observation preambles", async () => 
 
   assert.match(report, /function distinctObservationPreamble/);
   assert.match(report, /normalizedNarrative\(preamble\) === normalizedNarrative\(observed\)/);
-  assert.match(report, /preamble && <p/);
+  assert.match(report, /preamble && <div/);
+  assert.match(report, /report-section-excluded/);
   assert.match(page, /Generate report →/);
-  assert.match(page, /bg-foreground/);
+  assert.match(page, /bg-\[hsl\(38_48%_90%\)\]/);
   assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
 });
 
@@ -642,9 +732,9 @@ test("public interface legibility pass standardises VIGIL typography, controls, 
   assert.match(page, /patch_note: "Patch"/);
   assert.match(page, /border-rose-300 bg-rose-50/);
   assert.match(page, /border-blue-300 bg-blue-50/);
-  assert.match(page, /border-violet-300 bg-violet-50/);
+  assert.match(page, /border-orange-400 bg-orange-50/);
   assert.match(page, /border-emerald-300 bg-emerald-50/);
-  assert.match(page, /bg-\[hsl\(38_34%_82%\)\].*Generate report/);
+  assert.match(page, /bg-\[hsl\(38_48%_90%\)\].*Generate report/);
   assert.doesNotMatch(page, /bg-foreground[^"]*">Generate report/);
   assert.match(home, /text-\[17px\] leading-relaxed/);
   assert.match(home, /font-mono text-sm font-semibold uppercase/);
@@ -653,6 +743,18 @@ test("public interface legibility pass standardises VIGIL typography, controls, 
   assert.match(polishCss, /font-size: 1rem !important/);
 });
 
+test("expanded VIGIL header keeps the record ID with its icon controls and removes redundant search help", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const detailHeader = page.slice(page.indexOf('className="vigil-detail-surface'), page.indexOf('{detailLoad?.status === "loading"'));
+
+  assert.match(detailHeader, /flex flex-wrap items-center justify-between gap-3/);
+  assert.match(detailHeader, /detailRecord\.id/);
+  assert.match(detailHeader, /Copy raw JSON/);
+  assert.match(detailHeader, /Download raw JSON/);
+  assert.match(detailHeader, /Collapse record/);
+  assert.doesNotMatch(page, /vigil-search-help/);
+  assert.doesNotMatch(page, /Source titles, publishers, source types, source platforms, vendors, jurisdictions, and source domains are searchable metadata/);
+});
 test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);
@@ -739,7 +841,7 @@ test("VIGIL page lazy-loads details and warns when canonical detail falls back t
   assert.match(page, /detailDisplayRecord\(record, raw\)/);
   assert.match(page, /detailRecord = detailLoad\?\.status === "ready" \? detailLoad\.displayRecord : record/);
   assert.match(page, /Detailed canonical record could not be loaded\. Showing the registry index entry instead\./);
-  assert.match(page, /View source record/);
+  assert.doesNotMatch(page, /View source record/);
   assert.doesNotMatch(page, /Technical JSON/);
   assert.doesNotMatch(page, /Open record/);
   assert.doesNotMatch(page, /Record path:/);

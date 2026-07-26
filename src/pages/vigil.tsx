@@ -290,7 +290,7 @@ function recordTypeTone(recordType?: string) {
   const key = String(recordType ?? "").trim().toLocaleLowerCase().replace(/[\s-]+/g, "_");
   if (key === "failure_mode") return "border-rose-300 bg-rose-50 text-rose-900";
   if (key === "observation") return "border-blue-300 bg-blue-50 text-blue-900";
-  if (key === "proposal") return "border-violet-300 bg-violet-50 text-violet-900";
+  if (key === "proposal") return "border-orange-400 bg-orange-50 text-orange-950";
   if (key === "patch" || key === "patch_note") return "border-emerald-300 bg-emerald-50 text-emerald-900";
   if (key === "research" || key === "source") return "border-amber-300 bg-amber-50 text-amber-950";
   return "border-border bg-card text-muted-foreground";
@@ -754,7 +754,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
-        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/70 bg-[hsl(38_34%_82%)] px-3 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-[hsl(32_62%_25%)] shadow-sm transition hover:border-cam-gold/85 hover:bg-[hsl(38_34%_76%)] hover:text-[hsl(32_62%_20%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/60 bg-[hsl(38_48%_90%)] px-3 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-[hsl(32_62%_25%)] shadow-sm transition hover:border-cam-gold/75 hover:bg-[hsl(38_48%_86%)] hover:text-[hsl(32_62%_20%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
       </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {
@@ -771,7 +771,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
                 <button
                   key={recordId}
                   type="button"
-                  className={`rounded-md border px-2 py-1 font-mono text-[10px] tracking-[0.04em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
+                  className={`rounded-md border px-2.5 py-1.5 font-mono text-sm tracking-[0.04em] transition ${recordId === currentId ? "border-cam-gold/60 bg-white/65 font-semibold text-[hsl(32_62%_25%)]" : "border-border bg-background text-muted-foreground hover:text-cam-gold"}`}
                   onClick={() => recordId !== currentId && onNavigateRecord?.(recordId)}
                   disabled={recordId === currentId || !onNavigateRecord}
                   aria-label={recordId === currentId ? `${recordId}, current record` : `Find linked record ${recordId}`}
@@ -1102,10 +1102,6 @@ function recordExportText(jsonText: string) {
   return `${camInitiativeCitationHeader}\n\n${vigilReuseNotice}\n\n${jsonText}\n`;
 }
 
-function sourceRecordUrl(record: Pick<VigilIndexRecord, "github_blob_url">) {
-  return record.github_blob_url || undefined;
-}
-
 function exportFileName(status: string) {
   const date = new Date().toISOString().slice(0, 10);
   const statusPart = (status || "all").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "");
@@ -1139,6 +1135,40 @@ function defaultOpenSummaryNames(record: VigilIndexRecord) {
   const preferred = new Set((preferredByType[record.record_type] ?? []).filter((name) => meaningfulSummaries.includes(name as (typeof meaningfulSummaries)[number])));
   if (preferred.size > 0) return preferred;
   return new Set(meaningfulSummaries.slice(0, 1));
+}
+
+function countSearchOccurrences(value: string, term: string) {
+  let occurrences = 0;
+  let offset = 0;
+  while (offset < value.length) {
+    const index = value.indexOf(term, offset);
+    if (index < 0) break;
+    occurrences += 1;
+    offset = index + term.length;
+  }
+  return occurrences;
+}
+
+function searchRelevance(record: VigilIndexRecord, query: string) {
+  const normalizedQuery = query.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+  if (!normalizedQuery) return 0;
+  const terms = normalizedQuery.split(" ").filter(Boolean);
+  const fields = record.searchFields.length
+    ? record.searchFields
+    : [{ value: record.searchText, weight: 1 }];
+  const exactPhraseScore = fields.reduce((score, field) => (
+    field.value.includes(normalizedQuery)
+      ? Math.max(score, field.weight * 12)
+      : score
+  ), 0);
+  const termScore = terms.reduce((score, term) => {
+    const bestFieldScore = fields.reduce((best, field) => {
+      if (!field.value.includes(term)) return best;
+      return Math.max(best, field.weight * Math.min(3, countSearchOccurrences(field.value, term)));
+    }, 0);
+    return score + bestFieldScore;
+  }, 0);
+  return exactPhraseScore + termScore;
 }
 
 export default function Vigil() {
@@ -1195,7 +1225,13 @@ export default function Vigil() {
       });
       const searchOk = matchesVigilSearch(record.searchText, search);
       return filtersOk && searchOk;
-    }).sort((a, b) => compareRecordsBySort(a, b, sortConfig)),
+    }).sort((a, b) => {
+      if (search.trim()) {
+        const relevanceDifference = searchRelevance(b, search) - searchRelevance(a, search);
+        if (relevanceDifference !== 0) return relevanceDifference;
+      }
+      return compareRecordsBySort(a, b, sortConfig);
+    }),
     [filters, records, search, sortConfig],
   );
 
@@ -1574,7 +1610,7 @@ export default function Vigil() {
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, failure title, provider, domain, instrument, or section; narrow results by type, affected platform, and lifecycle status.</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, record or source title, publisher/platform, source type, provider, domain, instrument, section, or incident term; narrow results by type, affected platform, and lifecycle status. Multiple search terms must all match.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
@@ -1606,7 +1642,7 @@ export default function Vigil() {
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="e.g. AEON-003 §7.4.1"
+                  placeholder="e.g. Hugging Face, Reuters, or model evaluation"
                 />
               </label>
               {filterConfig.map((filter) => (
@@ -1701,7 +1737,6 @@ export default function Vigil() {
 
             {pagedRecords.map((record, index) => {
               const recordDate = record.date_recorded ?? record.date_implemented ?? "Date not specified";
-              const sourceHref = sourceRecordUrl(record);
               const recordKey = recordKeyFor(record, recordPageStart + index);
               const detailsPanelId = `vigil-record-details-${recordKey.replace(/[^A-Za-z0-9_-]/g, "-")}`;
               const isExpanded = expandedRecordKeys.has(recordKey);
@@ -1784,10 +1819,23 @@ export default function Vigil() {
 
                   {isExpanded && (
                     <div id={detailsPanelId} className="vigil-detail-surface px-4 py-5 md:px-5">
-                      <div className="mb-4 flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
-                        <div className="min-w-0">
-                          <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
-                          <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
+                      <div className="mb-4 border-b border-border pb-4">
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p className="min-w-0 break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
+                          <div className="flex shrink-0 flex-wrap gap-2">
+                            <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
+                              {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
+                              <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
+                            </button>
+                            <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
+                            <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => toggleExpandedRecord(record, recordKey)} aria-expanded={isExpanded} aria-controls={detailsPanelId} title="Collapse record">
+                              <X size={16} strokeWidth={1.8} aria-hidden="true" />
+                              <span className="sr-only">Collapse record</span>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-3 min-w-0">
+                          <h2 className="break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
                           <div className="mt-3 flex flex-wrap gap-2">
                             <span className={`rounded-full border px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.08em] ${recordTypeTone(detailRecord.record_type)}`}>{recordTypeLabel(detailRecord.record_type)}</span>
                             {[detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
@@ -1795,26 +1843,7 @@ export default function Vigil() {
                             ))}
                           </div>
                         </div>
-                        <div className="flex shrink-0 flex-wrap gap-2">
-                          {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View source record →</a>}
-                          <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
-                            {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
-                            <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
-                          </button>
-                          <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
-                          <button
-                            type="button"
-                            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
-                            onClick={() => toggleExpandedRecord(record, recordKey)}
-                            aria-expanded={isExpanded}
-                            aria-controls={detailsPanelId}
-                          >
-                            <X size={16} strokeWidth={1.8} aria-hidden="true" />
-                            <span className="sr-only">Collapse record</span>
-                          </button>
-                        </div>
                       </div>
-
                       {detailLoad?.status === "loading" && (
                         <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-xs leading-relaxed text-muted-foreground" role="status">
                           Loading canonical VIGIL record detail…

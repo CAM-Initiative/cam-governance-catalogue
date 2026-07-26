@@ -3,11 +3,18 @@ import { deriveVigilPublicDisplay, type PublicRecordDisplay } from "@/lib/vigilP
 
 export type SummaryEntry = { label: string; value: string };
 
+export type VigilSearchField = {
+  value: string;
+  weight: number;
+};
+
 export type VigilIndexRecord = {
   raw: UnknownRecord;
   id: string;
   record_type: string;
   record_state?: string;
+  record_version?: string;
+  record_last_updated?: string;
   date_recorded?: string;
   date_implemented?: string;
   title: string;
@@ -57,6 +64,7 @@ export type VigilIndexRecord = {
   changed_domains?: string[];
   publicDisplay: PublicRecordDisplay;
   summaries: Record<string, SummaryEntry[]>;
+  searchFields: VigilSearchField[];
   searchText: string;
 };
 
@@ -496,6 +504,117 @@ function addFallbackSummaries(record: UnknownRecord, summaries: Record<string, S
   if (!summaries.classification_summary?.length) summaries.classification_summary = classificationFallbackEntries(record);
 }
 
+const indexedSearchFields = [
+  "primary_source_title",
+  "source_titles",
+  "source_title",
+  "primary_source_author_or_publisher",
+  "source_authors",
+  "source_author",
+  "author_or_publisher",
+  "primary_source_platform",
+  "source_platforms",
+  "source_platform",
+  "primary_source_type",
+  "source_types",
+  "source_type",
+  "primary_source_date",
+  "source_dates",
+  "source_date",
+  "primary_source_domain",
+  "source_domains",
+  "platform_or_vendor",
+  "vendor_cluster",
+  "primary_evidenced_vendors",
+  "product_or_service",
+  "specific_model_or_runtime",
+  "model_or_product",
+  "interface_surface",
+  "deployment_context",
+  "canonical_failure_group",
+  "failure_family",
+  "failure_subtype",
+  "primary_jurisdiction",
+  "primary_jurisdictions",
+  "secondary_jurisdictions",
+  "jurisdiction",
+  "sector",
+  "regulatory_surface",
+] as const;
+
+const sourceIdentityFields = ["primary_source_title", "source_titles", "source_title"];
+const sourcePublisherFields = [
+  "primary_source_author_or_publisher",
+  "source_authors",
+  "source_author",
+  "author_or_publisher",
+  "publisher",
+  "author",
+  "primary_source_platform",
+  "source_platforms",
+  "source_platform",
+  "primary_source_type",
+  "source_types",
+  "source_type",
+];
+const sourceSystemFields = [
+  "system_or_product",
+  "model_or_algorithm",
+  "product_or_service",
+  "specific_model_or_runtime",
+];
+const sourceContextFields = [
+  "primary_source_date",
+  "source_dates",
+  "source_date",
+  "source_context",
+  "relevance_note",
+  "deployment_context",
+];
+const sourceUrlFields = ["primary_source_url", "source_urls", "source_url", "archive_url", "url"];
+
+function searchValueParts(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(searchValueParts);
+  return [];
+}
+
+function sourceValues(record: UnknownRecord, topLevelKeys: string[], sourceKeys: string[]) {
+  const projected = topLevelKeys.flatMap((key) => searchValueParts(record[key]));
+  const nested = Array.isArray(record.source_records)
+    ? record.source_records.flatMap((source) => isObject(source)
+      ? sourceKeys.flatMap((key) => searchValueParts(source[key]))
+      : [])
+    : [];
+  return [...projected, ...nested];
+}
+
+function sourceUrlHosts(value: unknown): string[] {
+  return searchValueParts(value).flatMap((candidate) => {
+    try {
+      const host = new URL(candidate).hostname.toLowerCase();
+      return host ? [host, host.replace(/^www\./, "")] : [];
+    } catch {
+      return [];
+    }
+  });
+}
+
+function buildSearchFields(groups: Array<{ values: unknown[]; weight: number }>): VigilSearchField[] {
+  const bestByValue = new Map<string, VigilSearchField>();
+  for (const group of groups) {
+    for (const value of searchValueParts(group.values)) {
+      const normalized = value.trim().toLowerCase();
+      if (!isMeaningfulText(normalized)) continue;
+      const existing = bestByValue.get(normalized);
+      if (!existing || group.weight > existing.weight) {
+        bestByValue.set(normalized, { value: normalized, weight: group.weight });
+      }
+    }
+  }
+  return [...bestByValue.values()];
+}
+
 export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilIndexRecord {
   const record_type = normalizeRecordType(record);
   const summaries = Object.fromEntries(summaryNames.map((name) => [name, summaryEntries(record[name])])) as Record<string, SummaryEntry[]>;
@@ -515,6 +634,10 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
   const github_blob_url = githubBlobUrlForRecord({ github_blob_url: getOptionalField(record, ["github_blob_url", "githubBlobUrl"]), path }) ?? "";
   const raw_url = rawUrlForRecord({ raw_url: getOptionalField(record, ["raw_url", "rawUrl"]), path }) ?? "";
   const record_state = normalizeStatus(getOptionalField(record, ["record_state", "status", "state"]));
+  const record_version = getOptionalField(record, ["record_version", "recordVersion", "version"])
+    ?? getNestedField(record, ["record_identity.version", "recordIdentity.version"]);
+  const record_last_updated = getOptionalField(record, ["record_last_updated", "recordLastUpdated", "last_updated", "lastUpdated", "updated_at", "date_updated"])
+    ?? getNestedField(record, ["record_identity.updated", "recordIdentity.updated"]);
   const publicDisplay = deriveVigilPublicDisplay(record, { recordType: record_type, id, recordState: record_state });
 
   const normalized: VigilIndexRecord = {
@@ -522,6 +645,8 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     id,
     record_type,
     record_state,
+    record_version,
+    record_last_updated,
     date_recorded: getOptionalField(record, ["date_recorded", "dateRecorded", "recorded_date", "recordedDate", "date"]),
     date_implemented: getOptionalField(record, ["date_implemented", "dateImplemented", "implemented_date", "implementedDate"]),
     title: resolveRecordTitle(record, id, path, index),
@@ -574,26 +699,68 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     changed_domains: arrayFrom(getNestedField(record, ["cam_summary.changed_domains", "change_summary.changed_domain", "change_summary.changed_domains", "changed_domain", "changed_domains"])),
     publicDisplay,
     summaries,
+    searchFields: [],
     searchText: "",
   };
 
-  const searchText = [
-    normalized.id,
-    normalized.title,
-    normalized.summary,
-    normalized.record_state,
-    normalized.record_type,
-    normalized.date_recorded,
-    normalized.evidence_confidence,
-    normalized.path,
-    normalized.platform_label,
-    normalized.source_record_hint,
-    normalized.type_label,
-    ...normalized.publicDisplay.searchTokens,
-    ...searchSummaryNames.flatMap((name) => normalized.summaries[name]?.flatMap((entry) => [entry.label, entry.value]) ?? []),
-  ].filter(isMeaningfulText).join(" ").toLowerCase();
-  normalized.searchText = `${searchText} ${searchText.replace(/§/g, "section ")}`;
+  const sourceIdentityValues = sourceValues(record, sourceIdentityFields, ["source_title", "title", "name"]);
+  const sourcePublisherValues = sourceValues(record, sourcePublisherFields, [
+    "author_or_publisher",
+    "publisher",
+    "author",
+    "source_author",
+    "source_platform",
+    "source_type",
+  ]);
+  const sourceSystemValues = sourceValues(record, sourceSystemFields, [
+    "system_or_product",
+    "model_or_algorithm",
+    "product_or_service",
+    "specific_model_or_runtime",
+  ]);
+  const sourceContextValues = sourceValues(record, sourceContextFields, [
+    "source_date",
+    "date",
+    "published_date",
+    "source_context",
+    "relevance_note",
+    "deployment_context",
+  ]);
+  const sourceDomainValues = [
+    ...sourceValues(record, ["primary_source_domain", "source_domains"], ["source_domain"]),
+    ...sourceUrlFields.flatMap((key) => sourceUrlHosts(record[key])),
+    ...(Array.isArray(record.source_records)
+      ? record.source_records.flatMap((source) => isObject(source)
+        ? sourceUrlFields.flatMap((key) => sourceUrlHosts(source[key]))
+        : [])
+      : []),
+  ];
 
+  const searchSummaryValues = searchSummaryNames.flatMap((name) => normalized.summaries[name]?.map((entry) => entry.value) ?? []);
+  const searchFields = buildSearchFields([
+    { weight: 140, values: [normalized.id] },
+    { weight: 120, values: [normalized.title] },
+    { weight: 110, values: sourceIdentityValues },
+    { weight: 100, values: sourcePublisherValues },
+    { weight: 80, values: sourceSystemValues },
+    { weight: 70, values: [normalized.summary, normalized.publicDisplay.finding] },
+    { weight: 60, values: [normalized.platform_label, normalized.observed_vendor, normalized.observed_product, normalized.primary_jurisdictions, normalized.regulatory_surfaces, normalized.sectors] },
+    { weight: 50, values: [normalized.publicDisplay.searchTokens, searchSummaryValues, sourceContextValues, sourceDomainValues] },
+    { weight: 35, values: [
+      normalized.record_state,
+      normalized.record_type,
+      normalized.date_recorded,
+      normalized.evidence_confidence,
+      normalized.path,
+      normalized.source_record_hint,
+      normalized.type_label,
+      indexedSearchFields.flatMap((key) => searchValueParts(record[key])),
+    ] },
+  ]);
+
+  const searchText = searchFields.map((field) => field.value).filter(isMeaningfulText).join(" ");
+  normalized.searchFields = searchFields;
+  normalized.searchText = searchText + " " + searchText.replace(/§/g, "section ");
   return normalized;
 }
 
