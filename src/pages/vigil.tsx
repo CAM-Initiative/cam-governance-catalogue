@@ -754,7 +754,7 @@ function RecordChainView({ chain, currentId, onNavigateRecord }: { chain: Record
     <div className="rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-3.5">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Evidence-to-repair record chain</p>
-        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/70 bg-[hsl(38_34%_82%)] px-3 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-[hsl(32_62%_25%)] shadow-sm transition hover:border-cam-gold/85 hover:bg-[hsl(38_34%_76%)] hover:text-[hsl(32_62%_20%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
+        <a href={`/observatory/reports/${encodeURIComponent(currentId)}`} className="inline-flex w-fit items-center rounded-md border border-cam-gold/60 bg-[hsl(38_48%_90%)] px-3 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-[hsl(32_62%_25%)] shadow-sm transition hover:border-cam-gold/75 hover:bg-[hsl(38_48%_86%)] hover:text-[hsl(32_62%_20%)] focus:outline-none focus:ring-2 focus:ring-cam-gold/60 focus:ring-offset-2 focus:ring-offset-[hsl(38_48%_94%)]">Generate report →</a>
       </div>
       <div className="mt-3 grid gap-2 md:grid-cols-4">
         {stages.map((stage, index) => {

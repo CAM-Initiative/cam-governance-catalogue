@@ -14,11 +14,11 @@ const chainStages: Array<{ key: keyof RecordChain; label: string; singular: stri
 ];
 
 const reportSteps = [
-  { number: "01", label: "Observe", description: "The signal, incident, research basis, or governance breakdown that began the chain." },
+  { number: "01", label: "Observation", description: "The signal, incident, research basis, or governance breakdown that began the chain." },
   { number: "02", label: "Record", description: "The primary linked VIGIL records and the provenance preserved across the chain." },
-  { number: "03", label: "Classify", description: "The repeatable failure mode or governance pattern identified from the evidence." },
-  { number: "04", label: "Diagnose", description: "The governance weakness, proposed response, and decision pathway." },
-  { number: "05", label: "Repair", description: "The PATCH, corpus implementation, safeguards, and verification." },
+  { number: "03", label: "Classification", description: "The repeatable failure mode or governance pattern identified from the evidence." },
+  { number: "04", label: "Diagnosis", description: "The governance weakness, proposed response, and decision pathway." },
+  { number: "05", label: "Repair", description: "A corpus PATCH or ecosystem-suggested repair grounded in existing corpus safeguards." },
   { number: "06", label: "Learn", description: "Distinct lessons or future-design implications explicitly declared by the linked records." },
 ] as const;
 
@@ -201,6 +201,13 @@ function vigilCitationNumber(record: VigilIndexRecord, citations: Citation[]) {
   return found?.number;
 }
 
+function VigilCitation({ number }: { number?: number }) {
+  if (!number) return null;
+  return <div className="mt-4 rounded-md border border-border/60 bg-[hsl(38_48%_94%)] p-3">
+    <p className="report-label">VIGIL Citation <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup></p>
+  </div>;
+}
+
 function RecordHeading({ record }: { record: VigilIndexRecord }) {
   return <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
     <div className="min-w-0">
@@ -243,7 +250,7 @@ function ObservationNarrative({ record, citations }: { record: VigilIndexRecord;
       <Narrative label="What was observed" value={record.publicDisplay.observation?.observed} />
       <div>
         <Narrative label="Context" value={record.publicDisplay.observation?.context} />
-        {citation ? <p className="mt-3 report-label">VIGIL Citation <sup className="ml-1 font-mono text-xs text-cam-gold">[{citation}]</sup></p> : null}
+        <VigilCitation number={citation} />
       </div>
       <Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} />
     </div>

@@ -199,9 +199,15 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /supportingSourceEvidence/);
   assert.match(report, /VIGIL Interpretation/);
   assert.match(report, /VIGIL Citation/);
+  assert.match(report, /function VigilCitation/);
+  assert.match(report, /<VigilCitation number=\{citation\} \/>/);
   assert.match(report, /What was observed/);
   assert.match(report, /Context/);
   assert.match(report, /Interpretation/);
+  assert.match(report, /label: "Observation"/);
+  assert.match(report, /label: "Classification"/);
+  assert.match(report, /label: "Diagnosis"/);
+  assert.match(report, /A corpus PATCH or ecosystem-suggested repair grounded in existing corpus safeguards/);
   assert.doesNotMatch(report, /External source evidence/);
   assert.doesNotMatch(report, /The external source is shown first/);
   assert.doesNotMatch(report, /VIGIL observation record/);
@@ -675,7 +681,7 @@ test("generated reports suppress duplicated observation preambles", async () => 
   assert.match(report, /preamble && <div/);
   assert.match(report, /report-section-excluded/);
   assert.match(page, /Generate report →/);
-  assert.match(page, /bg-\[hsl\(38_34%_82%\)\]/);
+  assert.match(page, /bg-\[hsl\(38_48%_90%\)\]/);
   assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
 });
 
@@ -695,7 +701,7 @@ test("public interface legibility pass standardises VIGIL typography, controls, 
   assert.match(page, /border-blue-300 bg-blue-50/);
   assert.match(page, /border-orange-400 bg-orange-50/);
   assert.match(page, /border-emerald-300 bg-emerald-50/);
-  assert.match(page, /bg-\[hsl\(38_34%_82%\)\].*Generate report/);
+  assert.match(page, /bg-\[hsl\(38_48%_90%\)\].*Generate report/);
   assert.doesNotMatch(page, /bg-foreground[^"]*">Generate report/);
   assert.match(home, /text-\[17px\] leading-relaxed/);
   assert.match(home, /font-mono text-sm font-semibold uppercase/);
