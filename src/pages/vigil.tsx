@@ -1137,21 +1137,36 @@ function defaultOpenSummaryNames(record: VigilIndexRecord) {
   return new Set(meaningfulSummaries.slice(0, 1));
 }
 
+function countSearchOccurrences(value: string, term: string) {
+  let occurrences = 0;
+  let offset = 0;
+  while (offset < value.length) {
+    const index = value.indexOf(term, offset);
+    if (index < 0) break;
+    occurrences += 1;
+    offset = index + term.length;
+  }
+  return occurrences;
+}
+
 function searchRelevance(record: VigilIndexRecord, query: string) {
   const normalizedQuery = query.trim().toLocaleLowerCase().replace(/\s+/g, " ");
   if (!normalizedQuery) return 0;
   const terms = normalizedQuery.split(" ").filter(Boolean);
-  const exactPhraseScore = record.searchText.includes(normalizedQuery) ? 1000 : 0;
+  const fields = record.searchFields.length
+    ? record.searchFields
+    : [{ value: record.searchText, weight: 1 }];
+  const exactPhraseScore = fields.reduce((score, field) => (
+    field.value.includes(normalizedQuery)
+      ? Math.max(score, field.weight * 12)
+      : score
+  ), 0);
   const termScore = terms.reduce((score, term) => {
-    let occurrences = 0;
-    let offset = 0;
-    while (offset < record.searchText.length) {
-      const index = record.searchText.indexOf(term, offset);
-      if (index < 0) break;
-      occurrences += 1;
-      offset = index + term.length;
-    }
-    return score + Math.min(100, occurrences * 10);
+    const bestFieldScore = fields.reduce((best, field) => {
+      if (!field.value.includes(term)) return best;
+      return Math.max(best, field.weight * Math.min(3, countSearchOccurrences(field.value, term)));
+    }, 0);
+    return score + bestFieldScore;
   }, 0);
   return exactPhraseScore + termScore;
 }
@@ -1595,7 +1610,7 @@ export default function Vigil() {
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, failure title, provider, domain, instrument, or section; narrow results by type, affected platform, and lifecycle status.</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, record or source title, publisher/platform, source type, provider, domain, instrument, section, or incident term; narrow results by type, affected platform, and lifecycle status. Multiple search terms must all match.</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
@@ -1627,8 +1642,9 @@ export default function Vigil() {
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="e.g. AEON-003 §7.4.1"
+                  placeholder="e.g. Hugging Face, Reuters, or model evaluation"
                 />
+                <p id="vigil-search-help" className="mt-1 text-xs leading-relaxed text-muted-foreground/75">Source titles, publishers, source types, source platforms, vendors, jurisdictions, and source domains are searchable metadata. Full source evidence remains in the canonical record.</p>
               </label>
               {filterConfig.map((filter) => (
                 <label key={filter.key} className="block">
