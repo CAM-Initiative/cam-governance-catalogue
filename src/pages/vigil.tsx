@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { Copy, Download, X } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
 import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
@@ -1742,7 +1743,7 @@ export default function Vigil() {
                           </div>
 
                           <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
-                            <Field label="Record Type" value={recordTypeLabel(record.record_type)} />
+                            <div><p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Record Type</p><span className={`mt-1 inline-flex rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] ${recordTypeTone(record.record_type)}`}>{recordTypeLabel(record.record_type)}</span></div>
                             <Field label="Lifecycle Status" value={publicLifecycle} />
                             <Field label="Record Date" value={recordDate} />
                             <Field label="Domain / System" value={domainLabel || record.platform_label} />
@@ -1763,10 +1764,13 @@ export default function Vigil() {
                           <div className="break-words font-mono text-sm leading-snug text-cam-gold">{displayRecordId}</div>
                           <div className="font-mono text-sm uppercase tracking-[0.08em] text-muted-foreground/80">{recordDate}</div>
                           <div className="min-w-0">
-                            <h2 className="whitespace-normal break-words font-mono text-[15px] font-normal leading-snug text-foreground/90 lg:text-base">{record.title}</h2>
-                            <p className="mt-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                              {[recordTypeLabel(record.record_type), record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
-                            </p>
+                            <h2 className="whitespace-normal break-words font-mono text-[15px] font-semibold leading-snug text-foreground lg:text-base">{record.title}</h2>
+                            <div className="mt-2 flex flex-wrap items-center gap-2">
+                              <span className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] ${recordTypeTone(record.record_type)}`}>{recordTypeLabel(record.record_type)}</span>
+                              <p className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                              {[record.platform_label, domainLabel].filter(isMeaningfulText).join(" · ")}
+                              </p>
+                            </div>
                             {findingSentence(publicFinding, 260) && publicFinding !== record.title && <p className="mt-2 line-clamp-2 text-base leading-relaxed text-muted-foreground"><InlineMarkdown text={findingSentence(publicFinding, 260)} /></p>}
                             {record.record_type === "patch_note" && record.publicDisplay.principalRepair && <p className="mt-1.5 line-clamp-2 font-mono text-[10px] leading-relaxed text-cam-gold">Repair: {record.publicDisplay.principalRepair}</p>}
                           </div>
@@ -1793,18 +1797,20 @@ export default function Vigil() {
                         </div>
                         <div className="flex shrink-0 flex-wrap gap-2">
                           {sourceHref && <a className="inline-flex items-center justify-center rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-primary/25" href={sourceHref} target="_blank" rel="noreferrer">View source record →</a>}
-                          <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`}>
-                            {copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}
+                          <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
+                            {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
+                            <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
                           </button>
-                          <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`}>Download JSON</button>
+                          <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
                           <button
                             type="button"
-                            className="inline-flex items-center justify-center rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25"
                             onClick={() => toggleExpandedRecord(record, recordKey)}
                             aria-expanded={isExpanded}
                             aria-controls={detailsPanelId}
                           >
-                            Collapse record −
+                            <X size={16} strokeWidth={1.8} aria-hidden="true" />
+                            <span className="sr-only">Collapse record</span>
                           </button>
                         </div>
                       </div>
@@ -1821,14 +1827,14 @@ export default function Vigil() {
                         </div>
                       )}
 
+                      {detailReadyForPublicView && <div className="mb-3"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
+
                       {previewText(detailRecord.publicDisplay.finding) && detailRecord.publicDisplay.finding !== detailRecord.title && (
                         <div className="mb-4 rounded-lg border border-border/70 bg-background/35 p-3">
                           <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-cam-gold">Public finding</p>
                           <p className="mt-2 text-base leading-relaxed text-foreground"><InlineMarkdown text={detailRecord.publicDisplay.finding} /></p>
                         </div>
                       )}
-
-                      {detailReadyForPublicView && <div className="mb-3"><RecordChainView chain={detailRecord.publicDisplay.chain} currentId={detailRecord.id} onNavigateRecord={navigateToRecord} /></div>}
 
                       {detailReadyForPublicView && <CuratedRecordDetail record={detailRecord} onNavigateRecord={navigateToRecord} />}
 

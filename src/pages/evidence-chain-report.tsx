@@ -19,7 +19,7 @@ const reportSteps = [
   { number: "03", label: "Classify", description: "The repeatable failure mode or governance pattern identified from the evidence." },
   { number: "04", label: "Diagnose", description: "The governance weakness, proposed response, and decision pathway." },
   { number: "05", label: "Repair", description: "The PATCH, corpus implementation, safeguards, and verification." },
-  { number: "06", label: "Learn", description: "Lifecycle, residual monitoring, unresolved work, and feedback into future design." },
+  { number: "06", label: "Learn", description: "Distinct lessons or future-design implications explicitly declared by the linked records." },
 ] as const;
 
 type ReportState =
@@ -201,7 +201,19 @@ function RepairStage({ records }: { records: VigilIndexRecord[] }) {
 }
 
 function LearnStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-3">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-mono text-xs text-cam-gold">{record.id}</p><p className="mt-1 font-serif text-lg text-foreground">{record.title}</p></div><span className={`w-fit rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] ${statusTone(statusFor(record))}`}>{statusFor(record)}</span></div><FieldGrid entries={[["Record type", typeLabel(record)], ["First observed", record.publicDisplay.dates.firstObserved], ["Published", record.publicDisplay.dates.published], ["Updated", record.publicDisplay.dates.lastUpdated], ["Implemented", record.publicDisplay.dates.implemented], ["Repair state", record.publicDisplay.repairState], ["Next action", record.next_action ?? record.publicDisplay.failure?.repairNextAction], ["Residual monitoring", record.publicDisplay.patch?.residualMonitoring], ["Verification", record.verification_status ?? record.publicDisplay.patch?.verificationStatus]]} /></article>) : <Incomplete text="No lifecycle or learning information has yet been recorded." />}</div>;
+  const learningKeys = [
+    ["Lessons learned", ["lessons_learned", "learning_statement", "lesson_learned"]],
+    ["Transferable governance lesson", ["transferable_lesson", "governance_lesson", "reusable_governance_pattern"]],
+    ["Future-design implication", ["future_design_implications", "future_design_implication", "feedback_into_future_design"]],
+    ["Residual risk or open question", ["residual_risk", "open_question", "open_questions"]],
+  ] as const;
+  const declaredLearning = records.flatMap((record) => learningKeys.flatMap(([label, keys]) => {
+    const value = field(record, [...keys]);
+    return value ? [{ record, label, value }] : [];
+  }));
+  return declaredLearning.length
+    ? <div className="space-y-3">{declaredLearning.map(({ record, label, value }, index) => <article key={`${record.id}-${label}-${index}`} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="font-mono text-xs text-cam-gold">{record.id}</p><p className="mt-1 font-serif text-lg text-foreground">{record.title}</p><p className="mt-4 report-label">{label}</p><p className="mt-1 whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/85">{value}</p></article>)}</div>
+    : <Incomplete text="No separate learning statement is declared in the linked records. Lifecycle actions, next steps, residual monitoring, and verification remain in Repair." availabilityNote={false} />;
 }
 
 function Incomplete({ text, availabilityNote = true }: { text: string; availabilityNote?: boolean }) { return <p className="rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/35 p-4 text-sm leading-relaxed text-muted-foreground">{text}{availabilityNote ? " This report remains available while the evidence chain is incomplete." : null}</p>; }
