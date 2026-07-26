@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { loadVigilRecordDetail, loadVigilRegistryRecords } from "@/lib/vigilRegistry";
+import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords, normalizeVigilRecord, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import type { CorpusProvision, RecordChain } from "@/lib/vigilPublicDisplay";
 
@@ -39,7 +39,16 @@ type SourceEvidence = {
 
 type Citation =
   | (SourceEvidence & { number: number; kind: "source" })
-  | { number: number; kind: "vigil"; recordId: string; title: string; url?: string };
+  | {
+      number: number;
+      kind: "vigil";
+      recordId: string;
+      title: string;
+      recordTitle: string;
+      recordVersion?: string;
+      recordLastUpdated?: string;
+      url?: string;
+    };
 
 function chainIds(chain: RecordChain) { return chainStages.flatMap(({ key }) => chain[key]); }
 function reportChainWithKnownRecords(chain: RecordChain, recordsById: Map<string, VigilIndexRecord>): RecordChain {
@@ -147,6 +156,10 @@ function isVigilRecordCitationSource(source: SourceEvidence) {
   return /^VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}\b/i.test(source.title.trim());
 }
 
+function externalSourceEvidenceFor(record: VigilIndexRecord): SourceEvidence[] {
+  return sourceEvidenceFor(record).filter((source) => !isVigilRecordCitationSource(source));
+}
+
 type SupportingSource = {
   source: SourceEvidence;
   records: VigilIndexRecord[];
@@ -155,8 +168,7 @@ type SupportingSource = {
 function supportingSourceEvidence(records: VigilIndexRecord[], primarySources: SourceEvidence[]): SupportingSource[] {
   const primaryKeys = new Set(primarySources.map(sourceKey));
   const grouped = new Map<string, SupportingSource>();
-  for (const record of records) for (const source of sourceEvidenceFor(record)) {
-    if (isVigilRecordCitationSource(source)) continue;
+  for (const record of records) for (const source of externalSourceEvidenceFor(record)) {
     const key = sourceKey(source);
     if (primaryKeys.has(key)) continue;
     const existing = grouped.get(key);
@@ -172,7 +184,7 @@ function supportingSourceEvidence(records: VigilIndexRecord[], primarySources: S
 function collectCitations(records: VigilIndexRecord[]): Citation[] {
   const seen = new Set<string>();
   const citations: Citation[] = [];
-  for (const record of records) for (const source of sourceEvidenceFor(record)) {
+  for (const record of records) for (const source of externalSourceEvidenceFor(record)) {
     const key = `source|${sourceKey(source)}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -188,6 +200,9 @@ function collectCitations(records: VigilIndexRecord[]): Citation[] {
       kind: "vigil",
       recordId: record.id,
       title: `${record.id} — ${record.title}`,
+      recordTitle: record.title,
+      recordVersion: record.record_version,
+      recordLastUpdated: record.record_last_updated,
       ...(url ? { url } : {}),
     });
   }
@@ -202,25 +217,6 @@ function citationNumber(source: SourceEvidence, citations: Citation[]) {
 function vigilCitationNumber(record: VigilIndexRecord, citations: Citation[]) {
   const found = citations.find((citation) => citation.kind === "vigil" && citation.recordId === record.id);
   return found?.number;
-}
-
-function VigilCitation({ record, number }: { record: VigilIndexRecord; number?: number }) {
-  if (!number) return null;
-  const entries = [
-    ["Record ID", record.id],
-    ["Record Title", record.title],
-    ["Record Version", record.record_version],
-    ["Record Last Update", record.record_last_updated],
-  ] as const;
-  return <div className="mt-4 rounded-md border border-border/60 bg-[hsl(38_48%_94%)] p-3">
-    <p className="report-label">VIGIL CITATION <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup></p>
-    <dl className="mt-3 grid gap-3 sm:grid-cols-2">
-      {entries.map(([label, value]) => <div key={label}>
-        <dt className="report-label">{label}</dt>
-        <dd className="mt-1 break-words text-sm leading-relaxed text-foreground/85">{value ?? "Not specified"}</dd>
-      </div>)}
-    </dl>
-  </div>;
 }
 
 function RecordHeading({ record }: { record: VigilIndexRecord }) {
@@ -255,28 +251,24 @@ function SourceDetails({ source, citations }: { source: SourceEvidence; citation
   </div>;
 }
 
-function ObservationNarrative({ record, citations }: { record: VigilIndexRecord; citations: Citation[] }) {
+function ObservationNarrative({ record }: { record: VigilIndexRecord }) {
   const preamble = distinctObservationPreamble(record);
-  const citation = vigilCitationNumber(record, citations);
   return <div className="border-t border-border/60 pt-4">
     <p className="report-label">VIGIL Interpretation</p>
     {preamble && <div className="mt-3"><Narrative label="Public finding" value={preamble} /></div>}
     <div className="mt-4 grid gap-4 sm:grid-cols-2">
       <Narrative label="What was observed" value={record.publicDisplay.observation?.observed} />
-      <div>
-        <Narrative label="Context" value={record.publicDisplay.observation?.context} />
-        <VigilCitation record={record} number={citation} />
-      </div>
+      <Narrative label="Context" value={record.publicDisplay.observation?.context} />
       <Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} />
     </div>
   </div>;
 }
 
 function ObservationEvidenceRecord({ record, citations }: { record: VigilIndexRecord; citations: Citation[] }) {
-  const sources = uniqueSourceEvidence(sourceEvidenceFor(record));
+  const sources = uniqueSourceEvidence(externalSourceEvidenceFor(record));
   return <article className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4">
     {sources.length ? <div className="space-y-3">{sources.map((source, index) => <SourceDetails key={`${sourceKey(source)}-${index}`} source={source} citations={citations} />)}</div> : <p className="report-label">No external SOURCE entry is declared for this observation.</p>}
-    <ObservationNarrative record={record} citations={citations} />
+    <ObservationNarrative record={record} />
   </article>;
 }
 
@@ -311,7 +303,7 @@ function RecordLedger({ records, chain, byId, citations }: { records: VigilIndex
 }
 
 function ObservationStage({ records, supportingRecords, citations }: { records: VigilIndexRecord[]; supportingRecords: VigilIndexRecord[]; citations: Citation[] }) {
-  const primarySources = records.flatMap(sourceEvidenceFor);
+  const primarySources = records.flatMap(externalSourceEvidenceFor);
   const supportingSources = supportingSourceEvidence(supportingRecords, primarySources);
   return <div className="space-y-4">
     {records.map((record) => <ObservationEvidenceRecord key={record.id} record={record} citations={citations} />)}
@@ -325,7 +317,23 @@ function ClassificationStage({ records }: { records: VigilIndexRecord[] }) {
 }
 
 function DiagnoseStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} /><p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Problem diagnosed" value={record.publicDisplay.proposal?.problem} /><Narrative label="Proposed wording" value={record.publicDisplay.proposal?.proposedWording} /></div><FieldGrid entries={[["Target domains", record.target_domains], ["Drafting status", record.drafting_status], ["Resulting PATCH records", record.publicDisplay.proposal?.resultingPatches]]} /></article>) : <Incomplete text="Proposal not yet linked." />}</div>;
+  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4">
+    <div>
+      <p className="report-label">Problem Diagnosed</p>
+      <p className="mt-1 whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/85">{displayText(record.publicDisplay.proposal?.problem) ?? "Problem not specified in the linked VIGIL record."}</p>
+    </div>
+    <div className="mt-5 border-t border-border/60 pt-4">
+      <p className="report-label">VIGIL Proposal</p>
+      <p className="mt-1 whitespace-pre-wrap text-[15px] leading-relaxed text-foreground/85">{summary(record)}</p>
+    </div>
+    <div className="mt-5 border-t border-border/60 pt-4">
+      <RecordHeading record={record} />
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Narrative label="Proposed wording" value={record.publicDisplay.proposal?.proposedWording} />
+      </div>
+      <FieldGrid entries={[["Target domains", record.target_domains], ["Drafting status", record.drafting_status], ["Resulting PATCH records", record.publicDisplay.proposal?.resultingPatches]]} />
+    </div>
+  </article>) : <Incomplete text="Proposal not yet linked." />}</div>;
 }
 
 function ProvisionTable({ provisions }: { provisions: CorpusProvision[] }) {
@@ -357,7 +365,26 @@ function Incomplete({ text, availabilityNote = true }: { text: string; availabil
 
 function Citations({ citations }: { citations: Citation[] }) {
   if (!citations.length) return null;
-  return <section className="report-citations report-break-inside-avoid border-t border-border/70 pt-5"><h2 className="font-serif text-2xl text-foreground">Sources and citations</h2><ol className="mt-4 space-y-3">{citations.map((citation) => <li key={citation.number} className="flex gap-3 text-sm leading-relaxed text-foreground/85"><span className="font-mono text-xs text-cam-gold">[{citation.number}]</span><span><span className="font-medium">{citation.title}</span>{citation.kind === "vigil" ? <span className="text-muted-foreground"> — VIGIL canonical record</span> : [citation.publisher, citation.date].filter(Boolean).length ? <span className="text-muted-foreground"> — {[citation.publisher, citation.date].filter(Boolean).join(" · ")}</span> : null}{citation.url ? <><br /><a href={citation.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{citation.url}</a></> : null}</span></li>)}</ol></section>;
+  return <section className="report-citations report-break-inside-avoid border-t border-border/70 pt-5"><h2 className="font-serif text-2xl text-foreground">Sources and citations</h2><ol className="mt-4 space-y-3">{citations.map((citation) => <li key={citation.number} className="flex gap-3 text-sm leading-relaxed text-foreground/85">
+    <span className="font-mono text-xs text-cam-gold">[{citation.number}]</span>
+    <span className="min-w-0">
+      {citation.kind === "vigil"
+        ? <cite className="not-italic"><span className="font-medium">{citation.recordId} — {citation.recordTitle}</span><span className="text-muted-foreground"> — VIGIL Observatory{citation.recordLastUpdated ? ` · ${citation.recordLastUpdated}` : ""}{citation.recordVersion ? `, Version ${citation.recordVersion}` : ""}{citation.url ? "," : "."}</span></cite>
+        : <><span className="font-medium">{citation.title}</span>{[citation.publisher, citation.date].filter(Boolean).length ? <span className="text-muted-foreground"> — {[citation.publisher, citation.date].filter(Boolean).join(" · ")}</span> : null}</>}
+      {citation.url ? <><br /><a href={citation.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{citation.url}</a></> : null}
+    </span>
+  </li>)}</ol></section>;
+}
+
+function normalizeReportRecord(detail: UnknownRecord, indexRecord: VigilIndexRecord) {
+  return normalizeVigilRecord({
+    ...detail,
+    path: detail.path || indexRecord.path,
+    github_blob_url: detail.github_blob_url || indexRecord.github_blob_url,
+    raw_url: detail.raw_url || indexRecord.raw_url,
+    record_version: detail.record_version || indexRecord.record_version,
+    record_last_updated: detail.record_last_updated || indexRecord.record_last_updated,
+  });
 }
 
 function StepSection({ number, label, description, included, onToggle, children }: { number: string; label: string; description: string; included: boolean; onToggle: () => void; children: ReactNode }) {
@@ -389,7 +416,7 @@ export default function EvidenceChainReport() {
         const sourceIndexRecord = indexById.get(sourceId);
         if (!sourceIndexRecord) throw new Error(`The VIGIL registry does not contain ${sourceId}.`);
         let sourceRecord = sourceIndexRecord;
-        try { sourceRecord = normalizeVigilRecord(await loadVigilRecordDetail(sourceIndexRecord.raw)); } catch { /* index projection remains useful */ }
+        try { sourceRecord = normalizeReportRecord(await loadVigilRecordDetail(sourceIndexRecord.raw), sourceIndexRecord); } catch { /* index projection remains useful */ }
         const details = new Map<string, VigilIndexRecord>([[sourceRecord.id, sourceRecord]]);
         // A report is a declared chain, not a graph walk: load the source and
         // its direct authoritative links exactly once. Context never expands it.
@@ -409,7 +436,7 @@ export default function EvidenceChainReport() {
           const indexRecord = indexById.get(id);
           if (!indexRecord) continue;
           let record = indexRecord;
-          try { record = normalizeVigilRecord(await loadVigilRecordDetail(indexRecord.raw)); } catch { /* index projection remains useful */ }
+          try { record = normalizeReportRecord(await loadVigilRecordDetail(indexRecord.raw), indexRecord); } catch { /* index projection remains useful */ }
           details.set(record.id, record);
         }
         if (!cancelled) setState({ status: "ready", records: [...details.values()], chain, sourceId, generatedAt: new Date().toISOString() });

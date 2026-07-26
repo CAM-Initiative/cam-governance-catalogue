@@ -218,17 +218,21 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /function SupportingEvidence/);
   assert.match(report, /supportingSourceEvidence/);
   assert.match(report, /function isVigilRecordCitationSource/);
-  assert.match(report, /if \(isVigilRecordCitationSource\(source\)\) continue/);
+  assert.match(report, /function externalSourceEvidenceFor/);
   assert.match(report, /VIGIL Interpretation/);
-  assert.match(report, /VIGIL CITATION/);
-  assert.match(report, /function VigilCitation/);
-  assert.match(report, /<VigilCitation record=\{record\} number=\{citation\} \/>/);
+  assert.doesNotMatch(report, /VIGIL CITATION/);
+  assert.doesNotMatch(report, /function VigilCitation/);
+  assert.doesNotMatch(report, /<VigilCitation record=\{record\}/);
   assert.match(report, /record_version/);
+  assert.match(report, /recordTitle: record\.title/);
+  assert.match(report, /recordVersion: record\.record_version/);
+  assert.match(report, /recordLastUpdated: record\.record_last_updated/);
   assert.match(report, /record_last_updated/);
-  assert.match(report, /Record ID/);
-  assert.match(report, /Record Title/);
-  assert.match(report, /Record Version/);
-  assert.match(report, /Record Last Update/);
+  assert.match(report, /VIGIL Observatory/);
+  assert.doesNotMatch(report, /Record ID:/);
+  assert.doesNotMatch(report, /Record Title:/);
+  assert.doesNotMatch(report, /Record Version:/);
+  assert.doesNotMatch(report, /Record Last Update:/);
   assert.match(report, /What was observed/);
   assert.match(report, /Context/);
   assert.match(report, /Interpretation/);
@@ -677,22 +681,36 @@ test("expanded VIGIL records keep all post-chain detail sections collapsed by de
   assert.match(page, /The report does not follow contextual links/);
 });
 
-test("Evidence Chain Report keeps the six sections but removes the step index and ledger-only fields", async () => {
+test("Evidence Chain Report keeps citation details at the end and reflows diagnosis content", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
 
   assert.doesNotMatch(report, /report-step-index/);
   assert.match(report, /function collectCitations/);
+  assert.match(report, /function externalSourceEvidenceFor/);
+  assert.match(report, /for \(const record of records\) for \(const source of externalSourceEvidenceFor\(record\)\)/);
   assert.match(report, /record\.github_blob_url \|\| record\.raw_url \|\| undefined/);
+  assert.match(report, /recordTitle: record\.title/);
+  assert.match(report, /recordVersion: record\.record_version/);
+  assert.match(report, /recordLastUpdated: record\.record_last_updated/);
   assert.match(report, /const citation = record \? vigilCitationNumber\(record, citations\) : undefined/);
   assert.match(report, /aria-label=.*Citation.*citation/);
   assert.match(report, /citations=\{citations\}/);
-  assert.match(report, /VIGIL canonical record/);
+  assert.doesNotMatch(report, /VIGIL canonical record/);
   assert.match(report, /function Citations/);
+  assert.match(report, /<cite className="not-italic">/);
+  assert.match(report, /VIGIL Observatory/);
+  assert.doesNotMatch(report, /grid gap-x-4 gap-y-1 text-xs/);
+  assert.doesNotMatch(report, /Record Version:/);
+  assert.doesNotMatch(report, /Record Last Update:/);
+  assert.match(report, /function normalizeReportRecord/);
   assert.match(report, /VIGIL Interpretation/);
-  assert.match(report, /VIGIL CITATION/);
+  assert.doesNotMatch(report, /function VigilCitation/);
+  assert.doesNotMatch(report, /VIGIL CITATION/);
   assert.match(report, /kind: "vigil"/);
   assert.match(report, /generatedAt: new Date\(\)\.toISOString\(\)/);
   assert.match(report, /type="checkbox"/);
+  assert.match(report, /Problem Diagnosed/);
+  assert.match(report, /VIGIL Proposal/);
   assert.doesNotMatch(report, /External source evidence/);
   assert.doesNotMatch(report, /The external source is shown first/);
   assert.doesNotMatch(report, /VIGIL observation record/);
@@ -703,6 +721,18 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.doesNotMatch(report, /External relevance.*record\.external_relevance/);
   assert.doesNotMatch(report, /Proposed outcome/);
   assert.match(report, /chain\.patches\.length > 0/);
+});
+
+test("home Evidence to Repair steps use readable cards within a horizontal scroll region", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
+
+  assert.match(page, /role="region" aria-label="VIGIL evidence-to-repair six-step method"/);
+  assert.match(page, /overflow-x-auto overflow-y-hidden/);
+  assert.match(page, /min-h-\[220px\] w-\[260px\]/);
+  assert.match(page, /font-mono text-sm font-medium uppercase/);
+  assert.match(page, /text-base font-normal leading-relaxed text-muted-foreground/);
+  assert.doesNotMatch(page, /min-h-\[175px\] w-\[160px\]/);
+  assert.doesNotMatch(page, /text-\[13px\] font-light/);
 });
 
 test("generated reports suppress duplicated observation preambles", async () => {
