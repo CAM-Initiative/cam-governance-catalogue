@@ -379,16 +379,16 @@ function CorpusWording({ value }: { value: string }) {
 function ProvisionTable({ provisions }: { provisions: CorpusProvision[] }) {
   if (!provisions.length) return null;
   return <div className="mt-4 overflow-hidden rounded-lg border border-border/70 bg-white/55">
-    <div className="border-b border-border/60 bg-white/45 px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-muted-foreground">Corpus implementation by instrument section</div>
+    <div className="border-b border-[hsl(var(--cam-corpus-metadata-border)/0.9)] bg-[hsl(var(--cam-corpus-heading))] px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-[hsl(var(--cam-corpus-heading-foreground))]">Corpus implementation by instrument section</div>
     <div className="divide-y divide-border/50">{provisions.map((provision, index) => {
       const sourceUrl = provision.canonicalUrl ?? provision.implementationUrl;
       const wording = provision.finalWording ?? provision.previousWording ?? "Wording not supplied.";
       return <article key={`${provision.instrumentId ?? "provision"}-${provision.section ?? index}`} className="report-break-inside-avoid px-4 py-4">
-        <header className="-mx-4 -mt-4 mb-4 border-b border-[hsl(var(--cam-corpus-selected-border)/0.75)] bg-[hsl(var(--cam-corpus-selected))] px-4 py-4 text-[hsl(var(--cam-corpus-selected-foreground))] shadow-sm">
+        <header className="-mx-4 -mt-4 mb-4 border-b border-[hsl(var(--cam-corpus-metadata-border)/0.85)] bg-[hsl(var(--cam-corpus-metadata))] px-4 py-4 text-[hsl(var(--cam-corpus-metadata-foreground))] shadow-sm">
           <p className="font-mono text-sm text-cam-gold">{provision.instrumentId ?? "Corpus provision"}{provision.section ? ` · ${provision.section}` : ""}</p>
-          {provision.heading && <h3 className="mt-1 font-serif text-lg leading-snug text-[hsl(var(--cam-corpus-selected-foreground))]">{provision.heading}</h3>}
-          <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--cam-corpus-selected-foreground))]/80"><span className="font-medium text-[hsl(var(--cam-corpus-selected-foreground))]">{provisionActionLabel(provision.action)}</span>{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p>
-          {(provision.verificationStatus || provision.verifiedAgainst) && <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--cam-corpus-selected-foreground))]/85"><span className="font-medium text-[hsl(var(--cam-corpus-selected-foreground))]">Verification:</span>{provision.verificationStatus && ` ${provision.verificationStatus}`}{provision.verifiedAgainst && <>{provision.verificationStatus && " · "}{sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="font-mono text-cam-gold underline decoration-cam-gold/60 underline-offset-4">{provision.verifiedAgainst}</a> : provision.verifiedAgainst}</>}</p>}
+          {provision.heading && <h3 className="mt-1 font-serif text-lg leading-snug text-[hsl(var(--cam-corpus-metadata-foreground))]">{provision.heading}</h3>}
+          <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--cam-corpus-metadata-foreground))]/80"><span className="font-medium text-[hsl(var(--cam-corpus-metadata-foreground))]">{provisionActionLabel(provision.action)}</span>{provision.implementedDate ? ` · ${provision.implementedDate}` : ""}</p>
+          {(provision.verificationStatus || provision.verifiedAgainst) && <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--cam-corpus-metadata-foreground))]/85"><span className="font-medium text-[hsl(var(--cam-corpus-metadata-foreground))]">Verification:</span>{provision.verificationStatus && ` ${provision.verificationStatus}`}{provision.verifiedAgainst && <>{provision.verificationStatus && " · "}{sourceUrl ? <a href={sourceUrl} target="_blank" rel="noreferrer" className="font-mono text-cam-gold underline decoration-cam-gold/60 underline-offset-4">{provision.verifiedAgainst}</a> : provision.verifiedAgainst}</>}</p>}
         </header>
         <div>
           <p className="report-label">{provisionWordingLabel(provision.action)}</p>

@@ -19,8 +19,11 @@ const requireText = (content, text, description) => {
 requireText(indexCss, "--cam-corpus-selected: 38 34% 82%;", "Missing CAM Corpus selected-surface token.");
 requireText(indexCss, "--cam-corpus-selected-foreground: 32 62% 25%;", "Missing CAM Corpus selected-text token.");
 requireText(indexCss, "--cam-corpus-selected-border: 38 62% 40%;", "Missing CAM Corpus selected-border token.");
+requireText(indexCss, "--cam-corpus-heading: var(--foreground);", "Missing CAM Corpus section-heading token.");
+requireText(indexCss, "--cam-corpus-metadata: var(--cam-corpus-selected-foreground);", "Missing CAM Corpus metadata-surface token.");
 requireText(indexCss, "background: hsl(var(--cam-corpus-selected)) !important;", "Constitutional Interfaces must use the shared CAM Corpus selected surface.");
-requireText(report, "bg-[hsl(var(--cam-corpus-selected))]", "Evidence-to-Repair corpus headers must use the shared CAM Corpus selected surface.");
+requireText(report, "bg-[hsl(var(--cam-corpus-heading))]", "Evidence-to-Repair corpus section title must use the shared CAM heading surface.");
+requireText(report, "bg-[hsl(var(--cam-corpus-metadata))]", "Evidence-to-Repair corpus metadata must use the shared CAM metadata surface.");
 requireText(home, 'aria-labelledby="constitutional-interfaces-heading"', "Constitutional Interfaces landmark is missing.");
 
 // Decorative green is not part of the CAM palette. Semantic status colours are

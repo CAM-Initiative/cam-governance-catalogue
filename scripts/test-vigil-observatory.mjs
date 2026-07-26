@@ -240,6 +240,9 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /label: "Classification"/);
   assert.match(report, /label: "Diagnosis"/);
   assert.match(report, /A corpus PATCH or ecosystem-suggested repair grounded in existing corpus safeguards/);
+  assert.match(report, /Corpus implementation by instrument section/);
+  assert.match(report, /bg-\[hsl\(var\(--cam-corpus-heading\)\)\]/);
+  assert.match(report, /bg-\[hsl\(var\(--cam-corpus-metadata\)\)\]/);
   assert.doesNotMatch(report, /External source evidence/);
   assert.doesNotMatch(report, /The external source is shown first/);
   assert.doesNotMatch(report, /VIGIL observation record/);
@@ -756,7 +759,7 @@ test("responsive shell and evidence reports use available width and readable typ
   assert.match(polishCss, /font-size: 0\.75rem;/);
 });
 
-test("Repair corpus provisions use the shared CAM Corpus selection surface", async () => {
+test("Repair corpus provisions use the CAM Corpus visual hierarchy", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
   const palette = await readFile(resolve(repoRoot, "src/index.css"), "utf8");
   const provisions = report.slice(report.indexOf("function provisionActionLabel"), report.indexOf("function RepairStage"));
@@ -766,7 +769,10 @@ test("Repair corpus provisions use the shared CAM Corpus selection surface", asy
   assert.match(provisions, /function CorpusWording/);
   assert.match(provisions, /<strong key=\{index\}>/);
   assert.match(palette, /--cam-corpus-selected: 38 34% 82%;/);
-  assert.match(provisions, /bg-\[hsl\(var\(--cam-corpus-selected\)\)\]/);
+  assert.match(palette, /--cam-corpus-heading: var\(--foreground\);/);
+  assert.match(palette, /--cam-corpus-metadata: var\(--cam-corpus-selected-foreground\);/);
+  assert.match(provisions, /bg-\[hsl\(var\(--cam-corpus-heading\)\)\]/);
+  assert.match(provisions, /bg-\[hsl\(var\(--cam-corpus-metadata\)\)\]/);
   assert.doesNotMatch(provisions, /hsl\(145_/);
   assert.match(provisions, /Verification:<\/span>/);
   assert.match(provisions, /font-mono text-cam-gold underline/);
