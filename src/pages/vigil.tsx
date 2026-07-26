@@ -290,7 +290,7 @@ function recordTypeTone(recordType?: string) {
   const key = String(recordType ?? "").trim().toLocaleLowerCase().replace(/[\s-]+/g, "_");
   if (key === "failure_mode") return "border-rose-300 bg-rose-50 text-rose-900";
   if (key === "observation") return "border-blue-300 bg-blue-50 text-blue-900";
-  if (key === "proposal") return "border-violet-300 bg-violet-50 text-violet-900";
+  if (key === "proposal") return "border-orange-400 bg-orange-50 text-orange-950";
   if (key === "patch" || key === "patch_note") return "border-emerald-300 bg-emerald-50 text-emerald-900";
   if (key === "research" || key === "source") return "border-amber-300 bg-amber-50 text-amber-950";
   return "border-border bg-card text-muted-foreground";
@@ -1644,7 +1644,6 @@ export default function Vigil() {
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="e.g. Hugging Face, Reuters, or model evaluation"
                 />
-                <p id="vigil-search-help" className="mt-1 text-xs leading-relaxed text-muted-foreground/75">Source titles, publishers, source types, source platforms, vendors, jurisdictions, and source domains are searchable metadata. Full source evidence remains in the canonical record.</p>
               </label>
               {filterConfig.map((filter) => (
                 <label key={filter.key} className="block">
@@ -1820,21 +1819,23 @@ export default function Vigil() {
 
                   {isExpanded && (
                     <div id={detailsPanelId} className="vigil-detail-surface px-4 py-5 md:px-5">
-                      <div className="mb-3 flex justify-end gap-2 border-b border-border pb-3">
-                        <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
-                          {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
-                          <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
-                        </button>
-                        <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
-                        <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => toggleExpandedRecord(record, recordKey)} aria-expanded={isExpanded} aria-controls={detailsPanelId} title="Collapse record">
-                          <X size={16} strokeWidth={1.8} aria-hidden="true" />
-                          <span className="sr-only">Collapse record</span>
-                        </button>
-                      </div>
                       <div className="mb-4 border-b border-border pb-4">
-                        <div className="min-w-0">
-                          <p className="break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
-                          <h2 className="mt-1 break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p className="min-w-0 break-words font-mono text-[11px] text-cam-gold">{detailRecord.id}</p>
+                          <div className="flex shrink-0 flex-wrap gap-2">
+                            <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void copyRecordJson(record, recordKey)} aria-label={`Copy raw JSON for ${detailRecord.id}`} title={copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}>
+                              {copiedRecordKey === recordKey ? <span className="font-mono text-xs font-semibold" aria-hidden="true">✓</span> : <Copy size={15} strokeWidth={1.8} aria-hidden="true" />}
+                              <span className="sr-only">{copiedRecordKey === recordKey ? "Copied" : "Copy JSON"}</span>
+                            </button>
+                            <button type="button" className="inline-flex h-9 w-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => void downloadRecordJson(record, recordKey)} aria-label={`Download raw JSON for ${detailRecord.id}`} title="Download JSON"><Download size={15} strokeWidth={1.8} aria-hidden="true" /><span className="sr-only">Download JSON</span></button>
+                            <button type="button" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition hover:bg-background/80 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-primary/25" onClick={() => toggleExpandedRecord(record, recordKey)} aria-expanded={isExpanded} aria-controls={detailsPanelId} title="Collapse record">
+                              <X size={16} strokeWidth={1.8} aria-hidden="true" />
+                              <span className="sr-only">Collapse record</span>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-3 min-w-0">
+                          <h2 className="break-words font-mono text-xl font-normal leading-snug text-foreground/90">{detailRecord.title}</h2>
                           <div className="mt-3 flex flex-wrap gap-2">
                             <span className={`rounded-full border px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.08em] ${recordTypeTone(detailRecord.record_type)}`}>{recordTypeLabel(detailRecord.record_type)}</span>
                             {[detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
@@ -1843,7 +1844,6 @@ export default function Vigil() {
                           </div>
                         </div>
                       </div>
-
                       {detailLoad?.status === "loading" && (
                         <div className="mb-4 rounded-lg border border-border bg-card/60 p-3 text-xs leading-relaxed text-muted-foreground" role="status">
                           Loading canonical VIGIL record detail…
