@@ -33,6 +33,8 @@ type SourceEvidence = {
   publisher?: string;
   date?: string;
   url?: string;
+  sourceType?: string;
+  accessStatus?: string;
 };
 
 type Citation = SourceEvidence & { number: number };
@@ -98,11 +100,20 @@ function isExternalObservationEvidence(record: VigilIndexRecord) {
 }
 
 function sourceEvidenceFor(record: VigilIndexRecord): SourceEvidence[] {
-  const rawSources = record.raw.source_records;
+  const rawSources = record.raw.source_records ?? record.raw.sources ?? record.raw.evidence_sources;
   if (!Array.isArray(rawSources)) return [];
   return rawSources.flatMap((source) => {
+    if (typeof source === "string") {
+      const url = /^https?:\/\//i.test(source) ? source : undefined;
+      return [{ title: source, url }];
+    }
     if (!source || typeof source !== "object") return [];
     const item = source as Record<string, unknown>;
+    const primaryArtefactAccess = item.primary_artefact_access;
+    const accessStatus = displayText(item.source_url_status ?? item.access_status)
+      ?? (primaryArtefactAccess && typeof primaryArtefactAccess === "object"
+        ? displayText((primaryArtefactAccess as Record<string, unknown>).access_status)
+        : undefined);
     const title = displayText(item.source_title ?? item.title ?? item.name);
     if (!title) return [];
     return [{
@@ -111,7 +122,19 @@ function sourceEvidenceFor(record: VigilIndexRecord): SourceEvidence[] {
       publisher: displayText(item.author_or_publisher ?? item.publisher ?? item.source_platform),
       date: displayText(item.source_date ?? item.date ?? item.published_date),
       url: displayText(item.source_url ?? item.url ?? item.archive_url),
+      sourceType: displayText(item.source_type ?? item.type),
+      accessStatus,
     }];
+  });
+}
+
+function uniqueSourceEvidence(sources: SourceEvidence[]) {
+  const seen = new Set<string>();
+  return sources.filter((source) => {
+    const key = source.title.toLocaleLowerCase() + "|" + (source.url ?? "");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
   });
 }
 
@@ -172,13 +195,13 @@ function RecordLedger({ records, chain, byId }: { records: VigilIndexRecord[]; c
 }
 
 function ObservationStage({ records, evidenceRecords, citations }: { records: VigilIndexRecord[]; evidenceRecords: VigilIndexRecord[]; citations: Citation[] }) {
-  const sourceRecords = evidenceRecords.flatMap(sourceEvidenceFor);
+  const sourceRecords = uniqueSourceEvidence(evidenceRecords.flatMap(sourceEvidenceFor));
   return <div className="space-y-4">
     {records.map((record) => {
       const preamble = distinctObservationPreamble(record);
       return <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><RecordHeading record={record} />{preamble && <p className="mt-3 text-[15px] leading-relaxed text-foreground/85">{preamble}</p>}<div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="What was observed" value={record.publicDisplay.observation?.observed} /><Narrative label="Context" value={record.publicDisplay.observation?.context} /><Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} /></div></article>;
     })}
-    {sourceRecords.length ? <article className="report-record report-break-inside-avoid rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/45 p-4"><div className="border-b border-border/60 pb-3"><p className="report-label">Source observations</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">Source records and research clippings attached to the linked chain are treated as observation-level evidence for this report.</p></div><div className="mt-3 space-y-3">{sourceRecords.map((source, index) => { const number = citationNumber(source, citations); return <div key={`${source.title}-${index}`} className="report-break-inside-avoid"><p className="font-serif text-base text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>{(source.publisher || source.date) && <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{source.description}</p>}</div>; })}</div></article> : null}
+    {sourceRecords.length ? <article className="report-record report-break-inside-avoid rounded-lg border border-dashed border-[hsl(38_25%_80%)] bg-white/45 p-4"><div className="border-b border-border/60 pb-3"><p className="report-label">External source evidence</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">Declared SOURCE entries attached to the linked observation, research, and failure-mode records are shown here. The linked VIGIL records themselves remain in the Record step.</p></div><div className="mt-3 space-y-3">{sourceRecords.map((source, index) => { const number = citationNumber(source, citations); return <div key={source.title + "-" + index} className="report-break-inside-avoid"><p className="font-serif text-base text-foreground">{source.title}{number ? <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup> : null}</p>{(source.publisher || source.date || source.sourceType || source.accessStatus) && <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">{[source.publisher, source.date, source.sourceType, source.accessStatus].filter(Boolean).join(" · ")}</p>}{source.description && <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer" className="mt-2 inline-flex break-all font-mono text-[10px] leading-relaxed text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4 print:hidden">Open external source ↗</a>}</div>; })}</div></article> : null}
     {!records.length && !sourceRecords.length && <Incomplete text="Observation or research not yet linked." />}
   </div>;
 }
@@ -278,12 +301,17 @@ export default function EvidenceChainReport() {
 
   const byId = useMemo(() => new Map(state.status === "ready" ? state.records.map((record) => [record.id, record]) : []), [state]);
   const citations = useMemo(() => collectCitations(state.status === "ready" ? state.records : []), [state]);
+  const evidenceRecords = useMemo(() => state.status === "ready"
+    ? [...state.chain.observations, ...state.chain.failureModes]
+      .map((id) => byId.get(id))
+      .filter((record): record is VigilIndexRecord => Boolean(record))
+    : [], [byId, state]);
   return <Shell><main className="report-page container mx-auto max-w-5xl px-6 py-12 md:px-10 md:py-16">
     {state.status === "loading" && <div className="cam-parchment-card rounded-xl p-6 text-sm text-muted-foreground">Preparing the evidence-chain report…</div>}
     {state.status === "error" && <div className="cam-parchment-card rounded-xl p-6"><p className="font-mono text-xs uppercase tracking-[0.16em] text-red-700">Report unavailable</p><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{state.message}</p><Link href="/observatory" className="mt-4 inline-flex font-mono text-xs uppercase tracking-[0.12em] text-cam-gold underline underline-offset-4">Return to Observatory →</Link></div>}
     {state.status === "ready" && <div className="space-y-6">
       <header className="report-cover border-b border-border/70 pb-7"><div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between"><div><p className="font-mono text-[11px] uppercase tracking-[0.2em] text-cam-gold">VIGIL Evidence Chain Report</p><h1 className="mt-3 font-serif text-4xl leading-tight text-foreground md:text-5xl">Evidence to repair</h1><p className="mt-3 max-w-3xl text-base leading-relaxed text-muted-foreground">A deterministic public audit artefact that preserves the evidence chain and presents its substantive findings in a structured report.</p></div><div className="flex shrink-0 flex-wrap gap-2 print:hidden"><button type="button" onClick={() => window.print()} className="rounded-lg border border-primary/35 bg-primary/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-[hsl(32_62%_25%)]">Print / Save as PDF</button><Link href="/observatory" className="rounded-lg border border-border bg-card px-3 py-2 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Back to Observatory</Link></div></div><div className="mt-6 grid gap-3 rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-4 sm:grid-cols-3"><div><p className="report-label">Report initiated from</p><p className="mt-1 font-mono text-sm text-cam-gold">{state.sourceId}</p></div><div><p className="report-label">Linked records</p><p className="mt-1 font-serif text-xl text-foreground">{chainIds(state.chain).length}</p></div><div><p className="report-label">Chain state</p><p className="mt-1 font-serif text-xl text-foreground">{chainState(state.chain)}</p></div></div></header>
-      <StepSection {...reportSteps[0]}><ObservationStage records={state.chain.observations.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)).filter(isExternalObservationEvidence)} evidenceRecords={state.chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} citations={citations} /></StepSection>
+      <StepSection {...reportSteps[0]}><ObservationStage records={state.chain.observations.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)).filter(isExternalObservationEvidence)} evidenceRecords={evidenceRecords} citations={citations} /></StepSection>
       <StepSection {...reportSteps[1]}><RecordLedger records={state.records} chain={state.chain} byId={byId} /></StepSection>
       <StepSection {...reportSteps[2]}><ClassificationStage records={state.chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} /></StepSection>
       <StepSection {...reportSteps[3]}><DiagnoseStage records={state.chain.proposals.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record))} /></StepSection>
