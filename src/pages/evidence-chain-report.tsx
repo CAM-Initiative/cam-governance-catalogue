@@ -44,6 +44,7 @@ type Citation =
       kind: "vigil";
       recordId: string;
       title: string;
+      recordTitle: string;
       recordVersion?: string;
       recordLastUpdated?: string;
       url?: string;
@@ -199,6 +200,7 @@ function collectCitations(records: VigilIndexRecord[]): Citation[] {
       kind: "vigil",
       recordId: record.id,
       title: `${record.id} — ${record.title}`,
+      recordTitle: record.title,
       recordVersion: record.record_version,
       recordLastUpdated: record.record_last_updated,
       ...(url ? { url } : {}),
@@ -266,7 +268,7 @@ function ObservationEvidenceRecord({ record, citations }: { record: VigilIndexRe
   const sources = uniqueSourceEvidence(externalSourceEvidenceFor(record));
   return <article className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4">
     {sources.length ? <div className="space-y-3">{sources.map((source, index) => <SourceDetails key={`${sourceKey(source)}-${index}`} source={source} citations={citations} />)}</div> : <p className="report-label">No external SOURCE entry is declared for this observation.</p>}
-    <ObservationNarrative record={record} citations={citations} />
+    <ObservationNarrative record={record} />
   </article>;
 }
 
@@ -369,7 +371,7 @@ function Citations({ citations }: { citations: Citation[] }) {
       {citation.kind === "vigil"
         ? <><span className="font-medium">VIGIL canonical record</span><dl className="mt-1 grid gap-x-4 gap-y-1 text-xs text-muted-foreground sm:grid-cols-2">
             <div><dt className="inline font-medium">Record ID: </dt><dd className="inline">{citation.recordId}</dd></div>
-            <div><dt className="inline font-medium">Record Title: </dt><dd className="inline">{citation.title.replace(`${citation.recordId} — `, "")}</dd></div>
+            <div><dt className="inline font-medium">Record Title: </dt><dd className="inline">{citation.recordTitle}</dd></div>
             <div><dt className="inline font-medium">Record Version: </dt><dd className="inline">{citation.recordVersion ?? "Not specified"}</dd></div>
             <div><dt className="inline font-medium">Record Last Update: </dt><dd className="inline">{citation.recordLastUpdated ?? "Not specified"}</dd></div>
           </dl></>
