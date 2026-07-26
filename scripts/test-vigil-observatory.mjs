@@ -195,8 +195,15 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /External source evidence/);
   assert.match(report, /state\.chain\.observations/);
   assert.match(report, /state\.chain\.failureModes/);
-  assert.match(report, /uniqueSourceEvidence\(evidenceRecords\.flatMap\(sourceEvidenceFor\)\)/);
-  assert.match(report, /Open external source/);
+  assert.match(report, /function ObservationEvidenceRecord/);
+  assert.match(report, /function SupportingEvidence/);
+  assert.match(report, /supportingSourceEvidence/);
+  assert.match(report, /VIGIL observation record/);
+  assert.match(report, /What was observed/);
+  assert.match(report, /Context/);
+  assert.match(report, /Interpretation/);
+  assert.doesNotMatch(report, /Open external source/);
+  assert.doesNotMatch(report, /View in Observatory/);
 });
 
 test("VIGIL live registry resolver follows master child indexes without deprecated files", async () => {
@@ -655,9 +662,9 @@ test("generated reports suppress duplicated observation preambles", async () => 
 
   assert.match(report, /function distinctObservationPreamble/);
   assert.match(report, /normalizedNarrative\(preamble\) === normalizedNarrative\(observed\)/);
-  assert.match(report, /preamble && <p/);
+  assert.match(report, /preamble && <div/);
   assert.match(page, /Generate report →/);
-  assert.match(page, /bg-\\[hsl\\(38_34%_82%\\)\\]/);
+  assert.match(page, /bg-\[hsl\(38_34%_82%\)\]/);
   assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
 });
 
@@ -691,7 +698,7 @@ test("expanded VIGIL header keeps the record ID with its icon controls and remov
   const detailHeader = page.slice(page.indexOf('className="vigil-detail-surface'), page.indexOf('{detailLoad?.status === "loading"'));
 
   assert.match(detailHeader, /flex flex-wrap items-center justify-between gap-3/);
-  assert.match(detailHeader, /detailRecord\\.id/);
+  assert.match(detailHeader, /detailRecord\.id/);
   assert.match(detailHeader, /Copy raw JSON/);
   assert.match(detailHeader, /Download raw JSON/);
   assert.match(detailHeader, /Collapse record/);
