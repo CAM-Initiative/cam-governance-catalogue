@@ -63,6 +63,26 @@ test("VIGIL normalization exposes human-readable title and only uses ID as last 
   }
 });
 
+test("VIGIL normalization exposes record citation version and last update", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord } = modules.presentation;
+    const record = normalizeVigilRecord({
+      id: "VIGIL-2026-OBS-0020",
+      record_type: "observation",
+      record_identity: {
+        title: "Citation metadata observation",
+        version: "1.0",
+        updated: "2026-07-25",
+      },
+    });
+    assert.equal(record.record_version, "1.0");
+    assert.equal(record.record_last_updated, "2026-07-25");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL search indexes source metadata as conjunctive discovery fields", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
@@ -197,10 +217,18 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /function ObservationEvidenceRecord/);
   assert.match(report, /function SupportingEvidence/);
   assert.match(report, /supportingSourceEvidence/);
+  assert.match(report, /function isVigilRecordCitationSource/);
+  assert.match(report, /if \(isVigilRecordCitationSource\(source\)\) continue/);
   assert.match(report, /VIGIL Interpretation/);
-  assert.match(report, /VIGIL Citation/);
+  assert.match(report, /VIGIL CITATION/);
   assert.match(report, /function VigilCitation/);
-  assert.match(report, /<VigilCitation number=\{citation\} \/>/);
+  assert.match(report, /<VigilCitation record=\{record\} number=\{citation\} \/>/);
+  assert.match(report, /record_version/);
+  assert.match(report, /record_last_updated/);
+  assert.match(report, /Record ID/);
+  assert.match(report, /Record Title/);
+  assert.match(report, /Record Version/);
+  assert.match(report, /Record Last Update/);
   assert.match(report, /What was observed/);
   assert.match(report, /Context/);
   assert.match(report, /Interpretation/);
@@ -656,7 +684,7 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.match(report, /function collectCitations/);
   assert.match(report, /function Citations/);
   assert.match(report, /VIGIL Interpretation/);
-  assert.match(report, /VIGIL Citation/);
+  assert.match(report, /VIGIL CITATION/);
   assert.match(report, /kind: "vigil"/);
   assert.match(report, /generatedAt: new Date\(\)\.toISOString\(\)/);
   assert.match(report, /type="checkbox"/);
