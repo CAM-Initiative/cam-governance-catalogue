@@ -19,11 +19,16 @@ const requireText = (content, text, description) => {
 requireText(indexCss, "--cam-corpus-selected: 38 34% 82%;", "Missing CAM Corpus selected-surface token.");
 requireText(indexCss, "--cam-corpus-selected-foreground: 32 62% 25%;", "Missing CAM Corpus selected-text token.");
 requireText(indexCss, "--cam-corpus-selected-border: 38 62% 40%;", "Missing CAM Corpus selected-border token.");
-requireText(indexCss, "--cam-corpus-heading: var(--foreground);", "Missing CAM Corpus section-heading token.");
-requireText(indexCss, "--cam-corpus-metadata: var(--cam-corpus-selected-foreground);", "Missing CAM Corpus metadata-surface token.");
+requireText(indexCss, "--cam-corpus-heading: var(--cam-corpus-selected);", "Corpus report heading must reuse the active Constitutional Interfaces surface.");
+requireText(indexCss, "--cam-corpus-heading-foreground: var(--cam-corpus-selected-foreground);", "Corpus report heading must use the selected-surface foreground token.");
+requireText(indexCss, "--cam-corpus-metadata: var(--secondary);", "Corpus report metadata must use the approved softer surface token.");
+requireText(indexCss, "--cam-corpus-metadata-foreground: var(--secondary-foreground);", "Corpus report metadata must use the approved softer-surface foreground token.");
 requireText(indexCss, "background: hsl(var(--cam-corpus-selected)) !important;", "Constitutional Interfaces must use the shared CAM Corpus selected surface.");
 requireText(report, "bg-[hsl(var(--cam-corpus-heading))]", "Evidence-to-Repair corpus section title must use the shared CAM heading surface.");
 requireText(report, "bg-[hsl(var(--cam-corpus-metadata))]", "Evidence-to-Repair corpus metadata must use the shared CAM metadata surface.");
+if (/--cam-corpus-(?:heading|metadata):\s*var\(--(?:foreground|card-foreground|primary-foreground|secondary-foreground|cam-corpus-selected-foreground)\)/u.test(indexCss)) {
+  failures.push("Corpus report backgrounds must use approved surface tokens, never foreground/text tokens.");
+}
 requireText(home, 'aria-labelledby="constitutional-interfaces-heading"', "Constitutional Interfaces landmark is missing.");
 
 // Decorative green is not part of the CAM palette. Semantic status colours are
