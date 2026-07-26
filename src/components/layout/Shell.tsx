@@ -231,9 +231,9 @@ export function Shell({ children }: { children: ReactNode }) {
       </main>
 
       <footer className="mt-auto border-t border-primary/25 bg-[hsl(36_48%_95%)] py-7 text-foreground shadow-[inset_0_1px_0_hsl(38_62%_40%/0.08)] md:py-8">
-        <div className="container mx-auto px-6 md:px-10">
+        <div className="container mx-auto min-w-0 px-4 sm:px-6 md:px-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
-            <div className="max-w-2xl space-y-2 text-center md:text-left">
+            <div className="min-w-0 max-w-2xl space-y-2 text-center md:text-left">
               <p className="text-base font-semibold leading-relaxed text-foreground md:text-[17px]">
                 Governance architecture, evidence-led repair, and public policy for artificial intelligence and synthetic agents.
               </p>
@@ -242,8 +242,8 @@ export function Shell({ children }: { children: ReactNode }) {
               </p>
             </div>
 
-            <div className="flex flex-col items-center gap-4 rounded-xl border border-primary/15 bg-card/55 px-5 py-4 shadow-sm md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0 md:shadow-none">
-              <nav aria-label="Footer" className="flex flex-nowrap justify-center gap-x-4 gap-y-2 md:justify-end md:gap-x-6">
+            <div className="flex min-w-0 max-w-full flex-col items-center gap-4 rounded-xl border border-primary/15 bg-card/55 px-4 py-4 shadow-sm md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0 md:shadow-none">
+              <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-x-3 gap-y-2 md:w-auto md:justify-end md:gap-x-6">
                 {footerLinks.map((link) => (
                   link.internal ? (
                     <Link key={link.href} href={link.href} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
