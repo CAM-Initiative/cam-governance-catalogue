@@ -192,16 +192,19 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
 
 test("generated evidence reports use declared source evidence from observations and failure modes", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
-  assert.match(report, /External source evidence/);
   assert.match(report, /state\.chain\.observations/);
   assert.match(report, /state\.chain\.failureModes/);
   assert.match(report, /function ObservationEvidenceRecord/);
   assert.match(report, /function SupportingEvidence/);
   assert.match(report, /supportingSourceEvidence/);
-  assert.match(report, /VIGIL observation record/);
+  assert.match(report, /VIGIL Interpretation/);
+  assert.match(report, /VIGIL Citation/);
   assert.match(report, /What was observed/);
   assert.match(report, /Context/);
   assert.match(report, /Interpretation/);
+  assert.doesNotMatch(report, /External source evidence/);
+  assert.doesNotMatch(report, /The external source is shown first/);
+  assert.doesNotMatch(report, /VIGIL observation record/);
   assert.doesNotMatch(report, /Open external source/);
   assert.doesNotMatch(report, /View in Observatory/);
 });
@@ -646,7 +649,14 @@ test("Evidence Chain Report keeps the six sections but removes the step index an
   assert.doesNotMatch(report, /report-step-index/);
   assert.match(report, /function collectCitations/);
   assert.match(report, /function Citations/);
-  assert.match(report, /External source evidence/);
+  assert.match(report, /VIGIL Interpretation/);
+  assert.match(report, /VIGIL Citation/);
+  assert.match(report, /kind: "vigil"/);
+  assert.match(report, /generatedAt: new Date\(\)\.toISOString\(\)/);
+  assert.match(report, /type="checkbox"/);
+  assert.doesNotMatch(report, /External source evidence/);
+  assert.doesNotMatch(report, /The external source is shown first/);
+  assert.doesNotMatch(report, /VIGIL observation record/);
   assert.doesNotMatch(report, /Affected domains.*record\.affected_domains/);
   assert.doesNotMatch(report, /Affected parties or interests.*record\.publicDisplay\.failure/);
   assert.doesNotMatch(report, /Decision status.*record\.publicDisplay\.proposal/);
@@ -663,6 +673,7 @@ test("generated reports suppress duplicated observation preambles", async () => 
   assert.match(report, /function distinctObservationPreamble/);
   assert.match(report, /normalizedNarrative\(preamble\) === normalizedNarrative\(observed\)/);
   assert.match(report, /preamble && <div/);
+  assert.match(report, /report-section-excluded/);
   assert.match(page, /Generate report →/);
   assert.match(page, /bg-\[hsl\(38_34%_82%\)\]/);
   assert.doesNotMatch(page, /bg-\[hsl\(146_35%_24%\)\]/);
