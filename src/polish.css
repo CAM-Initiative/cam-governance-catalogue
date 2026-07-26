@@ -145,7 +145,7 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + 
 
 .report-label {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 10px;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
   line-height: 1.35;
   text-transform: uppercase;
