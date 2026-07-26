@@ -143,6 +143,10 @@ function sourceKey(source: Pick<SourceEvidence, "title" | "url">) {
   return `${source.title.trim().toLocaleLowerCase()}|${(source.url ?? "").trim()}`;
 }
 
+function isVigilRecordCitationSource(source: SourceEvidence) {
+  return /^VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}\b/i.test(source.title.trim());
+}
+
 type SupportingSource = {
   source: SourceEvidence;
   records: VigilIndexRecord[];
@@ -152,6 +156,7 @@ function supportingSourceEvidence(records: VigilIndexRecord[], primarySources: S
   const primaryKeys = new Set(primarySources.map(sourceKey));
   const grouped = new Map<string, SupportingSource>();
   for (const record of records) for (const source of sourceEvidenceFor(record)) {
+    if (isVigilRecordCitationSource(source)) continue;
     const key = sourceKey(source);
     if (primaryKeys.has(key)) continue;
     const existing = grouped.get(key);
@@ -201,10 +206,22 @@ function vigilCitationNumber(record: VigilIndexRecord, citations: Citation[]) {
   return found?.number;
 }
 
-function VigilCitation({ number }: { number?: number }) {
+function VigilCitation({ record, number }: { record: VigilIndexRecord; number?: number }) {
   if (!number) return null;
+  const entries = [
+    ["Record ID", record.id],
+    ["Record Title", record.title],
+    ["Record Version", record.record_version],
+    ["Record Last Update", record.record_last_updated],
+  ] as const;
   return <div className="mt-4 rounded-md border border-border/60 bg-[hsl(38_48%_94%)] p-3">
-    <p className="report-label">VIGIL Citation <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup></p>
+    <p className="report-label">VIGIL CITATION <sup className="ml-1 font-mono text-xs text-cam-gold">[{number}]</sup></p>
+    <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+      {entries.map(([label, value]) => <div key={label}>
+        <dt className="report-label">{label}</dt>
+        <dd className="mt-1 break-words text-sm leading-relaxed text-foreground/85">{value ?? "Not specified"}</dd>
+      </div>)}
+    </dl>
   </div>;
 }
 
@@ -250,7 +267,7 @@ function ObservationNarrative({ record, citations }: { record: VigilIndexRecord;
       <Narrative label="What was observed" value={record.publicDisplay.observation?.observed} />
       <div>
         <Narrative label="Context" value={record.publicDisplay.observation?.context} />
-        <VigilCitation number={citation} />
+        <VigilCitation record={record} number={citation} />
       </div>
       <Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} />
     </div>
