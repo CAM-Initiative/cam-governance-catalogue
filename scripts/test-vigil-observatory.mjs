@@ -183,7 +183,7 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
   const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
   assert.match(collapsedRow, /record\.title/);
   assert.match(collapsedRow, /record\.platform_label/);
-  assert.match(collapsedRow, /record\.type_label/);
+  assert.match(collapsedRow, /recordTypeLabel\(record\.record_type\)/);
   assert.doesNotMatch(collapsedRow, /Source ↗/);
   assert.doesNotMatch(collapsedRow, /Open record/);
   assert.doesNotMatch(collapsedRow, /Raw JSON/);
@@ -772,7 +772,7 @@ test("VIGIL page lazy-loads details and warns when canonical detail falls back t
   assert.match(page, /detailDisplayRecord\(record, raw\)/);
   assert.match(page, /detailRecord = detailLoad\?\.status === "ready" \? detailLoad\.displayRecord : record/);
   assert.match(page, /Detailed canonical record could not be loaded\. Showing the registry index entry instead\./);
-  assert.match(page, /View source record/);
+  assert.doesNotMatch(page, /View source record/);
   assert.doesNotMatch(page, /Technical JSON/);
   assert.doesNotMatch(page, /Open record/);
   assert.doesNotMatch(page, /Record path:/);
