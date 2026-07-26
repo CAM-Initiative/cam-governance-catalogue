@@ -769,8 +769,8 @@ test("Repair corpus provisions use the CAM Corpus visual hierarchy", async () =>
   assert.match(provisions, /function CorpusWording/);
   assert.match(provisions, /<strong key=\{index\}>/);
   assert.match(palette, /--cam-corpus-selected: 38 34% 82%;/);
-  assert.match(palette, /--cam-corpus-heading: var\(--foreground\);/);
-  assert.match(palette, /--cam-corpus-metadata: var\(--cam-corpus-selected-foreground\);/);
+  assert.match(palette, /--cam-corpus-heading: var\(--cam-corpus-selected\);/);
+  assert.match(palette, /--cam-corpus-metadata: var\(--secondary\);/);
   assert.match(provisions, /bg-\[hsl\(var\(--cam-corpus-heading\)\)\]/);
   assert.match(provisions, /bg-\[hsl\(var\(--cam-corpus-metadata\)\)\]/);
   assert.doesNotMatch(provisions, /hsl\(145_/);
@@ -780,6 +780,17 @@ test("Repair corpus provisions use the CAM Corpus visual hierarchy", async () =>
   assert.doesNotMatch(provisions, /provision\.currentStatus/);
   assert.doesNotMatch(provisions, /View verified corpus source/);
   assert.doesNotMatch(provisions, /sm:grid-cols-\[minmax\(0,0\.8fr\)_minmax\(0,1fr\)\]/);
+});
+
+test("VIGIL result actions stay with the record count and pagination", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const filterGridIndex = page.indexOf('className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"');
+  const actionsIndex = page.indexOf('aria-label="VIGIL results actions"');
+
+  assert.ok(filterGridIndex >= 0, "The VIGIL filter grid should remain present.");
+  assert.ok(actionsIndex > filterGridIndex, "Clear and export controls should follow the filter grid in the results toolbar.");
+  assert.match(page, />\s*Clear filters\s*</);
+  assert.match(page, />\s*Export current view\s*</);
 });
 
 test("generated reports suppress duplicated observation preambles", async () => {
