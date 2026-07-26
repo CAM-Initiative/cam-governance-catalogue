@@ -10,7 +10,9 @@ Use the accompanying `--cam-corpus-selected-foreground` and `--cam-corpus-select
 
 ## Evidence-to-Repair report hierarchy
 
-Within **Corpus implementation by instrument section**, `--cam-corpus-heading` is the deepest CAM warm-ink surface used for the section title. The instrument, action, and verification summary uses the deliberately lighter `--cam-corpus-metadata` surface below it. Literal corpus wording remains on parchment. These surfaces are aliases of existing CAM palette tokens, not new hues.
+Within **Corpus implementation by instrument section**, `--cam-corpus-heading` must reuse the selected **Constitutional Interfaces** Corpus surface. The instrument, action, and verification summary uses the deliberately softer, lighter `--cam-corpus-metadata` surface below it. Literal corpus wording remains on parchment. These surfaces are aliases of existing CAM palette tokens, not new hues.
+
+Foreground or text tokens—including `--foreground`, `--primary-foreground`, and `--cam-corpus-selected-foreground`—must never be used as a report background. The palette validator rejects that mapping.
 
 ## Exceptions
 
