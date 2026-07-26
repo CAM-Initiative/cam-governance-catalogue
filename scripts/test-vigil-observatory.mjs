@@ -756,17 +756,20 @@ test("responsive shell and evidence reports use available width and readable typ
   assert.match(polishCss, /font-size: 0\.75rem;/);
 });
 
-test("Repair corpus provisions group wording beneath a verified, linked header", async () => {
+test("Repair corpus provisions use the shared CAM Corpus selection surface", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  const palette = await readFile(resolve(repoRoot, "src/index.css"), "utf8");
   const provisions = report.slice(report.indexOf("function provisionActionLabel"), report.indexOf("function RepairStage"));
 
   assert.match(provisions, /Existing control — no amendment required/);
   assert.match(provisions, /Existing applicable wording/);
   assert.match(provisions, /function CorpusWording/);
   assert.match(provisions, /<strong key=\{index\}>/);
-  assert.match(provisions, /bg-\[hsl\(145_28%_27%\)\]/);
+  assert.match(palette, /--cam-corpus-selected: 38 34% 82%;/);
+  assert.match(provisions, /bg-\[hsl\(var\(--cam-corpus-selected\)\)\]/);
+  assert.doesNotMatch(provisions, /hsl\(145_/);
   assert.match(provisions, /Verification:<\/span>/);
-  assert.match(provisions, /font-mono text-\[hsl\(43_78%_75%\)\] underline/);
+  assert.match(provisions, /font-mono text-cam-gold underline/);
   assert.match(provisions, /const sourceUrl = provision\.canonicalUrl \?\? provision\.implementationUrl/);
   assert.doesNotMatch(provisions, /provision\.currentStatus/);
   assert.doesNotMatch(provisions, /View verified corpus source/);

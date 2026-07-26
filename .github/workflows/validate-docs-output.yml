@@ -18,10 +18,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+
+      - name: Validate CAM website palette
+        run: node scripts/validate-cam-palette.mjs
 
       - name: Validate /docs publication output
         run: python scripts/validate-docs-published-output.py
