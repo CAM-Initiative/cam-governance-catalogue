@@ -117,10 +117,12 @@
   --cam-corpus-selected: 38 34% 82%;
   --cam-corpus-selected-foreground: 32 62% 25%;
   --cam-corpus-selected-border: 38 62% 40%;
-  --cam-corpus-heading: var(--foreground);
-  --cam-corpus-heading-foreground: var(--primary-foreground);
-  --cam-corpus-metadata: var(--cam-corpus-selected-foreground);
-  --cam-corpus-metadata-foreground: var(--primary-foreground);
+  /* Evidence-to-Repair: the heading repeats the active Corpus surface.
+     The provision summary is one approved surface lighter—not a text token. */
+  --cam-corpus-heading: var(--cam-corpus-selected);
+  --cam-corpus-heading-foreground: var(--cam-corpus-selected-foreground);
+  --cam-corpus-metadata: var(--secondary);
+  --cam-corpus-metadata-foreground: var(--secondary-foreground);
   --cam-corpus-metadata-border: var(--cam-corpus-selected-border);
 
   --shadow-sm: 0 1px 2px 0 rgba(80, 55, 20, 0.08);
