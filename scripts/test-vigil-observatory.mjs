@@ -239,7 +239,7 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /label: "Observation"/);
   assert.match(report, /label: "Classification"/);
   assert.match(report, /label: "Diagnosis"/);
-  assert.match(report, /A corpus PATCH or ecosystem-suggested repair grounded in existing corpus safeguards/);
+  assert.match(report, /The implemented corpus repair, relied-upon control, verification, and residual monitoring/);
   assert.match(report, /Corpus implementation by instrument section/);
   assert.match(report, /bg-\[hsl\(var\(--cam-corpus-heading\)\)\]/);
   assert.match(report, /bg-\[hsl\(var\(--cam-corpus-metadata\)\)\]/);
@@ -657,7 +657,7 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /not yet linked/);
   assert.match(report, /A repair may still be in development/);
   assert.match(report, /Observation \/ Research/);
-  assert.match(report, /VIGIL preserves the evidence-to-repair audit trail/);
+  assert.match(report, /VIGIL preserves the evidence-to-repair-and-learning audit trail/);
   assert.match(report, /function RecordLedger/);
   assert.match(report, /function ObservationStage/);
   assert.match(report, /function ClassificationStage/);
@@ -695,7 +695,7 @@ test("Evidence Chain Report keeps citation details at the end and reflows diagno
   assert.match(report, /recordTitle: record\.title/);
   assert.match(report, /recordVersion: record\.record_version/);
   assert.match(report, /recordLastUpdated: record\.record_last_updated/);
-  assert.match(report, /const citation = record \? vigilCitationNumber\(record, citations\) : undefined/);
+  assert.match(report, /const citation = vigilCitationNumber\(id, citations\)/);
   assert.match(report, /aria-label=.*Citation.*citation/);
   assert.match(report, /citations=\{citations\}/);
   assert.doesNotMatch(report, /VIGIL canonical record/);
