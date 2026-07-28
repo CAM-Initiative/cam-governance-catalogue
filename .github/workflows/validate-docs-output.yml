@@ -54,21 +54,22 @@ jobs:
         env:
           DOCS_VALIDATION_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
 
-      - name: Check normalization and registry assertions
+      - name: Run VIGIL Observatory suite
+        id: vigil_suite
         continue-on-error: true
-        run: node --test --test-name-pattern="normalization|search indexes|red-team proposal|registry resolver|detail loader" scripts/test-vigil-observatory.mjs
+        run: pnpm run test:vigil > vigil-observatory-test.log 2>&1
 
-      - name: Check PATCH and fallback assertions
-        continue-on-error: true
-        run: node --test --test-name-pattern="PATCH public display|failure repair status|fallback" scripts/test-vigil-observatory.mjs
+      - name: Upload VIGIL Observatory diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vigil-observatory-test-diagnostics
+          path: vigil-observatory-test.log
+          if-no-files-found: error
+          retention-days: 3
 
-      - name: Check ledger interface assertions
-        continue-on-error: true
-        run: node --test --test-name-pattern="VIGIL page|collapsed VIGIL|affected parties|vendor pills|literal PATCH|VIGIL detail hierarchy|expanded VIGIL|VIGIL result actions|public interface legibility|Observatory PATCH|per-record" scripts/test-vigil-observatory.mjs
-
-      - name: Check report and home assertions
-        continue-on-error: true
-        run: node --test --test-name-pattern="generated evidence reports|Evidence Chain Report|responsive shell|Repair corpus|generated reports suppress|home Evidence" scripts/test-vigil-observatory.mjs
-
-      - name: Test VIGIL Observatory
-        run: pnpm run test:vigil
+      - name: Enforce VIGIL Observatory suite
+        if: steps.vigil_suite.outcome == 'failure'
+        run: |
+          tail -n 100 vigil-observatory-test.log
+          exit 1
