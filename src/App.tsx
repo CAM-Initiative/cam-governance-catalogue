@@ -27,6 +27,7 @@ function Router() {
       <Route path="/catalogue" component={Catalogue} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
+      {/* Specific Observatory resources must precede the ledger catch-all route. */}
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeBase} />
       <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
