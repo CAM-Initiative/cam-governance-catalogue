@@ -19,6 +19,7 @@ const mobileLinks = [
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy Papers", internal: true },
   { href: "/vigil", label: "VIGIL Ledger", internal: true },
+  { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -36,6 +37,7 @@ const constitutionLinks = [
 
 const vigilLinks = [
   { href: "/observatory", label: "Browse the VIGIL Ledger" },
+  { href: "/observatory/knowledge-base", label: "Knowledge Base" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -169,7 +171,7 @@ export function Shell({ children }: { children: ReactNode }) {
                       key={link.href}
                       href={link.href}
                       className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href || (link.href === "/observatory" && location === "/vigil")
+                        location === link.href || (link.href === "/observatory" && location === "/vigil") || (link.href !== "/observatory" && location.startsWith(`${link.href}/`))
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-card hover:text-foreground"
                       }`}
@@ -202,7 +204,8 @@ export function Shell({ children }: { children: ReactNode }) {
                     className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
                       location === link.href ||
                       (link.href === "/constitution" && isConstitutionActive) ||
-                      (link.href === "/vigil" && isVigilActive)
+                      (link.href === "/vigil" && isVigilActive) ||
+                      (link.href === "/observatory/knowledge-base" && location.startsWith("/observatory/knowledge-base"))
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-card hover:text-foreground"
                     }`}
