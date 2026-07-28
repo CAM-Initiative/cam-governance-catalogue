@@ -54,5 +54,29 @@ jobs:
         env:
           DOCS_VALIDATION_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
 
+      - name: Check report evidence assertions
+        continue-on-error: true
+        run: node --test --test-name-pattern="generated evidence reports use declared source evidence" scripts/test-vigil-observatory.mjs
+
+      - name: Check report route assertions
+        continue-on-error: true
+        run: node --test --test-name-pattern="Evidence Chain Report is a dedicated print-friendly route" scripts/test-vigil-observatory.mjs
+
+      - name: Check report citation assertions
+        continue-on-error: true
+        run: node --test --test-name-pattern="Evidence Chain Report keeps citation details" scripts/test-vigil-observatory.mjs
+
+      - name: Check report responsive assertions
+        continue-on-error: true
+        run: node --test --test-name-pattern="responsive shell and evidence reports" scripts/test-vigil-observatory.mjs
+
+      - name: Check report corpus assertions
+        continue-on-error: true
+        run: node --test --test-name-pattern="Repair corpus provisions use the CAM Corpus" scripts/test-vigil-observatory.mjs
+
+      - name: Check report observation assertions
+        continue-on-error: true
+        run: node --test --test-name-pattern="generated reports suppress duplicated observation preambles" scripts/test-vigil-observatory.mjs
+
       - name: Test VIGIL Observatory
         run: pnpm run test:vigil
