@@ -427,7 +427,6 @@ export default function VigilKnowledgeBase() {
           </>}
         </section>
       </div>
-      </>}
     </>}
   </main></Shell>;
 }
