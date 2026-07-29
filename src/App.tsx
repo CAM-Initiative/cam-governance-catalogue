@@ -8,6 +8,7 @@ import Provenance from "@/pages/provenance";
 import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
+import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
 import EvidenceChainReport from "@/pages/evidence-chain-report";
 import About from "@/pages/about";
 import Policy from "@/pages/policy";
@@ -26,8 +27,11 @@ function Router() {
       <Route path="/catalogue" component={Catalogue} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
-      <Route path="/observatory" component={Vigil} />
+      {/* Specific Observatory resources must precede the ledger catch-all route. */}
+      <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
+      <Route path="/observatory/knowledge-base" component={VigilKnowledgeBase} />
       <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
+      <Route path="/observatory" component={Vigil} />
       <Route path="/vigil" component={Vigil} />
       <Route component={NotFound} />
     </Switch>
