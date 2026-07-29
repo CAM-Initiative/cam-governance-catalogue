@@ -17,7 +17,7 @@ assert.doesNotMatch(knowledgeBase, /bg-emerald|text-emerald|border-emerald/);
 
 assert.match(report, /type ReportChain = RecordChain & \{ learns: string\[\] \}/);
 assert.match(report, /No published LEARN record is linked/);
-assert.match(report, /A separate Observation record is not required/);
+assert.doesNotMatch(report, /A separate Observation record is not required/i, "Section 01 must not narrate internal OBS-versus-FM report architecture");
 assert.match(report, /state\.learnRecords\[0\]\?\.reportTitle/);
 assert.match(report, /function reportSectionAvailability/);
 assert.match(report, /"01": section01/);
