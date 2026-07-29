@@ -19,7 +19,16 @@ assert.match(report, /type ReportChain = RecordChain & \{ learns: string\[\] \}/
 assert.match(report, /No published LEARN record is linked/);
 assert.match(report, /A separate Observation record is not required/);
 assert.match(report, /state\.learnRecords\[0\]\?\.reportTitle/);
-assert.match(report, /chain\.failureModes\.length > 0 && chain\.proposals\.length > 0 && chain\.patches\.length > 0/);
+assert.match(report, /function reportSectionAvailability/);
+assert.match(report, /"01": section01/);
+assert.match(report, /"06": hasDeclaredLearning/);
+assert.match(report, /Object\.values\(availability\)\.every\(Boolean\)/);
+assert.match(report, /source\.sourceResidence\?\.toLocaleLowerCase\(\) === "external"/);
+assert.match(report, /Authoritative failure classification/);
+assert.match(report, /Authoritative evidence-to-repair-and-learning chain/);
+assert.match(report, /Caelestis corpus provenance/);
+assert.match(report, /published_release_at_implementation/);
+assert.doesNotMatch(report, /const caelestisArchiveCitation/);
 assert.match(report, /Abstracted learning/);
 assert.match(report, /Failure taxonomy link/);
 assert.doesNotMatch(report, /border-emerald|bg-emerald|text-emerald/);
