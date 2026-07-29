@@ -22,6 +22,7 @@ jobs:
       - name: Apply evidence report pathway migration
         if: github.event_name == 'pull_request'
         run: |
+          python scripts/fix-evidence-report-migration.py
           python scripts/migrate-evidence-report-pathways.py
           if git diff --quiet -- src/pages/evidence-chain-report.tsx; then
             echo "Evidence report is already current."
