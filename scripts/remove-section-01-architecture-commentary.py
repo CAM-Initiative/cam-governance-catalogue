@@ -14,15 +14,16 @@ report = report.replace(jsx_line, "", 1)
 REPORT.write_text(report, encoding="utf-8")
 
 test = TEST.read_text(encoding="utf-8")
-# Remove any obsolete assertion that requires the discarded public sentence.
-test_lines = [line for line in test.splitlines(keepends=True) if sentence not in line]
-test = "".join(test_lines)
-
-marker = 'assert.doesNotMatch(reportSource, /A separate Observation record is not required/i, "Section 01 must not narrate internal OBS-versus-FM report architecture");\n'
+# Remove the obsolete positive assertion requiring the discarded sentence.
+test = "".join(
+    line for line in test.splitlines(keepends=True)
+    if "assert.match(report, /A separate Observation record is not required/)" not in line
+)
+marker = 'assert.doesNotMatch(report, /A separate Observation record is not required/i, "Section 01 must not narrate internal OBS-versus-FM report architecture");\n'
 if marker not in test:
-    anchor = 'const reportSource = fs.readFileSync(reportPath, "utf8");\n'
+    anchor = 'assert.match(report, /No published LEARN record is linked/);\n'
     if anchor not in test:
-        raise SystemExit("Could not locate reportSource test anchor.")
+        raise SystemExit("Could not locate Knowledge Base report-test anchor.")
     test = test.replace(anchor, anchor + marker, 1)
 TEST.write_text(test, encoding="utf-8")
 
