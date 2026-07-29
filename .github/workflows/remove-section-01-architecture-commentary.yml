@@ -1,0 +1,37 @@
+name: Remove Section 01 architecture commentary
+
+on:
+  push:
+    branches:
+      - policy/soci-act-submission-2026
+    paths:
+      - "scripts/remove-section-01-architecture-commentary.py"
+      - ".github/workflows/remove-section-01-architecture-commentary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  amend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: policy/soci-act-submission-2026
+          fetch-depth: 0
+      - name: Remove report architecture commentary
+        run: python scripts/remove-section-01-architecture-commentary.py
+      - name: Run Knowledge Base contract tests
+        run: node scripts/test-vigil-knowledge-base.mjs
+      - name: Commit amended UX and regression test
+        run: |
+          if git diff --quiet -- src/pages/evidence-chain-report.tsx scripts/test-vigil-knowledge-base.mjs; then
+            echo "UX already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/evidence-chain-report.tsx scripts/test-vigil-knowledge-base.mjs
+          git commit -m "Remove Section 01 record-architecture commentary"
+          git push origin HEAD:policy/soci-act-submission-2026
