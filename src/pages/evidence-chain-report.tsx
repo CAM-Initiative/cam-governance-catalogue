@@ -511,7 +511,6 @@ function ObservationNarrative({ record }: { record: VigilIndexRecord }) {
       <Narrative label="Context" value={record.publicDisplay.observation?.context} />
       <div className="sm:col-span-2"><Narrative label="Interpretation" value={record.publicDisplay.observation?.interpretation} /></div>
     </div>}
-    {isFailureEvidence && <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Section 01 is populated from the Failure Mode’s declared external sources. A separate Observation record is not required for this complete chain.</p>}
   </div>;
 }
 
