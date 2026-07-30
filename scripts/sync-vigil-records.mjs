@@ -150,6 +150,8 @@ function projectedPlatform(record) {
     "observed_system_vendor",
     "observed_vendor",
     "system_vendor",
+    "primary_vendors",
+    "case_context.primary_vendors",
     "source_records.0.source_platform",
     "source_platform",
   ]);

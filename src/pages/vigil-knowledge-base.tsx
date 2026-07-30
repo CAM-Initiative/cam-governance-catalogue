@@ -13,6 +13,7 @@ type LearnRecord = {
   reportTitle: string;
   caseDescriptor?: string;
   summary: string;
+  whatHappened: string[];
   abstractedLearning: string;
   mustNotBeForgotten: string[];
   futureApplication: string[];
@@ -23,19 +24,11 @@ type LearnRecord = {
   year: number;
   primaryVendors: string[];
   incidentStatus?: string;
-  camRepairStatus?: string;
   monitoringRequired: boolean;
   chainState?: string;
-  primaryFailureMode?: string;
   primaryFailureFamilyCode?: string;
   canonicalFailureName?: string;
   taxonomyReference?: string;
-  taxonomyStatus?: string;
-  establishingPatchId?: string;
-  relatedObservations: string[];
-  relatedFailureModes: string[];
-  relatedProposals: string[];
-  relatedPatchNotes: string[];
   githubBlobUrl?: string;
   rawUrl?: string;
 };
@@ -90,10 +83,6 @@ function textList(value: unknown): string[] {
   });
 }
 
-function linkedIds(record: UnknownRecord, key: string) {
-  return textList(valueAt(record, `linked_records.${key}`));
-}
-
 function taxonomyLink(record: UnknownRecord) {
   const links = record.failure_taxonomy_links;
   return Array.isArray(links) && isObject(links[0]) ? links[0] : undefined;
@@ -115,9 +104,6 @@ function normalizeLearnRecord(record: UnknownRecord): LearnRecord | undefined {
   const title = text(firstValue(record, ["report_title", "title", "record_identity.title"])) ?? id;
   const summary = text(record.summary) ?? "No case summary is currently available.";
   const abstractedLearning = text(record.abstracted_learning) ?? summary;
-  const primaryFailureMode = text(firstValue(record, ["primary_failure_mode", "learning_basis.primary_failure_mode"]))
-    ?? text(taxonomy?.failure_record_id)
-    ?? linkedIds(record, "related_failure_modes")[0];
   const monitoringValue = firstValue(record, ["monitoring_required", "case_context.monitoring_required"]);
 
   return {
@@ -127,6 +113,7 @@ function normalizeLearnRecord(record: UnknownRecord): LearnRecord | undefined {
     reportTitle: title,
     caseDescriptor: text(record.case_descriptor),
     summary,
+    whatHappened: textList(record.what_happened),
     abstractedLearning,
     mustNotBeForgotten: textList(record.must_not_be_forgotten),
     futureApplication: textList(record.future_application),
@@ -137,19 +124,11 @@ function normalizeLearnRecord(record: UnknownRecord): LearnRecord | undefined {
     year: recordYear(id, record),
     primaryVendors: textList(firstValue(record, ["primary_vendors", "case_context.primary_vendors"])),
     incidentStatus: text(firstValue(record, ["incident_status", "case_context.incident_status"])),
-    camRepairStatus: text(firstValue(record, ["cam_repair_status", "case_context.cam_repair_status"])),
     monitoringRequired: monitoringValue === true || String(monitoringValue ?? "").toLocaleLowerCase() === "true",
     chainState: text(firstValue(record, ["chain_state", "chain_completion.overall_status"])),
-    primaryFailureMode,
     primaryFailureFamilyCode: text(firstValue(record, ["primary_failure_family_code"])) ?? text(taxonomy?.primary_failure_family_code),
     canonicalFailureName: text(firstValue(record, ["canonical_failure_name"])) ?? text(taxonomy?.canonical_failure_name),
     taxonomyReference: text(firstValue(record, ["taxonomy_reference"])) ?? text(taxonomy?.taxonomy_reference),
-    taxonomyStatus: text(firstValue(record, ["taxonomy_status"])) ?? text(taxonomy?.taxonomy_status),
-    establishingPatchId: text(firstValue(record, ["establishing_patch_id"])) ?? text(taxonomy?.establishing_patch_id),
-    relatedObservations: linkedIds(record, "related_observations"),
-    relatedFailureModes: linkedIds(record, "related_failure_modes"),
-    relatedProposals: linkedIds(record, "related_proposals"),
-    relatedPatchNotes: linkedIds(record, "related_patch_notes"),
     githubBlobUrl: text(record.github_blob_url),
     rawUrl: text(record.raw_url),
   };
@@ -175,6 +154,7 @@ function searchText(record: LearnRecord) {
     record.title,
     record.caseDescriptor,
     record.summary,
+    ...record.whatHappened,
     record.abstractedLearning,
     record.generalisationBoundary,
     record.canonicalFailureName,
@@ -202,22 +182,6 @@ function StatusBadges({ record }: { record: LearnRecord }) {
   </div>;
 }
 
-function Chain({ record }: { record: LearnRecord }) {
-  const stages = [
-    ...record.relatedObservations.map((id) => ({ label: "OBS", id })),
-    ...record.relatedFailureModes.map((id) => ({ label: "FM", id })),
-    ...record.relatedProposals.map((id) => ({ label: "PROP", id })),
-    ...record.relatedPatchNotes.map((id) => ({ label: "PATCH", id })),
-    { label: "LEARN", id: record.id },
-  ];
-  return <div className="flex flex-wrap items-center gap-2">
-    {stages.map((stage, index) => <div key={`${stage.label}-${stage.id}`} className="contents">
-      <span className="rounded-lg border border-border/80 bg-card/70 px-3 py-2 font-mono text-xs text-foreground/80"><span className="text-cam-gold">{stage.label}</span> · {stage.id}</span>
-      {index < stages.length - 1 && <span className="text-cam-gold/70" aria-hidden="true">→</span>}
-    </div>)}
-  </div>;
-}
-
 function KnowledgeCard({ record }: { record: LearnRecord }) {
   return <article className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/30 shadow-lg transition hover:-translate-y-0.5 hover:border-cam-gold/50 hover:shadow-xl">
     <div className="border-b border-cam-gold/25 bg-[hsl(36_48%_96%)] px-6 py-4 md:px-7">
@@ -229,9 +193,23 @@ function KnowledgeCard({ record }: { record: LearnRecord }) {
     <div className="p-6 md:p-7">
       <h3 className="font-serif text-3xl leading-tight text-foreground md:text-[2rem]">{record.title}</h3>
       {record.caseDescriptor && <p className="mt-3 text-base font-medium leading-relaxed text-foreground/70">{record.caseDescriptor}</p>}
-      <div className="mt-5 border-l-2 border-cam-gold/35 pl-4">
-        <p className="report-label">Reusable governance lesson</p>
-        <p className="mt-2 text-base leading-relaxed text-foreground/85">{record.abstractedLearning}</p>
+      <div className="mt-6 space-y-6">
+        <section>
+          <p className="report-label">What happened</p>
+          <ol className="mt-2 list-decimal space-y-2 pl-5 text-base leading-relaxed text-foreground/85">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
+        </section>
+        <section className="border-l-2 border-cam-gold/35 pl-4">
+          <p className="report-label">Lesson</p>
+          <p className="mt-2 text-base leading-relaxed text-foreground/85">{record.abstractedLearning}</p>
+        </section>
+        {record.mustNotBeForgotten.length > 0 && <section>
+          <p className="report-label">Must not be forgotten</p>
+          <ul className="mt-2 space-y-2 text-base leading-relaxed text-foreground/85">{record.mustNotBeForgotten.map((item) => <li key={item} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" /><span>{item}</span></li>)}</ul>
+        </section>}
+        {record.futureApplication.length > 0 && <section>
+          <p className="report-label">Future application</p>
+          <div className="mt-2 flex flex-wrap gap-2">{record.futureApplication.map((item) => <span key={item} className="rounded-full border border-border bg-background/55 px-2.5 py-1 text-xs text-muted-foreground">{item}</span>)}</div>
+        </section>}
       </div>
       {(record.canonicalFailureName || record.primaryFailureFamilyCode) && <div className="mt-6 rounded-2xl border border-border/75 bg-card/65 p-4">
         <p className="report-label">Failure taxonomy</p>
@@ -271,45 +249,37 @@ function KnowledgeDetail({ record }: { record: LearnRecord }) {
       </div>
     </header>
 
-    <DetailSection title="The lesson">
+    <DetailSection title="What happened">
+      <ol className="list-decimal space-y-3 pl-5">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
+    </DetailSection>
+
+    <DetailSection title="Lesson">
       <p className="font-serif text-xl leading-relaxed text-foreground">{record.abstractedLearning}</p>
     </DetailSection>
 
-    <div className="grid gap-6 lg:grid-cols-2">
-      <DetailSection title="What happened"><p>{record.summary}</p></DetailSection>
-      <DetailSection title="What failed">
-        <p>{record.canonicalFailureName ?? "The linked Failure Mode remains authoritative for classification."}</p>
-        {(record.primaryFailureFamilyCode || record.taxonomyReference) && <dl className="mt-4 space-y-3 border-t border-border/70 pt-4">
-          {record.primaryFailureFamilyCode && <div><dt className="report-label">Primary family</dt><dd className="mt-1 font-mono text-sm">{record.primaryFailureFamilyCode}</dd></div>}
-          {record.taxonomyReference && <div><dt className="report-label">Caelestis taxonomy</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
-        </dl>}
-      </DetailSection>
-    </div>
-
-    <DetailSection title="What changed">
-      <p>{record.camRepairStatus ?? "The linked PATCH records the implemented Caelestis repair and its verification state."}</p>
-      {record.establishingPatchId && <p className="mt-3 font-mono text-sm text-cam-gold">Establishing PATCH · {record.establishingPatchId}</p>}
-    </DetailSection>
-
-    {record.mustNotBeForgotten.length > 0 && <DetailSection title="What must not be forgotten">
+    {record.mustNotBeForgotten.length > 0 && <DetailSection title="Must not be forgotten">
       <ul className="space-y-3">{record.mustNotBeForgotten.map((item) => <li key={item} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" /><span>{item}</span></li>)}</ul>
     </DetailSection>}
 
-    <div className="grid gap-6 lg:grid-cols-2">
-      {record.futureApplication.length > 0 && <DetailSection title="Where this applies"><ul className="space-y-2">{record.futureApplication.map((item) => <li key={item}>{item}</li>)}</ul></DetailSection>}
-      {record.generalisationBoundary && <DetailSection title="Limits of the lesson"><p>{record.generalisationBoundary}</p></DetailSection>}
-    </div>
+    {record.futureApplication.length > 0 && <DetailSection title="Future application"><ul className="space-y-2">{record.futureApplication.map((item) => <li key={item}>{item}</li>)}</ul></DetailSection>}
+
+    {record.generalisationBoundary && <DetailSection title="Limits of the lesson"><p>{record.generalisationBoundary}</p></DetailSection>}
 
     <DetailSection title="Current state">
-      <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="grid gap-4 sm:grid-cols-3">
         <div><dt className="report-label">Evidence chain</dt><dd className="mt-1">{displayLabel(record.chainState) ?? "Not specified"}</dd></div>
-        <div><dt className="report-label">CAM repair</dt><dd className="mt-1">{record.camRepairStatus ?? "Not specified"}</dd></div>
         <div><dt className="report-label">External incident</dt><dd className="mt-1">{record.incidentStatus ?? "Not specified"}</dd></div>
         <div><dt className="report-label">Monitoring</dt><dd className="mt-1">{record.monitoringRequired ? "Required" : "Not currently declared"}</dd></div>
       </dl>
     </DetailSection>
 
-    <DetailSection title="Evidence-to-repair-and-learning chain"><Chain record={record} /></DetailSection>
+    {(record.canonicalFailureName || record.primaryFailureFamilyCode || record.taxonomyReference) && <DetailSection title="Failure taxonomy">
+      <p>{record.canonicalFailureName ?? "The linked Failure Mode remains authoritative for classification."}</p>
+      {(record.primaryFailureFamilyCode || record.taxonomyReference) && <dl className="mt-4 space-y-3 border-t border-border/70 pt-4">
+        {record.primaryFailureFamilyCode && <div><dt className="report-label">Primary family</dt><dd className="mt-1 font-mono text-sm">{record.primaryFailureFamilyCode}</dd></div>}
+        {record.taxonomyReference && <div><dt className="report-label">Caelestis taxonomy</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
+      </dl>}
+    </DetailSection>}
   </div>;
 }
 
