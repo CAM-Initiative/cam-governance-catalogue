@@ -54,6 +54,25 @@ function CitationCopyButton({ citation, label }: { citation: string; label: stri
   );
 }
 
+function EmbeddedPdfViewer({ href, label, title }: { href: string; label: string; title: string }) {
+  return (
+    <div className="mt-8 overflow-hidden rounded-2xl border border-cam-gold/35 bg-card shadow-inner">
+      <div className="border-b border-cam-gold/25 bg-[hsl(36_48%_96%)] px-4 py-3">
+        <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">{label}</p>
+      </div>
+      <iframe
+        className="h-[72vh] min-h-[38rem] w-full bg-white"
+        loading="lazy"
+        src={href}
+        title={title}
+      />
+      <p className="border-t border-cam-gold/25 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+        The embedded viewer depends on browser PDF support. Use “Open PDF in browser” or “Download PDF” where the preview is unavailable.
+      </p>
+    </div>
+  );
+}
+
 const primaryButtonClass =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cam-gold/70 bg-cam-gold/20 px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-cam-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
@@ -167,20 +186,11 @@ export default function Policy() {
                   </a>
                 </div>
 
-                <div className="mt-8 overflow-hidden rounded-2xl border border-cam-gold/35 bg-card shadow-inner">
-                  <div className="border-b border-cam-gold/25 bg-[hsl(36_48%_96%)] px-4 py-3">
-                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">Read the submission</p>
-                  </div>
-                  <iframe
-                    className="h-[72vh] min-h-[38rem] w-full bg-white"
-                    loading="lazy"
-                    src={sociSubmissionPdfHref}
-                    title="CAM Initiative submission on proposed amendments to the Security of Critical Infrastructure Act 2018"
-                  />
-                  <p className="border-t border-cam-gold/25 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
-                    The embedded viewer depends on browser PDF support. Use “Open PDF in browser” or “Download PDF” where the preview is unavailable.
-                  </p>
-                </div>
+                <EmbeddedPdfViewer
+                  href={sociSubmissionPdfHref}
+                  label="Read the submission"
+                  title="CAM Initiative submission on proposed amendments to the Security of Critical Infrastructure Act 2018"
+                />
               </div>
 
               <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Consultation submission details">
@@ -279,6 +289,12 @@ export default function Policy() {
                     <ExternalLink className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </div>
+
+                <EmbeddedPdfViewer
+                  href={trainingPolicyPdfHref}
+                  label="Read the policy proposal"
+                  title="CAM Initiative AI Training, Contribution and Copyright Scheme policy proposal"
+                />
               </div>
 
               <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Publication details">
