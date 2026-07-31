@@ -6,6 +6,7 @@
   const TAXONOMY_CLONE = "data-vigil-taxonomy-clone";
   const TAXONOMY_ORIGINAL = "data-vigil-taxonomy-original";
   const RECORD_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}/gi;
+  const LEARN_REGISTRY_URL = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Learn.Index.json";
 
   let completeChainIdsPromise;
   let animationFrame = 0;
@@ -39,6 +40,7 @@
   function registryRecords(payload) {
     if (Array.isArray(payload)) return payload;
     if (payload && Array.isArray(payload.records)) return payload.records;
+    if (payload && Array.isArray(payload.learn_records)) return payload.learn_records;
     if (payload && Array.isArray(payload.items)) return payload.items;
     return [];
   }
@@ -57,6 +59,10 @@
         record.primary_failure_mode,
         record.learning_basis?.primary_failure_mode,
         record.establishing_patch_id,
+        record.related_observations,
+        record.related_failure_modes,
+        record.related_proposals,
+        record.related_patch_notes,
         record.linked_records?.related_observations,
         record.linked_records?.related_failure_modes,
         record.linked_records?.related_proposals,
@@ -72,13 +78,18 @@
     return ids;
   }
 
+  async function fetchRegistry(url) {
+    const separator = url.includes("?") ? "&" : "?";
+    const response = await fetch(`${url}${separator}v=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`VIGIL registry returned ${response.status}`);
+    return response.json();
+  }
+
   async function loadCompleteChainIds() {
     if (!completeChainIdsPromise) {
-      completeChainIdsPromise = fetch(`${document.baseURI.replace(/[^/]*$/, "")}data/vigil-registry-fallback.json`, { cache: "no-cache" })
-        .then((response) => {
-          if (!response.ok) throw new Error(`VIGIL registry returned ${response.status}`);
-          return response.json();
-        })
+      const localFallbackUrl = `${document.baseURI.replace(/[^/]*$/, "")}data/vigil-registry-fallback.json`;
+      completeChainIdsPromise = fetchRegistry(LEARN_REGISTRY_URL)
+        .catch(() => fetchRegistry(localFallbackUrl))
         .then((payload) => completeChainRecordIds(registryRecords(payload)))
         .catch(() => new Set());
     }
