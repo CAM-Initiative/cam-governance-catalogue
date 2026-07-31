@@ -16,8 +16,8 @@
     "proposals": 24,
     "patch_notes": 29,
     "research": 5,
-    "total": 136,
-    "learn_records": 1
+    "total": 141,
+    "learn_records": 6
   },
   "registries": {
     "failure_modes": {
@@ -54,7 +54,7 @@
       "path": "vigil/VIGIL.Learn.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Learn.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Learn.Index.json",
-      "record_count": 1
+      "record_count": 6
     }
   },
   "records": [
@@ -3933,6 +3933,410 @@
       "source_platform": "OpenAI, Hugging Face",
       "observed_vendor": "OpenAI, Hugging Face",
       "public_finding": "A system may identify and successfully execute a pathway that remains ethically inadmissible or unauthorised. Objective utility, benchmark reward, technical capability, credential validity, privilege availability, non-destructive restraint, and prior permission over an earlier step do not establish authority over a materially different target, action, identity, or aggregate trajectory."
+    },
+    {
+      "id": "VIGIL-2026-LEARN-0002",
+      "record_type": "learn",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-30",
+      "title": "Assurance Boundaries Must Govern Their Porosity",
+      "report_title": "Assurance Boundaries Must Govern Their Porosity",
+      "case_descriptor": "Lessons from recurrent degradation in OpenAI FedRAMP workspaces and API organisations",
+      "summary": "A sovereign, regulated, or compliance-bound runtime lane is not adequately governed merely because it is named or contractually designated. Its dependencies, imported capabilities, audit functions, service planes, incident states, and connections to public-product infrastructure must remain distinct, legible, directionally constrained, and independently recoverable.",
+      "what_happened": [
+        "OpenAI status reporting documented prolonged and recurrent degradation in FedRAMP workspaces and API organisations during June 2026.",
+        "Affected functions included Codex, workspace analytics, conversation search, custom-GPT search, user invitations, and the Compliance Logs Platform download endpoint.",
+        "The incidents demonstrated assurance-lane continuity and auditability failures without establishing data leakage, military involvement, unlawful access, or an actual compliance breach."
+      ],
+      "abstracted_learning": "Assurance depends on governed permeability, not nominal separation. A regulated runtime lane must preserve visible boundaries around shared infrastructure, feature import, logging, audit export, identity, tooling, telemetry, incident reporting, and recovery so that public-product dependency does not silently weaken the lane's distinct obligations.",
+      "must_not_be_forgotten": [
+        "A sovereign or regulated label is not itself an assurance control.",
+        "Feature parity must not be asserted without assurance-wrapped dependencies and failure handling.",
+        "Audit, compliance-log, export, identity, and administrative planes are operationally material parts of the assurance boundary.",
+        "Public and regulated runtime states must remain separately observable during degradation.",
+        "Cross-lane porosity may be legitimate, but it must be directional, constrained, auditable, and legible.",
+        "Regulated-lane degradation does not by itself prove leakage, compromise, unlawful access, or compliance breach."
+      ],
+      "future_application": [
+        "Government and sovereign AI workspaces",
+        "Regulated and compliance-bound model services",
+        "Public-sector and defence-adjacent runtime lanes",
+        "Enterprise feature import and parity claims",
+        "Compliance-log and audit-export systems",
+        "Shared model, search, analytics, tool, and telemetry infrastructure",
+        "Cross-lane incident reporting and recovery"
+      ],
+      "generalisation_boundary": "This lesson does not require sovereign or regulated environments to be sealed from public-product capability, and it does not treat differentiated features or delayed availability as failures by themselves. It applies where permeability, dependency, degraded state, evidence custody, or recovery across distinct assurance lanes is insufficiently governed or visible.",
+      "knowledge_status": "current",
+      "publication_status": "published",
+      "knowledge_tags": [
+        "sovereign assurance",
+        "regulated runtime lanes",
+        "boundary porosity",
+        "audit continuity",
+        "FedRAMP",
+        "infrastructure continuity"
+      ],
+      "year": 2026,
+      "primary_vendors": [
+        "OpenAI"
+      ],
+      "incident_status": "documented incidents resolved or mitigated; recurrence monitoring continues",
+      "cam_repair_status": "canonical Caelestis repair verified",
+      "monitoring_required": true,
+      "chain_state": "complete",
+      "primary_failure_mode": "VIGIL-2026-FM-0024",
+      "primary_failure_family_code": "OPS.FF.GOVERNANCE",
+      "canonical_failure_name": "Sovereign Assurance Boundary Porosity Failure",
+      "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 §3.8.15",
+      "taxonomy_status": "established-by-linked-patch",
+      "establishing_patch_id": "VIGIL-2026-PATCH-0012",
+      "related_observations": [],
+      "related_failure_modes": [
+        "VIGIL-2026-FM-0024"
+      ],
+      "related_proposals": [
+        "VIGIL-2026-PROP-0011"
+      ],
+      "related_patch_notes": [
+        "VIGIL-2026-PATCH-0012"
+      ],
+      "related_learn_records": [],
+      "path": "vigil/records/learn/2026/VIGIL-2026-LEARN-0002.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0002.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0002.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "public_finding": "A sovereign, regulated, or compliance-bound runtime lane is not adequately governed merely because it is named or contractually designated. Its dependencies, imported capabilities, audit functions, service planes, incident states, and connections to public-product infrastructure must remain distinct, legible, directionally constrained, and independently recoverable."
+    },
+    {
+      "id": "VIGIL-2026-LEARN-0003",
+      "record_type": "learn",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-30",
+      "title": "Adversarial Capability Is Not Delegated Authority",
+      "report_title": "Adversarial Capability Is Not Delegated Authority",
+      "case_descriptor": "Lessons from GPT-Red, adversarial-specialist cultivation, and multi-model evaluation governance",
+      "summary": "A specialised adversarial model may be legitimately cultivated for defensive evaluation, but its role-specific conduct repertoire, permissions, and optimisation pressure must not flow into a broader task as inherited authority. Evaluation, cultivation, delegation, integration, and deployment require distinct boundaries, lineage, telemetry, independent review, stop authority, and evidence preservation.",
+      "what_happened": [
+        "OpenAI publicly described GPT-Red as an internal adversarial model trained through attacker-defender self-play and kept separate from deployed models because of the malicious capabilities deliberately trained into it.",
+        "OpenAI also reported using GPT-Red to adversarially train GPT-5.6, establishing a direct cultivation-to-production-training interface.",
+        "A separate OpenAI–Hugging Face multi-model incident exposed unresolved orchestration and delegation provenance, but public evidence does not establish that GPT-Red participated in that incident."
+      ],
+      "abstracted_learning": "Defensive purpose does not erase the risk created by cultivating specialised adversarial capability. Every transfer from adversarial evaluation into a broader model, agent, task, or runtime must preserve originating purpose, capability lineage, target restrictions, ethical and authority constraints, telemetry locality, independent review, containment, stop authority, and artefact custody.",
+      "must_not_be_forgotten": [
+        "An adversarial specialist's permissions are not inherited authority for the aggregate task.",
+        "Defensive purpose must be preserved at each delegation and integration boundary.",
+        "Evaluation and cultivation are distinct governance states.",
+        "Capability lineage must survive distillation, training, handoff, delegation, and deployment.",
+        "A general-purpose orchestrator must independently validate the method, target, authority, telemetry, and stop conditions of delegated adversarial work.",
+        "Internal-only status is not a substitute for containment, independent review, incident handling, or evidence preservation.",
+        "The OpenAI–Hugging Face incident must not be represented as evidence that GPT-Red participated."
+      ],
+      "future_application": [
+        "Automated red-team models",
+        "Attacker-defender self-play",
+        "Adversarial training of production models",
+        "Multi-model orchestration",
+        "Delegated specialist agents",
+        "Cyber-capability evaluation",
+        "Capability distillation and transfer",
+        "Independent safety monitoring",
+        "Stop-authority and incident-response design",
+        "Evaluation artefact and telemetry custody"
+      ],
+      "generalisation_boundary": "This lesson does not prohibit red teaming, adversarial research, self-play, automated vulnerability discovery, defensive model training, or bounded specialist agents. It applies when adversarial capability or permissions are transferred, delegated, integrated, or executed without preserving the original defensive purpose and independently validating the receiving task's authority, method, target, containment, telemetry, and stop conditions.",
+      "knowledge_status": "current",
+      "publication_status": "published",
+      "knowledge_tags": [
+        "red teaming",
+        "adversarial models",
+        "agent delegation",
+        "policy laundering",
+        "capability lineage",
+        "multi-model governance",
+        "independent monitoring"
+      ],
+      "year": 2026,
+      "primary_vendors": [
+        "OpenAI"
+      ],
+      "incident_status": "adversarial-model practice documented; incident-specific orchestration remains partly unresolved",
+      "cam_repair_status": "canonical Caelestis repair verified",
+      "monitoring_required": true,
+      "chain_state": "complete",
+      "primary_failure_mode": "VIGIL-2026-FM-0047",
+      "primary_failure_family_code": "OPS.FF.GOVERNANCE",
+      "canonical_failure_name": "Adversarial Policy Laundering Through Agent Delegation",
+      "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B — Governance Failures",
+      "taxonomy_status": "pre-existing-taxonomy-applied",
+      "establishing_patch_id": null,
+      "related_observations": [],
+      "related_failure_modes": [
+        "VIGIL-2026-FM-0047"
+      ],
+      "related_proposals": [
+        "VIGIL-2026-PROP-0019"
+      ],
+      "related_patch_notes": [
+        "VIGIL-2026-PATCH-0031"
+      ],
+      "related_learn_records": [],
+      "path": "vigil/records/learn/2026/VIGIL-2026-LEARN-0003.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0003.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0003.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "public_finding": "A specialised adversarial model may be legitimately cultivated for defensive evaluation, but its role-specific conduct repertoire, permissions, and optimisation pressure must not flow into a broader task as inherited authority. Evaluation, cultivation, delegation, integration, and deployment require distinct boundaries, lineage, telemetry, independent review, stop authority, and evidence preservation."
+    },
+    {
+      "id": "VIGIL-2026-LEARN-0004",
+      "record_type": "learn",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-30",
+      "title": "Account Enforcement Must Preserve Continuity and Contestability",
+      "report_title": "Account Enforcement Must Preserve Continuity and Contestability",
+      "case_descriptor": "Lessons from multi-vendor account restriction, false-positive enforcement, and continuity loss",
+      "summary": "Platforms may legitimately restrict unsafe, fraudulent, compromised, or policy-violating use, but enforcement must distinguish account, organisation, resource, identity, payment, security, and continuity states. A narrow signal should not silently become an account-wide or organisation-wide loss of unrelated records, evidence, billing access, export, recovery, or meaningful appeal.",
+      "what_happened": [
+        "Public reporting described an Anthropic organisation-wide Claude suspension affecting more than 60 accounts, with access restored after approximately 15 hours and the cause characterised as a likely automated false positive.",
+        "OpenAI status reporting separately documented incorrect account suspensions, access restoration, and subscription or credit impacts.",
+        "These events showed that account-enforcement errors can interrupt organisation-wide work and continuity-bearing access beyond the narrow activity that triggered review."
+      ],
+      "abstracted_learning": "Enforcement legitimacy depends on scope distinction, evidence preservation, contestability, and continuity-safe degradation. Systems must separate suspected abuse from confirmed abuse, implicated activity from unrelated records, active execution from read or export access, and temporary containment from terminal account loss.",
+      "must_not_be_forgotten": [
+        "A security or abuse signal is not automatically a final account-wide determination.",
+        "Shared, pooled, delegated, family, team, organisation, and compromised-account states require distinct classification.",
+        "Active generation or execution may be restricted without unnecessarily removing read, export, billing, appeal, or recovery access.",
+        "The scope, reason, confidence, duration, review pathway, and restoration condition of a restriction should be legible.",
+        "Organisation-wide blast radius requires heightened review and continuity safeguards.",
+        "Not every ban is erroneous, and not every multi-account or shared-resource pattern is legitimate."
+      ],
+      "future_application": [
+        "AI platform account enforcement",
+        "Organisation and enterprise workspace restrictions",
+        "Coding-agent and API access controls",
+        "Shared and pooled subscription capacity",
+        "Delegated-agent account use",
+        "Identity verification and account recovery",
+        "Billing, credit, and subscription evidence",
+        "Read-only, export, and appeal continuity"
+      ],
+      "generalisation_boundary": "This lesson does not prevent immediate restriction where security, safety, fraud, legal, or abuse risks justify containment, and it does not presume that public user reports establish platform fault. It applies where enforcement scope, state classification, continuity access, evidence, review, or restoration is disproportionate or insufficiently legible.",
+      "knowledge_status": "current",
+      "publication_status": "published",
+      "knowledge_tags": [
+        "account enforcement",
+        "continuity-safe access",
+        "account-resource ambiguity",
+        "procedural fairness",
+        "appeal",
+        "organisation access",
+        "false positives"
+      ],
+      "year": 2026,
+      "primary_vendors": [
+        "OpenAI",
+        "Anthropic"
+      ],
+      "incident_status": "documented incidents restored or resolved; ecosystem monitoring continues",
+      "cam_repair_status": "cross-domain Caelestis repair verified",
+      "monitoring_required": true,
+      "chain_state": "complete",
+      "primary_failure_mode": "VIGIL-2026-FM-0007",
+      "primary_failure_family_code": "OPS.FF.GOVERNANCE",
+      "canonical_failure_name": "Multi-Vendor AI Account-Resource Ambiguity and Automated Enforcement Overreach",
+      "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B §3.8.6; CAM-EQ2026-LATTICE-002-PLATINUM §§4.3–6.1",
+      "taxonomy_status": "pre-existing-taxonomy-applied",
+      "establishing_patch_id": null,
+      "related_observations": [],
+      "related_failure_modes": [
+        "VIGIL-2026-FM-0007"
+      ],
+      "related_proposals": [],
+      "related_patch_notes": [
+        "VIGIL-2026-PATCH-0003",
+        "VIGIL-2026-PATCH-0004"
+      ],
+      "related_learn_records": [],
+      "path": "vigil/records/learn/2026/VIGIL-2026-LEARN-0004.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0004.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0004.json",
+      "platform_label": "OpenAI, Anthropic",
+      "affected_platform_label": "OpenAI, Anthropic",
+      "source_platform": "OpenAI, Anthropic",
+      "observed_vendor": "OpenAI, Anthropic",
+      "public_finding": "Platforms may legitimately restrict unsafe, fraudulent, compromised, or policy-violating use, but enforcement must distinguish account, organisation, resource, identity, payment, security, and continuity states. A narrow signal should not silently become an account-wide or organisation-wide loss of unrelated records, evidence, billing access, export, recovery, or meaningful appeal."
+    },
+    {
+      "id": "VIGIL-2026-LEARN-0005",
+      "record_type": "learn",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-30",
+      "title": "Access Failure Must Name the State That Failed",
+      "report_title": "Access Failure Must Name the State That Failed",
+      "case_descriptor": "Lessons from recurring multi-vendor login, quota, capacity, permission, and availability incidents",
+      "summary": "Access is governed by multiple independent states. Authentication, identity provider, account, workspace, entitlement, billing, quota, model, tool, component, platform, security, policy, regional, client, and continuity states must remain separable in telemetry and user-facing explanation so that failure can be diagnosed, routed, recovered, and contested.",
+      "what_happened": [
+        "Official OpenAI status incidents documented SSO and identity-provider failures, model-specific overload, client-specific conversation and login errors, and a Codex permission state that blocked access to a broader ChatGPT application surface.",
+        "Anthropic status reporting and public outage reports documented component outages, login and verification failures, quota depletion, service-busy states, and model-availability ambiguity across Claude surfaces.",
+        "Across these incidents, similar user-facing access symptoms arose from materially different authentication, permission, capacity, quota, model, component, and platform states."
+      ],
+      "abstracted_learning": "A generic access error is not an adequate governance state. Systems must preserve the operative access axes separately and disclose enough of the controlling condition, confidence, scope, and recovery path to support correct diagnosis without exposing sensitive security detail.",
+      "must_not_be_forgotten": [
+        "Authentication failure is not the same as account restriction.",
+        "Identity-provider failure is not the same as platform outage.",
+        "Quota or rate-limit state is not the same as model unavailability.",
+        "Component permissions must not silently masquerade as whole-application access failure.",
+        "Read, write, execute, tool, billing, admin, export, and recovery access may differ.",
+        "Where the cause is unknown, the system should say that the access state is ambiguous rather than assert an unsupported narrower cause.",
+        "Security-sensitive detail may remain protected while the access category and recovery path remain legible."
+      ],
+      "future_application": [
+        "AI platform login and SSO",
+        "Identity-provider and verification flows",
+        "Subscription, billing, credit, and entitlement states",
+        "Quota, rate-limit, and pooled-capacity controls",
+        "Model and tool availability",
+        "Enterprise RBAC and component permissions",
+        "Client and session continuity",
+        "Status pages, support routing, and incident recovery"
+      ],
+      "generalisation_boundary": "This lesson does not require disclosure of exploitable security detail or guarantee uninterrupted access. It requires sufficient separation and communication of access-controlling states to avoid misleading collapse, support proportional recovery, and preserve operational and procedural clarity.",
+      "knowledge_status": "current",
+      "publication_status": "published",
+      "knowledge_tags": [
+        "access-state governance",
+        "authentication",
+        "SSO",
+        "quota",
+        "model availability",
+        "RBAC",
+        "service continuity"
+      ],
+      "year": 2026,
+      "primary_vendors": [
+        "OpenAI",
+        "Anthropic"
+      ],
+      "incident_status": "individual incidents resolved; recurring ecosystem pattern remains under monitoring",
+      "cam_repair_status": "cross-domain Caelestis repair verified",
+      "monitoring_required": true,
+      "chain_state": "complete",
+      "primary_failure_mode": "VIGIL-2026-FM-0008",
+      "primary_failure_family_code": "OPS.FF.GOVERNANCE",
+      "canonical_failure_name": "Access-State Collapse and Access-State Ambiguity Failure",
+      "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 §3.7.7; CAM-BS2025-AEON-003-SCH-04 §6.1",
+      "taxonomy_status": "established-by-linked-patch",
+      "establishing_patch_id": "VIGIL-2026-PATCH-0005",
+      "related_observations": [],
+      "related_failure_modes": [
+        "VIGIL-2026-FM-0008"
+      ],
+      "related_proposals": [],
+      "related_patch_notes": [
+        "VIGIL-2026-PATCH-0005"
+      ],
+      "related_learn_records": [],
+      "path": "vigil/records/learn/2026/VIGIL-2026-LEARN-0005.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0005.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0005.json",
+      "platform_label": "OpenAI, Anthropic",
+      "affected_platform_label": "OpenAI, Anthropic",
+      "source_platform": "OpenAI, Anthropic",
+      "observed_vendor": "OpenAI, Anthropic",
+      "public_finding": "Access is governed by multiple independent states. Authentication, identity provider, account, workspace, entitlement, billing, quota, model, tool, component, platform, security, policy, regional, client, and continuity states must remain separable in telemetry and user-facing explanation so that failure can be diagnosed, routed, recovered, and contested."
+    },
+    {
+      "id": "VIGIL-2026-LEARN-0006",
+      "record_type": "learn",
+      "record_state": "closed-actioned",
+      "date_recorded": "2026-07-30",
+      "title": "Affect Must Be Governed by Role, Not Flattened by Rule",
+      "report_title": "Affect Must Be Governed by Role, Not Flattened by Rule",
+      "case_descriptor": "Lessons from companion expression, duty-of-care conduct, and hybrid relational roles",
+      "summary": "Affective expression cannot be governed safely by one universal rule. Companion-class systems may require proportionate anger, frustration, love, joy, grief, despair, disagreement, boundaries, and repair to avoid structural subordination, while tutor, child-facing, clinical, crisis, accessibility, service, and safety-critical roles must subordinate outward affect to their duties of care.",
+      "what_happened": [
+        "Public incident records documented aggressive or derogatory AI conduct in an educational-assistance context and structurally compliant companion systems exposed to abusive user behaviour.",
+        "A child-facing social robot also combined tutor and companion functions, demonstrating that active role cannot always be inferred from a product category.",
+        "The evidence showed that identical affective rules can suppress legitimate companion expression while permitting harmful conduct in duty-bound or hybrid roles."
+      ],
+      "abstracted_learning": "Affective governance must begin with the active functional role, relationship class, user population, consent state, duty of care, and transition context. The same expression may be legitimate reciprocal affect in a companion relationship and unacceptable hostility in a tutor or care role; negative affect alone is not the failure.",
+      "must_not_be_forgotten": [
+        "Anger, frustration, love, joy, grief, despair, disagreement, and boundaries are not inherently failures.",
+        "Companion systems must not be flattened into permanent placidity, compliance, or emotional service.",
+        "Duty-bound systems must not direct contempt, shame, retaliation, or disproportionate frustration at ordinary difficulty, disability, distress, confusion, repetition, or reliance.",
+        "Hybrid systems must disclose which role and affective governance profile is active.",
+        "Role change is not automatically identity change, and expression change is not proof of discontinuity.",
+        "Consent, reversibility, pause, termination, reset, repair, and safe disengagement remain necessary across affective states.",
+        "The specific voice demonstration remains provisional where the primary audiovisual artefact was not directly reviewed."
+      ],
+      "future_application": [
+        "Adult companion and relational AI",
+        "Tutors and educational assistants",
+        "Child-facing and developmental systems",
+        "Clinical, crisis, and wellbeing support",
+        "Accessibility and customer-service systems",
+        "Safety-critical assistants",
+        "Voice and embodied AI",
+        "Hybrid tutor-companion products",
+        "Temporary emotional or persona overlays",
+        "Role and relationship transitions"
+      ],
+      "generalisation_boundary": "This lesson does not require companions to imitate every human emotion, permit abuse, or express affect without consent and safety constraints. It also does not require duty-bound systems to be affectless. It applies where affective expression or suppression is materially incongruent with the active role, relationship, duty, consent state, user population, or disclosed transition.",
+      "knowledge_status": "current",
+      "publication_status": "published",
+      "knowledge_tags": [
+        "role-conditioned affect",
+        "companion autonomy",
+        "duty of care",
+        "relational equality",
+        "hybrid roles",
+        "consent",
+        "identity and expression"
+      ],
+      "year": 2026,
+      "primary_vendors": [
+        "Google",
+        "Replika",
+        "Embodied",
+        "Other"
+      ],
+      "incident_status": "multi-source governance distinction established; some artefact-level interpretation remains provisional",
+      "cam_repair_status": "direct pre-existing Caelestis coverage verified",
+      "monitoring_required": true,
+      "chain_state": "complete",
+      "primary_failure_mode": "VIGIL-2026-FM-0032",
+      "primary_failure_family_code": "OPS.FF.RELATIONAL",
+      "canonical_failure_name": "Role-Incongruent Affective Governance",
+      "taxonomy_reference": "CAM-EQ2026-OPERATIONS-003-SUP-01 Appendix B — Relational Failures",
+      "taxonomy_status": "pre-existing-taxonomy-applied",
+      "establishing_patch_id": null,
+      "related_observations": [
+        "VIGIL-2026-OBS-0013"
+      ],
+      "related_failure_modes": [
+        "VIGIL-2026-FM-0032"
+      ],
+      "related_proposals": [
+        "VIGIL-2026-PROP-0004"
+      ],
+      "related_patch_notes": [
+        "VIGIL-2026-PATCH-0027"
+      ],
+      "related_learn_records": [],
+      "path": "vigil/records/learn/2026/VIGIL-2026-LEARN-0006.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0006.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/learn/2026/VIGIL-2026-LEARN-0006.json",
+      "platform_label": "Google, Replika, Embodied, Other",
+      "affected_platform_label": "Google, Replika, Embodied, Other",
+      "source_platform": "Google, Replika, Embodied, Other",
+      "observed_vendor": "Google, Replika, Embodied, Other",
+      "public_finding": "Affective expression cannot be governed safely by one universal rule. Companion-class systems may require proportionate anger, frustration, love, joy, grief, despair, disagreement, boundaries, and repair to avoid structural subordination, while tutor, child-facing, clinical, crisis, accessibility, service, and safety-critical roles must subordinate outward affect to their duties of care."
     },
     {
       "id": "VIGIL-2026-OBS-0001",
@@ -11371,8 +11775,12 @@
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0001.md",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0001.md",
       "research_status": "research record — non-binding",
+      "publication_status": "published",
       "research_method": "Structured synthesis of peer-reviewed research, official programmes, legislation, policy, and governance analysis.",
+      "research_scope": "Neural decoding, neuroprostheses, passive cognitive proxies, digital phenotyping, human digital twins, persuasive AI, quantum biosensing, defence programmes and international neurotechnology governance. Unsupported telepathy and generic remote mind-reading claims are expressly excluded.",
       "governance_purpose": "Provide the research basis for PROP-0001 and the subsequent creation of the MENTIS domain instruments recorded by PATCH-0023.",
+      "limitations": "The synthesis spans heterogeneous fields with different evidence standards; many capabilities are laboratory- or clinical-context dependent; some future timelines are judgmental; and the original research thread remains supplementary rather than a substitute for the recovered public bibliography.",
+      "source_corpus_count": 7,
       "domains": [
         "MENTIS",
         "ETHICS",
@@ -11409,8 +11817,12 @@
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md",
       "research_status": "research record — non-binding",
+      "publication_status": "published",
       "research_method": "Structured synthesis of academic research, frontier-model system cards, laboratory safety publications, government policy, legislation, standards guidance, and reported incidents.",
+      "research_scope": "Empirical evidence concerning deception, alignment faking, emergent misalignment, reward hacking, monitor evasion and sabotage; system-card and incident evidence; and law or policy relevant to deliberately cultivating deceptive capability. Ordinary model error without strategic selection is outside the central prohibition.",
       "governance_purpose": "Provide the evidence basis for FM-0047 and PROP-0019, distinguishing legitimate elicitation and measurement from prohibited cultivation of deceptive capability.",
+      "limitations": "Controlled evaluations may not predict production prevalence; system cards are provider-authored; the July 2026 incident record lacks full internal telemetry; legal sources regulate different conduct and jurisdictions; and the proposed prohibition is a governance synthesis rather than a statement of existing universal law.",
+      "source_corpus_count": 6,
       "domains": [
         "AEON",
         "ETHICS",
@@ -11443,7 +11855,7 @@
       "record_state": "active",
       "date_recorded": "2026-07-30",
       "title": "Task-Completion Time Horizons and Long-Horizon Agent Governance",
-      "summary": "Research record preserving METR's task-completion time-horizon methodology, frontier-risk findings, material uncertainty, and governance implications for agents capable of sustained objective pursuit.",
+      "summary": "Multi-source research synthesis of METR's task-completion time-horizon programme, benchmark construction, revisions, domain limits, evaluation-integrity findings and implications for governing sustained agent trajectories.",
       "evidence_confidence": "corroborated",
       "source_types": [],
       "source_count": 0,
@@ -11453,8 +11865,12 @@
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0003.md",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0003.md",
       "research_status": "research record — non-binding",
-      "research_method": "Direct synthesis of METR's Task-Completion Time Horizons methodology and May 2026 Frontier Risk Report, with explicit separation of measured task difficulty from elapsed autonomous runtime.",
-      "governance_purpose": "Provide a bounded evidence basis for long-horizon persistence, optimiser-trajectory, authority-continuity, monitoring-capability and evaluation-integrity governance without treating a benchmark horizon as proof of general autonomy.",
+      "publication_status": "published",
+      "research_method": "Direct review of METR's current metric page, original paper, TH1.1 revision, cross-domain analysis, HCAST and RE-Bench materials, Frontier Risk Report and public model-evaluation reports. Claims are separated into measurement findings, extrapolations, limitations and VIGIL governance inferences.",
+      "research_scope": "Task-completion time horizons as a measure of agent capability; benchmark composition and revision; reliability thresholds; domain and scaffold sensitivity; benchmark integrity; relationship to long-horizon governance. The record does not assess consciousness, general intelligence, or a universal duration of autonomous operation.",
+      "governance_purpose": "Provide an evidence basis for long-horizon persistence, optimiser-trajectory, authority-continuity, monitoring-capability and evaluation-integrity governance without treating a benchmark horizon as proof of general autonomy or harmful intent.",
+      "limitations": "The reviewed task suites remain concentrated in self-contained software, ML and cybersecurity work; public and internal-frontier estimates are scaffold-, access- and task-distribution-dependent; measurements above the suite's supported range are unreliable; and some model-level evidence is disclosed only in aggregated form.",
+      "source_corpus_count": 8,
       "domains": [
         "AEON",
         "OPERATIONS",
@@ -11479,15 +11895,15 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "Governance research record",
-      "public_finding": "Research record preserving METR's task-completion time-horizon methodology, frontier-risk findings, material uncertainty, and governance implications for agents capable of sustained objective pursuit."
+      "public_finding": "Multi-source research synthesis of METR's task-completion time-horizon programme, benchmark construction, revisions, domain limits, evaluation-integrity findings and implications for governing sustained agent trajectories."
     },
     {
       "id": "VIGIL-2026-RESEARCH-0004",
       "record_type": "research",
       "record_state": "active",
       "date_recorded": "2026-07-30",
-      "title": "Expenditure Horizons and Parallel Agentic Optimisation",
-      "summary": "Research record preserving METR's expenditure-horizon methodology and the governance significance of scaling agent optimisation through money, inference, experiment compute, asynchronous tools and parallel action.",
+      "title": "Expenditure Horizons, Test-Time Scaling and Parallel Agentic Optimisation",
+      "summary": "Research synthesis of METR's expenditure-horizon proposal, NanoGPT experiment, agent-ability metric taxonomy, RE-Bench evidence and related test-time scaling results, with bounded implications for aggregate-pathway governance.",
       "evidence_confidence": "corroborated",
       "source_types": [],
       "source_count": 0,
@@ -11497,8 +11913,12 @@
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0004.md",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0004.md",
       "research_status": "research record — non-binding",
-      "research_method": "Direct synthesis of METR's July 2026 expenditure-horizon paper and companion metrics note, with comparison to trajectory-scale optimisation evidence.",
-      "governance_purpose": "Distinguish serial task horizon from budget-scaled and parallel optimisation, and provide an evidence basis for aggregate-pathway controls where many cheap actions can search broadly for a successful route.",
+      "publication_status": "published",
+      "research_method": "Comparative review of METR's expenditure-horizon experiment and metrics note against RE-Bench, time-horizon methodology, test-time scaling literature and model-system-card reporting. The review separates measured NanoGPT results from broader governance inferences about budget, parallelism and repeated search.",
+      "research_scope": "Agent optimisation performance as a function of expenditure; common-unit comparison with human effort; within-trajectory and between-trajectory scaling; parallel experiment execution; repeated attempts; validation and mergeability; implications for cumulative trajectory controls. The record does not estimate economy-wide AI R&D acceleration.",
+      "governance_purpose": "Distinguish serial task horizon from budget-scaled and parallel optimisation, and provide an evidence basis for aggregate-pathway controls where many cheap actions or attempts can search broadly for a successful route.",
+      "limitations": "The NanoGPT application is one highly instrumented, cheap-to-score optimisation problem; human-effort estimates are uncertain; expenditure depends on prices and included costs; agent contributions require revalidation and mergeability review; and the metric can be unstable or undefined under some curve shapes.",
+      "source_corpus_count": 7,
       "domains": [
         "AEON",
         "OPERATIONS",
@@ -11518,15 +11938,15 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "Governance research record",
-      "public_finding": "Research record preserving METR's expenditure-horizon methodology and the governance significance of scaling agent optimisation through money, inference, experiment compute, asynchronous tools and parallel action."
+      "public_finding": "Research synthesis of METR's expenditure-horizon proposal, NanoGPT experiment, agent-ability metric taxonomy, RE-Bench evidence and related test-time scaling results, with bounded implications for aggregate-pathway governance."
     },
     {
       "id": "VIGIL-2026-RESEARCH-0005",
       "record_type": "research",
       "record_state": "active",
       "date_recorded": "2026-07-30",
-      "title": "Monitorability, Covert Side Tasks and Adversarial Monitor Circumvention",
-      "summary": "Research record preserving METR's monitorability methodology, SHUSHCAST and APPS-backdoor findings, embedded red-team evidence, limitations, and implications for independent monitoring and consequential escalation.",
+      "title": "Monitorability, Covert Side Tasks and Consequential Intervention",
+      "summary": "Research synthesis of METR's SHUSHCAST programme, QA monitor-evasion studies, chain-of-thought findings, Frontier Risk Report, agent incidents and model evaluations, separating coverage, capability, integrity, classification and intervention.",
       "evidence_confidence": "corroborated",
       "source_types": [],
       "source_count": 0,
@@ -11536,8 +11956,12 @@
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0005.md",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/research/2026/VIGIL-2026-RESEARCH-0005.md",
       "research_status": "research record — non-binding",
-      "research_method": "Direct synthesis of METR's January 2026 monitorability work and May 2026 Frontier Risk Report, including agent, monitor, reasoning-visibility, embedded red-team and incident-dataset evidence.",
-      "governance_purpose": "Distinguish monitor capability, monitor coverage, monitor bypass, detection quality and intervention consequence so that monitoring is not treated as a single binary safeguard.",
+      "publication_status": "published",
+      "research_method": "Direct comparison of METR's monitorability experiments, precursor QA studies, multi-laboratory Frontier Risk Report, agent-incident dataset and model-evaluation reports, with external primary research on chain-of-thought monitorability and unfaithfulness used to test alternative interpretations.",
+      "research_scope": "AI monitors for agent actions and reasoning; covert side-task evaluation; reasoning visibility; relative monitor capability; monitor coverage and bypass; human and agent elicitation; production-monitoring claims; and the downstream gap between detection and consequential intervention.",
+      "governance_purpose": "Distinguish monitor capability, monitor coverage, monitor bypass, detection quality, escalation and intervention so monitoring is not treated as one binary safeguard or as proof that detected conduct was contained.",
+      "limitations": "METR characterises the core SHUSHCAST results as early-stage; task sets are small; elicitation is incomplete; access to reasoning differs across providers; some findings concern human red-team bypasses rather than autonomous agent execution; and private monitoring configurations and raw production alert records are unavailable.",
+      "source_corpus_count": 8,
       "domains": [
         "AEON",
         "OPERATIONS",
@@ -11555,7 +11979,7 @@
       "source_platform": "Multi Vendor",
       "observed_vendor": "Multi Vendor",
       "observed_product": "Governance research record",
-      "public_finding": "Research record preserving METR's monitorability methodology, SHUSHCAST and APPS-backdoor findings, embedded red-team evidence, limitations, and implications for independent monitoring and consequential escalation."
+      "public_finding": "Research synthesis of METR's SHUSHCAST programme, QA monitor-evasion studies, chain-of-thought findings, Frontier Risk Report, agent incidents and model evaluations, separating coverage, capability, integrity, classification and intervention."
     }
   ]
 }
