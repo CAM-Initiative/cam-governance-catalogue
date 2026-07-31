@@ -225,7 +225,8 @@
   }
 
   async function markCompleteCollapsedChains() {
-    if (!location.pathname.includes("/observatory") || location.pathname.includes("/knowledge-base") || location.pathname.includes("/reports/")) return;
+    const route = location.pathname.replace(/\/+$/, "") || "/";
+    if (route !== "/observatory" && route !== "/vigil") return;
     const cards = [...document.querySelectorAll("article.vigil-record-card")];
     if (!cards.length) return;
 
