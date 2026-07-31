@@ -105,7 +105,12 @@
       existingName.className = "mt-1.5 font-serif text-lg leading-snug text-foreground";
     }
 
+    for (const child of [...block.children]) {
+      if (child === heading || child === existingName) continue;
+      if (child.tagName === "DL" || (child.tagName === "P" && child.classList.contains("font-mono"))) child.remove();
+    }
     block.querySelectorAll("[data-cam-taxonomy-detail]").forEach((node) => node.remove());
+
     const details = document.createElement("dl");
     details.dataset.camTaxonomyDetail = "1";
     details.className = "mt-4 space-y-3 border-t border-border/70 pt-4";
