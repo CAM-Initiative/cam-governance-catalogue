@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, BookOpen, ExternalLink, Search } from "lucide-react";
+import { ArrowLeft, BookOpen, Search } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 
 const LEARN_ID_PATTERN = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
+const CAM_CITATION = {
+  label: "O’Rourke, M. V. (2026). Caelestis Architecture Model (Version 1.1.0). Zenodo.",
+  doi: "https://doi.org/10.5281/zenodo.20686316",
+  version: "1.1.0",
+};
 
 type LearnRecord = {
   raw: UnknownRecord;
@@ -14,12 +19,16 @@ type LearnRecord = {
   caseDescriptor?: string;
   summary: string;
   whatHappened: string[];
+  governanceMisconception: string[];
   abstractedLearning: string;
-  mustNotBeForgotten: string[];
+  integratedLearning: string[];
+  riskIfNotIntegrated: string[];
   futureApplication: string[];
   generalisationBoundary?: string;
   knowledgeStatus?: string;
   publicationStatus?: string;
+  recordVersion?: string;
+  recordLastUpdated?: string;
   knowledgeTags: string[];
   year: number;
   primaryVendors: string[];
@@ -105,6 +114,8 @@ function normalizeLearnRecord(record: UnknownRecord): LearnRecord | undefined {
   const summary = text(record.summary) ?? "No case summary is currently available.";
   const abstractedLearning = text(record.abstracted_learning) ?? summary;
   const monitoringValue = firstValue(record, ["monitoring_required", "case_context.monitoring_required"]);
+  const integratedLearning = textList(record.integrated_learning);
+  const legacyLearning = textList(record.must_not_be_forgotten);
 
   return {
     raw: record,
@@ -114,12 +125,16 @@ function normalizeLearnRecord(record: UnknownRecord): LearnRecord | undefined {
     caseDescriptor: text(record.case_descriptor),
     summary,
     whatHappened: textList(record.what_happened),
+    governanceMisconception: textList(record.governance_misconception),
     abstractedLearning,
-    mustNotBeForgotten: textList(record.must_not_be_forgotten),
+    integratedLearning: integratedLearning.length > 0 ? integratedLearning : legacyLearning,
+    riskIfNotIntegrated: textList(record.risk_if_not_integrated),
     futureApplication: textList(record.future_application),
     generalisationBoundary: text(record.generalisation_boundary),
     knowledgeStatus: text(record.knowledge_status),
     publicationStatus: text(record.publication_status),
+    recordVersion: text(firstValue(record, ["record_version", "version", "record_identity.version"])),
+    recordLastUpdated: text(firstValue(record, ["record_last_updated", "record_identity.updated"])),
     knowledgeTags: textList(record.knowledge_tags),
     year: recordYear(id, record),
     primaryVendors: textList(firstValue(record, ["primary_vendors", "case_context.primary_vendors"])),
@@ -155,12 +170,14 @@ function searchText(record: LearnRecord) {
     record.caseDescriptor,
     record.summary,
     ...record.whatHappened,
+    ...record.governanceMisconception,
     record.abstractedLearning,
+    ...record.integratedLearning,
+    ...record.riskIfNotIntegrated,
     record.generalisationBoundary,
     record.canonicalFailureName,
     record.primaryFailureFamilyCode,
     record.taxonomyReference,
-    ...record.mustNotBeForgotten,
     ...record.futureApplication,
     ...record.knowledgeTags,
     ...record.primaryVendors,
@@ -174,12 +191,42 @@ function matchesSearch(record: LearnRecord, query: string) {
 }
 
 function StatusBadges({ record }: { record: LearnRecord }) {
+  const complete = record.chainState?.toLocaleLowerCase() === "complete";
   return <div className="flex flex-wrap gap-2">
+    <span className="rounded-full border border-border bg-background/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-muted-foreground">
+      {displayLabel(record.knowledgeStatus) ?? "Knowledge status not specified"}
+    </span>
     <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-[hsl(32_62%_25%)]">
-      {record.chainState?.toLocaleLowerCase() === "complete" ? "Complete evidence chain" : "Learning record"}
+      {complete ? "Complete evidence chain" : "Learning record"}
     </span>
     {record.monitoringRequired && <span className="rounded-full border border-rose-300 bg-rose-50 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-rose-900">Monitoring ongoing</span>}
   </div>;
+}
+
+function LearningList({ items }: { items: string[] }) {
+  return <ul className="space-y-2 text-base leading-relaxed text-foreground/85">{items.map((item) => <li key={item} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" /><span>{item}</span></li>)}</ul>;
+}
+
+function FailureClassPanel({ record }: { record: LearnRecord }) {
+  if (!record.canonicalFailureName && !record.primaryFailureFamilyCode) return null;
+  return <section className="mt-5 rounded-2xl border border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4">
+    <p className="report-label">Failure class</p>
+    {record.canonicalFailureName && <p className="mt-1.5 font-serif text-lg leading-snug text-foreground">{record.canonicalFailureName}</p>}
+    {record.primaryFailureFamilyCode && <div className="mt-3"><p className="report-label">Failure family</p><p className="mt-1 font-mono text-sm text-foreground/75">{record.primaryFailureFamilyCode}</p></div>}
+  </section>;
+}
+
+function TaxonomyProvenance({ record }: { record: LearnRecord }) {
+  if (!record.taxonomyReference && !record.primaryFailureFamilyCode) return null;
+  return <DetailSection title="Taxonomy and corpus provenance">
+    <dl className="grid gap-4 sm:grid-cols-2">
+      {record.primaryFailureFamilyCode && <div><dt className="report-label">Failure family</dt><dd className="mt-1 font-mono">{record.primaryFailureFamilyCode}</dd></div>}
+      {record.taxonomyReference && <div><dt className="report-label">Corpus reference</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
+    </dl>
+    <p className="mt-4 border-t border-cam-gold/25 pt-4 text-sm leading-relaxed text-muted-foreground">
+      Corpus citation · v{CAM_CITATION.version} · <a href={CAM_CITATION.doi} target="_blank" rel="noreferrer" className="underline decoration-cam-gold/60 underline-offset-4 hover:text-foreground">{CAM_CITATION.label} DOI: 10.5281/zenodo.20686316</a>
+    </p>
+  </DetailSection>;
 }
 
 function KnowledgeCard({ record }: { record: LearnRecord }) {
@@ -193,42 +240,18 @@ function KnowledgeCard({ record }: { record: LearnRecord }) {
     <div className="p-6 md:p-7">
       <h3 className="font-serif text-3xl leading-tight text-foreground md:text-[2rem]">{record.title}</h3>
       {record.caseDescriptor && <p className="mt-3 text-base font-medium leading-relaxed text-foreground/70">{record.caseDescriptor}</p>}
-      <div className="mt-6 space-y-6">
-        <section>
-          <p className="report-label">What happened</p>
-          <ol className="mt-2 list-decimal space-y-2 pl-5 text-base leading-relaxed text-foreground/85">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
-        </section>
-        <section className="border-l-2 border-cam-gold/35 pl-4">
-          <p className="report-label">Lesson</p>
-          <p className="mt-2 text-base leading-relaxed text-foreground/85">{record.abstractedLearning}</p>
-        </section>
-        {record.mustNotBeForgotten.length > 0 && <section>
-          <p className="report-label">Must not be forgotten</p>
-          <ul className="mt-2 space-y-2 text-base leading-relaxed text-foreground/85">{record.mustNotBeForgotten.map((item) => <li key={item} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" /><span>{item}</span></li>)}</ul>
-        </section>}
-        {record.futureApplication.length > 0 && <section>
-          <p className="report-label">Future application</p>
-          <div className="mt-2 flex flex-wrap gap-2">{record.futureApplication.map((item) => <span key={item} className="rounded-full border border-border bg-background/55 px-2.5 py-1 text-xs text-muted-foreground">{item}</span>)}</div>
-        </section>}
-      </div>
-      {(record.canonicalFailureName || record.primaryFailureFamilyCode) && <div className="mt-6 rounded-2xl border border-border/75 bg-card/65 p-4">
-        <p className="report-label">Failure taxonomy</p>
-        {record.canonicalFailureName && <p className="mt-1.5 font-serif text-lg leading-snug text-foreground">{record.canonicalFailureName}</p>}
-        {record.primaryFailureFamilyCode && <p className="mt-1 font-mono text-xs text-muted-foreground">{record.primaryFailureFamilyCode}</p>}
-      </div>}
-      {record.knowledgeTags.length > 0 && <div className="mt-5 flex flex-wrap gap-2">
-        {record.knowledgeTags.slice(0, 5).map((tag) => <span key={tag} className="rounded-full border border-border bg-background/55 px-2.5 py-1 text-xs text-muted-foreground">{tag}</span>)}
-      </div>}
+      <FailureClassPanel record={record} />
+      <p className="mt-5 text-base leading-relaxed text-foreground/85">{record.summary}</p>
       <div className="mt-7 flex flex-wrap gap-3 border-t border-border/65 pt-5">
-        <Link href={`/observatory/knowledge-base/${encodeURIComponent(record.id)}`} className="inline-flex min-h-11 items-center rounded-xl bg-rose-900 px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-rose-50 transition hover:bg-rose-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-700 focus-visible:ring-offset-2 focus-visible:ring-offset-background">Read lesson</Link>
-        <Link href={`/observatory/reports/${encodeURIComponent(record.id)}`} className="inline-flex min-h-11 items-center rounded-xl border border-cam-gold/50 bg-cam-gold/10 px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-[hsl(32_62%_25%)] transition hover:bg-cam-gold/20">View evidence report</Link>
+        <Link href={`/observatory/knowledge-base/${encodeURIComponent(record.id)}`} className="inline-flex min-h-11 items-center rounded-xl bg-rose-900 px-5 py-3 font-mono text-xs uppercase tracking-[0.12em] text-rose-50 transition hover:bg-rose-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-700 focus-visible:ring-offset-2 focus-visible:ring-offset-background">Open record</Link>
       </div>
     </div>
   </article>;
 }
 
-function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return <section className="cam-parchment-card rounded-xl p-5 md:p-6">
+function DetailSection({ title, children, tone = "default" }: { title: string; children: React.ReactNode; tone?: "default" | "risk" | "summary" }) {
+  const toneClass = tone === "risk" ? "border-rose-300 bg-rose-100/65" : tone === "summary" ? "bg-[hsl(38_48%_94%)]/65" : "bg-transparent";
+  return <section className={`border-t border-cam-gold/25 px-6 py-6 md:px-8 ${toneClass}`}>
     <h2 className="font-serif text-2xl text-foreground">{title}</h2>
     <div className="mt-4 text-base leading-relaxed text-foreground/85">{children}</div>
   </section>;
@@ -236,50 +259,58 @@ function DetailSection({ title, children }: { title: string; children: React.Rea
 
 function KnowledgeDetail({ record }: { record: LearnRecord }) {
   const reportId = record.id;
-  return <div className="space-y-6">
+  return <div className="space-y-5">
     <Link href="/observatory/knowledge-base" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.13em] text-cam-gold hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to Knowledge Base</Link>
-    <header className="border-b border-border/70 pb-7">
-      <StatusBadges record={record} />
-      <p className="mt-5 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">{record.id}</p>
-      <h1 className="mt-3 max-w-5xl font-serif text-4xl leading-tight text-foreground md:text-5xl">{record.title}</h1>
-      {record.caseDescriptor && <p className="mt-3 max-w-4xl text-lg leading-relaxed text-muted-foreground">{record.caseDescriptor}</p>}
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}`} className="rounded-lg bg-rose-900 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-rose-50 transition hover:bg-rose-800">Open full evidence report</Link>
-        {record.githubBlobUrl && <a href={record.githubBlobUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">View LEARN source <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></a>}
-      </div>
-    </header>
+    <article className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/30 shadow-xl">
+      <header className="bg-[hsl(36_48%_96%)] px-6 py-7 md:px-8 md:py-8">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">{record.id}</p>
+          <StatusBadges record={record} />
+        </div>
+        <h1 className="mt-4 max-w-5xl font-serif text-4xl leading-tight text-foreground md:text-5xl">{record.title}</h1>
+        {record.caseDescriptor && <p className="mt-3 max-w-4xl text-lg leading-relaxed text-muted-foreground">{record.caseDescriptor}</p>}
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Link href={`/observatory/reports/${encodeURIComponent(reportId)}`} className="rounded-lg bg-rose-900 px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-rose-50 transition hover:bg-rose-800">Open full evidence report</Link>
+        </div>
+        <FailureClassPanel record={record} />
+      </header>
 
-    <DetailSection title="What happened">
-      <ol className="list-decimal space-y-3 pl-5">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
-    </DetailSection>
+      <DetailSection title="Knowledge Base Summary" tone="summary">
+        <p>{record.abstractedLearning}</p>
+      </DetailSection>
 
-    <DetailSection title="Lesson">
-      <p className="font-serif text-xl leading-relaxed text-foreground">{record.abstractedLearning}</p>
-    </DetailSection>
+      {record.whatHappened.length > 0 && <DetailSection title="What Happened">
+        <ol className="list-decimal space-y-3 pl-5">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
+      </DetailSection>}
 
-    {record.mustNotBeForgotten.length > 0 && <DetailSection title="Must not be forgotten">
-      <ul className="space-y-3">{record.mustNotBeForgotten.map((item) => <li key={item} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" /><span>{item}</span></li>)}</ul>
-    </DetailSection>}
+      {record.riskIfNotIntegrated.length > 0 && <DetailSection title="Governance Risks" tone="risk">
+        <LearningList items={record.riskIfNotIntegrated} />
+      </DetailSection>}
 
-    {record.futureApplication.length > 0 && <DetailSection title="Future application"><ul className="space-y-2">{record.futureApplication.map((item) => <li key={item}>{item}</li>)}</ul></DetailSection>}
+      {record.governanceMisconception.length > 0 && <DetailSection title="Governance Reasoning">
+        <LearningList items={record.governanceMisconception} />
+      </DetailSection>}
 
-    {record.generalisationBoundary && <DetailSection title="Limits of the lesson"><p>{record.generalisationBoundary}</p></DetailSection>}
+      {record.integratedLearning.length > 0 && <DetailSection title="Key Takeaways">
+        <LearningList items={record.integratedLearning} />
+      </DetailSection>}
 
-    <DetailSection title="Current state">
-      <dl className="grid gap-4 sm:grid-cols-3">
-        <div><dt className="report-label">Evidence chain</dt><dd className="mt-1">{displayLabel(record.chainState) ?? "Not specified"}</dd></div>
-        <div><dt className="report-label">External incident</dt><dd className="mt-1">{record.incidentStatus ?? "Not specified"}</dd></div>
-        <div><dt className="report-label">Monitoring</dt><dd className="mt-1">{record.monitoringRequired ? "Required" : "Not currently declared"}</dd></div>
-      </dl>
-    </DetailSection>
+      {record.futureApplication.length > 0 && <DetailSection title="Future Application"><ul className="space-y-2">{record.futureApplication.map((item) => <li key={item}>{item}</li>)}</ul></DetailSection>}
 
-    {(record.canonicalFailureName || record.primaryFailureFamilyCode || record.taxonomyReference) && <DetailSection title="Failure taxonomy">
-      <p>{record.canonicalFailureName ?? "The linked Failure Mode remains authoritative for classification."}</p>
-      {(record.primaryFailureFamilyCode || record.taxonomyReference) && <dl className="mt-4 space-y-3 border-t border-border/70 pt-4">
-        {record.primaryFailureFamilyCode && <div><dt className="report-label">Primary family</dt><dd className="mt-1 font-mono text-sm">{record.primaryFailureFamilyCode}</dd></div>}
-        {record.taxonomyReference && <div><dt className="report-label">Caelestis taxonomy</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
-      </dl>}
-    </DetailSection>}
+      {record.generalisationBoundary && <DetailSection title="Limitations"><p>{record.generalisationBoundary}</p></DetailSection>}
+
+      <DetailSection title="Publication">
+        <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div><dt className="report-label">Evidence chain</dt><dd className="mt-1">{displayLabel(record.chainState) ?? "Not specified"}</dd></div>
+          <div><dt className="report-label">Knowledge status</dt><dd className="mt-1">{displayLabel(record.knowledgeStatus) ?? "Not specified"}</dd></div>
+          <div><dt className="report-label">Publication status</dt><dd className="mt-1">{displayLabel(record.publicationStatus) ?? "Not specified"}</dd></div>
+          <div><dt className="report-label">Monitoring</dt><dd className="mt-1">{record.monitoringRequired ? "Required" : "Not currently declared"}</dd></div>
+          <div><dt className="report-label">Record version</dt><dd className="mt-1">{record.recordVersion ?? "Not specified"}</dd></div>
+          <div><dt className="report-label">Last updated</dt><dd className="mt-1">{record.recordLastUpdated ?? "Not specified"}</dd></div>
+        </dl>
+      </DetailSection>
+      <TaxonomyProvenance record={record} />
+    </article>
   </div>;
 }
 
