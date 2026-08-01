@@ -56,7 +56,7 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      [${COMPLETE_CHAIN_BADGE}] { font-family:Inter,system-ui,sans-serif; font-size:.8125rem; line-height:1.15rem; position:absolute; right:1rem; top:.65rem; z-index:2; }
+      [${COMPLETE_CHAIN_BADGE}] { font-family:Inter,system-ui,sans-serif; }
       [${LEARN_STAGE}] a { text-decoration:none; }
     `;
     document.head.appendChild(style);
@@ -68,14 +68,21 @@
   }
 
   function makeCompleteBadge() {
-    const row = document.createElement("div");
-    row.setAttribute(COMPLETE_CHAIN_BADGE, "true");
     const badge = document.createElement("span");
+    badge.setAttribute(COMPLETE_CHAIN_BADGE, "true");
     badge.className = "inline-flex items-center gap-1.5 rounded-full border border-cam-gold/55 bg-[hsl(38_48%_92%)] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.09em] text-[hsl(32_62%_25%)]";
     badge.title = "This record belongs to a completed evidence-to-repair-and-learning chain.";
     badge.innerHTML = '<span aria-hidden="true">✓</span><span>Complete evidence chain</span>';
-    row.appendChild(badge);
-    return row;
+    return badge;
+  }
+
+  function cleanDomainSuffix(row) {
+    for (const node of [...row.childNodes]) {
+      if (node.nodeType !== Node.TEXT_NODE) continue;
+      const value = node.textContent ?? "";
+      if (!value.includes("·")) continue;
+      node.textContent = value.replace(/\s*·\s*(?:ETHICS|AEON|ARBITRATION|SECURITY|OPERATIONS|RELATION|IDENTITY|RUNTIME|GOVERNANCE)(?:\s*;[^]*)?$/i, "");
+    }
   }
 
   async function markCompleteCollapsedChains() {
@@ -84,10 +91,14 @@
     for (const card of document.querySelectorAll("article.vigil-record-card")) {
       if (card.querySelector(".vigil-detail-surface")) continue;
       const id = card.id.replace(/^vigil-record-/, "").toUpperCase();
-      const collapsed = card.querySelector(':scope > div[role="button"]');
       const existing = card.querySelector(`[${COMPLETE_CHAIN_BADGE}]`);
       const complete = map.get(id)?.chainState === "complete";
-      if (complete && collapsed && !existing) { collapsed.style.position = "relative"; collapsed.appendChild(makeCompleteBadge()); }
+      const failureModeLabel = [...card.querySelectorAll("span")].find((node) => labelText(node) === "failure mode");
+      const metadataRow = failureModeLabel?.parentElement;
+      if (complete && metadataRow && !existing) {
+        cleanDomainSuffix(metadataRow);
+        metadataRow.appendChild(makeCompleteBadge());
+      }
       if (!complete && existing) existing.remove();
     }
   }
