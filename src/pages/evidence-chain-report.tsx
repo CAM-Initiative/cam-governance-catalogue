@@ -663,7 +663,7 @@ function CorpusReleaseProvenance({ record }: { record: VigilIndexRecord }) {
 }
 
 function RepairStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><FieldGrid entries={[["Repair outcome", record.publicDisplay.patch?.outcome], ["Repair summary", record.publicDisplay.patch?.repairSummary], ["Implementation date", record.publicDisplay.patch?.implementationDate], ["Verification", record.publicDisplay.patch?.verificationStatus], ["Verified against", record.publicDisplay.patch?.verifiedAgainst], ["Patch type", record.patch_type], ["Change scope", record.change_scope], ["Implementation mode", record.implementation_mode]]} />{displayText(record.publicDisplay.patch?.residualMonitoring) && <div className="mt-4 border-t border-border/60 pt-3"><Narrative label="Residual monitoring" value={record.publicDisplay.patch?.residualMonitoring} /></div>}<CorpusReleaseProvenance record={record} /><ProvisionTable provisions={record.publicDisplay.corpusProvisions} /></article>) : <Incomplete text="No PATCH is linked yet. A repair may still be in development — check back later." availabilityNote={false} />}</div>;
+  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><FieldGrid entries={[["Repair outcome", record.publicDisplay.patch?.outcome], ["Repair summary", record.publicDisplay.patch?.repairSummary], ["Implementation date", record.publicDisplay.patch?.implementationDate], ["Verification", record.publicDisplay.patch?.verificationStatus], ["Verified against", record.publicDisplay.patch?.verifiedAgainst], ["Patch type", record.patch_type], ["Change scope", record.change_scope], ["Implementation mode", record.implementation_mode]]} /><ProvisionTable provisions={record.publicDisplay.corpusProvisions} />{displayText(record.publicDisplay.patch?.residualMonitoring) && <div className="mt-4 border-t border-border/60 pt-3"><Narrative label="Residual monitoring" value={record.publicDisplay.patch?.residualMonitoring} /></div>}<CorpusReleaseProvenance record={record} /></article>) : <Incomplete text="No PATCH is linked yet. A repair may still be in development — check back later." availabilityNote={false} />}</div>;
 }
 
 function LearningList({ items }: { items: string[] }) {
@@ -673,14 +673,14 @@ function LearningList({ items }: { items: string[] }) {
 function LearnStage({ records, fallbackRecords }: { records: LearnRecord[]; fallbackRecords: VigilIndexRecord[] }) {
   if (records.length) return <div className="space-y-4">{records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-5">
     <div className="flex flex-col gap-3 border-b border-border/60 pb-4 sm:flex-row sm:items-start sm:justify-between"><div><p className="font-mono text-sm text-cam-gold">{record.id}</p><h3 className="mt-1 font-serif text-2xl leading-snug text-foreground">{record.reportTitle}</h3>{record.caseDescriptor && <p className="mt-2 text-base leading-relaxed text-muted-foreground">{record.caseDescriptor}</p>}</div><div className="flex flex-wrap gap-2"><span className={`rounded-full border px-2.5 py-1 font-mono text-xs uppercase tracking-[0.1em] ${statusTone(record.chainState)}`}>{record.chainState ?? "Learning recorded"}</span>{record.knowledgeStatus && <span className="rounded-full border border-border bg-background/60 px-2.5 py-1 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">{record.knowledgeStatus}</span>}{record.monitoringRequired && <span className="rounded-full border border-rose-300 bg-rose-50 px-2.5 py-1 font-mono text-xs uppercase tracking-[0.1em] text-rose-950">Monitoring ongoing</span>}</div></div>
-    {record.whatHappened.length > 0 && <div className="mt-5"><p className="report-label">What happened</p><ol className="mt-3 list-decimal space-y-2 pl-5 text-base leading-relaxed text-foreground/85">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol></div>}
-    {record.governanceMisconception.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Governance reasoning corrected</p><div className="mt-3 text-base leading-relaxed text-foreground/85"><LearningList items={record.governanceMisconception} /></div></div>}
-    <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Abstracted learning</p><p className="mt-2 font-serif text-xl leading-relaxed text-foreground">{record.abstractedLearning}</p></div>
-    {record.integratedLearning.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Learning to integrate</p><div className="mt-3 text-base leading-relaxed text-foreground/85"><LearningList items={record.integratedLearning} /></div></div>}
-    {record.riskIfNotIntegrated.length > 0 && <div className="mt-5 rounded-lg border border-rose-200 bg-rose-50/40 p-4"><p className="report-label text-rose-900">Risk if not integrated</p><div className="mt-3 text-base leading-relaxed text-foreground/85"><LearningList items={record.riskIfNotIntegrated} /></div></div>}
-    {record.futureApplication.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Future application</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{record.futureApplication.join("; ")}</p></div>}
-    {record.generalisationBoundary && <div className="mt-5 border-t border-border/60 pt-4"><Narrative label="Generalisation boundary" value={record.generalisationBoundary} /></div>}
     {(record.canonicalFailureName || record.primaryFailureFamilyCode || record.taxonomyReference) && <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4"><p className="report-label">Failure class</p>{record.canonicalFailureName && <p className="mt-2 font-serif text-lg text-foreground">{record.canonicalFailureName}</p>}<FieldGrid entries={[["Failure family", record.primaryFailureFamilyCode], ["Corpus reference", record.taxonomyReference], ["Taxonomy status", record.taxonomyStatus], ["Establishing PATCH", record.establishingPatchId]]} /></div>}
+    <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Knowledge Base Summary</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{record.abstractedLearning}</p></div>
+    {record.whatHappened.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">What Happened</p><ol className="mt-3 list-decimal space-y-2 pl-5 text-base leading-relaxed text-foreground/85">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol></div>}
+    {record.riskIfNotIntegrated.length > 0 && <div className="mt-5 rounded-lg border border-rose-300 bg-rose-100/65 p-4"><p className="report-label text-rose-950">Governance Risks</p><div className="mt-3 text-base leading-relaxed text-foreground/85"><LearningList items={record.riskIfNotIntegrated} /></div></div>}
+    {record.governanceMisconception.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Governance Reasoning</p><div className="mt-3 text-base leading-relaxed text-foreground/85"><LearningList items={record.governanceMisconception} /></div></div>}
+    {record.integratedLearning.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Key Takeaways</p><div className="mt-3 text-base leading-relaxed text-foreground/85"><LearningList items={record.integratedLearning} /></div></div>}
+    {record.futureApplication.length > 0 && <div className="mt-5 border-t border-border/60 pt-4"><p className="report-label">Future Application</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{record.futureApplication.join("; ")}</p></div>}
+    {record.generalisationBoundary && <div className="mt-5 border-t border-border/60 pt-4"><Narrative label="Limitations" value={record.generalisationBoundary} /></div>}
     <FieldGrid entries={[["Publication status", record.publicationStatus], ["External incident status", record.incidentStatus], ["CAM repair status", record.camRepairStatus]]} />
   </article>)}</div>;
 
@@ -751,10 +751,10 @@ export default function EvidenceChainReport() {
   const [, params] = useRoute("/observatory/reports/:recordId");
   const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<ReportState>({ status: "loading" });
-  const [includedSections, setIncludedSections] = useState<Record<string, boolean>>(() => Object.fromEntries(reportSteps.map((step) => [step.number, true])));
+  const [includedSections, setIncludedSections] = useState<Record<string, boolean>>(() => Object.fromEntries(reportSteps.map((step) => [step.number, false])));
 
   useEffect(() => {
-    setIncludedSections(Object.fromEntries(reportSteps.map((step) => [step.number, true])));
+    setIncludedSections(Object.fromEntries(reportSteps.map((step) => [step.number, false])));
   }, [sourceId]);
 
   useEffect(() => {
@@ -830,7 +830,11 @@ export default function EvidenceChainReport() {
           details.set(record.id, record);
         }
         const reportLearns = chain.learns.map((id) => detailedLearnById.get(id)).filter((record): record is LearnRecord => Boolean(record));
-        if (!cancelled) setState({ status: "ready", records: [...details.values()], learnRecords: reportLearns, chain, sourceId, generatedAt: new Date().toISOString() });
+        if (!cancelled) {
+          const reportRecords = [...details.values()];
+          setState({ status: "ready", records: reportRecords, learnRecords: reportLearns, chain, sourceId, generatedAt: new Date().toISOString() });
+          setIncludedSections(reportSectionAvailability(reportRecords, reportLearns, chain));
+        }
       } catch (error) {
         if (!cancelled) setState({ status: "error", message: error instanceof Error ? error.message : "The evidence chain report could not be loaded." });
       }
