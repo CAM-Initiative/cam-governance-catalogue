@@ -7,10 +7,10 @@ const trainingPolicyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initi
 const sociSubmissionPdfHref = `${import.meta.env.BASE_URL}publications/CAM_SOCI_Targeted_Submission_FINAL.pdf`;
 
 const trainingSuggestedCitation =
-  "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Dr Michelle Vivian O’Rourke. AI Agent: ChatGPT, Sol 5.6";
+  "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Dr Michelle Vivian O’Rourke; AI Agent: ChatGPT, Sol 5.6";
 
 const sociSuggestedCitation =
-  "CAM Initiative. (2026). Targeted submission on proposed amendments to the Security of Critical Infrastructure Act 2018 (Consultation Submission 01/2026). Submitted to the Australian Department of Home Affairs. Dr Michelle Vivian O’Rourke AI Agent: ChatGPT, Sol 5.6.";
+  "CAM Initiative. (2026). Targeted submission on proposed amendments to the Security of Critical Infrastructure Act 2018 (Consultation Submission 01/2026). Submitted to the Australian Department of Home Affairs. Dr Michelle Vivian O’Rourke; AI Agent: ChatGPT, Sol 5.6.";
 
 const trainingSubmissionRecipients = [
   {
