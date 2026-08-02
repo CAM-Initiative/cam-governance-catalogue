@@ -7,10 +7,10 @@ const trainingPolicyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initi
 const sociSubmissionPdfHref = `${import.meta.env.BASE_URL}publications/CAM_SOCI_Targeted_Submission_FINAL.pdf`;
 
 const trainingSuggestedCitation =
-  "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Human Custodian-of-Record: Dr Michelle Vivian O’Rourke. AI Agent: OpenAI, ChatGPT Work, Sol 5.6 Extra High.";
+  "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Dr Michelle Vivian O’Rourke. AI Agent: ChatGPT, Sol 5.6";
 
 const sociSuggestedCitation =
-  "CAM Initiative. (2026). Targeted submission on proposed amendments to the Security of Critical Infrastructure Act 2018 (Consultation Submission 01/2026). Submitted by Dr Michelle Vivian O’Rourke, Aeon Governance Lab, to the Australian Department of Home Affairs.";
+  "CAM Initiative. (2026). Targeted submission on proposed amendments to the Security of Critical Infrastructure Act 2018 (Consultation Submission 01/2026). Submitted to the Australian Department of Home Affairs. Dr Michelle Vivian O’Rourke AI Agent: ChatGPT, Sol 5.6.";
 
 const trainingSubmissionRecipients = [
   {
@@ -184,9 +184,8 @@ export default function Policy() {
               </div>
 
               <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Consultation submission details">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                <div className="mb-5">
                   <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Submission details</p>
-                  <CitationCopyButton citation={sociSuggestedCitation} label="consultation submission" />
                 </div>
 
                 <dl className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -224,7 +223,10 @@ export default function Policy() {
                     </dd>
                   </div>
                   <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</dt>
+                    <dt className="flex flex-wrap items-start justify-between gap-3">
+                      <span className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</span>
+                      <CitationCopyButton citation={sociSuggestedCitation} label="consultation submission" />
+                    </dt>
                     <dd className="mt-2 font-mono text-sm leading-relaxed text-foreground/80">{sociSuggestedCitation}</dd>
                   </div>
                 </dl>
@@ -282,9 +284,8 @@ export default function Policy() {
               </div>
 
               <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Publication details">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                <div className="mb-5">
                   <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Publication details</p>
-                  <CitationCopyButton citation={trainingSuggestedCitation} label="policy proposal" />
                 </div>
 
                 <dl className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -329,7 +330,10 @@ export default function Policy() {
                     </dd>
                   </div>
                   <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</dt>
+                    <dt className="flex flex-wrap items-start justify-between gap-3">
+                      <span className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</span>
+                      <CitationCopyButton citation={trainingSuggestedCitation} label="policy proposal" />
+                    </dt>
                     <dd className="mt-2 font-mono text-sm leading-relaxed text-foreground/80">{trainingSuggestedCitation}</dd>
                   </div>
                 </dl>
