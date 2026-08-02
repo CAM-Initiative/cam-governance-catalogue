@@ -210,6 +210,16 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
   assert.doesNotMatch(collapsedRow, /record\.id/);
 });
 
+test("VIGIL ledger exposes priority and triage-status discovery controls", async () => {
+  const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  assert.match(page, /label: "Triage Priority"/);
+  assert.match(page, /label: "Triage Status"/);
+  assert.match(page, /record\.triage_priority/);
+  assert.match(page, /record\.triage_status/);
+  assert.match(page, /Priority \{detailRecord\.triage_priority\}/);
+  assert.match(page, /Triage: \{detailRecord\.triage_status\}/);
+});
+
 test("generated evidence reports use declared source evidence from observations and failure modes", async () => {
   const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
   assert.match(report, /state\.chain\.observations/);
@@ -785,7 +795,7 @@ test("Repair corpus provisions use the CAM Corpus visual hierarchy", async () =>
 
 test("VIGIL result actions stay with the record count and pagination", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
-  const filterGridIndex = page.indexOf('className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"');
+  const filterGridIndex = page.indexOf('className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"');
   const actionsIndex = page.indexOf('aria-label="VIGIL results actions"');
 
   assert.ok(filterGridIndex >= 0, "The VIGIL filter grid should remain present.");

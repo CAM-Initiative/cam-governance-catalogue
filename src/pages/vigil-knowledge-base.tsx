@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, BookOpen, Search } from "lucide-react";
+import { ArrowLeft, BookOpen, ExternalLink, Search } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -42,15 +42,21 @@ type LearnRecord = {
   rawUrl?: string;
 };
 
+type ThirdPartyObservation = {
+  title: string;
+  url: string;
+  publisher?: string;
+};
+
 type PageState =
   | { status: "loading" }
-  | { status: "ready"; records: LearnRecord[]; notice?: string }
+  | { status: "ready"; records: LearnRecord[]; registryRecords: UnknownRecord[]; notice?: string }
   | { status: "error"; message: string };
 
 type DetailState =
   | { status: "idle" }
   | { status: "loading" }
-  | { status: "ready"; record: LearnRecord }
+  | { status: "ready"; record: LearnRecord; thirdPartyObservation?: ThirdPartyObservation }
   | { status: "error"; record: LearnRecord; message: string };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -90,6 +96,50 @@ function textList(value: unknown): string[] {
     seen.add(key);
     return true;
   });
+}
+
+function linkedRecordIds(record: UnknownRecord, keys: string[]) {
+  const linked = isObject(record.linked_records) ? record.linked_records : {};
+  return keys.flatMap((key) => textList(linked[key]));
+}
+
+function thirdPartyObservationFromRecord(record: UnknownRecord): ThirdPartyObservation | undefined {
+  const sources = [record.source_records, record.sources, record.evidence_sources].find(Array.isArray);
+  if (!Array.isArray(sources)) return undefined;
+
+  for (const source of sources) {
+    if (!isObject(source)) continue;
+    const residence = text(source.source_residence)?.toLocaleLowerCase();
+    if (residence && residence !== "external") continue;
+    const url = text(firstValue(source, ["source_url", "url", "archive_url"]));
+    const title = text(firstValue(source, ["source_title", "title", "name"]));
+    if (!url || !title || !/^https?:\/\//i.test(url)) continue;
+    return {
+      title,
+      url,
+      publisher: text(firstValue(source, ["author_or_publisher", "publisher", "source_platform"])),
+    };
+  }
+  return undefined;
+}
+
+async function loadThirdPartyObservation(record: LearnRecord, registryRecords: UnknownRecord[]) {
+  const direct = thirdPartyObservationFromRecord(record.raw);
+  if (direct) return direct;
+
+  const linkedIds = linkedRecordIds(record.raw, ["related_observations", "research", "related_failure_modes"]);
+  for (const linkedId of linkedIds) {
+    const pointer = registryRecords.find((candidate) => text(firstValue(candidate, ["id", "record_id", "record_identity.record_id"])) === linkedId);
+    if (!pointer) continue;
+    try {
+      const detail = await loadVigilRecordDetail(pointer);
+      const source = thirdPartyObservationFromRecord(detail);
+      if (source) return source;
+    } catch {
+      // The Knowledge Base remains usable if a linked canonical record is temporarily unavailable.
+    }
+  }
+  return undefined;
 }
 
 function taxonomyLink(record: UnknownRecord) {
@@ -219,13 +269,12 @@ function FailureClassPanel({ record }: { record: LearnRecord }) {
 function TaxonomyProvenance({ record }: { record: LearnRecord }) {
   if (!record.taxonomyReference && !record.primaryFailureFamilyCode) return null;
   return <DetailSection title="Taxonomy and corpus provenance">
-    <dl className="grid gap-4 sm:grid-cols-2">
+    <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {record.primaryFailureFamilyCode && <div><dt className="report-label">Failure family</dt><dd className="mt-1 font-mono">{record.primaryFailureFamilyCode}</dd></div>}
       {record.taxonomyReference && <div><dt className="report-label">Corpus reference</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
+      <div><dt className="report-label">Corpus version</dt><dd className="mt-1"><a href={CAM_CITATION.doi} target="_blank" rel="noreferrer" className="underline decoration-cam-gold/60 underline-offset-4 hover:text-foreground">Version {CAM_CITATION.version} · Zenodo DOI</a></dd></div>
     </dl>
-    <p className="mt-4 border-t border-cam-gold/25 pt-4 text-sm leading-relaxed text-muted-foreground">
-      Corpus citation · v{CAM_CITATION.version} · <a href={CAM_CITATION.doi} target="_blank" rel="noreferrer" className="underline decoration-cam-gold/60 underline-offset-4 hover:text-foreground">{CAM_CITATION.label} DOI: 10.5281/zenodo.20686316</a>
-    </p>
+    <p className="mt-4 border-t border-cam-gold/25 pt-4 text-sm leading-relaxed text-muted-foreground">{CAM_CITATION.label} DOI: 10.5281/zenodo.20686316</p>
   </DetailSection>;
 }
 
@@ -257,7 +306,7 @@ function DetailSection({ title, children, tone = "default" }: { title: string; c
   </section>;
 }
 
-function KnowledgeDetail({ record }: { record: LearnRecord }) {
+function KnowledgeDetail({ record, thirdPartyObservation }: { record: LearnRecord; thirdPartyObservation?: ThirdPartyObservation }) {
   const reportId = record.id;
   return <div className="space-y-5">
     <Link href="/observatory/knowledge-base" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.13em] text-cam-gold hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to Knowledge Base</Link>
@@ -281,6 +330,12 @@ function KnowledgeDetail({ record }: { record: LearnRecord }) {
 
       {record.whatHappened.length > 0 && <DetailSection title="What Happened">
         <ol className="list-decimal space-y-3 pl-5">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
+        {thirdPartyObservation && <div className="mt-5 border-t border-cam-gold/25 pt-4">
+          <p className="report-label">Third-party observation</p>
+          <a href={thirdPartyObservation.url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-start gap-2 text-[hsl(32_62%_25%)] underline decoration-cam-gold/55 underline-offset-4 hover:text-cam-gold">
+            <span>{thirdPartyObservation.title}{thirdPartyObservation.publisher ? ` — ${thirdPartyObservation.publisher}` : ""}</span><ExternalLink className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
+          </a>
+        </div>}
       </DetailSection>}
 
       {record.riskIfNotIntegrated.length > 0 && <DetailSection title="Governance Risks" tone="risk">
@@ -322,7 +377,7 @@ export default function VigilKnowledgeBase() {
   const [query, setQuery] = useState("");
   const [year, setYear] = useState("");
   const [failureFamily, setFailureFamily] = useState("");
-  const [application, setApplication] = useState("");
+  const [vendor, setVendor] = useState("");
   const [monitoring, setMonitoring] = useState("");
 
   useEffect(() => {
@@ -335,7 +390,7 @@ export default function VigilKnowledgeBase() {
           .filter((record): record is LearnRecord => Boolean(record))
           .filter((record) => !record.publicationStatus || record.publicationStatus.toLocaleLowerCase() === "published")
           .sort((a, b) => b.year - a.year || a.title.localeCompare(b.title));
-        setState({ status: "ready", records, notice: result.message });
+        setState({ status: "ready", records, registryRecords: result.records, notice: result.message });
       })
       .catch((error: Error) => {
         if (!cancelled) setState({ status: "error", message: error.message });
@@ -354,30 +409,32 @@ export default function VigilKnowledgeBase() {
     }
     setDetailState({ status: "loading" });
     loadVigilRecordDetail(selectedIndexRecord.raw)
-      .then((detail) => {
-        if (!cancelled) setDetailState({ status: "ready", record: mergeDetail(selectedIndexRecord, detail) });
+      .then(async (detail) => {
+        const record = mergeDetail(selectedIndexRecord, detail);
+        const thirdPartyObservation = await loadThirdPartyObservation(record, state.status === "ready" ? state.registryRecords : []);
+        if (!cancelled) setDetailState({ status: "ready", record, thirdPartyObservation });
       })
       .catch((error: Error) => {
         if (!cancelled) setDetailState({ status: "error", record: selectedIndexRecord, message: error.message });
       });
     return () => { cancelled = true; };
-  }, [selectedId, selectedIndexRecord]);
+  }, [selectedId, selectedIndexRecord, state]);
 
   const filterOptions = useMemo(() => ({
     years: [...new Set(records.map((record) => String(record.year)))].sort((a, b) => Number(b) - Number(a)),
     families: [...new Set(records.map((record) => record.primaryFailureFamilyCode).filter((value): value is string => Boolean(value)))].sort(),
-    applications: [...new Set(records.flatMap((record) => record.futureApplication))].sort(),
+    vendors: [...new Set(records.flatMap((record) => record.primaryVendors))].sort(),
   }), [records]);
 
   const filtered = useMemo(() => records.filter((record) => {
     if (!matchesSearch(record, query)) return false;
     if (year && String(record.year) !== year) return false;
     if (failureFamily && record.primaryFailureFamilyCode !== failureFamily) return false;
-    if (application && !record.futureApplication.includes(application)) return false;
+    if (vendor && !record.primaryVendors.includes(vendor)) return false;
     if (monitoring === "required" && !record.monitoringRequired) return false;
     if (monitoring === "not-required" && record.monitoringRequired) return false;
     return true;
-  }), [application, failureFamily, monitoring, query, records, year]);
+  }), [failureFamily, monitoring, query, records, vendor, year]);
 
   const grouped = useMemo(() => {
     const groups = new Map<number, LearnRecord[]>();
@@ -392,11 +449,11 @@ export default function VigilKnowledgeBase() {
       {state.status === "loading" || detailState.status === "loading" ? <div className="cam-parchment-card rounded-xl p-6 text-muted-foreground">Preparing the learning record…</div> : null}
       {state.status === "error" && <div className="cam-parchment-card rounded-xl p-6"><p className="font-mono text-xs uppercase tracking-[0.16em] text-rose-800">Knowledge Base unavailable</p><p className="mt-3 text-muted-foreground">{state.message}</p></div>}
       {state.status === "ready" && !selectedIndexRecord && <div className="cam-parchment-card rounded-xl p-6"><p className="font-serif text-2xl text-foreground">Learning record not found</p><p className="mt-3 text-muted-foreground">The current VIGIL registry does not contain {selectedId}.</p><Link href="/observatory/knowledge-base" className="mt-4 inline-flex font-mono text-xs uppercase tracking-[0.12em] text-cam-gold">Return to Knowledge Base →</Link></div>}
-      {detailRecord && <><KnowledgeDetail record={detailRecord} />{detailState.status === "error" && <p className="mt-5 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">The canonical LEARN detail could not be loaded, so this page is showing its published registry projection. {detailState.message}</p>}</>}
+      {detailRecord && <><KnowledgeDetail record={detailRecord} thirdPartyObservation={detailState.status === "ready" ? detailState.thirdPartyObservation : undefined} />{detailState.status === "error" && <p className="mt-5 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">The canonical LEARN detail could not be loaded, so this page is showing its published registry projection. {detailState.message}</p>}</>}
     </> : <>
       <header className="border-b border-border/70 pb-7">
         <div className="flex items-start gap-4"><div className="rounded-xl border border-primary/25 bg-primary/10 p-3 text-cam-gold"><BookOpen className="h-6 w-6" aria-hidden="true" /></div><div><p className="font-mono text-sm uppercase tracking-[0.2em] text-cam-gold">VIGIL Observatory</p><h1 className="mt-2 font-serif text-4xl text-foreground md:text-5xl">Knowledge Base</h1></div></div>
-        <p className="mt-4 max-w-4xl text-lg leading-relaxed text-muted-foreground">Completed evidence chains translated into reusable governance lessons. Search by case, failure taxonomy, application, vendor, or the principle that should not be forgotten.</p>
+        <p className="mt-4 max-w-4xl text-lg leading-relaxed text-muted-foreground">Completed evidence chains translated into reusable governance lessons. Search by case, failure taxonomy, vendor, governance principle, or future application.</p>
         <div className="mt-5 flex flex-wrap gap-3"><Link href="/observatory" className="rounded-lg border border-border bg-card px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">Browse the VIGIL Ledger</Link></div>
       </header>
 
@@ -404,16 +461,16 @@ export default function VigilKnowledgeBase() {
         <aside aria-label="Knowledge Base search and filters" className="cam-parchment-card rounded-2xl p-4 shadow-sm lg:sticky lg:top-20">
           <div className="mb-5">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Search the Knowledge Base</p>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Find a completed lesson by incident, failure family, application, vendor, principle, or VIGIL record ID.</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Find a completed lesson by incident, failure family, vendor, governance principle, future application, or VIGIL record ID.</p>
           </div>
           <label className="relative block"><span className="sr-only">Search lessons learned</span><Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search lessons…" className="w-full rounded-xl border border-input bg-background/70 py-3 pl-10 pr-3 text-sm text-foreground outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/15" /></label>
           <div className="mt-5 space-y-4 border-t border-border/65 pt-5">
             <label className="block"><span className="report-label">Year</span><select value={year} onChange={(event) => setYear(event.target.value)} className="mt-1.5 w-full rounded-xl border border-input bg-background/70 px-3 py-2.5 text-sm"><option value="">All years</option>{filterOptions.years.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
             <label className="block"><span className="report-label">Failure family</span><select value={failureFamily} onChange={(event) => setFailureFamily(event.target.value)} className="mt-1.5 w-full rounded-xl border border-input bg-background/70 px-3 py-2.5 text-sm"><option value="">All failure families</option>{filterOptions.families.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
-            <label className="block"><span className="report-label">Application</span><select value={application} onChange={(event) => setApplication(event.target.value)} className="mt-1.5 w-full rounded-xl border border-input bg-background/70 px-3 py-2.5 text-sm"><option value="">All applications</option>{filterOptions.applications.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+            <label className="block"><span className="report-label">Vendor / provider</span><select value={vendor} onChange={(event) => setVendor(event.target.value)} className="mt-1.5 w-full rounded-xl border border-input bg-background/70 px-3 py-2.5 text-sm"><option value="">All vendors and providers</option>{filterOptions.vendors.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
             <label className="block"><span className="report-label">Monitoring</span><select value={monitoring} onChange={(event) => setMonitoring(event.target.value)} className="mt-1.5 w-full rounded-xl border border-input bg-background/70 px-3 py-2.5 text-sm"><option value="">All monitoring states</option><option value="required">Monitoring ongoing</option><option value="not-required">No monitoring declared</option></select></label>
           </div>
-          {(query || year || failureFamily || application || monitoring) && <button type="button" onClick={() => { setQuery(""); setYear(""); setFailureFamily(""); setApplication(""); setMonitoring(""); }} className="mt-5 w-full rounded-xl border border-cam-gold/35 bg-card px-3 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/55 hover:bg-background">Clear search and filters</button>}
+          {(query || year || failureFamily || vendor || monitoring) && <button type="button" onClick={() => { setQuery(""); setYear(""); setFailureFamily(""); setVendor(""); setMonitoring(""); }} className="mt-5 w-full rounded-xl border border-cam-gold/35 bg-card px-3 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/55 hover:bg-background">Clear search and filters</button>}
         </aside>
 
         <section className="min-w-0" aria-label="Published VIGIL lessons">
