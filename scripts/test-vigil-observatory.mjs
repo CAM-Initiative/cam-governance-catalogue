@@ -210,12 +210,17 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
   assert.doesNotMatch(collapsedRow, /record\.id/);
 });
 
-test("VIGIL ledger exposes priority and triage-status discovery controls", async () => {
+test("VIGIL ledger exposes independent triage filters and compact collapsed-row chips", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
+  const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
   assert.match(page, /label: "Triage Priority"/);
   assert.match(page, /label: "Triage Status"/);
-  assert.match(page, /record\.triage_priority/);
-  assert.match(page, /record\.triage_status/);
+  assert.match(collapsedRow, /record\.triage_priority && <span/);
+  assert.match(collapsedRow, /record\.triage_status && <span/);
+  assert.match(collapsedRow, /titleizeValue\(record\.triage_status\)/);
+  assert.match(collapsedRow, /flex flex-wrap gap-2/);
+  assert.doesNotMatch(collapsedRow, /line-clamp-2/);
+  assert.doesNotMatch(collapsedRow, /record\.triage_status \|\| "Not declared"/);
   assert.match(page, /Priority \{detailRecord\.triage_priority\}/);
   assert.match(page, /Triage: \{detailRecord\.triage_status\}/);
 });
@@ -230,6 +235,10 @@ test("generated evidence reports use declared source evidence from observations 
   assert.match(report, /function isVigilRecordCitationSource/);
   assert.match(report, /function externalSourceEvidenceFor/);
   assert.match(report, /VIGIL Interpretation/);
+  assert.doesNotMatch(report, /No external source entry is declared for this record\./);
+  assert.match(report, /sources\.length > 0 && <div className="space-y-3"/);
+  assert.match(report, /hasSourceEvidence=\{sources\.length > 0\}/);
+  assert.match(report, /record\.github_blob_url \|\| record\.raw_url \|\| undefined/);
   assert.doesNotMatch(report, /VIGIL CITATION/);
   assert.doesNotMatch(report, /function VigilCitation/);
   assert.doesNotMatch(report, /<VigilCitation record=\{record\}/);
@@ -680,6 +689,24 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.doesNotMatch(report, /function ReportRecord/);
   assert.match(report, /primary linked VIGIL records/);
   assert.match(report, /function reportChainWithKnownRecords/);
+});
+
+
+test("Evidence Chain Report places every authoritative failure classification at the start of Section 03", async () => {
+  const report = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report.tsx"), "utf8");
+  const ledger = report.slice(report.indexOf("function RecordLedger"), report.indexOf("function ObservationStage"));
+  const classification = report.slice(report.indexOf("function ClassificationStage"), report.indexOf("function DiagnoseStage"));
+
+  assert.match(report, /function FailureClassificationBlock/);
+  assert.doesNotMatch(ledger, /Authoritative failure classification/);
+  assert.match(classification, /<FailureClassificationBlock records=\{records\} \/>/);
+  assert.match(report, /records\.length > 1 \? "s" : ""/);
+  assert.match(report, /records\.map\(\(record\) =>/);
+  assert.match(report, /font-serif text-lg font-semibold leading-snug/);
+  assert.match(report, /font-mono text-sm text-cam-gold/);
+  assert.match(report, /text-base leading-relaxed text-foreground\/85/);
+  assert.match(report, /text-base leading-relaxed text-foreground\/80/);
+  assert.doesNotMatch(report, /font-serif text-xl leading-snug text-foreground/);
 });
 
 test("expanded VIGIL records keep all post-chain detail sections collapsed by default", async () => {
