@@ -1824,9 +1824,11 @@ export default function Vigil() {
                           <div className="flex flex-col items-end gap-1.5 text-right">
                             <span className={`rounded-md border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] ${lifecycleTone(publicLifecycle)}`}>{publicLifecycle}</span>
                           </div>
-                          <div className="min-w-0 space-y-1.5">
-                            {record.triage_priority && <span className="inline-flex rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-950">{record.triage_priority}</span>}
-                            <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{record.triage_status || "Not declared"}</p>
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap gap-2">
+                              {record.triage_priority && <span className="inline-flex rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-950">{record.triage_priority}</span>}
+                              {record.triage_status && <span className="inline-flex rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[10px] font-medium tracking-[0.08em] text-muted-foreground">{titleizeValue(record.triage_status)}</span>}
+                            </div>
                           </div>
                         </div>
                       </div>
