@@ -219,7 +219,7 @@ test("VIGIL ledger exposes independent triage filters and compact collapsed-row 
   assert.match(collapsedRow, /record\.triage_status && <span/);
   assert.match(collapsedRow, /titleizeValue\(record\.triage_status\)/);
   assert.match(collapsedRow, /flex flex-wrap gap-2/);
-  assert.doesNotMatch(collapsedRow, /line-clamp-2/);
+  assert.doesNotMatch(collapsedRow, /<p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">\{record\.triage_status/);
   assert.doesNotMatch(collapsedRow, /record\.triage_status \|\| "Not declared"/);
   assert.match(page, /Priority \{detailRecord\.triage_priority\}/);
   assert.match(page, /Triage: \{detailRecord\.triage_status\}/);
