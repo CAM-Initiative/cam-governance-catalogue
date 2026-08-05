@@ -509,12 +509,12 @@ function SourceDetails({ source, citations }: { source: SourceEvidence; citation
   </div>;
 }
 
-function ObservationNarrative({ record }: { record: VigilIndexRecord }) {
+function ObservationNarrative({ record, hasSourceEvidence }: { record: VigilIndexRecord; hasSourceEvidence: boolean }) {
   const preamble = distinctObservationPreamble(record);
   const isFailureEvidence = record.record_type === "failure_mode";
-  return <div className="border-t border-border/60 pt-4">
+  return <div className={hasSourceEvidence ? "mt-4 border-t border-border/60 pt-4" : undefined}>
     <p className="report-label">VIGIL Interpretation</p>
-    {preamble && <div className="mt-3"><Narrative label={isFailureEvidence ? "Public finding" : "Public finding"} value={preamble} /></div>}
+    {preamble && <div className="mt-3"><Narrative label="Public finding" value={preamble} /></div>}
     {!isFailureEvidence && <div className="mt-4 grid gap-4 sm:grid-cols-2">
       <Narrative label="What was observed" value={record.publicDisplay.observation?.observed} />
       <Narrative label="Context" value={record.publicDisplay.observation?.context} />
@@ -526,8 +526,8 @@ function ObservationNarrative({ record }: { record: VigilIndexRecord }) {
 function ObservationEvidenceRecord({ record, citations }: { record: VigilIndexRecord; citations: Citation[] }) {
   const sources = uniqueSourceEvidence(externalSourceEvidenceFor(record));
   return <article className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4">
-    {sources.length ? <div className="space-y-3">{sources.map((source, index) => <SourceDetails key={`${sourceKey(source)}-${index}`} source={source} citations={citations} />)}</div> : <p className="report-label">No external source entry is declared for this record.</p>}
-    <ObservationNarrative record={record} />
+    {sources.length > 0 && <div className="space-y-3">{sources.map((source, index) => <SourceDetails key={`${sourceKey(source)}-${index}`} source={source} citations={citations} />)}</div>}
+    <ObservationNarrative record={record} hasSourceEvidence={sources.length > 0} />
   </article>;
 }
 
@@ -551,11 +551,27 @@ function failureClassification(record: VigilIndexRecord) {
   };
 }
 
+function FailureClassificationBlock({ records }: { records: VigilIndexRecord[] }) {
+  if (!records.length) return null;
+  return <section className="report-break-inside-avoid rounded-lg border border-cam-gold/35 bg-white/55 p-4">
+    <p className="report-label">Authoritative failure classification{records.length > 1 ? "s" : ""}</p>
+    <div className="mt-3 space-y-4">
+      {records.map((record) => {
+        const failure = failureClassification(record);
+        return <article key={record.id} className="border-l-2 border-cam-gold/45 pl-4">
+          <h3 className="font-serif text-lg font-semibold leading-snug text-foreground">{failure.name}</h3>
+          <p className="mt-1 font-mono text-sm text-cam-gold">{[failure.code, record.id].filter(Boolean).join(" · ")}</p>
+          {failure.subtype && <p className="mt-2 text-base leading-relaxed text-foreground/85"><span className="font-semibold">Subtype:</span> {failure.subtype}</p>}
+          {failure.taxonomy && <p className="mt-2 text-base leading-relaxed text-foreground/80">{failure.taxonomy}</p>}
+        </article>;
+      })}
+    </div>
+  </section>;
+}
+
 function RecordLedger({ records, learnRecords, chain, byId, learnById, citations }: { records: VigilIndexRecord[]; learnRecords: LearnRecord[]; chain: ReportChain; byId: Map<string, VigilIndexRecord>; learnById: Map<string, LearnRecord>; citations: Citation[] }) {
   const ordered = chainStages.flatMap((stage) => chain[stage.key].map((id) => ({ id, label: stage.label })));
-  const failures = chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record));
   return <div className="space-y-4">
-    {failures.length > 0 && <section className="rounded-lg border border-cam-gold/35 bg-white/55 p-4"><p className="report-label">Authoritative failure classification{failures.length > 1 ? "s" : ""}</p><div className="mt-3 space-y-3">{failures.map((record) => { const failure = failureClassification(record); return <article key={record.id} className="border-l-2 border-cam-gold/45 pl-4"><h3 className="font-serif text-xl leading-snug text-foreground">{failure.name}</h3><p className="mt-1 font-mono text-sm text-cam-gold">{[failure.code, record.id].filter(Boolean).join(" · ")}</p>{failure.subtype && <p className="mt-1 text-sm text-muted-foreground">Subtype: {failure.subtype}</p>}{failure.taxonomy && <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{failure.taxonomy}</p>}</article>; })}</div></section>}
     <div className="overflow-hidden rounded-lg border border-border/70 bg-white/55">
     <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3 border-b border-border/60 bg-white/45 px-4 py-2.5 font-mono text-sm uppercase tracking-[0.12em] text-muted-foreground"><span>Authoritative evidence-to-repair-and-learning chain</span><span>Status</span></div>
     {ordered.length ? ordered.map(({ id, label }) => {
@@ -585,7 +601,10 @@ function ObservationStage({ records, supportingRecords, citations }: { records: 
 }
 
 function ClassificationStage({ records }: { records: VigilIndexRecord[] }) {
-  return <div className="space-y-4">{records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Failure-mode definition" value={record.publicDisplay.failure?.definition} /><Narrative label="Why it matters" value={record.publicDisplay.failure?.significance} /><div className="sm:col-span-2"><Narrative label="Triggers" value={record.publicDisplay.failure?.triggers} /></div><Narrative label="Observed manifestations" value={record.publicDisplay.failure?.manifestations} /></div><FieldGrid entries={[["Failure family", record.failure_family], ["Failure subtype", record.failure_subtype], ["Severity", record.severity], ["Likelihood", record.likelihood]]} /></article>) : <Incomplete text="Failure mode not yet linked." />}</div>;
+  return <div className="space-y-4">
+    <FailureClassificationBlock records={records} />
+    {records.length ? records.map((record) => <article key={record.id} className="report-record report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4"><p className="text-base leading-relaxed text-foreground/85">{summary(record)}</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><Narrative label="Failure-mode definition" value={record.publicDisplay.failure?.definition} /><Narrative label="Why it matters" value={record.publicDisplay.failure?.significance} /><div className="sm:col-span-2"><Narrative label="Triggers" value={record.publicDisplay.failure?.triggers} /></div><Narrative label="Observed manifestations" value={record.publicDisplay.failure?.manifestations} /></div><FieldGrid entries={[["Failure family", record.failure_family], ["Failure subtype", record.failure_subtype], ["Severity", record.severity], ["Likelihood", record.likelihood]]} /></article>) : <Incomplete text="Failure mode not yet linked." />}
+  </div>;
 }
 
 function DiagnoseStage({ records }: { records: VigilIndexRecord[] }) {
