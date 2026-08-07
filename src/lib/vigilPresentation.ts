@@ -52,6 +52,8 @@ export type VigilIndexRecord = {
   likelihood?: string;
   triage_priority?: string;
   triage_status?: string;
+  monitoring_required?: boolean;
+  repair_status?: string;
   mitigation_status?: string;
   proposal_type?: string;
   target_domains?: string[];
@@ -341,6 +343,46 @@ export function getNestedField(record: UnknownRecord, paths: string[]): string |
     if (text) return text;
   }
   return undefined;
+}
+
+export function getNestedBoolean(record: UnknownRecord, paths: string[]): boolean | undefined {
+  for (const path of paths) {
+    const value = path.split(".").reduce<unknown>((current, part) => {
+      if (Array.isArray(current) && /^\d+$/.test(part)) return current[Number(part)];
+      return isObject(current) ? current[part] : undefined;
+    }, record);
+    if (typeof value === "boolean") return value;
+    if (typeof value === "string") {
+      const normalized = value.trim().toLowerCase();
+      if (normalized === "true") return true;
+      if (normalized === "false") return false;
+    }
+  }
+  return undefined;
+}
+
+const operationalPriorityRanks: Record<string, number> = {
+  P0: 0,
+  P1: 10,
+  P2: 20,
+  P3: 30,
+  PU: 40,
+  PN: 50,
+};
+
+export function shouldShowCurrentPriority(priority?: string) {
+  return isMeaningfulText(priority) && priority.trim().toUpperCase() !== "PN";
+}
+
+export function vigilOperationalRank(record: Pick<VigilIndexRecord, "triage_priority" | "triage_status" | "record_state">) {
+  const priority = record.triage_priority?.trim().toUpperCase();
+  const workflow = record.triage_status?.trim().toLowerCase();
+  const lifecycle = record.record_state?.trim().toLowerCase();
+
+  if (lifecycle?.includes("closed")) return 70;
+  if (priority && priority in operationalPriorityRanks && priority !== "PN") return operationalPriorityRanks[priority];
+  if (workflow === "monitoring" || lifecycle === "monitoring" || lifecycle === "watching") return 60;
+  return priority ? operationalPriorityRanks[priority] ?? 45 : 50;
 }
 
 export function arrayFrom(value: unknown): string[] | undefined {
@@ -683,11 +725,13 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     sectors: arrayFrom(getNestedField(record, ["jurisdiction_summary.sector", "jurisdiction_summary.sectors", "sector", "sectors", "ecosystem_area"])),
     failure_family: getNestedField(record, ["classification_summary.failure_family", "failure_family"]),
     failure_subtype: getNestedField(record, ["classification_summary.failure_subtype", "failure_subtype", "failure_mode"]),
-    severity: getNestedField(record, ["classification_summary.severity", "severity"]),
+    severity: getNestedField(record, ["classification_summary.severity", "failure_classification.severity", "severity"]),
     likelihood: getNestedField(record, ["classification_summary.likelihood", "likelihood"]),
-    triage_priority: getNestedField(record, ["triage_summary.triage_priority", "triage_priority"]),
-    triage_status: getNestedField(record, ["triage_summary.triage_status", "triage_status"]),
-    mitigation_status: getNestedField(record, ["triage_summary.mitigation_status", "mitigation_status"]),
+    triage_priority: getNestedField(record, ["triage_summary.triage_priority", "triage.triage_priority", "triage_priority"]),
+    triage_status: getNestedField(record, ["triage_summary.triage_status", "triage.triage_status", "triage_status"]),
+    monitoring_required: getNestedBoolean(record, ["monitoring_required", "ecosystem_summary.monitoring_required", "ecosystem_status.monitoring_required"]),
+    repair_status: getNestedField(record, ["repair_summary.repair_status", "repair_summary.status", "repair_status.status", "repair_status_value", "repair_status"]),
+    mitigation_status: getNestedField(record, ["triage_summary.mitigation_status", "triage.mitigation_status", "mitigation_status"]),
     proposal_type: getNestedField(record, ["proposal_summary.proposal_type", "proposal_type"]),
     target_domains: arrayFrom(getNestedField(record, ["cam_summary.target_domains", "proposal_summary.cam_domains", "proposal_summary.target_domain", "proposal_summary.target_domains", "target_domain", "target_domains"])),
     drafting_status: getNestedField(record, ["cam_summary.drafting_status", "proposal_summary.drafting_status", "drafting_status"]),
@@ -749,6 +793,11 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     { weight: 35, values: [
       normalized.record_state,
       normalized.record_type,
+      normalized.severity,
+      normalized.triage_priority,
+      normalized.triage_status,
+      normalized.monitoring_required === undefined ? undefined : normalized.monitoring_required ? "monitoring required" : "monitoring not required",
+      normalized.repair_status,
       normalized.date_recorded,
       normalized.evidence_confidence,
       normalized.path,

@@ -210,19 +210,75 @@ test("collapsed VIGIL row omits record-file link while keeping readable public f
   assert.doesNotMatch(collapsedRow, /record\.id/);
 });
 
-test("VIGIL ledger exposes independent triage filters and compact collapsed-row chips", async () => {
+test("VIGIL ledger exposes independent model-2.0 filters, operational sorting, and compact chips", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   const collapsedRow = page.slice(page.indexOf('aria-controls={detailsPanelId}'), page.indexOf('{isExpanded &&'));
   assert.match(page, /label: "Triage Priority"/);
   assert.match(page, /label: "Triage Status"/);
-  assert.match(collapsedRow, /record\.triage_priority && <span/);
+  assert.match(page, /label: "Severity"/);
+  assert.match(page, /label: "Monitoring"/);
+  assert.match(page, /\["P0", "P1", "P2", "P3", "PU", "PN"\]/);
+  assert.match(page, /\["S0", "S1", "S2", "S3", "S4", "SU"\]/);
+  assert.match(page, /key: "triagePriority", direction: "asc"/);
+  assert.match(page, /vigilOperationalRank/);
+  assert.match(collapsedRow, /Severity \{record\.severity\}/);
+  assert.match(collapsedRow, /showPriority && <span/);
+  assert.doesNotMatch(collapsedRow, /record\.triage_priority && <span/);
   assert.match(collapsedRow, /record\.triage_status && <span/);
   assert.match(collapsedRow, /titleizeValue\(record\.triage_status\)/);
   assert.match(collapsedRow, /flex flex-wrap gap-2/);
   assert.doesNotMatch(collapsedRow, /<p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">\{record\.triage_status/);
   assert.doesNotMatch(collapsedRow, /record\.triage_status \|\| "Not declared"/);
   assert.match(page, /Priority \{detailRecord\.triage_priority\}/);
-  assert.match(page, /Triage: \{detailRecord\.triage_status\}/);
+  assert.match(page, /Triage: \{titleizeValue\(detailRecord\.triage_status\)\}/);
+});
+
+test("VIGIL model-2.0 normalization preserves classification, workflow, monitoring, and repair independently", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { normalizeVigilRecord, shouldShowCurrentPriority, vigilOperationalRank } = modules.presentation;
+    const active = normalizeVigilRecord({
+      id: "VIGIL-2026-FM-0101",
+      record_type: "failure_mode",
+      record_state: "active",
+      failure_classification: { severity: "S1" },
+      triage: { triage_priority: "P1", triage_status: "action-required" },
+      ecosystem_status: { monitoring_required: true },
+      repair_status: { status: "unrepaired" },
+    });
+    const monitored = normalizeVigilRecord({
+      id: "VIGIL-2026-FM-0102",
+      record_type: "failure_mode",
+      record_state: "monitoring",
+      failure_classification: { severity: "S1" },
+      triage: { triage_priority: "PN", triage_status: "monitoring" },
+      ecosystem_status: { monitoring_required: true },
+      repair_status: { status: "repaired" },
+    });
+    const closed = normalizeVigilRecord({
+      id: "VIGIL-2026-FM-0103",
+      record_type: "failure_mode",
+      record_state: "closed",
+      failure_classification: { severity: "S3" },
+      triage: { triage_priority: "PN", triage_status: "closed" },
+      ecosystem_status: { monitoring_required: false },
+      repair_status: { status: "repaired" },
+    });
+
+    assert.equal(active.severity, "S1");
+    assert.equal(active.triage_priority, "P1");
+    assert.equal(active.triage_status, "action-required");
+    assert.equal(active.monitoring_required, true);
+    assert.equal(active.repair_status, "unrepaired");
+    assert.equal(shouldShowCurrentPriority(active.triage_priority), true);
+    assert.equal(shouldShowCurrentPriority(monitored.triage_priority), false);
+    assert.ok(vigilOperationalRank(active) < vigilOperationalRank(monitored));
+    assert.ok(vigilOperationalRank(monitored) < vigilOperationalRank(closed));
+    assert.match(active.searchText, /s1/);
+    assert.match(active.searchText, /monitoring required/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
 });
 
 test("generated evidence reports use declared source evidence from observations and failure modes", async () => {
