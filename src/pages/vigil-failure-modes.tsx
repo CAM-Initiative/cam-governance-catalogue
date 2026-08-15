@@ -36,6 +36,10 @@ function values(records: VigilIndexRecord[], getter: (record: VigilIndexRecord) 
   return [...new Set(records.map(getter).filter((value): value is string => Boolean(value)))].sort((a, b) => a.localeCompare(b));
 }
 
+function compactFamily(value: string) {
+  return value.replace(/\s+Failures$/i, "");
+}
+
 export default function VigilFailureModes() {
   const [, params] = useRoute("/observatory/failure-modes/:recordId");
   const [, aliasParams] = useRoute("/vigil/:recordId");
@@ -50,6 +54,7 @@ export default function VigilFailureModes() {
   const [lifecycle, setLifecycle] = useState("");
   const [system, setSystem] = useState("");
   const [priority, setPriority] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [advanced, setAdvanced] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -108,13 +113,24 @@ export default function VigilFailureModes() {
     if (system && (record.observed_vendor ?? record.platform_label) !== system) return false;
     if (priority && record.triage_priority !== priority) return false;
     return true;
-  }), [records, search, family, severity, evidence, repair, lifecycle, system, priority, families]);
+  }), [records, search, family, severity, evidence, repair, lifecycle, system, priority]);
 
   useEffect(() => setPage(1), [search, family, severity, evidence, repair, lifecycle, system, priority]);
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const hasFilters = Boolean(search || family || severity || evidence || repair || lifecycle || system || priority);
+
+  const clearFilters = () => {
+    setSearch("");
+    setFamily("");
+    setSeverity("");
+    setEvidence("");
+    setRepair("");
+    setLifecycle("");
+    setSystem("");
+    setPriority("");
+  };
 
   if (recordId) {
     return (
@@ -134,98 +150,119 @@ export default function VigilFailureModes() {
   return (
     <Shell>
       <VigilObservatoryNav />
-      <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-10 md:py-14">
-        <header className="max-w-4xl">
-          <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-primary">Understand the pattern</p>
-          <h1 className="mt-3 font-serif text-4xl leading-tight text-foreground sm:text-5xl">AI Failure Mode Library</h1>
-          <p className="mt-4 text-lg leading-8 text-muted-foreground">Find, understand and compare documented AI failure patterns before tracing their evidence and governance response.</p>
-          {state.status === "ready" && (
-            <p className="mt-4 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground" aria-live="polite">
-              {records.length} documented failure modes · {families.length} families{updated ? ` · updated ${updated}` : ""}
-            </p>
-          )}
-        </header>
-
-        <section className="mt-9 rounded-2xl border border-border bg-card p-5 shadow-sm md:p-6" aria-labelledby="failure-mode-search-heading">
-          <h2 id="failure-mode-search-heading" className="sr-only">Search and filter failure modes</h2>
-          <label className="block">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Describe the behaviour you’re seeing…</span>
-            <span className="mt-2 flex items-center gap-3 rounded-xl border border-input bg-background px-4 focus-within:border-primary/55 focus-within:ring-2 focus-within:ring-primary/20">
-              <Search className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                className="min-w-0 flex-1 bg-transparent py-3.5 text-base text-foreground outline-none placeholder:text-muted-foreground/70"
-                placeholder="e.g. manipulated a user, bypassed a control, lost context…"
-              />
-              {search && <button type="button" onClick={() => setSearch("")} className="rounded-full p-1 text-muted-foreground hover:text-foreground" aria-label="Clear search"><X className="h-4 w-4" /></button>}
-            </span>
-          </label>
-
-          {families.length > 0 && (
-            <nav className="mt-5" aria-label="Browse failure families">
-              <p className="mb-2 font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">Failure families</p>
-              <div className="flex flex-wrap gap-2">
-                <button type="button" aria-pressed={!family} onClick={() => setFamily("")} className={`rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${!family ? "border-primary/55 bg-[hsl(var(--vigil-nav-active))] text-[hsl(var(--cam-corpus-selected-foreground))]" : "border-border bg-background text-muted-foreground hover:border-primary/35 hover:text-foreground"}`}>All {records.length}</button>
-                {families.map((entry) => (
-                  <button key={entry.key} type="button" aria-pressed={family === entry.key} onClick={() => setFamily(family === entry.key ? "" : entry.key)} className={`rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${family === entry.key ? "border-primary/55 bg-[hsl(var(--vigil-nav-active))] text-[hsl(var(--cam-corpus-selected-foreground))]" : "border-border bg-background text-muted-foreground hover:border-primary/35 hover:text-foreground"}`}>
-                    {entry.label} <span aria-label={`${entry.count} failure modes`}>{entry.count}</span>
-                  </button>
-                ))}
+      <main className="vigil-library-page">
+        <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
+          <section className="vigil-library-shell" aria-labelledby="failure-mode-library-heading">
+            <header className="vigil-library-header">
+              <div>
+                <p className="vigil-library-kicker">VIGIL public failure taxonomy</p>
+                <h1 id="failure-mode-library-heading">AI Failure Mode Library</h1>
+                <p className="vigil-library-description">Find, understand and compare documented AI failure patterns before tracing their evidence and governance response.</p>
               </div>
-            </nav>
-          )}
+              {state.status === "ready" && (
+                <div className="vigil-library-stats" aria-live="polite">
+                  <span><strong>{records.length}</strong> failure modes</span>
+                  <span><strong>{families.length}</strong> families</span>
+                  {updated && <span>Updated <strong>{updated}</strong></span>}
+                </div>
+              )}
+            </header>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Filter label="Failure family" value={family} onChange={setFamily} options={families.map((entry) => ({ value: entry.key, label: `${entry.label} (${entry.count})` }))} />
-            <Filter label="Severity" value={severity} onChange={setSeverity} options={options.severity.map((value) => ({ value, label: titleizeValue(value) }))} />
-            <Filter label="Evidence / confidence" value={evidence} onChange={setEvidence} options={options.evidence.map((value) => ({ value, label: titleizeValue(value) }))} />
-            <Filter label="Repair status" value={repair} onChange={setRepair} options={options.repair.map((value) => ({ value, label: titleizeValue(value) }))} />
-          </div>
+            <section className="vigil-library-toolbar" aria-labelledby="failure-mode-search-heading">
+              <h2 id="failure-mode-search-heading" className="sr-only">Search and filter failure modes</h2>
+              <div className="vigil-search-row">
+                <label className="vigil-search-control">
+                  <Search aria-hidden="true" />
+                  <span className="sr-only">Describe the behaviour you’re seeing…</span>
+                  <input
+                    type="search"
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Describe the behaviour you’re seeing…"
+                  />
+                  {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
+                </label>
+                <button type="button" className={`vigil-filter-button ${filtersOpen ? "is-active" : ""}`} aria-expanded={filtersOpen} aria-controls="vigil-filter-panel" onClick={() => setFiltersOpen((open) => !open)}>
+                  <SlidersHorizontal aria-hidden="true" /> Filters
+                </button>
+              </div>
 
-          <button type="button" className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.11em] text-primary" aria-expanded={advanced} onClick={() => setAdvanced((open) => !open)}>
-            <SlidersHorizontal className="h-4 w-4" aria-hidden="true" /> Advanced filters {advanced ? "−" : "+"}
-          </button>
-          {advanced && (
-            <div className="mt-4 grid gap-3 border-t border-border pt-4 sm:grid-cols-3">
-              <Filter label="Lifecycle state" value={lifecycle} onChange={setLifecycle} options={options.lifecycle.map((value) => ({ value, label: titleizeValue(value) }))} />
-              <Filter label="Observed system / vendor" value={system} onChange={setSystem} options={options.system.map((value) => ({ value, label: value }))} />
-              <Filter label="Audit priority" value={priority} onChange={setPriority} options={options.priority.map((value) => ({ value, label: value }))} />
-            </div>
-          )}
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-            <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">{filtered.length} matching failure {filtered.length === 1 ? "mode" : "modes"}</p>
-            {hasFilters && <button type="button" className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-primary hover:underline" onClick={() => { setSearch(""); setFamily(""); setSeverity(""); setEvidence(""); setRepair(""); setLifecycle(""); setSystem(""); setPriority(""); }}>Clear all filters</button>}
-          </div>
-        </section>
+              {families.length > 0 && (
+                <nav className="vigil-family-nav" aria-label="Browse failure families">
+                  <button type="button" aria-pressed={!family} onClick={() => setFamily("")} className={!family ? "is-active" : undefined}>All <span>{records.length}</span></button>
+                  {families.map((entry) => (
+                    <button key={entry.key} type="button" aria-pressed={family === entry.key} onClick={() => setFamily(family === entry.key ? "" : entry.key)} className={family === entry.key ? "is-active" : undefined}>
+                      {compactFamily(entry.label)} <span>{entry.count}</span>
+                    </button>
+                  ))}
+                </nav>
+              )}
 
-        {state.status === "loading" && <div className="mt-6 rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">Loading failure modes from {VIGIL_REGISTRY_SOURCE.registry_index_url}…</div>}
-        {state.status === "error" && <div className="mt-6 rounded-xl border border-destructive/40 bg-card p-5 text-sm text-destructive">{state.message}</div>}
-        {state.status === "ready" && state.notice && <div className="mt-6 rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">{state.notice}</div>}
+              {filtersOpen && (
+                <div id="vigil-filter-panel" className="vigil-filter-panel">
+                  <div className="vigil-primary-filters">
+                    <Filter label="Severity" value={severity} onChange={setSeverity} options={options.severity.map((value) => ({ value, label: titleizeValue(value) }))} />
+                    <Filter label="Evidence" value={evidence} onChange={setEvidence} options={options.evidence.map((value) => ({ value, label: titleizeValue(value) }))} />
+                    <Filter label="Repair status" value={repair} onChange={setRepair} options={options.repair.map((value) => ({ value, label: titleizeValue(value) }))} />
+                    <button type="button" className="vigil-advanced-filter-toggle" aria-expanded={advanced} onClick={() => setAdvanced((open) => !open)}>
+                      Advanced filters {advanced ? "−" : "+"}
+                    </button>
+                  </div>
+                  {advanced && (
+                    <div className="vigil-advanced-filters">
+                      <Filter label="Lifecycle state" value={lifecycle} onChange={setLifecycle} options={options.lifecycle.map((value) => ({ value, label: titleizeValue(value) }))} />
+                      <Filter label="Observed system / vendor" value={system} onChange={setSystem} options={options.system.map((value) => ({ value, label: value }))} />
+                      <Filter label="Audit priority" value={priority} onChange={setPriority} options={options.priority.map((value) => ({ value, label: value }))} />
+                    </div>
+                  )}
+                </div>
+              )}
 
-        <div className="mt-7 grid gap-4">
-          {pageRecords.map((record) => <FailureModeCard key={record.id} record={record} />)}
-          {state.status === "ready" && filtered.length === 0 && <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">No failure modes match those terms. Try a broader description or clear a filter.</div>}
+              <div className="vigil-result-summary">
+                <span>{filtered.length} matching failure {filtered.length === 1 ? "mode" : "modes"}</span>
+                {hasFilters && <button type="button" onClick={clearFilters}>Clear filters</button>}
+              </div>
+            </section>
+
+            {state.status === "loading" && <div className="vigil-registry-notice">Loading failure modes from {VIGIL_REGISTRY_SOURCE.registry_index_url}…</div>}
+            {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
+            {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
+
+            <section className="vigil-fm-table" aria-label="Failure mode catalogue">
+              <div className="vigil-fm-table-header" aria-hidden="true">
+                <span>Failure Mode</span>
+                <span>Family</span>
+                <span>Severity</span>
+                <span>Evidence</span>
+                <span>Status</span>
+                <span>Repair</span>
+                <span></span>
+              </div>
+              <div className="vigil-fm-table-body">
+                {pageRecords.map((record) => <FailureModeCard key={record.id} record={record} />)}
+                {state.status === "ready" && filtered.length === 0 && <div className="vigil-empty-panel">No failure modes match those terms. Try a broader description or clear a filter.</div>}
+              </div>
+            </section>
+
+            {filtered.length > PAGE_SIZE && (
+              <nav className="vigil-pagination" aria-label="Failure mode result pages">
+                <button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button>
+                <span>Page {currentPage} of {pageCount}</span>
+                <button type="button" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>Next</button>
+              </nav>
+            )}
+          </section>
         </div>
-
-        {filtered.length > PAGE_SIZE && (
-          <nav className="mt-7 flex items-center justify-center gap-3" aria-label="Failure mode result pages">
-            <button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))} className="rounded-lg border border-border bg-card px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] disabled:opacity-40">Previous</button>
-            <span className="font-mono text-xs text-muted-foreground">Page {currentPage} of {pageCount}</span>
-            <button type="button" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))} className="rounded-lg border border-border bg-card px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] disabled:opacity-40">Next</button>
-          </nav>
-        )}
-      </div>
+      </main>
     </Shell>
   );
 }
 
 function Filter({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: Array<{ value: string; label: string }> }) {
   return (
-    <label className="block">
-      <span className="mb-1.5 block font-mono text-[10px] font-semibold uppercase tracking-[0.13em] text-muted-foreground">{label}</span>
-      <select value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+    <label className="vigil-filter-control">
+      <span>{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)}>
         <option value="">All</option>
         {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
       </select>

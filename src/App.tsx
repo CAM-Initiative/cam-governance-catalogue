@@ -1,5 +1,6 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import "./polish.css";
+import "./vigil-storyboard.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
