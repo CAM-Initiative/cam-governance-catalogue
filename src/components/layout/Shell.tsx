@@ -20,8 +20,7 @@ const mobileLinks = [
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy Papers", internal: true },
   { href: "/observatory/failure-modes", label: "VIGIL Failure Modes", internal: true },
-  { href: "/observatory/incidents", label: "VIGIL Incidents", internal: true },
-  { href: "/observatory/repairs", label: "VIGIL Repairs", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Cases", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "/observatory/ledger", label: "VIGIL Full Ledger", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
@@ -41,8 +40,7 @@ const constitutionLinks = [
 
 const vigilLinks = [
   { href: "/observatory/failure-modes", label: "Failure Mode Library" },
-  { href: "/observatory/incidents", label: "Incidents & Observations" },
-  { href: "/observatory/repairs", label: "Governance Repairs" },
+  { href: "/observatory/cases", label: "Case Files" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/ledger", label: "Full Ledger" },
 ];
@@ -96,9 +94,7 @@ export function Shell({ children }: { children: ReactNode }) {
               <Link
                 href="/"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isHomeActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  isHomeActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Home
@@ -110,9 +106,7 @@ export function Shell({ children }: { children: ReactNode }) {
                       key={link.href}
                       href={link.href}
                       className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-card hover:text-foreground"
+                        location === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-card hover:text-foreground"
                       }`}
                     >
                       {link.label}
@@ -125,9 +119,7 @@ export function Shell({ children }: { children: ReactNode }) {
               <Link
                 href="/constitution"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isConstitutionActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  isConstitutionActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 Constitution
@@ -139,9 +131,7 @@ export function Shell({ children }: { children: ReactNode }) {
                       key={link.href}
                       href={link.href}
                       className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-card hover:text-foreground"
+                        location === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-card hover:text-foreground"
                       }`}
                     >
                       {link.label}
@@ -155,9 +145,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 key={link.href}
                 href={link.href}
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  link.active
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  link.active ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {link.label}
@@ -167,9 +155,7 @@ export function Shell({ children }: { children: ReactNode }) {
               <Link
                 href="/observatory/failure-modes"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isVigilActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                  isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 VIGIL
@@ -181,7 +167,7 @@ export function Shell({ children }: { children: ReactNode }) {
                       key={link.href}
                       href={link.href}
                       className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href || (link.href === "/observatory" && location === "/vigil") || (link.href !== "/observatory" && location.startsWith(`${link.href}/`))
+                        location === link.href || location.startsWith(`${link.href}/`)
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-card hover:text-foreground"
                       }`}
@@ -215,8 +201,7 @@ export function Shell({ children }: { children: ReactNode }) {
                     className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
                       location === link.href ||
                       (link.href === "/constitution" && isConstitutionActive) ||
-                      (link.href === "/observatory/failure-modes" && isVigilActive) ||
-                      (link.href === "/observatory/knowledge-base" && location.startsWith("/observatory/knowledge-base"))
+                      (link.href.startsWith("/observatory/") && location.startsWith(link.href))
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-card hover:text-foreground"
                     }`}

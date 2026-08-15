@@ -170,7 +170,7 @@ export default function VigilFailureModes() {
 
             <section className="vigil-library-toolbar" aria-labelledby="failure-mode-search-heading">
               <h2 id="failure-mode-search-heading" className="sr-only">Search and filter failure modes</h2>
-              <div className="vigil-search-row">
+              <div className="vigil-search-row vigil-search-row-v2">
                 <label className="vigil-search-control">
                   <Search aria-hidden="true" />
                   <span className="sr-only">Describe the behaviour you’re seeing…</span>
@@ -182,35 +182,33 @@ export default function VigilFailureModes() {
                   />
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
+
+                <label className="vigil-family-select">
+                  <span>Failure family</span>
+                  <select value={family} onChange={(event) => setFamily(event.target.value)}>
+                    <option value="">All families ({records.length})</option>
+                    {families.map((entry) => <option key={entry.key} value={entry.key}>{compactFamily(entry.label)} ({entry.count})</option>)}
+                  </select>
+                </label>
+
                 <button type="button" className={`vigil-filter-button ${filtersOpen ? "is-active" : ""}`} aria-expanded={filtersOpen} aria-controls="vigil-filter-panel" onClick={() => setFiltersOpen((open) => !open)}>
                   <SlidersHorizontal aria-hidden="true" /> Filters
                 </button>
               </div>
 
-              {families.length > 0 && (
-                <nav className="vigil-family-nav" aria-label="Browse failure families">
-                  <button type="button" aria-pressed={!family} onClick={() => setFamily("")} className={!family ? "is-active" : undefined}>All <span>{records.length}</span></button>
-                  {families.map((entry) => (
-                    <button key={entry.key} type="button" aria-pressed={family === entry.key} onClick={() => setFamily(family === entry.key ? "" : entry.key)} className={family === entry.key ? "is-active" : undefined}>
-                      {compactFamily(entry.label)} <span>{entry.count}</span>
-                    </button>
-                  ))}
-                </nav>
-              )}
-
               {filtersOpen && (
                 <div id="vigil-filter-panel" className="vigil-filter-panel">
-                  <div className="vigil-primary-filters">
+                  <div className="vigil-primary-filters vigil-primary-filters-v2">
                     <Filter label="Severity" value={severity} onChange={setSeverity} options={options.severity.map((value) => ({ value, label: titleizeValue(value) }))} />
                     <Filter label="Evidence" value={evidence} onChange={setEvidence} options={options.evidence.map((value) => ({ value, label: titleizeValue(value) }))} />
-                    <Filter label="Repair status" value={repair} onChange={setRepair} options={options.repair.map((value) => ({ value, label: titleizeValue(value) }))} />
+                    <Filter label="Status" value={lifecycle} onChange={setLifecycle} options={options.lifecycle.map((value) => ({ value, label: titleizeValue(value) }))} />
                     <button type="button" className="vigil-advanced-filter-toggle" aria-expanded={advanced} onClick={() => setAdvanced((open) => !open)}>
                       Advanced filters {advanced ? "−" : "+"}
                     </button>
                   </div>
                   {advanced && (
                     <div className="vigil-advanced-filters">
-                      <Filter label="Lifecycle state" value={lifecycle} onChange={setLifecycle} options={options.lifecycle.map((value) => ({ value, label: titleizeValue(value) }))} />
+                      <Filter label="Repair status" value={repair} onChange={setRepair} options={options.repair.map((value) => ({ value, label: titleizeValue(value) }))} />
                       <Filter label="Observed system / vendor" value={system} onChange={setSystem} options={options.system.map((value) => ({ value, label: value }))} />
                       <Filter label="Audit priority" value={priority} onChange={setPriority} options={options.priority.map((value) => ({ value, label: value }))} />
                     </div>
@@ -228,14 +226,12 @@ export default function VigilFailureModes() {
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
             {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
 
-            <section className="vigil-fm-table" aria-label="Failure mode catalogue">
+            <section className="vigil-fm-table vigil-fm-table-v2" aria-label="Failure mode catalogue">
               <div className="vigil-fm-table-header" aria-hidden="true">
                 <span>Failure Mode</span>
-                <span>Family</span>
                 <span>Severity</span>
                 <span>Evidence</span>
                 <span>Status</span>
-                <span>Repair</span>
                 <span></span>
               </div>
               <div className="vigil-fm-table-body">

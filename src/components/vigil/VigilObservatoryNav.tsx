@@ -3,9 +3,8 @@ import { Link, useLocation } from "wouter";
 
 const links = [
   { href: "/observatory/failure-modes", label: "Failure Modes", subtitle: "What can go wrong?", matches: ["/observatory/failure-modes", "/vigil"] },
-  { href: "/observatory/incidents", label: "Incidents & Observations", subtitle: "What happened?", matches: ["/observatory/incidents"] },
-  { href: "/observatory/repairs", label: "Repairs", subtitle: "What are we doing?", matches: ["/observatory/repairs"] },
-  { href: "/observatory/knowledge-base", label: "Knowledge Base", subtitle: "What should we remember?", matches: ["/observatory/knowledge-base"] },
+  { href: "/observatory/cases", label: "Cases", subtitle: "What happened and what followed?", matches: ["/observatory/cases", "/observatory/reports", "/observatory/incidents", "/observatory/repairs"] },
+  { href: "/observatory/knowledge-base", label: "Knowledge Base", subtitle: "What do we know now?", matches: ["/observatory/knowledge-base"] },
   { href: "/observatory/ledger", label: "Full Ledger", subtitle: "Audit every record", matches: ["/observatory/ledger", "/observatory"] },
 ];
 

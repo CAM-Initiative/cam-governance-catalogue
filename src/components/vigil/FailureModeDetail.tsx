@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
@@ -8,7 +8,7 @@ import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
 function chainHref(id: string) {
   if (/-FM-/i.test(id)) return `/observatory/failure-modes/${encodeURIComponent(id)}`;
   if (/-LEARN-/i.test(id)) return `/observatory/knowledge-base/${encodeURIComponent(id)}`;
-  if (/-OBS-|-RESEARCH-|-PROP-|-PATCH-/i.test(id)) return `/observatory/reports/${encodeURIComponent(id)}`;
+  if (/-OBS-|-RESEARCH-|-PROP-|-PATCH-/i.test(id)) return `/observatory/cases/${encodeURIComponent(id)}`;
   return `/observatory/ledger#vigil-record-${encodeURIComponent(id)}`;
 }
 
@@ -50,6 +50,7 @@ export function FailureModeDetail({ record }: { record: VigilIndexRecord }) {
   const lifecycle = record.publicDisplay.lifecycleLabel ?? record.record_state;
   const repairState = publicRepairStateLabel(detail.repairState, record.repair_status, record.publicDisplay.repairState);
   const leadProvision = record.publicDisplay.corpusProvisions[0];
+  const caseAnchor = record.publicDisplay.chain.observations[0] ?? record.publicDisplay.chain.failureModes[0] ?? record.id;
 
   return (
     <div className="vigil-detail-page">
@@ -73,6 +74,9 @@ export function FailureModeDetail({ record }: { record: VigilIndexRecord }) {
                 <VigilStatusChip value={lifecycle} />
                 <VigilStatusChip value={repairState} prefix="Repair" />
               </div>
+              <Link href={`/observatory/cases/${encodeURIComponent(caseAnchor)}`} className="vigil-case-cta">
+                View related case file <ArrowRight aria-hidden="true" />
+              </Link>
             </div>
 
             <aside className="vigil-corpus-relationship" aria-labelledby="corpus-relationship-heading">
@@ -151,8 +155,13 @@ export function FailureModeDetail({ record }: { record: VigilIndexRecord }) {
             </div>
 
             <aside className="vigil-chain-panel" aria-labelledby="evidence-repair-chain-heading">
-              <p className="vigil-panel-kicker">Trace the provenance</p>
-              <h2 id="evidence-repair-chain-heading">Evidence-to-Repair Chain</h2>
+              <div className="vigil-chain-heading-row">
+                <div>
+                  <p className="vigil-panel-kicker">Trace the provenance</p>
+                  <h2 id="evidence-repair-chain-heading">Evidence-to-Repair Chain</h2>
+                </div>
+                <Link href={`/observatory/cases/${encodeURIComponent(caseAnchor)}`} className="vigil-chain-case-link">Open case →</Link>
+              </div>
               <p className="vigil-chain-key">OBS → FM → PROP → PATCH → LEARN</p>
               {chainIds.length > 0 ? (
                 <div className="vigil-chain-list">

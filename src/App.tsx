@@ -1,6 +1,7 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import "./polish.css";
 import "./vigil-storyboard.css";
+import "./vigil-ux-v2.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
@@ -10,9 +11,11 @@ import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
 import VigilFailureModes from "@/pages/vigil-failure-modes";
-import { VigilIncidents, VigilRepairs } from "@/pages/vigil-projection";
+import VigilCases from "@/pages/vigil-cases";
+import VigilCaseFile from "@/pages/vigil-case-file";
+import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
+import { VigilExternalRequirements, VigilExternalSources } from "@/pages/vigil-reference-knowledge";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
-import EvidenceChainReport from "@/pages/evidence-chain-report";
 import About from "@/pages/about";
 import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
@@ -30,14 +33,24 @@ function Router() {
       <Route path="/catalogue" component={Catalogue} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
-      {/* Specific Observatory resources must precede the ledger catch-all route. */}
+
+      {/* VIGIL answer-first public surfaces. Specific routes precede catch-alls. */}
       <Route path="/observatory/failure-modes/:recordId" component={VigilFailureModes} />
       <Route path="/observatory/failure-modes" component={VigilFailureModes} />
-      <Route path="/observatory/incidents" component={VigilIncidents} />
-      <Route path="/observatory/repairs" component={VigilRepairs} />
+      <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
+      <Route path="/observatory/cases" component={VigilCases} />
+
+      <Route path="/observatory/knowledge-base/governance-lessons" component={VigilKnowledgeBase} />
+      <Route path="/observatory/knowledge-base/external-requirements" component={VigilExternalRequirements} />
+      <Route path="/observatory/knowledge-base/standards-sources" component={VigilExternalSources} />
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
-      <Route path="/observatory/knowledge-base" component={VigilKnowledgeBase} />
-      <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
+      <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
+
+      {/* Compatibility routes keep existing public links stable while routing into Case Files. */}
+      <Route path="/observatory/reports/:recordId" component={VigilCaseFile} />
+      <Route path="/observatory/incidents" component={VigilCases} />
+      <Route path="/observatory/repairs" component={VigilCases} />
+
       <Route path="/observatory/ledger" component={Vigil} />
       <Route path="/observatory" component={Vigil} />
       <Route path="/vigil/:recordId" component={VigilFailureModes} />
