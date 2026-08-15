@@ -398,6 +398,11 @@ function taxonomyCodeFromReference(reference?: string) {
   return reference?.match(/primary classification\s+([A-Z0-9._-]+)/i)?.[1];
 }
 
+function canonicalCodeFromGroup(group?: string) {
+  const normalized = group?.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+  return normalized ? `OPS.FF.${normalized}` : undefined;
+}
+
 function taxonomyNameFromReference(reference?: string) {
   if (!reference) return undefined;
   const afterDash = reference.split("—").slice(1).join("—").trim();
@@ -407,17 +412,13 @@ function taxonomyNameFromReference(reference?: string) {
 
 function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem): TaxonomyMeta {
   const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]) ?? learn?.taxonomyReference;
+  const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
   return {
-    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode ?? taxonomyCodeFromReference(reference),
+    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode ?? taxonomyCodeFromReference(reference) ?? canonicalCodeFromGroup(group),
     name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]) ?? learn?.canonicalFailureName ?? taxonomyNameFromReference(reference),
     reference,
-    group: firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]),
+    group,
   };
-}
-
-function relatedFailureModes(record: VigilIndexRecord) {
-  const linked = isObject(record.raw.linked_records) ? record.raw.linked_records : {};
-  return textList(linked.related_failure_modes).filter((id) => id.toUpperCase() !== record.id.toUpperCase());
 }
 
 function coverageItems(record?: VigilIndexRecord) {
@@ -633,7 +634,6 @@ export default function VigilCaseFile() {
     ? state.learns.find((learn) => learn.primaryFailureMode?.toUpperCase() === failure.id.toUpperCase()) ?? state.learns[0]
     : state.learns[0];
   const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
-  const relatedFailures = failure ? relatedFailureModes(failure) : [];
   const reportId = failure?.id ?? state.sourceId;
 
   const existingCoverage = coverageItems(failure);
@@ -690,12 +690,11 @@ export default function VigilCaseFile() {
         </div>
         <div className="vigil-classification-identity">
           <dl>
-            <Field label="Canonical failure code" value={taxonomy.code} mono />
+            <Field label="Canonical code" value={taxonomy.code} mono />
             <Field label="Failure type" value={family} />
             <Field label="Canonical failure name" value={taxonomy.name} />
             <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
-            <Field label="Corpus reference" value={taxonomy.reference} />
-            {!taxonomy.code && taxonomy.group && <Field label="Canonical failure group" value={taxonomy.group} mono />}
+            <Field label="Failure Mode Corpus Reference" value={taxonomy.reference} />
           </dl>
         </div>
         <div className="vigil-classify-definition">
@@ -706,7 +705,6 @@ export default function VigilCaseFile() {
           <div><p className="vigil-library-kicker">Recognition threshold</p><p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p></div>
           <div><p className="vigil-library-kicker">Governance significance</p><p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p></div>
         </div>
-        {relatedFailures.length > 0 && <div className="vigil-related-failures"><strong>Related failure modes</strong><p>{relatedFailures.join(" · ")}</p><small>Context only; these do not alter this Case File’s authoritative classification or severity.</small></div>}
       </article> : <p className="vigil-case-empty">No authoritative failure mode classification is linked yet.</p>}
     </>;
 
