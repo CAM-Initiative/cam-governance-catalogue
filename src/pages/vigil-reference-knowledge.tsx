@@ -167,9 +167,7 @@ export function VigilExternalSources() {
   return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
     <Link href="/observatory/knowledge-base" className="vigil-back-link">← Knowledge Base</Link>
     <header className="vigil-simple-hero vigil-reference-hero">
-      <p className="vigil-library-kicker">Layer 0 source identity and lifecycle</p>
       <h1>Standards &amp; Sources</h1>
-      <p>Browse the authoritative publisher or regulator identifiers VIGIL uses to monitor external governance instruments. OECD.AI and other third-party trackers may assist discovery but are not displayed as canonical authority.</p>
     </header>
     <SearchControl value={query} onChange={setQuery} placeholder="Search publisher, instrument, jurisdiction, canonical identifier or version…" />
 
