@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -31,6 +31,15 @@ function caseAnchors(records: VigilIndexRecord[]) {
   return [...evidenceOrigins, ...embeddedEvidenceFailures]
     .filter((record, index, all) => all.findIndex((candidate) => candidate.id === record.id) === index)
     .sort((a, b) => dateFor(b).localeCompare(dateFor(a)) || a.title.localeCompare(b.title));
+}
+
+function compactEvidence(value?: string) {
+  const normalized = String(value ?? "").toLowerCase();
+  if (!normalized) return "Evidence recorded";
+  if (normalized.includes("verified") || normalized.includes("confirmed")) return "Verified";
+  if (normalized.includes("strong") || normalized.includes("substantial") || normalized.includes("multiple")) return "Supported";
+  if (normalized.includes("partial") || normalized.includes("limited") || normalized.includes("provisional") || normalized.includes("uncertain")) return "Partial";
+  return "Evidence recorded";
 }
 
 function ChainSummary({ record }: { record: VigilIndexRecord }) {
@@ -91,25 +100,30 @@ export default function VigilCases() {
 
           {state.status === "ready" && (
             <section className="vigil-case-list" aria-label="VIGIL Case Files">
-              {filtered.map((record) => (
-                <article key={record.id} className="vigil-case-card">
-                  <div className="vigil-case-card-main">
-                    <div className="vigil-case-meta-line">
-                      <span>{record.id}</span>
-                      <span>{titleizeValue(record.record_type)}</span>
-                      {dateFor(record) && <span>{dateFor(record)}</span>}
-                    </div>
-                    <h2>{record.title}</h2>
-                    <p>{caseSummary(record)}</p>
-                    <ChainSummary record={record} />
-                  </div>
-                  <div className="vigil-case-card-side">
-                    <VigilStatusChip value={record.evidence_confidence} prefix="Evidence" />
-                    <VigilStatusChip value={record.publicDisplay.lifecycleLabel ?? record.record_state} />
-                    <Link href={`/observatory/cases/${encodeURIComponent(record.id)}`} className="vigil-case-open-link">Open case file <ArrowRight aria-hidden="true" /></Link>
-                  </div>
-                </article>
-              ))}
+              {filtered.map((record) => {
+                const href = `/observatory/cases/${encodeURIComponent(record.id)}`;
+                return (
+                  <article key={record.id} className="vigil-case-card">
+                    <Link href={href} className="vigil-case-card-link" aria-label={`Open case file ${record.title}`}>
+                      <div className="vigil-case-card-main">
+                        <div className="vigil-case-meta-line">
+                          <span>{record.id}</span>
+                          <span>{titleizeValue(record.record_type)}</span>
+                          {dateFor(record) && <span>{dateFor(record)}</span>}
+                        </div>
+                        <h2>{record.title}</h2>
+                        <p>{caseSummary(record)}</p>
+                        <ChainSummary record={record} />
+                      </div>
+                      <div className="vigil-case-card-side">
+                        <VigilStatusChip value={compactEvidence(record.evidence_confidence)} prefix="Evidence" />
+                        <VigilStatusChip value={record.publicDisplay.lifecycleLabel ?? record.record_state} />
+                        <span className="vigil-case-open-link">Open case file →</span>
+                      </div>
+                    </Link>
+                  </article>
+                );
+              })}
               {filtered.length === 0 && <div className="vigil-empty-panel">No case files match that search. Try a broader description.</div>}
             </section>
           )}

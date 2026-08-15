@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, Library, Scale } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
@@ -20,7 +20,7 @@ function isLearnRecord(record: Record<string, unknown>) {
   return /^VIGIL-\d{4}-LEARN-\d{4}$/i.test(id) || type === "learn";
 }
 
-function CollectionCard({ href, icon, title, description, status }: { href: string; icon: ReactNode; title: string; description: string; status: string }) {
+function CollectionCard({ href, icon, title, description, status }: { href: string; icon: React.ReactNode; title: string; description: string; status: string }) {
   return (
     <article className="vigil-knowledge-collection">
       <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
@@ -62,12 +62,12 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL accumulated knowledge</p>
             <h1>Knowledge Base</h1>
-            <p>Search durable governance lessons and authoritative external reference material without collapsing their different evidentiary roles or record classes.</p>
+            <p>Browse reusable governance learning and authoritative external reference material from one public knowledge surface.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
             <CollectionCard
-              href="/observatory/knowledge-base/governance-lessons"
+              href="/observatory/lessons"
               icon={<BookOpen />}
               title="Governance Lessons"
               description="Published LEARN records: what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
@@ -84,14 +84,10 @@ export default function VigilKnowledgeHub() {
               href="/observatory/knowledge-base/standards-sources"
               icon={<Library />}
               title="Standards & Sources"
-              description="The authoritative source/version register used to monitor external governance instruments, publisher identifiers and lifecycle state."
+              description="Authoritative source identity, publisher identifiers, versions and lifecycle state for external governance instruments."
               status={state.sourcesAvailable ? `${state.sources ?? 0} registered source versions` : "Canonical source register unavailable"}
             />
           </section>
-
-          <aside className="vigil-knowledge-boundary">
-            <strong>Why these remain separate:</strong> LEARN is a VIGIL learning record class. External requirements are maintained reference data. Standards & Sources records source identity and version provenance. The public Knowledge Base brings them together for discovery without turning them into the same kind of record.
-          </aside>
         </div>
       </main>
     </Shell>

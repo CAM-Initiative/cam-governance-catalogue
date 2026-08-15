@@ -2,6 +2,7 @@ import { Switch, Route, Router as WouterRouter } from "wouter";
 import "./polish.css";
 import "./vigil-storyboard.css";
 import "./vigil-ux-v2.css";
+import "./vigil-ux-v2-corrections.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
@@ -40,7 +41,8 @@ function Router() {
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/cases" component={VigilCases} />
 
-      <Route path="/observatory/knowledge-base/governance-lessons" component={VigilKnowledgeBase} />
+      {/* Governance Lessons remains a LEARN projection; the Knowledge Base itself is broader. */}
+      <Route path="/observatory/lessons" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base/external-requirements" component={VigilExternalRequirements} />
       <Route path="/observatory/knowledge-base/standards-sources" component={VigilExternalSources} />
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
