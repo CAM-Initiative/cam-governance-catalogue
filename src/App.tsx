@@ -3,6 +3,7 @@ import "./polish.css";
 import "./vigil-storyboard.css";
 import "./vigil-ux-v2.css";
 import "./vigil-ux-v2-corrections.css";
+import "./vigil-ux-v3.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
@@ -11,7 +12,6 @@ import Provenance from "@/pages/provenance";
 import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
-import VigilFailureModes from "@/pages/vigil-failure-modes";
 import VigilCases from "@/pages/vigil-cases";
 import VigilCaseFile from "@/pages/vigil-case-file";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
@@ -35,11 +35,11 @@ function Router() {
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
 
-      {/* VIGIL answer-first public surfaces. Specific routes precede catch-alls. */}
-      <Route path="/observatory/failure-modes/:recordId" component={VigilFailureModes} />
-      <Route path="/observatory/failure-modes" component={VigilFailureModes} />
+      {/* VIGIL public investigations. Case Files are FM-centred; historical URLs remain compatible. */}
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/cases" component={VigilCases} />
+      <Route path="/observatory/failure-modes/:recordId" component={VigilCaseFile} />
+      <Route path="/observatory/failure-modes" component={VigilCases} />
 
       {/* Governance Lessons remains a LEARN projection; the Knowledge Base itself is broader. */}
       <Route path="/observatory/lessons" component={VigilKnowledgeBase} />
@@ -48,15 +48,15 @@ function Router() {
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 
-      {/* Compatibility routes keep existing public links stable while routing into Case Files. */}
+      {/* Compatibility routes resolve into the same FM-centred investigation surface. */}
       <Route path="/observatory/reports/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/incidents" component={VigilCases} />
       <Route path="/observatory/repairs" component={VigilCases} />
 
       <Route path="/observatory/ledger" component={Vigil} />
       <Route path="/observatory" component={Vigil} />
-      <Route path="/vigil/:recordId" component={VigilFailureModes} />
-      <Route path="/vigil" component={VigilFailureModes} />
+      <Route path="/vigil/:recordId" component={VigilCaseFile} />
+      <Route path="/vigil" component={VigilCases} />
       <Route component={NotFound} />
     </Switch>
   );

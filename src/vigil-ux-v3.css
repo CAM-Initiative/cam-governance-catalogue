@@ -1,0 +1,510 @@
+/* VIGIL UX v3 — one FM-centred Case Files surface, clearer investigation flow,
+   and a readable typography floor. This intentionally overrides v2 without
+   altering the shared CAM palette contract. */
+
+/* Three public VIGIL destinations: Case Files, Knowledge Base, Full Ledger. */
+.vigil-app-nav {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vigil-app-tagline,
+.vigil-app-nav-subtitle {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  letter-spacing: 0.035em;
+}
+
+.vigil-app-nav-label {
+  font-size: 0.86rem;
+}
+
+.vigil-library-kicker,
+.vigil-panel-kicker,
+.vigil-evidence-kicker {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* Case Files landing page — FM records only, with one severity signal. */
+.vigil-case-search-row-v3 {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(220px, 285px) auto;
+  align-items: stretch;
+  gap: 0.8rem;
+}
+
+.vigil-case-search-row-v3 .vigil-search-control {
+  max-width: none;
+}
+
+.vigil-case-search-row-v3 .vigil-search-control input {
+  font-size: 0.9rem;
+}
+
+.vigil-case-family-select > span {
+  font-size: 0.75rem;
+}
+
+.vigil-case-family-select select {
+  font-size: 0.86rem;
+}
+
+.vigil-case-count {
+  align-self: center;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.vigil-case-card-v3 .vigil-case-card-link {
+  grid-template-columns: minmax(0, 1fr) minmax(145px, 175px);
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.15rem;
+}
+
+.vigil-case-card-v3 .vigil-case-meta-line {
+  font-size: 0.75rem;
+  letter-spacing: 0.045em;
+}
+
+.vigil-case-card-v3 .vigil-case-card-main h2 {
+  margin-top: 0.4rem;
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.vigil-case-card-v3 .vigil-case-card-main > p {
+  margin-top: 0.42rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  -webkit-line-clamp: 2;
+}
+
+.vigil-case-card-side-v3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.65rem;
+  padding-left: 1rem;
+}
+
+.vigil-case-card-side-v3 .vigil-status-chip,
+.vigil-case-file-page .vigil-status-chip {
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+
+.vigil-case-card-side-v3 .vigil-case-open-link {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+/* Case File hero: failure identity first, machinery later. */
+.vigil-case-file-hero-v3 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.35rem;
+}
+
+.vigil-case-file-hero-v3 > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.vigil-case-file-hero-v3 h1 {
+  max-width: 980px;
+  font-size: clamp(2.1rem, 3vw, 3.25rem);
+}
+
+.vigil-case-file-hero-v3 > div:first-child > p:last-of-type {
+  max-width: 930px;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.vigil-case-identity-line,
+.vigil-case-plain-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+  margin-top: 0.65rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-identity-line span:first-child {
+  color: hsl(var(--primary));
+  font-weight: 700;
+}
+
+.vigil-case-plain-meta strong {
+  font-weight: 650;
+  color: hsl(var(--foreground));
+}
+
+.vigil-case-severity {
+  flex: 0 0 auto;
+  padding-top: 0.35rem;
+}
+
+/* Unnumbered semantic overview inherited from the strongest Failure Mode view. */
+.vigil-investigation-overview {
+  margin-top: 0.8rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.55rem;
+  background: hsl(var(--background));
+}
+
+.vigil-overview-definition {
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.42);
+}
+
+.vigil-overview-definition > p:last-child {
+  max-width: 1050px;
+  margin: 0.45rem 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-overview-grid > div {
+  padding: 1rem 1.15rem 1.1rem;
+}
+
+.vigil-overview-grid > div + div {
+  border-left: 1px solid hsl(var(--border));
+}
+
+.vigil-overview-grid h2 {
+  margin: 0.35rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 1.08rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.vigil-overview-grid > div > p:last-child {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Investigation workflow. */
+.vigil-case-stage-nav a {
+  min-height: 48px;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.86rem;
+  line-height: 1.3;
+}
+
+.vigil-case-stage-nav span {
+  font-size: 0.75rem;
+}
+
+.vigil-case-section > header {
+  padding: 0.9rem 1rem;
+}
+
+.vigil-case-section > header > span {
+  font-size: 0.78rem;
+}
+
+.vigil-case-section > header h2 {
+  font-size: 1.35rem;
+}
+
+.vigil-case-section > header p {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.vigil-case-section-body {
+  gap: 0.75rem;
+  padding: 0.9rem 1rem 1rem;
+}
+
+.vigil-case-record {
+  padding: 0.9rem;
+}
+
+.vigil-case-record-heading {
+  grid-template-columns: minmax(160px, 0.3fr) minmax(0, 1fr);
+  gap: 0.9rem;
+}
+
+.vigil-case-record-heading > span {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.vigil-case-record-heading h3 {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.vigil-case-record > p,
+.vigil-case-record ol,
+.vigil-case-empty,
+.vigil-case-narrative p,
+.vigil-case-callout p,
+.vigil-observation-context p,
+.vigil-response-meta,
+.vigil-case-provision-list p,
+.vigil-provenance-note {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.vigil-case-record > a,
+.vigil-commit-links a,
+.vigil-record-provenance a,
+.vigil-case-citations a {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.vigil-case-field dt {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.vigil-case-field dd,
+.vigil-case-field dd.is-mono {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.vigil-classification-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.vigil-classification-grid .vigil-status-chip {
+  margin-top: 0.15rem;
+}
+
+.vigil-case-narrative,
+.vigil-case-callout {
+  margin-top: 0.75rem;
+}
+
+.vigil-case-narrative > strong,
+.vigil-case-callout > strong,
+.vigil-observation-context strong {
+  display: block;
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-narrative p,
+.vigil-case-callout p,
+.vigil-observation-context p {
+  margin: 0.35rem 0 0;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-observation-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.vigil-response-meta {
+  margin: 0.7rem 0 0;
+  font-family: var(--app-font-mono);
+  color: hsl(var(--muted-foreground));
+}
+
+/* Evidence keeps semantic distinctions, but confidence is plain text rather than another chip. */
+.vigil-case-file-page .vigil-evidence-header {
+  gap: 1.25rem;
+}
+
+.vigil-case-file-page .vigil-evidence-header h3 {
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.vigil-case-file-page .vigil-evidence-source-line,
+.vigil-evidence-confidence,
+.vigil-case-file-page .vigil-evidence-meta,
+.vigil-case-file-page .vigil-evidence-links a {
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.vigil-evidence-confidence {
+  flex: 0 0 auto;
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-evidence-confidence strong {
+  color: hsl(var(--foreground));
+}
+
+.vigil-case-file-page .vigil-evidence-column h4 {
+  font-size: 0.8rem;
+}
+
+.vigil-case-file-page .vigil-evidence-column p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.vigil-case-source-preview article,
+.vigil-case-citations li,
+.vigil-record-provenance article,
+.vigil-case-provision-list > div,
+.vigil-implementation-provenance {
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.vigil-case-source-preview article > span,
+.vigil-case-citations li > span,
+.vigil-record-provenance article > span,
+.vigil-internal-id,
+.vigil-source-internal {
+  font-size: 0.75rem;
+}
+
+/* Broader VIGIL v2 public surfaces should not solve density by dropping into 8–9px type. */
+.vigil-knowledge-copy > p:not(.vigil-library-kicker),
+.vigil-reference-state p {
+  font-size: 0.9rem;
+}
+
+.vigil-knowledge-copy a,
+.vigil-reference-group summary small,
+.vigil-reference-group summary b,
+.vigil-requirement-reference,
+.vigil-requirement-meta,
+.vigil-internal-id,
+.vigil-source-table-head,
+.vigil-source-row > strong,
+.vigil-source-internal {
+  font-size: 0.75rem;
+}
+
+.vigil-requirement-row h3,
+.vigil-source-row h2 {
+  font-size: 0.92rem;
+}
+
+.vigil-requirement-concepts,
+.vigil-source-row > div:first-child p,
+.vigil-source-row > span {
+  font-size: 0.82rem;
+}
+
+@media (max-width: 980px) {
+  .vigil-case-search-row-v3 {
+    grid-template-columns: minmax(0, 1fr) minmax(210px, 260px);
+  }
+
+  .vigil-case-count {
+    grid-column: 1 / -1;
+  }
+
+  .vigil-classification-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .vigil-case-card-v3 .vigil-case-card-link,
+  .vigil-case-search-row-v3 {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-case-card-side-v3 {
+    align-items: flex-start;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .vigil-case-file-hero-v3 {
+    flex-direction: column;
+  }
+
+  .vigil-case-severity {
+    padding-top: 0;
+  }
+
+  .vigil-overview-grid,
+  .vigil-observation-context {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-overview-grid > div + div {
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+
+  .vigil-case-stage-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vigil-case-stage-nav a:nth-child(3) {
+    border-right: 0;
+  }
+
+  .vigil-case-stage-nav a:nth-child(-n + 3) {
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .vigil-classification-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .vigil-case-stage-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vigil-case-stage-nav a {
+    border-right: 1px solid hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .vigil-case-stage-nav a:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .vigil-case-stage-nav a:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .vigil-case-record-heading {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+}

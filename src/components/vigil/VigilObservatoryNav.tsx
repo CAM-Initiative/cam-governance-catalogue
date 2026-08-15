@@ -1,9 +1,9 @@
 import { ShieldCheck } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
+// Legacy Failure Modes routes resolve into the FM-centred Case Files surface.
 const links = [
-  { href: "/observatory/failure-modes", label: "Failure Modes", subtitle: "What can go wrong?", matches: ["/observatory/failure-modes", "/vigil"] },
-  { href: "/observatory/cases", label: "Cases", subtitle: "What happened and what followed?", matches: ["/observatory/cases", "/observatory/reports", "/observatory/incidents", "/observatory/repairs"] },
+  { href: "/observatory/cases", label: "Case Files", subtitle: "AI failure mode investigations", matches: ["/observatory/cases", "/observatory/failure-modes", "/observatory/reports", "/observatory/incidents", "/observatory/repairs", "/vigil"] },
   { href: "/observatory/knowledge-base", label: "Knowledge Base", subtitle: "What do we know now?", matches: ["/observatory/knowledge-base", "/observatory/lessons"] },
   { href: "/observatory/ledger", label: "Full Ledger", subtitle: "Audit every record", matches: ["/observatory/ledger", "/observatory"] },
 ];
@@ -14,11 +14,11 @@ export function VigilObservatoryNav() {
     <section className="vigil-local-nav vigil-app-shell" aria-label="VIGIL Observatory">
       <div className="container mx-auto max-w-[1500px] px-4 sm:px-6 md:px-10">
         <div className="vigil-app-shell-inner">
-          <Link href="/observatory/failure-modes" className="vigil-app-identity">
+          <Link href="/observatory/cases" className="vigil-app-identity">
             <span className="vigil-app-mark" aria-hidden="true"><ShieldCheck /></span>
             <span className="min-w-0">
               <span className="vigil-app-name">VIGIL Observatory</span>
-              <span className="vigil-app-tagline">Evidence → diagnosis → repair → learning</span>
+              <span className="vigil-app-tagline">Evidence → classify → diagnose → respond → learn</span>
             </span>
           </Link>
           <nav className="hide-scrollbar vigil-app-nav" aria-label="Observatory sections">

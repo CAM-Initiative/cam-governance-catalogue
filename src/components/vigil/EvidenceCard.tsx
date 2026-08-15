@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import type { PublicEvidenceCard } from "@/lib/vigilPublicDisplay";
-import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
+import { titleizeValue } from "@/lib/vigilPresentation";
 
 function TextSection({ title, text, boundary = false }: { title: string; text?: string; boundary?: boolean }) {
   if (!text) return null;
@@ -21,7 +21,7 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
           <h3>{evidence.title}</h3>
           <p className="vigil-evidence-source-line">{[evidence.publisher, evidence.date, evidence.sourceType].filter(Boolean).join(" · ")}</p>
         </div>
-        <VigilStatusChip value={evidence.confidence} prefix="Confidence" />
+        {evidence.confidence && <p className="vigil-evidence-confidence"><strong>Evidence confidence:</strong> {titleizeValue(evidence.confidence)}</p>}
       </header>
 
       {(evidence.sourceRole || evidence.sourceResidence || evidence.directReviewStatus || evidence.evidenceModalities.length > 0) && (

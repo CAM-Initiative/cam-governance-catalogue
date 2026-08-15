@@ -9,7 +9,7 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy", internal: true },
-  { href: "/observatory/failure-modes", label: "VIGIL", internal: true },
+  { href: "/observatory/cases", label: "VIGIL", internal: true },
 ];
 
 const mobileLinks = [
@@ -19,8 +19,7 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy Papers", internal: true },
-  { href: "/observatory/failure-modes", label: "VIGIL Failure Modes", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Cases", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "/observatory/ledger", label: "VIGIL Full Ledger", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
@@ -39,7 +38,6 @@ const constitutionLinks = [
 ];
 
 const vigilLinks = [
-  { href: "/observatory/failure-modes", label: "Failure Mode Library" },
   { href: "/observatory/cases", label: "Case Files" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/ledger", label: "Full Ledger" },
@@ -153,7 +151,7 @@ export function Shell({ children }: { children: ReactNode }) {
             ))}
             <div className="group relative">
               <Link
-                href="/observatory/failure-modes"
+                href="/observatory/cases"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
