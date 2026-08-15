@@ -26,6 +26,24 @@ function clean(value?: string) {
   return value?.replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function comparable(value?: string) {
+  return String(value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function sourceSummaryMeta(source: ExternalSourceEntry) {
+  const title = comparable(source.title);
+  const issuer = comparable(source.issuer);
+  const visibleIssuer = source.issuer && issuer && !title.includes(issuer) ? source.issuer : undefined;
+  const values = [visibleIssuer, source.jurisdiction, clean(source.source_class)].filter((value): value is string => Boolean(value));
+  const seen = new Set<string>();
+  return values.filter((value) => {
+    const key = comparable(value);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function sourceMap(entries: ExternalSourceEntry[]) {
   return new Map(entries.map((entry) => [externalSourceKey(entry), entry]));
 }
@@ -159,14 +177,17 @@ export function VigilExternalSources() {
     {state.status === "unavailable" && <div className="vigil-reference-state"><h2>Source register unavailable</h2><p>{state.message}</p></div>}
     {state.status === "ready" && <section className="vigil-source-table" aria-label="Authoritative external governance sources">
       <div className="vigil-source-table-head" aria-hidden="true"><span>Instrument</span><span>Canonical identifier</span><span>Version</span><span>Status</span><span></span></div>
-      {filtered.map((source) => <article key={`${source.vigil_source_id}-${source.source_version}`} className="vigil-source-row">
-        <div><h2>{source.title}</h2><p>{[source.issuer, source.jurisdiction, clean(source.source_class)].filter(Boolean).join(" · ")}</p></div>
-        <strong>{canonicalIdentifierLabel(source)}</strong>
-        <span>{source.source_version}</span>
-        <span>{clean(source.source_lifecycle_state) ?? "Not specified"}</span>
-        <div>{source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" aria-label={`Open official source for ${source.title}`}><ExternalLink aria-hidden="true" /></a>}</div>
-        <p className="vigil-source-internal">VIGIL internal: {source.vigil_source_id}</p>
-      </article>)}
+      {filtered.map((source) => {
+        const summaryMeta = sourceSummaryMeta(source);
+        return <article key={`${source.vigil_source_id}-${source.source_version}`} className="vigil-source-row">
+          <div><h2>{source.title}</h2>{summaryMeta.length > 0 && <p className="vigil-source-summary-meta">{summaryMeta.join(" · ")}</p>}</div>
+          <strong>{canonicalIdentifierLabel(source)}</strong>
+          <span>{source.source_version}</span>
+          <span>{clean(source.source_lifecycle_state) ?? "Not specified"}</span>
+          <div>{source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" aria-label={`Open official source for ${source.title}`}><ExternalLink aria-hidden="true" /></a>}</div>
+          <p className="vigil-source-internal">VIGIL internal: {source.vigil_source_id}</p>
+        </article>;
+      })}
       {filtered.length === 0 && <div className="vigil-empty-panel">No registered sources match that search.</div>}
     </section>}
   </div></main></Shell>;
