@@ -3,13 +3,13 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
 import {
   canonicalComparisonKey,
   deriveFailureFamilyCounts,
   normalizeFailureFamilyLabel,
   normalizeRecords,
-  titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
@@ -20,6 +20,7 @@ type PageState =
   | { status: "error"; message: string };
 
 const PAGE_SIZE = 18;
+const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, SU: 5 };
 
 function compactId(id: string) {
   return id.replace(/^VIGIL-\d{4}-/i, "");
@@ -36,25 +37,14 @@ function familyLabel(record: VigilIndexRecord) {
   return normalizeFailureFamilyLabel(record.failure_family)?.replace(/\s+Failures$/i, "") ?? record.failure_family ?? "Not classified";
 }
 
+function severityRank(record: VigilIndexRecord) {
+  return SEVERITY_ORDER[String(record.severity ?? "SU").trim().toUpperCase()] ?? 6;
+}
+
 function failureModeCases(records: VigilIndexRecord[]) {
   return records
     .filter((record) => record.record_type === "failure_mode")
-    .sort((a, b) => a.id.localeCompare(b.id));
-}
-
-function severityDisplay(value?: string) {
-  const raw = value?.trim();
-  if (!raw) return "Not assessed";
-  const code = raw.toUpperCase();
-  const labels: Record<string, string> = {
-    S0: "Critical",
-    S1: "High",
-    S2: "Moderate",
-    S3: "Low",
-    S4: "Negligible",
-    SU: "To be assessed",
-  };
-  return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
+    .sort((a, b) => severityRank(a) - severityRank(b) || a.id.localeCompare(b.id, undefined, { numeric: true }));
 }
 
 function values(records: VigilIndexRecord[], getter: (record: VigilIndexRecord) => string | undefined) {
@@ -145,7 +135,7 @@ export default function VigilCases() {
                 </label>
               </div>
               <div className="vigil-result-summary">
-                <span>{filtered.length} matching case {filtered.length === 1 ? "file" : "files"}</span>
+                <span>{filtered.length} matching case {filtered.length === 1 ? "file" : "files"} · ordered by severity</span>
                 {(search || family) && <button type="button" onClick={() => { setSearch(""); setFamily(""); }}>Clear filters</button>}
               </div>
             </section>
@@ -175,7 +165,7 @@ export default function VigilCases() {
                           </div>
                         </div>
                         <CaseCell label="Failure Type"><span className="vigil-case-table-text">{familyLabel(record)}</span></CaseCell>
-                        <CaseCell label="Severity"><span className="vigil-case-table-severity">{severityDisplay(record.severity)}</span></CaseCell>
+                        <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>

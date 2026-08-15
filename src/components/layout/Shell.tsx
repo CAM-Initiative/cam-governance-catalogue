@@ -19,6 +19,7 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy Papers", internal: true },
+  { href: "/observatory/about", label: "About VIGIL", internal: true },
   { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "/observatory/ledger", label: "VIGIL Full Ledger", internal: true },
@@ -38,6 +39,7 @@ const constitutionLinks = [
 ];
 
 const vigilLinks = [
+  { href: "/observatory/about", label: "About VIGIL" },
   { href: "/observatory/cases", label: "Case Files" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/ledger", label: "Full Ledger" },
@@ -159,7 +161,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 VIGIL
               </Link>
               <div className="invisible absolute left-0 top-full min-w-64 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
+                <div className="rounded-xl border border-primary/35 bg-background p-2 shadow-2xl ring-1 ring-primary/15">
                   {vigilLinks.map((link) => (
                     <Link
                       key={link.href}
