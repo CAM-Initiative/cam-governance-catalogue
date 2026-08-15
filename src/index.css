@@ -55,7 +55,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Warm parchment / archival cream palette */
+/* CAM light appearance: clean canvas with warm archival working surfaces. */
 :root {
   --button-outline: rgba(0,0,0, .08);
   --badge-outline: rgba(0,0,0, .05);
@@ -63,18 +63,16 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .06);
 
-  /* Warm parchment background */
-  --background: 38 40% 93%;
+  --background: 40 33% 98%;
 
   /* Dark warm text */
   --foreground: 28 25% 16%;
 
-  /* Slightly lighter card surface */
-  --card: 36 35% 96%;
+  --card: 38 42% 95%;
   --card-foreground: 28 25% 16%;
   --card-border: 38 22% 84%;
 
-  --popover: 36 35% 96%;
+  --popover: 40 40% 98%;
   --popover-foreground: 28 25% 16%;
   --popover-border: 38 22% 84%;
 
@@ -82,14 +80,14 @@
   --primary: 38 62% 40%;
   --primary-foreground: 38 40% 95%;
 
-  --secondary: 38 30% 88%;
+  --secondary: 38 32% 91%;
   --secondary-foreground: 28 25% 20%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --muted: 38 25% 88%;
+  --muted: 38 24% 92%;
   --muted-foreground: 30 14% 46%;
 
-  --accent: 38 30% 88%;
+  --accent: 38 32% 91%;
   --accent-foreground: 28 25% 20%;
 
   --destructive: 4 58% 45%;
@@ -99,7 +97,7 @@
   --input: 38 20% 86%;
   --ring: 38 62% 40%;
 
-  --sidebar: 38 35% 91%;
+  --sidebar: 38 35% 94%;
   --sidebar-foreground: 28 25% 16%;
   --sidebar-border: 38 22% 83%;
   --sidebar-primary: 38 62% 40%;
@@ -125,6 +123,28 @@
   --cam-corpus-metadata-foreground: var(--secondary-foreground);
   --cam-corpus-metadata-border: var(--cam-corpus-selected-border);
 
+  /* Public-surface aliases remain subordinate to the CAM palette. */
+  --cam-surface-canvas: var(--background);
+  --cam-surface-raised: var(--card);
+  --cam-surface-muted: var(--secondary);
+  --cam-accent: var(--primary);
+  --vigil-nav-active: var(--cam-corpus-selected);
+  --vigil-surface: var(--cam-surface-raised);
+  --vigil-surface-muted: var(--cam-surface-muted);
+  --vigil-accent: var(--cam-accent);
+
+  /* Semantic status tokens are reserved for status meaning. */
+  --status-critical: 4 62% 39%;
+  --status-critical-surface: 4 60% 95%;
+  --status-high: 20 76% 38%;
+  --status-high-surface: 24 78% 94%;
+  --status-moderate: 38 72% 31%;
+  --status-moderate-surface: 40 75% 92%;
+  --status-low: 210 42% 34%;
+  --status-low-surface: 210 50% 95%;
+  --status-neutral: 30 12% 38%;
+  --status-neutral-surface: 35 18% 93%;
+
   --shadow-sm: 0 1px 2px 0 rgba(80, 55, 20, 0.08);
   --shadow: 0 1px 3px 0 rgba(80, 55, 20, 0.1), 0 1px 2px -1px rgba(80, 55, 20, 0.06);
   --shadow-md: 0 4px 6px -1px rgba(80, 55, 20, 0.1), 0 2px 4px -2px rgba(80, 55, 20, 0.06);
@@ -146,6 +166,62 @@
   --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* CAM dark appearance: warm ink and bronze, never an inverted or separate palette. */
+html[data-theme="dark"] {
+  --button-outline: rgba(255,255,255, .1);
+  --badge-outline: rgba(255,255,255, .08);
+  --elevate-1: rgba(255,255,255, .035);
+  --elevate-2: rgba(255,255,255, .07);
+  --background: 30 14% 10%;
+  --foreground: 38 24% 90%;
+  --card: 31 14% 14%;
+  --card-foreground: 38 24% 90%;
+  --card-border: 34 17% 27%;
+  --popover: 31 14% 13%;
+  --popover-foreground: 38 24% 90%;
+  --popover-border: 34 17% 29%;
+  --primary: 38 62% 58%;
+  --primary-foreground: 30 18% 10%;
+  --secondary: 33 15% 20%;
+  --secondary-foreground: 38 22% 88%;
+  --muted: 32 12% 18%;
+  --muted-foreground: 35 14% 68%;
+  --accent: 34 18% 22%;
+  --accent-foreground: 38 25% 92%;
+  --destructive: 4 62% 57%;
+  --destructive-foreground: 30 18% 9%;
+  --border: 34 15% 27%;
+  --input: 34 14% 24%;
+  --ring: 38 62% 58%;
+  --sidebar: 31 15% 12%;
+  --sidebar-foreground: 38 24% 90%;
+  --sidebar-border: 34 15% 27%;
+  --sidebar-primary: 38 62% 58%;
+  --sidebar-primary-foreground: 30 18% 10%;
+  --sidebar-accent: 34 18% 22%;
+  --sidebar-accent-foreground: 38 25% 92%;
+  --sidebar-ring: 38 62% 58%;
+  --cam-corpus-selected: 37 29% 27%;
+  --cam-corpus-selected-foreground: 39 72% 77%;
+  --cam-corpus-selected-border: 38 62% 58%;
+  --status-critical: 4 72% 72%;
+  --status-critical-surface: 4 34% 19%;
+  --status-high: 24 78% 70%;
+  --status-high-surface: 22 34% 19%;
+  --status-moderate: 42 72% 70%;
+  --status-moderate-surface: 40 30% 19%;
+  --status-low: 205 46% 73%;
+  --status-low-surface: 207 26% 20%;
+  --status-neutral: 35 16% 73%;
+  --status-neutral-surface: 32 13% 19%;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .28);
+  --shadow: 0 2px 6px rgba(0, 0, 0, .32);
+  --shadow-md: 0 6px 14px rgba(0, 0, 0, .34);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, .38);
+  --shadow-xl: 0 20px 42px rgba(0, 0, 0, .42);
+  --shadow-2xl: 0 24px 52px rgba(0, 0, 0, .48);
+}
+
 @layer base {
   * {
     border-color: hsl(var(--border));
@@ -155,6 +231,10 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
   }
 
   body {
@@ -192,9 +272,102 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cam-parchment-card {
-  background: hsl(36 55% 98%);
-  border: 1px solid hsl(38 22% 83%);
-  box-shadow: 0 8px 24px rgba(80, 55, 20, 0.06);
+  background: hsl(var(--vigil-surface));
+  border: 1px solid hsl(var(--card-border));
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: hsl(var(--primary) / .55);
+  color: hsl(var(--primary));
+}
+
+.theme-toggle:focus-visible,
+.vigil-local-nav-link:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+.theme-toggle svg {
+  height: 1rem;
+  width: 1rem;
+}
+
+.vigil-local-nav {
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--vigil-surface) / .78);
+  backdrop-filter: blur(12px);
+}
+
+.vigil-local-nav-link {
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  border-radius: .55rem;
+  padding: .58rem .78rem;
+  color: hsl(var(--muted-foreground));
+  font-family: var(--app-font-mono);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.vigil-local-nav-link:hover {
+  border-color: hsl(var(--primary) / .3);
+  background: hsl(var(--vigil-surface-muted));
+  color: hsl(var(--foreground));
+}
+
+.vigil-local-nav-link.is-active {
+  border-color: hsl(var(--cam-corpus-selected-border) / .62);
+  background: hsl(var(--vigil-nav-active));
+  color: hsl(var(--cam-corpus-selected-foreground));
+}
+
+.vigil-status-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: .28rem .58rem;
+  font-family: var(--app-font-mono);
+  font-size: .66rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.vigil-status-chip[data-tone="critical"] { background: hsl(var(--status-critical-surface)); color: hsl(var(--status-critical)); }
+.vigil-status-chip[data-tone="high"] { background: hsl(var(--status-high-surface)); color: hsl(var(--status-high)); }
+.vigil-status-chip[data-tone="moderate"] { background: hsl(var(--status-moderate-surface)); color: hsl(var(--status-moderate)); }
+.vigil-status-chip[data-tone="low"] { background: hsl(var(--status-low-surface)); color: hsl(var(--status-low)); }
+.vigil-status-chip[data-tone="neutral"] { background: hsl(var(--status-neutral-surface)); color: hsl(var(--status-neutral)); }
+
+html[data-theme="dark"] .cam-parchment-card,
+html[data-theme="dark"] header,
+html[data-theme="dark"] footer {
+  box-shadow: var(--shadow-sm);
+}
+
+html[data-theme="dark"] a:hover {
+  color: hsl(var(--primary));
 }
 
 /* Selected interface tabs should read as active controls, not passive cards. */
@@ -210,9 +383,9 @@ section[aria-labelledby="constitutional-interfaces-heading"] button[aria-pressed
 section[aria-labelledby="companion-map-heading"] button[aria-pressed="false"]:hover,
 section[aria-labelledby="relational-runtime-heading"] button[aria-pressed="false"]:hover,
 main:has(#impact-lenses-heading) button[aria-pressed="false"]:hover {
-  background: hsl(38 32% 88%) !important;
-  border-color: hsl(38 62% 40% / 0.62) !important;
-  color: hsl(32 50% 28%) !important;
+  background: hsl(var(--secondary)) !important;
+  border-color: hsl(var(--primary) / 0.62) !important;
+  color: hsl(var(--foreground)) !important;
 }
 
 section[aria-labelledby="companion-map-heading"] button[aria-pressed="true"],
@@ -234,6 +407,10 @@ a {
 
 a:hover {
   color: hsl(38 62% 34%);
+}
+
+html[data-theme="dark"] a:hover {
+  color: hsl(var(--primary));
 }
 
 .home-content {

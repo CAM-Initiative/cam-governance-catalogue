@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, BookOpen, ExternalLink, Search } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
+import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 
 const LEARN_ID_PATTERN = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
@@ -444,7 +445,7 @@ export default function VigilKnowledgeBase() {
 
   const detailRecord = detailState.status === "ready" || detailState.status === "error" ? detailState.record : selectedIndexRecord;
 
-  return <Shell><main className="container mx-auto w-full max-w-7xl px-5 py-8 md:px-8 md:py-12 lg:px-10">
+  return <Shell><VigilObservatoryNav /><main className="container mx-auto w-full max-w-7xl px-5 py-8 md:px-8 md:py-12 lg:px-10">
     {selectedId ? <>
       {state.status === "loading" || detailState.status === "loading" ? <div className="cam-parchment-card rounded-xl p-6 text-muted-foreground">Preparing the learning record…</div> : null}
       {state.status === "error" && <div className="cam-parchment-card rounded-xl p-6"><p className="font-mono text-xs uppercase tracking-[0.16em] text-rose-800">Knowledge Base unavailable</p><p className="mt-3 text-muted-foreground">{state.message}</p></div>}

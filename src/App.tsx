@@ -8,6 +8,8 @@ import Provenance from "@/pages/provenance";
 import Transition from "@/pages/transition-authority";
 import Catalogue from "@/pages/catalogue";
 import Vigil from "@/pages/vigil";
+import VigilFailureModes from "@/pages/vigil-failure-modes";
+import { VigilIncidents, VigilRepairs } from "@/pages/vigil-projection";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
 import EvidenceChainReport from "@/pages/evidence-chain-report";
 import About from "@/pages/about";
@@ -28,11 +30,17 @@ function Router() {
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
       {/* Specific Observatory resources must precede the ledger catch-all route. */}
+      <Route path="/observatory/failure-modes/:recordId" component={VigilFailureModes} />
+      <Route path="/observatory/failure-modes" component={VigilFailureModes} />
+      <Route path="/observatory/incidents" component={VigilIncidents} />
+      <Route path="/observatory/repairs" component={VigilRepairs} />
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeBase} />
       <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
+      <Route path="/observatory/ledger" component={Vigil} />
       <Route path="/observatory" component={Vigil} />
-      <Route path="/vigil" component={Vigil} />
+      <Route path="/vigil/:recordId" component={VigilFailureModes} />
+      <Route path="/vigil" component={VigilFailureModes} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Copy, Download, X } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
+import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
 import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, shouldShowCurrentPriority, textFrom, titleizeValue, vigilOperationalRank, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch, type CorpusProvision, type RecordChain } from "@/lib/vigilPublicDisplay";
@@ -1459,6 +1460,7 @@ export default function Vigil() {
 
   return (
     <Shell>
+      <VigilObservatoryNav />
       <div className="container mx-auto max-w-7xl px-5 py-8 md:px-8 lg:px-10">
         <div className="mb-5">
           <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">Evidence-to-Repair Governance Ledger</p>

@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Coffee, FileText, Mail } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const footerLinks = [
   { href: "/", label: "Home", internal: true },
@@ -8,7 +9,7 @@ const footerLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy", internal: true },
-  { href: "/vigil", label: "VIGIL", internal: true },
+  { href: "/observatory/failure-modes", label: "VIGIL", internal: true },
 ];
 
 const mobileLinks = [
@@ -18,8 +19,11 @@ const mobileLinks = [
   { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
   { href: "/policy", label: "Policy Papers", internal: true },
-  { href: "/vigil", label: "VIGIL Ledger", internal: true },
+  { href: "/observatory/failure-modes", label: "VIGIL Failure Modes", internal: true },
+  { href: "/observatory/incidents", label: "VIGIL Incidents", internal: true },
+  { href: "/observatory/repairs", label: "VIGIL Repairs", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
+  { href: "/observatory/ledger", label: "VIGIL Full Ledger", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -36,8 +40,11 @@ const constitutionLinks = [
 ];
 
 const vigilLinks = [
-  { href: "/observatory", label: "Browse the VIGIL Ledger" },
+  { href: "/observatory/failure-modes", label: "Failure Mode Library" },
+  { href: "/observatory/incidents", label: "Incidents & Observations" },
+  { href: "/observatory/repairs", label: "Governance Repairs" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
+  { href: "/observatory/ledger", label: "Full Ledger" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -71,15 +78,18 @@ export function Shell({ children }: { children: ReactNode }) {
             </span>
           </Link>
 
-          <button
-            type="button"
-            className="inline-flex items-center rounded-lg border border-border bg-card/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:hidden"
-            aria-controls="mobile-site-navigation"
-            aria-expanded={isMobileMenuOpen}
-            onClick={() => setIsMobileMenuOpen((open) => !open)}
-          >
-            Menu
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="inline-flex items-center rounded-lg border border-border bg-card/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-controls="mobile-site-navigation"
+              aria-expanded={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+            >
+              Menu
+            </button>
+          </div>
 
           <nav className="hidden md:flex items-center gap-8">
             <div className="group relative">
@@ -94,7 +104,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Home
               </Link>
               <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
+                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
                   {homeLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -123,7 +133,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 Constitution
               </Link>
               <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
+                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
                   {constitutionLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -155,7 +165,7 @@ export function Shell({ children }: { children: ReactNode }) {
             ))}
             <div className="group relative">
               <Link
-                href="/observatory"
+                href="/observatory/failure-modes"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isVigilActive
                     ? "text-primary"
@@ -165,7 +175,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 VIGIL
               </Link>
               <div className="invisible absolute left-0 top-full min-w-64 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-[rgba(184,147,90,0.38)] bg-[hsl(36_55%_98%)] p-2 shadow-2xl ring-1 ring-[rgba(184,147,90,0.16)]">
+                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
                   {vigilLinks.map((link) => (
                     <Link
                       key={link.href}
@@ -182,6 +192,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 </div>
               </div>
             </div>
+            <ThemeToggle />
             <a
               href="https://github.com/CAM-Initiative/Caelestis"
               target="_blank"
@@ -204,7 +215,7 @@ export function Shell({ children }: { children: ReactNode }) {
                     className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
                       location === link.href ||
                       (link.href === "/constitution" && isConstitutionActive) ||
-                      (link.href === "/vigil" && isVigilActive) ||
+                      (link.href === "/observatory/failure-modes" && isVigilActive) ||
                       (link.href === "/observatory/knowledge-base" && location.startsWith("/observatory/knowledge-base"))
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-card hover:text-foreground"
@@ -233,7 +244,7 @@ export function Shell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-primary/25 bg-[hsl(36_48%_95%)] py-7 text-foreground shadow-[inset_0_1px_0_hsl(38_62%_40%/0.08)] md:py-8">
+      <footer className="mt-auto border-t border-primary/25 bg-card py-7 text-foreground shadow-sm md:py-8">
         <div className="container mx-auto min-w-0 px-4 sm:px-6 md:px-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
             <div className="min-w-0 max-w-2xl space-y-2 text-center md:text-left">

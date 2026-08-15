@@ -374,6 +374,19 @@ export function shouldShowCurrentPriority(priority?: string) {
   return isMeaningfulText(priority) && priority.trim().toUpperCase() !== "PN";
 }
 
+export function publicRepairStateLabel(...candidates: Array<string | undefined>) {
+  const value = candidates.find(isMeaningfulText);
+  if (!value) return "Repair state not recorded";
+  const key = value.toLocaleLowerCase();
+  if (/no (additional )?(corpus )?(change|action) required|closed[-— ]no[-— ]action/.test(key)) return "No additional corpus change required";
+  if (/proposal (is )?recorded|proposal-linked|proposed/.test(key)) return "Proposal recorded";
+  if (/repair in progress|implementation in progress|patch in progress/.test(key)) return "Repair in progress";
+  if (/patch implemented|repair implemented|\brepaired\b|implemented-repair/.test(key)) return "Patch implemented";
+  if (/\bmonitoring\b/.test(key)) return "Monitoring";
+  if (/\bunrepaired\b|no implemented repair linked/.test(key)) return "Unrepaired";
+  return titleizeValue(value);
+}
+
 export function vigilOperationalRank(record: Pick<VigilIndexRecord, "triage_priority" | "triage_status" | "record_state">) {
   const priority = record.triage_priority?.trim().toUpperCase();
   const workflow = record.triage_status?.trim().toLowerCase();
@@ -832,4 +845,23 @@ export function normalizeRecords(data: unknown): VigilIndexRecord[] {
       return [];
     }
   });
+}
+
+export type FailureFamilyCount = {
+  key: string;
+  label: string;
+  count: number;
+};
+
+export function deriveFailureFamilyCounts(records: VigilIndexRecord[]): FailureFamilyCount[] {
+  const counts = new Map<string, FailureFamilyCount>();
+  for (const record of records) {
+    if (record.record_type !== "failure_mode" || !record.failure_family) continue;
+    const label = normalizeFailureFamilyLabel(record.failure_family) ?? titleizeValue(record.failure_family);
+    const key = canonicalComparisonKey(label);
+    const current = counts.get(key);
+    if (current) current.count += 1;
+    else counts.set(key, { key, label, count: 1 });
+  }
+  return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label));
 }
