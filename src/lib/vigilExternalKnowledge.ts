@@ -72,7 +72,11 @@ export async function loadExternalSources(fetcher: FetchLike = fetch): Promise<E
 export function canonicalIdentifierLabel(source?: ExternalSourceEntry) {
   const scheme = source?.canonical_identifier?.scheme?.trim();
   const value = source?.canonical_identifier?.value?.trim();
-  if (scheme && value) return `${scheme} ${value}`;
+  if (scheme && value) {
+    const schemePrefix = scheme.toLowerCase();
+    if (value.toLowerCase().startsWith(schemePrefix)) return value;
+    return `${scheme} ${value}`;
+  }
   return value ?? source?.external_source_id ?? source?.vigil_source_id;
 }
 
