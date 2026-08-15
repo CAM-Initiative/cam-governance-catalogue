@@ -19,6 +19,10 @@ type PageState =
   | { status: "ready"; records: VigilIndexRecord[]; notice?: string }
   | { status: "error"; message: string };
 
+type SortKey = "id" | "family" | "severity";
+type SortDirection = "asc" | "desc";
+type SortState = { key: SortKey; direction: SortDirection };
+
 const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, SU: 5 };
 
@@ -42,9 +46,22 @@ function severityRank(record: VigilIndexRecord) {
 }
 
 function failureModeCases(records: VigilIndexRecord[]) {
-  return records
-    .filter((record) => record.record_type === "failure_mode")
-    .sort((a, b) => severityRank(a) - severityRank(b) || a.id.localeCompare(b.id, undefined, { numeric: true }));
+  return records.filter((record) => record.record_type === "failure_mode");
+}
+
+function compareCases(a: VigilIndexRecord, b: VigilIndexRecord, sort: SortState) {
+  let comparison = 0;
+  if (sort.key === "severity") comparison = severityRank(a) - severityRank(b);
+  else if (sort.key === "family") comparison = familyLabel(a).localeCompare(familyLabel(b), undefined, { sensitivity: "base" });
+  else comparison = a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
+
+  if (comparison === 0) comparison = a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
+  return sort.direction === "asc" ? comparison : -comparison;
+}
+
+function sortLabel(sort: SortState) {
+  const labels: Record<SortKey, string> = { id: "Failure Mode", family: "Failure Type", severity: "Severity" };
+  return `${labels[sort.key]} ${sort.direction === "asc" ? "ascending" : "descending"}`;
 }
 
 function values(records: VigilIndexRecord[], getter: (record: VigilIndexRecord) => string | undefined) {
@@ -55,10 +72,24 @@ function CaseCell({ label, children }: { label: string; children: ReactNode }) {
   return <div className="vigil-case-table-cell"><span className="vigil-case-mobile-label">{label}</span>{children}</div>;
 }
 
+function SortHeading({ label, sortKey, sort, onSort }: { label: string; sortKey: SortKey; sort: SortState; onSort: (key: SortKey) => void }) {
+  const active = sort.key === sortKey;
+  return <button
+    type="button"
+    className={active ? "vigil-case-sort-heading is-active" : "vigil-case-sort-heading"}
+    onClick={() => onSort(sortKey)}
+    aria-label={`Sort by ${label}${active ? `, currently ${sort.direction === "asc" ? "ascending" : "descending"}` : ""}`}
+  >
+    <span>{label}</span>
+    <span className="vigil-sort-indicator" aria-hidden="true">{active ? (sort.direction === "asc" ? "↑" : "↓") : "↕"}</span>
+  </button>;
+}
+
 export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
   const [family, setFamily] = useState("");
+  const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -85,10 +116,19 @@ export default function VigilCases() {
     return true;
   }), [family, records, search]);
 
-  useEffect(() => setPage(1), [search, family]);
-  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
+
+  useEffect(() => setPage(1), [search, family, sort]);
+  const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
-  const pageRecords = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  function updateSort(key: SortKey) {
+    setSort((current) => ({
+      key,
+      direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : "asc",
+    }));
+  }
 
   return (
     <Shell>
@@ -135,7 +175,7 @@ export default function VigilCases() {
                 </label>
               </div>
               <div className="vigil-result-summary">
-                <span>{filtered.length} matching case {filtered.length === 1 ? "file" : "files"} · ordered by severity</span>
+                <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"} · sorted by {sortLabel(sort)}</span>
                 {(search || family) && <button type="button" onClick={() => { setSearch(""); setFamily(""); }}>Clear filters</button>}
               </div>
             </section>
@@ -145,10 +185,10 @@ export default function VigilCases() {
             {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
 
             <section className="vigil-case-table" aria-label="AI failure mode Case Files">
-              <div className="vigil-case-table-head" aria-hidden="true">
-                <span>Failure Mode</span>
-                <span>Failure Type</span>
-                <span>Severity</span>
+              <div className="vigil-case-table-head">
+                <SortHeading label="Failure Mode" sortKey="id" sort={sort} onSort={updateSort} />
+                <SortHeading label="Failure Type" sortKey="family" sort={sort} onSort={updateSort} />
+                <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
               <div className="vigil-case-table-body">
@@ -171,11 +211,11 @@ export default function VigilCases() {
                     </article>
                   );
                 })}
-                {state.status === "ready" && filtered.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another failure type.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another failure type.</div>}
               </div>
             </section>
 
-            {filtered.length > PAGE_SIZE && (
+            {sorted.length > PAGE_SIZE && (
               <nav className="vigil-pagination" aria-label="Case File result pages">
                 <button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button>
                 <span>Page {currentPage} of {pageCount}</span>

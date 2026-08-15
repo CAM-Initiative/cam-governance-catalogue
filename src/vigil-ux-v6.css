@@ -1,0 +1,438 @@
+/* VIGIL UX v6 — stage semantics and quieter investigation presentation.
+   Keeps the established Case File visual language while making each stage answer one question. */
+
+/* Case Files: the three meaningful columns are user-sortable in both directions. */
+.vigil-case-sort-heading {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.3rem 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vigil-case-sort-heading:hover,
+.vigil-case-sort-heading.is-active {
+  color: hsl(var(--foreground));
+}
+
+.vigil-case-sort-heading:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+  border-radius: 0.2rem;
+}
+
+.vigil-sort-indicator {
+  min-width: 0.85rem;
+  color: hsl(var(--primary));
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.vigil-case-table-head {
+  font-size: 0.75rem;
+}
+
+/* Keep metadata readable: compact must not mean microscopic. */
+.vigil-case-meta-panel .vigil-case-field dt,
+.vigil-classification-identity .vigil-case-field dt,
+.vigil-affected-system-grid .vigil-case-field dt {
+  font-size: 0.75rem;
+}
+
+.vigil-case-meta-panel .vigil-case-field dd,
+.vigil-case-meta-panel .vigil-case-field dd.is-mono {
+  font-size: 0.82rem;
+}
+
+/* Classify: identity and severity first; evidence confidence belongs to Evidence, not classification. */
+.vigil-classification-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.72rem 0.9rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary) / 0.24);
+}
+
+.vigil-classification-topline > span {
+  font-family: var(--app-font-mono);
+  font-size: 0.84rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  color: hsl(var(--primary));
+}
+
+.vigil-classification-topline > strong {
+  font-family: var(--app-font-sans);
+  font-size: 0.82rem;
+  font-weight: 550;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-classification-topline > strong b {
+  margin-left: 0.35rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.86rem;
+  color: hsl(var(--foreground));
+}
+
+.vigil-classification-summary-v6 .vigil-classification-identity dl {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-classification-summary-v6 .vigil-classification-identity .vigil-case-field:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.vigil-classification-summary-v6 .vigil-classify-definition > p:last-child,
+.vigil-classification-summary-v6 .vigil-classify-pair > div > p:last-child {
+  font-size: 0.9rem;
+  line-height: 1.58;
+}
+
+/* Diagnose: coverage -> gap -> required change -> placement rationale. */
+.vigil-diagnosis-view,
+.vigil-response-view,
+.vigil-learning-view {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.45rem;
+  background: hsl(var(--background));
+}
+
+.vigil-diagnosis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-diagnosis-grid > section {
+  min-width: 0;
+  padding: 0.92rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-diagnosis-grid > section:nth-child(odd) {
+  border-right: 1px solid hsl(var(--border));
+}
+
+.vigil-diagnosis-grid > section.is-gap {
+  background: hsl(var(--card) / 0.38);
+}
+
+.vigil-diagnosis-grid > section > p:not(.vigil-library-kicker),
+.vigil-diagnosis-grid > section > ul,
+.vigil-diagnosis-targets ul,
+.vigil-response-overview > p:not(.vigil-library-kicker),
+.vigil-response-overview > ul,
+.vigil-response-state-grid section > p:not(.vigil-library-kicker),
+.vigil-response-state-grid section > ul {
+  margin: 0.38rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-diagnosis-grid ul,
+.vigil-diagnosis-targets ul,
+.vigil-response-overview ul,
+.vigil-response-state-grid ul {
+  padding-left: 1.2rem;
+}
+
+.vigil-diagnosis-grid li + li,
+.vigil-diagnosis-targets li + li,
+.vigil-response-overview li + li,
+.vigil-response-state-grid li + li {
+  margin-top: 0.35rem;
+}
+
+.vigil-coverage-list {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.42rem;
+}
+
+.vigil-coverage-list > div {
+  padding: 0.62rem 0.68rem;
+  border-left: 3px solid hsl(var(--primary) / 0.45);
+  background: hsl(var(--card) / 0.3);
+}
+
+.vigil-coverage-list strong,
+.vigil-coverage-list span {
+  display: block;
+}
+
+.vigil-coverage-list strong {
+  font-family: var(--app-font-sans);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.vigil-coverage-list span {
+  margin-top: 0.15rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  color: hsl(var(--primary));
+}
+
+.vigil-coverage-list p {
+  margin: 0.28rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.52;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-diagnosis-targets {
+  padding: 0.85rem 0.92rem;
+  border-top: 0;
+  background: hsl(var(--secondary) / 0.14);
+}
+
+.vigil-stage-source-line {
+  margin: 0;
+  padding: 0.62rem 0.92rem;
+  border-top: 1px solid hsl(var(--border));
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Respond: concise outcome, implemented controls, state and residual scope. */
+.vigil-response-overview {
+  padding: 0.92rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.3);
+}
+
+.vigil-implemented-controls {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-control-list {
+  display: grid;
+}
+
+.vigil-control-list > article {
+  padding: 0.82rem 0.9rem;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+}
+
+.vigil-control-list > article:first-child {
+  border-top: 0;
+}
+
+.vigil-control-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vigil-control-heading strong,
+.vigil-control-heading span {
+  display: block;
+}
+
+.vigil-control-heading strong {
+  font-family: var(--app-font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: hsl(var(--foreground));
+}
+
+.vigil-control-heading span {
+  margin-top: 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-control-heading small {
+  flex: 0 0 auto;
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  color: hsl(var(--primary));
+}
+
+.vigil-control-list details {
+  margin-top: 0.55rem;
+}
+
+.vigil-control-list summary {
+  width: fit-content;
+  cursor: pointer;
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  color: hsl(var(--primary));
+}
+
+.vigil-control-list details > p {
+  margin: 0.6rem 0 0;
+  padding: 0.7rem 0.78rem;
+  border-left: 3px solid hsl(var(--primary) / 0.42);
+  background: hsl(var(--card) / 0.3);
+  white-space: pre-wrap;
+  font-size: 0.86rem;
+  line-height: 1.58;
+}
+
+.vigil-control-list details > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.55rem;
+  font-size: 0.8rem;
+}
+
+.vigil-control-list details > a svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.vigil-response-state-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-response-state-grid > section {
+  padding: 0.88rem 0.92rem;
+}
+
+.vigil-response-state-grid > section + section {
+  border-left: 1px solid hsl(var(--border));
+}
+
+/* Learn: present knowledge, not another database record card. */
+.vigil-learning-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.72rem;
+  padding: 0.62rem 0.9rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary) / 0.18);
+}
+
+.vigil-learning-meta span {
+  flex: 0 0 auto;
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+
+.vigil-learning-meta p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-learning-lead {
+  padding: 0.95rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-learning-lead > p:last-child {
+  margin: 0.4rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.08rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground));
+}
+
+.vigil-learning-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-learning-sections > section {
+  min-width: 0;
+  padding: 0.9rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-learning-sections > section:nth-child(odd) {
+  border-right: 1px solid hsl(var(--border));
+}
+
+.vigil-learning-sections > section.is-risk {
+  background: hsl(var(--card) / 0.36);
+}
+
+.vigil-learning-sections .vigil-learning-list,
+.vigil-learning-limit > p:last-child {
+  margin-top: 0.4rem;
+  font-size: 0.88rem;
+  line-height: 1.58;
+}
+
+.vigil-learning-limit {
+  padding: 0.88rem 0.92rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary) / 0.12);
+}
+
+.vigil-learning-view > a {
+  display: inline-flex;
+  margin: 0.72rem 0.9rem 0.85rem;
+  font-size: 0.82rem;
+}
+
+/* Provenance owns the complete bibliography. */
+.vigil-case-bibliography {
+  margin-bottom: 0.7rem;
+}
+
+.vigil-case-bibliography h3,
+.vigil-record-provenance > h3 {
+  font-size: 0.98rem;
+}
+
+.vigil-case-bibliography li > div > p {
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.vigil-case-bibliography li > div > a {
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .vigil-diagnosis-grid,
+  .vigil-response-state-grid,
+  .vigil-learning-sections,
+  .vigil-classification-summary-v6 .vigil-classification-identity dl {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-diagnosis-grid > section:nth-child(odd),
+  .vigil-learning-sections > section:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .vigil-response-state-grid > section + section {
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .vigil-classification-topline,
+  .vigil-control-heading,
+  .vigil-learning-meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

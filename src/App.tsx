@@ -6,6 +6,7 @@ import "./vigil-ux-v2-corrections.css";
 import "./vigil-ux-v3.css";
 import "./vigil-ux-v4.css";
 import "./vigil-ux-v5.css";
+import "./vigil-ux-v6.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";

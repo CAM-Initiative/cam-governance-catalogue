@@ -71,16 +71,25 @@ type TaxonomyMeta = {
   group?: string;
 };
 
+type ImplementationEntry = {
+  instrumentId?: string;
+  section?: string;
+  heading?: string;
+  resultingText?: string;
+  verification?: string;
+  sourceUrl?: string;
+};
+
 const VIGIL_ID = /VIGIL-\d{4}-(?:OBS|RESEARCH|FM|PROP|PATCH|LEARN)-\d{4}/gi;
 const LEARN_ID = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
 
 const CASE_STAGES = [
-  { id: "evidence", number: "01", title: "Evidence", description: "What happened, which systems are affected, what the available sources establish, and where the evidentiary boundary sits." },
-  { id: "classify", number: "02", title: "Classify", description: "The authoritative failure mode, its canonical governance classification, and the threshold used to recognise it." },
-  { id: "diagnose", number: "03", title: "Diagnose", description: "The governance weakness identified from the classified failure and the response VIGIL proposes." },
-  { id: "respond", number: "04", title: "Respond", description: "What governance response was implemented or relied upon, and the corpus state against which it was verified." },
-  { id: "learn", number: "05", title: "Learn", description: "The durable governance lesson, future applications, limitations, and risk if the learning is not integrated." },
-  { id: "provenance", number: "06", title: "Provenance", description: "The authoritative VIGIL records and implementation provenance behind this investigation." },
+  { id: "evidence", number: "01", title: "Evidence", description: "What happened, which systems are affected, what the available evidence establishes, and where the evidentiary boundary sits." },
+  { id: "classify", number: "02", title: "Classify", description: "What failure is this, how severe is it, and where does it sit in the canonical governance taxonomy?" },
+  { id: "diagnose", number: "03", title: "Diagnose", description: "What governance gap does the failure expose, and what needs to change in the corpus or control architecture?" },
+  { id: "respond", number: "04", title: "Respond", description: "What governance response was actually adopted, where was it implemented, and what remains unresolved?" },
+  { id: "learn", number: "05", title: "Learn", description: "What should governance remember, reuse, and avoid repeating after this investigation?" },
+  { id: "provenance", number: "06", title: "Provenance", description: "The external bibliography, canonical VIGIL record chain, and governance-corpus implementation provenance." },
 ] as const;
 
 type StageId = typeof CASE_STAGES[number]["id"];
@@ -93,17 +102,17 @@ function valueAt(record: UnknownRecord, path: string): unknown {
   return path.split(".").reduce<unknown>((current, part) => isObject(current) ? current[part] : undefined, record);
 }
 
+function text(value: unknown): string | undefined {
+  if (typeof value === "string") return value.trim() || undefined;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  return undefined;
+}
+
 function firstText(record: UnknownRecord, paths: string[]) {
   for (const path of paths) {
     const value = text(valueAt(record, path));
     if (value) return value;
   }
-  return undefined;
-}
-
-function text(value: unknown): string | undefined {
-  if (typeof value === "string") return value.trim() || undefined;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
   return undefined;
 }
 
@@ -116,6 +125,26 @@ function textList(value: unknown): string[] {
     seen.add(key);
     return true;
   });
+}
+
+function firstTextList(record: UnknownRecord, paths: string[]) {
+  for (const path of paths) {
+    const values = textList(valueAt(record, path));
+    if (values.length) return values;
+  }
+  return [];
+}
+
+function objectList(value: unknown): UnknownRecord[] {
+  return Array.isArray(value) ? value.filter(isObject) : [];
+}
+
+function firstObjectList(record: UnknownRecord, paths: string[]) {
+  for (const path of paths) {
+    const values = objectList(valueAt(record, path));
+    if (values.length) return values;
+  }
+  return [];
 }
 
 function recordId(raw: UnknownRecord) {
@@ -365,11 +394,23 @@ function dedupeSystems(records: VigilIndexRecord[]) {
   });
 }
 
+function taxonomyCodeFromReference(reference?: string) {
+  return reference?.match(/primary classification\s+([A-Z0-9._-]+)/i)?.[1];
+}
+
+function taxonomyNameFromReference(reference?: string) {
+  if (!reference) return undefined;
+  const afterDash = reference.split("—").slice(1).join("—").trim();
+  if (!afterDash) return undefined;
+  return afterDash.replace(/;\s*primary classification.*$/i, "").trim() || undefined;
+}
+
 function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem): TaxonomyMeta {
+  const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]) ?? learn?.taxonomyReference;
   return {
-    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode,
-    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]) ?? learn?.canonicalFailureName,
-    reference: firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]) ?? learn?.taxonomyReference,
+    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode ?? taxonomyCodeFromReference(reference),
+    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]) ?? learn?.canonicalFailureName ?? taxonomyNameFromReference(reference),
+    reference,
     group: firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]),
   };
 }
@@ -377,6 +418,64 @@ function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem): TaxonomyMeta
 function relatedFailureModes(record: VigilIndexRecord) {
   const linked = isObject(record.raw.linked_records) ? record.raw.linked_records : {};
   return textList(linked.related_failure_modes).filter((id) => id.toUpperCase() !== record.id.toUpperCase());
+}
+
+function coverageItems(record?: VigilIndexRecord) {
+  if (!record) return [];
+  return firstObjectList(record.raw, ["existing_cam_coverage", "existing_coverage"]).map((item, index) => ({
+    key: `${text(item.instrument ?? item.instrument_id) ?? "coverage"}-${index}`,
+    instrument: text(item.instrument ?? item.instrument_id),
+    section: text(item.section ?? item.provision),
+    coverageType: text(item.coverage_type ?? item.relationship),
+    relevance: text(item.relevance ?? item.coverage_summary),
+    internalFailure: text(item.internal_failure),
+  }));
+}
+
+function proposalTargets(record: VigilIndexRecord) {
+  return unique([
+    ...textList(valueAt(record.raw, "proposal_scope.cam_instruments")),
+    ...textList(valueAt(record.raw, "cam_internal.target_instruments")),
+    ...textList(valueAt(record.raw, "implementation_notes.suggested_insertion_points")),
+  ]);
+}
+
+function proposalRequiredChange(record: VigilIndexRecord) {
+  return record.publicDisplay.proposal?.proposedOutcome
+    ?? firstText(record.raw, ["proposal_scope.scope_summary", "proposal_rationale"])
+    ?? record.publicDisplay.finding
+    ?? record.summary;
+}
+
+function implementationEntries(record: VigilIndexRecord): ImplementationEntry[] {
+  return firstObjectList(record.raw, ["corpus_implementation.entries"]).map((entry) => {
+    const verification = isObject(entry.verification) ? entry.verification : {};
+    const source = isObject(entry.source) ? entry.source : {};
+    return {
+      instrumentId: text(entry.instrument_id ?? entry.instrument),
+      section: text(entry.section),
+      heading: text(entry.section_heading ?? entry.heading),
+      resultingText: text(entry.resulting_text ?? entry.final_wording),
+      verification: text(verification.status ?? entry.verification_status ?? entry.current_status),
+      sourceUrl: text(source.direct_url ?? entry.canonical_url),
+    };
+  });
+}
+
+function patchResponseSummary(record: VigilIndexRecord) {
+  return firstText(record.raw, ["corpus_implementation.implementation_outcome"])
+    ?? record.publicDisplay.patch?.repairSummary
+    ?? record.publicDisplay.finding
+    ?? record.summary;
+}
+
+function implementationState(record: VigilIndexRecord) {
+  return firstText(record.raw, ["corpus_implementation.canonical_state", "coverage_reconciliation.status"])
+    ?? record.publicDisplay.patch?.verificationStatus;
+}
+
+function remainingScope(record: VigilIndexRecord) {
+  return firstTextList(record.raw, ["coverage_reconciliation.remaining_scope", "corpus_implementation.remaining_scope", "remaining_scope"]);
 }
 
 function compactId(id: string) {
@@ -421,40 +520,48 @@ function LearningList({ items }: { items: string[] }) {
   return <ul className="vigil-learning-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
 }
 
+function TextList({ items }: { items: string[] }) {
+  if (!items.length) return null;
+  if (items.length === 1) return <p>{items[0]}</p>;
+  return <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul>;
+}
+
 function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
 
 function ImplementationProvenance({ record }: { record: VigilIndexRecord }) {
   const provenance = isObject(record.raw.corpus_release_provenance) ? record.raw.corpus_release_provenance : undefined;
-  if (!provenance) return null;
-  const implementation = isObject(provenance.implementation_corpus_state) ? provenance.implementation_corpus_state : undefined;
-  const canonical = isObject(provenance.canonical_corpus_state) ? provenance.canonical_corpus_state : undefined;
-  const release = isObject(provenance.published_release_at_implementation) ? provenance.published_release_at_implementation : undefined;
-  const implementationCommit = text(implementation?.commit);
+  const corpusImplementation = isObject(record.raw.corpus_implementation) ? record.raw.corpus_implementation : undefined;
+  if (!provenance && !corpusImplementation) return null;
+  const implementation = provenance && isObject(provenance.implementation_corpus_state) ? provenance.implementation_corpus_state : undefined;
+  const canonical = provenance && isObject(provenance.canonical_corpus_state) ? provenance.canonical_corpus_state : undefined;
+  const release = provenance && isObject(provenance.published_release_at_implementation) ? provenance.published_release_at_implementation : undefined;
+  const implementationCommit = text(implementation?.commit) ?? firstText(record.raw, ["coverage_reconciliation.corpus_commit"]);
   const canonicalCommit = text(canonical?.commit);
-  const targetRelease = text(provenance.target_release ?? provenance.target_version ?? provenance.intended_release ?? provenance.release_target) ?? "Unreleased working corpus";
+  const targetRelease = provenance ? text(provenance.target_release ?? provenance.target_version ?? provenance.intended_release ?? provenance.release_target) : undefined;
   const publishedVersion = text(release?.version);
+  const canonicalState = text(corpusImplementation?.canonical_state);
   const verificationState = canonicalCommit
     ? implementationCommit === canonicalCommit
       ? "Implementation and canonical corpus state recorded at the same commit"
       : "Implementation and canonical corpus states recorded separately"
-    : text(provenance.provenance_mode) ?? "Canonical corpus state not separately declared";
+    : text(provenance?.provenance_mode) ?? canonicalState;
 
   return <aside className="vigil-implementation-provenance">
     <p className="vigil-library-kicker">Implementation provenance</p>
     <h3>Governance corpus state</h3>
     <dl>
-      <Field label="Target release" value={targetRelease} />
+      <Field label="Target release" value={targetRelease ?? (canonicalState === "canonical-main" ? "Canonical main" : "Unreleased working corpus")} />
       <Field label="Published release at implementation" value={publishedVersion ? `Version ${publishedVersion}` : text(release?.status)} />
       <Field label="Verification state" value={verificationState} />
-      <Field label="Implementation date" value={text(implementation?.date)} />
+      <Field label="Implementation date" value={text(implementation?.date) ?? record.publicDisplay.patch?.implementationDate} />
     </dl>
     <div className="vigil-commit-links">
       {implementationCommit && <a href={`https://github.com/CAM-Initiative/Caelestis/commit/${implementationCommit}`} target="_blank" rel="noreferrer">Implementation commit <code>{implementationCommit.slice(0, 12)}</code> <ExternalLink aria-hidden="true" /></a>}
       {canonicalCommit && canonicalCommit !== implementationCommit && <a href={`https://github.com/CAM-Initiative/Caelestis/commit/${canonicalCommit}`} target="_blank" rel="noreferrer">Canonical commit <code>{canonicalCommit.slice(0, 12)}</code> <ExternalLink aria-hidden="true" /></a>}
     </div>
-    {Array.isArray(provenance.limitations) && provenance.limitations.length > 0 && <p className="vigil-provenance-note">{provenance.limitations.map(String).join(" ")}</p>}
+    {Array.isArray(provenance?.limitations) && provenance.limitations.length > 0 && <p className="vigil-provenance-note">{provenance.limitations.map(String).join(" ")}</p>}
   </aside>;
 }
 
@@ -510,8 +617,6 @@ export default function VigilCaseFile() {
     : undefined;
   const failureDetail = useMemo(() => failure ? deriveFailureModePublicDetail(failure.raw, failure.publicDisplay) : undefined, [failure]);
   const externalSources = useMemo(() => state.status === "ready" && failure ? dedupeEvidence([failure, ...observations].flatMap(externalEvidenceFor)) : [], [failure, observations, state]);
-  const structuredEvidenceTitles = useMemo(() => new Set((failureDetail?.evidence ?? []).map((evidence) => evidence.title.toLowerCase())), [failureDetail]);
-  const additionalSources = useMemo(() => externalSources.filter((source) => !structuredEvidenceTitles.has(source.title.toLowerCase())), [externalSources, structuredEvidenceTitles]);
   const affectedSystems = useMemo(() => failure ? dedupeSystems([failure, ...observations]) : dedupeSystems(observations), [failure, observations]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Case File…</main></Shell>;
@@ -530,6 +635,23 @@ export default function VigilCaseFile() {
   const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
   const relatedFailures = failure ? relatedFailureModes(failure) : [];
   const reportId = failure?.id ?? state.sourceId;
+
+  const existingCoverage = coverageItems(failure);
+  const governanceGap = failure ? firstText(failure.raw, ["governance_gap"]) : undefined;
+  const repairHypothesis = failure ? firstText(failure.raw, ["repair_hypothesis"]) : undefined;
+  const requiredChanges = unique(proposals.map(proposalRequiredChange).filter((value): value is string => Boolean(value)));
+  if (!requiredChanges.length && repairHypothesis) requiredChanges.push(repairHypothesis);
+  const placementRationales = unique([
+    ...patches.map((record) => firstText(record.raw, ["decision_trace.decision_summary"])),
+    ...proposals.map((record) => firstText(record.raw, ["proposal_rationale"])),
+  ].filter((value): value is string => Boolean(value)));
+  const targetLocations = unique(proposals.flatMap(proposalTargets));
+  const diagnosisSourceIds = unique([failure?.id, ...proposals.map((record) => record.id), ...patches.map((record) => record.id)].filter((value): value is string => Boolean(value)));
+
+  const responseSummaries = unique(patches.map(patchResponseSummary).filter((value): value is string => Boolean(value)));
+  const implementedControls = patches.flatMap(implementationEntries);
+  const implementationStates = unique(patches.map(implementationState).filter((value): value is string => Boolean(value)));
+  const remainingScopes = unique([...patches.flatMap(remainingScope), ...proposals.flatMap(remainingScope)]);
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "evidence") return <>
@@ -556,17 +678,22 @@ export default function VigilCaseFile() {
         </div>}
       </article>)}</div>}
       {failureDetail?.evidence.length ? <div className="vigil-evidence-list">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
-      {additionalSources.length > 0 && <div className="vigil-case-source-preview">{additionalSources.map((source, index) => <article key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">Open source <ExternalLink aria-hidden="true" /></a>}</div></article>)}</div>}
-      {affectedSystems.length === 0 && observations.length === 0 && !failureDetail?.evidence.length && additionalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
+      {!failureDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under Provenance.</p>}
+      {affectedSystems.length === 0 && observations.length === 0 && !failureDetail?.evidence.length && externalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
     </>;
 
     if (stageId === "classify") return <>
-      {failure ? <article className="vigil-classification-summary">
+      {failure ? <article className="vigil-classification-summary vigil-classification-summary-v6">
+        <div className="vigil-classification-topline">
+          <span>{compactId(failure.id)}</span>
+          <strong>Severity <b>{severityDisplay(failure.severity)}</b></strong>
+        </div>
         <div className="vigil-classification-identity">
           <dl>
-            <Field label="VIGIL failure mode" value={`${compactId(failure.id)} — ${failure.title}`} />
             <Field label="Canonical failure code" value={taxonomy.code} mono />
+            <Field label="Failure type" value={family} />
             <Field label="Canonical failure name" value={taxonomy.name} />
+            <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
             <Field label="Corpus reference" value={taxonomy.reference} />
             {!taxonomy.code && taxonomy.group && <Field label="Canonical failure group" value={taxonomy.group} mono />}
           </dl>
@@ -579,55 +706,85 @@ export default function VigilCaseFile() {
           <div><p className="vigil-library-kicker">Recognition threshold</p><p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p></div>
           <div><p className="vigil-library-kicker">Governance significance</p><p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p></div>
         </div>
-        <dl className="vigil-classification-meta">
-          <Field label="Failure type" value={family} />
-          <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
-          <Field label="Severity" value={severityDisplay(failure.severity)} />
-          <Field label="Evidence confidence" value={failure.evidence_confidence ? titleizeValue(failure.evidence_confidence) : undefined} />
-        </dl>
         {relatedFailures.length > 0 && <div className="vigil-related-failures"><strong>Related failure modes</strong><p>{relatedFailures.join(" · ")}</p><small>Context only; these do not alter this Case File’s authoritative classification or severity.</small></div>}
       </article> : <p className="vigil-case-empty">No authoritative failure mode classification is linked yet.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
-      {proposals.length > 0 ? proposals.map((record) => <article key={record.id} className="vigil-case-record">
-        <div className="vigil-case-record-heading"><span>{record.id}</span><h3>{record.title}</h3></div>
-        <div className="vigil-case-narrative"><strong>Governance weakness</strong><p>{record.publicDisplay.proposal?.problem ?? record.publicDisplay.finding ?? record.summary}</p></div>
-        {record.publicDisplay.proposal?.proposedOutcome && <div className="vigil-case-callout"><strong>Required governance capability</strong><p>{record.publicDisplay.proposal.proposedOutcome}</p></div>}
-      </article>) : <p className="vigil-case-empty">No proposal is linked yet. The investigation may still be in diagnosis or monitoring.</p>}
+      {(existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
+        <div className="vigil-diagnosis-grid">
+          <section>
+            <p className="vigil-library-kicker">Existing coverage</p>
+            {existingCoverage.length > 0 ? <div className="vigil-coverage-list">{existingCoverage.map((coverage) => <div key={coverage.key}>
+              <strong>{[coverage.instrument, coverage.section].filter(Boolean).join(" · ") || "Existing corpus coverage"}</strong>
+              {coverage.coverageType && <span>{coverage.coverageType}</span>}
+              {coverage.relevance && <p>{coverage.relevance}</p>}
+              {coverage.internalFailure && <p>{coverage.internalFailure}</p>}
+            </div>)}</div> : <p>No explicit existing-coverage assessment is stated in the current public record.</p>}
+          </section>
+          <section className="is-gap">
+            <p className="vigil-library-kicker">Gap identified</p>
+            <p>{governanceGap ?? proposals[0]?.publicDisplay.proposal?.problem ?? "No separate governance-gap statement is currently published."}</p>
+          </section>
+          <section>
+            <p className="vigil-library-kicker">Required governance change</p>
+            {requiredChanges.length > 0 ? <TextList items={requiredChanges} /> : <p>No separate required-change statement is currently published.</p>}
+          </section>
+          <section>
+            <p className="vigil-library-kicker">Placement / decision rationale</p>
+            {placementRationales.length > 0 ? <TextList items={placementRationales} /> : <p>No separate placement rationale is currently published.</p>}
+          </section>
+        </div>
+        {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
+        <p className="vigil-stage-source-line">Diagnosis derived from {diagnosisSourceIds.map(compactId).join(" · ")}</p>
+      </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or classification.</p>}
     </>;
 
     if (stageId === "respond") return <>
-      {patches.length > 0 ? patches.map((record) => <article key={record.id} className="vigil-case-record vigil-case-repair-record">
-        <div className="vigil-case-record-heading"><span>{record.id}</span><h3>{record.title}</h3></div>
-        <div className="vigil-case-narrative"><strong>Response summary</strong><p>{record.publicDisplay.patch?.repairSummary ?? record.publicDisplay.finding ?? record.summary}</p></div>
-        {(record.publicDisplay.patch?.verificationStatus || record.publicDisplay.patch?.implementationDate) && <p className="vigil-response-meta">{[
-          record.publicDisplay.patch?.implementationDate ? `Implemented ${record.publicDisplay.patch.implementationDate}` : undefined,
-          record.publicDisplay.patch?.verificationStatus ? `Verification: ${record.publicDisplay.patch.verificationStatus}` : undefined,
-        ].filter(Boolean).join(" · ")}</p>}
-        {record.publicDisplay.corpusProvisions.length > 0 && <div className="vigil-case-provision-list">{record.publicDisplay.corpusProvisions.map((provision, index) => <div key={`${provision.instrumentId}-${provision.section}-${index}`}><strong>{[provision.instrumentId, provision.section].filter(Boolean).join(" · ")}</strong>{provision.heading && <span>{provision.heading}</span>}{provision.relationship && <p>{provision.relationship}</p>}</div>)}</div>}
-        <ImplementationProvenance record={record} />
-      </article>) : <p className="vigil-case-empty">No PATCH is linked yet. A governance response may still be in development.</p>}
+      {patches.length > 0 ? <article className="vigil-response-view">
+        <section className="vigil-response-overview">
+          <p className="vigil-library-kicker">Governance response</p>
+          {responseSummaries.length > 0 ? <TextList items={responseSummaries} /> : <p>The linked PATCH does not currently expose a concise public response summary.</p>}
+        </section>
+
+        <section className="vigil-implemented-controls">
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Implemented controls</p><h3>Where the response was placed in the governance corpus</h3></div>
+          {implementedControls.length > 0 ? <div className="vigil-control-list">{implementedControls.map((entry, index) => <article key={`${entry.instrumentId}-${entry.section}-${index}`}>
+            <div className="vigil-control-heading">
+              <div><strong>{[entry.instrumentId, entry.section].filter(Boolean).join(" · ") || "Implemented control"}</strong>{entry.heading && <span>{entry.heading.replace(/^#+\s*/, "")}</span>}</div>
+              {entry.verification && <small>{titleizeValue(entry.verification)}</small>}
+            </div>
+            {(entry.resultingText || entry.sourceUrl) && <details><summary>Implementation detail</summary>{entry.resultingText && <p>{entry.resultingText}</p>}{entry.sourceUrl && <a href={entry.sourceUrl} target="_blank" rel="noreferrer">Open canonical provision <ExternalLink aria-hidden="true" /></a>}</details>}
+          </article>)}</div> : <div className="vigil-control-list">{patches.flatMap((record) => record.publicDisplay.corpusProvisions).map((provision, index) => <article key={`${provision.instrumentId}-${provision.section}-${index}`}><div className="vigil-control-heading"><div><strong>{[provision.instrumentId, provision.section].filter(Boolean).join(" · ") || "Corpus provision"}</strong>{provision.heading && <span>{provision.heading}</span>}</div></div>{provision.relationship && <p>{provision.relationship}</p>}</article>)}</div>}
+        </section>
+
+        <div className="vigil-response-state-grid">
+          <section><p className="vigil-library-kicker">Current implementation state</p>{implementationStates.length > 0 ? <TextList items={implementationStates.map(titleizeValue)} /> : <p>No separate implementation-state value is currently published.</p>}</section>
+          <section><p className="vigil-library-kicker">Remaining scope</p>{remainingScopes.length > 0 ? <TextList items={remainingScopes} /> : <p>No residual governance scope is recorded in the linked response.</p>}</section>
+        </div>
+        <p className="vigil-stage-source-line">Response derived from {patches.map((record) => compactId(record.id)).join(" · ")}</p>
+      </article> : <p className="vigil-case-empty">No PATCH is linked yet. A governance response may still be in development.</p>}
     </>;
 
     if (stageId === "learn") return <>
-      {state.learns.length > 0 ? state.learns.map((learn) => <article key={learn.id} className="vigil-case-record vigil-learning-record">
-        <div className="vigil-case-record-heading"><span>{learn.id}</span><h3>{learn.title}</h3></div>
-        <div className="vigil-learning-grid">
-          <section><strong>Governance lesson</strong><p>{learn.abstractedLearning ?? learn.summary ?? "No abstracted learning is stated."}</p></section>
-          {learn.governanceMisconception.length > 0 && <section><strong>Governance misconception</strong><LearningList items={learn.governanceMisconception} /></section>}
-          {learn.integratedLearning.length > 0 && <section><strong>Key takeaways / integrated learning</strong><LearningList items={learn.integratedLearning} /></section>}
-          {learn.futureApplication.length > 0 && <section><strong>Future applications</strong><LearningList items={learn.futureApplication} /></section>}
-          {learn.riskIfNotIntegrated.length > 0 && <section className="is-risk"><strong>Governance risk if not integrated</strong><LearningList items={learn.riskIfNotIntegrated} /></section>}
-          {learn.generalisationBoundary && <section><strong>Limitations / generalisation boundary</strong><p>{learn.generalisationBoundary}</p></section>}
+      {state.learns.length > 0 ? state.learns.map((learn) => <article key={learn.id} className="vigil-learning-view">
+        <div className="vigil-learning-meta"><span>{compactId(learn.id)}</span><p>{learn.title}</p></div>
+        <section className="vigil-learning-lead"><p className="vigil-library-kicker">Governance lesson</p><p>{learn.abstractedLearning ?? learn.summary ?? "No abstracted learning is stated."}</p></section>
+        <div className="vigil-learning-sections">
+          {learn.governanceMisconception.length > 0 && <section><p className="vigil-library-kicker">Governance misconception</p><LearningList items={learn.governanceMisconception} /></section>}
+          {learn.integratedLearning.length > 0 && <section><p className="vigil-library-kicker">Key takeaways</p><LearningList items={learn.integratedLearning} /></section>}
+          {learn.futureApplication.length > 0 && <section><p className="vigil-library-kicker">Future applications</p><LearningList items={learn.futureApplication} /></section>}
+          {learn.riskIfNotIntegrated.length > 0 && <section className="is-risk"><p className="vigil-library-kicker">Risk if not integrated</p><LearningList items={learn.riskIfNotIntegrated} /></section>}
         </div>
+        {learn.generalisationBoundary && <section className="vigil-learning-limit"><p className="vigil-library-kicker">Limitations / generalisation boundary</p><p>{learn.generalisationBoundary}</p></section>}
         <Link href={`/observatory/knowledge-base/${encodeURIComponent(learn.id)}`}>Open full governance lesson →</Link>
       </article>) : <p className="vigil-case-empty">No published LEARN record is linked. The investigation remains useful while learning closure is incomplete.</p>}
     </>;
 
     return <>
-      {externalSources.length > 0 && <div className="vigil-provenance-evidence-note"><strong>External evidence</strong><span>{externalSources.length} source{externalSources.length === 1 ? "" : "s"} — source details and evidentiary boundaries are presented under Evidence.</span></div>}
+      {externalSources.length > 0 && <div className="vigil-case-citations vigil-case-bibliography"><h3>External evidence bibliography</h3><ol>{externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}</div></li>)}</ol></div>}
       <div className="vigil-record-provenance"><h3>VIGIL record provenance</h3><div>{state.records.map((record) => <article key={record.id}><span>{record.id}</span><strong>{record.title}</strong>{recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}{state.learns.map((learn) => <article key={learn.id}><span>{learn.id}</span><strong>{learn.title}</strong>{learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}</div></div>
+      {patches.map((record) => <ImplementationProvenance key={`provenance-${record.id}`} record={record} />)}
     </>;
   };
 
