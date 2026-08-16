@@ -13,10 +13,10 @@
   "record_count": {
     "failure_modes": 57,
     "observations": 25,
-    "proposals": 29,
+    "proposals": 30,
     "patch_notes": 34,
     "research": 5,
-    "total": 158,
+    "total": 159,
     "learn_records": 8
   },
   "registries": {
@@ -36,7 +36,7 @@
       "path": "vigil/VIGIL.Proposals.Index.json",
       "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Proposals.Index.json",
       "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Proposals.Index.json",
-      "record_count": 29
+      "record_count": 30
     },
     "patch_notes": {
       "path": "vigil/VIGIL.PatchNotes.Index.json",
@@ -13881,6 +13881,61 @@
       "observed_vendor": "Multi Vendor",
       "observed_product": "Multi-vendor reasoning APIs and downstream agent frameworks",
       "public_finding": "Proposes focused SECURITY, IDENTITY, and OPERATIONS controls for client-carried opaque reasoning state. Cryptographic validity would not by itself authorise replay, decryption, transfer, resumption, model switching, or execution. Reasoning envelopes would be bound to the authenticated user, session, originating model or approved compatibility class, purpose, predecessor state, provenance, and authority context; mismatches would be rejected or routed through governed re-arbitration; and public trace tooling would strip opaque reasoning fields when sensitive context may have entered the run."
+    },
+    {
+      "id": "VIGIL-2026-PROP-0030",
+      "record_type": "proposal",
+      "record_state": "draft",
+      "date_recorded": "2026-08-12",
+      "title": "Typed intentional non-response and abstention-state governance",
+      "summary": "Proposes a first-class runtime action state for intentional non-response or deliberate abstention. A system that intentionally selects no visible response should not be represented as if generation failed, timed out, was refused, was interrupted by moderation, or failed to render. The user-facing interface may remain silent or minimal, but operator telemetry, evaluation, provenance, and conformance evidence should preserve that the system successfully selected an intentional abstention action.",
+      "evidence_confidence": "corroborated",
+      "source_types": [
+        "official-source"
+      ],
+      "source_count": 2,
+      "primary_source_title": "Elevated errors on ChatGPT",
+      "primary_source_type": "official-source",
+      "primary_source_platform": "OpenAI Status",
+      "source_platforms": [
+        "OpenAI Status"
+      ],
+      "source_url_status": "available",
+      "system_type": "conversational AI runtime and response-delivery pipeline",
+      "platform_or_vendor": "OpenAI",
+      "product_or_service": "ChatGPT",
+      "specific_model_or_runtime": "ChatGPT generation, orchestration, telemetry, API or application response state, and presentation layers; exact model varies or is unspecified",
+      "model_or_product": "ChatGPT and analogous conversational or agentic AI systems",
+      "interface_surface": "ChatGPT conversational response generation and web presentation, with governance implications for APIs and agent runtimes",
+      "deployment_context": "Production conversational AI, developer APIs, agent runtimes, evaluation systems, and user-facing chat interfaces",
+      "primary_jurisdiction": "global",
+      "regulatory_surface": [
+        "AI assurance",
+        "incident response",
+        "runtime observability",
+        "human-computer interaction",
+        "consumer transparency",
+        "safety evaluation",
+        "auditability"
+      ],
+      "sector": "frontier AI platforms, conversational AI, agent systems, and digital services",
+      "proposal_type": [
+        "runtime governance primitive",
+        "observability and telemetry",
+        "evaluation and conformance",
+        "UX representation",
+        "corpus amendment"
+      ],
+      "proposal_scope_summary": "Define intentional non-response or deliberate abstention as a typed runtime action state distinct from generation failure, refusal, timeout, moderation interruption, transport failure, and rendering failure. Preserve a privacy-safe reason and provenance trail without requiring disclosure of private chain-of-thought.",
+      "path": "vigil/records/proposals/2026/VIGIL-2026-PROP-0030.json",
+      "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0030.json",
+      "raw_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/proposals/2026/VIGIL-2026-PROP-0030.json",
+      "platform_label": "OpenAI",
+      "affected_platform_label": "OpenAI",
+      "source_platform": "OpenAI",
+      "observed_vendor": "OpenAI",
+      "observed_product": "ChatGPT and analogous conversational or agentic AI systems",
+      "public_finding": "Proposes a first-class runtime action state for intentional non-response or deliberate abstention. A system that intentionally selects no visible response should not be represented as if generation failed, timed out, was refused, was interrupted by moderation, or failed to render. The user-facing interface may remain silent or minimal, but operator telemetry, evaluation, provenance, and conformance evidence should preserve that the system successfully selected an intentional abstention action."
     },
     {
       "id": "VIGIL-2026-RESEARCH-0001",
