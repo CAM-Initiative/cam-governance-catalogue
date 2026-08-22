@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
+  { href: "/datasets", label: "Datasets", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
@@ -45,6 +46,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 
   const links = [
+    { href: "/datasets", label: "Datasets", active: location === "/datasets" || location.startsWith("/datasets/") },
     { href: "/policy", label: "Policy", active: location === "/policy" || location.startsWith("/policy/") },
   ];
 
