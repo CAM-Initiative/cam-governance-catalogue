@@ -43,9 +43,10 @@ requireText(home, 'aria-labelledby="constitutional-interfaces-heading"', "Consti
 // tokens rather than introducing a standalone brand palette.
 requireText(indexCss, "--background: 40 33% 98%;", "Light appearance must use the approved clean CAM canvas.");
 requireText(indexCss, 'html[data-theme="dark"]', "Missing deliberate CAM dark appearance token set.");
-requireText(darkAppearance, "--background: 0 0% 0%;", "Dark appearance must resolve the site canvas to true black.");
-requireText(darkAppearance, "--card: 0 0% 0%;", "Dark appearance must resolve principal card surfaces to true black.");
-requireText(darkAppearance, "--popover: 0 0% 0%;", "Dark appearance must resolve dropdown surfaces to true black.");
+requireText(darkAppearance, "--background: 0 0% 4%;", "Dark appearance must use the approved neutral near-black canvas.");
+requireText(darkAppearance, "--card: 0 0% 7%;", "Dark appearance must use the approved raised charcoal card surface.");
+requireText(darkAppearance, "--popover: 0 0% 7%;", "Dark appearance must use the approved raised charcoal popover surface.");
+requireText(darkAppearance, "--secondary: 0 0% 10%;", "Dark appearance must retain a distinct charcoal interaction surface.");
 requireText(darkAppearance, 'html[data-theme="dark"] [class~="bg-[hsl(38_40%_93%)]"]', "Dark appearance must override the light-only landing hero surface.");
 requireText(darkAppearance, 'html[data-theme="dark"] [class~="bg-[hsl(38_40%_94%)]"]', "Dark appearance must override light-only landing section surfaces.");
 requireText(darkAppearance, "header {", "Shared navigation must declare an opaque header surface.");
@@ -64,10 +65,17 @@ for (const match of indexCss.matchAll(/--vigil-(?:nav-active|surface|surface-mut
   }
 }
 
+// Homepage evidence-to-repair already communicates the six-stage method directly.
+// Do not reintroduce the redundant split VIGIL/Constitution explainer block beneath it.
+if (home.includes("Steps 01–03 · Evidence formation") || home.includes("Steps 04–06 · Governance response") || home.includes("Evidence ↔ repair")) {
+  failures.push("Homepage must not reintroduce the redundant VIGIL/Constitution evidence-bridge explainer block.");
+}
+
 // Constitution and Catalogue dark-mode closure. Literal parchment utilities may
-// remain valid in light mode, but they must never surface as white panels in dark mode.
+// remain valid in light mode, but they must never surface as pale panels in dark mode.
 requireText(main, 'import "./constitution-catalogue-ux.css";', "The Constitution/Catalogue UX closure must be loaded last by the application entry point.");
 requireText(constitutionCatalogueUx, 'section[aria-labelledby="governance-stack-heading"] [class~="bg-[hsl(36_35%_96%)]"]', "Governance Stack detail panels must have a dark-mode surface override.");
+requireText(constitutionCatalogueUx, "background-color: hsl(var(--background)) !important;", "Constitution dark-mode closures must follow the shared near-black canvas token.");
 requireText(constitutionCatalogueUx, '#runtime-model .pointer-events-none.absolute.right-0.top-0.bottom-0.w-16', "Runtime Constitutional Interface edge fade must be theme-aware in dark mode.");
 requireText(constitutionCatalogueUx, 'article[aria-controls^="catalogue-details-"]:hover', "Catalogue cards must override the light-only hover surface in dark mode.");
 requireText(constitutionCatalogueUx, 'article[aria-controls^="catalogue-details-"][aria-expanded="true"]', "Expanded Catalogue cards must retain a dark selected surface.");
