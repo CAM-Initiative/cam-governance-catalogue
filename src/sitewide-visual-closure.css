@@ -134,9 +134,17 @@ html[data-theme="dark"] [class~="bg-[hsl(38_40%_94%)]"],
 html[data-theme="dark"] [class~="bg-[hsl(36_35%_96%)]"],
 html[data-theme="dark"] [class~="bg-[hsl(36_48%_95%)]"],
 html[data-theme="dark"] [class~="bg-[hsl(36_48%_96%)]"],
+html[data-theme="dark"] [class~="bg-[hsl(40_42%_96%)]"],
+html[data-theme="dark"] [class~="bg-[hsl(40_48%_97%)]"],
+html[data-theme="dark"] [class~="bg-[hsl(40_55%_98%)]"],
 html[data-theme="dark"] [class~="bg-white"],
 html[data-theme="dark"] [class~="bg-gray-50"] {
   background-color: hsl(var(--card)) !important;
+}
+
+/* Selected/active archival surfaces remain distinct from ordinary cards. */
+html[data-theme="dark"] [class~="bg-[hsl(43_62%_86%)]"] {
+  background-color: hsl(var(--secondary)) !important;
 }
 
 /* Semantic/status/vendor chips may retain hue, but their light 50/100 fills
