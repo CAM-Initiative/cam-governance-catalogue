@@ -1,0 +1,421 @@
+/* VIGIL UX v5 — semantic polish: severity-led Case Files, one authoritative FM per case,
+   richer evidence/learning, dedicated report output, and a permanent About surface. */
+
+/* Case Files retain the strong table grammar; severity is the one intentional chip. */
+.vigil-case-table-cell .vigil-status-chip {
+  width: fit-content;
+  min-width: 2.4rem;
+  justify-content: center;
+  padding: 0.28rem 0.58rem;
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+
+.vigil-case-table-text {
+  font-size: 0.82rem;
+}
+
+/* Affected systems belong to Evidence, before narrative source material. */
+.vigil-affected-systems {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.45rem;
+  background: hsl(var(--background));
+}
+
+.vigil-case-subheading {
+  padding: 0.72rem 0.85rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.35);
+}
+
+.vigil-case-subheading h3 {
+  margin-top: 0.18rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.98rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.vigil-affected-system-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-affected-system-grid > article {
+  min-width: 0;
+  padding: 0.8rem 0.85rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-affected-system-grid > article:nth-child(odd) {
+  border-right: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-affected-system-grid > article > span {
+  display: block;
+  margin-bottom: 0.48rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+
+.vigil-affected-system-grid dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.8rem;
+}
+
+.vigil-affected-system-grid .vigil-case-field dt {
+  font-size: 0.7rem;
+}
+
+.vigil-affected-system-grid .vigil-case-field dd,
+.vigil-affected-system-grid .vigil-case-field dd.is-mono {
+  margin-top: 0.12rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+/* Classification identity is explicit and authoritative before explanatory prose. */
+.vigil-classification-identity {
+  padding: 0.78rem 0.9rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary) / 0.2);
+}
+
+.vigil-classification-identity dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 1rem;
+}
+
+.vigil-classification-identity .vigil-case-field dt {
+  font-size: 0.7rem;
+}
+
+.vigil-classification-identity .vigil-case-field dd,
+.vigil-classification-identity .vigil-case-field dd.is-mono {
+  margin-top: 0.15rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.vigil-related-failures {
+  padding: 0.72rem 0.9rem 0.82rem;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.24);
+}
+
+.vigil-related-failures strong {
+  display: block;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-related-failures p,
+.vigil-related-failures small {
+  display: block;
+  margin-top: 0.28rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.vigil-related-failures small {
+  color: hsl(var(--muted-foreground));
+}
+
+/* LEARN should expose the substantive knowledge already present in canonical records. */
+.vigil-learning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 0.7rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.42rem;
+  overflow: hidden;
+}
+
+.vigil-learning-grid > section {
+  min-width: 0;
+  padding: 0.82rem 0.88rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-learning-grid > section:nth-child(odd) {
+  border-right: 1px solid hsl(var(--border));
+}
+
+.vigil-learning-grid > section.is-risk {
+  background: hsl(var(--card) / 0.38);
+}
+
+.vigil-learning-grid > section > strong {
+  display: block;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-learning-grid > section > p,
+.vigil-learning-list {
+  margin: 0.38rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-learning-list {
+  padding-left: 1.15rem;
+}
+
+.vigil-learning-list li + li {
+  margin-top: 0.28rem;
+}
+
+.vigil-learning-record > a {
+  display: inline-flex;
+  margin-top: 0.72rem;
+}
+
+/* Provenance points back to Evidence instead of repeating the entire external bibliography on screen. */
+.vigil-provenance-evidence-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.8rem;
+  align-items: baseline;
+  padding: 0.72rem 0.82rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.42rem;
+  background: hsl(var(--card) / 0.3);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.vigil-provenance-evidence-note strong {
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+/* About VIGIL: explanatory, not another database dashboard. */
+.vigil-about-page {
+  background: hsl(var(--background));
+}
+
+.vigil-about-hero {
+  max-width: 980px;
+  padding: 1.2rem 0 1.35rem;
+}
+
+.vigil-about-hero h1 {
+  margin-top: 0.3rem;
+  font-family: var(--app-font-serif);
+  font-size: clamp(2.25rem, 4vw, 3.6rem);
+  line-height: 1.05;
+}
+
+.vigil-about-hero > p:not(.vigil-library-kicker) {
+  margin-top: 0.72rem;
+  max-width: 900px;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-section {
+  margin-top: 0.9rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.55rem;
+  overflow: hidden;
+  background: hsl(var(--card) / 0.3);
+}
+
+.vigil-about-section-heading {
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-about-section-heading h2 {
+  margin-top: 0.2rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.55rem;
+  line-height: 1.25;
+}
+
+.vigil-about-flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.vigil-about-flow article,
+.vigil-about-record-grid article,
+.vigil-about-boundary-grid article {
+  padding: 0.9rem;
+}
+
+.vigil-about-flow article + article {
+  border-left: 1px solid hsl(var(--border));
+}
+
+.vigil-about-flow span,
+.vigil-about-record-grid span {
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+
+.vigil-about-flow h3,
+.vigil-about-record-grid h3,
+.vigil-about-boundary-grid h3 {
+  margin-top: 0.22rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.vigil-about-flow p,
+.vigil-about-record-grid p,
+.vigil-about-boundary-grid p,
+.vigil-about-note {
+  margin-top: 0.38rem;
+  font-size: 0.88rem;
+  line-height: 1.58;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-note {
+  margin: 0;
+  padding: 0.8rem 0.95rem;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary) / 0.18);
+}
+
+.vigil-about-record-grid,
+.vigil-about-boundary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-about-record-grid article:nth-child(odd),
+.vigil-about-boundary-grid article:nth-child(odd) {
+  border-right: 1px solid hsl(var(--border));
+}
+
+.vigil-about-record-grid article,
+.vigil-about-boundary-grid article {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-about-surface-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vigil-about-surface-grid a {
+  display: block;
+  padding: 1rem;
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  transition: background 130ms ease;
+}
+
+.vigil-about-surface-grid a + a {
+  border-left: 1px solid hsl(var(--border));
+}
+
+.vigil-about-surface-grid a:hover {
+  background: hsl(var(--secondary) / 0.24);
+}
+
+.vigil-about-surface-grid strong,
+.vigil-about-surface-grid span {
+  display: block;
+}
+
+.vigil-about-surface-grid strong {
+  font-family: var(--app-font-sans);
+  font-size: 1rem;
+}
+
+.vigil-about-surface-grid span {
+  margin-top: 0.35rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Dedicated report route is the printable artefact. Keep headings with their opening content. */
+@media print {
+  .report-page .report-cover,
+  .report-page .report-section > header,
+  .report-page h1,
+  .report-page h2,
+  .report-page h3,
+  .report-page h4 {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+
+  .report-page article,
+  .report-page blockquote,
+  .report-page table,
+  .report-page .cam-parchment-card {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .report-page .report-section {
+    break-before: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .vigil-affected-system-grid,
+  .vigil-learning-grid,
+  .vigil-about-record-grid,
+  .vigil-about-boundary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-affected-system-grid > article:nth-child(odd),
+  .vigil-learning-grid > section:nth-child(odd),
+  .vigil-about-record-grid article:nth-child(odd),
+  .vigil-about-boundary-grid article:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .vigil-about-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-about-flow article + article {
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+
+  .vigil-about-surface-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-about-surface-grid a + a {
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .vigil-affected-system-grid dl,
+  .vigil-classification-identity dl {
+    grid-template-columns: 1fr;
+  }
+}

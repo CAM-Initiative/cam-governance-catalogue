@@ -4,10 +4,13 @@ import { resolve } from "node:path";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-const [indexCss, report, home] = await Promise.all([
+const [indexCss, report, home, shell, themeToggle, observatoryNav] = await Promise.all([
   read("src/index.css"),
   read("src/pages/evidence-chain-report.tsx"),
   read("src/pages/home.tsx"),
+  read("src/components/layout/Shell.tsx"),
+  read("src/components/ThemeToggle.tsx"),
+  read("src/components/vigil/VigilObservatoryNav.tsx"),
 ]);
 
 const failures = [];
@@ -30,6 +33,23 @@ if (/--cam-corpus-(?:heading|metadata):\s*var\(--(?:foreground|card-foreground|p
   failures.push("Corpus report backgrounds must use approved surface tokens, never foreground/text tokens.");
 }
 requireText(home, 'aria-labelledby="constitutional-interfaces-heading"', "Constitutional Interfaces landmark is missing.");
+
+// Appearance is a shared CAM capability. VIGIL aliases must resolve to CAM
+// tokens rather than introducing a standalone brand palette.
+requireText(indexCss, "--background: 40 33% 98%;", "Light appearance must use the approved clean CAM canvas.");
+requireText(indexCss, 'html[data-theme="dark"]', "Missing deliberate CAM dark appearance token set.");
+requireText(indexCss, "--cam-surface-canvas: var(--background);", "CAM canvas alias must resolve to the shared background token.");
+requireText(indexCss, "--vigil-nav-active: var(--cam-corpus-selected);", "VIGIL active navigation must resolve to the shared CAM selected surface.");
+requireText(indexCss, "--vigil-surface: var(--cam-surface-raised);", "VIGIL surfaces must resolve to CAM surface tokens.");
+requireText(indexCss, "--vigil-accent: var(--cam-accent);", "VIGIL accent must resolve to the CAM accent token.");
+requireText(themeToggle, 'window.localStorage.setItem(STORAGE_KEY, nextTheme)', "Theme preference must persist across navigation.");
+requireText(shell, "<ThemeToggle />", "The appearance toggle must be present in the shared CAM header.");
+requireText(observatoryNav, "vigil-local-nav-link", "The reusable VIGIL local navigation is missing.");
+for (const match of indexCss.matchAll(/--vigil-(?:nav-active|surface|surface-muted|accent):\s*([^;]+);/gu)) {
+  if (!/^var\(--(?:cam-|background|card|secondary|primary)/u.test(match[1].trim())) {
+    failures.push("VIGIL aliases must resolve to approved CAM tokens rather than literal colour values.");
+  }
+}
 
 // Decorative green is not part of the CAM palette. Semantic status colours are
 // deliberately outside this check; this guard applies to the report header.

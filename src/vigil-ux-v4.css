@@ -1,0 +1,549 @@
+/* VIGIL UX v4 — restore the strong table/hero composition, keep FM-centred Case Files,
+   and make the investigation stages interactive rather than infinitely stacked. */
+
+/* Case Files landing page: restore the readable catalogue/table grammar. */
+.vigil-case-table-search {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(220px, 290px);
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.vigil-case-table-search .vigil-search-control {
+  max-width: none;
+}
+
+.vigil-case-table {
+  overflow: hidden;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--background));
+}
+
+.vigil-case-table-head,
+.vigil-case-table-row-link {
+  display: grid;
+  grid-template-columns: minmax(520px, 1fr) minmax(150px, 190px) minmax(120px, 150px) 28px;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.vigil-case-table-head {
+  min-height: 36px;
+  padding: 0 0.95rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.52);
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-table-row {
+  border-bottom: 1px solid hsl(var(--border) / 0.78);
+}
+
+.vigil-case-table-row:last-child {
+  border-bottom: 0;
+}
+
+.vigil-case-table-row-link {
+  min-height: 82px;
+  padding: 0.72rem 0.95rem;
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  transition: background 130ms ease;
+}
+
+.vigil-case-table-row-link:hover {
+  background: hsl(var(--secondary) / 0.22);
+}
+
+.vigil-case-table-row-link:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.vigil-case-table-primary {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  min-width: 0;
+}
+
+.vigil-case-table-id {
+  padding-top: 0.15rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-table-copy {
+  min-width: 0;
+}
+
+.vigil-case-table-copy h2 {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.96rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.vigil-case-table-copy p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-table-cell {
+  min-width: 0;
+}
+
+.vigil-case-mobile-label {
+  display: none;
+}
+
+.vigil-case-table-text,
+.vigil-case-table-severity {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.42;
+  color: hsl(var(--foreground) / 0.84);
+}
+
+.vigil-case-table-severity {
+  font-family: var(--app-font-mono);
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.vigil-case-table-open {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-table-open svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Open Case File: restore the compact hero with an explicit metadata panel. */
+.vigil-case-file-hero-v4 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(270px, 0.72fr);
+  gap: 1.35rem;
+  margin-top: 0.8rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.55rem;
+  background: hsl(var(--card) / 0.46);
+}
+
+.vigil-case-file-title-block {
+  min-width: 0;
+  padding-right: 0.35rem;
+}
+
+.vigil-case-file-hero-v4 h1 {
+  max-width: 900px;
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.9rem, 2.55vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.vigil-case-file-summary {
+  max-width: 900px;
+  margin: 0.58rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-meta-panel {
+  min-width: 0;
+  padding-left: 1rem;
+  border-left: 1px solid hsl(var(--border));
+}
+
+.vigil-case-meta-panel dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.68rem 0.9rem;
+}
+
+.vigil-case-meta-panel .vigil-case-field dt {
+  font-size: 0.68rem;
+  line-height: 1.3;
+  letter-spacing: 0.07em;
+}
+
+.vigil-case-meta-panel .vigil-case-field dd,
+.vigil-case-meta-panel .vigil-case-field dd.is-mono {
+  margin-top: 0.16rem;
+  font-size: 0.78rem;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-print-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  margin-top: 0.85rem;
+  padding: 0.52rem 0.72rem;
+  border: 1px solid hsl(var(--primary) / 0.38);
+  border-radius: 0.38rem;
+  background: hsl(var(--background));
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-print-button:hover {
+  background: hsl(var(--vigil-nav-active) / 0.3);
+}
+
+.vigil-case-print-button svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* The stage bar is a real tab control: one investigation stage at a time. */
+.vigil-case-stage-tabs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 0.72rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.45rem;
+  overflow: hidden;
+  background: hsl(var(--background));
+}
+
+.vigil-case-stage-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 0.42rem;
+  min-height: 42px;
+  padding: 0.5rem 0.65rem;
+  border-right: 1px solid hsl(var(--border));
+  background: transparent;
+  font-family: var(--app-font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  text-align: left;
+}
+
+.vigil-case-stage-tabs button:last-child {
+  border-right: 0;
+}
+
+.vigil-case-stage-tabs button:hover,
+.vigil-case-stage-tabs button.is-active {
+  background: hsl(var(--vigil-nav-active) / 0.34);
+}
+
+.vigil-case-stage-tabs button.is-active {
+  box-shadow: inset 0 -2px 0 hsl(var(--primary));
+}
+
+.vigil-case-stage-tabs button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
+}
+
+.vigil-case-stage-tabs button span {
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-active-stage {
+  margin-top: 0.72rem;
+}
+
+.vigil-case-active-stage .vigil-case-section {
+  margin: 0;
+}
+
+.vigil-case-print-all {
+  display: none;
+}
+
+/* Classification: retain the useful FM fields without a giant threshold callout. */
+.vigil-classification-summary {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 0.42rem;
+  background: hsl(var(--background));
+}
+
+.vigil-classify-definition {
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.32);
+}
+
+.vigil-classify-definition > p:last-child,
+.vigil-classify-pair > div > p:last-child {
+  margin: 0.32rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-classify-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-classify-pair > div {
+  padding: 0.85rem 0.9rem;
+}
+
+.vigil-classify-pair > div + div {
+  border-left: 1px solid hsl(var(--border));
+}
+
+.vigil-classification-meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  padding: 0.75rem 0.9rem 0.85rem;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.2);
+}
+
+.vigil-classification-meta .vigil-case-field dt {
+  font-size: 0.68rem;
+}
+
+.vigil-classification-meta .vigil-case-field dd,
+.vigil-classification-meta .vigil-case-field dd.is-mono {
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+/* Bring the active stage typography back down from the v3 inflation without becoming tiny. */
+.vigil-case-active-stage .vigil-case-section > header {
+  padding: 0.72rem 0.88rem;
+}
+
+.vigil-case-active-stage .vigil-case-section > header > span {
+  font-size: 0.72rem;
+}
+
+.vigil-case-active-stage .vigil-case-section > header h2 {
+  font-size: 1.22rem;
+}
+
+.vigil-case-active-stage .vigil-case-section > header p {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.vigil-case-active-stage .vigil-case-section-body {
+  gap: 0.65rem;
+  padding: 0.78rem 0.88rem 0.9rem;
+}
+
+.vigil-case-active-stage .vigil-case-record {
+  padding: 0.78rem;
+}
+
+.vigil-case-active-stage .vigil-case-record-heading > span {
+  font-size: 0.7rem;
+}
+
+.vigil-case-active-stage .vigil-case-record-heading h3 {
+  font-size: 0.92rem;
+}
+
+.vigil-case-active-stage .vigil-case-record > p,
+.vigil-case-active-stage .vigil-case-record ol,
+.vigil-case-active-stage .vigil-case-narrative p,
+.vigil-case-active-stage .vigil-case-callout p,
+.vigil-case-active-stage .vigil-observation-context p,
+.vigil-case-active-stage .vigil-response-meta,
+.vigil-case-active-stage .vigil-case-provision-list p,
+.vigil-case-active-stage .vigil-provenance-note,
+.vigil-case-active-stage .vigil-evidence-column p {
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+/* Standards & Sources: metadata line should not repeat an issuer already present in the title. */
+.vigil-source-row .vigil-source-summary-meta:empty {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .vigil-case-table-head,
+  .vigil-case-table-row-link {
+    grid-template-columns: minmax(420px, 1fr) minmax(135px, 170px) minmax(115px, 145px) 24px;
+  }
+
+  .vigil-case-file-hero-v4 {
+    grid-template-columns: minmax(0, 1.55fr) minmax(245px, 0.78fr);
+  }
+
+  .vigil-case-meta-panel dl,
+  .vigil-classification-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .vigil-case-table-search,
+  .vigil-case-file-hero-v4 {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-case-meta-panel {
+    padding-top: 0.85rem;
+    padding-left: 0;
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+
+  .vigil-case-table-head {
+    display: none;
+  }
+
+  .vigil-case-table-row-link {
+    grid-template-columns: 1fr auto;
+    gap: 0.65rem 1rem;
+    padding: 0.9rem;
+  }
+
+  .vigil-case-table-primary {
+    grid-column: 1 / -1;
+  }
+
+  .vigil-case-table-cell {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .vigil-case-mobile-label {
+    display: inline;
+    font-family: var(--app-font-mono);
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .vigil-case-table-open {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+  }
+
+  .vigil-case-stage-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vigil-case-stage-tabs button:nth-child(3) {
+    border-right: 0;
+  }
+
+  .vigil-case-stage-tabs button:nth-child(-n + 3) {
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .vigil-classify-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-classify-pair > div + div {
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .vigil-case-stage-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vigil-case-stage-tabs button {
+    border-right: 1px solid hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .vigil-case-stage-tabs button:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .vigil-case-stage-tabs button:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .vigil-case-meta-panel dl,
+  .vigil-classification-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  body:has(.vigil-case-file-page) header.sticky,
+  body:has(.vigil-case-file-page) footer,
+  body:has(.vigil-case-file-page) .vigil-app-shell,
+  body:has(.vigil-case-file-page) .vigil-back-link,
+  body:has(.vigil-case-file-page) .vigil-case-stage-tabs,
+  body:has(.vigil-case-file-page) .vigil-case-print-button,
+  body:has(.vigil-case-file-page) .vigil-case-active-stage {
+    display: none !important;
+  }
+
+  .vigil-case-file-page {
+    background: white !important;
+  }
+
+  .vigil-case-file-page > .container {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .vigil-case-file-hero-v4 {
+    break-after: avoid;
+    box-shadow: none !important;
+  }
+
+  .vigil-case-print-all {
+    display: grid !important;
+    gap: 0.65rem;
+    margin-top: 0.7rem;
+  }
+
+  .vigil-case-print-all .vigil-case-section {
+    break-inside: auto;
+    box-shadow: none !important;
+  }
+
+  .vigil-case-print-all .vigil-case-record,
+  .vigil-case-print-all .vigil-evidence-card,
+  .vigil-case-print-all .vigil-classification-summary,
+  .vigil-case-print-all .vigil-implementation-provenance {
+    break-inside: avoid;
+  }
+}

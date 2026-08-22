@@ -86,6 +86,36 @@ export type PublicRecordDisplay = {
   searchTokens: string[];
 };
 
+export type PublicEvidenceCard = {
+  title: string;
+  publisher?: string;
+  date?: string;
+  sourceType?: string;
+  sourceResidence?: string;
+  sourceRole?: string;
+  sourceUrl?: string;
+  archiveUrl?: string;
+  directReviewStatus?: string;
+  evidenceModalities: string[];
+  confirmedEvidence?: string;
+  interpretiveConclusion?: string;
+  evidenceBoundary: string[];
+  confidence?: string;
+};
+
+export type FailureModePublicDetail = {
+  definition?: string;
+  recognitionThreshold?: string;
+  significance?: string;
+  evidence: PublicEvidenceCard[];
+  repairState?: string;
+  governanceControlSought?: string;
+  existingCoverage?: string;
+  governanceGap: string[];
+  proposedControl?: string;
+  implementedProvision?: string;
+};
+
 const VIGIL_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d+/gi;
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -845,6 +875,73 @@ export function deriveVigilPublicDisplay(
     repairState,
     principalRepair: principal,
     searchTokens,
+  };
+}
+
+/**
+ * Derive the answer-first failure-mode projection without changing canonical
+ * VIGIL data. Confirmed evidence, interpretation, and evidentiary boundaries
+ * remain separate so the public interface does not overstate a source.
+ */
+export function deriveFailureModePublicDetail(record: UnknownRecord, display?: PublicRecordDisplay): FailureModePublicDetail {
+  const sources = Array.isArray(record.source_records)
+    ? record.source_records.filter(isObject)
+    : Array.isArray(record.evidence_sources)
+      ? record.evidence_sources.filter(isObject)
+      : [];
+
+  const evidence = sources.map((source, index): PublicEvidenceCard => {
+    const limitations = collectLists(source, [
+      "source_limitations",
+      "limitations",
+      "primary_artefact_access.limitations",
+      "known_limitations",
+    ]);
+    const accessBoundary = firstText(source, [
+      "primary_artefact_access.access_status",
+      "access_status",
+      "source_url_status",
+    ]);
+    const interpretiveReliance = firstText(source, ["interpretive_reliance"]);
+    return {
+      title: firstText(source, ["source_title", "title", "name"]) ?? `Evidence source ${index + 1}`,
+      publisher: firstText(source, ["author_or_publisher", "publisher", "source_platform", "author"]),
+      date: firstText(source, ["source_date", "published_date", "date", "retrieved_date"]),
+      sourceType: firstText(source, ["source_type", "type"]),
+      sourceResidence: firstText(source, ["source_residence"]),
+      sourceRole: firstText(source, ["source_role", "evidence_role"]),
+      sourceUrl: firstText(source, ["source_url", "url"]),
+      archiveUrl: firstText(source, ["archive_url"]),
+      directReviewStatus: firstText(source, [
+        "primary_artefact_access.direct_primary_artefact_review",
+        "direct_review_status",
+        "direct_review",
+      ]),
+      evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),
+      confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"]),
+      interpretiveConclusion: firstText(source, ["interpretive_conclusion", "relevance_note", "interpretation"]),
+      evidenceBoundary: unique([accessBoundary, interpretiveReliance, ...limitations]),
+      confidence: firstText(source, ["evidence_confidence", "confidence"]) ?? firstText(record, ["evidence_confidence", "failure_classification.confidence"]),
+    };
+  });
+
+  return {
+    definition: firstText(record, ["failure_mode_definition", "definition", "summary"]) ?? display?.failure?.definition,
+    recognitionThreshold: firstText(record, ["failure_threshold", "recognition_threshold", "threshold"]),
+    significance: firstText(record, ["why_it_matters", "why_it_matters_to_CAM", "governance_significance", "significance"]) ?? display?.failure?.significance,
+    evidence,
+    repairState: firstText(record, ["repair_status.status", "repair_status.state", "repair_status_value"]) ?? display?.repairState,
+    governanceControlSought: firstText(record, [
+      "governance_control_sought",
+      "recommended_control",
+      "recommended_controls",
+      "triage.recommended_next_step",
+      "triage.next_action",
+    ]),
+    existingCoverage: firstText(record, ["corpus_coverage.coverage_summary", "corpus_coverage.classification"]) ?? display?.failure?.corpusRelationship,
+    governanceGap: collectLists(record, ["corpus_coverage.remaining_gaps", "repair_status.remaining_gaps", "remaining_gaps"]),
+    proposedControl: firstText(record, ["proposed_control", "recommended_control", "recommended_controls"]),
+    implementedProvision: display?.principalRepair ?? firstText(record, ["principal_repair"]),
   };
 }
 

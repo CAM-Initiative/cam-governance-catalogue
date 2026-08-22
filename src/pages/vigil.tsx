@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Copy, Download, X } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
+import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
-import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, textFrom, titleizeValue, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { arrayFrom, filterComparisonKey, humanLabel, isMeaningfulText, isObject, normalizeFilterLabel, normalizeRecords, previewText, shouldShowCurrentPriority, textFrom, titleizeValue, vigilOperationalRank, type SummaryEntry, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch, type CorpusProvision, type RecordChain } from "@/lib/vigilPublicDisplay";
 
 const VIGIL_PAGE_SIZE = 20;
 
-type FilterKey = "recordType" | "affectedPlatform" | "status" | "triagePriority" | "triageStatus";
+type FilterKey = "recordType" | "affectedPlatform" | "status" | "severity" | "triagePriority" | "triageStatus" | "monitoring";
 type SortKey = "id" | "date" | "platform" | "type" | "title" | "status" | "triagePriority";
 type SortDirection = "asc" | "desc";
 type SortConfig = { key: SortKey; direction: SortDirection };
@@ -53,8 +54,10 @@ const filterConfig: Array<{ key: FilterKey; label: string; placeholder: string }
   { key: "recordType", label: "Record Type", placeholder: "All record types" },
   { key: "affectedPlatform", label: "Affected Platform", placeholder: "All affected platforms" },
   { key: "status", label: "Record Status", placeholder: "All record statuses" },
+  { key: "severity", label: "Severity", placeholder: "All severity levels" },
   { key: "triagePriority", label: "Triage Priority", placeholder: "All priorities" },
   { key: "triageStatus", label: "Triage Status", placeholder: "All triage statuses" },
+  { key: "monitoring", label: "Monitoring", placeholder: "All monitoring states" },
 ];
 
 function getFilterOptionsFromRecords(records: VigilIndexRecord[]) {
@@ -84,7 +87,14 @@ function getFilterOptionsFromRecords(records: VigilIndexRecord[]) {
         ]];
       }
       if (filter.key === "triagePriority") {
-        const preferred = ["P0", "P1", "P2", "P3", "P4"];
+        const preferred = ["P0", "P1", "P2", "P3", "PU", "PN"];
+        return [filter.key, [
+          ...preferred.flatMap((label) => optionsByKey.get(filterComparisonKey(filter.key, label)) ?? []),
+          ...options.filter((option) => !preferred.includes(option.label)),
+        ]];
+      }
+      if (filter.key === "severity") {
+        const preferred = ["S0", "S1", "S2", "S3", "S4", "SU"];
         return [filter.key, [
           ...preferred.flatMap((label) => optionsByKey.get(filterComparisonKey(filter.key, label)) ?? []),
           ...options.filter((option) => !preferred.includes(option.label)),
@@ -100,8 +110,10 @@ function valuesForFilter(record: VigilIndexRecord, key: FilterKey): string[] {
     recordType: [record.record_type],
     affectedPlatform: record.affected_platform_label ? [record.affected_platform_label] : undefined,
     status: record.record_state ? [record.record_state] : undefined,
+    severity: record.severity ? [record.severity] : undefined,
     triagePriority: record.triage_priority ? [record.triage_priority] : undefined,
     triageStatus: record.triage_status ? [record.triage_status] : undefined,
+    monitoring: record.monitoring_required === undefined ? undefined : [record.monitoring_required ? "Required" : "Not required"],
   };
   return mapping[key] ?? [];
 }
@@ -136,6 +148,16 @@ function sortValueForRecord(record: VigilIndexRecord, key: SortKey) {
 }
 
 function compareRecordsBySort(a: VigilIndexRecord, b: VigilIndexRecord, sortConfig: SortConfig) {
+  if (sortConfig.key === "triagePriority") {
+    const operationalComparison = vigilOperationalRank(a) - vigilOperationalRank(b);
+    if (operationalComparison !== 0) return sortConfig.direction === "asc" ? operationalComparison : -operationalComparison;
+
+    const statusComparison = (sortTextValue(a.triage_status) ?? "").localeCompare(sortTextValue(b.triage_status) ?? "", undefined, { numeric: true, sensitivity: "base" });
+    if (statusComparison !== 0) return sortConfig.direction === "asc" ? statusComparison : -statusComparison;
+
+    const dateComparison = recordTimestamp(b) - recordTimestamp(a);
+    if (dateComparison !== 0) return sortConfig.direction === "asc" ? dateComparison : -dateComparison;
+  }
   const aValue = sortValueForRecord(a, sortConfig.key);
   const bValue = sortValueForRecord(b, sortConfig.key);
 
@@ -1190,11 +1212,13 @@ export default function Vigil() {
     recordType: "",
     affectedPlatform: "",
     status: "",
+    severity: "",
     triagePriority: "",
     triageStatus: "",
+    monitoring: "",
   });
   const [search, setSearch] = useState("");
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "date", direction: "desc" });
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: "triagePriority", direction: "asc" });
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [loadNotice, setLoadNotice] = useState("");
@@ -1387,7 +1411,7 @@ export default function Vigil() {
   function navigateToRecord(recordId: string) {
     const targetIndex = records.findIndex((record) => record.id.toLocaleLowerCase() === recordId.toLocaleLowerCase());
     setSearch(recordId);
-    setFilters({ recordType: "", affectedPlatform: "", status: "", triagePriority: "", triageStatus: "" });
+    setFilters({ recordType: "", affectedPlatform: "", status: "", severity: "", triagePriority: "", triageStatus: "", monitoring: "" });
     setRecordPage(1);
     if (targetIndex < 0) return;
 
@@ -1436,6 +1460,7 @@ export default function Vigil() {
 
   return (
     <Shell>
+      <VigilObservatoryNav />
       <div className="container mx-auto max-w-7xl px-5 py-8 md:px-8 lg:px-10">
         <div className="mb-5">
           <p className="mb-2 font-mono text-[13px] uppercase tracking-[0.22em] text-cam-gold">Evidence-to-Repair Governance Ledger</p>
@@ -1625,7 +1650,7 @@ export default function Vigil() {
             <div className="mb-4">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Public filters</p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, record or source title, publisher/platform, source type, provider, domain, instrument, section, incident term, or triage state; narrow results by type, affected platform, lifecycle status, priority, and triage status. Multiple search terms must all match.</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Search by record ID, record or source title, publisher/platform, source type, provider, domain, instrument, section, incident term, severity, or triage state; narrow results by type, affected platform, lifecycle status, severity, current priority, workflow status, and monitoring. Multiple search terms must all match.</p>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -1668,7 +1693,7 @@ export default function Vigil() {
                     type="button"
                     onClick={() => {
                       setSearch("");
-                      setFilters({ recordType: "", affectedPlatform: "", status: "", triagePriority: "", triageStatus: "" });
+                      setFilters({ recordType: "", affectedPlatform: "", status: "", severity: "", triagePriority: "", triageStatus: "", monitoring: "" });
                     }}
                   >
                     Clear filters
@@ -1761,6 +1786,8 @@ export default function Vigil() {
               const publicFinding = record.publicDisplay.finding ?? record.summary;
               const domainLabel = record.publicDisplay.domains.join("; ");
               const publicLifecycle = record.publicDisplay.lifecycleLabel ?? record.record_state;
+              const showPriority = shouldShowCurrentPriority(record.triage_priority);
+              const showDetailPriority = shouldShowCurrentPriority(detailRecord.triage_priority);
               return (
                 <article id={`vigil-record-${record.id.replace(/[^A-Za-z0-9_-]/g, "-")}`} key={recordKey} className="vigil-record-card group cam-parchment-card scroll-mt-6 rounded-xl shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-[hsl(36_48%_96%)] focus-within:ring-2 focus-within:ring-primary/20">
                   {!isExpanded && (
@@ -1793,7 +1820,8 @@ export default function Vigil() {
                           <div className="grid grid-cols-2 gap-3 rounded-lg border border-border/70 bg-background/35 p-3">
                             <div><p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground/70">Record Type</p><span className={`mt-1 inline-flex rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] ${recordTypeTone(record.record_type)}`}>{recordTypeLabel(record.record_type)}</span></div>
                             <Field label="Lifecycle Status" value={publicLifecycle} />
-                            <Field label="Triage Priority" value={record.triage_priority} />
+                            <Field label="Severity" value={record.severity} />
+                            <Field label="Triage Priority" value={showPriority ? record.triage_priority : undefined} />
                             <Field label="Triage Status" value={record.triage_status} />
                             <Field label="Record Date" value={recordDate} />
                             <Field label="Domain / System" value={domainLabel || record.platform_label} />
@@ -1826,8 +1854,9 @@ export default function Vigil() {
                           </div>
                           <div className="min-w-0">
                             <div className="flex flex-wrap gap-2">
-                              {record.triage_priority && <span className="inline-flex rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-950">{record.triage_priority}</span>}
-                              {record.triage_status && <span className="inline-flex rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[10px] font-medium tracking-[0.08em] text-muted-foreground">{titleizeValue(record.triage_status)}</span>}
+                              {record.severity && <span className="inline-flex rounded-md border border-rose-300 bg-rose-50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-rose-950">Severity {record.severity}</span>}
+                              {showPriority && <span className="inline-flex rounded-md border border-amber-300 bg-amber-50 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-amber-950">Priority {record.triage_priority}</span>}
+                              {record.triage_status && <span className="inline-flex rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[10px] font-medium tracking-[0.08em] text-muted-foreground">Triage: {titleizeValue(record.triage_status)}</span>}
                             </div>
                           </div>
                         </div>
@@ -1859,8 +1888,9 @@ export default function Vigil() {
                             {[detailRecord.publicDisplay.lifecycleLabel, detailRecordDate, detailRecord.platform_label].filter(isMeaningfulText).map((value, badgeIndex) => (
                               <span key={`${value}-${badgeIndex}`} className={`rounded-full border px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] ${badgeIndex === 0 ? lifecycleTone(String(value)) : "border-border bg-card text-muted-foreground"}`}>{value}</span>
                             ))}
-                            {detailRecord.triage_priority && <span className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.08em] text-amber-950">Priority {detailRecord.triage_priority}</span>}
-                            {detailRecord.triage_status && <span className="rounded-full border border-border bg-card px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">Triage: {detailRecord.triage_status}</span>}
+                            {detailRecord.severity && <span className="rounded-full border border-rose-300 bg-rose-50 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.08em] text-rose-950">Severity {detailRecord.severity}</span>}
+                            {showDetailPriority && <span className="rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.08em] text-amber-950">Priority {detailRecord.triage_priority}</span>}
+                            {detailRecord.triage_status && <span className="rounded-full border border-border bg-card px-3 py-1.5 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">Triage: {titleizeValue(detailRecord.triage_status)}</span>}
                           </div>
                         </div>
                       </div>

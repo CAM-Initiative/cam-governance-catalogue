@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
+import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords, normalizeVigilRecord, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import type { CorpusProvision, RecordChain } from "@/lib/vigilPublicDisplay";
@@ -878,7 +879,7 @@ export default function EvidenceChainReport() {
     : [], [observationRecordIds, state]);
   const toggleSection = (number: string) => setIncludedSections((current) => ({ ...current, [number]: !current[number] }));
 
-  return <Shell><main className="report-page container mx-auto w-full max-w-7xl px-4 py-8 sm:px-5 md:px-8 md:py-12 lg:px-10">
+  return <Shell><VigilObservatoryNav /><main className="report-page container mx-auto w-full max-w-7xl px-4 py-8 sm:px-5 md:px-8 md:py-12 lg:px-10">
     {state.status === "loading" && <div className="cam-parchment-card rounded-xl p-6 text-sm text-muted-foreground">Preparing the evidence-chain report…</div>}
     {state.status === "error" && <div className="cam-parchment-card rounded-xl p-6"><p className="font-mono text-sm uppercase tracking-[0.16em] text-rose-800">Report unavailable</p><p className="mt-3 text-base leading-relaxed text-muted-foreground">{state.message}</p><Link href="/observatory" className="mt-4 inline-flex font-mono text-sm uppercase tracking-[0.12em] text-cam-gold underline underline-offset-4">Return to Observatory →</Link></div>}
     {state.status === "ready" && <div className="space-y-6">

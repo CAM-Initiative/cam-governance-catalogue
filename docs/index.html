@@ -19,6 +19,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
       <script>
       window.tailwind = {
         theme: {
@@ -61,8 +75,8 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-DIM0PblK.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-FlIlqn6G.css">
+    <script type="module" crossorigin src="/assets/index-CWDuI155.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C04vhxS2.css">
   </head>
   <body>
     <div id="root"></div>
