@@ -8,9 +8,9 @@ const initiativeResources = [
   {
     id: "vigil-observatory",
     title: "VIGIL Observatory",
-    subtitle: "Evidence-to-repair governance ledger",
-    purpose: "Evidence, failure modes, proposals, patches and post-patch monitoring.",
-    description: "Explore the public ledger connecting real-world signals and failure modes to evidence, governance gaps, proposals, implemented patches, and continuing observation.",
+    subtitle: "Evidence, failure modes & public datasets",
+    purpose: "Case Files, source evidence, governance requirements, repair history and machine-readable public data.",
+    description: "Explore the public VIGIL system connecting real-world signals and failure modes to evidence, governance gaps, external reference data, proposals, implemented patches, and continuing observation.",
     cta: "Browse the VIGIL Observatory",
     href: "/observatory",
   },
@@ -24,13 +24,13 @@ const initiativeResources = [
     href: "/catalogue",
   },
   {
-    id: "policy-papers",
-    title: "Policy Papers",
-    subtitle: "Public policy proposals and submissions",
-    purpose: "Proposals applying CAM governance to institutional, legal, economic and administrative design.",
-    description: "Read CAM Initiative policy papers applying governance primitives to law, public administration, market design, and technology transition.",
-    cta: "Browse CAM Policy Papers",
-    href: "/policy",
+    id: "datasets",
+    title: "Datasets",
+    subtitle: "Machine-readable governance reference data",
+    purpose: "Downloadable VIGIL source, standards and requirement datasets for independent analysis and reuse.",
+    description: "Browse and download public VIGIL governance-reference datasets while preserving source authority, jurisdiction, normative-force and applicability boundaries.",
+    cta: "Browse CAM Initiative datasets",
+    href: "/datasets",
   },
 ];
 
