@@ -6,7 +6,7 @@ The public CAM interface uses a clean canvas, warm parchment working surfaces, a
 
 The default light appearance uses a white/near-white `--background` canvas. Parchment remains available through `--card`, `--secondary`, and the CAM Corpus surfaces so that archival character communicates grouping rather than colouring the whole page.
 
-The dark appearance is declared under `html[data-theme="dark"]`. It uses warm ink surfaces and bronze-gold accents; it is a deliberate CAM palette, not an inversion of the light theme. Shared semantic tokens keep borders, type, focus rings, selected states and status meanings accessible in both appearances.
+The dark appearance uses a **true black canvas and black principal surfaces**, with the existing CAM archival-gold accents, semantic borders, selected states and status meanings retained for hierarchy. The base token architecture remains in `src/index.css`; `src/dark-appearance.css` is loaded after it and owns the final dark-surface closure, including compatibility overrides for legacy light-only landing-page utilities. Dark mode must not expose light parchment section backgrounds or translucent navigation surfaces.
 
 `--cam-surface-*` aliases describe shared presentation roles. Any `--vigil-*` alias must resolve to one of those CAM roles or another approved CAM token. VIGIL must not declare an independent brand palette.
 
@@ -21,6 +21,10 @@ Use the accompanying `--cam-corpus-selected-foreground` and `--cam-corpus-select
 Within **Corpus implementation by instrument section**, `--cam-corpus-heading` must reuse the selected **Constitutional Interfaces** Corpus surface. The instrument, action, and verification summary uses the deliberately softer, lighter `--cam-corpus-metadata` surface below it. Literal corpus wording remains on parchment. These surfaces are aliases of existing CAM palette tokens, not new hues.
 
 Foreground or text tokens—including `--foreground`, `--primary-foreground`, and `--cam-corpus-selected-foreground`—must never be used as a report background. The palette validator rejects that mapping.
+
+## Navigation surfaces
+
+The sticky site header, desktop dropdown menus, mobile menu trigger, and mobile navigation panel must be visually opaque. Navigation may use the shared background, card, or popover tokens, but it must not rely on translucent glass treatment that allows underlying page content to interfere with legibility.
 
 ## Exceptions
 
