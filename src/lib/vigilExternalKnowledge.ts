@@ -3,9 +3,19 @@ export type ExternalRequirement = {
   vigil_source_id: string;
   external_source_id: string;
   source_version: string;
+  canonical_source_identifier?: CanonicalIdentifier;
+  issuer?: string;
+  jurisdiction?: string;
+  source_class?: string;
+  source_lifecycle_state?: string;
+  source_role?: string;
+  source_access_status?: string;
   clause_or_control: string;
   requirement_summary: string;
   requirement_posture: string;
+  expectation_type?: string;
+  normative_force?: string;
+  alignment_relationship?: string;
   applicable_actor?: string[];
   governance_concepts?: string[];
   interpretation_status?: string;
@@ -29,6 +39,9 @@ export type ExternalSourceEntry = {
   publication_date?: string | null;
   effective_date?: string | null;
   official_locator?: string;
+  review_state?: string;
+  review_eligible?: boolean;
+  alignment_state?: string;
 };
 
 type Ready<T> = { status: "ready"; data: T; attemptedUrl: string };
@@ -37,7 +50,10 @@ export type ExternalLoadResult<T> = Ready<T> | Unavailable;
 
 const VIGIL_RAW_ROOT = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil";
 export const VIGIL_EXTERNAL_REQUIREMENTS_URL = `${VIGIL_RAW_ROOT}/external_requirements/requirements-index.json`;
-export const VIGIL_EXTERNAL_SOURCES_URL = `${VIGIL_RAW_ROOT}/external_sources/ledger.json`;
+export const VIGIL_EXTERNAL_SOURCE_REGISTRY_URL = `${VIGIL_RAW_ROOT}/external_sources/source-registry.json`;
+export const VIGIL_EXTERNAL_LEGACY_SOURCES_URL = `${VIGIL_RAW_ROOT}/external_sources/ledger.json`;
+// Compatibility export for callers that previously expected one source URL.
+export const VIGIL_EXTERNAL_SOURCES_URL = VIGIL_EXTERNAL_SOURCE_REGISTRY_URL;
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -53,6 +69,20 @@ async function fetchOptional<T>(url: string, fetcher: FetchLike): Promise<Extern
   }
 }
 
+async function fetchFirstAvailable<T>(urls: string[], fetcher: FetchLike): Promise<ExternalLoadResult<T>> {
+  let lastUnavailable: Unavailable | undefined;
+  for (const url of urls) {
+    const result = await fetchOptional<T>(url, fetcher);
+    if (result.status === "ready") return result;
+    lastUnavailable = result;
+  }
+  return lastUnavailable ?? {
+    status: "unavailable",
+    attemptedUrl: urls[0] ?? "",
+    message: "Canonical VIGIL reference data could not be located.",
+  };
+}
+
 export async function loadExternalRequirements(fetcher: FetchLike = fetch): Promise<ExternalLoadResult<ExternalRequirement[]>> {
   const result = await fetchOptional<{ requirements?: ExternalRequirement[] } | ExternalRequirement[]>(VIGIL_EXTERNAL_REQUIREMENTS_URL, fetcher);
   if (result.status !== "ready") return result;
@@ -62,10 +92,17 @@ export async function loadExternalRequirements(fetcher: FetchLike = fetch): Prom
 }
 
 export async function loadExternalSources(fetcher: FetchLike = fetch): Promise<ExternalLoadResult<ExternalSourceEntry[]>> {
-  const result = await fetchOptional<{ entries?: ExternalSourceEntry[] } | ExternalSourceEntry[]>(VIGIL_EXTERNAL_SOURCES_URL, fetcher);
+  const result = await fetchFirstAvailable<{ entries?: ExternalSourceEntry[] } | ExternalSourceEntry[]>(
+    [VIGIL_EXTERNAL_SOURCE_REGISTRY_URL, VIGIL_EXTERNAL_LEGACY_SOURCES_URL],
+    fetcher,
+  );
   if (result.status !== "ready") return result;
   const payload = result.data;
-  const entries = Array.isArray(payload) ? payload : Array.isArray(payload.entries) ? payload.entries : [];
+  const rawEntries = Array.isArray(payload) ? payload : Array.isArray(payload.entries) ? payload.entries : [];
+  const entries = rawEntries.map((entry) => ({
+    ...entry,
+    title: entry.title?.trim() || entry.external_source_id || entry.vigil_source_id,
+  }));
   return { status: "ready", data: entries, attemptedUrl: result.attemptedUrl };
 }
 
