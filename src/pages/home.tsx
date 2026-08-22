@@ -168,7 +168,7 @@ const connectionLinks = [
   {
     label: "Substack",
     description: "Essays, policy commentary, and longer-form updates",
-    href: "https://substack.com",
+    href: "https://substack.com/@caminitiative",
     icon: "substack",
     external: true,
   },
