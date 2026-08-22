@@ -8,5 +8,6 @@ import "./constitution-catalogue-ux.css";
 import "./sitewide-visual-closure.css";
 import "./vigil-reference-datasets.css";
 import "./vigil-public-consistency.css";
+import "./vigil-page-shell.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
