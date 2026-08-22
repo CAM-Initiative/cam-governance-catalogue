@@ -61,6 +61,23 @@ for (const match of indexCss.matchAll(/--vigil-(?:nav-active|surface|surface-mut
   }
 }
 
+// Primary information architecture: VIGIL is a peer public product beside Home;
+// Catalogue is a Constitution child; a single repository must not masquerade as
+// the initiative-wide GitHub destination.
+requireText(shell, '{ href: "/catalogue", label: "Catalogue" },', "Catalogue must remain in the Constitution dropdown.");
+requireText(shell, 'const isConstitutionActive = location === "/catalogue"', "Catalogue must participate in the Constitution active navigation state.");
+const desktopNavStart = shell.indexOf('<nav className="hidden md:flex');
+const desktopNavEnd = shell.indexOf('</nav>', desktopNavStart);
+const desktopNav = desktopNavStart >= 0 && desktopNavEnd > desktopNavStart ? shell.slice(desktopNavStart, desktopNavEnd) : "";
+const vigilPosition = desktopNav.indexOf('href="/observatory/cases"');
+const constitutionPosition = desktopNav.indexOf('href="/constitution"');
+if (vigilPosition < 0 || constitutionPosition < 0 || vigilPosition > constitutionPosition) {
+  failures.push("Desktop primary navigation must place VIGIL immediately after Home and before Constitution.");
+}
+if (shell.includes('href="https://github.com/CAM-Initiative/Caelestis"')) {
+  failures.push("Shared top navigation must not expose one repository as the initiative-wide GitHub destination.");
+}
+
 // Decorative green is not part of the CAM palette. Semantic status colours are
 // deliberately outside this check; this guard applies to the report header.
 if (/hsl\(1(?:[0-7]\d|8[0-9]|9[0-9])_/u.test(report)) {
