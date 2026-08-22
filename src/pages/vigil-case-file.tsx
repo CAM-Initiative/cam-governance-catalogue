@@ -4,6 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
   normalizeFailureFamilyLabel,
@@ -83,16 +84,16 @@ type ImplementationEntry = {
 const VIGIL_ID = /VIGIL-\d{4}-(?:OBS|RESEARCH|FM|PROP|PATCH|LEARN)-\d{4}/gi;
 const LEARN_ID = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
 
-const CASE_STAGES = [
-  { id: "evidence", number: "01", title: "Evidence", description: "What happened, which systems are affected, what the available evidence establishes, and where the evidentiary boundary sits." },
-  { id: "classify", number: "02", title: "Classify", description: "What failure is this, how severe is it, and where does it sit in the canonical governance taxonomy?" },
-  { id: "diagnose", number: "03", title: "Diagnose", description: "What governance gap does the failure expose, and what needs to change in the corpus or control architecture?" },
-  { id: "respond", number: "04", title: "Respond", description: "What governance response was actually adopted, where was it implemented, and what remains unresolved?" },
-  { id: "learn", number: "05", title: "Learn", description: "What should governance remember, reuse, and avoid repeating after this investigation?" },
-  { id: "provenance", number: "06", title: "Provenance", description: "The external bibliography, canonical VIGIL record chain, and governance-corpus implementation provenance." },
-] as const;
+const PROVENANCE_VIEW = {
+  id: "provenance",
+  number: "",
+  label: "Sources & provenance",
+  description: "External bibliography and governance-corpus implementation provenance supporting the Case File.",
+} as const;
 
-type StageId = typeof CASE_STAGES[number]["id"];
+const CASE_VIEWS = [...VIGIL_EVIDENCE_REPAIR_SECTIONS, PROVENANCE_VIEW] as const;
+
+type StageId = typeof CASE_VIEWS[number]["id"];
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -509,9 +510,9 @@ function Field({ label, value, mono = false }: { label: string; value?: string; 
   return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
 }
 
-function Section({ id, number, title, description, children }: { id: string; number: string; title: string; description: string; children: ReactNode }) {
+function Section({ id, number, title, description, children }: { id: string; number?: string; title: string; description: string; children: ReactNode }) {
   return <section id={id} className="vigil-case-section" aria-labelledby={`${id}-heading`}>
-    <header><span>{number}</span><div><h2 id={`${id}-heading`}>{title}</h2><p>{description}</p></div></header>
+    <header>{number ? <span>{number}</span> : null}<div><h2 id={`${id}-heading`}>{title}</h2><p>{description}</p></div></header>
     <div className="vigil-case-section-body">{children}</div>
   </section>;
 }
@@ -572,9 +573,9 @@ export default function VigilCaseFile() {
   const [, vigilParams] = useRoute("/vigil/:recordId");
   const sourceId = decodeURIComponent(caseParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<CaseState>({ status: "loading" });
-  const [activeStage, setActiveStage] = useState<StageId>("evidence");
+  const [activeStage, setActiveStage] = useState<StageId>("observe");
 
-  useEffect(() => setActiveStage("evidence"), [sourceId]);
+  useEffect(() => setActiveStage("observe"), [sourceId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -654,7 +655,7 @@ export default function VigilCaseFile() {
   const remainingScopes = unique([...patches.flatMap(remainingScope), ...proposals.flatMap(remainingScope)]);
 
   const renderStageContent = (stageId: StageId): ReactNode => {
-    if (stageId === "evidence") return <>
+    if (stageId === "observe") return <>
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
         <div className="vigil-case-subheading"><p className="vigil-library-kicker">Affected systems</p><h3 id="affected-systems-heading">Platforms, products and runtimes named in the evidence</h3></div>
         <div className="vigil-affected-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
@@ -678,8 +679,19 @@ export default function VigilCaseFile() {
         </div>}
       </article>)}</div>}
       {failureDetail?.evidence.length ? <div className="vigil-evidence-list">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
-      {!failureDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under Provenance.</p>}
+      {!failureDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under Sources &amp; provenance.</p>}
       {affectedSystems.length === 0 && observations.length === 0 && !failureDetail?.evidence.length && externalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
+    </>;
+
+    if (stageId === "record") return <>
+      <div className="vigil-record-provenance">
+        <h3>Authoritative VIGIL record chain</h3>
+        <div>
+          {state.records.map((record) => <article key={record.id}><span>{record.id}</span><strong>{record.title}</strong>{recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
+          {state.learns.map((learn) => <article key={learn.id}><span>{learn.id}</span><strong>{learn.title}</strong>{learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
+        </div>
+      </div>
+      <p className="vigil-provenance-note">The Case File assembles distinct canonical records into one public investigation view. OBS, RESEARCH, FM, PROP, PATCH and LEARN records retain their separate evidentiary and governance roles rather than being flattened into one record.</p>
     </>;
 
     if (stageId === "classify") return <>
@@ -738,15 +750,15 @@ export default function VigilCaseFile() {
       </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or classification.</p>}
     </>;
 
-    if (stageId === "respond") return <>
+    if (stageId === "repair") return <>
       {patches.length > 0 ? <article className="vigil-response-view">
         <section className="vigil-response-overview">
-          <p className="vigil-library-kicker">Governance response</p>
-          {responseSummaries.length > 0 ? <TextList items={responseSummaries} /> : <p>The linked PATCH does not currently expose a concise public response summary.</p>}
+          <p className="vigil-library-kicker">Governance repair</p>
+          {responseSummaries.length > 0 ? <TextList items={responseSummaries} /> : <p>The linked PATCH does not currently expose a concise public repair summary.</p>}
         </section>
 
         <section className="vigil-implemented-controls">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Implemented controls</p><h3>Where the response was placed in the governance corpus</h3></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Implemented controls</p><h3>Where the repair was placed in the governance corpus</h3></div>
           {implementedControls.length > 0 ? <div className="vigil-control-list">{implementedControls.map((entry, index) => <article key={`${entry.instrumentId}-${entry.section}-${index}`}>
             <div className="vigil-control-heading">
               <div><strong>{[entry.instrumentId, entry.section].filter(Boolean).join(" · ") || "Implemented control"}</strong>{entry.heading && <span>{entry.heading.replace(/^#+\s*/, "")}</span>}</div>
@@ -758,10 +770,10 @@ export default function VigilCaseFile() {
 
         <div className="vigil-response-state-grid">
           <section><p className="vigil-library-kicker">Current implementation state</p>{implementationStates.length > 0 ? <TextList items={implementationStates.map(titleizeValue)} /> : <p>No separate implementation-state value is currently published.</p>}</section>
-          <section><p className="vigil-library-kicker">Remaining scope</p>{remainingScopes.length > 0 ? <TextList items={remainingScopes} /> : <p>No residual governance scope is recorded in the linked response.</p>}</section>
+          <section><p className="vigil-library-kicker">Remaining scope</p>{remainingScopes.length > 0 ? <TextList items={remainingScopes} /> : <p>No residual governance scope is recorded in the linked repair.</p>}</section>
         </div>
-        <p className="vigil-stage-source-line">Response derived from {patches.map((record) => compactId(record.id)).join(" · ")}</p>
-      </article> : <p className="vigil-case-empty">No PATCH is linked yet. A governance response may still be in development.</p>}
+        <p className="vigil-stage-source-line">Repair derived from {patches.map((record) => compactId(record.id)).join(" · ")}</p>
+      </article> : <p className="vigil-case-empty">No PATCH is linked yet. A governance repair may still be in development.</p>}
     </>;
 
     if (stageId === "learn") return <>
@@ -779,14 +791,16 @@ export default function VigilCaseFile() {
       </article>) : <p className="vigil-case-empty">No published LEARN record is linked. The investigation remains useful while learning closure is incomplete.</p>}
     </>;
 
-    return <>
-      {externalSources.length > 0 && <div className="vigil-case-citations vigil-case-bibliography"><h3>External evidence bibliography</h3><ol>{externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}</div></li>)}</ol></div>}
-      <div className="vigil-record-provenance"><h3>VIGIL record provenance</h3><div>{state.records.map((record) => <article key={record.id}><span>{record.id}</span><strong>{record.title}</strong>{recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}{state.learns.map((learn) => <article key={learn.id}><span>{learn.id}</span><strong>{learn.title}</strong>{learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}</div></div>
+    if (stageId === "provenance") return <>
+      {externalSources.length > 0 ? <div className="vigil-case-citations vigil-case-bibliography"><h3>External evidence bibliography</h3><ol>{externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}</div></li>)}</ol></div> : <p className="vigil-case-empty">No external bibliography is exposed in the current public projection.</p>}
       {patches.map((record) => <ImplementationProvenance key={`provenance-${record.id}`} record={record} />)}
     </>;
+
+    return null;
   };
 
-  const activeDefinition = CASE_STAGES.find((stage) => stage.id === activeStage) ?? CASE_STAGES[0];
+  const activeDefinition = CASE_VIEWS.find((stage) => stage.id === activeStage) ?? CASE_VIEWS[0];
+  const activeAriaLabel = activeDefinition.number ? `${activeDefinition.number} ${activeDefinition.label}` : activeDefinition.label;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
     <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
@@ -811,20 +825,30 @@ export default function VigilCaseFile() {
       </aside>
     </header>
 
-    <nav className="vigil-case-stage-nav vigil-case-stage-tabs" aria-label="Case File sections" role="tablist">
-      {CASE_STAGES.map((stage) => <button
-        key={stage.id}
+    <nav className="vigil-case-stage-nav" aria-label="Case File evidence-to-repair sections">
+      <div className="vigil-case-stage-tabs" role="tablist">
+        {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((stage) => <button
+          key={stage.id}
+          type="button"
+          role="tab"
+          aria-selected={activeStage === stage.id}
+          aria-controls={`case-panel-${stage.id}`}
+          className={activeStage === stage.id ? "is-active" : undefined}
+          onClick={() => setActiveStage(stage.id)}
+        ><span>{stage.number}</span>{stage.label}</button>)}
+      </div>
+      <button
         type="button"
-        role="tab"
-        aria-selected={activeStage === stage.id}
-        aria-controls={`case-panel-${stage.id}`}
-        className={activeStage === stage.id ? "is-active" : undefined}
-        onClick={() => setActiveStage(stage.id)}
-      ><span>{stage.number}</span>{stage.title}</button>)}
+        aria-pressed={activeStage === "provenance"}
+        className={`mt-2 inline-flex min-h-10 items-center rounded-lg border px-3.5 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${activeStage === "provenance" ? "border-primary/55 bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
+        onClick={() => setActiveStage("provenance")}
+      >
+        Sources &amp; provenance
+      </button>
     </nav>
 
-    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={`${activeDefinition.number} ${activeDefinition.title}`}>
-      <Section id={`case-${activeStage}`} number={activeDefinition.number} title={activeDefinition.title} description={activeDefinition.description}>
+    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel}>
+      <Section id={`case-${activeStage}`} number={activeDefinition.number || undefined} title={activeDefinition.label} description={activeDefinition.description}>
         {renderStageContent(activeStage)}
       </Section>
     </div>
