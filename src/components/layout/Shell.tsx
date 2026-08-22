@@ -215,29 +215,29 @@ export function Shell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-primary/25 bg-card py-6 text-foreground shadow-sm md:py-7">
+      <footer className="mt-auto border-t border-border/70 bg-background py-4 text-foreground md:py-5">
         <div className="container mx-auto min-w-0 px-4 sm:px-6 md:px-10">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between md:gap-10">
-            <div className="min-w-0 max-w-2xl space-y-2 text-center md:text-left">
-              <p className="text-base font-semibold leading-relaxed text-foreground md:text-[17px]">
-                Governance architecture, evidence-led repair, and public policy for artificial intelligence and synthetic agents.
-              </p>
-              <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved.
-              </p>
+          <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center md:justify-start md:text-left">
+              <img src="/cam-triskelion.svg" alt="" className="h-5 w-5 object-contain opacity-75" aria-hidden="true" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/75">CAM Initiative</span>
+              <span className="text-muted-foreground" aria-hidden="true">·</span>
+              <span className="text-sm text-muted-foreground">© 2026</span>
+              <span className="text-muted-foreground" aria-hidden="true">·</span>
+              <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>
 
             <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-3 md:w-auto md:justify-end">
-              <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </a>
-              <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>
               </a>
-              <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Newspaper className="h-4 w-4" aria-hidden="true" />
               </a>
-              <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Coffee className="h-4 w-4" aria-hidden="true" />
               </a>
             </nav>
