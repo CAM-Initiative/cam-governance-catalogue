@@ -1,0 +1,14 @@
+/* Brand-specific footer marks that are not included in the Lucide icon set. */
+footer a[aria-label="Substack"] > svg {
+  display: none;
+}
+
+footer a[aria-label="Substack"]::before {
+  content: "";
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  background-color: currentColor;
+  -webkit-mask: url("/substack.svg") center / contain no-repeat;
+  mask: url("/substack.svg") center / contain no-repeat;
+}
