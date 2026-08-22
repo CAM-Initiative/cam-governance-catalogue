@@ -1,0 +1,88 @@
+/* VIGIL public-surface consistency.
+ *
+ * About, Case Files, Knowledge Base and Full Ledger share one visual header
+ * grammar. Knowledge Base and Datasets share one collection-card grammar.
+ */
+
+/* Public VIGIL page heroes. */
+.vigil-about-page .vigil-about-hero,
+.vigil-knowledge-hub-page .vigil-simple-hero,
+.vigil-case-library-page .vigil-library-header,
+.vigil-app-shell + div.container > div:first-child {
+  max-width: none;
+  margin: 0 0 1.25rem;
+  padding: 1.2rem 1.35rem 1.1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.65rem;
+  background: hsl(var(--card) / 0.58);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Case Files already sits inside a bordered library shell; avoid a doubled
+ * outer border while retaining the same surface, spacing and type hierarchy. */
+.vigil-case-library-page .vigil-library-header {
+  margin: 0;
+  border-width: 0 0 1px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vigil-about-page .vigil-about-hero h1,
+.vigil-knowledge-hub-page .vigil-simple-hero h1,
+.vigil-case-library-page .vigil-library-header h1,
+.vigil-app-shell + div.container > div:first-child h1 {
+  margin: 0.28rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.9rem, 2.6vw, 2.55rem);
+  line-height: 1.05;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-hero > p:not(.vigil-library-kicker),
+.vigil-knowledge-hub-page .vigil-simple-hero > p:last-child,
+.vigil-case-library-page .vigil-library-description,
+.vigil-app-shell + div.container > div:first-child > p:last-child {
+  max-width: 900px;
+  margin: 0.58rem 0 0;
+  font-size: 1rem;
+  line-height: 1.62;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Shared Knowledge Base / Datasets collection cards. */
+.vigil-knowledge-grid.vigil-dataset-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-knowledge-collection {
+  min-height: 230px;
+}
+
+.vigil-knowledge-copy h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.vigil-knowledge-copy > p:not(.vigil-library-kicker) {
+  font-size: 1rem;
+  line-height: 1.58;
+}
+
+.vigil-knowledge-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.vigil-knowledge-actions a {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+@media (max-width: 820px) {
+  .vigil-knowledge-grid.vigil-dataset-grid {
+    grid-template-columns: 1fr;
+  }
+}
