@@ -90,7 +90,7 @@ aside[aria-label="Explore AI governance"] > div:last-child > p {
 }
 
 aside[aria-label="Explore AI governance"] > div:last-child a:hover {
-  background-color: hsl(36 52% 90%);
+  background-color: hsl(var(--secondary));
   border-color: hsl(var(--cam-gold) / 0.6);
 }
 

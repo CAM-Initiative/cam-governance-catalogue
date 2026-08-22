@@ -14,13 +14,13 @@ const footerLinks = [
 
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
-  { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
+  { href: "/catalogue", label: "Catalogue", internal: true },
   { href: "/policy", label: "Policy Papers", internal: true },
   { href: "/observatory/about", label: "About VIGIL", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "/observatory/ledger", label: "VIGIL Full Ledger", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
@@ -34,6 +34,7 @@ const homeLinks = [
 
 const constitutionLinks = [
   { href: "/constitution", label: "Overview" },
+  { href: "/catalogue", label: "Catalogue" },
   { href: "/constitution/relational", label: "Relational Governance" },
   { href: "/constitution/transition", label: "Transitional Architecture" },
 ];
@@ -49,11 +50,10 @@ export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about" || location === "/privacy";
-  const isConstitutionActive = location === "/constitution" || location.startsWith("/constitution/");
+  const isConstitutionActive = location === "/catalogue" || location === "/constitution" || location.startsWith("/constitution/");
   const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 
   const links = [
-    { href: "/catalogue", label: "Catalogue", active: location === "/catalogue" },
     { href: "/policy", label: "Policy", active: location === "/policy" || location.startsWith("/policy/") },
   ];
 
@@ -115,42 +115,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 </div>
               </div>
             </div>
-            <div className="group relative">
-              <Link
-                href="/constitution"
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isConstitutionActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Constitution
-              </Link>
-              <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
-                  {constitutionLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-card hover:text-foreground"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  link.active ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+
             <div className="group relative">
               <Link
                 href="/observatory/cases"
@@ -178,15 +143,45 @@ export function Shell({ children }: { children: ReactNode }) {
                 </div>
               </div>
             </div>
+
+            <div className="group relative">
+              <Link
+                href="/constitution"
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
+                  isConstitutionActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Constitution
+              </Link>
+              <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
+                  {constitutionLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
+                        location === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-card hover:text-foreground"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
+                  link.active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
             <ThemeToggle />
-            <a
-              href="https://github.com/CAM-Initiative/Caelestis"
-              target="_blank"
-              rel="noreferrer"
-              className="text-[12px] font-mono tracking-[0.14em] uppercase text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-            >
-              GitHub ↗
-            </a>
           </nav>
         </div>
 

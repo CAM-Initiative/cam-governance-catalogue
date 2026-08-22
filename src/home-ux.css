@@ -1,0 +1,38 @@
+/*
+ * Homepage surface and horizontal-flow alignment.
+ *
+ * The homepage uses one continuous CAM canvas. Content cards retain their own
+ * raised surfaces, but top-level sections do not alternate parchment bands.
+ */
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child,
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section[aria-labelledby="constitutional-interfaces-heading"],
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section#policy-papers {
+  background-color: hsl(var(--background)) !important;
+}
+
+/*
+ * The six-step VIGIL chain is intentionally wider than the viewport. Align its
+ * first card with the same max-w-6xl content gutter used by the section heading,
+ * then allow the remaining cards to overflow to the right behind a scrollbar.
+ */
+section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
+  padding-left: 1.5rem;
+}
+
+section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 1.5rem !important;
+  justify-content: flex-start !important;
+}
+
+@media (min-width: 768px) {
+  section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
+    padding-left: max(2.5rem, calc((100vw - 72rem) / 2 + 2.5rem));
+  }
+
+  section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
+    padding-right: 2.5rem !important;
+  }
+}

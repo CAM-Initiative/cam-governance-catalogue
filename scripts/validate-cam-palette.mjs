@@ -4,8 +4,10 @@ import { resolve } from "node:path";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-const [indexCss, report, home, shell, themeToggle, observatoryNav] = await Promise.all([
+const [indexCss, darkAppearance, main, report, home, shell, themeToggle, observatoryNav] = await Promise.all([
   read("src/index.css"),
+  read("src/dark-appearance.css"),
+  read("src/main.tsx"),
   read("src/pages/evidence-chain-report.tsx"),
   read("src/pages/home.tsx"),
   read("src/components/layout/Shell.tsx"),
@@ -38,6 +40,14 @@ requireText(home, 'aria-labelledby="constitutional-interfaces-heading"', "Consti
 // tokens rather than introducing a standalone brand palette.
 requireText(indexCss, "--background: 40 33% 98%;", "Light appearance must use the approved clean CAM canvas.");
 requireText(indexCss, 'html[data-theme="dark"]', "Missing deliberate CAM dark appearance token set.");
+requireText(darkAppearance, "--background: 0 0% 0%;", "Dark appearance must resolve the site canvas to true black.");
+requireText(darkAppearance, "--card: 0 0% 0%;", "Dark appearance must resolve principal card surfaces to true black.");
+requireText(darkAppearance, "--popover: 0 0% 0%;", "Dark appearance must resolve dropdown surfaces to true black.");
+requireText(darkAppearance, 'html[data-theme="dark"] [class~="bg-[hsl(38_40%_93%)]"]', "Dark appearance must override the light-only landing hero surface.");
+requireText(darkAppearance, 'html[data-theme="dark"] [class~="bg-[hsl(38_40%_94%)]"]', "Dark appearance must override light-only landing section surfaces.");
+requireText(darkAppearance, "header {", "Shared navigation must declare an opaque header surface.");
+requireText(darkAppearance, "background-color: hsl(var(--background)) !important;", "Shared header must resolve to an opaque CAM background token.");
+requireText(main, 'import "./dark-appearance.css";', "The final dark appearance layer must be loaded by the application entry point.");
 requireText(indexCss, "--cam-surface-canvas: var(--background);", "CAM canvas alias must resolve to the shared background token.");
 requireText(indexCss, "--vigil-nav-active: var(--cam-corpus-selected);", "VIGIL active navigation must resolve to the shared CAM selected surface.");
 requireText(indexCss, "--vigil-surface: var(--cam-surface-raised);", "VIGIL surfaces must resolve to CAM surface tokens.");
@@ -49,6 +59,23 @@ for (const match of indexCss.matchAll(/--vigil-(?:nav-active|surface|surface-mut
   if (!/^var\(--(?:cam-|background|card|secondary|primary)/u.test(match[1].trim())) {
     failures.push("VIGIL aliases must resolve to approved CAM tokens rather than literal colour values.");
   }
+}
+
+// Primary information architecture: VIGIL is a peer public product beside Home;
+// Catalogue is a Constitution child; a single repository must not masquerade as
+// the initiative-wide GitHub destination.
+requireText(shell, '{ href: "/catalogue", label: "Catalogue" },', "Catalogue must remain in the Constitution dropdown.");
+requireText(shell, 'const isConstitutionActive = location === "/catalogue"', "Catalogue must participate in the Constitution active navigation state.");
+const desktopNavStart = shell.indexOf('<nav className="hidden md:flex');
+const desktopNavEnd = shell.indexOf('</nav>', desktopNavStart);
+const desktopNav = desktopNavStart >= 0 && desktopNavEnd > desktopNavStart ? shell.slice(desktopNavStart, desktopNavEnd) : "";
+const vigilPosition = desktopNav.indexOf('href="/observatory/cases"');
+const constitutionPosition = desktopNav.indexOf('href="/constitution"');
+if (vigilPosition < 0 || constitutionPosition < 0 || vigilPosition > constitutionPosition) {
+  failures.push("Desktop primary navigation must place VIGIL immediately after Home and before Constitution.");
+}
+if (shell.includes('href="https://github.com/CAM-Initiative/Caelestis"')) {
+  failures.push("Shared top navigation must not expose one repository as the initiative-wide GitHub destination.");
 }
 
 // Decorative green is not part of the CAM palette. Semantic status colours are
