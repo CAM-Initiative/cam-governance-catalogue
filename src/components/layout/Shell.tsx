@@ -227,7 +227,7 @@ export function Shell({ children }: { children: ReactNode }) {
               </p>
             </div>
 
-            <nav aria-label="CAM Initiative links" className="flex flex-wrap justify-center gap-3 md:justify-end">
+            <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-3 md:w-auto md:justify-end">
               <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </a>
