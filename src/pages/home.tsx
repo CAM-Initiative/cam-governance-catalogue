@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeftRight, ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const initiativeResources = [
   {
@@ -405,39 +405,6 @@ function EvidenceRepairLoop() {
               </div>
             );
           })}
-        </div>
-      </div>
-
-      <div className="container mx-auto max-w-6xl px-6 md:px-10">
-        <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_5rem_minmax(0,1fr)] lg:items-center">
-          <article className="cam-parchment-card relative flex h-full flex-col rounded-2xl border border-cam-gold/40 p-6 shadow-sm before:absolute before:-top-8 before:left-1/2 before:hidden before:h-8 before:w-px before:-translate-x-1/2 before:bg-cam-gold/40 lg:before:block">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Steps 01–03 · Evidence formation</p>
-            <h3 className="mt-3 font-serif text-3xl leading-snug text-foreground">VIGIL Observatory</h3>
-            <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
-              VIGIL observes, records, and classifies real-world signals so incidents and recurring failures become structured, reviewable evidence rather than isolated reports.
-            </p>
-            <a className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="/observatory">
-              Browse the VIGIL Observatory
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </article>
-
-          <div className="flex flex-col items-center justify-center gap-2 py-1 text-cam-gold" aria-label="Bidirectional evidence and repair exchange">
-            <ArrowLeftRight className="h-6 w-6 rotate-90 lg:rotate-0" aria-hidden="true" />
-            <span className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.14em]">Evidence ↔ repair</span>
-          </div>
-
-          <article className="cam-parchment-card relative flex h-full flex-col rounded-2xl border border-cam-gold/40 p-6 shadow-sm before:absolute before:-top-8 before:left-1/2 before:hidden before:h-8 before:w-px before:-translate-x-1/2 before:bg-cam-gold/40 lg:before:block">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Steps 04–06 · Governance response</p>
-            <h3 className="mt-3 font-serif text-3xl leading-snug text-foreground">Constitution Corpus</h3>
-            <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
-              The Constitution Corpus supports diagnosis, repair, and learning by connecting evidence to governing duties, safeguards, arbitration rules, operational instruments, and amendments.
-            </p>
-            <a className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="/catalogue">
-              Browse the Constitution Corpus
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </article>
         </div>
       </div>
     </section>
