@@ -1,19 +1,19 @@
 /* Constitution + catalogue UX closure.
    These public surfaces still contain a few literal light-mode utilities and one
    hard-coded parchment edge fade. Keep light mode intact while preventing those
-   literals from punching white holes through the true-black dark appearance. */
+   literals from punching pale holes through the neutral near-black dark appearance. */
 
 html[data-theme="dark"] section[aria-labelledby="governance-stack-heading"] [class~="bg-[hsl(36_35%_96%)]"] {
-  background-color: #000 !important;
+  background-color: hsl(var(--background)) !important;
   color: hsl(var(--foreground)) !important;
 }
 
 html[data-theme="dark"] #runtime-model {
-  background-color: #000;
+  background-color: hsl(var(--background));
 }
 
 html[data-theme="dark"] #runtime-model .pointer-events-none.absolute.right-0.top-0.bottom-0.w-16 {
-  background: linear-gradient(to left, #000, transparent) !important;
+  background: linear-gradient(to left, hsl(var(--background)), transparent) !important;
 }
 
 /* Instrument Catalogue cards must stay dark when hovered, focused or expanded.
@@ -26,16 +26,16 @@ html[data-theme="dark"] article[aria-controls^="catalogue-details-"] {
 
 html[data-theme="dark"] article[aria-controls^="catalogue-details-"]:hover,
 html[data-theme="dark"] article[aria-controls^="catalogue-details-"]:focus-visible {
-  background-color: hsl(var(--secondary) / 0.55) !important;
+  background-color: hsl(var(--secondary) / 0.72) !important;
 }
 
 html[data-theme="dark"] article[aria-controls^="catalogue-details-"][aria-expanded="true"] {
-  background-color: hsl(var(--secondary) / 0.42) !important;
+  background-color: hsl(var(--secondary) / 0.62) !important;
 }
 
 html[data-theme="dark"] article[aria-controls^="catalogue-details-"][aria-expanded="true"]:hover,
 html[data-theme="dark"] article[aria-controls^="catalogue-details-"][aria-expanded="true"]:focus-visible {
-  background-color: hsl(var(--secondary) / 0.65) !important;
+  background-color: hsl(var(--secondary) / 0.82) !important;
 }
 
 html[data-theme="dark"] [role="dialog"] > [class~="bg-[hsl(36_48%_95%)]"] {
