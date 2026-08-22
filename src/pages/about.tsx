@@ -30,6 +30,11 @@ const maintainedLayers = [
     body: "Public observations, failure modes, proposals, patches, accountability gaps, design failures, and repair activity.",
   },
   {
+    label: "Public datasets",
+    eyebrow: "Machine-readable governance reference data",
+    body: "Downloadable external-governance source and requirement datasets maintained through VIGIL for research, comparison, audit, and independent analysis.",
+  },
+  {
     label: "Taxonomies and metadata standards",
     eyebrow: "Controlled vocabularies",
     body: "Record schemas, domain codes, crosswalks, lifecycle states, and validation guidance.",
