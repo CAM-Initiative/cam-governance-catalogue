@@ -7,5 +7,6 @@ import "./vigil-reading-legibility.css";
 import "./constitution-catalogue-ux.css";
 import "./sitewide-visual-closure.css";
 import "./vigil-reference-datasets.css";
+import "./vigil-public-consistency.css";
 
 createRoot(document.getElementById("root")!).render(<App />);

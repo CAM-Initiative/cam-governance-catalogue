@@ -140,7 +140,7 @@ export default function VigilCases() {
               <div>
                 <p className="vigil-library-kicker">VIGIL AI failure mode investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
-                <p className="vigil-library-description">Browse documented AI failure modes, then open the investigation to trace the evidence, classification, diagnosis, response and learning.</p>
+                <p className="vigil-library-description">Browse documented AI failure modes, then open an investigation through the canonical Observation, Record, Classification, Diagnosis, Repair and Learn model.</p>
               </div>
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">

@@ -5,7 +5,7 @@
   const COMPLETE_CHAIN_BADGE = "data-vigil-complete-chain-badge";
   const LEARN_STAGE = "data-vigil-learn-stage";
   const RECORD_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}/gi;
-  const LEARN_ID_PATTERN = /VIGIL-\d{4}-LEARN-\d{4}/i;
+  const LEARN_ID_PATTERN = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
   const LEARN_REGISTRY_URL = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Learn.Index.json";
 
   let learnMapPromise;
@@ -65,6 +65,34 @@
   function removeEmbeddedPolicyViewers() {
     if (!location.pathname.includes("/policy")) return;
     document.querySelectorAll('iframe[src*="/publications/"], iframe[title*="CAM Initiative"]').forEach((iframe) => iframe.parentElement?.remove());
+  }
+
+  function normalizePublicDestinations() {
+    if (location.pathname === "/" || location.pathname === "") {
+      const vigilCard = [...document.querySelectorAll('a.home-governance-card[href="/observatory"]')]
+        .find((link) => labelText(link).includes("vigil observatory"));
+      if (vigilCard) vigilCard.setAttribute("href", "/observatory/cases");
+    }
+
+    if (location.pathname === "/observatory" || location.pathname === "/observatory/ledger") {
+      const heading = [...document.querySelectorAll("main h1, .container h1")]
+        .find((node) => labelText(node) === "vigil observatory");
+      if (heading) heading.textContent = "VIGIL Ledger";
+    }
+  }
+
+  function fixReportNavigation() {
+    if (!location.pathname.includes("/observatory/reports/")) return;
+    for (const link of document.querySelectorAll('a[href="/observatory"]')) {
+      const label = labelText(link);
+      if (label === "back to observatory") {
+        link.setAttribute("href", "/observatory/cases");
+        link.textContent = "Back to Case Files";
+      } else if (label.startsWith("return to observatory")) {
+        link.setAttribute("href", "/observatory/cases");
+        link.textContent = "Return to Case Files →";
+      }
+    }
   }
 
   function makeCompleteBadge() {
@@ -143,6 +171,8 @@
   function enhance() {
     injectStyles();
     removeEmbeddedPolicyViewers();
+    normalizePublicDestinations();
+    fixReportNavigation();
     void markCompleteCollapsedChains();
     void appendLearnStage();
   }

@@ -28,7 +28,9 @@ function CollectionCard({ href, icon, title, description, status }: { href: stri
         <p className="vigil-library-kicker">{status}</p>
         <h2>{title}</h2>
         <p>{description}</p>
-        <Link href={href}>Browse collection <ArrowRight aria-hidden="true" /></Link>
+        <div className="vigil-knowledge-actions">
+          <Link href={href}>Browse collection <ArrowRight aria-hidden="true" /></Link>
+        </div>
       </div>
     </article>
   );
@@ -60,9 +62,9 @@ export default function VigilKnowledgeHub() {
       <main className="vigil-knowledge-hub-page">
         <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
           <header className="vigil-simple-hero">
-            <p className="vigil-library-kicker">VIGIL accumulated knowledge</p>
+            <p className="vigil-library-kicker">VIGIL public knowledge</p>
             <h1>Knowledge Base</h1>
-            <p>Browse reusable governance learning and authoritative external reference material from one public knowledge surface.</p>
+            <p>Browse reusable governance lessons and external governance reference collections maintained through VIGIL.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -71,21 +73,21 @@ export default function VigilKnowledgeHub() {
               icon={<BookOpen />}
               title="Governance Lessons"
               description="Published LEARN records: what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
-              status={state.lessons === undefined ? "Published LEARN records" : `${state.lessons} published learning records`}
+              status={state.lessons === undefined ? "Published learning records" : `${state.lessons} published learning records`}
             />
             <CollectionCard
               href="/observatory/knowledge-base/external-requirements"
               icon={<Scale />}
               title="External Requirements"
-              description="Requirement-level reference data extracted from authoritative AI-governance laws, frameworks and technical specifications."
-              status={state.requirementsAvailable ? `${state.requirements ?? 0} canonical requirements` : "Awaiting canonical VIGIL publication"}
+              description="Clause- and control-level governance requirements preserving requirement posture, authority type, applicable actors and governance concepts."
+              status={state.requirementsAvailable ? `${state.requirements ?? 0} published requirements` : "Dataset unavailable"}
             />
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
               icon={<Library />}
               title="Standards & Sources"
-              description="Authoritative source identity, publisher identifiers, versions and lifecycle state for external governance instruments."
-              status={state.sourcesAvailable ? `${state.sources ?? 0} registered source versions` : "Canonical source register unavailable"}
+              description="Registered laws, standards, frameworks and technical sources with publisher identity, identifier, jurisdiction, source class, version and lifecycle state."
+              status={state.sourcesAvailable ? `${state.sources ?? 0} published source versions` : "Dataset unavailable"}
             />
           </section>
         </div>

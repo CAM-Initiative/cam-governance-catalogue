@@ -17,8 +17,7 @@ export default function VigilAbout() {
     <header className="vigil-about-hero">
       <p className="vigil-library-kicker">VIGIL Observatory</p>
       <h1>About VIGIL</h1>
-      <p>VIGIL is an evidence-to-repair observatory for AI governance. It records externally observable incidents, research, platform behaviours and governance signals; identifies repeatable failure modes; routes diagnosis and repair; preserves implementation provenance; and records reusable learning.</p>
-      <p>VIGIL is not a regulator, legal determination system, safety certification body, or final incident adjudication authority. Its records are governance artefacts designed to support analysis, scrutiny, traceability and repair.</p>
+      <p>VIGIL is an evidence-to-repair observatory for AI governance. It records externally observable incidents, research, platform behaviours and governance signals; identifies repeatable failure modes; routes diagnosis and repair; preserves record and repair provenance; and records reusable learning.</p>
     </header>
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
@@ -38,13 +37,14 @@ export default function VigilAbout() {
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Public surfaces</p><h2 id="vigil-public-surfaces-heading">Three ways to use the Observatory</h2></div>
       <div className="vigil-about-surface-grid">
         <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through the six-section Observation, Record, Classification, Diagnosis, Repair and Learn model, with sources and provenance available separately.</span></Link>
-        <Link href="/observatory/knowledge-base"><strong>Knowledge Base</strong><span>Browse governance lessons, authoritative external requirements, and the source/version register.</span></Link>
+        <Link href="/observatory/knowledge-base"><strong>Knowledge Base</strong><span>Browse governance lessons, external governance requirements, and the source/version register.</span></Link>
         <Link href="/observatory/ledger"><strong>Full Ledger</strong><span>Audit the complete record system, workflow state, metadata, raw JSON and administrative relationships.</span></Link>
       </div>
     </section>
 
     <section className="vigil-about-section vigil-about-boundaries" aria-labelledby="vigil-boundaries-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Interpretive boundaries</p><h2 id="vigil-boundaries-heading">What the public interface is intended to preserve</h2></div>
+      <p className="vigil-about-record-intro">VIGIL is not a regulator, legal determination system, safety certification body, or final incident adjudication authority. Its records are governance artefacts designed to support analysis, scrutiny, traceability and repair.</p>
       <div className="vigil-about-boundary-grid">
         <article><h3>Evidence is bounded</h3><p>Source evidence, VIGIL interpretation, and what is not established are kept distinct. A named platform, model or actor is shown only where the underlying record supports it.</p></article>
         <article><h3>Severity is not priority</h3><p>Severity classifies supported harm potential. Operational priority describes the current governance work queue. They are separate concepts and are not interchangeable.</p></article>

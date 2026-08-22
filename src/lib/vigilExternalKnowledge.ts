@@ -61,11 +61,11 @@ async function fetchOptional<T>(url: string, fetcher: FetchLike): Promise<Extern
   try {
     const response = await fetcher(`${url}?v=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) {
-      return { status: "unavailable", attemptedUrl: url, message: `Canonical VIGIL has not published this projection yet (${response.status}).` };
+      return { status: "unavailable", attemptedUrl: url, message: `This dataset is not currently available (${response.status}).` };
     }
     return { status: "ready", data: await response.json() as T, attemptedUrl: url };
   } catch (error) {
-    return { status: "unavailable", attemptedUrl: url, message: `Canonical VIGIL reference data could not be loaded. ${(error as Error).message}` };
+    return { status: "unavailable", attemptedUrl: url, message: `The dataset could not be loaded. ${(error as Error).message}` };
   }
 }
 
@@ -79,7 +79,7 @@ async function fetchFirstAvailable<T>(urls: string[], fetcher: FetchLike): Promi
   return lastUnavailable ?? {
     status: "unavailable",
     attemptedUrl: urls[0] ?? "",
-    message: "Canonical VIGIL reference data could not be located.",
+    message: "The dataset could not be located.",
   };
 }
 
