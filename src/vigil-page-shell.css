@@ -1,22 +1,23 @@
 /*
  * Shared VIGIL public page shell.
  *
- * The Observatory toolbar is 1500px wide. Public VIGIL landing surfaces should
- * align to that same outer grid so Case Files, About, Knowledge Base and the
+ * The Observatory toolbar is 1500px wide. The principal VIGIL pages should
+ * align to that same outer grid so About, Case Files, Knowledge Base and the
  * Ledger read as one application rather than unrelated inset pages.
  */
 
 .vigil-about-page > .container,
 .vigil-knowledge-hub-page > .container,
 .vigil-library-page > .container,
-.vigil-ledger-page-shell {
-  max-width: 1500px !important;
+.vigil-app-shell + div.container {
   width: 100%;
+  max-width: 1500px !important;
 }
 
+/* Match the toolbar / Case Files gutters on the other top-level VIGIL pages. */
 .vigil-about-page > .container,
 .vigil-knowledge-hub-page > .container,
-.vigil-ledger-page-shell {
+.vigil-app-shell + div.container {
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
@@ -24,7 +25,7 @@
 @media (min-width: 640px) {
   .vigil-about-page > .container,
   .vigil-knowledge-hub-page > .container,
-  .vigil-ledger-page-shell {
+  .vigil-app-shell + div.container {
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
   }
@@ -33,47 +34,47 @@
 @media (min-width: 768px) {
   .vigil-about-page > .container,
   .vigil-knowledge-hub-page > .container,
-  .vigil-ledger-page-shell {
+  .vigil-app-shell + div.container {
     padding-left: 2.5rem !important;
     padding-right: 2.5rem !important;
   }
 }
 
-/* Use the same top-level hero geometry on the four principal VIGIL pages. */
+/* Keep one header rhythm across the principal VIGIL landing pages. Case Files
+   already provides the reference geometry through .vigil-library-header. */
 .vigil-about-page .vigil-about-hero,
 .vigil-knowledge-hub-page .vigil-simple-hero,
-.vigil-ledger-page-shell > .vigil-ledger-hero,
-.vigil-case-library-page .vigil-library-header {
-  margin: 0;
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.75rem 0.75rem 0 0;
-  background: hsl(var(--card));
-  box-shadow: none;
-  padding: 1.15rem 1.25rem;
+.vigil-app-shell + div.container > div:first-child {
+  max-width: none !important;
+  margin: 0 0 1rem !important;
+  padding: 1.2rem 1.35rem 1.1rem !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 0.65rem !important;
+  background: hsl(var(--card) / 0.58) !important;
+  box-shadow: var(--shadow-sm) !important;
 }
 
 .vigil-about-page .vigil-about-hero h1,
 .vigil-knowledge-hub-page .vigil-simple-hero h1,
-.vigil-ledger-page-shell > .vigil-ledger-hero h1,
-.vigil-case-library-page .vigil-library-header h1 {
-  margin-top: 0.25rem;
-  margin-bottom: 0.35rem;
-  font-size: clamp(2rem, 3vw, 2.45rem);
-  line-height: 1.08;
+.vigil-app-shell + div.container > div:first-child h1 {
+  margin: 0.28rem 0 0 !important;
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.9rem, 2.6vw, 2.55rem) !important;
+  line-height: 1.05 !important;
 }
 
-.vigil-about-page .vigil-about-hero > p:last-child,
+.vigil-about-page .vigil-about-hero > p:not(.vigil-library-kicker),
 .vigil-knowledge-hub-page .vigil-simple-hero > p:last-child,
-.vigil-ledger-page-shell > .vigil-ledger-hero > p:last-child,
-.vigil-case-library-page .vigil-library-description {
-  max-width: 68rem;
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.6;
+.vigil-app-shell + div.container > div:first-child > p:last-child {
+  max-width: 900px;
+  margin: 0.58rem 0 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.62 !important;
 }
 
-.vigil-about-page .vigil-about-section:first-of-type,
-.vigil-knowledge-hub-page .vigil-knowledge-grid,
-.vigil-ledger-page-shell > .vigil-ledger-content {
-  margin-top: 1rem;
+/* The Ledger no longer needs an embedded About panel now that About VIGIL is a
+   first-class Observatory destination. This CSS prevents a flash before the
+   runtime enhancer removes the redundant panel from the DOM. */
+.vigil-app-shell + div.container .vigil-about-panel {
+  display: none !important;
 }
