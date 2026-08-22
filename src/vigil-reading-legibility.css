@@ -1,0 +1,182 @@
+/* Final VIGIL reading-surface typography.
+   Case Files and About VIGIL are public reading surfaces, not dense database views.
+   Substantive prose should remain comfortably legible even where legacy VIGIL layers
+   use compact record-management typography. */
+
+/* Case File hero and metadata */
+.vigil-case-file-summary {
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dt,
+.vigil-case-file-page .vigil-classification-identity .vigil-case-field dt,
+.vigil-case-file-page .vigil-affected-system-grid .vigil-case-field dt,
+.vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dt {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dd,
+.vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-classification-identity .vigil-case-field dd,
+.vigil-case-file-page .vigil-classification-identity .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-affected-system-grid .vigil-case-field dd,
+.vigil-case-file-page .vigil-affected-system-grid .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dd,
+.vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dd.is-mono {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.vigil-case-file-page .vigil-case-print-button {
+  font-size: 0.92rem;
+}
+
+/* Case File stage navigation and hierarchy */
+.vigil-case-file-page .vigil-case-stage-tabs button {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button span {
+  font-size: 0.86rem;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header > span,
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-record-heading > span,
+.vigil-case-file-page .vigil-affected-system-grid > article > span,
+.vigil-case-file-page .vigil-learning-meta span,
+.vigil-case-file-page .vigil-case-section-body .vigil-library-kicker {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header h2 {
+  font-size: 1.6rem;
+  line-height: 1.28;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-record-heading h3,
+.vigil-case-file-page .vigil-case-subheading h3 {
+  font-size: 1.18rem;
+  line-height: 1.45;
+}
+
+/* Substantive Case File reading text.
+   This broad rule deliberately closes small-text leakage from earlier VIGIL v4-v6 layers. */
+.vigil-case-file-page .vigil-case-section-body :where(p:not(.vigil-library-kicker), li) {
+  font-size: 1.075rem;
+  line-height: 1.65;
+}
+
+.vigil-case-file-page .vigil-case-section-body :where(a, summary) {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-case-section-body :where(small) {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-classification-topline > span,
+.vigil-case-file-page .vigil-classification-topline > strong,
+.vigil-case-file-page .vigil-classification-topline > strong b {
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.vigil-case-file-page .vigil-coverage-list strong,
+.vigil-case-file-page .vigil-control-heading strong,
+.vigil-case-file-page .vigil-related-failures strong,
+.vigil-case-file-page .vigil-learning-grid > section > strong,
+.vigil-case-file-page .vigil-provenance-evidence-note strong,
+.vigil-case-file-page .vigil-case-bibliography li > div > strong,
+.vigil-case-file-page .vigil-record-provenance article strong {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.vigil-case-file-page .vigil-coverage-list span,
+.vigil-case-file-page .vigil-control-heading small,
+.vigil-case-file-page .vigil-stage-source-line,
+.vigil-case-file-page .vigil-record-provenance article > span {
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-control-heading span {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-learning-lead > p:last-child {
+  font-size: 1.2rem;
+  line-height: 1.68;
+}
+
+.vigil-case-file-page .vigil-case-bibliography h3,
+.vigil-case-file-page .vigil-record-provenance > h3,
+.vigil-case-file-page .vigil-implementation-provenance > h3 {
+  font-size: 1.2rem;
+  line-height: 1.4;
+}
+
+.vigil-case-file-page .vigil-case-empty,
+.vigil-case-file-page .vigil-provenance-note {
+  font-size: 1.075rem;
+  line-height: 1.65;
+}
+
+/* About VIGIL is explanatory prose, not a compact ledger view. */
+.vigil-about-hero > p:not(.vigil-library-kicker) {
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.vigil-about-section-heading .vigil-library-kicker,
+.vigil-about-flow > article > span,
+.vigil-about-record-grid > article > span {
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.vigil-about-section-heading h2 {
+  font-size: 1.75rem;
+  line-height: 1.28;
+}
+
+.vigil-about-flow h3,
+.vigil-about-record-grid h3,
+.vigil-about-boundary-grid h3 {
+  font-size: 1.12rem;
+  line-height: 1.45;
+}
+
+.vigil-about-flow p,
+.vigil-about-record-grid p,
+.vigil-about-boundary-grid p,
+.vigil-about-note,
+.vigil-about-record-intro,
+.vigil-about-surface-grid span {
+  font-size: 1.0625rem;
+  line-height: 1.66;
+}
+
+.vigil-about-record-intro {
+  margin: 0;
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-surface-grid strong {
+  font-size: 1.12rem;
+  line-height: 1.45;
+}
