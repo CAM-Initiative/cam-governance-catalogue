@@ -67,6 +67,20 @@
     document.querySelectorAll('iframe[src*="/publications/"], iframe[title*="CAM Initiative"]').forEach((iframe) => iframe.parentElement?.remove());
   }
 
+  function fixReportNavigation() {
+    if (!location.pathname.includes("/observatory/reports/")) return;
+    for (const link of document.querySelectorAll('a[href="/observatory"]')) {
+      const label = labelText(link);
+      if (label === "back to observatory") {
+        link.setAttribute("href", "/observatory/cases");
+        link.textContent = "Back to Case Files";
+      } else if (label.startsWith("return to observatory")) {
+        link.setAttribute("href", "/observatory/cases");
+        link.textContent = "Return to Case Files →";
+      }
+    }
+  }
+
   function makeCompleteBadge() {
     const badge = document.createElement("span");
     badge.setAttribute(COMPLETE_CHAIN_BADGE, "true");
@@ -143,6 +157,7 @@
   function enhance() {
     injectStyles();
     removeEmbeddedPolicyViewers();
+    fixReportNavigation();
     void markCompleteCollapsedChains();
     void appendLearnStage();
   }
