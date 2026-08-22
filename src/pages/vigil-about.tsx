@@ -37,7 +37,7 @@ export default function VigilAbout() {
     <section className="vigil-about-section" aria-labelledby="vigil-public-surfaces-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Public surfaces</p><h2 id="vigil-public-surfaces-heading">Three ways to use the Observatory</h2></div>
       <div className="vigil-about-surface-grid">
-        <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through the six-section Observe, Record, Classify, Diagnose, Repair and Learn model, with sources and provenance available separately.</span></Link>
+        <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through the six-section Observation, Record, Classification, Diagnosis, Repair and Learn model, with sources and provenance available separately.</span></Link>
         <Link href="/observatory/knowledge-base"><strong>Knowledge Base</strong><span>Browse governance lessons, authoritative external requirements, and the source/version register.</span></Link>
         <Link href="/observatory/ledger"><strong>Full Ledger</strong><span>Audit the complete record system, workflow state, metadata, raw JSON and administrative relationships.</span></Link>
       </div>
