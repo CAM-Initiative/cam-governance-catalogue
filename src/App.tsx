@@ -22,6 +22,7 @@ import EvidenceChainReport from "@/pages/evidence-chain-report";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
 import { VigilExternalRequirements, VigilExternalSources } from "@/pages/vigil-reference-knowledge";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
+import Datasets from "@/pages/datasets";
 import About from "@/pages/about";
 import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/constitution/transition" component={Transition} />
       <Route path="/constitution" component={Constitution} />
       <Route path="/catalogue" component={Catalogue} />
+      <Route path="/datasets" component={Datasets} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
 

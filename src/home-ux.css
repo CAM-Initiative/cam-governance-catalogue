@@ -33,6 +33,32 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
   padding-bottom: 0.25rem !important;
 }
 
+/*
+ * Connect follows the same top-level section rhythm as Policy Papers:
+ * section label -> heading/description -> content. Remove the extra raised
+ * wrapper and redundant CAM Initiative channels kicker so the contact grid is
+ * not visually inset inside a second container.
+ */
+#connect > article {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+#connect > article > div > div:first-child > p:first-child {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  #connect > article > div {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) !important;
+    align-items: center !important;
+    gap: 1.5rem !important;
+  }
+}
+
 @media (min-width: 768px) {
   section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
     padding-left: max(2.5rem, calc((100vw - 72rem) / 2 + 2.5rem));

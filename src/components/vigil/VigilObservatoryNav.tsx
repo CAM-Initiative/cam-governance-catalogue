@@ -14,11 +14,11 @@ export function VigilObservatoryNav() {
     <section className="vigil-local-nav vigil-app-shell" aria-label="VIGIL Observatory">
       <div className="container mx-auto max-w-[1500px] px-4 sm:px-6 md:px-10">
         <div className="vigil-app-shell-inner">
-          <Link href="/observatory/cases" className="vigil-app-identity">
+          <Link href="/observatory/about" className="vigil-app-identity">
             <span className="vigil-app-mark" aria-hidden="true"><ShieldCheck /></span>
             <span className="min-w-0">
               <span className="vigil-app-name">VIGIL Observatory</span>
-              <span className="vigil-app-tagline">Evidence → classify → diagnose → respond → learn</span>
+              <span className="vigil-app-tagline">Observation → Record → Classification → Diagnosis → Repair → Learn</span>
             </span>
           </Link>
           <nav className="hide-scrollbar vigil-app-nav" aria-label="Observatory sections">

@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
+  { href: "/datasets", label: "Datasets", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
   { href: "/constitution", label: "Constitution", internal: true },
@@ -45,6 +46,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
 
   const links = [
+    { href: "/datasets", label: "Datasets", active: location === "/datasets" || location.startsWith("/datasets/") },
     { href: "/policy", label: "Policy", active: location === "/policy" || location.startsWith("/policy/") },
   ];
 
@@ -222,7 +224,7 @@ export function Shell({ children }: { children: ReactNode }) {
               <img src="/cam-triskelion.svg" alt="" className="h-5 w-5 object-contain opacity-75" aria-hidden="true" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/75">CAM Initiative</span>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <span className="text-sm text-muted-foreground">© 2026</span>
+              <span className="text-sm text-muted-foreground">© 2026. All Rights Reserved.</span>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
               <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>

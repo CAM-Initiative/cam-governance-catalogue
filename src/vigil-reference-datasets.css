@@ -1,0 +1,252 @@
+/* VIGIL public reference and dataset surfaces.
+   This is a reading interface, not a dense administrative table. */
+
+.vigil-reference-page .vigil-reference-hero > p:last-child {
+  max-width: 980px;
+  font-size: 1.075rem;
+  line-height: 1.7;
+}
+
+.vigil-reference-page .vigil-reference-search {
+  max-width: none;
+  margin-top: 1.15rem;
+}
+
+.vigil-reference-page .vigil-reference-search input {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.vigil-reference-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 230px) minmax(230px, 310px);
+  gap: 0.75rem;
+  align-items: end;
+  margin-top: 1rem;
+}
+
+.vigil-reference-controls .vigil-reference-search {
+  margin-top: 0;
+}
+
+.vigil-reference-filter {
+  display: block;
+  min-width: 0;
+}
+
+.vigil-reference-filter > span {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-filter select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid hsl(var(--input));
+  border-radius: 0.4rem;
+  padding: 0.5rem 2rem 0.5rem 0.65rem;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 0.92rem;
+}
+
+.vigil-reference-filter select:disabled {
+  opacity: 0.62;
+}
+
+.vigil-dataset-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--card) / 0.42);
+}
+
+.vigil-dataset-toolbar p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-dataset-toolbar p strong {
+  color: hsl(var(--foreground));
+}
+
+.vigil-dataset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.vigil-dataset-link {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.68rem;
+  border: 1px solid hsl(var(--primary) / 0.42);
+  border-radius: 0.38rem;
+  background: hsl(var(--background));
+  font-family: var(--app-font-mono);
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-dataset-link:hover {
+  background: hsl(var(--vigil-nav-active) / 0.32);
+  color: hsl(var(--primary));
+}
+
+.vigil-dataset-link svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.vigil-reference-page .vigil-source-table {
+  margin-top: 0.9rem;
+}
+
+.vigil-reference-page .vigil-source-table-head {
+  min-height: 42px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.vigil-reference-page .vigil-source-row {
+  padding-top: 0.95rem;
+  padding-bottom: 1.25rem;
+}
+
+.vigil-reference-page .vigil-source-row h2 {
+  font-size: 1.05rem;
+  line-height: 1.42;
+}
+
+.vigil-reference-page .vigil-source-row > div:first-child p {
+  margin-top: 0.3rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.vigil-reference-page .vigil-source-row > strong,
+.vigil-reference-page .vigil-source-row > span {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.vigil-reference-page .vigil-source-row > div:last-of-type a {
+  display: inline-flex;
+  min-width: 2rem;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.vigil-reference-page .vigil-source-internal,
+.vigil-reference-page .vigil-internal-id {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.vigil-reference-page .vigil-reference-group summary {
+  padding: 1rem 1.05rem;
+}
+
+.vigil-reference-page .vigil-reference-group summary strong {
+  font-size: 1.05rem;
+  line-height: 1.42;
+}
+
+.vigil-reference-page .vigil-reference-group summary small {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.vigil-reference-page .vigil-reference-group summary b {
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.vigil-reference-page .vigil-requirement-row {
+  padding: 1rem 1.05rem;
+}
+
+.vigil-reference-page .vigil-requirement-reference {
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.vigil-reference-page .vigil-requirement-row h3 {
+  margin-top: 0.38rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.vigil-reference-page .vigil-requirement-meta {
+  margin-top: 0.55rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.vigil-reference-page .vigil-requirement-concepts {
+  margin-top: 0.55rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.vigil-reference-page .vigil-reference-state,
+.vigil-reference-page .vigil-empty-panel {
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.vigil-reference-page .vigil-reference-state p {
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 900px) {
+  .vigil-reference-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vigil-reference-controls .vigil-reference-search {
+    grid-column: 1 / -1;
+  }
+
+  .vigil-dataset-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vigil-dataset-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 620px) {
+  .vigil-reference-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-reference-controls .vigil-reference-search {
+    grid-column: 1;
+  }
+}
