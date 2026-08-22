@@ -1,0 +1,79 @@
+/*
+ * Shared VIGIL public page shell.
+ *
+ * The Observatory toolbar is 1500px wide. Public VIGIL landing surfaces should
+ * align to that same outer grid so Case Files, About, Knowledge Base and the
+ * Ledger read as one application rather than unrelated inset pages.
+ */
+
+.vigil-about-page > .container,
+.vigil-knowledge-hub-page > .container,
+.vigil-library-page > .container,
+.vigil-ledger-page-shell {
+  max-width: 1500px !important;
+  width: 100%;
+}
+
+.vigil-about-page > .container,
+.vigil-knowledge-hub-page > .container,
+.vigil-ledger-page-shell {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .vigil-about-page > .container,
+  .vigil-knowledge-hub-page > .container,
+  .vigil-ledger-page-shell {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .vigil-about-page > .container,
+  .vigil-knowledge-hub-page > .container,
+  .vigil-ledger-page-shell {
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+  }
+}
+
+/* Use the same top-level hero geometry on the four principal VIGIL pages. */
+.vigil-about-page .vigil-about-hero,
+.vigil-knowledge-hub-page .vigil-simple-hero,
+.vigil-ledger-page-shell > .vigil-ledger-hero,
+.vigil-case-library-page .vigil-library-header {
+  margin: 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem 0.75rem 0 0;
+  background: hsl(var(--card));
+  box-shadow: none;
+  padding: 1.15rem 1.25rem;
+}
+
+.vigil-about-page .vigil-about-hero h1,
+.vigil-knowledge-hub-page .vigil-simple-hero h1,
+.vigil-ledger-page-shell > .vigil-ledger-hero h1,
+.vigil-case-library-page .vigil-library-header h1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.35rem;
+  font-size: clamp(2rem, 3vw, 2.45rem);
+  line-height: 1.08;
+}
+
+.vigil-about-page .vigil-about-hero > p:last-child,
+.vigil-knowledge-hub-page .vigil-simple-hero > p:last-child,
+.vigil-ledger-page-shell > .vigil-ledger-hero > p:last-child,
+.vigil-case-library-page .vigil-library-description {
+  max-width: 68rem;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.vigil-about-page .vigil-about-section:first-of-type,
+.vigil-knowledge-hub-page .vigil-knowledge-grid,
+.vigil-ledger-page-shell > .vigil-ledger-content {
+  margin-top: 1rem;
+}
