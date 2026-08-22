@@ -1,11 +1,11 @@
 /* Brand-specific marks that are not included in the Lucide icon set. */
 footer a[aria-label="Substack"] > svg,
-a[href="https://substack.com/@caminitiative"] span > svg {
+a[href="https://substack.com/@caminitiative"] > span:first-child > svg {
   display: none;
 }
 
 footer a[aria-label="Substack"]::before,
-a[href="https://substack.com/@caminitiative"] span:has(> svg)::before {
+a[href="https://substack.com/@caminitiative"] > span:first-child::before {
   content: "";
   display: block;
   width: 1rem;
