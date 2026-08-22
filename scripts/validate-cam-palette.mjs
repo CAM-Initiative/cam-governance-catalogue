@@ -4,9 +4,10 @@ import { resolve } from "node:path";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-const [indexCss, darkAppearance, vigilReading, main, report, home, shell, themeToggle, observatoryNav, vigilAbout] = await Promise.all([
+const [indexCss, darkAppearance, constitutionCatalogueUx, vigilReading, main, report, home, shell, themeToggle, observatoryNav, vigilAbout] = await Promise.all([
   read("src/index.css"),
   read("src/dark-appearance.css"),
+  read("src/constitution-catalogue-ux.css"),
   read("src/vigil-reading-legibility.css"),
   read("src/main.tsx"),
   read("src/pages/evidence-chain-report.tsx"),
@@ -62,6 +63,16 @@ for (const match of indexCss.matchAll(/--vigil-(?:nav-active|surface|surface-mut
     failures.push("VIGIL aliases must resolve to approved CAM tokens rather than literal colour values.");
   }
 }
+
+// Constitution and Catalogue dark-mode closure. Literal parchment utilities may
+// remain valid in light mode, but they must never surface as white panels in dark mode.
+requireText(main, 'import "./constitution-catalogue-ux.css";', "The Constitution/Catalogue UX closure must be loaded last by the application entry point.");
+requireText(constitutionCatalogueUx, 'section[aria-labelledby="governance-stack-heading"] [class~="bg-[hsl(36_35%_96%)]"]', "Governance Stack detail panels must have a dark-mode surface override.");
+requireText(constitutionCatalogueUx, '#runtime-model .pointer-events-none.absolute.right-0.top-0.bottom-0.w-16', "Runtime Constitutional Interface edge fade must be theme-aware in dark mode.");
+requireText(constitutionCatalogueUx, 'article[aria-controls^="catalogue-details-"]:hover', "Catalogue cards must override the light-only hover surface in dark mode.");
+requireText(constitutionCatalogueUx, 'article[aria-controls^="catalogue-details-"][aria-expanded="true"]', "Expanded Catalogue cards must retain a dark selected surface.");
+requireText(constitutionCatalogueUx, '[role="dialog"] > [class~="bg-[hsl(36_48%_95%)]"]', "Catalogue source dialogs must not retain a light-only parchment surface in dark mode.");
+requireText(constitutionCatalogueUx, 'grid-template-columns: minmax(0, 1fr) auto;', "Catalogue source/data actions must share the final desktop action row with Read instrument / Details.");
 
 // Primary information architecture: VIGIL is a peer public product beside Home;
 // Catalogue is a Constitution child; a single repository must not masquerade as
