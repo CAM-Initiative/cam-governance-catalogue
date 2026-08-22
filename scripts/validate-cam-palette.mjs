@@ -44,9 +44,11 @@ requireText(home, 'aria-labelledby="constitutional-interfaces-heading"', "Consti
 requireText(indexCss, "--background: 40 33% 98%;", "Light appearance must use the approved clean CAM canvas.");
 requireText(indexCss, 'html[data-theme="dark"]', "Missing deliberate CAM dark appearance token set.");
 requireText(darkAppearance, "--background: 0 0% 4%;", "Dark appearance must use the approved neutral near-black canvas.");
+requireText(darkAppearance, "--foreground: 0 0% 90%;", "Dark appearance reading text must remain neutral rather than collapsing into the gold accent family.");
 requireText(darkAppearance, "--card: 0 0% 7%;", "Dark appearance must use the approved raised charcoal card surface.");
 requireText(darkAppearance, "--popover: 0 0% 7%;", "Dark appearance must use the approved raised charcoal popover surface.");
 requireText(darkAppearance, "--secondary: 0 0% 10%;", "Dark appearance must retain a distinct charcoal interaction surface.");
+requireText(darkAppearance, "--muted-foreground: 0 0% 68%;", "Dark appearance secondary reading text must remain neutral.");
 requireText(darkAppearance, 'html[data-theme="dark"] [class~="bg-[hsl(38_40%_93%)]"]', "Dark appearance must override the light-only landing hero surface.");
 requireText(darkAppearance, 'html[data-theme="dark"] [class~="bg-[hsl(38_40%_94%)]"]', "Dark appearance must override light-only landing section surfaces.");
 requireText(darkAppearance, "header {", "Shared navigation must declare an opaque header surface.");
