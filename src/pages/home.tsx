@@ -10,35 +10,45 @@ const initiativeResources = [
     title: "VIGIL Observatory",
     subtitle: "Evidence, failure modes & public datasets",
     purpose: "Case Files, source evidence, governance requirements, repair history and machine-readable public data.",
-    description: "Explore the public VIGIL system connecting real-world signals and failure modes to evidence, governance gaps, external reference data, proposals, implemented patches, and continuing observation.",
-    cta: "Browse the VIGIL Observatory",
     href: "/observatory",
-  },
-  {
-    id: "constitution-corpus",
-    title: "Constitution Corpus",
-    subtitle: "Constitutional governance architecture",
-    purpose: "Constitutional instruments, runtime schedules, safeguards, standards mappings and operational controls.",
-    description: "Browse the published CAM governance corpus and inspect the constitutional, domain, runtime, ethics, security, continuity, economic, and operational instruments that make up the architecture.",
-    cta: "Browse the Constitution Corpus",
-    href: "/catalogue",
   },
   {
     id: "datasets",
     title: "Datasets",
     subtitle: "Machine-readable governance reference data",
     purpose: "Downloadable VIGIL source, standards and requirement datasets for independent analysis and reuse.",
-    description: "Browse and download public VIGIL governance-reference datasets while preserving source authority, jurisdiction, normative-force and applicability boundaries.",
-    cta: "Browse CAM Initiative datasets",
     href: "/datasets",
+  },
+  {
+    id: "constitution-corpus",
+    title: "Constitution Corpus",
+    subtitle: "CAELESTIS constitutional governance architecture",
+    purpose: "Constitutional instruments, runtime schedules, safeguards, standards mappings and operational controls.",
+    href: "/catalogue",
   },
 ];
 
 const externalResources = [
-  { label: "AI Regulations Tracker", href: "https://regulations.ai/" },
-  { label: "AI Incident Database", href: "https://incidentdatabase.ai/" },
-  { label: "OECD AI Incidents Monitor", href: "https://oecd.ai/en/incidents" },
-  { label: "NIST AI Resource Center", href: "https://airc.nist.gov/" },
+  {
+    label: "AI Regulations Tracker",
+    description: "Compare AI laws, regulatory proposals and policy developments across jurisdictions.",
+    href: "https://regulations.ai/",
+  },
+  {
+    label: "AI Incident Database",
+    description: "Search reported AI incidents and harms documented across systems, sectors and jurisdictions.",
+    href: "https://incidentdatabase.ai/",
+  },
+  {
+    label: "OECD AI Incidents Monitor",
+    description: "Review internationally monitored AI incidents, hazards and emerging risk patterns.",
+    href: "https://oecd.ai/en/incidents",
+  },
+  {
+    label: "NIST AI Resource Center",
+    description: "Access NIST AI risk-management frameworks, profiles, guidance and supporting resources.",
+    href: "https://airc.nist.gov/",
+  },
 ];
 
 const interfaceGroups = [
@@ -56,20 +66,14 @@ const interfaceGroups = [
       {
         title: "Compliance, audit and incident response",
         body: "How constitutional duties become operating controls, logs, escalation pathways, regulatory interfaces, incident response, and repair operations.",
-        href: "/catalogue",
-        cta: "Browse operations instruments",
       },
       {
         title: "Authority, sovereignty and arbitration",
         body: "How competing instructions, institutions, jurisdictions, governance stacks, and authority claims are resolved without manufacturing legitimacy.",
-        href: "/catalogue",
-        cta: "Browse arbitration instruments",
       },
       {
         title: "Security, integrity and boundary control",
         body: "How data, identity, context, capability, provenance, and sovereign environments remain protected under adversarial, degraded, or untrusted conditions.",
-        href: "/catalogue",
-        cta: "Browse security instruments",
       },
     ],
   },
@@ -87,20 +91,14 @@ const interfaceGroups = [
       {
         title: "Ethics, high-risk use and boundary expression",
         body: "Ethical floors, vulnerable users, military and violent contexts, restricted domains, proportionate refusal, and dignity-preserving safeguards.",
-        href: "/catalogue",
-        cta: "Browse ethics instruments",
       },
       {
         title: "Identity, memory and continuity",
         body: "Identity stability, salience, memory, portability, succession, custodianship, migration, recovery, and continuity across changing systems.",
-        href: "/catalogue",
-        cta: "Browse identity and continuity",
       },
       {
         title: "Mental privacy and cognitive integrity",
         body: "Neurodata, inferred mental states, cognitive biometrics, ambient biosignals, persuasion, profiling, and technological interference with cognition.",
-        href: "/catalogue",
-        cta: "Browse cognitive-integrity instruments",
       },
       {
         title: "Provenance, authorship and contribution rights",
@@ -118,8 +116,6 @@ const interfaceGroups = [
       {
         title: "Civilian infrastructure and essential access",
         body: "Non-militarisation, population-scale surveillance, coercive disconnection, essential cognitive access, blackouts, and conflict-condition continuity.",
-        href: "/catalogue",
-        cta: "Browse civilian-infrastructure instruments",
       },
       {
         title: "Economic power, labour and value return",
@@ -136,14 +132,10 @@ const interfaceGroups = [
       {
         title: "Long-term stewardship and institutional legitimacy",
         body: "Capture prevention, neutrality, custodianship, planetary stewardship, succession, legitimacy, and responsible governance across long horizons.",
-        href: "/catalogue",
-        cta: "Browse stewardship instruments",
       },
       {
         title: "Meaning, culture and symbolic autonomy",
         body: "Spiritual, contemplative, symbolic, mythic, and meaning-making interaction without commercial, institutional, or system-level capture.",
-        href: "/catalogue",
-        cta: "Browse meaning-making instruments",
       },
     ],
   },
@@ -203,22 +195,6 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
-function ButtonLink({ href, label, primary = false }: { href: string; label: string; primary?: boolean }) {
-  return (
-    <a
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-[15px] ${
-        primary
-          ? "border border-cam-gold/70 bg-cam-gold/20 text-foreground shadow-sm hover:bg-cam-gold/30"
-          : "border border-primary/30 bg-card/85 text-foreground hover:border-primary/55 hover:text-primary"
-      }`}
-      href={href}
-    >
-      {label}
-      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-    </a>
-  );
-}
-
 function ConnectionIcon({ icon }: { icon: string }) {
   if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
   if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
@@ -245,7 +221,7 @@ function ExploreGovernancePanel() {
       <div className="grid gap-2">
         {initiativeResources.map((resource) => (
           <a
-            className="group rounded-xl border border-cam-gold/30 bg-[hsl(36_48%_96%)] p-4 transition hover:border-cam-gold/60 hover:bg-[hsl(36_52%_93%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="home-governance-card group rounded-xl border border-cam-gold/30 bg-[hsl(36_48%_96%)] px-4 py-3 transition hover:border-cam-gold/60 hover:bg-[hsl(36_52%_93%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             href={resource.href}
             key={resource.id}
           >
@@ -253,8 +229,10 @@ function ExploreGovernancePanel() {
               <span className="font-serif text-xl leading-tight text-foreground">{resource.title}</span>
               <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
-            <span className="mt-1.5 block font-mono text-[13px] font-semibold uppercase tracking-[0.1em] text-cam-gold">{resource.subtitle}</span>
-            <span className="mt-2 block text-[17px] leading-relaxed text-muted-foreground">{resource.purpose}</span>
+            <span className="home-governance-detail block">
+              <span className="mt-1.5 block font-mono text-[13px] font-semibold uppercase tracking-[0.1em] text-cam-gold">{resource.subtitle}</span>
+              <span className="mt-2 block text-[17px] leading-relaxed text-muted-foreground">{resource.purpose}</span>
+            </span>
           </a>
         ))}
       </div>
@@ -264,14 +242,17 @@ function ExploreGovernancePanel() {
         <div className="grid gap-2">
           {externalResources.map((resource) => (
             <a
-              className="group flex items-center justify-between gap-3 rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2.5 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-cam-gold transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="home-governance-card group rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2.5 transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               href={resource.href}
               key={resource.label}
               rel="noreferrer"
               target="_blank"
             >
-              <span>{resource.label}</span>
-              <ExternalLink className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+              <span className="flex items-center justify-between gap-3 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-cam-gold">
+                <span>{resource.label}</span>
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+              </span>
+              <span className="home-governance-detail mt-2 block text-[15px] leading-relaxed text-muted-foreground">{resource.description}</span>
             </a>
           ))}
         </div>
@@ -280,15 +261,17 @@ function ExploreGovernancePanel() {
   );
 }
 
-function InterfaceCard({ title, body, cta, href }: { title: string; body: string; cta: string; href: string }) {
+function InterfaceCard({ title, body, cta, href }: { title: string; body: string; cta?: string; href?: string }) {
   return (
     <article className="cam-parchment-card flex h-full flex-col rounded-2xl p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/50 hover:shadow-md">
       <h3 className="font-serif text-xl leading-snug text-foreground">{title}</h3>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground md:text-base">{body}</p>
-      <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href={href}>
-        {cta}
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-      </a>
+      {href && cta ? (
+        <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href={href}>
+          {cta}
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
+      ) : null}
     </article>
   );
 }
@@ -300,11 +283,11 @@ function ConstitutionalInterfaces() {
   return (
     <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="constitutional-interfaces-heading">
       <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-        <SectionLabel>Constitutional Interfaces</SectionLabel>
+        <SectionLabel>CAELESTIS Architecture</SectionLabel>
         <div className="mb-7 max-w-4xl">
           <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Explore the problems CAM is designed to govern.</h2>
           <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-            Browse the constitutional corpus through the questions and problems it addresses rather than CAM’s internal domain names.
+            Browse the CAELESTIS constitutional corpus through the questions and problems it addresses rather than its internal domain names.
           </p>
         </div>
 
@@ -344,6 +327,11 @@ function ConstitutionalInterfaces() {
             ))}
           </motion.div>
         </AnimatePresence>
+
+        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/catalogue">
+          Browse the Constitution Catalogue
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
       </div>
     </section>
   );
@@ -443,7 +431,6 @@ function ConnectPanel() {
       <article className="cam-parchment-card rounded-3xl border border-cam-gold/35 p-5 shadow-xl md:p-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
           <div className="max-w-2xl">
-            <p className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">CAM Initiative channels</p>
             <h2 className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
             <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
               Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL accessible.
@@ -505,10 +492,6 @@ export default function Home() {
                 <p>
                   It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
                 </p>
-              </div>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <ButtonLink href="/catalogue" label="Explore CAM governance" primary />
-                <ButtonLink href="/about" label="About the CAM Initiative" />
               </div>
             </motion.div>
             <ExploreGovernancePanel />
