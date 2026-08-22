@@ -5,5 +5,6 @@ import "./dark-appearance.css";
 import "./home-ux.css";
 import "./vigil-reading-legibility.css";
 import "./constitution-catalogue-ux.css";
+import "./sitewide-visual-closure.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
