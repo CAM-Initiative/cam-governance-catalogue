@@ -820,17 +820,20 @@ test("Evidence Chain Report keeps citation details at the end and reflows diagno
   assert.match(report, /Object\.values\(availability\)\.every\(Boolean\)/);
 });
 
-test("home Evidence to Repair uses the canonical six-section model within a horizontal scroll region", async () => {
-  const page = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
+test("About VIGIL owns the canonical six-stage model and the homepage links to it", async () => {
+  const home = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
+  const about = await readFile(resolve(repoRoot, "src/pages/vigil-about.tsx"), "utf8");
+  const shellCss = await readFile(resolve(repoRoot, "src/vigil-page-shell.css"), "utf8");
 
-  assert.match(page, /role="region" aria-label="VIGIL six-section evidence-to-repair report model"/);
-  assert.match(page, /VIGIL_EVIDENCE_REPAIR_SECTIONS\.map/);
-  assert.match(page, /overflow-x-auto overflow-y-hidden/);
-  assert.match(page, /min-h-\[220px\] w-\[260px\]/);
-  assert.match(page, /font-mono text-sm font-medium uppercase/);
-  assert.match(page, /text-base font-normal leading-relaxed text-muted-foreground/);
-  assert.doesNotMatch(page, /min-h-\[175px\] w-\[160px\]/);
-  assert.doesNotMatch(page, /text-\[13px\] font-light/);
+  assert.match(home, /href="\/observatory\/about"/);
+  assert.doesNotMatch(home, /VIGIL_EVIDENCE_REPAIR_SECTIONS\.map/);
+  assert.match(about, /role="region" aria-label="VIGIL six-stage evidence-to-repair report model"/);
+  assert.match(about, /VIGIL_EVIDENCE_REPAIR_SECTIONS\.map/);
+  assert.match(about, /Stage \{section\.number\}/);
+  assert.match(shellCss, /\.vigil-about-flow-scroll/);
+  assert.match(shellCss, /overflow-x: auto/);
+  assert.match(shellCss, /flex: 0 0 260px/);
+  assert.match(shellCss, /content: "→"/);
 });
 
 test("responsive shell and evidence reports use available width and readable type", async () => {
@@ -938,6 +941,7 @@ test("expanded VIGIL header keeps the record ID with its icon controls and remov
   assert.doesNotMatch(page, /vigil-search-help/);
   assert.doesNotMatch(page, /Source titles, publishers, source types, source platforms, vendors, jurisdictions, and source domains are searchable metadata/);
 });
+
 test("Observatory PATCH rows keep verification compact and move commentary into wording detail", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
   assert.match(page, /const verificationMark = provision\.complete \? "✓" : "—"/);

@@ -11,12 +11,55 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
 }
 
 /*
- * Explore AI Governance uses compact discovery cards on hover-capable desktop
- * devices. The expanded information remains visible by default on touch and
- * small-screen devices, and keyboard focus expands the card alongside hover.
+ * Explore AI Governance uses one card grammar for CAM resources and external
+ * tools. Desktop users get compact discovery cards that expand on hover/focus;
+ * touch and small-screen devices retain the explanatory copy by default.
  */
 .home-governance-detail {
   overflow: hidden;
+}
+
+/* Internal CAM resources use the same compact visual language as external
+ * reference tools. Their former subtitle is redundant with the description. */
+.home-governance-card[href^="/"] {
+  border-color: hsl(var(--primary) / 0.2) !important;
+  border-radius: 0.5rem !important;
+  background: hsl(var(--card) / 0.55) !important;
+  padding: 0.625rem 0.75rem !important;
+}
+
+.home-governance-card[href^="/"]:hover,
+.home-governance-card[href^="/"]:focus-visible {
+  border-color: hsl(var(--primary) / 0.45) !important;
+  background: hsl(var(--card)) !important;
+}
+
+.home-governance-card[href^="/"] > span:first-child {
+  font-family: var(--app-font-mono);
+  font-size: 0.875rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.home-governance-card[href^="/"] > span:first-child > span:first-child {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+}
+
+.home-governance-card[href^="/"] .home-governance-detail > span:first-child {
+  display: none;
+}
+
+.home-governance-card[href^="/"] .home-governance-detail > span:last-child {
+  margin-top: 0 !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.55 !important;
 }
 
 @media (hover: hover) and (pointer: fine) {

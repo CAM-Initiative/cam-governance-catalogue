@@ -75,9 +75,11 @@
     }
 
     if (location.pathname === "/observatory" || location.pathname === "/observatory/ledger") {
+      const pageShell = document.querySelector(".vigil-app-shell + div.container");
       const heading = [...document.querySelectorAll("main h1, .container h1")]
         .find((node) => labelText(node) === "vigil observatory");
       if (heading) heading.textContent = "VIGIL Ledger";
+      pageShell?.querySelector(".vigil-about-panel")?.remove();
     }
   }
 

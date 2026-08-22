@@ -47,6 +47,27 @@ html[data-theme="dark"] [class~="hover:bg-[hsl(36_52%_93%)]"]:hover {
   background-color: hsl(var(--secondary)) !important;
 }
 
+/* LEARN detail surfaces are theme-token driven, but older utility output may
+ * still retain pale rose/archival fills in generated bundles. Close those
+ * specifically on the lesson-detail projection so no light panel can survive
+ * the dark appearance. */
+html[data-theme="dark"] .vigil-learn-detail .cam-parchment-card,
+html[data-theme="dark"] .vigil-learn-detail header,
+html[data-theme="dark"] .vigil-learn-detail [class~="bg-card"] {
+  background-color: hsl(var(--card)) !important;
+}
+
+html[data-theme="dark"] .vigil-learn-detail [class*="bg-secondary"],
+html[data-theme="dark"] .vigil-learn-detail [class*="bg-[hsl(36_"],
+html[data-theme="dark"] .vigil-learn-detail [class*="bg-[hsl(38_"] {
+  background-color: hsl(var(--secondary)) !important;
+}
+
+html[data-theme="dark"] .vigil-learn-detail [class*="bg-rose-"],
+html[data-theme="dark"] .vigil-learn-detail [class*="bg-destructive"] {
+  background-color: hsl(var(--destructive) / 0.12) !important;
+}
+
 /*
  * Navigation should read as a solid interface layer, not translucent glass.
  * This applies in both appearances so the sticky header and its menus remain

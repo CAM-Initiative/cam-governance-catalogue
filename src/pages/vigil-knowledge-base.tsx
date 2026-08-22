@@ -6,11 +6,6 @@ import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 
 const LEARN_ID_PATTERN = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
-const CAM_CITATION = {
-  label: "O’Rourke, M. V. (2026). Caelestis Architecture Model (Version 1.1.0). Zenodo.",
-  doi: "https://doi.org/10.5281/zenodo.20686316",
-  version: "1.1.0",
-};
 
 type LearnRecord = {
   raw: UnknownRecord;
@@ -247,7 +242,7 @@ function StatusBadges({ record }: { record: LearnRecord }) {
     <span className="rounded-full border border-border bg-background/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-muted-foreground">
       {displayLabel(record.knowledgeStatus) ?? "Knowledge status not specified"}
     </span>
-    <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-[hsl(32_62%_25%)]">
+    <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-cam-gold">
       {complete ? "Complete evidence chain" : "Learning record"}
     </span>
     {record.monitoringRequired && <span className="rounded-full border border-rose-300 bg-rose-50 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.11em] text-rose-900">Monitoring ongoing</span>}
@@ -260,7 +255,7 @@ function LearningList({ items }: { items: string[] }) {
 
 function FailureClassPanel({ record }: { record: LearnRecord }) {
   if (!record.canonicalFailureName && !record.primaryFailureFamilyCode) return null;
-  return <section className="mt-5 rounded-2xl border border-cam-gold/35 bg-[hsl(38_48%_94%)] p-4">
+  return <section className="mt-5 rounded-2xl border border-cam-gold/35 bg-secondary/65 p-4">
     <p className="report-label">Failure class</p>
     {record.canonicalFailureName && <p className="mt-1.5 font-serif text-lg leading-snug text-foreground">{record.canonicalFailureName}</p>}
     {record.primaryFailureFamilyCode && <div className="mt-3"><p className="report-label">Failure family</p><p className="mt-1 font-mono text-sm text-foreground/75">{record.primaryFailureFamilyCode}</p></div>}
@@ -269,19 +264,17 @@ function FailureClassPanel({ record }: { record: LearnRecord }) {
 
 function TaxonomyProvenance({ record }: { record: LearnRecord }) {
   if (!record.taxonomyReference && !record.primaryFailureFamilyCode) return null;
-  return <DetailSection title="Taxonomy and corpus provenance">
-    <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  return <DetailSection title="Taxonomy reference">
+    <dl className="grid gap-4 sm:grid-cols-2">
       {record.primaryFailureFamilyCode && <div><dt className="report-label">Failure family</dt><dd className="mt-1 font-mono">{record.primaryFailureFamilyCode}</dd></div>}
-      {record.taxonomyReference && <div><dt className="report-label">Corpus reference</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
-      <div><dt className="report-label">Corpus version</dt><dd className="mt-1"><a href={CAM_CITATION.doi} target="_blank" rel="noreferrer" className="underline decoration-cam-gold/60 underline-offset-4 hover:text-foreground">Version {CAM_CITATION.version} · Zenodo DOI</a></dd></div>
+      {record.taxonomyReference && <div><dt className="report-label">Reference</dt><dd className="mt-1">{record.taxonomyReference}</dd></div>}
     </dl>
-    <p className="mt-4 border-t border-cam-gold/25 pt-4 text-sm leading-relaxed text-muted-foreground">{CAM_CITATION.label} DOI: 10.5281/zenodo.20686316</p>
   </DetailSection>;
 }
 
 function KnowledgeCard({ record }: { record: LearnRecord }) {
   return <article className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/30 shadow-lg transition hover:-translate-y-0.5 hover:border-cam-gold/50 hover:shadow-xl">
-    <div className="border-b border-cam-gold/25 bg-[hsl(36_48%_96%)] px-6 py-4 md:px-7">
+    <div className="border-b border-cam-gold/25 bg-secondary/55 px-6 py-4 md:px-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">{record.id}</p>
         <StatusBadges record={record} />
@@ -300,7 +293,7 @@ function KnowledgeCard({ record }: { record: LearnRecord }) {
 }
 
 function DetailSection({ title, children, tone = "default" }: { title: string; children: React.ReactNode; tone?: "default" | "risk" | "summary" }) {
-  const toneClass = tone === "risk" ? "border-rose-300 bg-rose-100/65" : tone === "summary" ? "bg-[hsl(38_48%_94%)]/65" : "bg-transparent";
+  const toneClass = tone === "risk" ? "border-destructive/40 bg-destructive/10" : tone === "summary" ? "bg-secondary/55" : "bg-transparent";
   return <section className={`border-t border-cam-gold/25 px-6 py-6 md:px-8 ${toneClass}`}>
     <h2 className="font-serif text-2xl text-foreground">{title}</h2>
     <div className="mt-4 text-base leading-relaxed text-foreground/85">{children}</div>
@@ -309,10 +302,10 @@ function DetailSection({ title, children, tone = "default" }: { title: string; c
 
 function KnowledgeDetail({ record, thirdPartyObservation }: { record: LearnRecord; thirdPartyObservation?: ThirdPartyObservation }) {
   const reportId = record.id;
-  return <div className="space-y-5">
+  return <div className="space-y-5 vigil-learn-detail">
     <Link href="/observatory/knowledge-base" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.13em] text-cam-gold hover:text-foreground"><ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to Knowledge Base</Link>
     <article className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/30 shadow-xl">
-      <header className="bg-[hsl(36_48%_96%)] px-6 py-7 md:px-8 md:py-8">
+      <header className="bg-card px-6 py-7 md:px-8 md:py-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-sm uppercase tracking-[0.18em] text-cam-gold">{record.id}</p>
           <StatusBadges record={record} />
@@ -333,7 +326,7 @@ function KnowledgeDetail({ record, thirdPartyObservation }: { record: LearnRecor
         <ol className="list-decimal space-y-3 pl-5">{record.whatHappened.map((item) => <li key={item}>{item}</li>)}</ol>
         {thirdPartyObservation && <div className="mt-5 border-t border-cam-gold/25 pt-4">
           <p className="report-label">Third-party observation</p>
-          <a href={thirdPartyObservation.url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-start gap-2 text-[hsl(32_62%_25%)] underline decoration-cam-gold/55 underline-offset-4 hover:text-cam-gold">
+          <a href={thirdPartyObservation.url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-start gap-2 text-cam-gold underline decoration-cam-gold/55 underline-offset-4 hover:text-foreground">
             <span>{thirdPartyObservation.title}{thirdPartyObservation.publisher ? ` — ${thirdPartyObservation.publisher}` : ""}</span><ExternalLink className="mt-1 h-4 w-4 shrink-0" aria-hidden="true" />
           </a>
         </div>}
@@ -453,15 +446,15 @@ export default function VigilKnowledgeBase() {
       {detailRecord && <><KnowledgeDetail record={detailRecord} thirdPartyObservation={detailState.status === "ready" ? detailState.thirdPartyObservation : undefined} />{detailState.status === "error" && <p className="mt-5 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">The canonical LEARN detail could not be loaded, so this page is showing its published registry projection. {detailState.message}</p>}</>}
     </> : <>
       <header className="border-b border-border/70 pb-7">
-        <div className="flex items-start gap-4"><div className="rounded-xl border border-primary/25 bg-primary/10 p-3 text-cam-gold"><BookOpen className="h-6 w-6" aria-hidden="true" /></div><div><p className="font-mono text-sm uppercase tracking-[0.2em] text-cam-gold">VIGIL Observatory</p><h1 className="mt-2 font-serif text-4xl text-foreground md:text-5xl">Knowledge Base</h1></div></div>
+        <div className="flex items-start gap-4"><div className="rounded-xl border border-primary/25 bg-primary/10 p-3 text-cam-gold"><BookOpen className="h-6 w-6" aria-hidden="true" /></div><div><p className="font-mono text-sm uppercase tracking-[0.2em] text-cam-gold">VIGIL Observatory</p><h1 className="mt-2 font-serif text-4xl text-foreground md:text-5xl">Governance Lessons</h1></div></div>
         <p className="mt-4 max-w-4xl text-lg leading-relaxed text-muted-foreground">Completed evidence chains translated into reusable governance lessons. Search by case, failure taxonomy, vendor, governance principle, or future application.</p>
-        <div className="mt-5 flex flex-wrap gap-3"><Link href="/observatory" className="rounded-lg border border-border bg-card px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">Browse the VIGIL Ledger</Link></div>
+        <div className="mt-5 flex flex-wrap gap-3"><Link href="/observatory/ledger" className="rounded-lg border border-border bg-card px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">Browse the VIGIL Ledger</Link></div>
       </header>
 
       <div className="mt-7 grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
-        <aside aria-label="Knowledge Base search and filters" className="cam-parchment-card rounded-2xl p-4 shadow-sm lg:sticky lg:top-20">
+        <aside aria-label="Governance Lessons search and filters" className="cam-parchment-card rounded-2xl p-4 shadow-sm lg:sticky lg:top-20">
           <div className="mb-5">
-            <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Search the Knowledge Base</p>
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Search Governance Lessons</p>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Find a completed lesson by incident, failure family, vendor, governance principle, future application, or VIGIL record ID.</p>
           </div>
           <label className="relative block"><span className="sr-only">Search lessons learned</span><Search className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search lessons…" className="w-full rounded-xl border border-input bg-background/70 py-3 pl-10 pr-3 text-sm text-foreground outline-none transition focus:border-primary/50 focus:ring-2 focus:ring-primary/15" /></label>

@@ -1,0 +1,204 @@
+/*
+ * Shared VIGIL public page shell.
+ *
+ * The Observatory toolbar is 1500px wide. Public VIGIL surfaces align to that
+ * same outer grid so About, Case Files, Knowledge Base, reference collections,
+ * Governance Lessons and the Ledger read as one application.
+ */
+
+.vigil-about-page > .container,
+.vigil-knowledge-hub-page > .container,
+.vigil-reference-page > .container,
+.vigil-library-page > .container,
+.vigil-app-shell + div.container,
+.vigil-app-shell + main.container:not(.report-page) {
+  max-width: 1500px !important;
+  width: 100%;
+}
+
+.vigil-about-page > .container,
+.vigil-knowledge-hub-page > .container,
+.vigil-reference-page > .container,
+.vigil-app-shell + div.container,
+.vigil-app-shell + main.container:not(.report-page) {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .vigil-about-page > .container,
+  .vigil-knowledge-hub-page > .container,
+  .vigil-reference-page > .container,
+  .vigil-app-shell + div.container,
+  .vigil-app-shell + main.container:not(.report-page) {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .vigil-about-page > .container,
+  .vigil-knowledge-hub-page > .container,
+  .vigil-reference-page > .container,
+  .vigil-app-shell + div.container,
+  .vigil-app-shell + main.container:not(.report-page) {
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+  }
+}
+
+/* One hero/header grammar across VIGIL landing and collection pages. */
+.vigil-about-page .vigil-about-hero,
+.vigil-knowledge-hub-page .vigil-simple-hero,
+.vigil-reference-page .vigil-reference-hero,
+.vigil-app-shell + div.container > div:first-child,
+.vigil-app-shell + main.container:not(.report-page) > header,
+.vigil-case-library-page .vigil-library-header {
+  margin: 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem 0.75rem 0 0;
+  background: hsl(var(--card));
+  box-shadow: none;
+  padding: 1.15rem 1.25rem;
+}
+
+/* Case Files already lives inside its bordered library shell. */
+.vigil-case-library-page .vigil-library-header {
+  border-width: 0 0 1px;
+  border-radius: 0;
+}
+
+.vigil-about-page .vigil-about-hero h1,
+.vigil-knowledge-hub-page .vigil-simple-hero h1,
+.vigil-reference-page .vigil-reference-hero h1,
+.vigil-app-shell + div.container > div:first-child h1,
+.vigil-app-shell + main.container:not(.report-page) > header h1,
+.vigil-case-library-page .vigil-library-header h1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.35rem;
+  font-size: clamp(2rem, 3vw, 2.45rem);
+  line-height: 1.08;
+}
+
+.vigil-about-page .vigil-about-hero > p:last-child,
+.vigil-knowledge-hub-page .vigil-simple-hero > p:last-child,
+.vigil-reference-page .vigil-reference-hero > p:last-child,
+.vigil-app-shell + div.container > div:first-child > p:last-child,
+.vigil-app-shell + main.container:not(.report-page) > header > p:last-child,
+.vigil-case-library-page .vigil-library-description {
+  max-width: 68rem;
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-page .vigil-about-section:first-of-type,
+.vigil-knowledge-hub-page .vigil-knowledge-grid,
+.vigil-reference-page .vigil-reference-controls,
+.vigil-reference-page .vigil-dataset-toolbar,
+.vigil-app-shell + main.container:not(.report-page) > header + *,
+.vigil-app-shell + div.container > div:first-child + * {
+  margin-top: 1rem;
+}
+
+/* The Ledger no longer carries a second embedded About VIGIL surface. */
+.vigil-app-shell + div.container > .vigil-about-panel {
+  display: none !important;
+}
+
+/* Back navigation is navigation, not micro-metadata. Keep it comfortably legible
+ * across Case Files, Knowledge Base references and LEARN detail pages. */
+.vigil-back-link,
+.vigil-app-shell + main.container:not(.report-page) > .space-y-5 > a:first-child {
+  display: inline-flex !important;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  padding: 0.45rem 0.15rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.95rem !important;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-back-link:hover,
+.vigil-app-shell + main.container:not(.report-page) > .space-y-5 > a:first-child:hover {
+  color: hsl(var(--foreground));
+}
+
+.vigil-back-link svg,
+.vigil-app-shell + main.container:not(.report-page) > .space-y-5 > a:first-child svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+}
+
+/* About VIGIL owns the full six-stage explanatory model. Keep the same
+ * rightward browsing grammar formerly used on the homepage instead of stacking
+ * the stages into a dense grid. */
+.vigil-about-flow-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.85rem 0.95rem 1rem;
+  scrollbar-gutter: stable;
+}
+
+.vigil-about-flow {
+  display: flex !important;
+  width: max-content;
+  min-width: max-content;
+  align-items: stretch;
+  grid-template-columns: none !important;
+}
+
+.vigil-about-flow > article {
+  position: relative;
+  flex: 0 0 260px;
+  min-height: 220px;
+  padding: 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  background: hsl(var(--background));
+}
+
+.vigil-about-flow > article + article {
+  border-top: 1px solid hsl(var(--border)) !important;
+  border-left: 1px solid hsl(var(--border)) !important;
+}
+
+.vigil-about-flow > article:not(:last-child) {
+  margin-right: 2.5rem;
+}
+
+.vigil-about-flow > article:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: -2.1rem;
+  width: 1.7rem;
+  transform: translateY(-50%);
+  text-align: center;
+  font-family: var(--app-font-mono);
+  font-size: 1.25rem;
+  color: hsl(var(--primary));
+}
+
+.vigil-about-flow > article > span {
+  display: block;
+  font-size: 0.875rem !important;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .vigil-about-flow {
+    display: flex !important;
+    grid-template-columns: none !important;
+  }
+}
