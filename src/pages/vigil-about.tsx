@@ -11,11 +11,12 @@ const stages = [
 ];
 
 const recordTypes = [
-  ["OBS / RESEARCH", "Evidence origins", "Observed behaviour, source-linked events, structured research, and other evidentiary material."],
-  ["FM", "Failure modes", "Repeatable governance-relevant failure patterns. Public Case Files are centred on one authoritative FM classification."],
-  ["PROP", "Proposals", "Candidate governance responses, controls, assessment changes, or doctrinal amendments."],
-  ["PATCH", "Repairs", "Traceable implementation or verified pre-existing coverage, including corpus and release provenance."],
-  ["LEARN", "Governance lessons", "Durable learning closure that preserves misconception, integrated learning, future application, limitations, and risk if the lesson is lost."],
+  ["OBS", "Observations", "Source-linked records of externally observable events, system behaviour, or governance-relevant signals. They preserve what was observed without converting the observation itself into a general failure claim."],
+  ["RESEARCH", "Research", "Structured research and evidence-synthesis records that test, contextualise, or reconcile claims across sources while preserving what is established, inferred, and unresolved."],
+  ["FM", "Failure modes", "Repeatable governance-relevant failure mechanisms that survive non-duplication review. A public Case File is organised around one authoritative FM classification."],
+  ["PROP", "Proposals", "Candidate governance responses describing the gap to be repaired, the proposed change, and the intended control effect. A proposal is not evidence that a repair has been implemented."],
+  ["PATCH", "Repairs", "Implementation records showing where a governance response was actually placed, or where verified existing coverage was relied upon, together with provenance and verification state."],
+  ["LEARN", "Governance lessons", "Durable learning records that preserve corrected reasoning, reusable lessons, future applications, limitations, and recurrence risk after an investigation."],
 ];
 
 export default function VigilAbout() {
@@ -34,7 +35,8 @@ export default function VigilAbout() {
     </section>
 
     <section className="vigil-about-section" aria-labelledby="vigil-record-types-heading">
-      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Underlying records</p><h2 id="vigil-record-types-heading">The ledger remains more detailed than the public Case File</h2></div>
+      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Record system</p><h2 id="vigil-record-types-heading">VIGIL record types</h2></div>
+      <p className="vigil-about-record-intro">A Case File is a public investigation view assembled from distinct canonical records. Those records retain separate evidentiary and governance roles in the ledger; they are not flattened into one document.</p>
       <div className="vigil-about-record-grid">{recordTypes.map(([code, title, text]) => <article key={code}><span>{code}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
     </section>
 
