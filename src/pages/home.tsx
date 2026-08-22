@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 
 const initiativeResources = [
   {
@@ -38,15 +39,6 @@ const externalResources = [
   { label: "AI Incident Database", href: "https://incidentdatabase.ai/" },
   { label: "OECD AI Incidents Monitor", href: "https://oecd.ai/en/incidents" },
   { label: "NIST AI Resource Center", href: "https://airc.nist.gov/" },
-];
-
-const evidenceRepairSteps = [
-  { label: "Observe", text: "Identify a real-world signal, incident, compliance gap, or governance breakdown." },
-  { label: "Record", text: "Preserve evidence, context, affected systems, sources, and relevant obligations." },
-  { label: "Classify", text: "Map the signal to a repeatable failure mode, control gap, or governance pattern." },
-  { label: "Diagnose", text: "Locate the design, accountability, implementation, or assurance weakness." },
-  { label: "Repair", text: "Connect the evidence to a patch, safeguard, standard, instrument, or proposal." },
-  { label: "Learn", text: "Track outcomes and feed the repair back into governance and future-system design." },
 ];
 
 const interfaceGroups = [
@@ -371,27 +363,27 @@ function EvidenceRepairLoop() {
               VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
             </p>
             <p>
-              Each record preserves the connection between what happened and what should change. VIGIL turns scattered signals into structured evidence, links diagnosed failures to the relevant CAM controls or governance gaps, and maintains a visible history of whether a proposed repair was implemented, closed, or remains under observation.
+              The six sections below are the canonical public report model. They organise a completed case consistently, while the underlying VIGIL record lifecycle remains conditional and may enter or exit at different points depending on the evidence and governance state.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto overflow-y-hidden pb-4" role="region" aria-label="VIGIL evidence-to-repair six-step method" tabIndex={0}>
+      <div className="overflow-x-auto overflow-y-hidden pb-4" role="region" aria-label="VIGIL six-section evidence-to-repair report model" tabIndex={0}>
         <div className="mx-auto flex w-max min-w-max items-start justify-center px-6 pb-6 pt-3 md:px-10">
-          {evidenceRepairSteps.map((step, index) => {
-            const isLast = index === evidenceRepairSteps.length - 1;
+          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section, index) => {
+            const isLast = index === VIGIL_EVIDENCE_REPAIR_SECTIONS.length - 1;
             return (
-              <div className="flex items-start" key={step.label}>
+              <div className="flex items-start" key={section.id}>
                 <motion.article
                   animate={{ opacity: 1, y: 0 }}
                   className="cam-parchment-card flex min-h-[220px] w-[260px] flex-col rounded-2xl border border-cam-gold/35 p-5 shadow-[0_1px_4px_rgba(120,80,20,0.07)]"
                   initial={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.45, delay: index * 0.06 }}
                 >
-                  <span className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-cam-gold">Step {String(index + 1).padStart(2, "0")}</span>
-                  <h3 className="mt-3 font-serif text-xl leading-snug text-foreground">{step.label}</h3>
-                  <p className="mt-3 text-base font-normal leading-relaxed text-muted-foreground">{step.text}</p>
+                  <span className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-cam-gold">Section {section.number}</span>
+                  <h3 className="mt-3 font-serif text-xl leading-snug text-foreground">{section.label}</h3>
+                  <p className="mt-3 text-base font-normal leading-relaxed text-muted-foreground">{section.description}</p>
                 </motion.article>
 
                 {!isLast ? (
