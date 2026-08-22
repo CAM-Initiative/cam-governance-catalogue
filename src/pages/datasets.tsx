@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Database, Download, Library, Scale } from "lucide-react";
+import { ArrowRight, Database, Download } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
@@ -72,7 +72,7 @@ export default function Datasets() {
           <p className="font-mono text-sm font-semibold uppercase tracking-[0.18em] text-cam-gold">CAM Initiative public data</p>
           <h1 className="mt-3 font-serif text-4xl leading-tight text-foreground md:text-5xl">Datasets</h1>
           <p className="mt-5 max-w-4xl text-lg leading-relaxed text-muted-foreground">
-            Download and inspect machine-readable public governance reference data maintained through VIGIL. These datasets preserve external source identity and requirement semantics; inclusion does not assert CAM applicability, compliance, conformance, alignment or adoption.
+            Download and inspect machine-readable governance reference data maintained through VIGIL for research, comparison, audit and independent analysis.
           </p>
         </div>
       </section>
@@ -82,7 +82,7 @@ export default function Datasets() {
           <DatasetCard
             title="External Governance Sources"
             description="Registered laws, standards, frameworks and technical sources with publisher identity, canonical identifier, jurisdiction, source class, version and lifecycle state."
-            status={!state.loaded ? "Loading canonical VIGIL data" : state.sourcesCount === undefined ? "Canonical dataset unavailable" : `${state.sourcesCount} published source versions`}
+            status={!state.loaded ? "Loading dataset" : state.sourcesCount === undefined ? "Dataset unavailable" : `${state.sourcesCount} published source versions`}
             browseHref="/observatory/knowledge-base/standards-sources"
             browseLabel="Browse standards & sources"
             downloadHref={state.sourcesUrl}
@@ -90,16 +90,11 @@ export default function Datasets() {
           <DatasetCard
             title="External AI-Governance Requirements"
             description="Clause and control-level requirement records preserving requirement posture, normative force, applicable actors, governance concepts and downstream claim vocabulary."
-            status={!state.loaded ? "Loading canonical VIGIL data" : state.requirementsCount === undefined ? "Awaiting publication to VIGIL main" : `${state.requirementsCount.toLocaleString()} published requirements`}
+            status={!state.loaded ? "Loading dataset" : state.requirementsCount === undefined ? "Dataset unavailable" : `${state.requirementsCount.toLocaleString()} published requirements`}
             browseHref="/observatory/knowledge-base/external-requirements"
             browseLabel="Browse requirements"
             downloadHref={state.requirementsUrl}
           />
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-border/80 bg-card/35 p-5 text-base leading-relaxed text-muted-foreground">
-          <div className="flex items-start gap-3"><Library className="mt-0.5 h-5 w-5 shrink-0 text-cam-gold" aria-hidden="true" /><p><strong className="text-foreground">Publication boundary.</strong> The website consumes canonical VIGIL <code>main</code>. Active working-branch material is not silently promoted into the public dataset before it is merged and published.</p></div>
-          <div className="mt-4 flex items-start gap-3"><Scale className="mt-0.5 h-5 w-5 shrink-0 text-cam-gold" aria-hidden="true" /><p><strong className="text-foreground">Authority boundary.</strong> Requirement posture and normative force describe the external source. They do not determine whether an instrument applies to CAM or whether CAM satisfies it.</p></div>
         </div>
       </section>
     </main>
