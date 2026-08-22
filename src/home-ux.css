@@ -27,6 +27,12 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
   justify-content: flex-start !important;
 }
 
+/* With the redundant VIGIL/Constitution bridge removed, the evidence section
+   can close directly after the six-step chain without leaving a false gap. */
+section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
+  padding-bottom: 0.25rem !important;
+}
+
 @media (min-width: 768px) {
   section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
     padding-left: max(2.5rem, calc((100vw - 72rem) / 2 + 2.5rem));
