@@ -4,15 +4,17 @@ import { resolve } from "node:path";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-const [indexCss, darkAppearance, main, report, home, shell, themeToggle, observatoryNav] = await Promise.all([
+const [indexCss, darkAppearance, vigilReading, main, report, home, shell, themeToggle, observatoryNav, vigilAbout] = await Promise.all([
   read("src/index.css"),
   read("src/dark-appearance.css"),
+  read("src/vigil-reading-legibility.css"),
   read("src/main.tsx"),
   read("src/pages/evidence-chain-report.tsx"),
   read("src/pages/home.tsx"),
   read("src/components/layout/Shell.tsx"),
   read("src/components/ThemeToggle.tsx"),
   read("src/components/vigil/VigilObservatoryNav.tsx"),
+  read("src/pages/vigil-about.tsx"),
 ]);
 
 const failures = [];
@@ -76,6 +78,34 @@ if (vigilPosition < 0 || constitutionPosition < 0 || vigilPosition > constitutio
 }
 if (shell.includes('href="https://github.com/CAM-Initiative/Caelestis"')) {
   failures.push("Shared top navigation must not expose one repository as the initiative-wide GitHub destination.");
+}
+
+// Footer navigation is intentionally not a duplicate of the persistent header.
+// Keep only concise initiative text and the small contact/social icon group.
+requireText(shell, 'aria-label="CAM Initiative links"', "Footer must retain the compact contact/social icon group.");
+requireText(shell, 'aria-label="Substack"', "Footer must expose a Substack icon link.");
+if (shell.includes('aria-label="Footer"') || shell.includes('const footerLinks =')) {
+  failures.push("Footer must not duplicate the primary site navigation links.");
+}
+if (shell.includes('/about#citations') || shell.includes('aria-label="Citations"')) {
+  failures.push("Footer must not retain the former Citations quick-link icon.");
+}
+
+// VIGIL public reading surfaces must not regress into dense ledger typography.
+requireText(main, 'import "./vigil-reading-legibility.css";', "The final VIGIL reading-legibility layer must be loaded by the application entry point.");
+requireText(vigilReading, ".vigil-case-file-page .vigil-case-section-body :where(p:not(.vigil-library-kicker), li)", "Case File substantive prose must have a final reading-size override.");
+requireText(vigilReading, "font-size: 1.075rem;", "Case File substantive prose must remain above the old compact 1rem floor.");
+requireText(vigilReading, ".vigil-about-flow p,", "About VIGIL explanatory cards must participate in the reading-size contract.");
+requireText(vigilReading, "font-size: 1.0625rem;", "About VIGIL substantive card text must remain at least 17px-equivalent.");
+
+// About VIGIL should explain canonical record roles directly. Do not use the
+// record-type section to repeat the separate public-surface / Full Ledger explanation.
+requireText(vigilAbout, "VIGIL record types", "About VIGIL must retain a dedicated record-type explanation section.");
+for (const recordCode of ['["OBS",', '["RESEARCH",', '["FM",', '["PROP",', '["PATCH",', '["LEARN",']) {
+  requireText(vigilAbout, recordCode, `About VIGIL is missing record-type explanation ${recordCode}.`);
+}
+if (vigilAbout.includes("The ledger remains more detailed than the public Case File")) {
+  failures.push("About VIGIL must not duplicate the Full Ledger explanation inside the record-type section.");
 }
 
 // Decorative green is not part of the CAM palette. Semantic status colours are
