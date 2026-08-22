@@ -134,6 +134,49 @@
   line-height: 1.65;
 }
 
+/* Evidence Cards and provenance had additional v3 microtype outside the generic
+   paragraph/list rules above. Keep the supporting metadata compact, but readable. */
+.vigil-case-file-page .vigil-evidence-header h3 {
+  font-size: 1.2rem;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-evidence-source-line,
+.vigil-case-file-page .vigil-evidence-confidence,
+.vigil-case-file-page .vigil-evidence-meta {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-evidence-column h4 {
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-evidence-links a,
+.vigil-case-file-page .vigil-commit-links a,
+.vigil-case-file-page .vigil-record-provenance a,
+.vigil-case-file-page .vigil-case-citations a {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-case-narrative > strong,
+.vigil-case-file-page .vigil-case-callout > strong,
+.vigil-case-file-page .vigil-observation-context strong {
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.vigil-case-file-page .vigil-case-source-preview article,
+.vigil-case-file-page .vigil-case-citations li,
+.vigil-case-file-page .vigil-record-provenance article,
+.vigil-case-file-page .vigil-case-provision-list > div,
+.vigil-case-file-page .vigil-implementation-provenance {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
 /* About VIGIL is explanatory prose, not a compact ledger view. */
 .vigil-about-hero > p:not(.vigil-library-kicker) {
   font-size: 1.125rem;
