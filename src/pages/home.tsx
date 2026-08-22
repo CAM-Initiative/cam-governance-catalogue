@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
-import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 
 const initiativeResources = [
   {
@@ -10,7 +9,7 @@ const initiativeResources = [
     title: "VIGIL Observatory",
     subtitle: "Evidence, failure modes & public datasets",
     purpose: "Case Files, source evidence, governance requirements, repair history and machine-readable public data.",
-    href: "/observatory",
+    href: "/observatory/cases",
   },
   {
     id: "datasets",
@@ -342,49 +341,28 @@ function EvidenceRepairLoop() {
     <section className="py-12 md:py-16" aria-labelledby="evidence-repair-heading">
       <div className="container mx-auto max-w-6xl px-6 md:px-10">
         <SectionLabel>VIGIL: evidence to repair</SectionLabel>
-        <div className="mb-9 max-w-4xl">
-          <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-            Failures and compliance gaps should become evidence for repair.
-          </h2>
-          <div className="space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-            <p>
-              VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
-            </p>
-            <p>
-              The six sections below are the canonical public report model. They organise a completed case consistently, while the underlying VIGIL record lifecycle remains conditional and may enter or exit at different points depending on the evidence and governance state.
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
+          <div className="max-w-4xl">
+            <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+              See how VIGIL turns evidence into accountable repair.
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+              VIGIL connects observable evidence, failure classification, governance diagnosis, implemented repair and reusable learning. The dedicated About VIGIL page explains the six-stage public model, record types and public interfaces without duplicating the full method here.
             </p>
           </div>
-        </div>
-      </div>
 
-      <div className="overflow-x-auto overflow-y-hidden pb-4" role="region" aria-label="VIGIL six-section evidence-to-repair report model" tabIndex={0}>
-        <div className="mx-auto flex w-max min-w-max items-start justify-center px-6 pb-6 pt-3 md:px-10">
-          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section, index) => {
-            const isLast = index === VIGIL_EVIDENCE_REPAIR_SECTIONS.length - 1;
-            return (
-              <div className="flex items-start" key={section.id}>
-                <motion.article
-                  animate={{ opacity: 1, y: 0 }}
-                  className="cam-parchment-card flex min-h-[220px] w-[260px] flex-col rounded-2xl border border-cam-gold/35 p-5 shadow-[0_1px_4px_rgba(120,80,20,0.07)]"
-                  initial={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.45, delay: index * 0.06 }}
-                >
-                  <span className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-cam-gold">Section {section.number}</span>
-                  <h3 className="mt-3 font-serif text-xl leading-snug text-foreground">{section.label}</h3>
-                  <p className="mt-3 text-base font-normal leading-relaxed text-muted-foreground">{section.description}</p>
-                </motion.article>
-
-                {!isLast ? (
-                  <div className="flex h-[220px] w-10 shrink-0 items-center justify-center" aria-hidden="true">
-                    <svg width="28" height="14" viewBox="0 0 28 14" fill="none">
-                      <line x1="1" y1="7" x2="20" y2="7" stroke="#D4AA72" strokeWidth="1" />
-                      <polyline points="16,3 24,7 16,11" fill="none" stroke="#D4AA72" strokeWidth="1" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
+          <a
+            className="cam-parchment-card group rounded-2xl border border-cam-gold/40 p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/60 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            href="/observatory/about"
+          >
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">About VIGIL</p>
+            <h3 className="mt-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">Explore the evidence-to-repair model</h3>
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground">Read the six-stage model, canonical record types, public surfaces and interpretive boundaries that shape VIGIL investigations.</p>
+            <span className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition group-hover:text-foreground">
+              About VIGIL
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            </span>
+          </a>
         </div>
       </div>
     </section>
