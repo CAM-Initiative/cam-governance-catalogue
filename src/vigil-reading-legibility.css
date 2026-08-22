@@ -3,6 +3,34 @@
    Substantive prose should remain comfortably legible even where legacy VIGIL layers
    use compact record-management typography. */
 
+/* Case File library controls and summaries */
+.vigil-case-library-page .vigil-library-stats {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  gap: 0.35rem 1rem;
+}
+
+.vigil-case-library-page .vigil-family-select > span {
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.vigil-case-library-page .vigil-family-select select {
+  min-height: 2rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.vigil-case-library-page .vigil-result-summary {
+  min-height: 2.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.vigil-case-library-page .vigil-result-summary button {
+  font-size: inherit;
+}
+
 /* Case File hero and metadata */
 .vigil-case-file-summary {
   font-size: 1.125rem;
