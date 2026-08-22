@@ -22,8 +22,12 @@ export default function VigilAbout() {
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Evidence to repair</p><h2 id="vigil-method-heading">How VIGIL presents an evidence-to-repair case</h2></div>
-      <p className="vigil-about-record-intro">The six sections below are the canonical public report model. VIGIL routing is conditional rather than compulsory: a record may enter the lifecycle at different points, and not every investigation requires every record type.</p>
-      <div className="vigil-about-flow">{VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>{section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}</div>
+      <p className="vigil-about-record-intro">The six stages below are the canonical public report model. They organise a completed case consistently, while VIGIL record routing remains conditional: an investigation may enter the lifecycle at different points and does not require every record type.</p>
+      <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL six-stage evidence-to-repair report model" tabIndex={0}>
+        <div className="vigil-about-flow">
+          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>Stage {section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}
+        </div>
+      </div>
       <p className="vigil-about-note">Contextual relationships may help explain a record, but they do not automatically expand an authoritative Case File, change its failure classification, or create a repair claim.</p>
     </section>
 
@@ -36,9 +40,9 @@ export default function VigilAbout() {
     <section className="vigil-about-section" aria-labelledby="vigil-public-surfaces-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Public surfaces</p><h2 id="vigil-public-surfaces-heading">Three ways to use the Observatory</h2></div>
       <div className="vigil-about-surface-grid">
-        <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through the six-section Observation, Record, Classification, Diagnosis, Repair and Learn model, with sources and provenance available separately.</span></Link>
+        <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through the six-stage Observation, Record, Classification, Diagnosis, Repair and Learn model, with sources and provenance available separately.</span></Link>
         <Link href="/observatory/knowledge-base"><strong>Knowledge Base</strong><span>Browse governance lessons, external governance requirements, and the source/version register.</span></Link>
-        <Link href="/observatory/ledger"><strong>Full Ledger</strong><span>Audit the complete record system, workflow state, metadata, raw JSON and administrative relationships.</span></Link>
+        <Link href="/observatory/ledger"><strong>VIGIL Ledger</strong><span>Audit the complete record system, workflow state, metadata, raw JSON and administrative relationships.</span></Link>
       </div>
     </section>
 
