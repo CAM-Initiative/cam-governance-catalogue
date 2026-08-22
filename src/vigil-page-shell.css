@@ -1,9 +1,9 @@
 /*
  * Shared VIGIL public page shell.
  *
- * The Observatory toolbar is 1500px wide. Public VIGIL surfaces align to that
- * same outer grid so About, Case Files, Knowledge Base, reference collections,
- * Governance Lessons and the Ledger read as one application.
+ * The Observatory toolbar and every principal public VIGIL surface use the
+ * same 1500px outer grid, gutters and hero grammar. Page-specific content may
+ * differ; the application shell must not.
  */
 
 .vigil-about-page > .container,
@@ -12,8 +12,11 @@
 .vigil-library-page > .container,
 .vigil-app-shell + div.container,
 .vigil-app-shell + main.container:not(.report-page) {
+  box-sizing: border-box;
   max-width: 1500px !important;
-  width: 100%;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .vigil-about-page > .container,
@@ -47,22 +50,30 @@
   }
 }
 
-/* One hero/header grammar across VIGIL landing and collection pages. */
+/* One hero/header grammar across the full VIGIL family. The standard public
+ * hero uses the page background in both appearances: white in light mode and
+ * the neutral dark canvas in dark mode. It must not acquire a parchment/card
+ * fill on the Ledger or Lessons pages. */
 .vigil-about-page .vigil-about-hero,
 .vigil-knowledge-hub-page .vigil-simple-hero,
 .vigil-reference-page .vigil-reference-hero,
 .vigil-app-shell + div.container > div:first-child,
 .vigil-app-shell + main.container:not(.report-page) > header,
 .vigil-case-library-page .vigil-library-header {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: none !important;
   margin: 0;
   border: 1px solid hsl(var(--border));
-  border-radius: 0.75rem 0.75rem 0 0;
-  background: hsl(var(--card));
-  box-shadow: none;
+  border-radius: 0.75rem;
+  background: hsl(var(--background)) !important;
+  box-shadow: none !important;
   padding: 1.15rem 1.25rem;
 }
 
-/* Case Files already lives inside its bordered library shell. */
+/* Case Files already lives inside its bordered library shell. Preserve that
+ * single outer shell while giving its header exactly the same background and
+ * type hierarchy as the other VIGIL heroes. */
 .vigil-case-library-page .vigil-library-header {
   border-width: 0 0 1px;
   border-radius: 0;
@@ -76,8 +87,10 @@
 .vigil-case-library-page .vigil-library-header h1 {
   margin-top: 0.25rem;
   margin-bottom: 0.35rem;
-  font-size: clamp(2rem, 3vw, 2.45rem);
-  line-height: 1.08;
+  font-family: var(--app-font-serif);
+  font-size: clamp(2rem, 3vw, 2.45rem) !important;
+  line-height: 1.08 !important;
+  color: hsl(var(--foreground));
 }
 
 .vigil-about-page .vigil-about-hero > p:last-child,
@@ -89,9 +102,29 @@
   max-width: 68rem;
   margin-top: 0.45rem;
   margin-bottom: 0;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
   color: hsl(var(--muted-foreground));
+}
+
+/* Governance Lessons previously used a bespoke book icon block in its hero.
+ * It is decorative and is removed so the heading aligns with every other VIGIL
+ * page. */
+.vigil-app-shell + main.container:not(.report-page) > header > .flex.items-start.gap-4 > div:first-child:has(svg) {
+  display: none !important;
+}
+
+.vigil-app-shell + main.container:not(.report-page) > header > .flex.items-start.gap-4 {
+  display: block !important;
+}
+
+/* Reference pages keep their required return navigation inside the same hero
+ * surface. The enhancement layer moves the existing link into the header; this
+ * rule makes it read as navigation within the hero rather than a separate tiny
+ * line that shifts the entire page down. */
+.vigil-reference-page .vigil-reference-hero > .vigil-back-link {
+  margin: 0 0 0.55rem !important;
+  padding: 0 !important;
 }
 
 .vigil-about-page .vigil-about-section:first-of-type,
@@ -108,8 +141,7 @@
   display: none !important;
 }
 
-/* Back navigation is navigation, not micro-metadata. Keep it comfortably legible
- * across Case Files, Knowledge Base references and LEARN detail pages. */
+/* Back navigation is navigation, not micro-metadata. */
 .vigil-back-link,
 .vigil-app-shell + main.container:not(.report-page) > .space-y-5 > a:first-child {
   display: inline-flex !important;
@@ -141,8 +173,7 @@
 }
 
 /* About VIGIL owns the full six-stage explanatory model. Keep the same
- * rightward browsing grammar formerly used on the homepage instead of stacking
- * the stages into a dense grid. */
+ * rightward browsing grammar formerly used on the homepage. */
 .vigil-about-flow-scroll {
   overflow-x: auto;
   overflow-y: hidden;

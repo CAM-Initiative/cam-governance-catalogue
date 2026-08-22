@@ -67,6 +67,24 @@
     document.querySelectorAll('iframe[src*="/publications/"], iframe[title*="CAM Initiative"]').forEach((iframe) => iframe.parentElement?.remove());
   }
 
+  function restoreHomepageVigilCopy() {
+    if (location.pathname !== "/" && location.pathname !== "") return;
+    const section = document.querySelector('section[aria-labelledby="evidence-repair-heading"]');
+    if (!section) return;
+    const heading = section.querySelector("#evidence-repair-heading");
+    const intro = section.querySelector("#evidence-repair-heading + p, #evidence-repair-heading + div p:first-child");
+    if (heading) heading.textContent = "Failures and compliance gaps should become evidence for repair.";
+    if (intro) intro.textContent = "VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.";
+  }
+
+  function normalizeReferenceBackNavigation() {
+    if (!location.pathname.includes("/observatory/knowledge-base/")) return;
+    const page = document.querySelector(".vigil-reference-page");
+    const hero = page?.querySelector(".vigil-reference-hero");
+    const back = page?.querySelector(":scope > .container > .vigil-back-link");
+    if (hero && back && back.parentElement !== hero) hero.prepend(back);
+  }
+
   function normalizePublicDestinations() {
     if (location.pathname === "/" || location.pathname === "") {
       const vigilCard = [...document.querySelectorAll('a.home-governance-card[href="/observatory"]')]
@@ -173,6 +191,8 @@
   function enhance() {
     injectStyles();
     removeEmbeddedPolicyViewers();
+    restoreHomepageVigilCopy();
+    normalizeReferenceBackNavigation();
     normalizePublicDestinations();
     fixReportNavigation();
     void markCompleteCollapsedChains();
