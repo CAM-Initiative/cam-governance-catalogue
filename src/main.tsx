@@ -4,5 +4,6 @@ import "./index.css";
 import "./dark-appearance.css";
 import "./home-ux.css";
 import "./vigil-reading-legibility.css";
+import "./constitution-catalogue-ux.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
