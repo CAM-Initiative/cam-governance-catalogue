@@ -163,9 +163,9 @@ export function VigilExternalRequirements() {
     <header className="vigil-simple-hero vigil-reference-hero">
       <p className="vigil-library-kicker">Governance requirement reference</p>
       <h1>External Requirements</h1>
-      <p>Browse clause- and control-level governance requirements extracted from registered external sources, including requirement posture, normative force, applicable actors and governance concepts.</p>
+      <p>Browse clause- and control-level governance requirements extracted from registered external sources, including requirement posture, authority type, applicable actors and governance concepts.</p>
     </header>
-    <SearchControl value={query} onChange={setQuery} placeholder="Search instruments, clauses, jurisdiction, normative force, actors, concepts or requirement text…" />
+    <SearchControl value={query} onChange={setQuery} placeholder="Search instruments, clauses, jurisdiction, authority type, actors, concepts or requirement text…" />
 
     {state.status === "loading" && <div className="vigil-reference-state">Loading external requirements…</div>}
     {state.status === "unavailable" && <div className="vigil-reference-state"><h2>Requirement dataset unavailable</h2><p>{state.message}</p></div>}
@@ -192,7 +192,7 @@ export function VigilExternalRequirements() {
                 <h3>{requirement.requirement_summary}</h3>
                 <div className="vigil-requirement-meta">
                   <span>Posture: {clean(requirement.requirement_posture)}</span>
-                  {requirement.normative_force && <span>Force: {clean(requirement.normative_force)}</span>}
+                  {requirement.normative_force && <span>Authority type: {clean(requirement.normative_force)}</span>}
                   {requirement.expectation_type && <span>Expectation: {clean(requirement.expectation_type)}</span>}
                   {requirement.alignment_relationship && <span>Claim family: {clean(requirement.alignment_relationship)}</span>}
                   {requirement.interpretation_status && <span>{clean(requirement.interpretation_status)}</span>}
@@ -266,7 +266,7 @@ export function VigilExternalSources() {
     <header className="vigil-simple-hero vigil-reference-hero">
       <p className="vigil-library-kicker">Public governance reference dataset</p>
       <h1>Standards &amp; Sources</h1>
-      <p>Browse registered external governance instruments by publisher identity, jurisdiction, version, source class and lifecycle. Where requirement metadata is available, source-level normative-force classification is shown separately from clause-level requirement posture.</p>
+      <p>Browse registered external governance instruments by publisher identity, jurisdiction, version, source class and lifecycle. Where requirement metadata is available, the source authority type is shown separately from clause-level requirement posture.</p>
     </header>
 
     {state.status === "loading" && <div className="vigil-reference-state">Loading source register…</div>}
@@ -281,9 +281,9 @@ export function VigilExternalSources() {
       </div>
 
       <div className="vigil-reference-controls">
-        <SearchControl value={query} onChange={setQuery} placeholder="Search publisher, instrument, jurisdiction, source class, normative force, identifier or version…" />
+        <SearchControl value={query} onChange={setQuery} placeholder="Search publisher, instrument, jurisdiction, source class, authority type, identifier or version…" />
         <label className="vigil-reference-filter"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
-        <label className="vigil-reference-filter"><span>Normative force</span><select value={normativeForce} onChange={(event) => setNormativeForce(event.target.value)} disabled={!state.requirementsAvailable}><option value="all">{state.requirementsAvailable ? "All authority categories" : "Requirements metadata unavailable"}</option>{normativeForces.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
+        <label className="vigil-reference-filter"><span>Authority type</span><select value={normativeForce} onChange={(event) => setNormativeForce(event.target.value)} disabled={!state.requirementsAvailable}><option value="all">{state.requirementsAvailable ? "All authority categories" : "Requirements metadata unavailable"}</option>{normativeForces.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
       </div>
 
       <section className="vigil-source-table" aria-label="Authoritative external governance sources">
