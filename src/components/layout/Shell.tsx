@@ -1,16 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Coffee, FileText, Mail } from "lucide-react";
+import { Coffee, Mail, Newspaper } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-const footerLinks = [
-  { href: "/", label: "Home", internal: true },
-  { href: "/about", label: "About", internal: true },
-  { href: "/catalogue", label: "Catalogue", internal: true },
-  { href: "/constitution", label: "Constitution", internal: true },
-  { href: "/policy", label: "Policy", internal: true },
-  { href: "/observatory/cases", label: "VIGIL", internal: true },
-];
 
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
@@ -224,50 +215,32 @@ export function Shell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-primary/25 bg-card py-7 text-foreground shadow-sm md:py-8">
+      <footer className="mt-auto border-t border-border/70 bg-background py-4 text-foreground md:py-5">
         <div className="container mx-auto min-w-0 px-4 sm:px-6 md:px-10">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between md:gap-10">
-            <div className="min-w-0 max-w-2xl space-y-2 text-center md:text-left">
-              <p className="text-base font-semibold leading-relaxed text-foreground md:text-[17px]">
-                Governance architecture, evidence-led repair, and public policy for artificial intelligence and synthetic agents.
-              </p>
-              <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-                © 2026 CAM Initiative. All rights reserved.
-              </p>
+          <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center md:justify-start md:text-left">
+              <img src="/cam-triskelion.svg" alt="" className="h-5 w-5 object-contain opacity-75" aria-hidden="true" />
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/75">CAM Initiative</span>
+              <span className="text-muted-foreground" aria-hidden="true">·</span>
+              <span className="text-sm text-muted-foreground">© 2026</span>
+              <span className="text-muted-foreground" aria-hidden="true">·</span>
+              <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>
 
-            <div className="flex min-w-0 max-w-full flex-col items-center gap-4 rounded-xl border border-primary/15 bg-card/55 px-4 py-4 shadow-sm md:items-end md:border-transparent md:bg-transparent md:px-0 md:py-0 md:shadow-none">
-              <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-x-3 gap-y-2 md:w-auto md:justify-end md:gap-x-6">
-                {footerLinks.map((link) => (
-                  link.internal ? (
-                    <Link key={link.href} href={link.href} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a key={link.href} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel={link.href.startsWith("http") ? "noreferrer" : undefined} className="whitespace-nowrap font-mono text-[12px] font-semibold uppercase tracking-[0.1em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:text-sm">
-                      {link.label}
-                    </a>
-                  )
-                ))}
-              </nav>
-
-              <address className="not-italic">
-                <div className="flex flex-wrap justify-center gap-3 md:justify-end">
-                  <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <Mail className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                  <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>
-                  </a>
-                  <Link href="/about#citations" aria-label="Citations" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <FileText className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-card/70 text-foreground/85 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                    <Coffee className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                </div>
-              </address>
-            </div>
+            <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-3 md:w-auto md:justify-end">
+              <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <Mail className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>
+              </a>
+              <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <Newspaper className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <Coffee className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </nav>
           </div>
         </div>
       </footer>

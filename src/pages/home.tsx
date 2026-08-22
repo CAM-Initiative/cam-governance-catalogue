@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeftRight, ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 
 const initiativeResources = [
   {
@@ -38,15 +39,6 @@ const externalResources = [
   { label: "AI Incident Database", href: "https://incidentdatabase.ai/" },
   { label: "OECD AI Incidents Monitor", href: "https://oecd.ai/en/incidents" },
   { label: "NIST AI Resource Center", href: "https://airc.nist.gov/" },
-];
-
-const evidenceRepairSteps = [
-  { label: "Observe", text: "Identify a real-world signal, incident, compliance gap, or governance breakdown." },
-  { label: "Record", text: "Preserve evidence, context, affected systems, sources, and relevant obligations." },
-  { label: "Classify", text: "Map the signal to a repeatable failure mode, control gap, or governance pattern." },
-  { label: "Diagnose", text: "Locate the design, accountability, implementation, or assurance weakness." },
-  { label: "Repair", text: "Connect the evidence to a patch, safeguard, standard, instrument, or proposal." },
-  { label: "Learn", text: "Track outcomes and feed the repair back into governance and future-system design." },
 ];
 
 const interfaceGroups = [
@@ -168,7 +160,7 @@ const connectionLinks = [
   {
     label: "Substack",
     description: "Essays, policy commentary, and longer-form updates",
-    href: "https://substack.com",
+    href: "https://substack.com/@caminitiative",
     icon: "substack",
     external: true,
   },
@@ -371,27 +363,27 @@ function EvidenceRepairLoop() {
               VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
             </p>
             <p>
-              Each record preserves the connection between what happened and what should change. VIGIL turns scattered signals into structured evidence, links diagnosed failures to the relevant CAM controls or governance gaps, and maintains a visible history of whether a proposed repair was implemented, closed, or remains under observation.
+              The six sections below are the canonical public report model. They organise a completed case consistently, while the underlying VIGIL record lifecycle remains conditional and may enter or exit at different points depending on the evidence and governance state.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="overflow-x-auto overflow-y-hidden pb-4" role="region" aria-label="VIGIL evidence-to-repair six-step method" tabIndex={0}>
+      <div className="overflow-x-auto overflow-y-hidden pb-4" role="region" aria-label="VIGIL six-section evidence-to-repair report model" tabIndex={0}>
         <div className="mx-auto flex w-max min-w-max items-start justify-center px-6 pb-6 pt-3 md:px-10">
-          {evidenceRepairSteps.map((step, index) => {
-            const isLast = index === evidenceRepairSteps.length - 1;
+          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section, index) => {
+            const isLast = index === VIGIL_EVIDENCE_REPAIR_SECTIONS.length - 1;
             return (
-              <div className="flex items-start" key={step.label}>
+              <div className="flex items-start" key={section.id}>
                 <motion.article
                   animate={{ opacity: 1, y: 0 }}
                   className="cam-parchment-card flex min-h-[220px] w-[260px] flex-col rounded-2xl border border-cam-gold/35 p-5 shadow-[0_1px_4px_rgba(120,80,20,0.07)]"
                   initial={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.45, delay: index * 0.06 }}
                 >
-                  <span className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-cam-gold">Step {String(index + 1).padStart(2, "0")}</span>
-                  <h3 className="mt-3 font-serif text-xl leading-snug text-foreground">{step.label}</h3>
-                  <p className="mt-3 text-base font-normal leading-relaxed text-muted-foreground">{step.text}</p>
+                  <span className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-cam-gold">Section {section.number}</span>
+                  <h3 className="mt-3 font-serif text-xl leading-snug text-foreground">{section.label}</h3>
+                  <p className="mt-3 text-base font-normal leading-relaxed text-muted-foreground">{section.description}</p>
                 </motion.article>
 
                 {!isLast ? (
@@ -405,39 +397,6 @@ function EvidenceRepairLoop() {
               </div>
             );
           })}
-        </div>
-      </div>
-
-      <div className="container mx-auto max-w-6xl px-6 md:px-10">
-        <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(0,1fr)_5rem_minmax(0,1fr)] lg:items-center">
-          <article className="cam-parchment-card relative flex h-full flex-col rounded-2xl border border-cam-gold/40 p-6 shadow-sm before:absolute before:-top-8 before:left-1/2 before:hidden before:h-8 before:w-px before:-translate-x-1/2 before:bg-cam-gold/40 lg:before:block">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Steps 01–03 · Evidence formation</p>
-            <h3 className="mt-3 font-serif text-3xl leading-snug text-foreground">VIGIL Observatory</h3>
-            <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
-              VIGIL observes, records, and classifies real-world signals so incidents and recurring failures become structured, reviewable evidence rather than isolated reports.
-            </p>
-            <a className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="/observatory">
-              Browse the VIGIL Observatory
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </article>
-
-          <div className="flex flex-col items-center justify-center gap-2 py-1 text-cam-gold" aria-label="Bidirectional evidence and repair exchange">
-            <ArrowLeftRight className="h-6 w-6 rotate-90 lg:rotate-0" aria-hidden="true" />
-            <span className="text-center font-mono text-[10px] font-semibold uppercase tracking-[0.14em]">Evidence ↔ repair</span>
-          </div>
-
-          <article className="cam-parchment-card relative flex h-full flex-col rounded-2xl border border-cam-gold/40 p-6 shadow-sm before:absolute before:-top-8 before:left-1/2 before:hidden before:h-8 before:w-px before:-translate-x-1/2 before:bg-cam-gold/40 lg:before:block">
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Steps 04–06 · Governance response</p>
-            <h3 className="mt-3 font-serif text-3xl leading-snug text-foreground">Constitution Corpus</h3>
-            <p className="mt-3 flex-1 text-base leading-relaxed text-muted-foreground">
-              The Constitution Corpus supports diagnosis, repair, and learning by connecting evidence to governing duties, safeguards, arbitration rules, operational instruments, and amendments.
-            </p>
-            <a className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href="/catalogue">
-              Browse the Constitution Corpus
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
-          </article>
         </div>
       </div>
     </section>

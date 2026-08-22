@@ -820,10 +820,11 @@ test("Evidence Chain Report keeps citation details at the end and reflows diagno
   assert.match(report, /Object\.values\(availability\)\.every\(Boolean\)/);
 });
 
-test("home Evidence to Repair steps use readable cards within a horizontal scroll region", async () => {
+test("home Evidence to Repair uses the canonical six-section model within a horizontal scroll region", async () => {
   const page = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
 
-  assert.match(page, /role="region" aria-label="VIGIL evidence-to-repair six-step method"/);
+  assert.match(page, /role="region" aria-label="VIGIL six-section evidence-to-repair report model"/);
+  assert.match(page, /VIGIL_EVIDENCE_REPAIR_SECTIONS\.map/);
   assert.match(page, /overflow-x-auto overflow-y-hidden/);
   assert.match(page, /min-h-\[220px\] w-\[260px\]/);
   assert.match(page, /font-mono text-sm font-medium uppercase/);

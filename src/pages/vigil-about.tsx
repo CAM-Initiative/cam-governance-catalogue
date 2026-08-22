@@ -1,21 +1,15 @@
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-
-const stages = [
-  { number: "01", label: "Evidence", text: "Preserve an observable incident, research result, platform behaviour, or other governance-relevant signal with its source and evidentiary limits." },
-  { number: "02", label: "Classify", text: "Identify the repeatable failure mode and connect it to the authoritative governance taxonomy without treating contextual links as co-equal classifications." },
-  { number: "03", label: "Diagnose", text: "Identify the governance weakness and the control, assessment, or institutional response that may be required." },
-  { number: "04", label: "Respond", text: "Record an implemented repair, relied-upon existing control, verification state, and any remaining gap." },
-  { number: "05", label: "Learn", text: "Preserve the corrected governance reasoning, reusable lesson, future applications, limitations, and recurrence risk." },
-];
+import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 
 const recordTypes = [
-  ["OBS / RESEARCH", "Evidence origins", "Observed behaviour, source-linked events, structured research, and other evidentiary material."],
-  ["FM", "Failure modes", "Repeatable governance-relevant failure patterns. Public Case Files are centred on one authoritative FM classification."],
-  ["PROP", "Proposals", "Candidate governance responses, controls, assessment changes, or doctrinal amendments."],
-  ["PATCH", "Repairs", "Traceable implementation or verified pre-existing coverage, including corpus and release provenance."],
-  ["LEARN", "Governance lessons", "Durable learning closure that preserves misconception, integrated learning, future application, limitations, and risk if the lesson is lost."],
+  ["OBS", "Observations", "Source-linked records of externally observable events, system behaviour, or governance-relevant signals. They preserve what was observed without converting the observation itself into a general failure claim."],
+  ["RESEARCH", "Research", "Structured research and evidence-synthesis records that test, contextualise, or reconcile claims across sources while preserving what is established, inferred, and unresolved."],
+  ["FM", "Failure modes", "Repeatable governance-relevant failure mechanisms that survive non-duplication review. A public Case File is organised around one authoritative FM classification."],
+  ["PROP", "Proposals", "Candidate governance responses describing the gap to be repaired, the proposed change, and the intended control effect. A proposal is not evidence that a repair has been implemented."],
+  ["PATCH", "Repairs", "Implementation records showing where a governance response was actually placed, or where verified existing coverage was relied upon, together with provenance and verification state."],
+  ["LEARN", "Governance lessons", "Durable learning records that preserve corrected reasoning, reusable lessons, future applications, limitations, and recurrence risk after an investigation."],
 ];
 
 export default function VigilAbout() {
@@ -28,20 +22,22 @@ export default function VigilAbout() {
     </header>
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
-      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Evidence to repair</p><h2 id="vigil-method-heading">How an investigation moves through VIGIL</h2></div>
-      <div className="vigil-about-flow">{stages.map((stage) => <article key={stage.number}><span>{stage.number}</span><h3>{stage.label}</h3><p>{stage.text}</p></article>)}</div>
+      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Evidence to repair</p><h2 id="vigil-method-heading">How VIGIL presents an evidence-to-repair case</h2></div>
+      <p className="vigil-about-record-intro">The six sections below are the canonical public report model. VIGIL routing is conditional rather than compulsory: a record may enter the lifecycle at different points, and not every investigation requires every record type.</p>
+      <div className="vigil-about-flow">{VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>{section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}</div>
       <p className="vigil-about-note">Contextual relationships may help explain a record, but they do not automatically expand an authoritative Case File, change its failure classification, or create a repair claim.</p>
     </section>
 
     <section className="vigil-about-section" aria-labelledby="vigil-record-types-heading">
-      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Underlying records</p><h2 id="vigil-record-types-heading">The ledger remains more detailed than the public Case File</h2></div>
+      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Record system</p><h2 id="vigil-record-types-heading">VIGIL record types</h2></div>
+      <p className="vigil-about-record-intro">A Case File is a public investigation view assembled from distinct canonical records. Those records retain separate evidentiary and governance roles in the ledger; they are not flattened into one document.</p>
       <div className="vigil-about-record-grid">{recordTypes.map(([code, title, text]) => <article key={code}><span>{code}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
     </section>
 
     <section className="vigil-about-section" aria-labelledby="vigil-public-surfaces-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Public surfaces</p><h2 id="vigil-public-surfaces-heading">Three ways to use the Observatory</h2></div>
       <div className="vigil-about-surface-grid">
-        <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through evidence, classification, diagnosis, response, learning and provenance.</span></Link>
+        <Link href="/observatory/cases"><strong>Case Files</strong><span>Investigate a documented AI failure mode through the six-section Observation, Record, Classification, Diagnosis, Repair and Learn model, with sources and provenance available separately.</span></Link>
         <Link href="/observatory/knowledge-base"><strong>Knowledge Base</strong><span>Browse governance lessons, authoritative external requirements, and the source/version register.</span></Link>
         <Link href="/observatory/ledger"><strong>Full Ledger</strong><span>Audit the complete record system, workflow state, metadata, raw JSON and administrative relationships.</span></Link>
       </div>
