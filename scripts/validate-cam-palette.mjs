@@ -81,10 +81,10 @@ if (shell.includes('href="https://github.com/CAM-Initiative/Caelestis"')) {
 }
 
 // Footer navigation is intentionally not a duplicate of the persistent header.
-// Keep only concise initiative text and the small contact/social icon group.
-requireText(shell, 'aria-label="CAM Initiative links"', "Footer must retain the compact contact/social icon group.");
+// Keep only concise initiative text and the small responsive contact/social icon group.
+requireText(shell, 'aria-label="Footer" className="flex w-full max-w-full flex-wrap', "Footer must retain the responsive compact contact/social icon group.");
 requireText(shell, 'aria-label="Substack"', "Footer must expose a Substack icon link.");
-if (shell.includes('aria-label="Footer"') || shell.includes('const footerLinks =')) {
+if (shell.includes('const footerLinks =')) {
   failures.push("Footer must not duplicate the primary site navigation links.");
 }
 if (shell.includes('/about#citations') || shell.includes('aria-label="Citations"')) {
