@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Coffee, Mail, Newspaper } from "lucide-react";
+import { Coffee, Github, Mail, Newspaper } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -238,6 +238,9 @@ export function Shell({ children }: { children: ReactNode }) {
               </a>
               <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Newspaper className="h-4 w-4" aria-hidden="true" />
+              </a>
+              <a href="https://github.com/CAM-Initiative/Vigil" aria-label="VIGIL repository on GitHub" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <Github className="h-4 w-4" aria-hidden="true" />
               </a>
               <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Coffee className="h-4 w-4" aria-hidden="true" />
