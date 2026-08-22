@@ -2,7 +2,7 @@ export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
   {
     id: "observe",
     number: "01",
-    label: "Observe",
+    label: "Observation",
     description: "Establish what happened or what was found, which systems are affected, what the available evidence supports, and where the evidentiary boundary sits.",
   },
   {
@@ -14,13 +14,13 @@ export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
   {
     id: "classify",
     number: "03",
-    label: "Classify",
+    label: "Classification",
     description: "Identify the repeatable failure mode, severity, canonical taxonomy position, and classification boundary.",
   },
   {
     id: "diagnose",
     number: "04",
-    label: "Diagnose",
+    label: "Diagnosis",
     description: "Identify the governance weakness, existing coverage, control gap, and response that may be required.",
   },
   {
