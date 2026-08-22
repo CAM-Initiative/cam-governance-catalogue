@@ -2,33 +2,33 @@
  * CAM dark appearance closure.
  *
  * The base token architecture lives in index.css. This layer is loaded after it
- * so the public dark appearance resolves to a true black canvas and black
- * principal surfaces while retaining the existing CAM gold, border, status and
- * typography semantics.
+ * so the public dark appearance resolves to a neutral near-black canvas with
+ * slightly raised charcoal surfaces while retaining the existing CAM gold,
+ * border, status and typography semantics.
  */
 
 html[data-theme="dark"] {
   color-scheme: dark;
-  --background: 0 0% 0%;
-  --card: 0 0% 0%;
+  --background: 0 0% 4%;
+  --card: 0 0% 7%;
   --card-foreground: 38 24% 90%;
-  --popover: 0 0% 0%;
+  --popover: 0 0% 7%;
   --popover-foreground: 38 24% 90%;
-  --secondary: 0 0% 7%;
+  --secondary: 0 0% 10%;
   --secondary-foreground: 38 22% 88%;
-  --muted: 0 0% 7%;
+  --muted: 0 0% 10%;
   --muted-foreground: 35 14% 68%;
-  --accent: 0 0% 8%;
+  --accent: 0 0% 11%;
   --accent-foreground: 38 25% 92%;
-  --input: 0 0% 10%;
-  --sidebar: 0 0% 0%;
+  --input: 0 0% 12%;
+  --sidebar: 0 0% 4%;
   --sidebar-foreground: 38 24% 90%;
 }
 
 html[data-theme="dark"],
 html[data-theme="dark"] body,
 html[data-theme="dark"] #root {
-  background: #000;
+  background: hsl(var(--background));
 }
 
 /*
@@ -39,11 +39,11 @@ html[data-theme="dark"] #root {
 html[data-theme="dark"] [class~="bg-[hsl(38_40%_93%)]"],
 html[data-theme="dark"] [class~="bg-[hsl(38_40%_94%)]"],
 html[data-theme="dark"] [class~="bg-[hsl(36_48%_96%)]"] {
-  background-color: #000 !important;
+  background-color: hsl(var(--background)) !important;
 }
 
 html[data-theme="dark"] [class~="hover:bg-[hsl(36_52%_93%)]"]:hover {
-  background-color: hsl(0 0% 6%) !important;
+  background-color: hsl(var(--secondary)) !important;
 }
 
 /*
