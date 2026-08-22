@@ -10,12 +10,36 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   background-color: hsl(var(--background)) !important;
 }
 
-/* The homepage now earns navigation through the substantive surfaces beneath
-   the hero rather than duplicating Catalogue/About calls to action here. */
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers)
-  > section:first-child
-  .mt-8.flex.flex-wrap.gap-3:has(> a[href="/catalogue"]):has(> a[href="/about"]) {
-  display: none !important;
+/*
+ * Explore AI Governance uses compact discovery cards on hover-capable desktop
+ * devices. The expanded information remains visible by default on touch and
+ * small-screen devices, and keyboard focus expands the card alongside hover.
+ */
+.home-governance-detail {
+  overflow: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-governance-card .home-governance-detail {
+    max-height: 0;
+    margin-top: 0 !important;
+    opacity: 0;
+    transform: translateY(-0.2rem);
+    transition: max-height 220ms ease, margin-top 220ms ease, opacity 160ms ease, transform 220ms ease;
+  }
+
+  .home-governance-card:hover .home-governance-detail,
+  .home-governance-card:focus-visible .home-governance-detail,
+  .home-governance-card:focus-within .home-governance-detail {
+    max-height: 12rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .home-governance-card:hover .home-governance-detail,
+  .home-governance-card:focus-visible .home-governance-detail {
+    margin-top: 0.45rem !important;
+  }
 }
 
 /*
@@ -25,6 +49,7 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers)
  */
 section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
   padding-left: 1.5rem;
+  padding-bottom: 0.25rem !important;
 }
 
 section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
@@ -35,17 +60,10 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
   justify-content: flex-start !important;
 }
 
-/* With the redundant VIGIL/Constitution bridge removed, the evidence section
-   can close directly after the six-step chain without leaving a false gap. */
-section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
-  padding-bottom: 0.25rem !important;
-}
-
 /*
- * Connect follows the same top-level section rhythm as Policy Papers:
- * section label -> heading/description -> content. Remove the extra raised
- * wrapper and redundant CAM Initiative channels kicker so the contact grid is
- * not visually inset inside a second container.
+ * Connect follows the same top-level section rhythm as Policy Papers. The
+ * source component now omits the redundant intermediate kicker; the outer
+ * wrapper remains visually flat so the contact grid is not nested in a card.
  */
 #connect > article {
   border: 0 !important;
@@ -53,10 +71,6 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
-}
-
-#connect > article > div > div:first-child > p:first-child {
-  display: none !important;
 }
 
 @media (min-width: 1024px) {
