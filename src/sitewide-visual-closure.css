@@ -126,17 +126,13 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div > di
  * Dark appearance: complete recurring light-surface closure
  * ------------------------------------------------------------------------- */
 
-/* Literal archival surfaces still used by routed pages. They remain valid in
-   light appearance, but cannot punch pale holes through dark mode. */
-html[data-theme="dark"] [class~="bg-[hsl(38_48%_94%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(38_40%_93%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(38_40%_94%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(36_35%_96%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(36_48%_95%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(36_48%_96%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(40_42%_96%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(40_48%_97%)]"],
-html[data-theme="dark"] [class~="bg-[hsl(40_55%_98%)]"],
+/* Archival parchment utilities use a family of nearby warm HSL values across
+   older routed pages. Close the family in dark mode rather than enumerating
+   every individual 93/94/95/96/97/98% lightness variant and rediscovering the
+   next one page by page. */
+html[data-theme="dark"] [class*="bg-[hsl(36_"],
+html[data-theme="dark"] [class*="bg-[hsl(38_"],
+html[data-theme="dark"] [class*="bg-[hsl(40_"],
 html[data-theme="dark"] [class~="bg-white"],
 html[data-theme="dark"] [class~="bg-gray-50"] {
   background-color: hsl(var(--card)) !important;
