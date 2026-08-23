@@ -109,7 +109,7 @@ assert.match(report, /setIncludedSections\(reportSectionAvailability\(reportReco
 assert.match(report, /reportSteps\.map\(\(step\) => \[step\.number, false\]\)/);
 assert.doesNotMatch(enhancements, /data-vigil-condensed-card|data-vigil-card-summary|data-vigil-learn-detail-card/);
 assert.match(enhancements, /metadataRow\.appendChild\(makeCompleteBadge\(\)\)/);
-assert.doesNotMatch(enhancements, /\.vigil-case-stage-tabs\s*\{[^}]*grid-template-columns\s*:\s*repeat\(6/mins, "Injected enhancement styles must not override responsive Case File stage navigation");
+assert.doesNotMatch(enhancements, /\.vigil-case-stage-tabs[^\n]*repeat\(6,minmax\(0,1fr\)\)/, "Injected enhancement styles must not override responsive Case File stage navigation");
 assert.doesNotMatch(enhancements, /repeat\(7,minmax\(0,1fr\)\)/);
 assert.doesNotMatch(enhancements, /normalizeCaseReferences|normalizeReportReferences/);
 assert.doesNotMatch(enhancements, /position:absolute|right:1rem|top:\.65rem/);
