@@ -1,6 +1,6 @@
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { VIGIL_EVIDENCE_REPAIR_SECTIONS, VIGIL_REFERENCES_SECTION } from "@/lib/vigilEvidenceRepair";
+import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 
 const recordTypes = [
   ["OBS", "Observations", "Source-linked records of externally observable events, system behaviour, or governance-relevant signals. They preserve what was observed without converting the observation itself into a general failure claim."],
@@ -27,11 +27,10 @@ export default function VigilAbout() {
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Evidence to repair</p><h2 id="vigil-method-heading">How a VIGIL case is structured</h2></div>
-      <p className="vigil-about-record-intro">Sections 01–06 form the canonical evidence-to-repair investigation. Section 07, References, provides the external evidence, canonical VIGIL citations and repair provenance needed to audit the Case File or generated report. VIGIL record routing remains conditional, so an investigation may enter the lifecycle at different points and does not require every record type.</p>
+      <p className="vigil-about-record-intro">VIGIL uses six public stages: Observation, Classification, Diagnosis, Repair, Learn and References. References closes the chain by showing the external evidence first, followed by the linked VIGIL records and internal provenance needed to trace how the case was assembled. VIGIL record routing remains conditional, so an investigation may enter the lifecycle at different points and does not require every record type.</p>
       <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL six-stage evidence-to-repair report model" tabIndex={0}>
         <div className="vigil-about-flow">
           {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>Stage {section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}
-          <article key={VIGIL_REFERENCES_SECTION.number}><span>Stage {VIGIL_REFERENCES_SECTION.number}</span><h3>{VIGIL_REFERENCES_SECTION.label}</h3><p>{VIGIL_REFERENCES_SECTION.description}</p></article>
         </div>
       </div>
       <p className="vigil-about-note">Contextual relationships may help explain a record, but they do not automatically expand an authoritative Case File, change its failure classification, or create a repair claim.</p>
