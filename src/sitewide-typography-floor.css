@@ -27,14 +27,18 @@
   font-size: var(--cam-type-micro) !important;
 }
 
-/* Product/development markers were previously 9.9–10.9px. */
+/* Product/development markers and an older homepage pseudo-label previously
+ * rendered at roughly 9.9–10.9px. */
 .cam-development-status,
 main.overflow-hidden:has(#evidence-repair-heading)
   > section:first-child
   > .container
   > div:first-child
   > p:first-child::after,
-.home-governance-card > span:first-child > span:first-child::after {
+.home-governance-card > span:first-child > span:first-child::after,
+section[aria-labelledby="governance-stack-heading"]
+  > div.rounded-3xl
+  > .overflow-x-auto::after {
   font-size: var(--cam-type-micro) !important;
   line-height: 1.3;
 }
