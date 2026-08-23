@@ -11,6 +11,7 @@ on:
       - "pnpm-lock.yaml"
       - "vite.config.ts"
       - "scripts/prepare-github-pages.js"
+      - "scripts/migrate-vigil-references-v7.mjs"
       - ".github/workflows/publish-pages-output.yml"
   workflow_dispatch:
 
@@ -44,6 +45,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Apply References v7 source migration
+        run: node scripts/migrate-vigil-references-v7.mjs
+
+      - name: Test VIGIL Observatory
+        run: pnpm run test:vigil
+
+      - name: Test VIGIL Knowledge Base contract
+        run: pnpm run test:knowledge-base
+
       - name: Validate CAM website palette
         run: pnpm run validate:palette
 
@@ -56,14 +66,14 @@ jobs:
       - name: Validate generated Pages output
         run: python scripts/validate-docs-published-output.py --base HEAD~1
 
-      - name: Commit rebuilt docs output
+      - name: Commit migrated source and rebuilt docs output
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs
+          git add docs src/pages/vigil-case-file.tsx src/pages/evidence-chain-report.tsx src/vigil-ux-v4.css src/public/vigil-ux-enhancements.js scripts/test-vigil-observatory.mjs
           if git diff --cached --quiet; then
-            echo "Published /docs output is already current."
+            echo "Source migration and published /docs output are already current."
           else
-            git commit -m "chore: rebuild GitHub Pages output [skip ci]"
+            git commit -m "refactor: make References canonical section 07 [skip ci]"
             git push
           fi
