@@ -83,15 +83,7 @@ type ImplementationEntry = {
 
 const VIGIL_ID = /VIGIL-\d{4}-(?:OBS|RESEARCH|FM|PROP|PATCH|LEARN)-\d{4}/gi;
 const LEARN_ID = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
-
-const PROVENANCE_VIEW = {
-  id: "provenance",
-  number: "",
-  label: "Sources & provenance",
-  description: "External bibliography and governance-corpus implementation provenance supporting the Case File.",
-} as const;
-
-const CASE_VIEWS = [...VIGIL_EVIDENCE_REPAIR_SECTIONS, PROVENANCE_VIEW] as const;
+const CASE_VIEWS = VIGIL_EVIDENCE_REPAIR_SECTIONS;
 
 type StageId = typeof CASE_VIEWS[number]["id"];
 
@@ -679,19 +671,8 @@ export default function VigilCaseFile() {
         </div>}
       </article>)}</div>}
       {failureDetail?.evidence.length ? <div className="vigil-evidence-list">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
-      {!failureDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under Sources &amp; provenance.</p>}
+      {!failureDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under References.</p>}
       {affectedSystems.length === 0 && observations.length === 0 && !failureDetail?.evidence.length && externalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
-    </>;
-
-    if (stageId === "record") return <>
-      <div className="vigil-record-provenance">
-        <h3>Authoritative VIGIL record chain</h3>
-        <div>
-          {state.records.map((record) => <article key={record.id}><span>{record.id}</span><strong>{record.title}</strong>{recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
-          {state.learns.map((learn) => <article key={learn.id}><span>{learn.id}</span><strong>{learn.title}</strong>{learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
-        </div>
-      </div>
-      <p className="vigil-provenance-note">The Case File assembles distinct canonical records into one public investigation view. OBS, RESEARCH, FM, PROP, PATCH and LEARN records retain their separate evidentiary and governance roles rather than being flattened into one record.</p>
     </>;
 
     if (stageId === "classify") return <>
@@ -791,16 +772,30 @@ export default function VigilCaseFile() {
       </article>) : <p className="vigil-case-empty">No published LEARN record is linked. The investigation remains useful while learning closure is incomplete.</p>}
     </>;
 
-    if (stageId === "provenance") return <>
-      {externalSources.length > 0 ? <div className="vigil-case-citations vigil-case-bibliography"><h3>External evidence bibliography</h3><ol>{externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}</div></li>)}</ol></div> : <p className="vigil-case-empty">No external bibliography is exposed in the current public projection.</p>}
-      {patches.map((record) => <ImplementationProvenance key={`provenance-${record.id}`} record={record} />)}
+    if (stageId === "references") return <>
+      <section className="vigil-reference-group" aria-labelledby="external-references-heading">
+        <div className="vigil-case-subheading"><p className="vigil-library-kicker">External references</p><h3 id="external-references-heading">Evidence and source material</h3></div>
+        {externalSources.length > 0 ? <div className="vigil-case-citations vigil-case-bibliography"><ol>{externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}</div></li>)}</ol></div> : <p className="vigil-case-empty">No external bibliography is exposed in the current public projection.</p>}
+      </section>
+
+      <section className="vigil-reference-group" aria-labelledby="internal-references-heading">
+        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Internal references</p><h3 id="internal-references-heading">Linked VIGIL records</h3></div>
+        <div className="vigil-record-provenance">
+          <div>
+            {state.records.map((record) => <article key={record.id}><span>{record.id}</span><strong>{record.title}</strong>{recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
+            {state.learns.map((learn) => <article key={learn.id}><span>{learn.id}</span><strong>{learn.title}</strong>{learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
+          </div>
+        </div>
+        <p className="vigil-provenance-note">These linked OBS, RESEARCH, FM, PROP, PATCH and LEARN records are VIGIL&apos;s internal references for the Case File. They remain distinct canonical records rather than being flattened into one document.</p>
+        {patches.map((record) => <ImplementationProvenance key={`provenance-${record.id}`} record={record} />)}
+      </section>
     </>;
 
     return null;
   };
 
   const activeDefinition = CASE_VIEWS.find((stage) => stage.id === activeStage) ?? CASE_VIEWS[0];
-  const activeAriaLabel = activeDefinition.number ? `${activeDefinition.number} ${activeDefinition.label}` : activeDefinition.label;
+  const activeAriaLabel = `${activeDefinition.number} ${activeDefinition.label}`;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
     <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
@@ -837,18 +832,10 @@ export default function VigilCaseFile() {
           onClick={() => setActiveStage(stage.id)}
         ><span>{stage.number}</span>{stage.label}</button>)}
       </div>
-      <button
-        type="button"
-        aria-pressed={activeStage === "provenance"}
-        className={`mt-2 inline-flex min-h-10 items-center rounded-lg border px-3.5 py-2 font-mono text-xs font-semibold uppercase tracking-[0.1em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${activeStage === "provenance" ? "border-primary/55 bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}
-        onClick={() => setActiveStage("provenance")}
-      >
-        Sources &amp; provenance
-      </button>
     </nav>
 
     <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel}>
-      <Section id={`case-${activeStage}`} number={activeDefinition.number || undefined} title={activeDefinition.label} description={activeDefinition.description}>
+      <Section id={`case-${activeStage}`} number={activeDefinition.number} title={activeDefinition.label} description={activeDefinition.description}>
         {renderStageContent(activeStage)}
       </Section>
     </div>
