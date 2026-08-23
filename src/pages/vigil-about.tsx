@@ -48,7 +48,7 @@ export default function VigilAbout() {
 
     <section className="vigil-about-section" aria-labelledby="vigil-record-types-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Record system</p><h2 id="vigil-record-types-heading">VIGIL record types</h2></div>
-      <p className="vigil-about-record-intro">A Case File is a public investigation view assembled from distinct canonical records. Those records retain separate evidentiary and governance roles in the ledger; they are not flattened into one document.</p>
+      <p className="vigil-about-record-intro">A Case File is a public investigation view assembled from distinct canonical records. Those records retain separate evidentiary and governance roles within VIGIL; they are not flattened into one document.</p>
       <div className="vigil-about-record-grid">{recordTypes.map(([code, title, text]) => <article key={code}><span>{code}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
     </section>
   </div></main></Shell>;
