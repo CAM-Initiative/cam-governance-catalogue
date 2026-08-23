@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Download, ExternalLink, Search, X } from "lucide-react";
-import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import {
@@ -158,8 +157,7 @@ export function VigilExternalRequirements() {
       .sort((a, b) => (a.source?.title ?? a.requirements[0]?.external_source_id ?? "").localeCompare(b.source?.title ?? b.requirements[0]?.external_source_id ?? ""));
   }, [query, state]);
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-    <Link href="/observatory/knowledge-base" className="vigil-back-link">← Knowledge Base</Link>
+  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
     <header className="vigil-simple-hero vigil-reference-hero">
       <p className="vigil-library-kicker">Governance requirement reference</p>
       <h1>External Requirements</h1>
@@ -261,8 +259,7 @@ export function VigilExternalSources() {
     }).sort((a, b) => a.title.localeCompare(b.title) || b.source_version.localeCompare(a.source_version));
   }, [forceBySource, jurisdiction, normativeForce, query, state]);
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-    <Link href="/observatory/knowledge-base" className="vigil-back-link">← Knowledge Base</Link>
+  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
     <header className="vigil-simple-hero vigil-reference-hero">
       <p className="vigil-library-kicker">Public governance reference dataset</p>
       <h1>Standards &amp; Sources</h1>
