@@ -213,7 +213,7 @@ function ExploreGovernancePanel() {
       transition={{ duration: 0.7, delay: 0.1 }}
     >
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
-        <p className="font-mono text-base font-semibold uppercase tracking-[0.16em] text-cam-gold">Explore AI Governance</p>
+        <p className="font-mono text-sm font-semibold uppercase tracking-[0.14em] text-cam-gold">Explore AI Governance</p>
         <span className="h-2 w-2 rounded-full bg-cam-gold/80" aria-hidden="true" />
       </div>
 
