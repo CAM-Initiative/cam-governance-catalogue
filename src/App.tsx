@@ -61,6 +61,7 @@ function Router() {
       <Route path="/observatory/incidents" component={VigilCases} />
       <Route path="/observatory/repairs" component={VigilCases} />
       <Route path="/observatory" component={VigilCases} />
+      {/* Former /observatory/ledger public surface is preserved as src/drafts/vigil-ledger.tsx and is intentionally not routed. */}
       <Route path="/vigil/:recordId" component={VigilCaseFile} />
       <Route path="/vigil" component={VigilCases} />
       <Route component={NotFound} />
