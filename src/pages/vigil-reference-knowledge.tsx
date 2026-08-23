@@ -139,18 +139,6 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
     <div className="vigil-baseline-clause-actions">
       {(requirement.authoritative_locator || source.official_locator) && <a href={requirement.authoritative_locator ?? source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
     </div>
-
-    <details className="vigil-baseline-provenance">
-      <summary>Record notes &amp; provenance</summary>
-      <dl>
-        <div><dt>Clause record</dt><dd>{requirement.requirement_id}</dd></div>
-        <div><dt>Posture</dt><dd>{clean(requirement.requirement_posture) ?? "Not specified"}</dd></div>
-        <div><dt>Type</dt><dd>{clean(requirement.expectation_type) ?? "Not specified"}</dd></div>
-        <div><dt>Authority</dt><dd>{clean(requirement.normative_force) ?? "Not specified"}</dd></div>
-        <div><dt>Interpretation status</dt><dd>{clean(requirement.interpretation_status) ?? "Not specified"}</dd></div>
-        <div><dt>Source access</dt><dd>{clean(requirement.source_access_status) ?? "Not specified"}</dd></div>
-      </dl>
-    </details>
   </div>;
 }
 
