@@ -18,7 +18,7 @@ export function VigilObservatoryNav() {
             <span className="min-w-0">
               <span className="vigil-app-name-line">
                 <span className="vigil-app-name">VIGIL Observatory</span>
-                <span className="cam-development-status">Public beta · prototype</span>
+                <span className="cam-beta-chip">Beta</span>
               </span>
               <span className="vigil-app-tagline">Observation → Record → Classification → Diagnosis → Repair → Learn</span>
             </span>
