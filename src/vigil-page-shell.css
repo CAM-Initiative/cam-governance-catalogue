@@ -78,14 +78,13 @@
   border-radius: 0;
 }
 
-/* One kicker treatment. This closes the remaining Ledger/Lessons mismatch
- * caused by legacy utility classes rather than by different page semantics. */
+/* One kicker treatment across every public VIGIL hero. */
 .vigil-about-page .vigil-library-kicker,
 .vigil-knowledge-hub-page .vigil-library-kicker,
 .vigil-reference-page .vigil-library-kicker,
 .vigil-case-library-page .vigil-library-kicker,
 .vigil-app-shell + div.container > div:first-child > p:first-child,
-.vigil-app-shell + main.container:not(.report-page) > header > .flex.items-start.gap-4 p:first-child {
+.vigil-app-shell + main.container:not(.report-page) > header .vigil-library-kicker {
   margin: 0 !important;
   font-family: var(--app-font-mono) !important;
   font-size: 0.875rem !important;
@@ -114,7 +113,7 @@
 .vigil-knowledge-hub-page .vigil-simple-hero > p:last-child,
 .vigil-reference-page .vigil-reference-hero > p:last-child,
 .vigil-app-shell + div.container > div:first-child > p:last-child,
-.vigil-app-shell + main.container:not(.report-page) > header > p,
+.vigil-app-shell + main.container:not(.report-page) > header > p:not(.vigil-library-kicker),
 .vigil-case-library-page .vigil-library-description {
   max-width: 68rem;
   margin-top: 0.45rem;
@@ -122,23 +121,6 @@
   font-size: 1rem !important;
   line-height: 1.6 !important;
   color: hsl(var(--muted-foreground));
-}
-
-/* Governance Lessons previously used a bespoke book icon block in its hero.
- * It is decorative and is removed so the heading aligns with every other VIGIL
- * page. */
-.vigil-app-shell + main.container:not(.report-page) > header > .flex.items-start.gap-4 > div:first-child:has(svg) {
-  display: none !important;
-}
-
-.vigil-app-shell + main.container:not(.report-page) > header > .flex.items-start.gap-4 {
-  display: block !important;
-}
-
-/* The full Ledger is an internal working surface, not a public discovery CTA.
- * Governance Lessons therefore does not advertise it. */
-.vigil-app-shell + main.container:not(.report-page) > header a[href="/observatory/ledger"] {
-  display: none !important;
 }
 
 .vigil-about-page .vigil-about-section:first-of-type,
