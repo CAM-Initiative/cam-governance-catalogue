@@ -17,7 +17,10 @@ export function VigilObservatoryNav() {
           <Link href="/observatory/about" className="vigil-app-identity">
             <span className="vigil-app-mark" aria-hidden="true"><ShieldCheck /></span>
             <span className="min-w-0">
-              <span className="vigil-app-name">VIGIL Observatory</span>
+              <span className="vigil-app-name-line">
+                <span className="vigil-app-name">VIGIL Observatory</span>
+                <span className="cam-development-status">Public beta · prototype</span>
+              </span>
               <span className="vigil-app-tagline">Observation → Record → Classification → Diagnosis → Repair → Learn</span>
             </span>
           </Link>

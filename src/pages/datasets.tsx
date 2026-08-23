@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Download, Library, Scale } from "lucide-react";
+import { ArrowRight, Download, Library, Network, Scale } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
@@ -19,26 +19,31 @@ function DatasetCard({
   browseHref,
   browseLabel,
   downloadHref,
+  developmentNote,
   icon,
 }: {
   title: string;
   description: string;
   status: string;
-  browseHref: string;
-  browseLabel: string;
+  browseHref?: string;
+  browseLabel?: string;
   downloadHref?: string;
+  developmentNote?: string;
   icon: React.ReactNode;
 }) {
+  const hasActions = Boolean((browseHref && browseLabel) || downloadHref || developmentNote);
+
   return <article className="vigil-knowledge-collection">
     <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
     <div className="vigil-knowledge-copy">
       <p className="vigil-library-kicker">{status}</p>
       <h2>{title}</h2>
       <p>{description}</p>
-      <div className="vigil-knowledge-actions">
-        <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link>
+      {hasActions ? <div className="vigil-knowledge-actions">
+        {browseHref && browseLabel ? <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link> : null}
         {downloadHref ? <a href={downloadHref} target="_blank" rel="noreferrer" download>Download JSON<Download aria-hidden="true" /></a> : null}
-      </div>
+        {developmentNote ? <span className="vigil-dataset-development-note">{developmentNote}</span> : null}
+      </div> : null}
     </div>
   </article>;
 }
@@ -65,9 +70,12 @@ export default function Datasets() {
     <main className="vigil-knowledge-hub-page">
       <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
         <header className="vigil-simple-hero">
-          <p className="vigil-library-kicker">VIGIL public data</p>
+          <div className="vigil-development-kicker-row">
+            <p className="vigil-library-kicker">VIGIL public data</p>
+            <span className="cam-development-status">Beta datasets · active development</span>
+          </div>
           <h1>Datasets</h1>
-          <p>Download the machine-readable forms of the same external governance reference collections available through the VIGIL Knowledge Base.</p>
+          <p>These are working public datasets. Coverage, classification and schema continue to evolve as VIGIL incorporates new evidence, standards, governance requirements and observed AI-system failures.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
@@ -88,6 +96,13 @@ export default function Datasets() {
             browseLabel="Browse collection"
             downloadHref={state.requirementsUrl}
             icon={<Scale />}
+          />
+          <DatasetCard
+            title="Governance Failure Taxonomy"
+            description="Internally developed, machine-readable interpretive standard for classifying AI runtime and governance failure mechanisms. It is being prototyped to support diagnosis, mapping to governance controls, and evidence-backed self-repair workflows."
+            status="Internal standard · prototype"
+            developmentNote="Machine-readable dataset in development"
+            icon={<Network />}
           />
         </section>
       </div>
