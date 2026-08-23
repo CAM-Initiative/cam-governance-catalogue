@@ -67,36 +67,39 @@ function sourceRoleLabel(role?: string) {
   return role ? labels[role] ?? clean(role) ?? role : "Role not specified";
 }
 
-function sourceRoleExplanation(role?: string) {
-  if (role === "primary-ai-governance") {
-    return "Included because this source is specifically about AI governance, AI risk, safety, assurance or technical controls and contains material guidance or obligations for governing AI systems.";
-  }
-  if (role === "supporting-external-authority") {
-    return "Included because this broader law, standard or framework helps answer a specific AI-governance question, such as privacy, cybersecurity, safety, accountability or risk management.";
-  }
-  if (role === "context-or-discovery") {
-    return "Included because it helps interpret terminology, reporting structures or the standards landscape relevant to AI governance.";
-  }
-  if (role === "excluded-from-current-scope") {
-    return "Registered for traceability, but not used as part of the current external-governance baseline.";
-  }
-  return "Included because the source contributes to a specific question in the external AI-governance baseline.";
+function sourceTopic(title: string) {
+  return title
+    .replace(/^Information technology\s+—\s+Artificial intelligence(?: \(AI\))?\s+—\s+/i, "")
+    .replace(/^Artificial intelligence(?: \(AI\))?\s+—\s+/i, "")
+    .replace(/^Systems and software engineering\s+—\s+Systems and software Quality Requirements and Evaluation \(SQuaRE\)\s+—\s+/i, "")
+    .replace(/^Software engineering\s+—\s+Systems and software Quality Requirements and Evaluation \(SQuaRE\)\s+—\s+/i, "")
+    .replace(/^Regulation \([^)]+\) \d+\/\d+\s+—\s+/i, "")
+    .replace(/^Directive \([^)]+\) \d+\/\d+\s+—\s+/i, "")
+    .replace(/[.]$/, "")
+    .trim();
 }
 
-function clauseReviewLabel(scope: ExternalSourceScopeEntry | undefined, clauseCount: number) {
-  if (clauseCount > 0) return `${clauseCount.toLocaleString()} clause${clauseCount === 1 ? "" : "s"}`;
-  if (scope?.extraction_status === "blocked-access" && scope.source_access_status === "official-metadata-only") return "Copyright Protected";
-  switch (scope?.extraction_status) {
-    case "in-progress":
-    case "partial":
-      return "Review in progress";
-    case "blocked-access":
-      return "Access limited";
-    case "complete":
-      return "No public clauses";
-    default:
-      return "Review pending";
+function sourcePublicSummary(source: ExternalSourceEntry) {
+  const note = source.notes?.trim();
+  if (note) {
+    const useful = note
+      .split(/(?<=[.!?])\s+|;\s+/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .filter((part) => !/(\bVIGIL\b|\bCaelestis\b|\bCAM\b|\bledger\b|substantive applicability|alignment review|conformance|source-version provenance|review-required|\bin scope\b)/i.test(part));
+    if (useful.length) {
+      return useful.slice(0, 2).map((part) => /[.!?]$/.test(part) ? part : `${part}.`).join(" ");
+    }
   }
+
+  const topic = sourceTopic(source.title);
+  const first = topic.charAt(0).toLowerCase() + topic.slice(1);
+  return `Covers ${first}.`;
+}
+
+function clauseReviewLabel(clauseCount: number) {
+  if (clauseCount > 0) return `${clauseCount.toLocaleString()} clause${clauseCount === 1 ? "" : "s"}`;
+  return "Overview only";
 }
 
 function SearchControl({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
@@ -159,11 +162,11 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
 
 function SourceAbout({ source, scope, previousVersions }: { source: ExternalSourceEntry; scope?: ExternalSourceScopeEntry; previousVersions: ExternalSourceEntry[] }) {
   return <details className="vigil-baseline-source-about">
-    <summary>About this source &amp; review provenance</summary>
+    <summary>About this source</summary>
     <div className="vigil-baseline-source-about-body">
       <section>
-        <p className="vigil-library-kicker">Why it is included</p>
-        <p>{sourceRoleExplanation(scope?.source_role)}</p>
+        <p className="vigil-library-kicker">Why it matters here</p>
+        <p>{sourcePublicSummary(source)}</p>
       </section>
       <dl className="vigil-baseline-source-facts">
         <div><dt>Publisher</dt><dd>{source.issuer ?? "Not specified"}</dd></div>
@@ -194,7 +197,7 @@ function SupportingSources({ sources, scopeBySource }: { sources: ExternalSource
     <div className="mb-3 max-w-5xl">
       <p className="vigil-library-kicker">Supporting &amp; contextual sources</p>
       <h2 id="supporting-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Sources that inform specific governance questions</h2>
-      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the reference baseline because they provide relevant legal, technical or interpretive context. They are not presented as empty clause collections.</p>
+      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These references provide legal, technical, reporting or interpretive context that helps explain specific AI-governance questions.</p>
     </div>
     <div className="overflow-hidden rounded-lg border border-border bg-background">
       {sources.map((source) => {
@@ -207,7 +210,7 @@ function SupportingSources({ sources, scopeBySource }: { sources: ExternalSource
           </div>
           <div>
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{sourceRoleLabel(scope?.source_role)}</p>
-            <p className="mt-1 text-sm leading-relaxed text-foreground/85">{sourceRoleExplanation(scope?.source_role)}</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/85">{sourcePublicSummary(source)}</p>
           </div>
           {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-primary hover:underline" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : <span />}
         </article>;
@@ -283,6 +286,10 @@ function VigilExternalGovernanceBaseline() {
     return grouped;
   }, [state]);
 
+  const sourceCount = useMemo(() => state.status === "ready"
+    ? new Set(state.sources.map((source) => sourceIdentity(source))).size
+    : 0, [state]);
+
   const jurisdictions = useMemo(() => state.status === "ready"
     ? uniqueText(state.sources.map((source) => source.jurisdiction)).sort((a, b) => a.localeCompare(b))
     : [], [state]);
@@ -310,6 +317,8 @@ function VigilExternalGovernanceBaseline() {
         source.source_class,
         source.source_lifecycle_state,
         source.source_version,
+        source.notes,
+        sourcePublicSummary(source),
         canonicalIdentifierLabel(source),
         source.external_source_id,
         scope?.source_role,
@@ -365,7 +374,7 @@ function VigilExternalGovernanceBaseline() {
     {state.status === "unavailable" && <div className="vigil-reference-state"><h2>External governance baseline unavailable</h2><p>{state.message}</p></div>}
     {state.status === "ready" && <>
       <div className="vigil-baseline-toolbar">
-        <p><strong>{state.sources.length.toLocaleString()}</strong> registered source versions · <strong>{state.requirements.length.toLocaleString()}</strong> clauses {(query || jurisdiction !== "all" || sourceType !== "all") ? <span>· {(clauseSources.length + supportingSources.length).toLocaleString()} current sources shown</span> : null}</p>
+        <p><strong>{sourceCount.toLocaleString()}</strong> AI-governance sources · <strong>{state.requirements.length.toLocaleString()}</strong> clauses {(query || jurisdiction !== "all" || sourceType !== "all") ? <span>· {(clauseSources.length + supportingSources.length).toLocaleString()} current sources shown</span> : null}</p>
         <button type="button" className="vigil-baseline-download" onClick={downloadDataset} disabled={downloadState === "working"}>
           <Download aria-hidden="true" />
           {downloadState === "working" ? "Preparing dataset…" : "Download dataset"}
@@ -384,7 +393,7 @@ function VigilExternalGovernanceBaseline() {
         <div className="mb-3 max-w-5xl">
           <p className="vigil-library-kicker">Sources with clauses</p>
           <h2 id="clause-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Browse governance clauses and controls</h2>
-          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse its published clauses. Sources without public clause text stay collapsed and show their availability state instead.</p>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse its published clauses. Where clause-level text is not represented, the source remains available as an overview with a link to the official publication.</p>
         </div>
         <div className="vigil-baseline-library !mt-0" aria-label="External governance sources with clauses">
           <div className="vigil-baseline-table-head" aria-hidden="true">
@@ -405,13 +414,14 @@ function VigilExternalGovernanceBaseline() {
                 <span className="vigil-baseline-source-primary">
                   <strong>{source.title}</strong>
                   <small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small>
+                  {!canOpen && <span className="mt-2 block font-sans text-sm leading-relaxed text-muted-foreground">{sourcePublicSummary(source)}</span>}
                 </span>
                 <span className="vigil-baseline-source-meta">
                   <strong>{source.issuer ?? "Publisher not specified"}</strong>
                   <small>{source.jurisdiction ?? "Jurisdiction not specified"}</small>
                 </span>
                 <span>{clean(source.source_class) ?? "Not specified"}</span>
-                <span className="vigil-baseline-clause-count">{clauses.length > 0 ? <><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</> : <span className="font-semibold text-foreground">{clauseReviewLabel(scope, clauses.length)}</span>}</span>
+                <span className="vigil-baseline-clause-count">{canOpen ? <><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</> : <span className="font-semibold text-foreground">{clauseReviewLabel(clauses.length)}</span>}</span>
                 {canOpen ? <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" /> : <span />}
               </>;
 
@@ -446,7 +456,7 @@ function VigilExternalGovernanceBaseline() {
                 </section>}
               </div>;
             })}
-            {clauseSources.length === 0 && <div className="vigil-empty-panel">No clause-bearing or clause-review sources match the current search and filters.</div>}
+            {clauseSources.length === 0 && <div className="vigil-empty-panel">No clause-bearing or overview sources match the current search and filters.</div>}
           </div>
         </div>
       </section>
