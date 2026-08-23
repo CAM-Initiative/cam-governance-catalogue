@@ -6,11 +6,11 @@ import { Check, Copy } from "lucide-react";
 const citations = [
   {
     label: "Umbrella CAM Initiative citation",
-    citation: "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org",
+    citation: "CAM Initiative. CAM Initiative public governance infrastructure. 2026. https://www.cam-initiative.org",
   },
   {
     label: "VIGIL citation",
-    citation: "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil",
+    citation: "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. 2026. https://www.cam-initiative.org/vigil",
   },
   {
     label: "CAM governance corpus citation",
@@ -114,7 +114,7 @@ export default function About() {
           <ContentPanel>
             <div className="space-y-4 text-base leading-relaxed text-foreground/75">
               <p>The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for publication and maintenance of CAM governance materials and the VIGIL Ledger.</p>
-              <p>Aeon Governance Lab is a project identity associated with this work. Phoenix Covenant Pty Ltd is a registered company connected to administration of associated marks, assets, publications, or operational infrastructure.</p>
+              <p>Independent Australian AI governance initiative founded and led by Dr Michelle Vivian O’Rourke.</p>
               <p>The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/.</p>
             </div>
           </ContentPanel>
