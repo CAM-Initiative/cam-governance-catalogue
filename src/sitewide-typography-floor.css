@@ -1,0 +1,121 @@
+/*
+ * Sitewide public typography floor.
+ *
+ * The catalogue accumulated several generations of compact VIGIL styles and
+ * arbitrary Tailwind pixel sizes. Some of those declarations resolve to 8–11px
+ * at the default 16px root, which is too small for a public reading interface.
+ *
+ * This file is intentionally imported last. It is the single authoritative
+ * closure layer for public microtype: metadata may remain compact, but no
+ * deliberate public text treatment represented here should render below 12px.
+ */
+
+:root {
+  --cam-type-micro: 0.75rem;   /* 12px at the default root */
+  --cam-type-meta: 0.8125rem;  /* 13px */
+  --cam-type-small: 0.875rem;  /* 14px */
+}
+
+/* Legacy arbitrary Tailwind pixel utilities still occur on routed CAM pages.
+ * Catch them centrally rather than repairing every historical fragment. */
+[class~="text-[6px]"],
+[class~="text-[7px]"],
+[class~="text-[8px]"],
+[class~="text-[9px]"],
+[class~="text-[10px]"],
+[class~="text-[11px]"] {
+  font-size: var(--cam-type-micro) !important;
+}
+
+/* Product/development markers were previously 9.9–10.9px. */
+.cam-development-status,
+main.overflow-hidden:has(#evidence-repair-heading)
+  > section:first-child
+  > .container
+  > div:first-child
+  > p:first-child::after,
+.home-governance-card > span:first-child > span:first-child::after {
+  font-size: var(--cam-type-micro) !important;
+  line-height: 1.3;
+}
+
+/* Observatory application shell. */
+.vigil-app-tagline,
+.vigil-app-nav-subtitle {
+  font-size: var(--cam-type-micro) !important;
+  line-height: 1.35;
+}
+
+.vigil-local-nav-link,
+.vigil-app-nav-label {
+  font-size: var(--cam-type-meta) !important;
+  line-height: 1.35;
+}
+
+/* Shared VIGIL metadata and controls. Earlier storyboard layers contain
+ * values as low as .48rem/.50rem/.52rem for these public elements. */
+.vigil-panel-kicker,
+.vigil-evidence-kicker,
+.vigil-filter-button,
+.vigil-family-nav button span,
+.vigil-filter-control > span,
+.vigil-advanced-filter-toggle,
+.vigil-fm-table-header,
+.vigil-fm-id,
+.vigil-fm-mobile-label,
+.vigil-pagination,
+.vigil-detail-code-line,
+.vigil-detail-field dt,
+.vigil-evidence-meta,
+.vigil-evidence-column h4,
+.vigil-provision-id,
+.vigil-chain-key,
+.vigil-chain-stage,
+.vigil-chain-id,
+.vigil-json-panel > summary,
+.vigil-json-panel pre {
+  font-size: var(--cam-type-meta) !important;
+  line-height: 1.45;
+}
+
+.vigil-family-nav button,
+.vigil-filter-control select,
+.vigil-registry-notice,
+.vigil-fm-summary,
+.vigil-fm-cell,
+.vigil-detail-field dd,
+.vigil-detail-field dd.is-mono,
+.vigil-core-section h2 + p,
+.vigil-section-heading > p,
+.vigil-evidence-column p,
+.vigil-evidence-links a,
+.vigil-audit-links a,
+.vigil-provision p,
+.vigil-chain-empty,
+.vigil-audit-intro {
+  font-size: var(--cam-type-small) !important;
+  line-height: 1.55;
+}
+
+/* Preserve the larger legibility repairs already established for these
+ * interactive/public-reading elements rather than reducing them to the floor. */
+.vigil-library-stats,
+.vigil-result-summary {
+  font-size: var(--cam-type-small) !important;
+  line-height: 1.5;
+}
+
+.vigil-status-chip {
+  font-size: 0.82rem !important;
+  line-height: 1.3;
+}
+
+.vigil-back-link {
+  font-size: 0.95rem !important;
+  line-height: 1.4;
+}
+
+.vigil-evidence-source-line {
+  font-size: 0.95rem !important;
+  line-height: 1.55;
+}
