@@ -59,6 +59,7 @@ export type ExternalSourceEntry = {
   publication_date?: string | null;
   effective_date?: string | null;
   official_locator?: string;
+  notes?: string | null;
   review_state?: string;
   review_eligible?: boolean;
   alignment_state?: string;
