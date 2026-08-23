@@ -51,9 +51,8 @@
 }
 
 /* One hero/header grammar across the full VIGIL family. The standard public
- * hero uses the page background in both appearances: white in light mode and
- * the neutral dark canvas in dark mode. It must not acquire a parchment/card
- * fill on the Ledger or Lessons pages. */
+ * hero uses the page background in both appearances: white/neutral in light
+ * mode and the neutral dark canvas in dark mode. */
 .vigil-about-page .vigil-about-hero,
 .vigil-knowledge-hub-page .vigil-simple-hero,
 .vigil-reference-page .vigil-reference-hero,
@@ -79,6 +78,24 @@
   border-radius: 0;
 }
 
+/* One kicker treatment. This closes the remaining Ledger/Lessons mismatch
+ * caused by legacy utility classes rather than by different page semantics. */
+.vigil-about-page .vigil-library-kicker,
+.vigil-knowledge-hub-page .vigil-library-kicker,
+.vigil-reference-page .vigil-library-kicker,
+.vigil-case-library-page .vigil-library-kicker,
+.vigil-app-shell + div.container > div:first-child > p:first-child,
+.vigil-app-shell + main.container:not(.report-page) > header > .flex.items-start.gap-4 p:first-child {
+  margin: 0 !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
 .vigil-about-page .vigil-about-hero h1,
 .vigil-knowledge-hub-page .vigil-simple-hero h1,
 .vigil-reference-page .vigil-reference-hero h1,
@@ -97,7 +114,7 @@
 .vigil-knowledge-hub-page .vigil-simple-hero > p:last-child,
 .vigil-reference-page .vigil-reference-hero > p:last-child,
 .vigil-app-shell + div.container > div:first-child > p:last-child,
-.vigil-app-shell + main.container:not(.report-page) > header > p:last-child,
+.vigil-app-shell + main.container:not(.report-page) > header > p,
 .vigil-case-library-page .vigil-library-description {
   max-width: 68rem;
   margin-top: 0.45rem;
@@ -118,13 +135,10 @@
   display: block !important;
 }
 
-/* Reference pages keep their required return navigation inside the same hero
- * surface. The enhancement layer moves the existing link into the header; this
- * rule makes it read as navigation within the hero rather than a separate tiny
- * line that shifts the entire page down. */
-.vigil-reference-page .vigil-reference-hero > .vigil-back-link {
-  margin: 0 0 0.55rem !important;
-  padding: 0 !important;
+/* The full Ledger is an internal working surface, not a public discovery CTA.
+ * Governance Lessons therefore does not advertise it. */
+.vigil-app-shell + main.container:not(.report-page) > header a[href="/observatory/ledger"] {
+  display: none !important;
 }
 
 .vigil-about-page .vigil-about-section:first-of-type,
@@ -141,7 +155,9 @@
   display: none !important;
 }
 
-/* Back navigation is navigation, not micro-metadata. */
+/* Back navigation is navigation, not micro-metadata. This remains available
+ * on record-detail surfaces, while the two reference collection pages no
+ * longer render a back-link above their hero. */
 .vigil-back-link,
 .vigil-app-shell + main.container:not(.report-page) > .space-y-5 > a:first-child {
   display: inline-flex !important;
