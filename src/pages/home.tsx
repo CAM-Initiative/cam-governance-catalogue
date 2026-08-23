@@ -344,7 +344,7 @@ function EvidenceRepairLoop() {
         <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
           Failures and compliance gaps should become evidence for repair.
         </h2>
-        <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+        <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
           VIGIL is the CAM Initiative’s public evidence-to-repair governance ledger and digital ecosystem observatory. It records real-world AI incidents, observed behaviours, recurring failure modes, governance proposals, implemented patches, source evidence, lifecycle status, and post-patch monitoring.
         </p>
         <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
