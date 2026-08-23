@@ -30,6 +30,7 @@
 /* Product/development markers and an older homepage pseudo-label previously
  * rendered at roughly 9.9–10.9px. */
 .cam-development-status,
+.cam-beta-chip,
 main.overflow-hidden:has(#evidence-repair-heading)
   > section:first-child
   > .container
