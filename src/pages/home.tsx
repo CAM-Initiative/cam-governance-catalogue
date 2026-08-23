@@ -345,7 +345,7 @@ function EvidenceRepairLoop() {
           Turn real-world AI failures into evidence for accountable repair.
         </h2>
         <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-          VIGIL tracks observed incidents, recurring failure modes, governance gaps, proposed repairs and what happens after those repairs are implemented. It connects evidence to diagnosis, accountability and reusable learning.
+          VIGIL is an evidence-to-repair system for AI governance. It captures safety incidents and governance failures, diagnoses the control breakdown, maps the evidence to required safeguards, and supports traceable runtime repair and verification.
         </p>
         <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
           Explore VIGIL
@@ -428,7 +428,7 @@ export default function Home() {
         <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
           <div className="container mx-auto grid w-full max-w-[100rem] gap-12 px-5 py-14 sm:px-6 md:gap-16 md:px-8 md:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(27rem,0.85fr)] lg:items-center xl:gap-20">
             <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-none" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-              <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Constitutional Governance</p>
+              <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Open AI Governance Architecture</p>
               <h1 className="mb-4 max-w-4xl font-serif leading-[0.98] text-foreground">
                 <span className="block whitespace-nowrap text-5xl tracking-[0.06em] sm:text-6xl md:text-7xl">CAELESTIS</span>
                 <span className="mt-2 block text-3xl tracking-normal sm:text-4xl md:text-5xl">Architecture Model</span>
