@@ -38,18 +38,22 @@ function DatasetCard({
   return <article className="vigil-knowledge-collection vigil-dataset-collection-wide">
     <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
     <div className="vigil-knowledge-copy">
-      <div className="vigil-development-kicker-row">
-        <p className="vigil-library-kicker">{status}</p>
-        {beta ? <span className="cam-beta-chip">Beta</span> : null}
-      </div>
-      <h2>{title}</h2>
-      <p>{description}</p>
-      <div className="vigil-knowledge-actions">
-        {browseHref && browseLabel ? <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link> : null}
-        {onDownload ? <button type="button" className="vigil-baseline-download" onClick={onDownload} disabled={downloading}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div className="vigil-development-kicker-row">
+            <p className="vigil-library-kicker">{status}</p>
+            {beta ? <span className="cam-beta-chip">Beta</span> : null}
+          </div>
+          <h2>{title}</h2>
+        </div>
+        {onDownload ? <button type="button" className="vigil-baseline-download shrink-0" onClick={onDownload} disabled={downloading}>
           {downloading ? "Preparing dataset…" : "Download dataset"}<Download aria-hidden="true" />
         </button> : null}
       </div>
+      <p>{description}</p>
+      {browseHref && browseLabel ? <div className="vigil-knowledge-actions">
+        <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link>
+      </div> : null}
     </div>
   </article>;
 }
