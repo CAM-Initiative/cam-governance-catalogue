@@ -58,7 +58,6 @@
     style.textContent = `
       [${COMPLETE_CHAIN_BADGE}] { font-family:Inter,system-ui,sans-serif; }
       [${LEARN_STAGE}] a { text-decoration:none; }
-      .vigil-case-stage-tabs { grid-template-columns:repeat(6,minmax(0,1fr)) !important; }
     `;
     document.head.appendChild(style);
   }
