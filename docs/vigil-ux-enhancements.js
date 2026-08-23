@@ -106,7 +106,8 @@
       referenceButton.setAttribute("role", "tab");
       referenceButton.setAttribute("aria-selected", selected ? "true" : "false");
       referenceButton.setAttribute("aria-controls", "case-panel-provenance");
-      referenceButton.innerHTML = "<span>07</span>References";
+      const currentLabel = labelText(referenceButton);
+      if (currentLabel !== "07references" && currentLabel !== "07 references") referenceButton.innerHTML = "<span>07</span>References";
       if (referenceButton.parentElement !== tabs) tabs.appendChild(referenceButton);
     }
 
