@@ -50,7 +50,9 @@ export default function VigilKnowledgeHub() {
         setState({
           lessons: registry.records.filter((record) => isLearnRecord(record)).length,
           clauses: clauses.status === "ready" ? clauses.data.length : undefined,
-          sources: sources.status === "ready" ? sources.data.length : undefined,
+          sources: sources.status === "ready"
+            ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
+            : undefined,
           clausesAvailable: clauses.status === "ready",
           sourcesAvailable: sources.status === "ready",
         });
@@ -60,7 +62,7 @@ export default function VigilKnowledgeHub() {
   }, []);
 
   const baselineStatus = state.sourcesAvailable
-    ? `${state.sources ?? 0} source versions${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses` : ""}`
+    ? `${state.sources ?? 0} AI-governance sources${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses` : ""}`
     : "Dataset unavailable";
 
   return (
