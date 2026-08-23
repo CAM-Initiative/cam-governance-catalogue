@@ -8,9 +8,9 @@ import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExtern
 
 type HubState = {
   lessons?: number;
-  requirements?: number;
+  clauses?: number;
   sources?: number;
-  requirementsAvailable?: boolean;
+  clausesAvailable?: boolean;
   sourcesAvailable?: boolean;
 };
 
@@ -45,13 +45,13 @@ export default function VigilKnowledgeHub() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([loadVigilRegistryRecords(), loadExternalRequirements(), loadExternalSources()])
-      .then(([registry, requirements, sources]) => {
+      .then(([registry, clauses, sources]) => {
         if (cancelled) return;
         setState({
           lessons: registry.records.filter((record) => isLearnRecord(record)).length,
-          requirements: requirements.status === "ready" ? requirements.data.length : undefined,
+          clauses: clauses.status === "ready" ? clauses.data.length : undefined,
           sources: sources.status === "ready" ? sources.data.length : undefined,
-          requirementsAvailable: requirements.status === "ready",
+          clausesAvailable: clauses.status === "ready",
           sourcesAvailable: sources.status === "ready",
         });
       })
@@ -60,7 +60,7 @@ export default function VigilKnowledgeHub() {
   }, []);
 
   const baselineStatus = state.sourcesAvailable
-    ? `${state.sources ?? 0} source versions${state.requirementsAvailable ? ` · ${(state.requirements ?? 0).toLocaleString()} extracted requirements` : ""}`
+    ? `${state.sources ?? 0} source versions${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses` : ""}`
     : "Dataset unavailable";
 
   return (
@@ -86,10 +86,10 @@ export default function VigilKnowledgeHub() {
               href="/observatory/knowledge-base/standards-sources"
               icon={<Library />}
               title="External Governance Baseline"
-              description="A curated external-authority baseline selected for its relevance to AI-governance decisions. Sources are included where they directly govern AI systems, provide bounded authority for material governance questions, or supply necessary context; open each source to inspect the requirements extracted from it."
+              description="A curated reference set of external laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
               status={baselineStatus}
               beta
-              actionLabel="Browse sources & requirements"
+              actionLabel="Browse sources & clauses"
             />
             <CollectionCard
               icon={<Network />}
