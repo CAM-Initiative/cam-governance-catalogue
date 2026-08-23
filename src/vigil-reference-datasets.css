@@ -2,7 +2,7 @@
    This is a reading interface, not a dense administrative table. */
 
 .vigil-reference-page .vigil-reference-hero > p:last-child {
-  max-width: 980px;
+  max-width: 1040px;
   font-size: 1.075rem;
   line-height: 1.7;
 }
@@ -19,7 +19,7 @@
 
 .vigil-reference-controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(180px, 230px) minmax(230px, 310px);
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 260px) minmax(180px, 240px);
   gap: 0.75rem;
   align-items: end;
   margin-top: 1rem;
@@ -118,6 +118,401 @@
   height: 0.95rem;
 }
 
+.vigil-baseline-scope-note {
+  margin-top: 0.9rem;
+  padding: 1rem 1.05rem;
+  border-left: 3px solid hsl(var(--primary) / 0.62);
+  border-radius: 0.35rem;
+  background: hsl(var(--card) / 0.34);
+}
+
+.vigil-baseline-scope-note > strong {
+  display: block;
+  font-family: var(--app-font-serif);
+  font-size: 1.06rem;
+  color: hsl(var(--foreground));
+}
+
+.vigil-baseline-scope-note p {
+  max-width: 1120px;
+  margin: 0.42rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-baseline-scope-note b {
+  color: hsl(var(--foreground));
+}
+
+.vigil-governance-source-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.vigil-governance-source {
+  overflow: clip;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.58rem;
+  background: hsl(var(--card) / 0.44);
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-governance-source > summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.1rem;
+  align-items: center;
+  padding: 1.05rem 1.15rem;
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.vigil-governance-source > summary:hover {
+  background: hsl(var(--vigil-nav-active) / 0.18);
+}
+
+.vigil-governance-source[open] > summary {
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--vigil-nav-active) / 0.14);
+}
+
+.vigil-governance-source-title {
+  min-width: 0;
+}
+
+.vigil-governance-source-title > strong {
+  display: block;
+  font-family: var(--app-font-serif);
+  font-size: 1.16rem;
+  line-height: 1.32;
+  color: hsl(var(--foreground));
+}
+
+.vigil-governance-source-title > span {
+  display: block;
+  margin-top: 0.3rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: hsl(var(--primary));
+}
+
+.vigil-governance-source-title > small {
+  display: block;
+  margin-top: 0.24rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-governance-source-count {
+  min-width: 120px;
+  text-align: right;
+}
+
+.vigil-governance-source-count b {
+  display: block;
+  font-family: var(--app-font-serif);
+  font-size: 1.35rem;
+  line-height: 1;
+  color: hsl(var(--foreground));
+}
+
+.vigil-governance-source-count span {
+  display: block;
+  margin-top: 0.22rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-governance-source-body {
+  padding: 1.1rem 1.15rem 1.25rem;
+}
+
+.vigil-source-purpose {
+  max-width: 1050px;
+}
+
+.vigil-source-purpose > p:last-child {
+  margin: 0.4rem 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground));
+}
+
+.vigil-source-facts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.vigil-source-facts > div {
+  padding: 0.72rem 0.78rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.42rem;
+  background: hsl(var(--background) / 0.64);
+}
+
+.vigil-source-facts dt {
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-source-facts dd {
+  margin: 0.28rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.45;
+  color: hsl(var(--foreground));
+}
+
+.vigil-source-review-note {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.42rem;
+  background: hsl(var(--muted) / 0.36);
+}
+
+.vigil-source-review-note p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-source-review-note strong {
+  color: hsl(var(--foreground));
+}
+
+.vigil-source-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+  margin-top: 0.9rem;
+}
+
+.vigil-source-actions a,
+.vigil-clause-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-source-actions a:hover,
+.vigil-clause-links a:hover {
+  text-decoration: underline;
+}
+
+.vigil-source-actions svg,
+.vigil-clause-links svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.vigil-source-actions > span {
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-source-requirements {
+  margin-top: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.vigil-source-requirements-heading h3 {
+  margin: 0.25rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: hsl(var(--foreground));
+}
+
+.vigil-clause-list {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.vigil-clause-record {
+  overflow: clip;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.45rem;
+  background: hsl(var(--background) / 0.7);
+}
+
+.vigil-clause-record > summary {
+  display: grid;
+  gap: 0.34rem;
+  padding: 0.82rem 0.9rem;
+  cursor: pointer;
+}
+
+.vigil-clause-record > summary:hover {
+  background: hsl(var(--vigil-nav-active) / 0.16);
+}
+
+.vigil-clause-record[open] > summary {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-clause-reference {
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: hsl(var(--primary));
+}
+
+.vigil-clause-record > summary strong {
+  max-width: 1160px;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.55;
+  color: hsl(var(--foreground));
+}
+
+.vigil-clause-body {
+  padding: 0.95rem 1rem 1.05rem;
+}
+
+.vigil-requirement-lead {
+  max-width: 1120px;
+  padding: 0.82rem 0.9rem;
+  border-left: 3px solid hsl(var(--primary) / 0.58);
+  background: hsl(var(--card) / 0.5);
+}
+
+.vigil-requirement-lead h4,
+.vigil-requirement-detail-block h4 {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-requirement-lead p {
+  margin: 0.42rem 0 0;
+  font-size: 1rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground));
+}
+
+.vigil-requirement-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.8rem;
+}
+
+.vigil-requirement-detail-block {
+  padding: 0.72rem 0.8rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.38rem;
+  background: hsl(var(--card) / 0.26);
+}
+
+.vigil-requirement-detail-block p,
+.vigil-requirement-detail-block ul {
+  margin: 0.38rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.58;
+  color: hsl(var(--foreground));
+}
+
+.vigil-requirement-detail-block ul {
+  padding-left: 1.1rem;
+}
+
+.vigil-requirement-detail-block li + li {
+  margin-top: 0.2rem;
+}
+
+.vigil-requirement-detail-unavailable {
+  margin: 0.8rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-requirement-meta-expanded {
+  margin-top: 0.82rem;
+}
+
+.vigil-reference-page .vigil-requirement-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.vigil-reference-page .vigil-requirement-meta span {
+  padding: 0.28rem 0.46rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  background: hsl(var(--muted) / 0.32);
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-page .vigil-requirement-concepts {
+  margin-top: 0.7rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-page .vigil-requirement-concepts strong {
+  color: hsl(var(--foreground));
+}
+
+.vigil-clause-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  margin-top: 0.78rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.vigil-clause-links > span {
+  font-family: var(--app-font-mono);
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-page .vigil-reference-state,
+.vigil-reference-page .vigil-empty-panel {
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.vigil-reference-page .vigil-reference-state p {
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+/* Legacy reference classes remain readable for compatibility routes and any
+   downstream component that still uses the earlier table grammar. */
 .vigil-reference-page .vigil-source-table {
   margin-top: 0.9rem;
 }
@@ -164,62 +559,10 @@
   line-height: 1.45;
 }
 
-.vigil-reference-page .vigil-reference-group summary {
-  padding: 1rem 1.05rem;
-}
-
-.vigil-reference-page .vigil-reference-group summary strong {
-  font-size: 1.05rem;
-  line-height: 1.42;
-}
-
-.vigil-reference-page .vigil-reference-group summary small {
-  margin-top: 0.3rem;
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-
-.vigil-reference-page .vigil-reference-group summary b {
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
-
-.vigil-reference-page .vigil-requirement-row {
-  padding: 1rem 1.05rem;
-}
-
-.vigil-reference-page .vigil-requirement-reference {
-  font-size: 0.82rem;
-  line-height: 1.45;
-}
-
-.vigil-reference-page .vigil-requirement-row h3 {
-  margin-top: 0.38rem;
-  font-size: 1.02rem;
-  line-height: 1.55;
-}
-
-.vigil-reference-page .vigil-requirement-meta {
-  margin-top: 0.55rem;
-  font-size: 0.8rem;
-  line-height: 1.5;
-}
-
-.vigil-reference-page .vigil-requirement-concepts {
-  margin-top: 0.55rem;
-  font-size: 0.92rem;
-  line-height: 1.55;
-}
-
-.vigil-reference-page .vigil-reference-state,
-.vigil-reference-page .vigil-empty-panel {
-  font-size: 0.98rem;
-  line-height: 1.6;
-}
-
-.vigil-reference-page .vigil-reference-state p {
-  font-size: 0.98rem;
-  line-height: 1.65;
+@media (max-width: 1000px) {
+  .vigil-source-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
@@ -238,6 +581,31 @@
 
   .vigil-dataset-actions {
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .vigil-governance-source > summary {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-governance-source-count {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .vigil-governance-source-count b,
+  .vigil-governance-source-count span {
+    display: inline;
+  }
+
+  .vigil-governance-source-count span {
+    margin-left: 0.3rem;
+  }
+
+  .vigil-source-facts,
+  .vigil-requirement-detail-grid {
+    grid-template-columns: 1fr;
   }
 }
 
