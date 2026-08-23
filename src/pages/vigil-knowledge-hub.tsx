@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, Library, Network, Scale } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Network } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -59,6 +59,10 @@ export default function VigilKnowledgeHub() {
     return () => { cancelled = true; };
   }, []);
 
+  const baselineStatus = state.sourcesAvailable
+    ? `${state.sources ?? 0} source versions${state.requirementsAvailable ? ` · ${(state.requirements ?? 0).toLocaleString()} extracted requirements` : ""}`
+    : "Dataset unavailable";
+
   return (
     <Shell>
       <VigilObservatoryNav />
@@ -67,7 +71,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL public knowledge</p>
             <h1>Knowledge Base</h1>
-            <p>Browse reusable governance lessons, external governance reference collections and the evolving VIGIL governance failure taxonomy.</p>
+            <p>Browse reusable governance lessons, the curated external-governance baseline and the evolving VIGIL governance failure taxonomy.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -75,28 +79,22 @@ export default function VigilKnowledgeHub() {
               href="/observatory/lessons"
               icon={<BookOpen />}
               title="Governance Lessons"
-              description="Published LEARN records: what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
+              description="Published LEARN records showing what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
               status={state.lessons === undefined ? "Published learning records" : `${state.lessons} published learning records`}
-            />
-            <CollectionCard
-              href="/observatory/knowledge-base/external-requirements"
-              icon={<Scale />}
-              title="External Requirements"
-              description="Clause- and control-level governance requirements preserving requirement posture, authority type, applicable actors and governance concepts."
-              status={state.requirementsAvailable ? `${state.requirements ?? 0} published requirements` : "Dataset unavailable"}
-              beta
             />
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
               icon={<Library />}
-              title="Standards & Sources"
-              description="Registered laws, standards, frameworks and technical sources with publisher identity, identifier, jurisdiction, source class, version and lifecycle state."
-              status={state.sourcesAvailable ? `${state.sources ?? 0} published source versions` : "Dataset unavailable"}
+              title="External Governance Baseline"
+              description="A curated external-authority baseline selected for its relevance to AI-governance decisions. Sources are included where they directly govern AI systems, provide bounded authority for material governance questions, or supply necessary context; open each source to inspect the requirements extracted from it."
+              status={baselineStatus}
+              beta
+              actionLabel="Browse sources & requirements"
             />
             <CollectionCard
               icon={<Network />}
               title="Governance Failure Taxonomy"
-              description="Internally developed interpretive standard for classifying AI runtime and governance failure mechanisms. The taxonomy is in public beta while its machine-readable projection and dedicated browsing surface continue to develop."
+              description="Internally developed interpretive standard for classifying recurring AI runtime and governance failure mechanisms. The taxonomy is in public beta while its dedicated browsing surface continues to develop."
               status="Internal standard"
               beta
             />
