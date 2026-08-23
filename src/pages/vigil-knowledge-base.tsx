@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, BookOpen, ExternalLink, Search } from "lucide-react";
+import { ArrowLeft, ExternalLink, Search } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -438,7 +438,7 @@ export default function VigilKnowledgeBase() {
 
   const detailRecord = detailState.status === "ready" || detailState.status === "error" ? detailState.record : selectedIndexRecord;
 
-  return <Shell><VigilObservatoryNav /><main className="container mx-auto w-full max-w-7xl px-5 py-8 md:px-8 md:py-12 lg:px-10">
+  return <Shell><VigilObservatoryNav /><main className="container mx-auto w-full max-w-[1500px] px-5 py-8 md:px-8 md:py-12 lg:px-10">
     {selectedId ? <>
       {state.status === "loading" || detailState.status === "loading" ? <div className="cam-parchment-card rounded-xl p-6 text-muted-foreground">Preparing the learning record…</div> : null}
       {state.status === "error" && <div className="cam-parchment-card rounded-xl p-6"><p className="font-mono text-xs uppercase tracking-[0.16em] text-rose-800">Knowledge Base unavailable</p><p className="mt-3 text-muted-foreground">{state.message}</p></div>}
@@ -446,9 +446,9 @@ export default function VigilKnowledgeBase() {
       {detailRecord && <><KnowledgeDetail record={detailRecord} thirdPartyObservation={detailState.status === "ready" ? detailState.thirdPartyObservation : undefined} />{detailState.status === "error" && <p className="mt-5 rounded-lg border border-rose-200 bg-rose-50 p-4 text-sm text-rose-900">The canonical LEARN detail could not be loaded, so this page is showing its published registry projection. {detailState.message}</p>}</>}
     </> : <>
       <header className="border-b border-border/70 pb-7">
-        <div className="flex items-start gap-4"><div className="rounded-xl border border-primary/25 bg-primary/10 p-3 text-cam-gold"><BookOpen className="h-6 w-6" aria-hidden="true" /></div><div><p className="font-mono text-sm uppercase tracking-[0.2em] text-cam-gold">VIGIL Observatory</p><h1 className="mt-2 font-serif text-4xl text-foreground md:text-5xl">Governance Lessons</h1></div></div>
+        <p className="vigil-library-kicker">VIGIL Observatory</p>
+        <h1 className="mt-2 font-serif text-4xl text-foreground md:text-5xl">Governance Lessons</h1>
         <p className="mt-4 max-w-4xl text-lg leading-relaxed text-muted-foreground">Completed evidence chains translated into reusable governance lessons. Search by case, failure taxonomy, vendor, governance principle, or future application.</p>
-        <div className="mt-5 flex flex-wrap gap-3"><Link href="/observatory/ledger" className="rounded-lg border border-border bg-card px-4 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">Browse the VIGIL Ledger</Link></div>
       </header>
 
       <div className="mt-7 grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
