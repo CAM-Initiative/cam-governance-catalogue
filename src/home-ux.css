@@ -10,8 +10,8 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   background-color: hsl(var(--background)) !important;
 }
 
-/* Explore AI Governance section label: black in the light appearance and
- * white in dark mode. */
+/* Explore AI Governance section label: black in light mode and white in dark
+ * mode. Size remains controlled by the source component pending review. */
 aside[aria-label="Explore AI governance"] > div:first-child > p {
   color: #000 !important;
 }
