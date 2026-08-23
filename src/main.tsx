@@ -9,5 +9,6 @@ import "./sitewide-visual-closure.css";
 import "./vigil-reference-datasets.css";
 import "./vigil-public-consistency.css";
 import "./vigil-page-shell.css";
+import "./public-development-status.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
