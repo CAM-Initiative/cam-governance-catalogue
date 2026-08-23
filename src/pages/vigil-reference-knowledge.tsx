@@ -53,6 +53,10 @@ function sourceScopeKey(scope: Pick<ExternalSourceScopeEntry, "vigil_source_id" 
   return `${scope.vigil_source_id}|${scope.source_version}`;
 }
 
+function sourceIdentity(source: ExternalSourceEntry) {
+  return source.external_source_id || source.vigil_source_id;
+}
+
 function sourceRoleLabel(role?: string) {
   const labels: Record<string, string> = {
     "primary-ai-governance": "AI-specific governance source",
@@ -68,10 +72,10 @@ function sourceRoleExplanation(role?: string) {
     return "Included because this source is specifically about AI governance, AI risk, safety, assurance or technical controls and contains material guidance or obligations for governing AI systems.";
   }
   if (role === "supporting-external-authority") {
-    return "Included because this broader law, standard or framework provides authority for a specific AI-governance question, such as privacy, cybersecurity, safety, accountability or risk management. It is not treated as a general catalogue of every provision in the source.";
+    return "Included because this broader law, standard or framework helps answer a specific AI-governance question, such as privacy, cybersecurity, safety, accountability or risk management.";
   }
   if (role === "context-or-discovery") {
-    return "Included because it helps interpret terminology, reporting structures or the standards landscape relevant to AI governance. It provides context rather than being treated as a source of governance duties in its own right.";
+    return "Included because it helps interpret terminology, reporting structures or the standards landscape relevant to AI governance.";
   }
   if (role === "excluded-from-current-scope") {
     return "Registered for traceability, but not used as part of the current external-governance baseline.";
@@ -79,9 +83,19 @@ function sourceRoleExplanation(role?: string) {
   return "Included because the source contributes to a specific question in the external AI-governance baseline.";
 }
 
-function referenceFor(requirement: ExternalRequirement, source?: ExternalSourceEntry) {
-  const native = canonicalIdentifierLabel(source);
-  return [native, requirement.clause_or_control].filter(Boolean).join(" · ");
+function clauseReviewLabel(scope: ExternalSourceScopeEntry | undefined, clauseCount: number) {
+  if (clauseCount > 0) return `${clauseCount.toLocaleString()} clause${clauseCount === 1 ? "" : "s"}`;
+  switch (scope?.extraction_status) {
+    case "in-progress":
+    case "partial":
+      return "Clause review in progress";
+    case "blocked-access":
+      return "Clause review blocked";
+    case "complete":
+      return "No public clause records";
+    default:
+      return "Clause review pending";
+  }
 }
 
 function SearchControl({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
@@ -142,7 +156,7 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
   </div>;
 }
 
-function SourceAbout({ source, scope }: { source: ExternalSourceEntry; scope?: ExternalSourceScopeEntry }) {
+function SourceAbout({ source, scope, previousVersions }: { source: ExternalSourceEntry; scope?: ExternalSourceScopeEntry; previousVersions: ExternalSourceEntry[] }) {
   return <details className="vigil-baseline-source-about">
     <summary>About this source &amp; review provenance</summary>
     <div className="vigil-baseline-source-about-body">
@@ -164,9 +178,46 @@ function SourceAbout({ source, scope }: { source: ExternalSourceEntry; scope?: E
         {scope.extraction_scope_notes && <p><strong>Review boundary:</strong> {scope.extraction_scope_notes}</p>}
         {scope.next_action && <p><strong>Next review action:</strong> {scope.next_action}</p>}
       </div>}
+      {previousVersions.length > 0 && <section className="border-t border-border/70">
+        <p className="vigil-library-kicker">Previous versions</p>
+        <ul className="mt-2 space-y-2">
+          {previousVersions.map((version) => <li key={externalSourceKey(version)} className="flex flex-wrap items-center justify-between gap-3 text-sm leading-relaxed">
+            <span><strong>{version.source_version}</strong>{version.source_lifecycle_state ? ` · ${clean(version.source_lifecycle_state)}` : ""}</span>
+            {version.official_locator && <a href={version.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-primary hover:underline">Open source <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></a>}
+          </li>)}
+        </ul>
+      </section>}
       {source.official_locator && <a className="vigil-baseline-official-link" href={source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
     </div>
   </details>;
+}
+
+function SupportingSources({ sources, scopeBySource }: { sources: ExternalSourceEntry[]; scopeBySource: Map<string, ExternalSourceScopeEntry> }) {
+  if (!sources.length) return null;
+  return <section className="mt-8" aria-labelledby="supporting-sources-heading">
+    <div className="mb-3 max-w-5xl">
+      <p className="vigil-library-kicker">Supporting &amp; contextual sources</p>
+      <h2 id="supporting-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Sources that inform specific governance questions</h2>
+      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the reference baseline because they provide relevant legal, technical or interpretive context. They are not presented as empty clause collections.</p>
+    </div>
+    <div className="overflow-hidden rounded-lg border border-border bg-background">
+      {sources.map((source) => {
+        const scope = scopeBySource.get(externalSourceKey(source));
+        return <article key={externalSourceKey(source)} className="grid gap-3 border-b border-border/75 px-4 py-4 last:border-b-0 md:grid-cols-[minmax(260px,1fr)_minmax(360px,1.5fr)_auto] md:items-start">
+          <div className="min-w-0">
+            <h3 className="font-sans text-base font-semibold leading-snug text-foreground">{source.title}</h3>
+            <p className="mt-1 font-mono text-sm leading-relaxed text-primary">{canonicalIdentifierLabel(source)} · Version {source.source_version}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{[source.issuer, source.jurisdiction].filter(Boolean).join(" · ")}</p>
+          </div>
+          <div>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{sourceRoleLabel(scope?.source_role)}</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/85">{sourceRoleExplanation(scope?.source_role)}</p>
+          </div>
+          {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-primary hover:underline">Open source <ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : <span />}
+        </article>;
+      })}
+    </div>
+  </section>;
 }
 
 function VigilExternalGovernanceBaseline() {
@@ -226,6 +277,16 @@ function VigilExternalGovernanceBaseline() {
     return grouped;
   }, [detailsById, state]);
 
+  const versionsByIdentity = useMemo(() => {
+    const grouped = new Map<string, ExternalSourceEntry[]>();
+    if (state.status !== "ready") return grouped;
+    for (const source of state.sources) {
+      const key = sourceIdentity(source);
+      grouped.set(key, [...(grouped.get(key) ?? []), source]);
+    }
+    return grouped;
+  }, [state]);
+
   const jurisdictions = useMemo(() => state.status === "ready"
     ? uniqueText(state.sources.map((source) => source.jurisdiction)).sort((a, b) => a.localeCompare(b))
     : [], [state]);
@@ -234,16 +295,18 @@ function VigilExternalGovernanceBaseline() {
     ? uniqueText(state.sources.map((source) => source.source_class)).sort((a, b) => a.localeCompare(b))
     : [], [state]);
 
-  const filtered = useMemo(() => {
+  const visibleSources = useMemo(() => {
     if (state.status !== "ready") return [];
     const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
     return state.sources.filter((source) => {
       const key = externalSourceKey(source);
       const scope = scopeBySource.get(key);
-      const clauses = clausesBySource.get(key) ?? [];
+      if (scope?.extraction_status === "superseded-version" || scope?.source_role === "excluded-from-current-scope") return false;
       if (jurisdiction !== "all" && source.jurisdiction !== jurisdiction) return false;
       if (sourceType !== "all" && source.source_class !== sourceType) return false;
       if (!terms.length) return true;
+      const clauses = clausesBySource.get(key) ?? [];
+      const versionHistory = versionsByIdentity.get(sourceIdentity(source)) ?? [];
       const haystack = [
         source.title,
         source.issuer,
@@ -254,6 +317,8 @@ function VigilExternalGovernanceBaseline() {
         canonicalIdentifierLabel(source),
         source.external_source_id,
         scope?.source_role,
+        scope?.extraction_status,
+        ...versionHistory.flatMap((version) => [version.title, version.source_version, canonicalIdentifierLabel(version)]),
         ...clauses.flatMap((clause) => [
           clause.clause_or_control,
           clause.requirement_summary,
@@ -269,7 +334,19 @@ function VigilExternalGovernanceBaseline() {
       ].filter(Boolean).join(" ").toLowerCase();
       return terms.every((term) => haystack.includes(term));
     }).sort((a, b) => a.title.localeCompare(b.title) || b.source_version.localeCompare(a.source_version));
-  }, [clausesBySource, jurisdiction, query, scopeBySource, sourceType, state]);
+  }, [clausesBySource, jurisdiction, query, scopeBySource, sourceType, state, versionsByIdentity]);
+
+  const clauseSources = useMemo(() => visibleSources.filter((source) => {
+    const scope = scopeBySource.get(externalSourceKey(source));
+    const clauseCount = clausesBySource.get(externalSourceKey(source))?.length ?? 0;
+    return clauseCount > 0 || scope?.source_role === "primary-ai-governance";
+  }), [clausesBySource, scopeBySource, visibleSources]);
+
+  const supportingSources = useMemo(() => visibleSources.filter((source) => {
+    const scope = scopeBySource.get(externalSourceKey(source));
+    const clauseCount = clausesBySource.get(externalSourceKey(source))?.length ?? 0;
+    return clauseCount === 0 && ["supporting-external-authority", "context-or-discovery"].includes(scope?.source_role ?? "");
+  }), [clausesBySource, scopeBySource, visibleSources]);
 
   async function downloadDataset() {
     setDownloadState("working");
@@ -292,7 +369,7 @@ function VigilExternalGovernanceBaseline() {
     {state.status === "unavailable" && <div className="vigil-reference-state"><h2>External governance baseline unavailable</h2><p>{state.message}</p></div>}
     {state.status === "ready" && <>
       <div className="vigil-baseline-toolbar">
-        <p><strong>{state.sources.length.toLocaleString()}</strong> source versions · <strong>{state.requirements.length.toLocaleString()}</strong> clauses {filtered.length !== state.sources.length ? <span>· {filtered.length.toLocaleString()} sources shown</span> : null}</p>
+        <p><strong>{state.sources.length.toLocaleString()}</strong> registered source versions · <strong>{state.requirements.length.toLocaleString()}</strong> clauses {(query || jurisdiction !== "all" || sourceType !== "all") ? <span>· {(clauseSources.length + supportingSources.length).toLocaleString()} current sources shown</span> : null}</p>
         <button type="button" className="vigil-baseline-download" onClick={downloadDataset} disabled={downloadState === "working"}>
           <Download aria-hidden="true" />
           {downloadState === "working" ? "Preparing dataset…" : "Download dataset"}
@@ -306,67 +383,86 @@ function VigilExternalGovernanceBaseline() {
         <label className="vigil-reference-filter"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
       </div>
 
-      <section className="vigil-baseline-library" aria-label="External governance sources and clauses">
-        <div className="vigil-baseline-table-head" aria-hidden="true">
-          <span>Source</span><span>Publisher / jurisdiction</span><span>Type</span><span>Clauses</span><span />
+      <section className="mt-6" aria-labelledby="clause-sources-heading">
+        <div className="mb-3 max-w-5xl">
+          <p className="vigil-library-kicker">Sources with clauses</p>
+          <h2 id="clause-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Browse governance clauses and controls</h2>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse the clauses represented from it. AI-specific sources still undergoing clause review are shown with their review state rather than a misleading zero count.</p>
         </div>
-        <div className="vigil-baseline-table-body">
-          {filtered.map((source) => {
-            const key = externalSourceKey(source);
-            const scope = scopeBySource.get(key);
-            const clauses = clausesBySource.get(key) ?? [];
-            const isOpen = openSource === key;
-            return <div className={`vigil-baseline-source-row${isOpen ? " is-open" : ""}`} key={key}>
-              <button type="button" className="vigil-baseline-source-button" aria-expanded={isOpen} onClick={() => {
-                setOpenSource(isOpen ? null : key);
-                setOpenClause(null);
-              }}>
-                <span className="vigil-baseline-source-primary">
-                  <strong>{source.title}</strong>
-                  <small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small>
-                </span>
-                <span className="vigil-baseline-source-meta">
-                  <strong>{source.issuer ?? "Publisher not specified"}</strong>
-                  <small>{source.jurisdiction ?? "Jurisdiction not specified"}</small>
-                </span>
-                <span>{clean(source.source_class) ?? "Not specified"}</span>
-                <span className="vigil-baseline-clause-count"><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</span>
-                <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" />
-              </button>
+        <div className="vigil-baseline-library !mt-0" aria-label="External governance sources with clauses">
+          <div className="vigil-baseline-table-head" aria-hidden="true">
+            <span>Source</span><span>Publisher / jurisdiction</span><span>Type</span><span>Clauses / review</span><span />
+          </div>
+          <div className="vigil-baseline-table-body">
+            {clauseSources.map((source) => {
+              const key = externalSourceKey(source);
+              const scope = scopeBySource.get(key);
+              const clauses = clausesBySource.get(key) ?? [];
+              const isOpen = openSource === key;
+              const previousVersions = (versionsByIdentity.get(sourceIdentity(source)) ?? [])
+                .filter((version) => scopeBySource.get(externalSourceKey(version))?.extraction_status === "superseded-version")
+                .sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true }));
+              return <div className={`vigil-baseline-source-row${isOpen ? " is-open" : ""}`} key={key}>
+                <button type="button" className="vigil-baseline-source-button" aria-expanded={isOpen} onClick={() => {
+                  setOpenSource(isOpen ? null : key);
+                  setOpenClause(null);
+                }}>
+                  <span className="vigil-baseline-source-primary">
+                    <strong>{source.title}</strong>
+                    <small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small>
+                  </span>
+                  <span className="vigil-baseline-source-meta">
+                    <strong>{source.issuer ?? "Publisher not specified"}</strong>
+                    <small>{source.jurisdiction ?? "Jurisdiction not specified"}</small>
+                  </span>
+                  <span>{clean(source.source_class) ?? "Not specified"}</span>
+                  <span className="vigil-baseline-clause-count">{clauses.length > 0 ? <><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</> : <span className="font-semibold text-foreground">{clauseReviewLabel(scope, clauses.length)}</span>}</span>
+                  <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" />
+                </button>
 
-              {isOpen && <section className="vigil-baseline-source-detail" aria-label={`${clauses.length} clauses from ${source.title}`}>
-                <div className="vigil-baseline-source-detail-heading">
-                  <div>
-                    <p className="vigil-library-kicker">{clauses.length.toLocaleString()} clause{clauses.length === 1 ? "" : "s"}</p>
-                    <h2>Clauses and controls represented from this source</h2>
-                    <p>Select a clause to read what it says and the structured governance detail recorded for it.</p>
-                  </div>
-                  {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
-                </div>
+                {isOpen && <section className="vigil-baseline-source-detail" aria-label={`${source.title} clause detail`}>
+                  {clauses.length > 0 ? <>
+                    <div className="vigil-baseline-source-detail-heading">
+                      <div>
+                        <p className="vigil-library-kicker">{clauses.length.toLocaleString()} clause{clauses.length === 1 ? "" : "s"}</p>
+                        <h2>Clauses and controls represented from this source</h2>
+                        <p>Select a clause to read what it says and the structured governance detail recorded for it.</p>
+                      </div>
+                      {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
+                    </div>
+                    <div className="vigil-baseline-clause-table">
+                      <div className="vigil-baseline-clause-head" aria-hidden="true"><span>Clause / control</span><span>What it says</span><span>Type</span><span /></div>
+                      {clauses.map((clause) => {
+                        const clauseOpen = openClause === clause.requirement_id;
+                        return <div className={`vigil-baseline-clause-row${clauseOpen ? " is-open" : ""}`} key={clause.requirement_id}>
+                          <button type="button" className="vigil-baseline-clause-button" aria-expanded={clauseOpen} onClick={() => setOpenClause(clauseOpen ? null : clause.requirement_id)}>
+                            <span className="vigil-baseline-clause-ref">{clause.clause_or_control}</span>
+                            <span className="vigil-baseline-clause-summary">{clause.requirement_summary}</span>
+                            <span className="vigil-baseline-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span>
+                            <ChevronDown aria-hidden="true" />
+                          </button>
+                          {clauseOpen && <ClauseDetail requirement={clause} source={source} />}
+                        </div>;
+                      })}
+                    </div>
+                  </> : <div className="rounded-md border border-border bg-background/70 p-4">
+                    <p className="vigil-library-kicker">{clauseReviewLabel(scope, clauses.length)}</p>
+                    <p className="mt-2 max-w-4xl text-base leading-relaxed text-muted-foreground">This source is part of the AI-specific governance baseline, but no public clause records are available yet.{scope?.next_action ? ` ${scope.next_action}` : ""}</p>
+                    {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Open official source <ExternalLink className="h-4 w-4" aria-hidden="true" /></a>}
+                  </div>}
 
-                {clauses.length > 0 ? <div className="vigil-baseline-clause-table">
-                  <div className="vigil-baseline-clause-head" aria-hidden="true"><span>Clause / control</span><span>What it says</span><span>Type</span><span /></div>
-                  {clauses.map((clause) => {
-                    const clauseOpen = openClause === clause.requirement_id;
-                    return <div className={`vigil-baseline-clause-row${clauseOpen ? " is-open" : ""}`} key={clause.requirement_id}>
-                      <button type="button" className="vigil-baseline-clause-button" aria-expanded={clauseOpen} onClick={() => setOpenClause(clauseOpen ? null : clause.requirement_id)}>
-                        <span className="vigil-baseline-clause-ref">{clause.clause_or_control}</span>
-                        <span className="vigil-baseline-clause-summary">{clause.requirement_summary}</span>
-                        <span className="vigil-baseline-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span>
-                        <ChevronDown aria-hidden="true" />
-                      </button>
-                      {clauseOpen && <ClauseDetail requirement={clause} source={source} />}
-                    </div>;
-                  })}
-                </div> : <p className="vigil-empty-panel">No clause records are currently represented for this source/version.</p>}
-
-                <SourceAbout source={source} scope={scope} />
-              </section>}
-            </div>;
-          })}
-          {filtered.length === 0 && <div className="vigil-empty-panel">No sources or clauses match the current search and filters.</div>}
+                  <SourceAbout source={source} scope={scope} previousVersions={previousVersions} />
+                </section>}
+              </div>;
+            })}
+            {clauseSources.length === 0 && <div className="vigil-empty-panel">No clause-bearing or clause-review sources match the current search and filters.</div>}
+          </div>
         </div>
       </section>
+
+      <SupportingSources sources={supportingSources} scopeBySource={scopeBySource} />
+
+      {clauseSources.length === 0 && supportingSources.length === 0 && <div className="vigil-empty-panel mt-6">No sources match the current search and filters.</div>}
     </>}
   </div></main></Shell>;
 }
