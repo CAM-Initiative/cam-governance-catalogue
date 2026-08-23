@@ -37,4 +37,17 @@ export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
   },
 ] as const;
 
+export const VIGIL_REFERENCES_SECTION = {
+  id: "references",
+  number: "07",
+  label: "References",
+  description: "Provide the external evidence, canonical VIGIL record citations, and repair provenance needed to audit the case and trace its conclusions.",
+} as const;
+
+export const VIGIL_PUBLIC_REPORT_SECTIONS = [
+  ...VIGIL_EVIDENCE_REPAIR_SECTIONS,
+  VIGIL_REFERENCES_SECTION,
+] as const;
+
 export type VigilEvidenceRepairSectionId = typeof VIGIL_EVIDENCE_REPAIR_SECTIONS[number]["id"];
+export type VigilPublicReportSectionId = typeof VIGIL_PUBLIC_REPORT_SECTIONS[number]["id"];

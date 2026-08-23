@@ -24,6 +24,25 @@
   color: hsl(var(--primary));
 }
 
+/* Canonical compact BETA chip: matches the homepage discovery markers. */
+.cam-beta-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.12rem 0.38rem;
+  border: 1px solid hsl(var(--primary) / 0.34);
+  border-radius: 999px;
+  background: hsl(var(--primary) / 0.06);
+  font-family: var(--app-font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: hsl(var(--primary));
+}
+
 /* Homepage: one CAELESTIS product-level marker, plus compact VIGIL/Datasets
  * discovery markers in the existing governance resource panel. */
 main.overflow-hidden:has(#evidence-repair-heading)
@@ -115,6 +134,7 @@ main.overflow-hidden:has(#evidence-repair-heading)
 }
 
 html[data-theme="dark"] .cam-development-status,
+html[data-theme="dark"] .cam-beta-chip,
 html[data-theme="dark"] main.overflow-hidden:has(#evidence-repair-heading)
   > section:first-child
   > .container

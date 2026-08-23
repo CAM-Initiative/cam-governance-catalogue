@@ -4,6 +4,7 @@
   const STYLE_ID = "vigil-ux-readability-styles";
   const COMPLETE_CHAIN_BADGE = "data-vigil-complete-chain-badge";
   const LEARN_STAGE = "data-vigil-learn-stage";
+  const REFERENCES_SECTION = "data-vigil-references-section";
   const RECORD_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}/gi;
   const LEARN_ID_PATTERN = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
   const LEARN_REGISTRY_URL = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Learn.Index.json";
@@ -58,6 +59,9 @@
     style.textContent = `
       [${COMPLETE_CHAIN_BADGE}] { font-family:Inter,system-ui,sans-serif; }
       [${LEARN_STAGE}] a { text-decoration:none; }
+      .vigil-case-stage-tabs { grid-template-columns:repeat(7,minmax(0,1fr)) !important; }
+      [${REFERENCES_SECTION}].report-section-excluded { opacity:.58; }
+      @media print { [${REFERENCES_SECTION}].report-section-excluded { display:none !important; } }
     `;
     document.head.appendChild(style);
   }
@@ -81,14 +85,89 @@
         .find((link) => labelText(link).includes("vigil observatory"));
       if (vigilCard) vigilCard.setAttribute("href", "/observatory/cases");
     }
+  }
 
-    if (location.pathname === "/observatory" || location.pathname === "/observatory/ledger") {
-      const pageShell = document.querySelector(".vigil-app-shell + div.container");
-      const heading = [...document.querySelectorAll("main h1, .container h1")]
-        .find((node) => labelText(node) === "vigil observatory");
-      if (heading) heading.textContent = "VIGIL Ledger";
-      pageShell?.querySelector(".vigil-about-panel")?.remove();
+  function normalizeCaseReferences() {
+    const isCase = location.pathname.includes("/observatory/cases/") || location.pathname.includes("/observatory/failure-modes/") || /^\/vigil\//.test(location.pathname);
+    if (!isCase) return;
+
+    const nav = document.querySelector(".vigil-case-stage-nav");
+    const tabs = nav?.querySelector(".vigil-case-stage-tabs");
+    if (!nav || !tabs) return;
+
+    const referenceButton = [...nav.querySelectorAll("button")].find((button) => {
+      const label = labelText(button);
+      return label === "sources & provenance" || label === "references" || label === "07references" || label === "07 references";
+    });
+
+    if (referenceButton) {
+      const selected = referenceButton.getAttribute("aria-pressed") === "true" || referenceButton.getAttribute("aria-selected") === "true";
+      referenceButton.className = selected ? "is-active" : "";
+      referenceButton.setAttribute("role", "tab");
+      referenceButton.setAttribute("aria-selected", selected ? "true" : "false");
+      referenceButton.setAttribute("aria-controls", "case-panel-provenance");
+      const currentLabel = labelText(referenceButton);
+      if (currentLabel !== "07references" && currentLabel !== "07 references") referenceButton.innerHTML = "<span>07</span>References";
+      if (referenceButton.parentElement !== tabs) tabs.appendChild(referenceButton);
     }
+
+    for (const note of document.querySelectorAll(".vigil-case-empty")) {
+      if (note.textContent?.includes("Sources & provenance")) note.textContent = note.textContent.replace("Sources & provenance", "References");
+    }
+
+    const panel = document.querySelector(".vigil-case-active-stage .vigil-case-section");
+    const heading = panel?.querySelector("h2");
+    if (heading && labelText(heading) === "sources & provenance") {
+      heading.textContent = "References";
+      const header = heading.closest("header");
+      const headingBlock = heading.parentElement;
+      if (header && headingBlock && !header.querySelector(":scope > span")) {
+        const number = document.createElement("span");
+        number.textContent = "07";
+        header.insertBefore(number, headingBlock);
+      }
+      const description = headingBlock?.querySelector("p");
+      if (description) description.textContent = "External evidence, canonical VIGIL record citations, and repair provenance supporting the Case File.";
+    }
+  }
+
+  function normalizeReportReferences() {
+    if (!location.pathname.includes("/observatory/reports/")) return;
+    const citations = document.querySelector("section.report-citations");
+    if (!citations || citations.hasAttribute(REFERENCES_SECTION)) return;
+
+    const list = citations.querySelector("ol");
+    const existingHeading = citations.querySelector("h2");
+    if (!list) return;
+
+    existingHeading?.remove();
+    citations.setAttribute(REFERENCES_SECTION, "true");
+    citations.className = "report-citations report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-5 md:p-6";
+
+    const header = document.createElement("div");
+    header.className = "flex items-start justify-between gap-4 border-b border-[hsl(38_25%_80%)] pb-4";
+
+    const left = document.createElement("div");
+    left.className = "flex min-w-0 items-start gap-4";
+    left.innerHTML = '<span class="font-mono text-base tracking-[0.12em] text-cam-gold">07</span><div><h2 id="report-section-07-heading" class="font-serif text-2xl text-foreground">References</h2><p class="mt-1 max-w-3xl text-base leading-relaxed text-muted-foreground">External evidence, canonical VIGIL record citations, and repair provenance supporting this report.</p></div>';
+
+    const label = document.createElement("label");
+    label.className = "print:hidden shrink-0 pt-1";
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = true;
+    checkbox.className = "h-4 w-4 accent-[hsl(38_62%_40%)]";
+    checkbox.setAttribute("aria-label", "Include References section in the printed PDF");
+    checkbox.addEventListener("change", () => citations.classList.toggle("report-section-excluded", !checkbox.checked));
+    label.appendChild(checkbox);
+
+    header.append(left, label);
+    const body = document.createElement("div");
+    body.className = "mt-4";
+    list.className = "space-y-3";
+    body.appendChild(list);
+    citations.append(header, body);
+    citations.setAttribute("aria-labelledby", "report-section-07-heading");
   }
 
   function fixReportNavigation() {
@@ -183,6 +262,8 @@
     removeEmbeddedPolicyViewers();
     normalizeReferenceBackNavigation();
     normalizePublicDestinations();
+    normalizeCaseReferences();
+    normalizeReportReferences();
     fixReportNavigation();
     void markCompleteCollapsedChains();
     void appendLearnStage();

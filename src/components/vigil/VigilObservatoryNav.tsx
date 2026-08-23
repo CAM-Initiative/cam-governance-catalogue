@@ -4,7 +4,7 @@ import { Link, useLocation } from "wouter";
 // Legacy Failure Modes routes resolve into the FM-centred Case Files surface.
 const links = [
   { href: "/observatory/cases", label: "Case Files", subtitle: "AI failure mode investigations", matches: ["/observatory/cases", "/observatory/failure-modes", "/observatory/reports", "/observatory/incidents", "/observatory/repairs", "/vigil", "/observatory"] },
-  { href: "/observatory/knowledge-base", label: "Knowledge Base", subtitle: "What do we know now?", matches: ["/observatory/knowledge-base", "/observatory/lessons"] },
+  { href: "/observatory/knowledge-base", label: "Knowledge Base", subtitle: "Governance lessons & reference knowledge", matches: ["/observatory/knowledge-base", "/observatory/lessons"] },
 ];
 
 export function VigilObservatoryNav() {
@@ -18,7 +18,7 @@ export function VigilObservatoryNav() {
             <span className="min-w-0">
               <span className="vigil-app-name-line">
                 <span className="vigil-app-name">VIGIL Observatory</span>
-                <span className="cam-development-status">Public beta · prototype</span>
+                <span className="cam-beta-chip">Beta</span>
               </span>
               <span className="vigil-app-tagline">Observation → Record → Classification → Diagnosis → Repair → Learn</span>
             </span>

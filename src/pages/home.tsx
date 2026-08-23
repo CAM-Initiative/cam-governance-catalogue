@@ -7,8 +7,8 @@ const initiativeResources = [
   {
     id: "vigil-observatory",
     title: "VIGIL Observatory",
-    subtitle: "Evidence, failure modes & public datasets",
-    purpose: "Case Files, source evidence, governance requirements, repair history and machine-readable public data.",
+    subtitle: "Evidence, failure taxonomy & public datasets",
+    purpose: "Case Files grouped through the VIGIL Runtime & Governance Failure Taxonomy, with source evidence, governance requirements, repair history and public data.",
     href: "/observatory/cases",
   },
   {
@@ -53,8 +53,8 @@ const externalResources = [
 const interfaceGroups = [
   {
     id: "operate",
-    label: "How systems operate",
-    description: "Decision-making, authority, security, compliance, execution, and accountability.",
+    label: "Runtime & system governance",
+    description: "Decision-making, authority, security, compliance, execution and accountability.",
     topics: [
       {
         title: "Runtime decisions and system behaviour",
@@ -78,8 +78,8 @@ const interfaceGroups = [
   },
   {
     id: "protect",
-    label: "What CAM protects",
-    description: "People, relationships, identity, cognition, contribution, and safe participation.",
+    label: "Human & relational safeguards",
+    description: "People, relationships, identity, cognition, contribution and safe participation.",
     topics: [
       {
         title: "Companion systems, relationships and minors",
@@ -109,8 +109,8 @@ const interfaceGroups = [
   },
   {
     id: "transition",
-    label: "How systems change society",
-    description: "Infrastructure, economics, public dependency, transition, meaning, and long-term stewardship.",
+    label: "Infrastructure, economy & society",
+    description: "Public infrastructure, economic transition, institutional legitimacy and long-term stewardship.",
     topics: [
       {
         title: "Civilian infrastructure and essential access",
@@ -280,9 +280,9 @@ function ConstitutionalInterfaces() {
       <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
         <SectionLabel>CAELESTIS Architecture</SectionLabel>
         <div className="mb-7 max-w-4xl">
-          <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Explore the problems CAM is designed to govern.</h2>
+          <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Governance across AI systems, institutions and society.</h2>
           <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-            Browse the CAELESTIS constitutional corpus through the questions and problems it addresses rather than its internal domain names.
+            CAELESTIS connects runtime decision-making, security, relational safeguards, cognitive integrity, continuity, infrastructure, economic transition and institutional accountability within a single governance architecture.
           </p>
         </div>
 
@@ -340,9 +340,14 @@ function EvidenceRepairLoop() {
         <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
           Turn real-world AI failures into evidence for accountable repair.
         </h2>
-        <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-          VIGIL is an evidence-to-repair system for AI governance. It captures safety incidents and governance failures, diagnoses the control breakdown, maps the evidence to required safeguards, and supports traceable runtime repair and verification.
-        </p>
+        <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+          <p>
+            VIGIL is an evidence-to-repair system for AI governance. It captures safety incidents and governance failures, diagnoses the control breakdown, maps the evidence to required safeguards, and supports traceable runtime repair and verification.
+          </p>
+          <p>
+            Cases are grouped through the <strong className="font-semibold text-foreground">VIGIL Runtime &amp; Governance Failure Taxonomy</strong>, a shared classification standard that distinguishes structural failure mechanisms from their manifestations, causes, severity, evidence state and repair responsibility. This makes recurring failure patterns comparable across different systems and deployment contexts.
+          </p>
+        </div>
         <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
           Explore VIGIL
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

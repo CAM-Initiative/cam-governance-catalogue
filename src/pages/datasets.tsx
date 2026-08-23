@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Download, Library, Network, Scale } from "lucide-react";
+import { ArrowRight, Download, Library, Scale } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
@@ -16,6 +16,7 @@ function DatasetCard({
   title,
   description,
   status,
+  beta = false,
   browseHref,
   browseLabel,
   downloadHref,
@@ -25,6 +26,7 @@ function DatasetCard({
   title: string;
   description: string;
   status: string;
+  beta?: boolean;
   browseHref?: string;
   browseLabel?: string;
   downloadHref?: string;
@@ -36,7 +38,10 @@ function DatasetCard({
   return <article className="vigil-knowledge-collection">
     <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
     <div className="vigil-knowledge-copy">
-      <p className="vigil-library-kicker">{status}</p>
+      <div className="vigil-development-kicker-row">
+        <p className="vigil-library-kicker">{status}</p>
+        {beta ? <span className="cam-beta-chip">Beta</span> : null}
+      </div>
       <h2>{title}</h2>
       <p>{description}</p>
       {hasActions ? <div className="vigil-knowledge-actions">
@@ -92,17 +97,11 @@ export default function Datasets() {
             title="External Requirements"
             description="Clause- and control-level governance requirements preserving requirement posture, authority type, applicable actors and governance concepts."
             status={!state.loaded ? "Loading dataset" : state.requirementsCount === undefined ? "Dataset unavailable" : `${state.requirementsCount.toLocaleString()} published requirements`}
+            beta
             browseHref="/observatory/knowledge-base/external-requirements"
             browseLabel="Browse collection"
             downloadHref={state.requirementsUrl}
             icon={<Scale />}
-          />
-          <DatasetCard
-            title="Governance Failure Taxonomy"
-            description="Internally developed, machine-readable interpretive standard for classifying AI runtime and governance failure mechanisms. It is being prototyped to support diagnosis, mapping to governance controls, and evidence-backed self-repair workflows."
-            status="Internal standard · prototype"
-            developmentNote="Machine-readable dataset in development"
-            icon={<Network />}
           />
         </section>
       </div>
