@@ -10,6 +10,18 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   background-color: hsl(var(--background)) !important;
 }
 
+/* Explore AI Governance section label: deliberately secondary to the main
+ * CAELESTIS hero, one typographic step above the External tools label. */
+aside[aria-label="Explore AI governance"] > div:first-child > p {
+  color: #000 !important;
+  font-size: 0.875rem !important;
+  letter-spacing: 0.14em !important;
+}
+
+html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-child > p {
+  color: #fff !important;
+}
+
 /*
  * Explore AI Governance uses one card grammar for CAM resources and external
  * tools. Desktop users get compact discovery cards that expand on hover/focus;
@@ -86,24 +98,6 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
 }
 
 /*
- * The six-step VIGIL chain is intentionally wider than the viewport. Align its
- * first card with the same max-w-6xl content gutter used by the section heading,
- * then allow the remaining cards to overflow to the right behind a scrollbar.
- */
-section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
-  padding-left: 1.5rem;
-  padding-bottom: 0.25rem !important;
-}
-
-section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 1.5rem !important;
-  justify-content: flex-start !important;
-}
-
-/*
  * Connect follows the same top-level section rhythm as Policy Papers. The
  * source component now omits the redundant intermediate kicker; the outer
  * wrapper remains visually flat so the contact grid is not nested in a card.
@@ -121,15 +115,5 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) !important;
     align-items: center !important;
     gap: 1.5rem !important;
-  }
-}
-
-@media (min-width: 768px) {
-  section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto {
-    padding-left: max(2.5rem, calc((100vw - 72rem) / 2 + 2.5rem));
-  }
-
-  section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto > div {
-    padding-right: 2.5rem !important;
   }
 }

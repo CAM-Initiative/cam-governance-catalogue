@@ -67,6 +67,14 @@
     document.querySelectorAll('iframe[src*="/publications/"], iframe[title*="CAM Initiative"]').forEach((iframe) => iframe.parentElement?.remove());
   }
 
+  function normalizeReferenceBackNavigation() {
+    if (!location.pathname.includes("/observatory/knowledge-base/")) return;
+    const page = document.querySelector(".vigil-reference-page");
+    const hero = page?.querySelector(".vigil-reference-hero");
+    const back = page?.querySelector(":scope > .container > .vigil-back-link");
+    if (hero && back && back.parentElement !== hero) hero.prepend(back);
+  }
+
   function normalizePublicDestinations() {
     if (location.pathname === "/" || location.pathname === "") {
       const vigilCard = [...document.querySelectorAll('a.home-governance-card[href="/observatory"]')]
@@ -173,6 +181,7 @@
   function enhance() {
     injectStyles();
     removeEmbeddedPolicyViewers();
+    normalizeReferenceBackNavigation();
     normalizePublicDestinations();
     fixReportNavigation();
     void markCompleteCollapsedChains();

@@ -5,16 +5,18 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
-  { href: "/datasets", label: "Datasets", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
-  { href: "/constitution", label: "Constitution", internal: true },
-  { href: "/catalogue", label: "Catalogue", internal: true },
-  { href: "/policy", label: "Policy Papers", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/about", label: "About VIGIL", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
-  { href: "/observatory/ledger", label: "VIGIL Full Ledger", internal: true },
+  { href: "/observatory/ledger", label: "VIGIL Ledger", internal: true },
+  { href: "/constitution", label: "Constitution", internal: true },
+  { href: "/catalogue", label: "Catalogue", internal: true },
+  { href: "/constitution/relational", label: "Relational Governance", internal: true },
+  { href: "/constitution/transition", label: "Transitional Architecture", internal: true },
+  { href: "/datasets", label: "Datasets", internal: true },
+  { href: "/policy", label: "Policy Papers", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 

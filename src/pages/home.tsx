@@ -220,17 +220,17 @@ function ExploreGovernancePanel() {
       <div className="grid gap-2">
         {initiativeResources.map((resource) => (
           <a
-            className="home-governance-card group rounded-xl border border-cam-gold/30 bg-[hsl(36_48%_96%)] px-4 py-3 transition hover:border-cam-gold/60 hover:bg-[hsl(36_52%_93%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="home-governance-card group rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2.5 transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             href={resource.href}
             key={resource.id}
           >
-            <span className="flex items-center justify-between gap-3">
-              <span className="font-serif text-xl leading-tight text-foreground">{resource.title}</span>
-              <ArrowRight className="h-4 w-4 shrink-0 text-cam-gold transition-transform group-hover:translate-x-1" aria-hidden="true" />
+            <span className="flex items-center justify-between gap-3 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-cam-gold">
+              <span>{resource.title}</span>
+              <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
             <span className="home-governance-detail block">
               <span className="mt-1.5 block font-mono text-[13px] font-semibold uppercase tracking-[0.1em] text-cam-gold">{resource.subtitle}</span>
-              <span className="mt-2 block text-[17px] leading-relaxed text-muted-foreground">{resource.purpose}</span>
+              <span className="mt-2 block text-[15px] leading-relaxed text-muted-foreground">{resource.purpose}</span>
             </span>
           </a>
         ))}
@@ -340,30 +340,17 @@ function EvidenceRepairLoop() {
   return (
     <section className="py-12 md:py-16" aria-labelledby="evidence-repair-heading">
       <div className="container mx-auto max-w-6xl px-6 md:px-10">
-        <SectionLabel>VIGIL: evidence to repair</SectionLabel>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center">
-          <div className="max-w-4xl">
-            <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-              See how VIGIL turns evidence into accountable repair.
-            </h2>
-            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-              VIGIL connects observable evidence, failure classification, governance diagnosis, implemented repair and reusable learning. The dedicated About VIGIL page explains the six-stage public model, record types and public interfaces without duplicating the full method here.
-            </p>
-          </div>
-
-          <a
-            className="cam-parchment-card group rounded-2xl border border-cam-gold/40 p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/60 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            href="/observatory/about"
-          >
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">About VIGIL</p>
-            <h3 className="mt-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">Explore the evidence-to-repair model</h3>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">Read the six-stage model, canonical record types, public surfaces and interpretive boundaries that shape VIGIL investigations.</p>
-            <span className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition group-hover:text-foreground">
-              About VIGIL
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </span>
-          </a>
-        </div>
+        <SectionLabel>VIGIL: Evidence to Repair</SectionLabel>
+        <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+          Turn real-world AI failures into evidence for accountable repair.
+        </h2>
+        <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+          VIGIL tracks observed incidents, recurring failure modes, governance gaps, proposed repairs and what happens after those repairs are implemented. It connects evidence to diagnosis, accountability and reusable learning.
+        </p>
+        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
+          Explore VIGIL
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
       </div>
     </section>
   );
@@ -373,30 +360,17 @@ function PolicyPapersPanel() {
   return (
     <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="policy-papers-home-heading" id="policy-papers">
       <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-        <SectionLabel>Policy Papers</SectionLabel>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center">
-          <div className="max-w-3xl">
-            <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-              From governance architecture to public policy.
-            </h2>
-            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-              CAM Initiative policy papers translate governance principles into proposals for institutions, legislation, public administration, economic design, and accountable technology transition. Each publication preserves its status, submission history, citation, and downloadable source document.
-            </p>
-          </div>
-
-          <a
-            className="cam-parchment-card group rounded-2xl border border-cam-gold/40 p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/60 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            href="/policy"
-          >
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold">Current publication · Policy Proposal 01/2026</p>
-            <h3 className="mt-3 font-serif text-2xl leading-snug text-foreground md:text-3xl">AI Training, Contribution &amp; Copyright Scheme</h3>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground">Copyright permission, contribution valuation and sovereign value return.</p>
-            <span className="mt-5 inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition group-hover:text-foreground">
-              Browse CAM Policy Papers
-              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </span>
-          </a>
-        </div>
+        <SectionLabel>Policy</SectionLabel>
+        <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+          Turn governance architecture into practical public policy.
+        </h2>
+        <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+          CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.
+        </p>
+        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/policy">
+          Explore Policy Papers
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
       </div>
     </section>
   );
