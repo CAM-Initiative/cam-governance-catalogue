@@ -3,21 +3,15 @@ import { ArrowRight, Download, Library } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import {
-  VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL,
+  downloadExternalGovernanceDataset,
   loadExternalRequirements,
   loadExternalSources,
 } from "@/lib/vigilExternalKnowledge";
 
 type DatasetState = {
   sourcesCount?: number;
-  sourcesUrl?: string;
-  requirementsCount?: number;
+  clausesCount?: number;
   loaded: boolean;
-};
-
-type DownloadAction = {
-  href: string;
-  label: string;
 };
 
 function DatasetCard({
@@ -27,7 +21,8 @@ function DatasetCard({
   beta = false,
   browseHref,
   browseLabel,
-  downloads = [],
+  onDownload,
+  downloading,
   icon,
 }: {
   title: string;
@@ -36,11 +31,10 @@ function DatasetCard({
   beta?: boolean;
   browseHref?: string;
   browseLabel?: string;
-  downloads?: DownloadAction[];
+  onDownload?: () => void;
+  downloading?: boolean;
   icon: React.ReactNode;
 }) {
-  const hasActions = Boolean((browseHref && browseLabel) || downloads.length);
-
   return <article className="vigil-knowledge-collection vigil-dataset-collection-wide">
     <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
     <div className="vigil-knowledge-copy">
@@ -50,26 +44,28 @@ function DatasetCard({
       </div>
       <h2>{title}</h2>
       <p>{description}</p>
-      {hasActions ? <div className="vigil-knowledge-actions">
+      <div className="vigil-knowledge-actions">
         {browseHref && browseLabel ? <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link> : null}
-        {downloads.map((download) => <a key={download.href} href={download.href} target="_blank" rel="noreferrer" download>{download.label}<Download aria-hidden="true" /></a>)}
-      </div> : null}
+        {onDownload ? <button type="button" className="vigil-dataset-download-button" onClick={onDownload} disabled={downloading}>
+          {downloading ? "Preparing dataset…" : "Download dataset"}<Download aria-hidden="true" />
+        </button> : null}
+      </div>
     </div>
   </article>;
 }
 
 export default function Datasets() {
   const [state, setState] = useState<DatasetState>({ loaded: false });
+  const [downloadState, setDownloadState] = useState<"idle" | "working" | "error">("idle");
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadExternalSources(), loadExternalRequirements()]).then(([sources, requirements]) => {
+    Promise.all([loadExternalSources(), loadExternalRequirements()]).then(([sources, clauses]) => {
       if (cancelled) return;
       setState({
         loaded: true,
         sourcesCount: sources.status === "ready" ? sources.data.length : undefined,
-        sourcesUrl: sources.status === "ready" ? sources.attemptedUrl : undefined,
-        requirementsCount: requirements.status === "ready" ? requirements.data.length : undefined,
+        clausesCount: clauses.status === "ready" ? clauses.data.length : undefined,
       });
     });
     return () => { cancelled = true; };
@@ -79,12 +75,17 @@ export default function Datasets() {
     ? "Loading dataset"
     : state.sourcesCount === undefined
       ? "Dataset unavailable"
-      : `${state.sourcesCount} source versions${state.requirementsCount === undefined ? "" : ` · ${state.requirementsCount.toLocaleString()} extracted requirements`}`;
+      : `${state.sourcesCount} source versions${state.clausesCount === undefined ? "" : ` · ${state.clausesCount.toLocaleString()} clauses`}`;
 
-  const downloads: DownloadAction[] = [
-    ...(state.sourcesUrl ? [{ href: state.sourcesUrl, label: "Source register JSON" }] : []),
-    { href: VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL, label: "Full requirement records JSON" },
-  ];
+  async function downloadDataset() {
+    setDownloadState("working");
+    try {
+      await downloadExternalGovernanceDataset();
+      setDownloadState("idle");
+    } catch {
+      setDownloadState("error");
+    }
+  }
 
   return <Shell>
     <main className="vigil-knowledge-hub-page">
@@ -95,20 +96,22 @@ export default function Datasets() {
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
-          <p>Machine-readable public outputs behind VIGIL's external-governance reference baseline. The source register records which authorities are in scope; the requirement corpus records the clause- and control-level expectations extracted from those sources.</p>
+          <p>Machine-readable files behind VIGIL's external-governance reference library. One download provides the source register and the full clause records that sit underneath those sources.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
             title="External Governance Baseline"
-            description="A curated set of external authorities selected because they directly govern AI systems, provide bounded authority for material AI-governance questions, or supply necessary context. The downloadable source register and full requirement records preserve both the selection boundary and the requirements extracted from the selected sources."
+            description="The machine-readable version of the curated external-governance library: the selected source register plus the clause-level records represented from those sources. The source register preserves why each authority is in scope; the clause records preserve what each source says in structured form."
             status={status}
             beta
             browseHref="/observatory/knowledge-base/standards-sources"
-            browseLabel="Browse sources & requirements"
-            downloads={downloads}
+            browseLabel="Browse sources & clauses"
+            onDownload={downloadDataset}
+            downloading={downloadState === "working"}
             icon={<Library />}
           />
+          {downloadState === "error" ? <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p> : null}
         </section>
       </div>
     </main>
