@@ -38,6 +38,7 @@ export function VigilObservatoryNav() {
                 </Link>
               );
             })}
+            {/* Full Ledger is intentionally withdrawn; this third slot remains reserved for a later Observatory expansion. */}
             <span className="vigil-app-nav-placeholder" aria-hidden="true" />
           </nav>
         </div>
