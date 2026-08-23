@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 const app = readFileSync(new URL("../src/App.tsx", import.meta.url), "utf8");
 const shell = readFileSync(new URL("../src/components/layout/Shell.tsx", import.meta.url), "utf8");
 const knowledgeBase = readFileSync(new URL("../src/pages/vigil-knowledge-base.tsx", import.meta.url), "utf8");
+const referenceKnowledge = readFileSync(new URL("../src/pages/vigil-reference-knowledge.tsx", import.meta.url), "utf8");
+const externalKnowledge = readFileSync(new URL("../src/lib/vigilExternalKnowledge.ts", import.meta.url), "utf8");
 const report = readFileSync(new URL("../src/pages/evidence-chain-report.tsx", import.meta.url), "utf8");
 const cases = readFileSync(new URL("../src/pages/vigil-cases.tsx", import.meta.url), "utf8");
 const caseFile = readFileSync(new URL("../src/pages/vigil-case-file.tsx", import.meta.url), "utf8");
@@ -46,6 +48,14 @@ assert.doesNotMatch(knowledgeBase, /related_patch_notes|relatedPatchNotes|cam_re
 assert.doesNotMatch(knowledgeBase, /What changed/);
 assert.match(knowledgeBase, /bg-rose-900/);
 assert.doesNotMatch(knowledgeBase, /bg-emerald|text-emerald|border-emerald/);
+
+assert.match(referenceKnowledge, /return "Overview only"/);
+assert.doesNotMatch(referenceKnowledge, /Copyright Protected|Clause review blocked/);
+assert.match(referenceKnowledge, /sourcePublicSummary/);
+assert.match(referenceKnowledge, /source\.notes/);
+assert.match(referenceKnowledge, /AI-governance sources/);
+assert.match(referenceKnowledge, /Search and filters apply to both lists below/);
+assert.match(externalKnowledge, /notes\?: string \| null/);
 
 assert.match(evidenceRepair, /number: "01",\s*label: "Observation"/s);
 assert.match(evidenceRepair, /number: "02",\s*label: "Classification"/s);
