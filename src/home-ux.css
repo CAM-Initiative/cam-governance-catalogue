@@ -10,14 +10,13 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   background-color: hsl(var(--background)) !important;
 }
 
-/* Explore AI Governance section label: black in the light appearance, while
- * dark mode keeps the label readable against the dark canvas. */
+/* Explore AI Governance heading is deliberately neutral rather than gold. */
 aside[aria-label="Explore AI governance"] > div:first-child > p {
   color: #000 !important;
 }
 
 html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-child > p {
-  color: hsl(var(--foreground)) !important;
+  color: #fff !important;
 }
 
 /*
@@ -25,43 +24,26 @@ html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-ch
  * tools. Desktop users get compact discovery cards that expand on hover/focus;
  * touch and small-screen devices retain the explanatory copy by default.
  */
-.home-governance-detail {
-  overflow: hidden;
-}
-
-/* Internal CAM resources use the same compact visual language as external
- * reference tools. Their former subtitle is redundant with the description. */
-.home-governance-card[href^="/"] {
+.home-governance-card {
   border-color: hsl(var(--primary) / 0.2) !important;
   border-radius: 0.5rem !important;
   background: hsl(var(--card) / 0.55) !important;
   padding: 0.625rem 0.75rem !important;
 }
 
-.home-governance-card[href^="/"]:hover,
-.home-governance-card[href^="/"]:focus-visible {
+.home-governance-card:hover,
+.home-governance-card:focus-visible {
   border-color: hsl(var(--primary) / 0.45) !important;
   background: hsl(var(--card)) !important;
 }
 
-.home-governance-card[href^="/"] > span:first-child {
-  font-family: var(--app-font-mono);
-  font-size: 0.875rem;
-  font-weight: 650;
-  line-height: 1.35;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: hsl(var(--primary));
+.home-governance-detail {
+  overflow: hidden;
+  margin-top: 0.5rem !important;
 }
 
-.home-governance-card[href^="/"] > span:first-child > span:first-child {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  font-weight: inherit !important;
-  line-height: inherit !important;
-  color: inherit !important;
-}
-
+/* Internal CAM resources no longer display a second mini-heading between the
+ * resource name and its explanatory copy. */
 .home-governance-card[href^="/"] .home-governance-detail > span:first-child {
   display: none;
 }
@@ -85,13 +67,9 @@ html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-ch
   .home-governance-card:focus-visible .home-governance-detail,
   .home-governance-card:focus-within .home-governance-detail {
     max-height: 12rem;
+    margin-top: 0.45rem !important;
     opacity: 1;
     transform: translateY(0);
-  }
-
-  .home-governance-card:hover .home-governance-detail,
-  .home-governance-card:focus-visible .home-governance-detail {
-    margin-top: 0.45rem !important;
   }
 }
 
