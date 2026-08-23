@@ -68,7 +68,9 @@ export default function Datasets() {
       if (cancelled) return;
       setState({
         loaded: true,
-        sourcesCount: sources.status === "ready" ? sources.data.length : undefined,
+        sourcesCount: sources.status === "ready"
+          ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
+          : undefined,
         clausesCount: clauses.status === "ready" ? clauses.data.length : undefined,
       });
     });
@@ -79,7 +81,7 @@ export default function Datasets() {
     ? "Loading dataset"
     : state.sourcesCount === undefined
       ? "Dataset unavailable"
-      : `${state.sourcesCount} source versions${state.clausesCount === undefined ? "" : ` · ${state.clausesCount.toLocaleString()} clauses`}`;
+      : `${state.sourcesCount} AI-governance sources${state.clausesCount === undefined ? "" : ` · ${state.clausesCount.toLocaleString()} clauses`}`;
 
   async function downloadDataset() {
     setDownloadState("working");
