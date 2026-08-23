@@ -49,12 +49,14 @@ assert.doesNotMatch(knowledgeBase, /What changed/);
 assert.match(knowledgeBase, /bg-rose-900/);
 assert.doesNotMatch(knowledgeBase, /bg-emerald|text-emerald|border-emerald/);
 
-assert.match(referenceKnowledge, /return "Overview only"/);
-assert.doesNotMatch(referenceKnowledge, /Copyright Protected|Clause review blocked/);
+assert.doesNotMatch(referenceKnowledge, /Copyright Protected|Clause review blocked|Overview only/);
 assert.match(referenceKnowledge, /sourcePublicSummary/);
 assert.match(referenceKnowledge, /source\.notes/);
 assert.match(referenceKnowledge, /AI-governance sources/);
 assert.match(referenceKnowledge, /Search and filters apply to both lists below/);
+assert.match(referenceKnowledge, /Sources without public clause records/);
+assert.match(referenceKnowledge, /const clauseSources = useMemo\(\(\) => visibleSources\.filter\(\(source\) =>\s*\(clausesBySource\.get\(externalSourceKey\(source\)\)\?\.length \?\? 0\) > 0/s);
+assert.match(referenceKnowledge, /const overviewSources = useMemo\(\(\) => visibleSources\.filter\(\(source\) =>\s*\(clausesBySource\.get\(externalSourceKey\(source\)\)\?\.length \?\? 0\) === 0/s);
 assert.match(externalKnowledge, /notes\?: string \| null/);
 
 assert.match(evidenceRepair, /number: "01",\s*label: "Observation"/s);
