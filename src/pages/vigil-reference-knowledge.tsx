@@ -415,13 +415,15 @@ function VigilExternalGovernanceBaseline() {
                 {canOpen ? <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" /> : <span />}
               </>;
 
-              return <div className={`vigil-baseline-source-row relative${isOpen ? " is-open" : ""}`} key={key}>
-                {canOpen ? <button type="button" className="vigil-baseline-source-button pr-20" aria-expanded={isOpen} onClick={() => {
-                  setOpenSource(isOpen ? null : key);
-                  setOpenClause(null);
-                }}>{rowContents}</button> : <div className="vigil-baseline-source-button cursor-default pr-14">{rowContents}</div>}
+              return <div className={`vigil-baseline-source-row${isOpen ? " is-open" : ""}`} key={key}>
+                <div className="relative">
+                  {canOpen ? <button type="button" className="vigil-baseline-source-button pr-20" aria-expanded={isOpen} onClick={() => {
+                    setOpenSource(isOpen ? null : key);
+                    setOpenClause(null);
+                  }}>{rowContents}</button> : <div className="vigil-baseline-source-button cursor-default pr-14">{rowContents}</div>}
 
-                {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" className={`absolute top-1/2 -translate-y-1/2 text-primary hover:text-foreground ${canOpen ? "right-11" : "right-4"}`} aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a>}
+                  {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" className={`absolute top-1/2 -translate-y-1/2 text-primary hover:text-foreground ${canOpen ? "right-11" : "right-4"}`} aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a>}
+                </div>
 
                 {isOpen && <section className="vigil-baseline-source-detail" aria-label={`${source.title} clause detail`}>
                   <div className="vigil-baseline-clause-table">
