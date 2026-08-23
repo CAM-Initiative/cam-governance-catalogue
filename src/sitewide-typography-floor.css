@@ -131,6 +131,8 @@ section[aria-labelledby="governance-stack-heading"]
  * at the final cascade layer, so later/older VIGIL generations cannot push a
  * public investigation back into sub-12px microtype. */
 .vigil-case-file-page .vigil-library-kicker,
+.vigil-case-file-page .vigil-panel-kicker,
+.vigil-case-file-page .vigil-evidence-kicker,
 .vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dt,
 .vigil-case-file-page .vigil-classification-identity .vigil-case-field dt,
 .vigil-case-file-page .vigil-classification-meta .vigil-case-field dt,
@@ -149,7 +151,11 @@ section[aria-labelledby="governance-stack-heading"]
 .vigil-case-file-page .vigil-case-callout > strong,
 .vigil-case-file-page .vigil-observation-context strong,
 .vigil-case-file-page .vigil-control-heading small,
-.vigil-case-file-page .vigil-stage-source-line {
+.vigil-case-file-page .vigil-stage-source-line,
+.vigil-case-file-page .vigil-provision-id,
+.vigil-case-file-page .vigil-chain-key,
+.vigil-case-file-page .vigil-chain-stage,
+.vigil-case-file-page .vigil-chain-id {
   font-size: var(--cam-type-small) !important;
   line-height: 1.5;
 }
@@ -165,7 +171,10 @@ section[aria-labelledby="governance-stack-heading"]
 .vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dd,
 .vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dd.is-mono,
 .vigil-case-file-page .vigil-case-stage-tabs button,
-.vigil-case-file-page .vigil-case-section-body :where(a, summary) {
+.vigil-case-file-page .vigil-case-section-body :where(a, summary),
+.vigil-case-file-page .vigil-evidence-column h4,
+.vigil-case-file-page .vigil-evidence-links a,
+.vigil-case-file-page .vigil-audit-links a {
   font-size: 1rem !important;
   line-height: 1.55;
 }
@@ -175,10 +184,20 @@ section[aria-labelledby="governance-stack-heading"]
   line-height: 1.4;
 }
 
+.vigil-case-file-page .vigil-evidence-meta,
+.vigil-case-file-page .vigil-evidence-source-line,
+.vigil-case-file-page .vigil-evidence-confidence {
+  font-size: 0.95rem !important;
+  line-height: 1.55;
+}
+
 .vigil-case-file-page .vigil-case-section-body :where(p:not(.vigil-library-kicker), li),
 .vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p,
 .vigil-case-file-page .vigil-case-empty,
-.vigil-case-file-page .vigil-provenance-note {
+.vigil-case-file-page .vigil-provenance-note,
+.vigil-case-file-page .vigil-evidence-column p,
+.vigil-case-file-page .vigil-provision p,
+.vigil-case-file-page .vigil-chain-empty {
   font-size: 1.075rem !important;
   line-height: 1.65;
 }
