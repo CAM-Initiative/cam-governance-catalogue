@@ -177,3 +177,37 @@ export function canonicalIdentifierLabel(source?: ExternalSourceEntry) {
 export function externalSourceKey(source: Pick<ExternalSourceEntry, "vigil_source_id" | "source_version">) {
   return `${source.vigil_source_id}|${source.source_version}`;
 }
+
+function triggerJsonDownload(filename: string, text: string) {
+  const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * One public action for the one conceptual dataset. The baseline is stored in
+ * two machine-readable files because source selection/provenance and clause
+ * records are distinct data structures; visitors should not need two buttons
+ * to obtain them.
+ */
+export async function downloadExternalGovernanceDataset(fetcher: FetchLike = fetch) {
+  const [sources, clauses] = await Promise.all([
+    fetcher(`${VIGIL_EXTERNAL_SOURCE_REGISTRY_URL}?v=${Date.now()}`, { cache: "no-store" }),
+    fetcher(`${VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL}?v=${Date.now()}`, { cache: "no-store" }),
+  ]);
+
+  if (!sources.ok || !clauses.ok) {
+    throw new Error("The complete external-governance dataset is not currently available for download.");
+  }
+
+  const [sourcesText, clausesText] = await Promise.all([sources.text(), clauses.text()]);
+  triggerJsonDownload("vigil-external-governance-sources.json", sourcesText);
+  window.setTimeout(() => triggerJsonDownload("vigil-external-governance-clauses.json", clausesText), 180);
+}
