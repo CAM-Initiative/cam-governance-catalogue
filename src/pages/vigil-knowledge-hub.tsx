@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, Library, Scale } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Network, Scale } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -20,7 +20,7 @@ function isLearnRecord(record: Record<string, unknown>) {
   return /^VIGIL-\d{4}-LEARN-\d{4}$/i.test(id) || type === "learn";
 }
 
-function CollectionCard({ href, icon, title, description, status }: { href: string; icon: React.ReactNode; title: string; description: string; status: string }) {
+function CollectionCard({ href, icon, title, description, status, actionLabel = "Browse collection" }: { href?: string; icon: React.ReactNode; title: string; description: string; status: string; actionLabel?: string }) {
   return (
     <article className="vigil-knowledge-collection">
       <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
@@ -28,9 +28,9 @@ function CollectionCard({ href, icon, title, description, status }: { href: stri
         <p className="vigil-library-kicker">{status}</p>
         <h2>{title}</h2>
         <p>{description}</p>
-        <div className="vigil-knowledge-actions">
-          <Link href={href}>Browse collection <ArrowRight aria-hidden="true" /></Link>
-        </div>
+        {href ? <div className="vigil-knowledge-actions">
+          <Link href={href}>{actionLabel} <ArrowRight aria-hidden="true" /></Link>
+        </div> : null}
       </div>
     </article>
   );
@@ -64,7 +64,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL public knowledge</p>
             <h1>Knowledge Base</h1>
-            <p>Browse reusable governance lessons and external governance reference collections maintained through VIGIL.</p>
+            <p>Browse reusable governance lessons, external governance reference collections and the evolving VIGIL governance failure taxonomy.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -80,7 +80,7 @@ export default function VigilKnowledgeHub() {
               icon={<Scale />}
               title="External Requirements"
               description="Clause- and control-level governance requirements preserving requirement posture, authority type, applicable actors and governance concepts."
-              status={state.requirementsAvailable ? `${state.requirements ?? 0} published requirements` : "Dataset unavailable"}
+              status={state.requirementsAvailable ? `Beta · ${state.requirements ?? 0} published requirements` : "Beta · dataset unavailable"}
             />
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
@@ -88,6 +88,12 @@ export default function VigilKnowledgeHub() {
               title="Standards & Sources"
               description="Registered laws, standards, frameworks and technical sources with publisher identity, identifier, jurisdiction, source class, version and lifecycle state."
               status={state.sourcesAvailable ? `${state.sources ?? 0} published source versions` : "Dataset unavailable"}
+            />
+            <CollectionCard
+              icon={<Network />}
+              title="Governance Failure Taxonomy"
+              description="Internally developed interpretive standard for classifying AI runtime and governance failure mechanisms. The taxonomy is in public beta while its machine-readable projection and dedicated browsing surface continue to develop."
+              status="Internal standard · beta"
             />
           </section>
         </div>
