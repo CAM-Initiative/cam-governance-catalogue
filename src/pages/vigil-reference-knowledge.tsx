@@ -85,16 +85,17 @@ function sourceRoleExplanation(role?: string) {
 
 function clauseReviewLabel(scope: ExternalSourceScopeEntry | undefined, clauseCount: number) {
   if (clauseCount > 0) return `${clauseCount.toLocaleString()} clause${clauseCount === 1 ? "" : "s"}`;
+  if (scope?.extraction_status === "blocked-access" && scope.source_access_status === "official-metadata-only") return "Copyright Protected";
   switch (scope?.extraction_status) {
     case "in-progress":
     case "partial":
-      return "Clause review in progress";
+      return "Review in progress";
     case "blocked-access":
-      return "Clause review blocked";
+      return "Access limited";
     case "complete":
-      return "No public clause records";
+      return "No public clauses";
     default:
-      return "Clause review pending";
+      return "Review pending";
   }
 }
 
@@ -169,15 +170,11 @@ function SourceAbout({ source, scope, previousVersions }: { source: ExternalSour
         <div><dt>Jurisdiction</dt><dd>{source.jurisdiction ?? "Not specified"}</dd></div>
         <div><dt>Source type</dt><dd>{clean(source.source_class) ?? "Not specified"}</dd></div>
         <div><dt>Role in the baseline</dt><dd>{sourceRoleLabel(scope?.source_role)}</dd></div>
-        <div><dt>Clause review state</dt><dd>{clean(scope?.extraction_status) ?? "Not specified"}</dd></div>
+        <div><dt>Review state</dt><dd>{clean(scope?.extraction_status) ?? "Not specified"}</dd></div>
         <div><dt>Source access</dt><dd>{clean(scope?.source_access_status) ?? "Not specified"}</dd></div>
         <div><dt>Lifecycle state</dt><dd>{clean(source.source_lifecycle_state) ?? "Not specified"}</dd></div>
         <div><dt>VIGIL source identity</dt><dd>{source.vigil_source_id}</dd></div>
       </dl>
-      {(scope?.extraction_scope_notes || scope?.next_action) && <div className="vigil-baseline-review-note">
-        {scope.extraction_scope_notes && <p><strong>Review boundary:</strong> {scope.extraction_scope_notes}</p>}
-        {scope.next_action && <p><strong>Next review action:</strong> {scope.next_action}</p>}
-      </div>}
       {previousVersions.length > 0 && <section className="border-t border-border/70">
         <p className="vigil-library-kicker">Previous versions</p>
         <ul className="mt-2 space-y-2">
@@ -187,7 +184,6 @@ function SourceAbout({ source, scope, previousVersions }: { source: ExternalSour
           </li>)}
         </ul>
       </section>}
-      {source.official_locator && <a className="vigil-baseline-official-link" href={source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
     </div>
   </details>;
 }
@@ -213,7 +209,7 @@ function SupportingSources({ sources, scopeBySource }: { sources: ExternalSource
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{sourceRoleLabel(scope?.source_role)}</p>
             <p className="mt-1 text-sm leading-relaxed text-foreground/85">{sourceRoleExplanation(scope?.source_role)}</p>
           </div>
-          {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-primary hover:underline">Open source <ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : <span />}
+          {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-primary hover:underline" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : <span />}
         </article>;
       })}
     </div>
@@ -382,74 +378,67 @@ function VigilExternalGovernanceBaseline() {
         <label className="vigil-reference-filter"><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option value={value} key={value}>{clean(value) ?? value}</option>)}</select></label>
         <label className="vigil-reference-filter"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
       </div>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Search and filters apply to both lists below, including clause text where clauses are available.</p>
 
       <section className="mt-6" aria-labelledby="clause-sources-heading">
         <div className="mb-3 max-w-5xl">
           <p className="vigil-library-kicker">Sources with clauses</p>
           <h2 id="clause-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Browse governance clauses and controls</h2>
-          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse the clauses represented from it. AI-specific sources still undergoing clause review are shown with their review state rather than a misleading zero count.</p>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse its published clauses. Sources without public clause text stay collapsed and show their availability state instead.</p>
         </div>
         <div className="vigil-baseline-library !mt-0" aria-label="External governance sources with clauses">
           <div className="vigil-baseline-table-head" aria-hidden="true">
-            <span>Source</span><span>Publisher / jurisdiction</span><span>Type</span><span>Clauses / review</span><span />
+            <span>Source</span><span>Publisher / jurisdiction</span><span>Type</span><span>Clauses / access</span><span />
           </div>
           <div className="vigil-baseline-table-body">
             {clauseSources.map((source) => {
               const key = externalSourceKey(source);
               const scope = scopeBySource.get(key);
               const clauses = clausesBySource.get(key) ?? [];
-              const isOpen = openSource === key;
+              const canOpen = clauses.length > 0;
+              const isOpen = canOpen && openSource === key;
               const previousVersions = (versionsByIdentity.get(sourceIdentity(source)) ?? [])
                 .filter((version) => scopeBySource.get(externalSourceKey(version))?.extraction_status === "superseded-version")
                 .sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true }));
-              return <div className={`vigil-baseline-source-row${isOpen ? " is-open" : ""}`} key={key}>
-                <button type="button" className="vigil-baseline-source-button" aria-expanded={isOpen} onClick={() => {
+
+              const rowContents = <>
+                <span className="vigil-baseline-source-primary">
+                  <strong>{source.title}</strong>
+                  <small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small>
+                </span>
+                <span className="vigil-baseline-source-meta">
+                  <strong>{source.issuer ?? "Publisher not specified"}</strong>
+                  <small>{source.jurisdiction ?? "Jurisdiction not specified"}</small>
+                </span>
+                <span>{clean(source.source_class) ?? "Not specified"}</span>
+                <span className="vigil-baseline-clause-count">{clauses.length > 0 ? <><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</> : <span className="font-semibold text-foreground">{clauseReviewLabel(scope, clauses.length)}</span>}</span>
+                {canOpen ? <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" /> : <span />}
+              </>;
+
+              return <div className={`vigil-baseline-source-row relative${isOpen ? " is-open" : ""}`} key={key}>
+                {canOpen ? <button type="button" className="vigil-baseline-source-button pr-20" aria-expanded={isOpen} onClick={() => {
                   setOpenSource(isOpen ? null : key);
                   setOpenClause(null);
-                }}>
-                  <span className="vigil-baseline-source-primary">
-                    <strong>{source.title}</strong>
-                    <small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small>
-                  </span>
-                  <span className="vigil-baseline-source-meta">
-                    <strong>{source.issuer ?? "Publisher not specified"}</strong>
-                    <small>{source.jurisdiction ?? "Jurisdiction not specified"}</small>
-                  </span>
-                  <span>{clean(source.source_class) ?? "Not specified"}</span>
-                  <span className="vigil-baseline-clause-count">{clauses.length > 0 ? <><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</> : <span className="font-semibold text-foreground">{clauseReviewLabel(scope, clauses.length)}</span>}</span>
-                  <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" />
-                </button>
+                }}>{rowContents}</button> : <div className="vigil-baseline-source-button cursor-default pr-14">{rowContents}</div>}
+
+                {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" className={`absolute top-1/2 -translate-y-1/2 text-primary hover:text-foreground ${canOpen ? "right-11" : "right-4"}`} aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a>}
 
                 {isOpen && <section className="vigil-baseline-source-detail" aria-label={`${source.title} clause detail`}>
-                  {clauses.length > 0 ? <>
-                    <div className="vigil-baseline-source-detail-heading">
-                      <div>
-                        <p className="vigil-library-kicker">{clauses.length.toLocaleString()} clause{clauses.length === 1 ? "" : "s"}</p>
-                        <h2>Clauses and controls represented from this source</h2>
-                        <p>Select a clause to read what it says and the structured governance detail recorded for it.</p>
-                      </div>
-                      {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
-                    </div>
-                    <div className="vigil-baseline-clause-table">
-                      <div className="vigil-baseline-clause-head" aria-hidden="true"><span>Clause / control</span><span>What it says</span><span>Type</span><span /></div>
-                      {clauses.map((clause) => {
-                        const clauseOpen = openClause === clause.requirement_id;
-                        return <div className={`vigil-baseline-clause-row${clauseOpen ? " is-open" : ""}`} key={clause.requirement_id}>
-                          <button type="button" className="vigil-baseline-clause-button" aria-expanded={clauseOpen} onClick={() => setOpenClause(clauseOpen ? null : clause.requirement_id)}>
-                            <span className="vigil-baseline-clause-ref">{clause.clause_or_control}</span>
-                            <span className="vigil-baseline-clause-summary">{clause.requirement_summary}</span>
-                            <span className="vigil-baseline-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span>
-                            <ChevronDown aria-hidden="true" />
-                          </button>
-                          {clauseOpen && <ClauseDetail requirement={clause} source={source} />}
-                        </div>;
-                      })}
-                    </div>
-                  </> : <div className="rounded-md border border-border bg-background/70 p-4">
-                    <p className="vigil-library-kicker">{clauseReviewLabel(scope, clauses.length)}</p>
-                    <p className="mt-2 max-w-4xl text-base leading-relaxed text-muted-foreground">This source is part of the AI-specific governance baseline, but no public clause records are available yet.{scope?.next_action ? ` ${scope.next_action}` : ""}</p>
-                    {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">Open official source <ExternalLink className="h-4 w-4" aria-hidden="true" /></a>}
-                  </div>}
+                  <div className="vigil-baseline-clause-table">
+                    <div className="vigil-baseline-clause-head" aria-hidden="true"><span>Clause / control</span><span>What it says</span><span>Type</span><span /></div>
+                    {clauses.map((clause) => {
+                      const clauseOpen = openClause === clause.requirement_id;
+                      return <div className={`vigil-baseline-clause-row${clauseOpen ? " is-open" : ""}`} key={clause.requirement_id}>
+                        <button type="button" className="vigil-baseline-clause-button" aria-expanded={clauseOpen} onClick={() => setOpenClause(clauseOpen ? null : clause.requirement_id)}>
+                          <span className="vigil-baseline-clause-ref">{clause.clause_or_control}</span>
+                          <span className="vigil-baseline-clause-summary">{clause.requirement_summary}</span>
+                          <span className="vigil-baseline-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span>
+                          <ChevronDown aria-hidden="true" />
+                        </button>
+                        {clauseOpen && <ClauseDetail requirement={clause} source={source} />}
+                      </div>;
+                    })}
+                  </div>
 
                   <SourceAbout source={source} scope={scope} previousVersions={previousVersions} />
                 </section>}
