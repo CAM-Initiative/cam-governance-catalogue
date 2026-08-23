@@ -20,12 +20,15 @@ function isLearnRecord(record: Record<string, unknown>) {
   return /^VIGIL-\d{4}-LEARN-\d{4}$/i.test(id) || type === "learn";
 }
 
-function CollectionCard({ href, icon, title, description, status, actionLabel = "Browse collection" }: { href?: string; icon: React.ReactNode; title: string; description: string; status: string; actionLabel?: string }) {
+function CollectionCard({ href, icon, title, description, status, beta = false, actionLabel = "Browse collection" }: { href?: string; icon: React.ReactNode; title: string; description: string; status: string; beta?: boolean; actionLabel?: string }) {
   return (
     <article className="vigil-knowledge-collection">
       <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
       <div className="vigil-knowledge-copy">
-        <p className="vigil-library-kicker">{status}</p>
+        <div className="vigil-development-kicker-row">
+          <p className="vigil-library-kicker">{status}</p>
+          {beta ? <span className="cam-beta-chip">Beta</span> : null}
+        </div>
         <h2>{title}</h2>
         <p>{description}</p>
         {href ? <div className="vigil-knowledge-actions">
@@ -80,7 +83,8 @@ export default function VigilKnowledgeHub() {
               icon={<Scale />}
               title="External Requirements"
               description="Clause- and control-level governance requirements preserving requirement posture, authority type, applicable actors and governance concepts."
-              status={state.requirementsAvailable ? `Beta · ${state.requirements ?? 0} published requirements` : "Beta · dataset unavailable"}
+              status={state.requirementsAvailable ? `${state.requirements ?? 0} published requirements` : "Dataset unavailable"}
+              beta
             />
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
@@ -93,7 +97,8 @@ export default function VigilKnowledgeHub() {
               icon={<Network />}
               title="Governance Failure Taxonomy"
               description="Internally developed interpretive standard for classifying AI runtime and governance failure mechanisms. The taxonomy is in public beta while its machine-readable projection and dedicated browsing surface continue to develop."
-              status="Internal standard · beta"
+              status="Internal standard"
+              beta
             />
           </section>
         </div>
