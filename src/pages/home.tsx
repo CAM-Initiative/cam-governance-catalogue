@@ -119,14 +119,10 @@ const interfaceGroups = [
       {
         title: "Economic power, labour and value return",
         body: "Automation, synthetic labour, ownership concentration, pooled resources, contribution recognition, reciprocity, and non-extractive exchange.",
-        href: "/constitution/transition",
-        cta: "Explore economic transition",
       },
       {
         title: "Technology transition and public dependency",
         body: "How emerging capabilities cross into labour, embodiment, institutions, infrastructure, ownership, public reliance, and civilisational continuity.",
-        href: "/constitution/transition",
-        cta: "Explore transitional architecture",
       },
       {
         title: "Long-term stewardship and institutional legitimacy",
@@ -439,7 +435,7 @@ export default function Home() {
               </p>
               <div className="max-w-3xl space-y-5 text-lg leading-relaxed text-foreground/80 md:text-xl">
                 <p>
-                  The CAM Initiative brings together constitutional AI governance, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and transitional architecture for emerging systems.
+                  The CAM Initiative brings together constitutional AI governance, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
                 </p>
                 <p>
                   It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.

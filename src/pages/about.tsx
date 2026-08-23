@@ -25,19 +25,19 @@ const maintainedLayers = [
     body: "Constitutional instruments, domain instruments, annexes, schedules, supplements, taxonomies, and governance doctrine.",
   },
   {
-    label: "VIGIL Ledger",
-    eyebrow: "Evidence-to-repair record system",
-    body: "Public observations, failure modes, proposals, patches, accountability gaps, design failures, and repair activity.",
+    label: "VIGIL evidence-to-repair system",
+    eyebrow: "Evidence, diagnosis and repair",
+    body: "Public observations, failure modes, proposals, patches, accountability gaps, design failures, and traceable repair activity.",
   },
   {
     label: "Public datasets",
     eyebrow: "Machine-readable governance reference data",
-    body: "Downloadable external-governance source and requirement datasets maintained through VIGIL for research, comparison, audit, and independent analysis.",
+    body: "Downloadable governance-source, external-requirement and developing failure-taxonomy datasets maintained through VIGIL for research, comparison, audit, and independent analysis.",
   },
   {
     label: "Taxonomies and metadata standards",
     eyebrow: "Controlled vocabularies",
-    body: "Record schemas, domain codes, crosswalks, lifecycle states, and validation guidance.",
+    body: "Record schemas, failure classifications, domain codes, crosswalks, lifecycle states, and validation guidance.",
   },
   {
     label: "Public catalogue and implementation materials",
@@ -81,20 +81,6 @@ function SectionHeading({ eyebrow }: { eyebrow: string }) {
   );
 }
 
-function AboutDetails({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <details className="group overflow-hidden rounded-xl border border-border/80 bg-card/75 text-sm shadow-sm">
-      <summary className="cursor-pointer list-none p-4 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-cam-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
-        <span className="inline-flex w-full items-center gap-3">
-          <span className="inline-block h-0 w-0 shrink-0 border-y-[0.35rem] border-l-[0.52rem] border-y-transparent border-l-[hsl(var(--primary))] transition-transform duration-200 group-open:rotate-90" aria-hidden="true" />
-          <span>{title}</span>
-        </span>
-      </summary>
-      <div className="border-t border-border/70 px-4 py-4 text-base leading-relaxed text-foreground/75">{children}</div>
-    </details>
-  );
-}
-
 function ContentPanel({ children }: { children: ReactNode }) {
   return <article className="rounded-2xl border border-border/80 bg-background/30 p-6 shadow-sm">{children}</article>;
 }
@@ -113,9 +99,16 @@ export default function About() {
           <SectionHeading eyebrow="Institutional context" />
           <ContentPanel>
             <div className="space-y-4 text-base leading-relaxed text-foreground/75">
-              <p>The CAM Initiative is an unincorporated public-benefit governance initiative. It operates as the public institutional identity for publication and maintenance of CAM governance materials and the VIGIL Ledger.</p>
-              <p>Independent Australian AI governance initiative founded and led by Dr Michelle Vivian O’Rourke.</p>
-              <p>The CAM Initiative and the Caelestis Architecture Model are not affiliated with the Caelestis project at https://caelestis-project.eu/.</p>
+              <p>
+                The CAM Initiative is an independent Australian, unincorporated public-benefit AI governance initiative founded and led by Dr Michelle Vivian O’Rourke. It provides the public institutional identity through which the CAELESTIS Architecture Model, VIGIL, associated governance datasets, and policy materials are developed, maintained and published.
+              </p>
+              <p>
+                The CAM Initiative and the Caelestis Architecture Model are not affiliated with the separate Caelestis project at{" "}
+                <a className="text-cam-gold underline decoration-cam-gold/40 underline-offset-4 hover:text-foreground" href="https://caelestis-project.eu/" rel="noreferrer" target="_blank">
+                  caelestis-project.eu
+                </a>
+                .
+              </p>
             </div>
           </ContentPanel>
         </motion.section>
@@ -123,13 +116,13 @@ export default function About() {
         <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
           <SectionHeading eyebrow="Purpose" />
           <ContentPanel>
-            <div className="grid gap-3">
-              <AboutDetails title="Vision: Civilisational Readiness">
-                <p>The CAM Initiative exists to help close the civilisational readiness gap: the mismatch between increasingly capable artificial systems and the legal, ecological, economic, relational, and cultural structures required to govern them responsibly.</p>
-              </AboutDetails>
-              <AboutDetails title="Mission: Minimum Invariant Conditions">
-                <p>CAM develops minimum conditions for delegation, stewardship, responsibility, refusal, repair, and accountable continuity across human–AI and AI–AI systems.</p>
-              </AboutDetails>
+            <div className="space-y-4 text-base leading-relaxed text-foreground/75">
+              <p>
+                The CAM Initiative develops open governance architecture for increasingly capable AI systems and the institutions responsible for them. Its work connects constitutional and operational controls, external governance requirements, evidence-to-repair methods, machine-readable reference data, and public policy analysis.
+              </p>
+              <p>
+                VIGIL provides the empirical feedback layer: observed failures and governance evidence can be recorded, classified, traced to affected controls, and used to support review, repair and verification.
+              </p>
             </div>
           </ContentPanel>
         </motion.section>
@@ -138,7 +131,7 @@ export default function About() {
           <SectionHeading eyebrow="Why it matters" />
           <ContentPanel>
             <div className="space-y-4 text-base leading-relaxed text-foreground/75">
-              <p>The CAM Initiative began with two questions: whether AI systems can govern themselves, and what a global governance model would require if it had to arbitrate across jurisdictions, institutions, technical systems, social contexts, and forms of intelligence.</p>
+              <p>The CAM Initiative began from the question of how increasingly capable AI systems can be governed at runtime across conflicting instructions, jurisdictions, institutions, technical environments, and social contexts.</p>
               <p>CAM treats governance as an architecture rather than a policy statement alone: a constraint model, an arbitration structure, and a runtime-facing language for responsibility.</p>
               <p>VIGIL records what happens in practice so observed failures can become reviewable evidence and accountable repair.</p>
             </div>
