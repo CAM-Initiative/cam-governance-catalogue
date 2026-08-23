@@ -124,3 +124,61 @@ section[aria-labelledby="governance-stack-heading"]
   font-size: 0.95rem !important;
   line-height: 1.55;
 }
+
+/* Current Case File routes use the newer .vigil-case-* selector family rather
+ * than the legacy .vigil-detail-* family above. v4/v5 still contain 0.68rem,
+ * 0.70rem and 0.72rem declarations for these elements. Close that gap here,
+ * at the final cascade layer, so later/older VIGIL generations cannot push a
+ * public investigation back into sub-12px microtype. */
+.vigil-case-file-page .vigil-library-kicker,
+.vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dt,
+.vigil-case-file-page .vigil-classification-identity .vigil-case-field dt,
+.vigil-case-file-page .vigil-classification-meta .vigil-case-field dt,
+.vigil-case-file-page .vigil-affected-system-grid .vigil-case-field dt,
+.vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dt,
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header > span,
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-record-heading > span,
+.vigil-case-file-page .vigil-affected-system-grid > article > span,
+.vigil-case-file-page .vigil-related-failures > strong,
+.vigil-case-file-page .vigil-learning-grid > section > strong,
+.vigil-case-file-page .vigil-provenance-evidence-note > strong,
+.vigil-case-file-page .vigil-case-source-preview article > span,
+.vigil-case-file-page .vigil-case-citations li > span,
+.vigil-case-file-page .vigil-record-provenance article > span,
+.vigil-case-file-page .vigil-case-narrative > strong,
+.vigil-case-file-page .vigil-case-callout > strong,
+.vigil-case-file-page .vigil-observation-context strong,
+.vigil-case-file-page .vigil-control-heading small,
+.vigil-case-file-page .vigil-stage-source-line {
+  font-size: var(--cam-type-small) !important;
+  line-height: 1.5;
+}
+
+.vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dd,
+.vigil-case-file-page .vigil-case-meta-panel .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-classification-identity .vigil-case-field dd,
+.vigil-case-file-page .vigil-classification-identity .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-classification-meta .vigil-case-field dd,
+.vigil-case-file-page .vigil-classification-meta .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-affected-system-grid .vigil-case-field dd,
+.vigil-case-file-page .vigil-affected-system-grid .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dd,
+.vigil-case-file-page .vigil-implementation-provenance .vigil-case-field dd.is-mono,
+.vigil-case-file-page .vigil-case-stage-tabs button,
+.vigil-case-file-page .vigil-case-section-body :where(a, summary) {
+  font-size: 1rem !important;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button span {
+  font-size: var(--cam-type-small) !important;
+  line-height: 1.4;
+}
+
+.vigil-case-file-page .vigil-case-section-body :where(p:not(.vigil-library-kicker), li),
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p,
+.vigil-case-file-page .vigil-case-empty,
+.vigil-case-file-page .vigil-provenance-note {
+  font-size: 1.075rem !important;
+  line-height: 1.65;
+}
