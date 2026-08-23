@@ -46,7 +46,7 @@ function DatasetCard({
       <p>{description}</p>
       <div className="vigil-knowledge-actions">
         {browseHref && browseLabel ? <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link> : null}
-        {onDownload ? <button type="button" className="vigil-dataset-download-button" onClick={onDownload} disabled={downloading}>
+        {onDownload ? <button type="button" className="vigil-baseline-download" onClick={onDownload} disabled={downloading}>
           {downloading ? "Preparing dataset…" : "Download dataset"}<Download aria-hidden="true" />
         </button> : null}
       </div>
