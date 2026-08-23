@@ -49,16 +49,22 @@
   color: hsl(var(--muted-foreground));
 }
 
-/* Shared Knowledge Base / Datasets collection cards. Four Knowledge Base
- * collections and two dataset collections both read cleanly as a two-column
- * public information grid rather than leaving a stranded final card. */
-.vigil-knowledge-grid,
+/* Three Knowledge Base collections now read as one coherent row. The Datasets
+ * surface exposes the same external-governance baseline as one wide bundle. */
+.vigil-knowledge-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .vigil-knowledge-grid.vigil-dataset-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .vigil-knowledge-collection {
   min-height: 230px;
+}
+
+.vigil-dataset-collection-wide {
+  min-height: 0;
 }
 
 .vigil-knowledge-copy h2 {
@@ -82,6 +88,12 @@
 .vigil-knowledge-actions a {
   margin-top: 0;
   padding-top: 0;
+}
+
+@media (max-width: 1020px) {
+  .vigil-knowledge-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 820px) {

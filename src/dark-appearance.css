@@ -69,6 +69,35 @@ html[data-theme="dark"] .vigil-learn-detail [class*="bg-destructive"] {
 }
 
 /*
+ * Evidence-chain reports intentionally retain light paper colours for print,
+ * but the on-screen report must follow the active appearance. The report
+ * component still contains literal white/parchment utility classes for its
+ * printable composition, so close those only on screen in dark mode. This
+ * keeps Print / Save as PDF light while preventing white report panels from
+ * punching through the dark website.
+ */
+@media screen {
+  html[data-theme="dark"] .report-page {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground));
+  }
+
+  html[data-theme="dark"] .report-page .report-section,
+  html[data-theme="dark"] .report-page [class~="bg-[hsl(38_48%_94%)]"] {
+    background-color: hsl(var(--card)) !important;
+    border-color: hsl(var(--border)) !important;
+  }
+
+  html[data-theme="dark"] .report-page [class*="bg-white"] {
+    background-color: hsl(var(--secondary) / 0.48) !important;
+  }
+
+  html[data-theme="dark"] .report-page [class*="border-[hsl(38_"] {
+    border-color: hsl(var(--border)) !important;
+  }
+}
+
+/*
  * Navigation should read as a solid interface layer, not translucent glass.
  * This applies in both appearances so the sticky header and its menus remain
  * legible over every page beneath them.

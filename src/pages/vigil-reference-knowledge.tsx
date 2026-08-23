@@ -1,30 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
-import { Download, ExternalLink, Search, X } from "lucide-react";
+import { ChevronDown, Download, ExternalLink, Search, X } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import {
   canonicalIdentifierLabel,
+  downloadExternalGovernanceDataset,
   externalSourceKey,
+  loadExternalRequirementDetails,
   loadExternalRequirements,
+  loadExternalSourceScope,
   loadExternalSources,
   type ExternalRequirement,
+  type ExternalRequirementDetail,
   type ExternalSourceEntry,
+  type ExternalSourceScopeEntry,
 } from "@/lib/vigilExternalKnowledge";
 
-type RequirementState =
-  | { status: "loading" }
-  | { status: "ready"; requirements: ExternalRequirement[]; sources: ExternalSourceEntry[]; requirementsUrl: string }
-  | { status: "unavailable"; message: string };
-
-type SourceState =
+type BaselineState =
   | { status: "loading" }
   | {
       status: "ready";
       sources: ExternalSourceEntry[];
       requirements: ExternalRequirement[];
-      requirementsAvailable: boolean;
-      sourcesUrl: string;
-      requirementsUrl?: string;
+      details: ExternalRequirementDetail[];
+      scopes: ExternalSourceScopeEntry[];
     }
   | { status: "unavailable"; message: string };
 
@@ -46,44 +45,56 @@ function uniqueText(values: Array<string | undefined>) {
   });
 }
 
-function sourceSummaryMeta(source: ExternalSourceEntry, normativeForce?: string) {
-  const title = comparable(source.title);
-  const issuer = comparable(source.issuer);
-  const visibleIssuer = source.issuer && issuer && !title.includes(issuer) ? source.issuer : undefined;
-  return uniqueText([
-    visibleIssuer,
-    source.jurisdiction,
-    clean(source.source_class),
-    normativeForce,
-  ]);
-}
-
-function sourceMap(entries: ExternalSourceEntry[]) {
-  return new Map(entries.map((entry) => [externalSourceKey(entry), entry]));
-}
-
 function requirementSourceKey(requirement: Pick<ExternalRequirement, "vigil_source_id" | "source_version">) {
   return `${requirement.vigil_source_id}|${requirement.source_version}`;
 }
 
-function referenceFor(requirement: ExternalRequirement, source?: ExternalSourceEntry) {
-  const native = canonicalIdentifierLabel(source);
-  return [native, requirement.clause_or_control].filter(Boolean).join(" · ");
+function sourceScopeKey(scope: Pick<ExternalSourceScopeEntry, "vigil_source_id" | "source_version">) {
+  return `${scope.vigil_source_id}|${scope.source_version}`;
 }
 
-function normativeForcesBySource(requirements: ExternalRequirement[]) {
-  const values = new Map<string, Set<string>>();
-  for (const requirement of requirements) {
-    if (!requirement.normative_force) continue;
-    const key = requirementSourceKey(requirement);
-    const bucket = values.get(key) ?? new Set<string>();
-    bucket.add(requirement.normative_force);
-    values.set(key, bucket);
+function sourceIdentity(source: ExternalSourceEntry) {
+  return source.external_source_id || source.vigil_source_id;
+}
+
+function sourceRoleLabel(role?: string) {
+  const labels: Record<string, string> = {
+    "primary-ai-governance": "AI-specific governance source",
+    "supporting-external-authority": "Supporting governance authority",
+    "context-or-discovery": "Context and reference source",
+    "excluded-from-current-scope": "Outside the current baseline",
+  };
+  return role ? labels[role] ?? clean(role) ?? role : "Role not specified";
+}
+
+function sourceTopic(title: string) {
+  return title
+    .replace(/^Information technology\s+—\s+Artificial intelligence(?: \(AI\))?\s+—\s+/i, "")
+    .replace(/^Artificial intelligence(?: \(AI\))?\s+—\s+/i, "")
+    .replace(/^Systems and software engineering\s+—\s+Systems and software Quality Requirements and Evaluation \(SQuaRE\)\s+—\s+/i, "")
+    .replace(/^Software engineering\s+—\s+Systems and software Quality Requirements and Evaluation \(SQuaRE\)\s+—\s+/i, "")
+    .replace(/^Regulation \([^)]+\) \d+\/\d+\s+—\s+/i, "")
+    .replace(/^Directive \([^)]+\) \d+\/\d+\s+—\s+/i, "")
+    .replace(/[.]$/, "")
+    .trim();
+}
+
+function sourcePublicSummary(source: ExternalSourceEntry) {
+  const note = source.notes?.trim();
+  if (note) {
+    const useful = note
+      .split(/(?<=[.!?])\s+|;\s+/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .filter((part) => !/(\bVIGIL\b|\bCaelestis\b|\bCAM\b|\bledger\b|substantive applicability|alignment review|conformance|source-version provenance|review-required|\bin scope\b)/i.test(part));
+    if (useful.length) {
+      return useful.slice(0, 2).map((part) => /[.!?]$/.test(part) ? part : `${part}.`).join(" ");
+    }
   }
-  return new Map([...values.entries()].map(([key, forceSet]) => {
-    const labels = [...forceSet].map(clean).filter((value): value is string => Boolean(value));
-    return [key, labels.join(" / ")];
-  }));
+
+  const topic = sourceTopic(source.title);
+  const first = topic.charAt(0).toLowerCase() + topic.slice(1);
+  return `Covers ${first}.`;
 }
 
 function SearchControl({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
@@ -95,128 +106,131 @@ function SearchControl({ value, onChange, placeholder }: { value: string; onChan
   </label>;
 }
 
-function DatasetLink({ href, children }: { href: string; children: string }) {
-  return <a className="vigil-dataset-link" href={href} target="_blank" rel="noreferrer" download>
-    <Download aria-hidden="true" />
-    {children}
-  </a>;
+function DetailList({ title, values }: { title: string; values?: string[] }) {
+  if (!values?.length) return null;
+  return <section className="vigil-baseline-detail-block">
+    <h4>{title}</h4>
+    {values.length === 1 ? <p>{values[0]}</p> : <ul>{values.map((value) => <li key={value}>{value}</li>)}</ul>}
+  </section>;
 }
 
-export function VigilExternalRequirements() {
-  const [state, setState] = useState<RequirementState>({ status: "loading" });
-  const [query, setQuery] = useState("");
+function ClauseDetail({ requirement, source }: { requirement: ExternalRequirementDetail; source: ExternalSourceEntry }) {
+  const hasRichDetail = Boolean(
+    requirement.governance_expectation
+    || requirement.governed_object?.length
+    || requirement.lifecycle_stage?.length
+    || requirement.evidence_expectation?.length
+    || requirement.required_artefacts?.length
+    || requirement.verification_method?.length
+    || requirement.timing_or_frequency?.length
+    || requirement.applicability_conditions?.length
+    || requirement.exceptions_or_qualifications?.length,
+  );
 
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([loadExternalRequirements(), loadExternalSources()]).then(([requirements, sources]) => {
-      if (cancelled) return;
-      if (requirements.status !== "ready") {
-        setState({ status: "unavailable", message: requirements.message });
-        return;
-      }
-      setState({
-        status: "ready",
-        requirements: requirements.data,
-        sources: sources.status === "ready" ? sources.data : [],
-        requirementsUrl: requirements.attemptedUrl,
-      });
-    });
-    return () => { cancelled = true; };
-  }, []);
+  return <div className="vigil-baseline-clause-detail">
+    <section className="vigil-baseline-clause-lead">
+      <p className="vigil-library-kicker">What this clause says</p>
+      <p>{requirement.governance_expectation ?? requirement.requirement_summary}</p>
+    </section>
 
-  const groups = useMemo(() => {
-    if (state.status !== "ready") return [];
-    const bySource = sourceMap(state.sources);
-    const grouped = new Map<string, { source?: ExternalSourceEntry; requirements: ExternalRequirement[] }>();
-    for (const requirement of state.requirements) {
-      const key = requirementSourceKey(requirement);
-      const group = grouped.get(key) ?? { source: bySource.get(key), requirements: [] };
-      group.requirements.push(requirement);
-      grouped.set(key, group);
-    }
-    const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    return [...grouped.values()]
-      .map((group) => ({ ...group, requirements: group.requirements.filter((requirement) => {
-        if (!terms.length) return true;
-        const haystack = [
-          group.source?.title,
-          group.source?.jurisdiction,
-          canonicalIdentifierLabel(group.source),
-          requirement.clause_or_control,
-          requirement.requirement_summary,
-          requirement.requirement_posture,
-          requirement.normative_force,
-          requirement.expectation_type,
-          requirement.alignment_relationship,
-          ...(requirement.applicable_actor ?? []),
-          ...(requirement.governance_concepts ?? []),
-        ].filter(Boolean).join(" ").toLowerCase();
-        return terms.every((term) => haystack.includes(term));
-      }) }))
-      .filter((group) => group.requirements.length > 0)
-      .sort((a, b) => (a.source?.title ?? a.requirements[0]?.external_source_id ?? "").localeCompare(b.source?.title ?? b.requirements[0]?.external_source_id ?? ""));
-  }, [query, state]);
+    {hasRichDetail && <div className="vigil-baseline-detail-grid">
+      <DetailList title="Who it applies to" values={requirement.applicable_actor} />
+      <DetailList title="What it governs" values={requirement.governed_object} />
+      <DetailList title="Lifecycle stage" values={requirement.lifecycle_stage?.map((value) => clean(value) ?? value)} />
+      <DetailList title="Evidence or documentation" values={requirement.evidence_expectation} />
+      <DetailList title="Required artefacts" values={requirement.required_artefacts} />
+      <DetailList title="How it can be verified" values={requirement.verification_method} />
+      <DetailList title="When or how often" values={requirement.timing_or_frequency} />
+      <DetailList title="When it applies" values={requirement.applicability_conditions} />
+      <DetailList title="Exceptions or qualifications" values={requirement.exceptions_or_qualifications} />
+    </div>}
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-    <header className="vigil-simple-hero vigil-reference-hero">
-      <p className="vigil-library-kicker">Governance requirement reference</p>
-      <h1>External Requirements</h1>
-      <p>Browse clause- and control-level governance requirements extracted from registered external sources, including requirement posture, authority type, applicable actors and governance concepts.</p>
-    </header>
-    <SearchControl value={query} onChange={setQuery} placeholder="Search instruments, clauses, jurisdiction, authority type, actors, concepts or requirement text…" />
+    {!hasRichDetail && <p className="vigil-baseline-detail-unavailable">No additional structured detail is currently published for this clause beyond the reviewed summary above.</p>}
 
-    {state.status === "loading" && <div className="vigil-reference-state">Loading external requirements…</div>}
-    {state.status === "unavailable" && <div className="vigil-reference-state"><h2>Requirement dataset unavailable</h2><p>{state.message}</p></div>}
-    {state.status === "ready" && <>
-      <div className="vigil-dataset-toolbar">
-        <p><strong>{state.requirements.length.toLocaleString()}</strong> published requirement records across <strong>{groups.length.toLocaleString()}</strong> matching source/version groups.</p>
-        <div className="vigil-dataset-actions"><DatasetLink href={state.requirementsUrl}>Download requirements dataset</DatasetLink></div>
-      </div>
-      <section className="vigil-reference-groups" aria-label="External requirement instruments">
-        {groups.map((group) => {
-          const first = group.requirements[0];
-          const title = group.source?.title ?? first.external_source_id;
-          const nativeId = canonicalIdentifierLabel(group.source);
-          const forces = uniqueText(group.requirements.map((requirement) => clean(requirement.normative_force)));
-          const groupMeta = uniqueText([group.source?.jurisdiction, ...forces]);
-          return <details key={`${first.vigil_source_id}-${first.source_version}`} className="vigil-reference-group">
-            <summary>
-              <span><strong>{title}</strong><small>{nativeId} · Version {first.source_version}{groupMeta.length ? ` · ${groupMeta.join(" · ")}` : ""}</small></span>
-              <b>{group.requirements.length} requirements</b>
-            </summary>
-            <div className="vigil-requirement-list">
-              {group.requirements.map((requirement) => <article key={requirement.requirement_id} className="vigil-requirement-row">
-                <div className="vigil-requirement-reference">{referenceFor(requirement, group.source)}</div>
-                <h3>{requirement.requirement_summary}</h3>
-                <div className="vigil-requirement-meta">
-                  <span>Posture: {clean(requirement.requirement_posture)}</span>
-                  {requirement.normative_force && <span>Authority type: {clean(requirement.normative_force)}</span>}
-                  {requirement.expectation_type && <span>Expectation: {clean(requirement.expectation_type)}</span>}
-                  {requirement.alignment_relationship && <span>Claim family: {clean(requirement.alignment_relationship)}</span>}
-                  {requirement.interpretation_status && <span>{clean(requirement.interpretation_status)}</span>}
-                  {requirement.applicable_actor?.length ? <span>Actor: {requirement.applicable_actor.join("; ")}</span> : null}
-                </div>
-                {requirement.governance_concepts?.length ? <p className="vigil-requirement-concepts">{requirement.governance_concepts.map(clean).join(" · ")}</p> : null}
-                <p className="vigil-internal-id">VIGIL internal identity: {requirement.requirement_id}</p>
-              </article>)}
-            </div>
-          </details>;
-        })}
-        {groups.length === 0 && <div className="vigil-empty-panel">No published external requirements match that search.</div>}
+    {requirement.governance_concepts?.length ? <p className="vigil-baseline-concepts"><strong>Governance concepts:</strong> {requirement.governance_concepts.map(clean).join(" · ")}</p> : null}
+
+    <div className="vigil-baseline-clause-actions">
+      {(requirement.authoritative_locator || source.official_locator) && <a href={requirement.authoritative_locator ?? source.official_locator} target="_blank" rel="noreferrer">Open official source <ExternalLink aria-hidden="true" /></a>}
+    </div>
+  </div>;
+}
+
+function SourceAbout({ source, scope, previousVersions }: { source: ExternalSourceEntry; scope?: ExternalSourceScopeEntry; previousVersions: ExternalSourceEntry[] }) {
+  return <details className="vigil-baseline-source-about">
+    <summary>About this source</summary>
+    <div className="vigil-baseline-source-about-body">
+      <section>
+        <p className="vigil-library-kicker">Why it matters here</p>
+        <p>{sourcePublicSummary(source)}</p>
       </section>
-    </>}
-  </div></main></Shell>;
+      <dl className="vigil-baseline-source-facts">
+        <div><dt>Publisher</dt><dd>{source.issuer ?? "Not specified"}</dd></div>
+        <div><dt>Jurisdiction</dt><dd>{source.jurisdiction ?? "Not specified"}</dd></div>
+        <div><dt>Source type</dt><dd>{clean(source.source_class) ?? "Not specified"}</dd></div>
+        <div><dt>Role in the baseline</dt><dd>{sourceRoleLabel(scope?.source_role)}</dd></div>
+        <div><dt>Review state</dt><dd>{clean(scope?.extraction_status) ?? "Not specified"}</dd></div>
+        <div><dt>Source access</dt><dd>{clean(scope?.source_access_status) ?? "Not specified"}</dd></div>
+        <div><dt>Lifecycle state</dt><dd>{clean(source.source_lifecycle_state) ?? "Not specified"}</dd></div>
+        <div><dt>VIGIL source identity</dt><dd>{source.vigil_source_id}</dd></div>
+      </dl>
+      {previousVersions.length > 0 && <section className="border-t border-border/70">
+        <p className="vigil-library-kicker">Previous versions</p>
+        <ul className="mt-2 space-y-2">
+          {previousVersions.map((version) => <li key={externalSourceKey(version)} className="flex flex-wrap items-center justify-between gap-3 text-sm leading-relaxed">
+            <span><strong>{version.source_version}</strong>{version.source_lifecycle_state ? ` · ${clean(version.source_lifecycle_state)}` : ""}</span>
+            {version.official_locator && <a href={version.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-primary hover:underline">Open source <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></a>}
+          </li>)}
+        </ul>
+      </section>}
+    </div>
+  </details>;
 }
 
-export function VigilExternalSources() {
-  const [state, setState] = useState<SourceState>({ status: "loading" });
+function OverviewSources({ sources, scopeBySource }: { sources: ExternalSourceEntry[]; scopeBySource: Map<string, ExternalSourceScopeEntry> }) {
+  if (!sources.length) return null;
+  return <section className="mt-8" aria-labelledby="overview-sources-heading">
+    <div className="mb-3 max-w-5xl">
+      <p className="vigil-library-kicker">Source overviews</p>
+      <h2 id="overview-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Sources without public clause records</h2>
+      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the AI-governance baseline, but clause-level records are not currently represented. Each remains available as a concise overview with a link to the official publication.</p>
+    </div>
+    <div className="overflow-hidden rounded-lg border border-border bg-background">
+      {sources.map((source) => {
+        const scope = scopeBySource.get(externalSourceKey(source));
+        return <article key={externalSourceKey(source)} className="grid gap-3 border-b border-border/75 px-4 py-4 last:border-b-0 md:grid-cols-[minmax(260px,1fr)_minmax(360px,1.5fr)_auto] md:items-start">
+          <div className="min-w-0">
+            <h3 className="font-sans text-base font-semibold leading-snug text-foreground">{source.title}</h3>
+            <p className="mt-1 font-mono text-sm leading-relaxed text-primary">{canonicalIdentifierLabel(source)} · Version {source.source_version}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{[source.issuer, source.jurisdiction].filter(Boolean).join(" · ")}</p>
+          </div>
+          <div>
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{sourceRoleLabel(scope?.source_role)}</p>
+            <p className="mt-1 text-sm leading-relaxed text-foreground/85">{sourcePublicSummary(source)}</p>
+          </div>
+          {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-primary hover:underline" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : <span />}
+        </article>;
+      })}
+    </div>
+  </section>;
+}
+
+function VigilExternalGovernanceBaseline() {
+  const [state, setState] = useState<BaselineState>({ status: "loading" });
   const [query, setQuery] = useState("");
   const [jurisdiction, setJurisdiction] = useState("all");
-  const [normativeForce, setNormativeForce] = useState("all");
+  const [sourceType, setSourceType] = useState("all");
+  const [openSource, setOpenSource] = useState<string | null>(null);
+  const [openClause, setOpenClause] = useState<string | null>(null);
+  const [downloadState, setDownloadState] = useState<"idle" | "working" | "error">("idle");
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadExternalSources(), loadExternalRequirements()]).then(([sources, requirements]) => {
+    Promise.all([
+      loadExternalSources(),
+      loadExternalRequirements(),
+      loadExternalRequirementDetails(),
+      loadExternalSourceScope(),
+    ]).then(([sources, requirements, details, scopes]) => {
       if (cancelled) return;
       if (sources.status !== "ready") {
         setState({ status: "unavailable", message: sources.message });
@@ -226,79 +240,229 @@ export function VigilExternalSources() {
         status: "ready",
         sources: sources.data,
         requirements: requirements.status === "ready" ? requirements.data : [],
-        requirementsAvailable: requirements.status === "ready",
-        sourcesUrl: sources.attemptedUrl,
-        requirementsUrl: requirements.status === "ready" ? requirements.attemptedUrl : undefined,
+        details: details.status === "ready" ? details.data : [],
+        scopes: scopes.status === "ready" ? scopes.data : [],
       });
+    }).catch((error) => {
+      if (!cancelled) setState({ status: "unavailable", message: (error as Error).message });
     });
     return () => { cancelled = true; };
   }, []);
 
-  const forceBySource = useMemo(() => state.status === "ready" ? normativeForcesBySource(state.requirements) : new Map<string, string>(), [state]);
+  const scopeBySource = useMemo(() => state.status === "ready"
+    ? new Map(state.scopes.map((scope) => [sourceScopeKey(scope), scope]))
+    : new Map<string, ExternalSourceScopeEntry>(), [state]);
 
-  const jurisdictions = useMemo(() => {
-    if (state.status !== "ready") return [];
-    return uniqueText(state.sources.map((source) => source.jurisdiction)).sort((a, b) => a.localeCompare(b));
+  const detailsById = useMemo(() => state.status === "ready"
+    ? new Map(state.details.map((requirement) => [requirement.requirement_id, requirement]))
+    : new Map<string, ExternalRequirementDetail>(), [state]);
+
+  const clausesBySource = useMemo(() => {
+    const grouped = new Map<string, ExternalRequirementDetail[]>();
+    if (state.status !== "ready") return grouped;
+    for (const requirement of state.requirements) {
+      const detail = detailsById.get(requirement.requirement_id) ?? requirement;
+      const key = requirementSourceKey(requirement);
+      const bucket = grouped.get(key) ?? [];
+      bucket.push(detail);
+      grouped.set(key, bucket);
+    }
+    for (const bucket of grouped.values()) bucket.sort((a, b) => a.clause_or_control.localeCompare(b.clause_or_control, undefined, { numeric: true }));
+    return grouped;
+  }, [detailsById, state]);
+
+  const versionsByIdentity = useMemo(() => {
+    const grouped = new Map<string, ExternalSourceEntry[]>();
+    if (state.status !== "ready") return grouped;
+    for (const source of state.sources) {
+      const key = sourceIdentity(source);
+      grouped.set(key, [...(grouped.get(key) ?? []), source]);
+    }
+    return grouped;
   }, [state]);
 
-  const normativeForces = useMemo(() => {
-    if (state.status !== "ready") return [];
-    return uniqueText([...forceBySource.values()]).sort((a, b) => a.localeCompare(b));
-  }, [forceBySource, state]);
+  const sourceCount = useMemo(() => state.status === "ready"
+    ? new Set(state.sources.map((source) => sourceIdentity(source))).size
+    : 0, [state]);
 
-  const filtered = useMemo(() => {
+  const jurisdictions = useMemo(() => state.status === "ready"
+    ? uniqueText(state.sources.map((source) => source.jurisdiction)).sort((a, b) => a.localeCompare(b))
+    : [], [state]);
+
+  const sourceTypes = useMemo(() => state.status === "ready"
+    ? uniqueText(state.sources.map((source) => source.source_class)).sort((a, b) => a.localeCompare(b))
+    : [], [state]);
+
+  const visibleSources = useMemo(() => {
     if (state.status !== "ready") return [];
     const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
     return state.sources.filter((source) => {
-      const force = forceBySource.get(externalSourceKey(source));
+      const key = externalSourceKey(source);
+      const scope = scopeBySource.get(key);
+      if (scope?.extraction_status === "superseded-version" || scope?.source_role === "excluded-from-current-scope") return false;
       if (jurisdiction !== "all" && source.jurisdiction !== jurisdiction) return false;
-      if (normativeForce !== "all" && force !== normativeForce) return false;
+      if (sourceType !== "all" && source.source_class !== sourceType) return false;
       if (!terms.length) return true;
-      const haystack = [source.title, source.issuer, source.jurisdiction, source.source_class, source.source_lifecycle_state, source.source_version, canonicalIdentifierLabel(source), source.external_source_id, force].filter(Boolean).join(" ").toLowerCase();
+      const clauses = clausesBySource.get(key) ?? [];
+      const versionHistory = versionsByIdentity.get(sourceIdentity(source)) ?? [];
+      const haystack = [
+        source.title,
+        source.issuer,
+        source.jurisdiction,
+        source.source_class,
+        source.source_lifecycle_state,
+        source.source_version,
+        source.notes,
+        sourcePublicSummary(source),
+        canonicalIdentifierLabel(source),
+        source.external_source_id,
+        scope?.source_role,
+        scope?.extraction_status,
+        ...versionHistory.flatMap((version) => [version.title, version.source_version, canonicalIdentifierLabel(version)]),
+        ...clauses.flatMap((clause) => [
+          clause.clause_or_control,
+          clause.requirement_summary,
+          clause.governance_expectation,
+          clause.requirement_posture,
+          clause.expectation_type,
+          clause.normative_force,
+          ...(clause.applicable_actor ?? []),
+          ...(clause.governed_object ?? []),
+          ...(clause.lifecycle_stage ?? []),
+          ...(clause.governance_concepts ?? []),
+        ]),
+      ].filter(Boolean).join(" ").toLowerCase();
       return terms.every((term) => haystack.includes(term));
     }).sort((a, b) => a.title.localeCompare(b.title) || b.source_version.localeCompare(a.source_version));
-  }, [forceBySource, jurisdiction, normativeForce, query, state]);
+  }, [clausesBySource, jurisdiction, query, scopeBySource, sourceType, state, versionsByIdentity]);
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page"><div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
+  const clauseSources = useMemo(() => visibleSources.filter((source) =>
+    (clausesBySource.get(externalSourceKey(source))?.length ?? 0) > 0
+  ), [clausesBySource, visibleSources]);
+
+  const overviewSources = useMemo(() => visibleSources.filter((source) =>
+    (clausesBySource.get(externalSourceKey(source))?.length ?? 0) === 0
+  ), [clausesBySource, visibleSources]);
+
+  async function downloadDataset() {
+    setDownloadState("working");
+    try {
+      await downloadExternalGovernanceDataset();
+      setDownloadState("idle");
+    } catch {
+      setDownloadState("error");
+    }
+  }
+
+  return <Shell><VigilObservatoryNav /><main className="vigil-reference-page vigil-baseline-page"><div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
     <header className="vigil-simple-hero vigil-reference-hero">
-      <p className="vigil-library-kicker">Public governance reference dataset</p>
-      <h1>Standards &amp; Sources</h1>
-      <p>Browse registered external governance instruments by publisher identity, jurisdiction, version, source class and lifecycle. Where requirement metadata is available, the source authority type is shown separately from clause-level requirement posture.</p>
+      <p className="vigil-library-kicker">External AI governance reference library</p>
+      <h1>External Governance Baseline</h1>
+      <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Some directly set AI-specific rules or expectations; others provide relevant authority on issues such as privacy, cybersecurity, safety, accountability, risk or assurance. It is not intended to collect every law or standard that could conceivably apply to AI.</p>
     </header>
 
-    {state.status === "loading" && <div className="vigil-reference-state">Loading source register…</div>}
-    {state.status === "unavailable" && <div className="vigil-reference-state"><h2>Source register unavailable</h2><p>{state.message}</p></div>}
+    {state.status === "loading" && <div className="vigil-reference-state">Loading external governance baseline…</div>}
+    {state.status === "unavailable" && <div className="vigil-reference-state"><h2>External governance baseline unavailable</h2><p>{state.message}</p></div>}
     {state.status === "ready" && <>
-      <div className="vigil-dataset-toolbar">
-        <p><strong>{state.sources.length.toLocaleString()}</strong> published source versions. {filtered.length !== state.sources.length ? <span>{filtered.length.toLocaleString()} match the current filters.</span> : null}</p>
-        <div className="vigil-dataset-actions">
-          <DatasetLink href={state.sourcesUrl}>Download source dataset</DatasetLink>
-          {state.requirementsUrl && <DatasetLink href={state.requirementsUrl}>Download requirements dataset</DatasetLink>}
-        </div>
+      <div className="vigil-baseline-toolbar">
+        <p><strong>{sourceCount.toLocaleString()}</strong> AI-governance sources · <strong>{state.requirements.length.toLocaleString()}</strong> clauses {(query || jurisdiction !== "all" || sourceType !== "all") ? <span>· {(clauseSources.length + overviewSources.length).toLocaleString()} current sources shown</span> : null}</p>
+        <button type="button" className="vigil-baseline-download" onClick={downloadDataset} disabled={downloadState === "working"}>
+          <Download aria-hidden="true" />
+          {downloadState === "working" ? "Preparing dataset…" : "Download dataset"}
+        </button>
       </div>
+      {downloadState === "error" && <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p>}
 
-      <div className="vigil-reference-controls">
-        <SearchControl value={query} onChange={setQuery} placeholder="Search publisher, instrument, jurisdiction, source class, authority type, identifier or version…" />
+      <div className="vigil-reference-controls vigil-baseline-controls">
+        <SearchControl value={query} onChange={setQuery} placeholder="Search source, clause, duty, actor, lifecycle stage or governance concept…" />
+        <label className="vigil-reference-filter"><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option value={value} key={value}>{clean(value) ?? value}</option>)}</select></label>
         <label className="vigil-reference-filter"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
-        <label className="vigil-reference-filter"><span>Authority type</span><select value={normativeForce} onChange={(event) => setNormativeForce(event.target.value)} disabled={!state.requirementsAvailable}><option value="all">{state.requirementsAvailable ? "All authority categories" : "Requirements metadata unavailable"}</option>{normativeForces.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
       </div>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Search and filters apply to both lists below, including clause text where clauses are available.</p>
 
-      <section className="vigil-source-table" aria-label="Authoritative external governance sources">
-        <div className="vigil-source-table-head" aria-hidden="true"><span>Instrument</span><span>Canonical identifier</span><span>Version</span><span>Status</span><span></span></div>
-        {filtered.map((source) => {
-          const force = forceBySource.get(externalSourceKey(source));
-          const summaryMeta = sourceSummaryMeta(source, force);
-          return <article key={`${source.vigil_source_id}-${source.source_version}`} className="vigil-source-row">
-            <div><h2>{source.title}</h2>{summaryMeta.length > 0 && <p className="vigil-source-summary-meta">{summaryMeta.join(" · ")}</p>}</div>
-            <strong>{canonicalIdentifierLabel(source)}</strong>
-            <span>{source.source_version}</span>
-            <span>{clean(source.source_lifecycle_state) ?? "Not specified"}</span>
-            <div>{source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" aria-label={`Open official source for ${source.title}`}><ExternalLink aria-hidden="true" /></a>}</div>
-            <p className="vigil-source-internal">VIGIL internal: {source.vigil_source_id}</p>
-          </article>;
-        })}
-        {filtered.length === 0 && <div className="vigil-empty-panel">No registered sources match the current search and filters.</div>}
+      <section className="mt-6" aria-labelledby="clause-sources-heading">
+        <div className="mb-3 max-w-5xl">
+          <p className="vigil-library-kicker">Sources with clauses</p>
+          <h2 id="clause-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Browse governance clauses and controls</h2>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse the clause-level records represented from it.</p>
+        </div>
+        <div className="vigil-baseline-library !mt-0" aria-label="External governance sources with clauses">
+          <div className="vigil-baseline-table-head" aria-hidden="true">
+            <span>Source</span><span>Publisher / jurisdiction</span><span>Type</span><span>Clauses</span><span />
+          </div>
+          <div className="vigil-baseline-table-body">
+            {clauseSources.map((source) => {
+              const key = externalSourceKey(source);
+              const scope = scopeBySource.get(key);
+              const clauses = clausesBySource.get(key) ?? [];
+              const isOpen = openSource === key;
+              const previousVersions = (versionsByIdentity.get(sourceIdentity(source)) ?? [])
+                .filter((version) => scopeBySource.get(externalSourceKey(version))?.extraction_status === "superseded-version")
+                .sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true }));
+
+              const rowContents = <>
+                <span className="vigil-baseline-source-primary">
+                  <strong>{source.title}</strong>
+                  <small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small>
+                </span>
+                <span className="vigil-baseline-source-meta">
+                  <strong>{source.issuer ?? "Publisher not specified"}</strong>
+                  <small>{source.jurisdiction ?? "Jurisdiction not specified"}</small>
+                </span>
+                <span>{clean(source.source_class) ?? "Not specified"}</span>
+                <span className="vigil-baseline-clause-count"><strong>{clauses.length.toLocaleString()}</strong> clause{clauses.length === 1 ? "" : "s"}</span>
+                <ChevronDown className="vigil-baseline-source-chevron" aria-hidden="true" />
+              </>;
+
+              return <div className={`vigil-baseline-source-row${isOpen ? " is-open" : ""}`} key={key}>
+                <div className="relative">
+                  <button type="button" className="vigil-baseline-source-button pr-20" aria-expanded={isOpen} onClick={() => {
+                    setOpenSource(isOpen ? null : key);
+                    setOpenClause(null);
+                  }}>{rowContents}</button>
+
+                  {source.official_locator && <a href={source.official_locator} target="_blank" rel="noreferrer" className="absolute right-11 top-1/2 -translate-y-1/2 text-primary hover:text-foreground" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a>}
+                </div>
+
+                {isOpen && <section className="vigil-baseline-source-detail" aria-label={`${source.title} clause detail`}>
+                  <div className="vigil-baseline-clause-table">
+                    <div className="vigil-baseline-clause-head" aria-hidden="true"><span>Clause / control</span><span>What it says</span><span>Type</span><span /></div>
+                    {clauses.map((clause) => {
+                      const clauseOpen = openClause === clause.requirement_id;
+                      return <div className={`vigil-baseline-clause-row${clauseOpen ? " is-open" : ""}`} key={clause.requirement_id}>
+                        <button type="button" className="vigil-baseline-clause-button" aria-expanded={clauseOpen} onClick={() => setOpenClause(clauseOpen ? null : clause.requirement_id)}>
+                          <span className="vigil-baseline-clause-ref">{clause.clause_or_control}</span>
+                          <span className="vigil-baseline-clause-summary">{clause.requirement_summary}</span>
+                          <span className="vigil-baseline-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span>
+                          <ChevronDown aria-hidden="true" />
+                        </button>
+                        {clauseOpen && <ClauseDetail requirement={clause} source={source} />}
+                      </div>;
+                    })}
+                  </div>
+
+                  <SourceAbout source={source} scope={scope} previousVersions={previousVersions} />
+                </section>}
+              </div>;
+            })}
+            {clauseSources.length === 0 && <div className="vigil-empty-panel">No clause-bearing sources match the current search and filters.</div>}
+          </div>
+        </div>
       </section>
+
+      <OverviewSources sources={overviewSources} scopeBySource={scopeBySource} />
+
+      {clauseSources.length === 0 && overviewSources.length === 0 && <div className="vigil-empty-panel mt-6">No sources match the current search and filters.</div>}
     </>}
   </div></main></Shell>;
+}
+
+// Historical route retained for compatibility. Clauses now live inside the
+// curated external-governance baseline rather than on a separate public surface.
+export function VigilExternalRequirements() {
+  return <VigilExternalGovernanceBaseline />;
+}
+
+export function VigilExternalSources() {
+  return <VigilExternalGovernanceBaseline />;
 }

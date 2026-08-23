@@ -89,7 +89,7 @@ export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
   const [family, setFamily] = useState("");
-  const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
+  const [sort, setSort] = useState<SortState>({ key: "id", direction: "desc" });
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export default function VigilCases() {
   function updateSort(key: SortKey) {
     setSort((current) => ({
       key,
-      direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : "asc",
+      direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : key === "id" ? "desc" : "asc",
     }));
   }
 
@@ -140,7 +140,7 @@ export default function VigilCases() {
               <div>
                 <p className="vigil-library-kicker">VIGIL AI failure mode investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
-                <p className="vigil-library-description">Browse documented AI failure modes, then open an investigation through the canonical Observation, Record, Classification, Diagnosis, Repair and Learn model.</p>
+                <p className="vigil-library-description">Browse documented AI failure modes, newest first, then open an investigation through the six-stage Observation, Classification, Diagnosis, Repair, Learn and References model.</p>
               </div>
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">

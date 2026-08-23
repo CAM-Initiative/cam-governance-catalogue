@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, BookOpen, Library, Network, Scale } from "lucide-react";
+import { ArrowRight, BookOpen, Library, Network } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -8,9 +8,9 @@ import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExtern
 
 type HubState = {
   lessons?: number;
-  requirements?: number;
+  clauses?: number;
   sources?: number;
-  requirementsAvailable?: boolean;
+  clausesAvailable?: boolean;
   sourcesAvailable?: boolean;
 };
 
@@ -45,19 +45,25 @@ export default function VigilKnowledgeHub() {
   useEffect(() => {
     let cancelled = false;
     Promise.all([loadVigilRegistryRecords(), loadExternalRequirements(), loadExternalSources()])
-      .then(([registry, requirements, sources]) => {
+      .then(([registry, clauses, sources]) => {
         if (cancelled) return;
         setState({
           lessons: registry.records.filter((record) => isLearnRecord(record)).length,
-          requirements: requirements.status === "ready" ? requirements.data.length : undefined,
-          sources: sources.status === "ready" ? sources.data.length : undefined,
-          requirementsAvailable: requirements.status === "ready",
+          clauses: clauses.status === "ready" ? clauses.data.length : undefined,
+          sources: sources.status === "ready"
+            ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
+            : undefined,
+          clausesAvailable: clauses.status === "ready",
           sourcesAvailable: sources.status === "ready",
         });
       })
       .catch(() => !cancelled && setState({}));
     return () => { cancelled = true; };
   }, []);
+
+  const baselineStatus = state.sourcesAvailable
+    ? `${state.sources ?? 0} AI-governance sources${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses` : ""}`
+    : "Dataset unavailable";
 
   return (
     <Shell>
@@ -67,7 +73,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL public knowledge</p>
             <h1>Knowledge Base</h1>
-            <p>Browse reusable governance lessons, external governance reference collections and the evolving VIGIL governance failure taxonomy.</p>
+            <p>Browse reusable governance lessons, the curated external-governance baseline and the evolving VIGIL governance failure taxonomy.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -75,28 +81,22 @@ export default function VigilKnowledgeHub() {
               href="/observatory/lessons"
               icon={<BookOpen />}
               title="Governance Lessons"
-              description="Published LEARN records: what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
+              description="Published LEARN records showing what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
               status={state.lessons === undefined ? "Published learning records" : `${state.lessons} published learning records`}
-            />
-            <CollectionCard
-              href="/observatory/knowledge-base/external-requirements"
-              icon={<Scale />}
-              title="External Requirements"
-              description="Clause- and control-level governance requirements preserving requirement posture, authority type, applicable actors and governance concepts."
-              status={state.requirementsAvailable ? `${state.requirements ?? 0} published requirements` : "Dataset unavailable"}
-              beta
             />
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
               icon={<Library />}
-              title="Standards & Sources"
-              description="Registered laws, standards, frameworks and technical sources with publisher identity, identifier, jurisdiction, source class, version and lifecycle state."
-              status={state.sourcesAvailable ? `${state.sources ?? 0} published source versions` : "Dataset unavailable"}
+              title="External Governance Baseline"
+              description="A curated reference set of external laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
+              status={baselineStatus}
+              beta
+              actionLabel="Browse sources & clauses"
             />
             <CollectionCard
               icon={<Network />}
               title="Governance Failure Taxonomy"
-              description="Internally developed interpretive standard for classifying AI runtime and governance failure mechanisms. The taxonomy is in public beta while its machine-readable projection and dedicated browsing surface continue to develop."
+              description="Internally developed interpretive standard for classifying recurring AI runtime and governance failure mechanisms. The taxonomy is in public beta while its dedicated browsing surface continues to develop."
               status="Internal standard"
               beta
             />

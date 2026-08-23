@@ -10,6 +10,7 @@ import "./vigil-reference-datasets.css";
 import "./vigil-public-consistency.css";
 import "./vigil-page-shell.css";
 import "./public-development-status.css";
+import "./vigil-external-baseline.css";
 import "./sitewide-typography-floor.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
