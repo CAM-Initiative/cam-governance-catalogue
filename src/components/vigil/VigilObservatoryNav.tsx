@@ -3,9 +3,8 @@ import { Link, useLocation } from "wouter";
 
 // Legacy Failure Modes routes resolve into the FM-centred Case Files surface.
 const links = [
-  { href: "/observatory/cases", label: "Case Files", subtitle: "AI failure mode investigations", matches: ["/observatory/cases", "/observatory/failure-modes", "/observatory/reports", "/observatory/incidents", "/observatory/repairs", "/vigil"] },
+  { href: "/observatory/cases", label: "Case Files", subtitle: "AI failure mode investigations", matches: ["/observatory/cases", "/observatory/failure-modes", "/observatory/reports", "/observatory/incidents", "/observatory/repairs", "/vigil", "/observatory"] },
   { href: "/observatory/knowledge-base", label: "Knowledge Base", subtitle: "What do we know now?", matches: ["/observatory/knowledge-base", "/observatory/lessons"] },
-  { href: "/observatory/ledger", label: "Full Ledger", subtitle: "Audit every record", matches: ["/observatory/ledger", "/observatory"] },
 ];
 
 export function VigilObservatoryNav() {
@@ -39,6 +38,7 @@ export function VigilObservatoryNav() {
                 </Link>
               );
             })}
+            <span className="vigil-app-nav-placeholder" aria-hidden="true" />
           </nav>
         </div>
       </div>
