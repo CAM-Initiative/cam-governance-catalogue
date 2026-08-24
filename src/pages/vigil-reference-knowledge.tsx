@@ -115,8 +115,13 @@ function DetailList({ title, values }: { title: string; values?: string[] }) {
 }
 
 function ClauseDetail({ requirement, source }: { requirement: ExternalRequirementDetail; source: ExternalSourceEntry }) {
+  const governanceExpectation = requirement.governance_expectation?.trim();
+  const showGovernanceExpectation = Boolean(
+    governanceExpectation
+    && comparable(governanceExpectation) !== comparable(requirement.requirement_summary),
+  );
   const hasRichDetail = Boolean(
-    requirement.governance_expectation
+    showGovernanceExpectation
     || requirement.governed_object?.length
     || requirement.lifecycle_stage?.length
     || requirement.evidence_expectation?.length
@@ -128,12 +133,8 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
   );
 
   return <div className="vigil-baseline-clause-detail">
-    <section className="vigil-baseline-clause-lead">
-      <p className="vigil-library-kicker">What this clause says</p>
-      <p>{requirement.governance_expectation ?? requirement.requirement_summary}</p>
-    </section>
-
     {hasRichDetail && <div className="vigil-baseline-detail-grid">
+      <DetailList title="Governance expectation" values={showGovernanceExpectation && governanceExpectation ? [governanceExpectation] : undefined} />
       <DetailList title="Who it applies to" values={requirement.applicable_actor} />
       <DetailList title="What it governs" values={requirement.governed_object} />
       <DetailList title="Lifecycle stage" values={requirement.lifecycle_stage?.map((value) => clean(value) ?? value)} />
@@ -145,7 +146,7 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
       <DetailList title="Exceptions or qualifications" values={requirement.exceptions_or_qualifications} />
     </div>}
 
-    {!hasRichDetail && <p className="vigil-baseline-detail-unavailable">No additional structured detail is currently published for this clause beyond the reviewed summary above.</p>}
+    {!hasRichDetail && <p className="vigil-baseline-detail-unavailable">No additional structured detail is currently published for this clause.</p>}
 
     {requirement.governance_concepts?.length ? <p className="vigil-baseline-concepts"><strong>Governance concepts:</strong> {requirement.governance_concepts.map(clean).join(" · ")}</p> : null}
 
@@ -192,7 +193,7 @@ function OverviewSources({ sources, scopeBySource }: { sources: ExternalSourceEn
     <div className="mb-3 max-w-5xl">
       <p className="vigil-library-kicker">Source overviews</p>
       <h2 id="overview-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Sources without public clause records</h2>
-      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the AI-governance baseline, but clause-level records are not currently represented. Each remains available as a concise overview with a link to the official publication.</p>
+      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the AI Governance Standards Baseline, but clause-level records are not currently represented. Each remains available as a concise overview with a link to the official publication.</p>
     </div>
     <div className="overflow-hidden rounded-lg border border-border bg-background">
       {sources.map((source) => {
@@ -356,13 +357,13 @@ function VigilExternalGovernanceBaseline() {
 
   return <Shell><VigilObservatoryNav /><main className="vigil-reference-page vigil-baseline-page"><div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
     <header className="vigil-simple-hero vigil-reference-hero">
-      <p className="vigil-library-kicker">External AI governance reference library</p>
-      <h1>External Governance Baseline</h1>
+      <p className="vigil-library-kicker">AI governance standards library</p>
+      <h1>AI Governance Standards Baseline</h1>
       <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Some directly set AI-specific rules or expectations; others provide relevant authority on issues such as privacy, cybersecurity, safety, accountability, risk or assurance. It is not intended to collect every law or standard that could conceivably apply to AI.</p>
     </header>
 
-    {state.status === "loading" && <div className="vigil-reference-state">Loading external governance baseline…</div>}
-    {state.status === "unavailable" && <div className="vigil-reference-state"><h2>External governance baseline unavailable</h2><p>{state.message}</p></div>}
+    {state.status === "loading" && <div className="vigil-reference-state">Loading AI Governance Standards Baseline…</div>}
+    {state.status === "unavailable" && <div className="vigil-reference-state"><h2>AI Governance Standards Baseline unavailable</h2><p>{state.message}</p></div>}
     {state.status === "ready" && <>
       <div className="vigil-baseline-toolbar">
         <p><strong>{sourceCount.toLocaleString()}</strong> AI-governance sources · <strong>{state.requirements.length.toLocaleString()}</strong> clauses {(query || jurisdiction !== "all" || sourceType !== "all") ? <span>· {(clauseSources.length + overviewSources.length).toLocaleString()} current sources shown</span> : null}</p>
@@ -386,7 +387,7 @@ function VigilExternalGovernanceBaseline() {
           <h2 id="clause-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Browse governance clauses and controls</h2>
           <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse the clause-level records represented from it.</p>
         </div>
-        <div className="vigil-baseline-library !mt-0" aria-label="External governance sources with clauses">
+        <div className="vigil-baseline-library !mt-0" aria-label="AI governance sources with clauses">
           <div className="vigil-baseline-table-head" aria-hidden="true">
             <span>Source</span><span>Publisher / jurisdiction</span><span>Type</span><span>Clauses</span><span />
           </div>
@@ -458,7 +459,7 @@ function VigilExternalGovernanceBaseline() {
 }
 
 // Historical route retained for compatibility. Clauses now live inside the
-// curated external-governance baseline rather than on a separate public surface.
+// curated AI-governance standards baseline rather than on a separate public surface.
 export function VigilExternalRequirements() {
   return <VigilExternalGovernanceBaseline />;
 }
