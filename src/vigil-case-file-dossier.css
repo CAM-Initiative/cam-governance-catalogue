@@ -1,0 +1,298 @@
+/* Case File dossier layout — align the public investigation surface with the calmer
+   card grammar used by the VIGIL taxonomy review view. */
+
+.vigil-case-file-page {
+  --vigil-case-card-radius: 0.85rem;
+  --vigil-case-card-pad: 1.25rem;
+  --vigil-case-soft-bg: hsl(var(--card) / 0.42);
+  --vigil-case-label: hsl(var(--muted-foreground) / 0.78);
+}
+
+/* Paper-drawer tab treatment: the selected tab is visually attached to the open file. */
+.vigil-case-file-page .vigil-case-stage-nav {
+  position: relative;
+  z-index: 2;
+  margin-top: 1rem;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs {
+  align-items: end;
+  margin-top: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  gap: 0.35rem;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button {
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid hsl(var(--border));
+  border-bottom-color: hsl(var(--border));
+  border-radius: 0.65rem 0.65rem 0 0;
+  background: hsl(var(--card) / 0.5);
+  font-size: 0.84rem;
+  font-weight: 650;
+  transition: min-height 140ms ease, padding 140ms ease, background 140ms ease, color 140ms ease;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button:hover {
+  background: hsl(var(--secondary) / 0.42);
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+  min-height: 56px;
+  padding-top: 0.88rem;
+  padding-bottom: 0.85rem;
+  border-color: hsl(var(--foreground) / 0.82);
+  border-bottom-color: hsl(var(--foreground) / 0.82);
+  background: hsl(var(--foreground) / 0.9);
+  color: hsl(var(--background));
+  box-shadow: none;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button span {
+  font-size: 0.7rem;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button.is-active span {
+  color: hsl(var(--background) / 0.74);
+}
+
+.vigil-case-file-page .vigil-case-active-stage {
+  position: relative;
+  z-index: 1;
+  margin-top: -1px;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0 var(--vigil-case-card-radius) var(--vigil-case-card-radius) var(--vigil-case-card-radius);
+  overflow: hidden;
+  background: hsl(var(--background));
+}
+
+/* The active tab already names the section. Keep only its explanatory sentence. */
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header {
+  display: block;
+  padding: 1rem var(--vigil-case-card-pad);
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  background: hsl(var(--card) / 0.34);
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header > span,
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header h2 {
+  display: none;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
+  margin: 0;
+  max-width: 58rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Shared metadata grammar across affected systems, evidence sources and classification. */
+.vigil-case-file-page .vigil-case-field dt,
+.vigil-case-file-page .vigil-evidence-meta-field dt {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  color: var(--vigil-case-label);
+}
+
+.vigil-case-file-page .vigil-case-field dd,
+.vigil-case-file-page .vigil-evidence-meta-field dd {
+  margin-top: 0.32rem;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+/* Affected-system card: remove the half-empty table feel and use a spacious metadata card. */
+.vigil-case-file-page .vigil-affected-systems {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--vigil-case-card-radius);
+  overflow: hidden;
+  background: hsl(var(--background));
+}
+
+.vigil-case-file-page .vigil-affected-systems .vigil-case-subheading {
+  padding: 1rem var(--vigil-case-card-pad);
+  border-bottom: 1px solid hsl(var(--border));
+  background: var(--vigil-case-soft-bg);
+}
+
+.vigil-case-file-page .vigil-affected-system-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.vigil-case-file-page .vigil-affected-system-grid > article {
+  padding: var(--vigil-case-card-pad);
+  border: 0;
+}
+
+.vigil-case-file-page .vigil-affected-system-grid > article + article {
+  border-top: 1px solid hsl(var(--border));
+}
+
+.vigil-case-file-page .vigil-affected-system-grid > article > span {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.vigil-case-file-page .vigil-affected-system-grid dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.35rem 2rem;
+  max-width: 62rem;
+}
+
+/* Evidence cards use the same white-card, roomy presentation as the taxonomy prototype. */
+.vigil-case-file-page .vigil-evidence-card {
+  border-radius: var(--vigil-case-card-radius);
+  overflow: hidden;
+}
+
+.vigil-case-file-page .vigil-evidence-header {
+  position: relative;
+  padding: var(--vigil-case-card-pad);
+  background: hsl(var(--background));
+}
+
+.vigil-case-file-page .vigil-evidence-header h3 {
+  margin-top: 0.42rem;
+  padding-right: 2.5rem;
+  font-size: 1.08rem;
+  line-height: 1.42;
+}
+
+.vigil-case-file-page .vigil-evidence-source-meta {
+  gap: 1rem 2rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.vigil-case-file-page .vigil-evidence-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-case-file-page .vigil-evidence-column {
+  padding: 1.2rem var(--vigil-case-card-pad) 1.3rem;
+}
+
+.vigil-case-file-page .vigil-evidence-column h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.vigil-case-file-page .vigil-evidence-column p {
+  margin-top: 0.58rem;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.vigil-case-file-page .vigil-evidence-review-inline {
+  margin-top: 1rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid hsl(var(--border) / 0.65);
+}
+
+.vigil-case-file-page .vigil-evidence-review-inline dl {
+  gap: 0.9rem 1.5rem;
+}
+
+.vigil-case-file-page .vigil-evidence-limitations {
+  padding: 1rem var(--vigil-case-card-pad) 1.15rem;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.34);
+}
+
+.vigil-case-file-page .vigil-evidence-limitations h4 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.74);
+}
+
+/* References: quieter academic-bibliography rhythm and explicit record metadata. */
+.vigil-case-file-page .vigil-case-bibliography li {
+  padding: 1.15rem 0;
+}
+
+.vigil-case-file-page .vigil-case-bibliography li > div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.vigil-case-file-page .vigil-case-bibliography strong {
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-reference-record-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0;
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-case-bibliography a {
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 820px) {
+  .vigil-case-file-page .vigil-case-stage-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs button,
+  .vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+    min-height: 46px;
+    padding: 0.65rem 0.7rem;
+    font-size: 0.82rem;
+    border-radius: 0.55rem;
+  }
+
+  .vigil-case-file-page .vigil-case-active-stage {
+    margin-top: 0.55rem;
+  }
+
+  .vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
+    border-radius: var(--vigil-case-card-radius);
+  }
+
+  .vigil-case-file-page .vigil-affected-system-grid dl,
+  .vigil-case-file-page .vigil-evidence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .vigil-case-file-page .vigil-case-stage-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vigil-case-file-page .vigil-affected-system-grid dl {
+    gap: 1rem;
+  }
+}
