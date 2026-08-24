@@ -62,12 +62,12 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
         </section>}
       </div>
 
-      {boundaries.length > 0 && <section className="vigil-evidence-limitations">
-        <h4>Limits of the evidence</h4>
+      {boundaries.length > 0 && <details className="vigil-evidence-limitations">
+        <summary>Limits of the evidence</summary>
         <div className="vigil-evidence-boundary-list">
           {boundaries.map((item) => <p key={item}>{item}</p>)}
         </div>
-      </section>}
+      </details>}
     </article>
   );
 }
