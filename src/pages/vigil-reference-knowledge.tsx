@@ -31,6 +31,12 @@ function clean(value?: string) {
   return value?.replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function knowledgeLabel(value: string) {
+  return (clean(value) ?? value)
+    .replace(/\bAi\b/g, "AI")
+    .replace(/\bIct\b/g, "ICT");
+}
+
 function comparable(value?: string) {
   return String(value ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
@@ -57,44 +63,61 @@ function sourceIdentity(source: ExternalSourceEntry) {
   return source.external_source_id || source.vigil_source_id;
 }
 
-function sourceRoleLabel(role?: string) {
-  const labels: Record<string, string> = {
-    "primary-ai-governance": "AI-specific governance source",
-    "supporting-external-authority": "Supporting governance authority",
-    "context-or-discovery": "Context and reference source",
-    "excluded-from-current-scope": "Outside the current baseline",
-  };
-  return role ? labels[role] ?? clean(role) ?? role : "Role not specified";
-}
-
-function sourceTopic(title: string) {
-  return title
-    .replace(/^Information technology\s+—\s+Artificial intelligence(?: \(AI\))?\s+—\s+/i, "")
-    .replace(/^Artificial intelligence(?: \(AI\))?\s+—\s+/i, "")
-    .replace(/^Systems and software engineering\s+—\s+Systems and software Quality Requirements and Evaluation \(SQuaRE\)\s+—\s+/i, "")
-    .replace(/^Software engineering\s+—\s+Systems and software Quality Requirements and Evaluation \(SQuaRE\)\s+—\s+/i, "")
-    .replace(/^Regulation \([^)]+\) \d+\/\d+\s+—\s+/i, "")
-    .replace(/^Directive \([^)]+\) \d+\/\d+\s+—\s+/i, "")
-    .replace(/[.]$/, "")
-    .trim();
-}
-
 function sourcePublicSummary(source: ExternalSourceEntry) {
-  const note = source.notes?.trim();
-  if (note) {
-    const useful = note
-      .split(/(?<=[.!?])\s+|;\s+/)
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .filter((part) => !/(\bVIGIL\b|\bCaelestis\b|\bCAM\b|\bledger\b|substantive applicability|alignment review|conformance|source-version provenance|review-required|\bin scope\b)/i.test(part));
-    if (useful.length) {
-      return useful.slice(0, 2).map((part) => /[.!?]$/.test(part) ? part : `${part}.`).join(" ");
-    }
-  }
+  return source.public_summary?.trim() || "A substantive public summary is not yet available for this source.";
+}
 
-  const topic = sourceTopic(source.title);
-  const first = topic.charAt(0).toLowerCase() + topic.slice(1);
-  return `Covers ${first}.`;
+function summaryParagraphs(summary: string) {
+  return summary.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
+}
+
+function formatReviewDate(value?: string) {
+  if (!value) return "Not yet substantively reviewed";
+  const parsed = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
+}
+
+function reviewIsDue(value?: string) {
+  if (!value) return true;
+  const reviewed = new Date(`${value}T00:00:00Z`).getTime();
+  if (Number.isNaN(reviewed)) return true;
+  return Date.now() - reviewed > 90 * 24 * 60 * 60 * 1000;
+}
+
+function KnowledgeTags({ values }: { values?: string[] }) {
+  if (!values?.length) return <span className="text-sm text-muted-foreground">Not yet classified</span>;
+  return <div className="flex flex-wrap gap-2">
+    {values.map((value) => <span key={value} className="rounded-full border border-border bg-card/55 px-2.5 py-1 text-xs font-medium text-foreground/85">{knowledgeLabel(value)}</span>)}
+  </div>;
+}
+
+function SourceKnowledge({ source, compact = false }: { source: ExternalSourceEntry; compact?: boolean }) {
+  const summary = sourcePublicSummary(source);
+  const paragraphs = summaryParagraphs(summary);
+  const due = reviewIsDue(source.last_substantive_reviewed);
+  return <section className={`vigil-source-public-knowledge${compact ? " is-compact" : ""}`}>
+    <div className="space-y-3">
+      {paragraphs.map((paragraph, index) => <p key={`${source.vigil_source_id}-summary-${index}`} className="text-sm leading-relaxed text-foreground/90">{paragraph}</p>)}
+    </div>
+    {source.relevance_scope ? <div className="mt-4 border-t border-border/70 pt-4">
+      <p className="vigil-library-kicker">Where it matters</p>
+      <p className="mt-1 text-sm leading-relaxed text-foreground/85">{source.relevance_scope}</p>
+    </div> : null}
+    <div className="mt-4 grid gap-4 border-t border-border/70 pt-4 lg:grid-cols-2">
+      <div>
+        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">AI governance relevance</p>
+        <KnowledgeTags values={source.ai_governance_relevance} />
+      </div>
+      <div>
+        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">Relevant lifecycle stages</p>
+        <KnowledgeTags values={source.applicable_lifecycle_stages} />
+      </div>
+    </div>
+    <p className={`mt-4 text-xs font-medium ${due ? "text-amber-700 dark:text-amber-300" : "text-muted-foreground"}`}>
+      {due ? "Review due · " : ""}Last substantively reviewed: {formatReviewDate(source.last_substantive_reviewed)}
+    </p>
+  </section>;
 }
 
 function SearchControl({ value, onChange, placeholder }: { value: string; onChange: (value: string) => void; placeholder: string }) {
@@ -156,23 +179,17 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
   </div>;
 }
 
-function SourceAbout({ source, scope, previousVersions }: { source: ExternalSourceEntry; scope?: ExternalSourceScopeEntry; previousVersions: ExternalSourceEntry[] }) {
+function SourceAbout({ source, previousVersions }: { source: ExternalSourceEntry; previousVersions: ExternalSourceEntry[] }) {
   return <details className="vigil-baseline-source-about">
-    <summary>About this source</summary>
+    <summary>Source details &amp; provenance</summary>
     <div className="vigil-baseline-source-about-body">
-      <section>
-        <p className="vigil-library-kicker">Why it matters here</p>
-        <p>{sourcePublicSummary(source)}</p>
-      </section>
       <dl className="vigil-baseline-source-facts">
         <div><dt>Publisher</dt><dd>{source.issuer ?? "Not specified"}</dd></div>
         <div><dt>Jurisdiction</dt><dd>{source.jurisdiction ?? "Not specified"}</dd></div>
         <div><dt>Source type</dt><dd>{clean(source.source_class) ?? "Not specified"}</dd></div>
-        <div><dt>Role in the baseline</dt><dd>{sourceRoleLabel(scope?.source_role)}</dd></div>
-        <div><dt>Review state</dt><dd>{clean(scope?.extraction_status) ?? "Not specified"}</dd></div>
-        <div><dt>Source access</dt><dd>{clean(scope?.source_access_status) ?? "Not specified"}</dd></div>
         <div><dt>Lifecycle state</dt><dd>{clean(source.source_lifecycle_state) ?? "Not specified"}</dd></div>
-        <div><dt>VIGIL source identity</dt><dd>{source.vigil_source_id}</dd></div>
+        <div><dt>Publication date</dt><dd>{source.publication_date ?? "Not specified"}</dd></div>
+        <div><dt>Effective date</dt><dd>{source.effective_date ?? "Not specified"}</dd></div>
       </dl>
       {previousVersions.length > 0 && <section className="border-t border-border/70">
         <p className="vigil-library-kicker">Previous versions</p>
@@ -187,30 +204,28 @@ function SourceAbout({ source, scope, previousVersions }: { source: ExternalSour
   </details>;
 }
 
-function OverviewSources({ sources, scopeBySource }: { sources: ExternalSourceEntry[]; scopeBySource: Map<string, ExternalSourceScopeEntry> }) {
+function OverviewSources({ sources }: { sources: ExternalSourceEntry[] }) {
   if (!sources.length) return null;
   return <section className="mt-8" aria-labelledby="overview-sources-heading">
     <div className="mb-3 max-w-5xl">
       <p className="vigil-library-kicker">Source overviews</p>
       <h2 id="overview-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Sources without public clause records</h2>
-      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the AI Governance Standards Baseline, but clause-level records are not currently represented. Each remains available as a concise overview with a link to the official publication.</p>
+      <p className="mt-2 text-base leading-relaxed text-muted-foreground">These sources are part of the AI Governance Standards Baseline even though clause-level records are not currently represented. Each overview explains what the source governs, where it contributes to AI governance, its relevant lifecycle stages and when that assessment was last substantively reviewed.</p>
     </div>
-    <div className="overflow-hidden rounded-lg border border-border bg-background">
-      {sources.map((source) => {
-        const scope = scopeBySource.get(externalSourceKey(source));
-        return <article key={externalSourceKey(source)} className="grid gap-3 border-b border-border/75 px-4 py-4 last:border-b-0 md:grid-cols-[minmax(260px,1fr)_minmax(360px,1.5fr)_auto] md:items-start">
-          <div className="min-w-0">
-            <h3 className="font-sans text-base font-semibold leading-snug text-foreground">{source.title}</h3>
+    <div className="space-y-4">
+      {sources.map((source) => <article key={externalSourceKey(source)} className="rounded-lg border border-border bg-background p-4 sm:p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0 max-w-4xl">
+            <h3 className="font-sans text-lg font-semibold leading-snug text-foreground">{source.title}</h3>
             <p className="mt-1 font-mono text-sm leading-relaxed text-primary">{canonicalIdentifierLabel(source)} · Version {source.source_version}</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{[source.issuer, source.jurisdiction].filter(Boolean).join(" · ")}</p>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{[source.issuer, source.jurisdiction, clean(source.source_class)].filter(Boolean).join(" · ")}</p>
           </div>
-          <div>
-            <p className="font-mono text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">{sourceRoleLabel(scope?.source_role)}</p>
-            <p className="mt-1 text-sm leading-relaxed text-foreground/85">{sourcePublicSummary(source)}</p>
-          </div>
-          {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-primary hover:underline" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : <span />}
-        </article>;
-      })}
+          {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-primary hover:underline" aria-label={`Open official source for ${source.title}`}>Open official source <ExternalLink className="h-4 w-4" aria-hidden="true" /></a> : null}
+        </div>
+        <div className="mt-4 border-t border-border/75 pt-4">
+          <SourceKnowledge source={source} compact />
+        </div>
+      </article>)}
     </div>
   </section>;
 }
@@ -313,12 +328,13 @@ function VigilExternalGovernanceBaseline() {
         source.source_class,
         source.source_lifecycle_state,
         source.source_version,
-        source.notes,
-        sourcePublicSummary(source),
+        source.public_summary,
+        source.relevance_scope,
+        source.last_substantive_reviewed,
+        ...(source.ai_governance_relevance ?? []),
+        ...(source.applicable_lifecycle_stages ?? []),
         canonicalIdentifierLabel(source),
         source.external_source_id,
-        scope?.source_role,
-        scope?.extraction_status,
         ...versionHistory.flatMap((version) => [version.title, version.source_version, canonicalIdentifierLabel(version)]),
         ...clauses.flatMap((clause) => [
           clause.clause_or_control,
@@ -375,17 +391,17 @@ function VigilExternalGovernanceBaseline() {
       {downloadState === "error" && <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p>}
 
       <div className="vigil-reference-controls vigil-baseline-controls">
-        <SearchControl value={query} onChange={setQuery} placeholder="Search source, clause, duty, actor, lifecycle stage or governance concept…" />
+        <SearchControl value={query} onChange={setQuery} placeholder="Search source, AI-governance theme, lifecycle stage, clause, duty or actor…" />
         <label className="vigil-reference-filter"><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option value={value} key={value}>{clean(value) ?? value}</option>)}</select></label>
         <label className="vigil-reference-filter"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option value={value} key={value}>{value}</option>)}</select></label>
       </div>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Search and filters apply to both lists below, including clause text where clauses are available.</p>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Search and filters apply to both lists below, including public source summaries, AI-governance relevance, lifecycle stages and clause text where clauses are available.</p>
 
       <section className="mt-6" aria-labelledby="clause-sources-heading">
         <div className="mb-3 max-w-5xl">
           <p className="vigil-library-kicker">Sources with clauses</p>
           <h2 id="clause-sources-heading" className="mt-1 font-serif text-2xl text-foreground">Browse governance clauses and controls</h2>
-          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to browse the clause-level records represented from it.</p>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">Open a source to understand its AI-governance relevance, review freshness and the clause-level records represented from it.</p>
         </div>
         <div className="vigil-baseline-library !mt-0" aria-label="AI governance sources with clauses">
           <div className="vigil-baseline-table-head" aria-hidden="true">
@@ -394,7 +410,6 @@ function VigilExternalGovernanceBaseline() {
           <div className="vigil-baseline-table-body">
             {clauseSources.map((source) => {
               const key = externalSourceKey(source);
-              const scope = scopeBySource.get(key);
               const clauses = clausesBySource.get(key) ?? [];
               const isOpen = openSource === key;
               const previousVersions = (versionsByIdentity.get(sourceIdentity(source)) ?? [])
@@ -426,6 +441,9 @@ function VigilExternalGovernanceBaseline() {
                 </div>
 
                 {isOpen && <section className="vigil-baseline-source-detail" aria-label={`${source.title} clause detail`}>
+                  <div className="border-b border-border/75 p-4 sm:p-5">
+                    <SourceKnowledge source={source} />
+                  </div>
                   <div className="vigil-baseline-clause-table">
                     <div className="vigil-baseline-clause-head" aria-hidden="true"><span>Clause / control</span><span>What it says</span><span>Type</span><span /></div>
                     {clauses.map((clause) => {
@@ -442,7 +460,7 @@ function VigilExternalGovernanceBaseline() {
                     })}
                   </div>
 
-                  <SourceAbout source={source} scope={scope} previousVersions={previousVersions} />
+                  <SourceAbout source={source} previousVersions={previousVersions} />
                 </section>}
               </div>;
             })}
@@ -451,7 +469,7 @@ function VigilExternalGovernanceBaseline() {
         </div>
       </section>
 
-      <OverviewSources sources={overviewSources} scopeBySource={scopeBySource} />
+      <OverviewSources sources={overviewSources} />
 
       {clauseSources.length === 0 && overviewSources.length === 0 && <div className="vigil-empty-panel mt-6">No sources match the current search and filters.</div>}
     </>}
