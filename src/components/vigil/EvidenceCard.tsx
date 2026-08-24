@@ -41,6 +41,8 @@ function MetaField({ label, value }: { label: string; value?: string }) {
 }
 
 export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
+  const hasReviewProvenance = Boolean(evidence.reviewer || evidence.sourceAccess || evidence.reviewDate);
+
   return (
     <article className="vigil-evidence-card">
       <header className="vigil-evidence-header">
@@ -58,6 +60,15 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
         <TextSection title="VIGIL interpretation" text={evidence.interpretiveConclusion} />
         <BoundarySection items={evidence.evidenceBoundary} />
       </div>
+
+      {hasReviewProvenance && <section className="vigil-evidence-review-provenance" aria-label="Evidence review provenance">
+        <p className="vigil-evidence-provenance-heading">Review provenance</p>
+        <dl>
+          <MetaField label="Reviewer" value={evidence.reviewer} />
+          <MetaField label="Source access" value={evidence.sourceAccess ? titleizeValue(evidence.sourceAccess) : undefined} />
+          <MetaField label="Review date" value={evidence.reviewDate} />
+        </dl>
+      </section>}
 
       {(evidence.sourceUrl || evidence.archiveUrl) && (
         <footer className="vigil-evidence-links">
