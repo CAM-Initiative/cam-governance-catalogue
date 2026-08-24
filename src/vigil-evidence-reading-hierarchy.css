@@ -1,0 +1,151 @@
+/* Case File evidence hierarchy repair.
+   Keep evidentiary distinctions visible without presenting internal metadata as a wall of labels. */
+
+.vigil-case-file-page .vigil-evidence-header {
+  align-items: flex-start;
+  padding: 1rem 1.05rem 0.9rem;
+  background: hsl(var(--card) / 0.28);
+}
+
+.vigil-case-file-page .vigil-evidence-header h3 {
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.38;
+}
+
+.vigil-case-file-page .vigil-evidence-kicker {
+  font-size: 0.68rem;
+  letter-spacing: 0.11em;
+}
+
+.vigil-case-file-page .vigil-evidence-source-line {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground) / 0.88);
+}
+
+.vigil-evidence-assessment {
+  flex: 0 1 310px;
+  display: grid;
+  justify-items: end;
+  gap: 0.4rem;
+  max-width: 310px;
+  text-align: right;
+}
+
+.vigil-evidence-assessment-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0.28rem 0.58rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  background: hsl(var(--card) / 0.6);
+  font-size: 0.72rem;
+  font-weight: 650;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-evidence-assessment p {
+  margin: 0;
+  max-width: 300px;
+  font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1.45;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-evidence-review-note {
+  padding: 0.62rem 1.05rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+  border-bottom: 1px solid hsl(var(--border) / 0.62);
+  background: hsl(var(--secondary) / 0.16);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-evidence-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: transparent;
+}
+
+.vigil-case-file-page .vigil-evidence-column {
+  padding: 1rem 1.05rem 1.1rem;
+  background: transparent;
+}
+
+.vigil-case-file-page .vigil-evidence-column + .vigil-evidence-column {
+  border-left: 1px solid hsl(var(--border) / 0.7);
+}
+
+.vigil-case-file-page .vigil-evidence-column h4 {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+.vigil-case-file-page .vigil-evidence-column p {
+  margin: 0.48rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.vigil-evidence-boundary-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.vigil-evidence-boundary-list p + p {
+  padding-top: 0.55rem;
+  border-top: 1px solid hsl(var(--border) / 0.5);
+}
+
+/* Affected-system metadata should support the evidence rather than compete with it. */
+.vigil-case-file-page .vigil-affected-systems .vigil-case-field dt {
+  font-family: var(--app-font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  color: hsl(var(--muted-foreground) / 0.68);
+}
+
+.vigil-case-file-page .vigil-affected-systems .vigil-case-field dd {
+  margin-top: 0.12rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+@media (max-width: 900px) {
+  .vigil-case-file-page .vigil-evidence-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-case-file-page .vigil-evidence-column + .vigil-evidence-column {
+    border-left: 0;
+    border-top: 1px solid hsl(var(--border) / 0.7);
+  }
+}
+
+@media (max-width: 640px) {
+  .vigil-evidence-assessment {
+    justify-items: start;
+    max-width: none;
+    text-align: left;
+  }
+
+  .vigil-evidence-assessment p {
+    max-width: none;
+  }
+}
