@@ -655,20 +655,28 @@ export default function VigilCaseFile() {
             <Field label="Failure Mode Corpus Reference" value={taxonomy.reference} />
           </dl>
         </div>
-        <div className="vigil-classify-definition">
-          <p className="vigil-library-kicker">Failure definition</p>
-          <p>{failureDetail?.definition ?? failure.publicDisplay.finding ?? failure.summary}</p>
-        </div>
-        <div className="vigil-classify-pair">
-          <div><p className="vigil-library-kicker">Recognition threshold</p><p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p></div>
-          <div><p className="vigil-library-kicker">Governance significance</p><p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p></div>
-        </div>
       </article> : <p className="vigil-case-empty">No current taxonomy classification is linked yet. The diagnosis may require a new or revised failure class.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
-      {(existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
-        <div className="vigil-diagnosis-grid">
+      {(failure || existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
+        {failure && <div className="vigil-diagnosis-mechanism">
+          <section className="vigil-diagnosis-definition">
+            <p className="vigil-library-kicker">Failure definition</p>
+            <p>{failureDetail?.definition ?? failure.publicDisplay.finding ?? failure.summary}</p>
+          </section>
+          <div className="vigil-diagnosis-mechanism-pair">
+            <section>
+              <p className="vigil-library-kicker">Recognition threshold</p>
+              <p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p>
+            </section>
+            <section>
+              <p className="vigil-library-kicker">Governance significance</p>
+              <p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p>
+            </section>
+          </div>
+        </div>}
+        {(existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0) && <div className="vigil-diagnosis-grid">
           <section>
             <p className="vigil-library-kicker">Existing coverage</p>
             {existingCoverage.length > 0 ? <div className="vigil-coverage-list">{existingCoverage.map((coverage) => <div key={coverage.key}>
@@ -690,7 +698,7 @@ export default function VigilCaseFile() {
             <p className="vigil-library-kicker">Placement / decision rationale</p>
             {placementRationales.length > 0 ? <TextList items={placementRationales} /> : <p>No separate placement rationale is currently published.</p>}
           </section>
-        </div>
+        </div>}
         {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
         <p className="vigil-stage-source-line">Diagnosis derived from {diagnosisSourceIds.map(compactId).join(" · ")}</p>
       </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
