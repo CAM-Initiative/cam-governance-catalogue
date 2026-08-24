@@ -97,6 +97,37 @@
   border-top: 1px solid hsl(var(--border) / 0.5);
 }
 
+.vigil-evidence-review-provenance {
+  padding: 0.8rem 1.05rem 0.9rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+  background: hsl(var(--secondary) / 0.1);
+}
+
+.vigil-evidence-provenance-heading {
+  margin: 0 0 0.62rem;
+  font-size: 0.69rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.7);
+}
+
+.vigil-evidence-review-provenance dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem 1.5rem;
+  margin: 0;
+}
+
+.vigil-evidence-review-provenance .vigil-evidence-meta-field dt {
+  color: hsl(var(--muted-foreground) / 0.62);
+}
+
+.vigil-evidence-review-provenance .vigil-evidence-meta-field dd {
+  font-size: 0.8rem;
+  color: hsl(var(--foreground) / 0.72);
+}
+
 /* Affected-system labels should be clear structural signposts without competing with values. */
 .vigil-case-file-page .vigil-affected-systems .vigil-case-field dt {
   font-family: var(--app-font-sans);
@@ -127,7 +158,8 @@
 }
 
 @media (max-width: 640px) {
-  .vigil-evidence-source-meta {
+  .vigil-evidence-source-meta,
+  .vigil-evidence-review-provenance dl {
     grid-template-columns: 1fr;
     gap: 0.65rem;
   }
