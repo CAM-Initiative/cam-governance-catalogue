@@ -13,16 +13,16 @@ export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
     description: "What happened, which systems were affected, and what the evidence establishes.",
   },
   {
-    id: "classify",
+    id: "diagnose",
     number: "02",
-    label: "Classification",
-    description: "The recurring failure mode, severity, and taxonomy classification.",
+    label: "Diagnosis",
+    description: "What went wrong, how the failure mechanism operated, and where existing governance or controls were insufficient.",
   },
   {
-    id: "diagnose",
+    id: "classify",
     number: "03",
-    label: "Diagnosis",
-    description: "The governance weakness, existing coverage, and remaining control gap.",
+    label: "Classification",
+    description: "How the diagnosed failure maps to the current failure taxonomy, including any new classification required.",
   },
   {
     id: "repair",
