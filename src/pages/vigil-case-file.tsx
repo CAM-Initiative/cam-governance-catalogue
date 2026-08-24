@@ -524,41 +524,6 @@ function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
 
-function ImplementationProvenance({ record }: { record: VigilIndexRecord }) {
-  const provenance = isObject(record.raw.corpus_release_provenance) ? record.raw.corpus_release_provenance : undefined;
-  const corpusImplementation = isObject(record.raw.corpus_implementation) ? record.raw.corpus_implementation : undefined;
-  if (!provenance && !corpusImplementation) return null;
-  const implementation = provenance && isObject(provenance.implementation_corpus_state) ? provenance.implementation_corpus_state : undefined;
-  const canonical = provenance && isObject(provenance.canonical_corpus_state) ? provenance.canonical_corpus_state : undefined;
-  const release = provenance && isObject(provenance.published_release_at_implementation) ? provenance.published_release_at_implementation : undefined;
-  const implementationCommit = text(implementation?.commit) ?? firstText(record.raw, ["coverage_reconciliation.corpus_commit"]);
-  const canonicalCommit = text(canonical?.commit);
-  const targetRelease = provenance ? text(provenance.target_release ?? provenance.target_version ?? provenance.intended_release ?? provenance.release_target) : undefined;
-  const publishedVersion = text(release?.version);
-  const canonicalState = text(corpusImplementation?.canonical_state);
-  const verificationState = canonicalCommit
-    ? implementationCommit === canonicalCommit
-      ? "Implementation and canonical corpus state recorded at the same commit"
-      : "Implementation and canonical corpus states recorded separately"
-    : text(provenance?.provenance_mode) ?? canonicalState;
-
-  return <aside className="vigil-implementation-provenance">
-    <p className="vigil-library-kicker">Implementation provenance</p>
-    <h3>Governance corpus state</h3>
-    <dl>
-      <Field label="Target release" value={targetRelease ?? (canonicalState === "canonical-main" ? "Canonical main" : "Unreleased working corpus")} />
-      <Field label="Published release at implementation" value={publishedVersion ? `Version ${publishedVersion}` : text(release?.status)} />
-      <Field label="Verification state" value={verificationState} />
-      <Field label="Implementation date" value={text(implementation?.date) ?? record.publicDisplay.patch?.implementationDate} />
-    </dl>
-    <div className="vigil-commit-links">
-      {implementationCommit && <a href={`https://github.com/CAM-Initiative/Caelestis/commit/${implementationCommit}`} target="_blank" rel="noreferrer">Implementation commit <code>{implementationCommit.slice(0, 12)}</code> <ExternalLink aria-hidden="true" /></a>}
-      {canonicalCommit && canonicalCommit !== implementationCommit && <a href={`https://github.com/CAM-Initiative/Caelestis/commit/${canonicalCommit}`} target="_blank" rel="noreferrer">Canonical commit <code>{canonicalCommit.slice(0, 12)}</code> <ExternalLink aria-hidden="true" /></a>}
-    </div>
-    {Array.isArray(provenance?.limitations) && provenance.limitations.length > 0 && <p className="vigil-provenance-note">{provenance.limitations.map(String).join(" ")}</p>}
-  </aside>;
-}
-
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
   const [, failureParams] = useRoute("/observatory/failure-modes/:recordId");
@@ -645,6 +610,7 @@ export default function VigilCaseFile() {
   const implementedControls = patches.flatMap(implementationEntries);
   const implementationStates = unique(patches.map(implementationState).filter((value): value is string => Boolean(value)));
   const remainingScopes = unique([...patches.flatMap(remainingScope), ...proposals.flatMap(remainingScope)]);
+  const referenceCount = externalSources.length + state.records.length + state.learns.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -772,24 +738,33 @@ export default function VigilCaseFile() {
       </article>) : <p className="vigil-case-empty">No published LEARN record is linked. The investigation remains useful while learning closure is incomplete.</p>}
     </>;
 
-    if (stageId === "references") return <>
-      <section className="vigil-reference-group" aria-labelledby="external-references-heading">
-        <div className="vigil-case-subheading"><p className="vigil-library-kicker">External references</p><h3 id="external-references-heading">Evidence and source material</h3></div>
-        {externalSources.length > 0 ? <div className="vigil-case-citations vigil-case-bibliography"><ol>{externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}><span>[{index + 1}]</span><div><strong>{source.title}</strong>{(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}{source.description && <p>{source.description}</p>}{source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}</div></li>)}</ol></div> : <p className="vigil-case-empty">No external bibliography is exposed in the current public projection.</p>}
-      </section>
-
-      <section className="vigil-reference-group" aria-labelledby="internal-references-heading">
-        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Internal references</p><h3 id="internal-references-heading">Linked VIGIL records</h3></div>
-        <div className="vigil-record-provenance">
+    if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">
+      <ol>
+        {externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}>
+          <span>[{index + 1}]</span>
           <div>
-            {state.records.map((record) => <article key={record.id}><span>{record.id}</span><strong>{record.title}</strong>{recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
-            {state.learns.map((learn) => <article key={learn.id}><span>{learn.id}</span><strong>{learn.title}</strong>{learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}</article>)}
+            <strong>{source.title}</strong>
+            {(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}
+            {source.description && <p>{source.description}</p>}
+            {source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}
           </div>
-        </div>
-        <p className="vigil-provenance-note">These linked OBS, RESEARCH, FM, PROP, PATCH and LEARN records are VIGIL&apos;s internal references for the Case File. They remain distinct canonical records rather than being flattened into one document.</p>
-        {patches.map((record) => <ImplementationProvenance key={`provenance-${record.id}`} record={record} />)}
-      </section>
-    </>;
+        </li>)}
+        {state.records.map((record, index) => <li key={record.id}>
+          <span>[{externalSources.length + index + 1}]</span>
+          <div>
+            <strong>{record.id} — {record.title}</strong>
+            {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}
+          </div>
+        </li>)}
+        {state.learns.map((learn, index) => <li key={learn.id}>
+          <span>[{externalSources.length + state.records.length + index + 1}]</span>
+          <div>
+            <strong>{learn.id} — {learn.title}</strong>
+            {learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}
+          </div>
+        </li>)}
+      </ol>
+    </div> : <p className="vigil-case-empty">No references are currently available for this Case File.</p>;
 
     return null;
   };
