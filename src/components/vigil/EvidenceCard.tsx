@@ -2,18 +2,13 @@ import { ExternalLink } from "lucide-react";
 import type { PublicEvidenceCard } from "@/lib/vigilPublicDisplay";
 import { titleizeValue } from "@/lib/vigilPresentation";
 
-function TextSection({ title, text }: { title: string; text?: string }) {
-  if (!text) return null;
-  return (
-    <section className="vigil-evidence-column">
-      <h4>{title}</h4>
-      <p>{text}</p>
-    </section>
-  );
+function MetaField({ label, value }: { label: string; value?: string }) {
+  if (!value) return null;
+  return <div className="vigil-evidence-meta-field"><dt>{label}</dt><dd>{value}</dd></div>;
 }
 
-function BoundarySection({ items }: { items: string[] }) {
-  const visibleItems = items.filter((item) => {
+function visibleBoundaryItems(items: string[]) {
+  return items.filter((item) => {
     const normalized = item.trim().toLowerCase().replace(/[_\s]+/g, "-");
     return ![
       "directly-reviewed",
@@ -24,30 +19,25 @@ function BoundarySection({ items }: { items: string[] }) {
       "yes",
     ].includes(normalized);
   });
-  if (!visibleItems.length) return null;
-  return (
-    <section className="vigil-evidence-column is-boundary">
-      <h4>Limits of the evidence</h4>
-      <div className="vigil-evidence-boundary-list">
-        {visibleItems.map((item) => <p key={item}>{item}</p>)}
-      </div>
-    </section>
-  );
-}
-
-function MetaField({ label, value }: { label: string; value?: string }) {
-  if (!value) return null;
-  return <div className="vigil-evidence-meta-field"><dt>{label}</dt><dd>{value}</dd></div>;
 }
 
 export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
-  const hasReviewProvenance = Boolean(evidence.reviewer || evidence.sourceAccess || evidence.reviewDate);
+  const boundaries = visibleBoundaryItems(evidence.evidenceBoundary);
+  const hasReviewMeta = Boolean(evidence.reviewer || evidence.sourceAccess || evidence.reviewDate);
 
   return (
     <article className="vigil-evidence-card">
       <header className="vigil-evidence-header">
-        <p className="vigil-evidence-kicker">Evidence source</p>
-        <h3>{evidence.title}</h3>
+        <div className="vigil-evidence-title-row">
+          <div>
+            <p className="vigil-evidence-kicker">Evidence source</p>
+            <h3>{evidence.title}</h3>
+          </div>
+          <div className="vigil-evidence-source-actions" aria-label="Evidence source links">
+            {evidence.sourceUrl && <a href={evidence.sourceUrl} target="_blank" rel="noreferrer" aria-label="Open source" title="Open source"><ExternalLink aria-hidden="true" /></a>}
+            {evidence.archiveUrl && <a href={evidence.archiveUrl} target="_blank" rel="noreferrer" aria-label="Open archived source" title="Open archived source"><ExternalLink aria-hidden="true" /></a>}
+          </div>
+        </div>
         <dl className="vigil-evidence-source-meta" aria-label="Evidence source details">
           <MetaField label="Publisher" value={evidence.publisher} />
           <MetaField label="Published" value={evidence.date} />
@@ -56,26 +46,28 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
       </header>
 
       <div className="vigil-evidence-grid">
-        <TextSection title="What the source establishes" text={evidence.confirmedEvidence} />
-        <TextSection title="VIGIL interpretation" text={evidence.interpretiveConclusion} />
-        <BoundarySection items={evidence.evidenceBoundary} />
+        {evidence.confirmedEvidence && <section className="vigil-evidence-column">
+          <h4>What the source establishes</h4>
+          <p>{evidence.confirmedEvidence}</p>
+        </section>}
+
+        {(evidence.interpretiveConclusion || hasReviewMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
+          <h4>VIGIL interpretation</h4>
+          {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
+          {hasReviewMeta && <dl className="vigil-evidence-review-meta" aria-label="VIGIL review details">
+            <MetaField label="Reviewer" value={evidence.reviewer} />
+            <MetaField label="Reviewed" value={evidence.reviewDate} />
+            <MetaField label="Source access" value={evidence.sourceAccess ? titleizeValue(evidence.sourceAccess) : undefined} />
+          </dl>}
+        </section>}
       </div>
 
-      {hasReviewProvenance && <section className="vigil-evidence-review-provenance" aria-label="Evidence review provenance">
-        <p className="vigil-evidence-provenance-heading">Review provenance</p>
-        <dl>
-          <MetaField label="Reviewer" value={evidence.reviewer} />
-          <MetaField label="Source access" value={evidence.sourceAccess ? titleizeValue(evidence.sourceAccess) : undefined} />
-          <MetaField label="Review date" value={evidence.reviewDate} />
-        </dl>
+      {boundaries.length > 0 && <section className="vigil-evidence-limitations">
+        <h4>Limits of the evidence</h4>
+        <div className="vigil-evidence-boundary-list">
+          {boundaries.map((item) => <p key={item}>{item}</p>)}
+        </div>
       </section>}
-
-      {(evidence.sourceUrl || evidence.archiveUrl) && (
-        <footer className="vigil-evidence-links">
-          {evidence.sourceUrl && <a href={evidence.sourceUrl} target="_blank" rel="noreferrer">Open source <ExternalLink aria-hidden="true" /></a>}
-          {evidence.archiveUrl && <a href={evidence.archiveUrl} target="_blank" rel="noreferrer">Open archive <ExternalLink aria-hidden="true" /></a>}
-        </footer>
-      )}
     </article>
   );
 }
