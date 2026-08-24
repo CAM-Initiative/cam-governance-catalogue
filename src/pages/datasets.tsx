@@ -94,11 +94,11 @@ export default function Datasets() {
   }
 
   return <Shell>
-    <main className="vigil-knowledge-hub-page">
+    <main className="vigil-knowledge-hub-page vigil-datasets-page">
       <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
         <header className="vigil-simple-hero">
           <div className="vigil-development-kicker-row">
-            <p className="vigil-library-kicker">VIGIL public data</p>
+            <p className="vigil-library-kicker">VIGIL Observatory</p>
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
