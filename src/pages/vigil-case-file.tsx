@@ -586,7 +586,6 @@ export default function VigilCaseFile() {
   const summary = failure?.publicDisplay.finding ?? sourceRecord?.publicDisplay.finding ?? failureDetail?.definition ?? sourceRecord?.summary;
   const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
   const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated;
-  const evidenceConfidence = failure?.evidence_confidence;
   const recordCount = state.records.length + state.learns.length;
   const learnForFailure = failure
     ? state.learns.find((learn) => learn.primaryFailureMode?.toUpperCase() === failure.id.toUpperCase()) ?? state.learns[0]
@@ -664,7 +663,7 @@ export default function VigilCaseFile() {
           <div><p className="vigil-library-kicker">Recognition threshold</p><p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p></div>
           <div><p className="vigil-library-kicker">Governance significance</p><p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p></div>
         </div>
-      </article> : <p className="vigil-case-empty">No authoritative failure mode classification is linked yet.</p>}
+      </article> : <p className="vigil-case-empty">No current taxonomy classification is linked yet. The diagnosis may require a new or revised failure class.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
@@ -694,7 +693,7 @@ export default function VigilCaseFile() {
         </div>
         {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
         <p className="vigil-stage-source-line">Diagnosis derived from {diagnosisSourceIds.map(compactId).join(" · ")}</p>
-      </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or classification.</p>}
+      </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
     </>;
 
     if (stageId === "repair") return <>
@@ -753,14 +752,14 @@ export default function VigilCaseFile() {
           <span>[{externalSources.length + index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
-            {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}
+            {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
           </div>
         </li>)}
         {state.learns.map((learn, index) => <li key={learn.id}>
           <span>[{externalSources.length + state.records.length + index + 1}]</span>
           <div>
             <strong>{learn.id} — {learn.title}</strong>
-            {learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">Canonical record <ExternalLink aria-hidden="true" /></a>}
+            {learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">{learn.githubUrl}</a>}
           </div>
         </li>)}
       </ol>
@@ -786,7 +785,6 @@ export default function VigilCaseFile() {
           <Field label="Case file" value={failure ? compactId(failure.id) : compactId(state.sourceId)} mono />
           <Field label="Failure type" value={family} />
           <Field label="Severity" value={severityDisplay(failure?.severity)} />
-          <Field label="Evidence" value={evidenceConfidence ? titleizeValue(evidenceConfidence) : "Not specified"} />
           <Field label="Updated" value={updated} mono />
           <Field label="Linked VIGIL records" value={String(recordCount)} />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
