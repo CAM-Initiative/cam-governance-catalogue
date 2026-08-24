@@ -1,0 +1,103 @@
+/* Observatory surface cleanup: keep VIGIL pages visually consistent and reduce redundant chrome. */
+
+/* Case Files retains the same gold Observatory kicker used on About VIGIL. */
+.vigil-case-library-page .vigil-library-header .vigil-library-kicker {
+  display: block;
+}
+
+/* Datasets are presented two abreast on wide screens. */
+.vigil-datasets-page .vigil-dataset-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vigil-datasets-page .vigil-dataset-collection-wide {
+  grid-column: auto;
+}
+
+/* Desktop site navigation: Home, VIGIL, Datasets, Constitution, Policy. */
+header nav.hidden.md\:flex > :nth-child(1) { order: 1; }
+header nav.hidden.md\:flex > :nth-child(2) { order: 2; }
+header nav.hidden.md\:flex > :nth-child(3) { order: 4; }
+header nav.hidden.md\:flex > :nth-child(4) { order: 3; }
+header nav.hidden.md\:flex > :nth-child(5) { order: 5; }
+header nav.hidden.md\:flex > :nth-child(6) { order: 6; }
+
+/* Standards-source links are icon actions, not another text heading. */
+.vigil-baseline-clause-actions a[data-icon-only-source-link="true"],
+.vigil-source-overview-official[data-icon-only-source-link="true"] {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  color: hsl(var(--primary));
+  background: hsl(var(--background));
+}
+
+.vigil-baseline-clause-actions a[data-icon-only-source-link="true"]:hover,
+.vigil-source-overview-official[data-icon-only-source-link="true"]:hover {
+  border-color: hsl(var(--primary) / 0.48);
+  background: hsl(var(--card) / 0.58);
+}
+
+.vigil-baseline-clause-actions a[data-icon-only-source-link="true"] svg,
+.vigil-source-overview-official[data-icon-only-source-link="true"] svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+/* Sources without clause records collapse to a quiet bibliographic header. */
+.vigil-source-overview-collapsible {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.vigil-source-overview-collapsible > :first-child {
+  padding: 1rem 1.1rem;
+}
+
+.vigil-source-overview-collapsible .vigil-source-overview-body {
+  padding: 0 1.1rem 1.1rem;
+  border-top: 1px solid hsl(var(--border) / 0.75);
+}
+
+.vigil-source-overview-collapsible.is-collapsed .vigil-source-overview-body {
+  display: none;
+}
+
+.vigil-source-overview-toggle {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--app-font-sans);
+  font-size: 1rem;
+  line-height: 1;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-source-overview-toggle:hover {
+  background: hsl(var(--card) / 0.65);
+  color: hsl(var(--foreground));
+}
+
+.vigil-source-overview-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+@media (max-width: 820px) {
+  .vigil-datasets-page .vigil-dataset-grid {
+    grid-template-columns: 1fr;
+  }
+}
