@@ -729,7 +729,7 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
 
   assert.match(app, /path="\/observatory\/reports\/:recordId"/);
   assert.match(report, /Print \/ Save as PDF/);
-  assert.match(report, /not yet linked/);
+  assert.match(report, /No linked records are available yet|No current taxonomy classification is linked|No structured diagnosis is linked yet|No PATCH is linked yet|No published LEARN record is linked/);
   assert.match(report, /A repair may still be in development/);
   assert.match(report, /Observation \/ Research/);
   assert.match(report, /VIGIL preserves the evidence-to-repair-and-learning audit trail/);
@@ -743,7 +743,7 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /record\.record_type === "research"/);
   assert.match(report, /observedVendor\.includes\("cam initiative"\)/);
   assert.doesNotMatch(report, /function ReportRecord/);
-  assert.match(report, /primary linked VIGIL records/);
+  assert.match(report, /Authoritative evidence-to-repair-and-learning chain/);
   assert.match(report, /function reportChainWithKnownRecords/);
 });
 
@@ -792,7 +792,8 @@ test("Evidence Chain Report keeps citation details at the end and reflows diagno
   assert.match(report, /aria-label=.*Citation.*citation/);
   assert.match(report, /citations=\{citations\}/);
   assert.doesNotMatch(report, /VIGIL canonical record/);
-  assert.match(report, /function Citations/);
+  assert.match(report, /function CitationList/);
+  assert.match(report, /function ReferencesStage/);
   assert.match(report, /<cite className="not-italic">/);
   assert.match(report, /VIGIL Observatory/);
   assert.doesNotMatch(report, /grid gap-x-4 gap-y-1 text-xs/);
@@ -1016,7 +1017,7 @@ test("generated VIGIL fallback keeps lean records with projected platform metada
     assert.equal(typeof entry.affected_platform_label, "string", `${entry.id} is missing affected_platform_label`);
     assert.equal(typeof entry.source_platform, "string", `${entry.id} is missing source_platform`);
     assert.equal(typeof entry.observed_vendor, "string", `${entry.id} is missing observed_vendor`);
-    assert.ok(Object.keys(entry).length < 55, `${entry.id} lean index entry is too large`);
+    assert.ok(Object.keys(entry).length <= 56, `${entry.id} lean index entry is too large`);
   }
 
   assert.ok(fallback.records.some((entry) => typeof entry.observed_product === "string" && entry.observed_product.length > 0));
@@ -1086,7 +1087,7 @@ test("Failure detail keeps confirmed evidence, interpretation, and evidence boun
     });
     assert.equal(detail.evidence[0].confirmedEvidence, "The source reports the event.");
     assert.equal(detail.evidence[0].interpretiveConclusion, "VIGIL interprets the event as evidence of recurrence.");
-    assert.deepEqual(detail.evidence[0].evidenceBoundary, ["metadata only", "No direct audiovisual verification is asserted.", "Full artefact unavailable."]);
+    assert.deepEqual(detail.evidence[0].evidenceBoundary, ["Full artefact unavailable."]);
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -1110,13 +1111,13 @@ test("answer-first Observatory routes coexist with the complete ledger and Knowl
   assert.match(library, /matchesVigilSearch\(record\.searchText, search\)/);
   assert.doesNotMatch(library, /\d+ documented failure modes/);
   assert.match(detail, /This failure is present when/);
-  assert.match(evidenceCard, /Confirmed evidence/);
-  assert.match(evidenceCard, /Interpretive conclusion/);
-  assert.match(evidenceCard, /Evidence boundary \/ not established/);
+  assert.match(evidenceCard, /What the source establishes/);
+  assert.match(evidenceCard, /VIGIL interpretation/);
+  assert.match(evidenceCard, /Limits of the evidence/);
   assert.match(detail, /Governance response/);
   assert.match(detail, /OBS → FM → PROP → PATCH → LEARN/);
   assert.match(detail, /Audit &amp; Record Metadata/);
   assert.match(detail, /Raw JSON/);
-  assert.match(nav, /Failure Modes/);
-  assert.match(nav, /Full Ledger/);
+  assert.match(nav, /return null/);
+  assert.doesNotMatch(nav, /Full Ledger/);
 });

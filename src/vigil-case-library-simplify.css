@@ -1,0 +1,215 @@
+/* VIGIL Case File library simplification.
+   Reduce stacked navigation and repeated metadata so the case list is the visual focus. */
+
+/* Observatory navigation: one compact utility row rather than a second dashboard. */
+.vigil-app-shell-inner {
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 52px;
+  border-inline: 0;
+  background: hsl(var(--background));
+}
+
+.vigil-app-identity {
+  gap: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  border-right: 1px solid hsl(var(--border) / 0.7);
+}
+
+.vigil-app-mark {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  background: transparent;
+}
+
+.vigil-app-mark svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.vigil-app-name {
+  font-size: 0.92rem;
+}
+
+.vigil-app-tagline,
+.vigil-app-nav-subtitle,
+.vigil-app-nav-placeholder {
+  display: none;
+}
+
+.vigil-app-nav {
+  display: flex;
+  align-items: stretch;
+  grid-template-columns: none;
+  overflow-x: auto;
+}
+
+.vigil-app-nav-link {
+  flex: 0 0 auto;
+  min-width: 132px;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  border-right: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+}
+
+.vigil-app-nav-link.is-active {
+  background: hsl(var(--vigil-nav-active) / 0.28);
+  border-bottom-color: hsl(var(--primary));
+}
+
+.vigil-app-nav-link.is-active::after {
+  display: none;
+}
+
+.vigil-app-nav-label {
+  font-size: 0.78rem;
+}
+
+/* Case Files page: remove repeated framing and let the search/list lead. */
+.vigil-case-library-page .container {
+  padding-top: 1.35rem;
+}
+
+.vigil-case-library-page .vigil-library-shell {
+  border-radius: 0.8rem;
+  box-shadow: none;
+}
+
+.vigil-case-library-page .vigil-library-header {
+  align-items: flex-start;
+  padding: 1.25rem 1.35rem 1rem;
+  background: hsl(var(--background));
+}
+
+.vigil-case-library-page .vigil-library-stats {
+  display: none;
+}
+
+.vigil-case-library-page .vigil-library-header h1 {
+  margin-top: 0.28rem;
+  font-size: clamp(1.8rem, 2.1vw, 2.25rem);
+}
+
+.vigil-case-library-page .vigil-library-description {
+  max-width: 760px;
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.vigil-case-library-page .vigil-library-toolbar {
+  padding: 0.75rem 0.85rem 0;
+}
+
+.vigil-case-library-page .vigil-result-summary {
+  min-height: 28px;
+  border-top: 0;
+  font-size: 0.52rem;
+  letter-spacing: 0.055em;
+}
+
+.vigil-case-library-page .vigil-case-table-head {
+  background: hsl(var(--card) / 0.38);
+}
+
+/* The Case File hero deliberately carries a restrained old-ticket cue: the metadata
+   stub is separated by a perforation-style rule rather than a solid divider. */
+.vigil-case-file-page .vigil-case-meta-panel {
+  border-left: 1px dashed hsl(var(--border) / 0.95);
+}
+
+/* Knowledge Base: title and explanation first; metadata is supporting information. */
+.vigil-knowledge-hub-page .vigil-knowledge-grid {
+  gap: 1rem;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-collection {
+  display: block;
+  min-height: 228px;
+  padding: 1.3rem 1.35rem 1.15rem;
+  border-radius: 0.8rem;
+  background: hsl(var(--background));
+  box-shadow: none;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-icon,
+.vigil-knowledge-hub-page .vigil-knowledge-collection .vigil-development-kicker-row {
+  display: none;
+}
+
+.vigil-knowledge-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy > p:not(.vigil-knowledge-meta) {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.62;
+}
+
+.vigil-knowledge-card-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.15rem;
+}
+
+.vigil-knowledge-meta {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-actions {
+  margin-left: auto;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy a {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+@media (max-width: 760px) {
+  .vigil-app-shell-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-app-identity {
+    border-right: 0;
+    border-bottom: 1px solid hsl(var(--border) / 0.65);
+  }
+
+  .vigil-app-nav-link {
+    min-width: 50%;
+  }
+
+  .vigil-case-file-page .vigil-case-meta-panel {
+    border-left: 0;
+    border-top: 1px dashed hsl(var(--border) / 0.95);
+    padding-top: 1.2rem;
+  }
+
+  .vigil-knowledge-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vigil-knowledge-hub-page .vigil-knowledge-actions {
+    margin-left: 0;
+  }
+}

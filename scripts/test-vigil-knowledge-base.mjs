@@ -94,10 +94,12 @@ assert.match(publicDisplay, /sourceAccess\?: string/);
 assert.match(publicDisplay, /primary_artefact_access\.reviewing_system/);
 assert.match(publicDisplay, /primary_artefact_access\.access_method/);
 assert.match(publicDisplay, /evidenceBoundary: limitations/);
-assert.match(evidenceCard, /Review provenance/);
+assert.doesNotMatch(evidenceCard, /Review provenance/);
+assert.match(evidenceCard, /aria-label="VIGIL review details"/);
 assert.match(evidenceCard, /label="Reviewer"/);
 assert.match(evidenceCard, /label="Source access"/);
-assert.match(evidenceCard, /label="Review date"/);
+assert.match(evidenceCard, /label="Reviewed"/);
+assert.match(evidenceCard, /Limits of the evidence/);
 assert.doesNotMatch(evidenceCard, /Corroborated|Supported by corroborating evidence|Source reviewed directly/);
 
 assert.match(evidenceRepair, /number: "01",\s*label: "Observation"/s);

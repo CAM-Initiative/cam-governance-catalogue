@@ -429,10 +429,19 @@ export default function Home() {
         <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
           <div className="container mx-auto grid w-full max-w-[100rem] gap-12 px-5 py-14 sm:px-6 md:gap-16 md:px-8 md:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(27rem,0.85fr)] lg:items-center xl:gap-20">
             <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-none" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-              <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Open AI Governance Architecture</p>
-              <h1 className="mb-4 max-w-4xl font-serif leading-[0.98] text-foreground">
-                <span className="block whitespace-nowrap text-5xl tracking-[0.06em] sm:text-6xl md:text-7xl">CAELESTIS</span>
-                <span className="mt-2 block text-3xl tracking-normal sm:text-4xl md:text-5xl">Architecture Model</span>
+              <p className="mb-4 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">CAM Initiative · Open AI Governance</p>
+              <h1 className="mb-5 max-w-5xl text-foreground">
+                <span className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_1px_minmax(0,0.9fr)] sm:items-center sm:gap-6">
+                  <span className="block">
+                    <span className="block whitespace-nowrap font-serif text-5xl leading-[0.98] tracking-[0.06em] sm:text-6xl md:text-7xl">CAELESTIS</span>
+                    <span className="mt-2 block font-serif text-3xl leading-tight tracking-normal sm:text-4xl md:text-5xl">Architecture Model</span>
+                  </span>
+                  <span className="hidden h-24 w-px bg-cam-gold/35 sm:block" aria-hidden="true" />
+                  <span className="block border-t border-cam-gold/35 pt-4 sm:border-t-0 sm:pt-0">
+                    <span className="block font-serif text-4xl leading-[0.98] tracking-[0.045em] sm:text-5xl md:text-6xl">VIGIL</span>
+                    <span className="mt-2 block font-mono text-sm font-semibold uppercase tracking-[0.18em] text-cam-gold sm:text-base">Observatory</span>
+                  </span>
+                </span>
               </h1>
               <hr className="gold-rule mb-5 w-24" />
               <p className="mb-8 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold md:text-[15px]">
