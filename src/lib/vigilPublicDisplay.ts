@@ -101,6 +101,9 @@ export type PublicEvidenceCard = {
   interpretiveConclusion?: string;
   evidenceBoundary: string[];
   confidence?: string;
+  reviewer?: string;
+  reviewDate?: string;
+  sourceAccess?: string;
 };
 
 export type FailureModePublicDetail = {
@@ -244,15 +247,10 @@ function deriveRecordChain(record: UnknownRecord, recordType: string, id: string
   const linked = isObject(record.linked_records) ? record.linked_records : {};
   const repairScope = isObject(record.repair_scope) ? record.repair_scope : undefined;
 
-  // Research and observations are evidence origins. Typed contextual relations
-  // are deliberately excluded from the authoritative chain.
   for (const key of ["related_observations", "source_observations", "observations", "research"]) {
     addRecordIds(chain.observations, linked[key]);
   }
 
-  // The explicit repair scope supersedes legacy related-failure links. The
-  // compatibility path keeps older unmigrated records readable without letting
-  // contextual relations become repair assertions.
   if (repairScope) {
     addRecordIds(chain.failureModes, repairScope.primary_failure_mode);
     addRecordIds(chain.failureModes, repairScope.additional_resolved_failure_modes);
@@ -878,17 +876,21 @@ export function deriveVigilPublicDisplay(
   };
 }
 
-/**
- * Derive the answer-first failure-mode projection without changing canonical
- * VIGIL data. Confirmed evidence, interpretation, and evidentiary boundaries
- * remain separate so the public interface does not overstate a source.
- */
 export function deriveFailureModePublicDetail(record: UnknownRecord, display?: PublicRecordDisplay): FailureModePublicDetail {
   const sources = Array.isArray(record.source_records)
     ? record.source_records.filter(isObject)
     : Array.isArray(record.evidence_sources)
       ? record.evidence_sources.filter(isObject)
       : [];
+  const recordReviewDate = firstText(record, [
+    "interpretive_provenance.current_ai_review.review_date",
+    "interpretive_provenance.review_history.0.review_date",
+    "triage.triage_review_date",
+  ]);
+  const recordReviewer = firstText(record, [
+    "interpretive_provenance.current_ai_review.reviewer_model",
+    "interpretive_provenance.current_ai_review.reviewer_platform",
+  ]);
 
   const evidence = sources.map((source, index): PublicEvidenceCard => {
     const limitations = collectLists(source, [
@@ -897,12 +899,22 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
       "primary_artefact_access.limitations",
       "known_limitations",
     ]);
-    const accessBoundary = firstText(source, [
-      "primary_artefact_access.access_status",
-      "access_status",
-      "source_url_status",
+    const sourceReviewer = firstText(source, [
+      "primary_artefact_access.reviewing_system",
+      "reviewer",
+      "reviewer_model",
+      "reviewing_system",
     ]);
-    const interpretiveReliance = firstText(source, ["interpretive_reliance"]);
+    const sourceAccess = firstText(source, [
+      "primary_artefact_access.access_method",
+      "source_access_method",
+      "access_method",
+    ]);
+    const sourceReviewDate = firstText(source, [
+      "primary_artefact_access.review_date",
+      "review_date",
+      "retrieved_date",
+    ]);
     return {
       title: firstText(source, ["source_title", "title", "name"]) ?? `Evidence source ${index + 1}`,
       publisher: firstText(source, ["author_or_publisher", "publisher", "source_platform", "author"]),
@@ -920,8 +932,11 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
       evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),
       confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"]),
       interpretiveConclusion: firstText(source, ["interpretive_conclusion", "relevance_note", "interpretation"]),
-      evidenceBoundary: unique([accessBoundary, interpretiveReliance, ...limitations]),
+      evidenceBoundary: limitations,
       confidence: firstText(source, ["evidence_confidence", "confidence"]) ?? firstText(record, ["evidence_confidence", "failure_classification.confidence"]),
+      reviewer: sourceReviewer ?? recordReviewer,
+      reviewDate: sourceReviewDate ?? recordReviewDate,
+      sourceAccess,
     };
   });
 
