@@ -59,11 +59,6 @@ function compareCases(a: VigilIndexRecord, b: VigilIndexRecord, sort: SortState)
   return sort.direction === "asc" ? comparison : -comparison;
 }
 
-function sortLabel(sort: SortState) {
-  const labels: Record<SortKey, string> = { id: "Failure Mode", family: "Failure Type", severity: "Severity" };
-  return `${labels[sort.key]} ${sort.direction === "asc" ? "ascending" : "descending"}`;
-}
-
 function values(records: VigilIndexRecord[], getter: (record: VigilIndexRecord) => string | undefined) {
   return [...new Set(records.map(getter).filter((value): value is string => Boolean(value)))].sort((a, b) => a.localeCompare(b));
 }
@@ -175,7 +170,7 @@ export default function VigilCases() {
                 </label>
               </div>
               <div className="vigil-result-summary">
-                <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"} · sorted by {sortLabel(sort)}</span>
+                <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
                 {(search || family) && <button type="button" onClick={() => { setSearch(""); setFamily(""); }}>Clear filters</button>}
               </div>
             </section>
