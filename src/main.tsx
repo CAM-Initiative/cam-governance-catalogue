@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import "./vigil-reference-metadata";
 import "./index.css";
 import "./dark-appearance.css";
 import "./home-ux.css";
