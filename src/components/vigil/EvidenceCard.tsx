@@ -12,31 +12,69 @@ function TextSection({ title, text, boundary = false }: { title: string; text?: 
   );
 }
 
+function BoundarySection({ items }: { items: string[] }) {
+  if (!items.length) return null;
+  return (
+    <section className="vigil-evidence-column is-boundary">
+      <h4>Limits of the evidence</h4>
+      <div className="vigil-evidence-boundary-list">
+        {items.map((item) => <p key={item}>{item}</p>)}
+      </div>
+    </section>
+  );
+}
+
+function confidenceExplanation(value?: string) {
+  const normalized = value?.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (!normalized) return undefined;
+  if (normalized === "corroborated") {
+    return "Supported by corroborating evidence recorded for this case; this does not necessarily mean independent verification.";
+  }
+  if (normalized === "verified") {
+    return "The evidentiary claim has been checked against the cited material recorded for this case.";
+  }
+  if (normalized === "observed") {
+    return "Recorded as an observation supported by the cited material, without a stronger verification claim.";
+  }
+  return undefined;
+}
+
+function directReviewExplanation(value?: string) {
+  const normalized = value?.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (!normalized) return undefined;
+  if (["true", "yes", "direct", "directly-reviewed", "reviewed-directly"].includes(normalized)) {
+    return "Source reviewed directly — the cited source itself was inspected rather than relied on only through a secondary description.";
+  }
+  if (["false", "no", "not-reviewed-directly", "indirect"].includes(normalized)) {
+    return "Source not reviewed directly — this evidence relies on an intermediary or secondary description of the source.";
+  }
+  return `Source review: ${titleizeValue(value)}`;
+}
+
 export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
+  const confidenceHelp = confidenceExplanation(evidence.confidence);
+  const reviewHelp = directReviewExplanation(evidence.directReviewStatus);
+
   return (
     <article className="vigil-evidence-card">
       <header className="vigil-evidence-header">
         <div className="min-w-0">
           <p className="vigil-evidence-kicker">Evidence source</p>
           <h3>{evidence.title}</h3>
-          <p className="vigil-evidence-source-line">{[evidence.publisher, evidence.date, evidence.sourceType].filter(Boolean).join(" · ")}</p>
+          <p className="vigil-evidence-source-line">{[evidence.publisher, evidence.date, evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined].filter(Boolean).join(" · ")}</p>
         </div>
-        {evidence.confidence && <p className="vigil-evidence-confidence"><strong>Evidence confidence:</strong> {titleizeValue(evidence.confidence)}</p>}
+        {evidence.confidence && <div className="vigil-evidence-assessment">
+          <span className="vigil-evidence-assessment-label">{titleizeValue(evidence.confidence)}</span>
+          {confidenceHelp && <p>{confidenceHelp}</p>}
+        </div>}
       </header>
 
-      {(evidence.sourceRole || evidence.sourceResidence || evidence.directReviewStatus || evidence.evidenceModalities.length > 0) && (
-        <div className="vigil-evidence-meta" aria-label="Evidence metadata">
-          {evidence.sourceRole && <span>Role: {evidence.sourceRole}</span>}
-          {evidence.sourceResidence && <span>Residence: {evidence.sourceResidence}</span>}
-          {evidence.directReviewStatus && <span>Direct review: {evidence.directReviewStatus}</span>}
-          {evidence.evidenceModalities.map((modality) => <span key={modality}>{modality}</span>)}
-        </div>
-      )}
+      {reviewHelp && <div className="vigil-evidence-review-note">{reviewHelp}</div>}
 
       <div className="vigil-evidence-grid">
-        <TextSection title="Confirmed evidence" text={evidence.confirmedEvidence} />
-        <TextSection title="Interpretive conclusion" text={evidence.interpretiveConclusion} />
-        <TextSection title="Evidence boundary / not established" text={evidence.evidenceBoundary.join("\n\n")} boundary />
+        <TextSection title="What the source establishes" text={evidence.confirmedEvidence} />
+        <TextSection title="VIGIL interpretation" text={evidence.interpretiveConclusion} />
+        <BoundarySection items={evidence.evidenceBoundary} />
       </div>
 
       {(evidence.sourceUrl || evidence.archiveUrl) && (
