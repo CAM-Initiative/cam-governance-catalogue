@@ -83,13 +83,12 @@
   background: hsl(var(--background));
 }
 
-.vigil-case-library-page .vigil-library-header .vigil-library-kicker,
 .vigil-case-library-page .vigil-library-stats {
   display: none;
 }
 
 .vigil-case-library-page .vigil-library-header h1 {
-  margin-top: 0;
+  margin-top: 0.28rem;
   font-size: clamp(1.8rem, 2.1vw, 2.25rem);
 }
 
@@ -115,6 +114,12 @@
   background: hsl(var(--card) / 0.38);
 }
 
+/* The Case File hero deliberately carries a restrained old-ticket cue: the metadata
+   stub is separated by a perforation-style rule rather than a solid divider. */
+.vigil-case-file-page .vigil-case-meta-panel {
+  border-left: 1px dashed hsl(var(--border) / 0.95);
+}
+
 /* Knowledge Base: title and explanation first; metadata is supporting information. */
 .vigil-knowledge-hub-page .vigil-knowledge-grid {
   gap: 1rem;
@@ -130,7 +135,7 @@
 }
 
 .vigil-knowledge-hub-page .vigil-knowledge-icon,
-.vigil-knowledge-hub-page .vigil-development-kicker-row {
+.vigil-knowledge-hub-page .vigil-knowledge-collection .vigil-development-kicker-row {
   display: none;
 }
 
@@ -191,6 +196,12 @@
 
   .vigil-app-nav-link {
     min-width: 50%;
+  }
+
+  .vigil-case-file-page .vigil-case-meta-panel {
+    border-left: 0;
+    border-top: 1px dashed hsl(var(--border) / 0.95);
+    padding-top: 1.2rem;
   }
 
   .vigil-knowledge-card-footer {
