@@ -8,6 +8,8 @@ const referenceKnowledge = readFileSync(new URL("../src/pages/vigil-reference-kn
 const knowledgeHub = readFileSync(new URL("../src/pages/vigil-knowledge-hub.tsx", import.meta.url), "utf8");
 const datasets = readFileSync(new URL("../src/pages/datasets.tsx", import.meta.url), "utf8");
 const externalKnowledge = readFileSync(new URL("../src/lib/vigilExternalKnowledge.ts", import.meta.url), "utf8");
+const publicDisplay = readFileSync(new URL("../src/lib/vigilPublicDisplay.ts", import.meta.url), "utf8");
+const evidenceCard = readFileSync(new URL("../src/components/vigil/EvidenceCard.tsx", import.meta.url), "utf8");
 const report = readFileSync(new URL("../src/pages/evidence-chain-report.tsx", import.meta.url), "utf8");
 const cases = readFileSync(new URL("../src/pages/vigil-cases.tsx", import.meta.url), "utf8");
 const caseFile = readFileSync(new URL("../src/pages/vigil-case-file.tsx", import.meta.url), "utf8");
@@ -85,6 +87,18 @@ assert.match(knowledgeHub, /AI Governance Standards Baseline/);
 assert.doesNotMatch(knowledgeHub, /External Governance Baseline|external-governance baseline/);
 assert.match(datasets, /AI Governance Standards Baseline/);
 assert.doesNotMatch(datasets, /External Governance Baseline|external-governance reference library/);
+
+assert.match(publicDisplay, /reviewer\?: string/);
+assert.match(publicDisplay, /reviewDate\?: string/);
+assert.match(publicDisplay, /sourceAccess\?: string/);
+assert.match(publicDisplay, /primary_artefact_access\.reviewing_system/);
+assert.match(publicDisplay, /primary_artefact_access\.access_method/);
+assert.match(publicDisplay, /evidenceBoundary: limitations/);
+assert.match(evidenceCard, /Review provenance/);
+assert.match(evidenceCard, /label="Reviewer"/);
+assert.match(evidenceCard, /label="Source access"/);
+assert.match(evidenceCard, /label="Review date"/);
+assert.doesNotMatch(evidenceCard, /Corroborated|Supported by corroborating evidence|Source reviewed directly/);
 
 assert.match(evidenceRepair, /number: "01",\s*label: "Observation"/s);
 assert.match(evidenceRepair, /number: "02",\s*label: "Diagnosis"/s);
