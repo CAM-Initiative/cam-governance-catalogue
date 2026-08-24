@@ -73,7 +73,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL public knowledge</p>
             <h1>Knowledge Base</h1>
-            <p>Browse reusable governance lessons, the curated external-governance baseline and the evolving VIGIL governance failure taxonomy.</p>
+            <p>Browse reusable governance lessons, the curated AI Governance Standards Baseline and the evolving VIGIL governance failure taxonomy.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -87,8 +87,8 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
               icon={<Library />}
-              title="External Governance Baseline"
-              description="A curated reference set of external laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
+              title="AI Governance Standards Baseline"
+              description="A curated reference set of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
               status={baselineStatus}
               beta
               actionLabel="Browse sources & clauses"
