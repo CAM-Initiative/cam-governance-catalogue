@@ -22,23 +22,23 @@ export default function VigilAbout() {
     <header className="vigil-about-hero">
       <p className="vigil-library-kicker">VIGIL Observatory</p>
       <h1>About VIGIL</h1>
-      <p>VIGIL is an evidence-to-repair observatory for AI governance. It records externally observable incidents, research, platform behaviours and governance signals; identifies repeatable failure modes; routes diagnosis and repair; preserves record and repair provenance; and records reusable learning.</p>
+      <p>VIGIL is an evidence-to-repair observatory for AI governance. It records observable incidents, research, platform behaviours and governance signals; identifies repeatable failure modes; documents governance responses; and preserves reusable learning.</p>
     </header>
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Evidence to repair</p><h2 id="vigil-method-heading">How a VIGIL case is structured</h2></div>
-      <p className="vigil-about-record-intro">VIGIL uses six public stages: Observation, Classification, Diagnosis, Repair, Learn and References. References closes the chain by showing the external evidence first, followed by the linked VIGIL records and internal provenance needed to trace how the case was assembled. VIGIL record routing remains conditional, so an investigation may enter the lifecycle at different points and does not require every record type.</p>
+      <p className="vigil-about-record-intro">VIGIL uses six public stages: Observation, Classification, Diagnosis, Repair, Learn and References. References lists the sources cited by the case, with external evidence first and linked VIGIL records last.</p>
       <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL six-stage evidence-to-repair report model" tabIndex={0}>
         <div className="vigil-about-flow">
           {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>Stage {section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}
         </div>
       </div>
-      <p className="vigil-about-note">Contextual relationships may help explain a record, but they do not automatically expand an authoritative Case File, change its failure classification, or create a repair claim.</p>
+      <p className="vigil-about-note">Context can help explain a case, but the failure classification and repair claims remain tied to the evidence shown in that Case File.</p>
     </section>
 
     <section className="vigil-about-section" aria-labelledby="vigil-taxonomy-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Failure taxonomy</p><h2 id="vigil-taxonomy-heading">How VIGIL groups structurally similar failures</h2></div>
-      <p className="vigil-about-record-intro"><strong>VIGIL-2026-STD-0001 — Runtime &amp; Governance Failure Taxonomy</strong> is VIGIL&apos;s internal interpretive standard for AI-system failure classification. It provides a shared language for comparing failure mechanisms across systems, incidents and deployment contexts without treating every manifestation as a separate class.</p>
+      <p className="vigil-about-record-intro"><strong>VIGIL-2026-STD-0001 — Runtime &amp; Governance Failure Taxonomy</strong> is VIGIL&apos;s interpretive standard for AI-system failure classification. It provides a shared language for comparing failure mechanisms across systems, incidents and deployment contexts without treating every manifestation as a separate class.</p>
       <div className="vigil-about-boundary-grid">
         {taxonomyPrinciples.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
       </div>
@@ -47,7 +47,7 @@ export default function VigilAbout() {
 
     <section className="vigil-about-section" aria-labelledby="vigil-record-types-heading">
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Record system</p><h2 id="vigil-record-types-heading">VIGIL record types</h2></div>
-      <p className="vigil-about-record-intro">A Case File is a public investigation view assembled from distinct canonical records. Those records retain separate evidentiary and governance roles within VIGIL; they are not flattened into one document.</p>
+      <p className="vigil-about-record-intro">A Case File brings together the evidence, failure classification, repair and learning for one investigation. The underlying VIGIL records remain individually citable.</p>
       <div className="vigil-about-record-grid">{recordTypes.map(([code, title, text]) => <article key={code}><span>{code}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
     </section>
   </div></main></Shell>;

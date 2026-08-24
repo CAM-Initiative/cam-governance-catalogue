@@ -1,0 +1,29 @@
+/* External Governance Baseline clause expansion.
+   The collapsed row already states the clause/control and its reviewed summary.
+   Expanded state therefore shows only additional structured detail rather than
+   repeating the same summary under a second "What this clause says" heading. */
+
+.vigil-baseline-clause-row.is-open > .vigil-baseline-clause-button {
+  border-bottom: 0;
+}
+
+.vigil-baseline-clause-detail {
+  padding-top: 0.8rem;
+}
+
+.vigil-baseline-clause-detail > .vigil-baseline-clause-lead {
+  display: none;
+}
+
+.vigil-baseline-clause-detail > .vigil-baseline-detail-grid {
+  margin-top: 0;
+}
+
+.vigil-baseline-clause-detail > .vigil-baseline-detail-unavailable {
+  margin-top: 0;
+}
+
+.vigil-baseline-clause-detail > .vigil-baseline-concepts:first-child,
+.vigil-baseline-clause-detail > .vigil-baseline-clause-actions:first-child {
+  margin-top: 0;
+}

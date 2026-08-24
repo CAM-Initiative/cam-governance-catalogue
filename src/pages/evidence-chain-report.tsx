@@ -60,7 +60,7 @@ const reportSteps = [
   { number: "03", label: "Diagnosis", description: "The governance weakness, proposed response, and decision pathway." },
   { number: "04", label: "Repair", description: "The implemented corpus repair, relied-upon control, verification, and residual monitoring." },
   { number: "05", label: "Learn", description: "The durable, bounded governance knowledge produced by the completed evidence-to-repair chain." },
-  { number: "06", label: "References", description: "External evidence first, followed by linked VIGIL records and internal provenance supporting the report." },
+  { number: "06", label: "References", description: "Sources and VIGIL records cited in this report." },
 ] as const;
 
 type ReportState =
@@ -723,7 +723,7 @@ function Incomplete({ text, availabilityNote = true }: { text: string; availabil
 }
 
 function CitationList({ citations }: { citations: Citation[] }) {
-  if (!citations.length) return <p className="text-base leading-relaxed text-muted-foreground">No references are currently available in this category.</p>;
+  if (!citations.length) return <p className="text-base leading-relaxed text-muted-foreground">No references are currently available.</p>;
   return <ol className="mt-3 space-y-3">{citations.map((citation) => <li key={citation.number} className="flex gap-3 text-base leading-relaxed text-foreground/85">
     <span className="font-mono text-sm text-cam-gold">[{citation.number}]</span>
     <span className="min-w-0">
@@ -736,20 +736,7 @@ function CitationList({ citations }: { citations: Citation[] }) {
 }
 
 function ReferencesStage({ citations }: { citations: Citation[] }) {
-  const externalReferences = citations.filter((citation) => citation.kind === "source" && citation.sourceResidence?.toLocaleLowerCase() !== "cam-internal");
-  const internalReferences = citations.filter((citation) => citation.kind === "vigil" || (citation.kind === "source" && citation.sourceResidence?.toLocaleLowerCase() === "cam-internal"));
-  return <div className="space-y-6">
-    <section className="report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4">
-      <p className="report-label">External references</p>
-      <p className="mt-1 text-base leading-relaxed text-muted-foreground">Published evidence and source material relied on by the investigation.</p>
-      <CitationList citations={externalReferences} />
-    </section>
-    <section className="report-break-inside-avoid rounded-lg border border-border/70 bg-white/60 p-4">
-      <p className="report-label">Internal references</p>
-      <p className="mt-1 text-base leading-relaxed text-muted-foreground">Linked VIGIL records and governance-corpus provenance used to trace the investigation and repair.</p>
-      <CitationList citations={internalReferences} />
-    </section>
-  </div>;
+  return <div className="report-break-inside-avoid"><CitationList citations={citations} /></div>;
 }
 
 function normalizeReportRecord(detail: UnknownRecord, indexRecord: VigilIndexRecord) {

@@ -1,0 +1,51 @@
+/* Mobile Case File evidence-card repair.
+   Evidence metadata must reflow vertically rather than compressing the source title. */
+
+@media (max-width: 640px) {
+  .vigil-case-file-page .vigil-evidence-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.65rem;
+  }
+
+  .vigil-case-file-page .vigil-evidence-header > div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .vigil-case-file-page .vigil-evidence-header h3,
+  .vigil-case-file-page .vigil-evidence-source-line,
+  .vigil-case-file-page .vigil-evidence-confidence {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .vigil-case-file-page .vigil-evidence-confidence {
+    width: 100%;
+    flex: none;
+  }
+
+  .vigil-case-file-page .vigil-evidence-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+  }
+
+  .vigil-case-file-page .vigil-evidence-meta > span {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .vigil-case-file-page .vigil-evidence-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vigil-case-file-page .vigil-evidence-column,
+  .vigil-case-file-page .vigil-evidence-links {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}

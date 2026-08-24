@@ -102,13 +102,13 @@ export default function Datasets() {
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
-          <p>Machine-readable files behind VIGIL's external-governance reference library. One download provides the source register and the full clause records that sit underneath those sources.</p>
+          <p>Machine-readable VIGIL datasets for AI-governance standards, failure classification, and related public research.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
-            title="External Governance Baseline"
-            description="The machine-readable version of the curated external-governance library: the selected source register plus the clause-level records represented from those sources. The source register preserves why each authority is in scope; the clause records preserve what each source says in structured form."
+            title="AI Governance Standards Baseline"
+            description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources. The source register preserves why each authority is in scope; the clause records preserve what each source says in structured form."
             status={status}
             beta
             browseHref="/observatory/knowledge-base/standards-sources"
@@ -118,6 +118,14 @@ export default function Datasets() {
             icon={<Library />}
           />
           {downloadState === "error" ? <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p> : null}
+
+          <DatasetCard
+            title="VIGIL Failure Taxonomy"
+            description="A machine-readable classification of the recurring AI-system and governance failure patterns used across VIGIL. The dataset will expose the taxonomy structure, canonical failure families and classes, and the public definitions used to classify failure-mode records."
+            status="Coming soon"
+            beta
+            icon={<Library />}
+          />
         </section>
       </div>
     </main>

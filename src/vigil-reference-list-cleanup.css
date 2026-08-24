@@ -1,0 +1,132 @@
+/* Public References presentation.
+   References are one numbered list: external sources first, linked VIGIL records last.
+   Internal workflow/provenance commentary is not part of the public reading surface. */
+
+/* Case File references: visually collapse the two source groups into one continuous list. */
+#case-references .vigil-case-section-body {
+  counter-reset: vigil-public-reference;
+  gap: 0;
+}
+
+#case-references .vigil-reference-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#case-references .vigil-reference-group + .vigil-reference-group {
+  margin-top: 0;
+}
+
+#case-references .vigil-reference-group > .vigil-case-subheading,
+#case-references .vigil-provenance-note,
+#case-references .vigil-implementation-provenance {
+  display: none !important;
+}
+
+#case-references .vigil-case-bibliography ol,
+#case-references .vigil-record-provenance > div {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#case-references .vigil-case-bibliography li,
+#case-references .vigil-record-provenance article {
+  counter-increment: vigil-public-reference;
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.7rem minmax(0, 1fr);
+  gap: 0 0.8rem;
+  margin: 0;
+  padding: 0.9rem 0;
+  border: 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.7);
+  background: transparent;
+}
+
+#case-references .vigil-case-bibliography li::before,
+#case-references .vigil-record-provenance article::before {
+  content: "[" counter(vigil-public-reference) "]";
+  grid-column: 1;
+  grid-row: 1 / span 4;
+  font-family: var(--app-font-mono);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: hsl(var(--primary));
+}
+
+#case-references .vigil-case-bibliography li > span:first-child {
+  display: none;
+}
+
+#case-references .vigil-case-bibliography li > div,
+#case-references .vigil-record-provenance article > :not(:first-child) {
+  grid-column: 2;
+}
+
+#case-references .vigil-record-provenance {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+#case-references .vigil-record-provenance article > span {
+  grid-column: 2;
+  font-family: var(--app-font-mono);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: hsl(var(--primary));
+}
+
+#case-references .vigil-record-provenance article > strong,
+#case-references .vigil-record-provenance article > a {
+  grid-column: 2;
+}
+
+#case-references .vigil-case-empty {
+  margin: 0;
+  padding: 0.9rem 0;
+  border: 0;
+  background: transparent;
+}
+
+/* Generated Evidence-to-Repair report: same single-list treatment. Citation
+   numbers already belong to the global report bibliography, so external and
+   VIGIL references retain continuous numbering when the group chrome is removed. */
+section[aria-labelledby="report-section-06-heading"] .space-y-6 {
+  display: block;
+}
+
+section[aria-labelledby="report-section-06-heading"] .space-y-6 > section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+section[aria-labelledby="report-section-06-heading"] .space-y-6 > section > .report-label,
+section[aria-labelledby="report-section-06-heading"] .space-y-6 > section > .report-label + p {
+  display: none !important;
+}
+
+section[aria-labelledby="report-section-06-heading"] .space-y-6 > section > ol {
+  margin-top: 0;
+}
+
+section[aria-labelledby="report-section-06-heading"] .space-y-6 > section + section > ol {
+  margin-top: 0;
+}
+
+@media (max-width: 560px) {
+  #case-references .vigil-case-bibliography li,
+  #case-references .vigil-record-provenance article {
+    grid-template-columns: 2.35rem minmax(0, 1fr);
+    gap: 0 0.55rem;
+    padding: 0.8rem 0;
+  }
+}

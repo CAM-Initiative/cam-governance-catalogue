@@ -2,7 +2,7 @@ export const VIGIL_REFERENCES_SECTION = {
   id: "references",
   number: "06",
   label: "References",
-  description: "List the external evidence first, then the linked VIGIL records and internal provenance needed to audit the case and trace its conclusions.",
+  description: "Sources and VIGIL records cited in this case.",
 } as const;
 
 export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
@@ -10,31 +10,31 @@ export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
     id: "observe",
     number: "01",
     label: "Observation",
-    description: "Establish what happened or what was found, which systems are affected, what the available evidence supports, and where the evidentiary boundary sits.",
+    description: "What happened, which systems were affected, and what the evidence establishes.",
   },
   {
     id: "classify",
     number: "02",
     label: "Classification",
-    description: "Identify the repeatable failure mode, severity, canonical taxonomy position, and classification boundary.",
+    description: "The recurring failure mode, severity, and taxonomy classification.",
   },
   {
     id: "diagnose",
     number: "03",
     label: "Diagnosis",
-    description: "Identify the governance weakness, existing coverage, control gap, and response that may be required.",
+    description: "The governance weakness, existing coverage, and remaining control gap.",
   },
   {
     id: "repair",
     number: "04",
     label: "Repair",
-    description: "Record the implemented or relied-upon governance response, where it sits, how it was verified, and what remains unresolved.",
+    description: "The governance response, implementation status, and verification.",
   },
   {
     id: "learn",
     number: "05",
     label: "Learn",
-    description: "Preserve corrected governance reasoning, reusable lessons, future applications, limitations, and recurrence risk.",
+    description: "The reusable governance lesson, future application, and limitations.",
   },
   VIGIL_REFERENCES_SECTION,
 ] as const;
