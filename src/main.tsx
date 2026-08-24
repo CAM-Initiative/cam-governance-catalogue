@@ -16,5 +16,6 @@ import "./vigil-baseline-clause-collapse-fix.css";
 import "./vigil-mobile-evidence-fix.css";
 import "./sitewide-typography-floor.css";
 import "./vigil-evidence-reading-hierarchy.css";
+import "./vigil-case-file-dossier.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
