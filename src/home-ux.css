@@ -10,6 +10,39 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   background-color: hsl(var(--background)) !important;
 }
 
+/* Homepage identity artwork. The original live hero copy remains in the DOM
+ * for search and assistive technology, but is visually replaced by the
+ * approved CAM / VIGIL identity artwork. */
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1535 / 900;
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/97f5f04286bf6e3b6b40bdf20bfce9e17adb4fdf/Images/CAM_VIGIL_HERO.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > * {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media (max-width: 1023px) {
+  main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
+    width: 100%;
+    max-width: 70rem;
+    margin-inline: auto;
+  }
+}
+
 /* Explore AI Governance section label: deliberately secondary to the main
  * CAELESTIS hero, one typographic step above the External tools label. */
 aside[aria-label="Explore AI governance"] > div:first-child > p {
