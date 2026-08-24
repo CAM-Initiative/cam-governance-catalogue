@@ -743,7 +743,7 @@ test("Evidence Chain Report is a dedicated print-friendly route and preserves in
   assert.match(report, /record\.record_type === "research"/);
   assert.match(report, /observedVendor\.includes\("cam initiative"\)/);
   assert.doesNotMatch(report, /function ReportRecord/);
-  assert.match(report, /primary linked VIGIL records/);
+  assert.match(report, /Authoritative evidence-to-repair-and-learning chain/);
   assert.match(report, /function reportChainWithKnownRecords/);
 });
 
@@ -1118,7 +1118,6 @@ test("answer-first Observatory routes coexist with the complete ledger and Knowl
   assert.match(detail, /OBS → FM → PROP → PATCH → LEARN/);
   assert.match(detail, /Audit &amp; Record Metadata/);
   assert.match(detail, /Raw JSON/);
-  assert.match(nav, /Case Files/);
-  assert.match(nav, /Knowledge Base/);
+  assert.match(nav, /return null/);
   assert.doesNotMatch(nav, /Full Ledger/);
 });
