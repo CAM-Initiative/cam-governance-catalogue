@@ -76,7 +76,7 @@ export default function VigilKnowledgeHub() {
       <main className="vigil-knowledge-hub-page">
         <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
           <header className="vigil-simple-hero">
-            <p className="vigil-library-kicker">VIGIL public knowledge</p>
+            <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
             <p>Browse reusable governance lessons, the curated AI Governance Standards Baseline and the evolving VIGIL governance failure taxonomy.</p>
           </header>
