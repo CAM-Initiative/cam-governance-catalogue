@@ -13,6 +13,7 @@ import "./public-development-status.css";
 import "./vigil-external-baseline.css";
 import "./vigil-reference-list-cleanup.css";
 import "./vigil-baseline-clause-collapse-fix.css";
+import "./vigil-mobile-evidence-fix.css";
 import "./sitewide-typography-floor.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
