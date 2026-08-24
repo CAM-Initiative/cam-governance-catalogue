@@ -204,7 +204,7 @@ export default function Constitution() {
           initial={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.7 }}
         >
-          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Aeon Tier Governance</p>
+          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Runtime Governance</p>
           <h1 className="mb-3 font-serif text-4xl text-foreground md:text-5xl">The Constitution</h1>
           <hr className="gold-rule mb-4 w-24" />
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
