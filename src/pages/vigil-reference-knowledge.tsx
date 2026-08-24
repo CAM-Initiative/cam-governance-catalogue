@@ -72,7 +72,7 @@ function summaryParagraphs(summary: string) {
 }
 
 function formatReviewDate(value?: string) {
-  if (!value) return "Not yet substantively reviewed";
+  if (!value) return "No substantive review recorded";
   const parsed = new Date(`${value}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) return value;
   return new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
@@ -114,9 +114,12 @@ function SourceKnowledge({ source, compact = false }: { source: ExternalSourceEn
         <KnowledgeTags values={source.applicable_lifecycle_stages} />
       </div>
     </div>
-    <p className={`mt-4 text-xs font-medium ${due ? "text-amber-700 dark:text-amber-300" : "text-muted-foreground"}`}>
-      {due ? "Review due · " : ""}Last substantively reviewed: {formatReviewDate(source.last_substantive_reviewed)}
-    </p>
+    <div className="mt-4 flex flex-wrap items-center gap-2.5">
+      {due ? <span className="vigil-status-chip" data-tone="moderate">Review due</span> : null}
+      <p className="m-0 text-xs text-muted-foreground">
+        {source.last_substantive_reviewed ? "Last substantively reviewed: " : ""}{formatReviewDate(source.last_substantive_reviewed)}
+      </p>
+    </div>
   </section>;
 }
 
