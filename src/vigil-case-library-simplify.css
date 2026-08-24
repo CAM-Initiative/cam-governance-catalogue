@@ -115,6 +115,70 @@
   background: hsl(var(--card) / 0.38);
 }
 
+/* Knowledge Base: title and explanation first; metadata is supporting information. */
+.vigil-knowledge-hub-page .vigil-knowledge-grid {
+  gap: 1rem;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-collection {
+  display: block;
+  min-height: 228px;
+  padding: 1.3rem 1.35rem 1.15rem;
+  border-radius: 0.8rem;
+  background: hsl(var(--background));
+  box-shadow: none;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-icon,
+.vigil-knowledge-hub-page .vigil-development-kicker-row {
+  display: none;
+}
+
+.vigil-knowledge-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy > p:not(.vigil-knowledge-meta) {
+  margin-top: 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.62;
+}
+
+.vigil-knowledge-card-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 1.15rem;
+}
+
+.vigil-knowledge-meta {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-actions {
+  margin-left: auto;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy a {
+  margin-top: 0;
+  padding-top: 0;
+}
+
 @media (max-width: 760px) {
   .vigil-app-shell-inner {
     grid-template-columns: 1fr;
@@ -127,5 +191,14 @@
 
   .vigil-app-nav-link {
     min-width: 50%;
+  }
+
+  .vigil-knowledge-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vigil-knowledge-hub-page .vigil-knowledge-actions {
+    margin-left: 0;
   }
 }
