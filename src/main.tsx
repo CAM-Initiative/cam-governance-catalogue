@@ -19,5 +19,6 @@ import "./sitewide-typography-floor.css";
 import "./vigil-evidence-reading-hierarchy.css";
 import "./vigil-case-file-dossier.css";
 import "./vigil-case-file-polish.css";
+import "./vigil-case-library-simplify.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
