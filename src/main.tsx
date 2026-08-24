@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import "./vigil-reference-metadata";
 import "./index.css";
 import "./dark-appearance.css";
 import "./home-ux.css";
@@ -15,5 +16,8 @@ import "./vigil-reference-list-cleanup.css";
 import "./vigil-baseline-clause-collapse-fix.css";
 import "./vigil-mobile-evidence-fix.css";
 import "./sitewide-typography-floor.css";
+import "./vigil-evidence-reading-hierarchy.css";
+import "./vigil-case-file-dossier.css";
+import "./vigil-case-file-polish.css";
 
 createRoot(document.getElementById("root")!).render(<App />);

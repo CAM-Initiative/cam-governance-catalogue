@@ -59,6 +59,11 @@ export type ExternalSourceEntry = {
   publication_date?: string | null;
   effective_date?: string | null;
   official_locator?: string;
+  public_summary?: string;
+  ai_governance_relevance?: string[];
+  applicable_lifecycle_stages?: string[];
+  relevance_scope?: string;
+  last_substantive_reviewed?: string;
   notes?: string | null;
   review_state?: string;
   review_eligible?: boolean;

@@ -1,0 +1,153 @@
+/* Final Case File hierarchy polish.
+   Keep the dossier readable: consistent body scale, calm labels, balanced hero spacing,
+   and no accidental type jumps in evidence limitations. */
+
+/* Opening Case File hero: vertically balance the narrative against the metadata panel. */
+.vigil-case-file-page .vigil-case-file-hero-v4 {
+  align-items: stretch;
+}
+
+.vigil-case-file-page .vigil-case-file-title-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+
+.vigil-case-file-page .vigil-case-file-title-block .vigil-library-kicker {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-case-file-hero-v4 h1 {
+  margin-top: 0.85rem;
+}
+
+.vigil-case-file-page .vigil-case-file-summary {
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.68;
+}
+
+.vigil-case-file-page .vigil-case-meta-panel {
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+}
+
+.vigil-case-file-page .vigil-case-meta-panel dl {
+  gap: 1.25rem 1.5rem;
+}
+
+/* Limits stay visually subordinate whether collapsed or expanded. */
+.vigil-case-file-page .vigil-evidence-limitations summary,
+.vigil-case-file-page .vigil-evidence-limitations[open] summary {
+  font-family: var(--app-font-sans);
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+  color: var(--vigil-case-label);
+}
+
+.vigil-case-file-page .vigil-evidence-limitations[open] summary {
+  padding-bottom: 0.6rem;
+}
+
+.vigil-case-file-page .vigil-evidence-limitations p {
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+/* Diagnosis mechanism fields use the same soft reading-panel grammar as the taxonomy prototype. */
+.vigil-case-file-page .vigil-diagnosis-mechanism {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vigil-case-file-page .vigil-diagnosis-definition,
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair > section {
+  padding: 1.05rem 1.15rem;
+  border-radius: 0.78rem;
+  background: hsl(var(--card) / 0.36);
+}
+
+.vigil-case-file-page .vigil-diagnosis-definition > p:last-child,
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair > section > p:last-child {
+  margin: 0.48rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+/* The homepage internal and external resource titles are one typographic system. */
+aside[aria-label="Explore AI governance"] .home-governance-card > span:first-child {
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.875rem !important;
+  font-weight: 650 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+}
+
+aside[aria-label="Explore AI governance"] .home-governance-card > span:first-child > span:first-child {
+  font: inherit !important;
+  letter-spacing: inherit !important;
+  text-transform: inherit !important;
+}
+
+/* Stage descriptions are secondary editorial copy attached to the active file tab. */
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
+  font-style: italic;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* The failure-mode identifier is already present in the Case File metadata panel. */
+.vigil-case-file-page .vigil-affected-system-grid > article > span {
+  display: none !important;
+}
+
+/* One metadata-label grammar across Case File, affected-system and source cards. */
+.vigil-case-file-page .vigil-case-field dt,
+.vigil-case-file-page .vigil-evidence-meta-field dt,
+.vigil-case-file-page .vigil-evidence-limitations summary,
+.vigil-case-file-page .vigil-evidence-limitations[open] summary {
+  font-family: var(--app-font-sans) !important;
+  font-size: 0.72rem !important;
+  font-weight: 650 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.065em !important;
+  text-transform: uppercase !important;
+  color: var(--vigil-case-label) !important;
+}
+
+/* Diagnosis reading headings match the evidence-card reading headings. */
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair .vigil-library-kicker {
+  margin: 0;
+  font-family: var(--app-font-sans) !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  color: hsl(var(--foreground) / 0.82) !important;
+}
+
+@media (max-width: 820px) {
+  .vigil-case-file-page .vigil-diagnosis-mechanism-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-case-file-page .vigil-case-file-title-block {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+}
