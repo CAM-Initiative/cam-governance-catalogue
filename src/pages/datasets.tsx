@@ -102,13 +102,13 @@ export default function Datasets() {
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
-          <p>Machine-readable files behind VIGIL's external-governance reference library. One download provides the source register and the full clause records that sit underneath those sources.</p>
+          <p>Machine-readable files behind VIGIL's AI Governance Standards Baseline. One download provides the source register and the full clause records that sit underneath those sources.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
-            title="External Governance Baseline"
-            description="The machine-readable version of the curated external-governance library: the selected source register plus the clause-level records represented from those sources. The source register preserves why each authority is in scope; the clause records preserve what each source says in structured form."
+            title="AI Governance Standards Baseline"
+            description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources. The source register preserves why each authority is in scope; the clause records preserve what each source says in structured form."
             status={status}
             beta
             browseHref="/observatory/knowledge-base/standards-sources"
