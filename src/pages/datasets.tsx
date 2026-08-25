@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Download, Library } from "lucide-react";
-import { Link } from "wouter";
+import { Download, Library } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
 import {
   downloadExternalGovernanceDataset,
@@ -19,9 +18,9 @@ function DatasetCard({
   description,
   status,
   beta = false,
-  browseHref,
-  browseLabel,
   onDownload,
+  downloadHref,
+  downloadLabel = "Download dataset",
   downloading,
   icon,
 }: {
@@ -29,9 +28,9 @@ function DatasetCard({
   description: string;
   status: string;
   beta?: boolean;
-  browseHref?: string;
-  browseLabel?: string;
   onDownload?: () => void;
+  downloadHref?: string;
+  downloadLabel?: string;
   downloading?: boolean;
   icon: React.ReactNode;
 }) {
@@ -47,13 +46,13 @@ function DatasetCard({
           <h2>{title}</h2>
         </div>
         {onDownload ? <button type="button" className="vigil-baseline-download shrink-0" onClick={onDownload} disabled={downloading}>
-          {downloading ? "Preparing dataset…" : "Download dataset"}<Download aria-hidden="true" />
+          {downloading ? "Preparing dataset…" : downloadLabel}<Download aria-hidden="true" />
         </button> : null}
+        {!onDownload && downloadHref ? <a className="vigil-baseline-download shrink-0" href={downloadHref} target="_blank" rel="noreferrer">
+          {downloadLabel}<Download aria-hidden="true" />
+        </a> : null}
       </div>
       <p>{description}</p>
-      {browseHref && browseLabel ? <div className="vigil-knowledge-actions">
-        <Link href={browseHref}>{browseLabel}<ArrowRight aria-hidden="true" /></Link>
-      </div> : null}
     </div>
   </article>;
 }
@@ -102,17 +101,15 @@ export default function Datasets() {
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
-          <p>Machine-readable VIGIL datasets for AI-governance standards, failure classification, and related public research.</p>
+          <p>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
-            title="AI Governance Standards Baseline"
-            description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources. The source register preserves why each authority is in scope; the clause records preserve what each source says in structured form."
+            title="AI Governance Standards — Compliance Baseline"
+            description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources."
             status={status}
             beta
-            browseHref="/observatory/knowledge-base/standards-sources"
-            browseLabel="Browse sources & clauses"
             onDownload={downloadDataset}
             downloading={downloadState === "working"}
             icon={<Library />}
@@ -121,9 +118,18 @@ export default function Datasets() {
 
           <DatasetCard
             title="VIGIL AI Governance Failure Taxonomy"
-            description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with recognition criteria, exclusions, examples and relationships. The dataset publishes that taxonomy in machine-readable form for reuse and analysis."
+            description="A machine-readable classification reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with explicit recognition criteria and boundaries."
             status="Coming soon"
             beta
+            icon={<Library />}
+          />
+
+          <DatasetCard
+            title="CAELESTIS Architecture Model"
+            description="Archived public release of the CAELESTIS Architecture Model governance corpus. The current downloadable release is version 1.1.0, preserved through Zenodo with a persistent DOI."
+            status="Version 1.1.0 · Zenodo"
+            downloadHref="https://doi.org/10.5281/zenodo.20686316"
+            downloadLabel="Open Zenodo archive"
             icon={<Library />}
           />
         </section>
