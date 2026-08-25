@@ -92,6 +92,24 @@ function EvidenceRepairLoop() {
   );
 }
 
+function DatasetsPanel() {
+  return (
+    <section className="home-rail-section" aria-labelledby="datasets-home-heading" id="datasets-home">
+      <SectionLabel>Datasets</SectionLabel>
+      <div className="home-datasets-panel">
+        <div>
+          <p className="home-datasets-kicker">Downloadable governance reference data</p>
+          <h2 id="datasets-home-heading">Use the underlying governance data directly.</h2>
+          <p>
+            The CAM Initiative publishes machine-readable governance reference data and archival releases for independent research, comparison and reuse. The datasets surface brings together VIGIL standards and source records, structured governance requirements, and the current CAELESTIS archival release, with additional public datasets added as they mature.
+          </p>
+        </div>
+        <a href="/datasets">Open datasets <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></a>
+      </div>
+    </section>
+  );
+}
+
 function PolicyPapersPanel() {
   return (
     <section className="home-rail-section" aria-labelledby="policy-papers-home-heading" id="policy-papers">
@@ -190,6 +208,7 @@ export default function Home() {
               </section>
 
               <EvidenceRepairLoop />
+              <DatasetsPanel />
               <PolicyPapersPanel />
               <ConnectPanel />
             </div>
