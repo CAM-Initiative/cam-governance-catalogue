@@ -21,6 +21,7 @@ import VigilAbout from "@/pages/vigil-about";
 import EvidenceChainReport from "@/pages/evidence-chain-report-printable";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
 import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
+import VigilStandardSource from "@/pages/vigil-standard-source";
 import VigilFailureTaxonomy from "@/pages/vigil-failure-taxonomy";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
 import Datasets from "@/pages/datasets";
@@ -51,6 +52,7 @@ function Router() {
       {/* Governance Lessons remains a LEARN projection; the Knowledge Base itself is broader. */}
       <Route path="/observatory/lessons" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base/external-requirements" component={VigilStandardsBaseline} />
+      <Route path="/observatory/knowledge-base/standards-sources/:sourceKey" component={VigilStandardSource} />
       <Route path="/observatory/knowledge-base/standards-sources" component={VigilStandardsBaseline} />
       <Route path="/observatory/knowledge-base/failure-taxonomy/:taxonomyId" component={VigilFailureTaxonomy} />
       <Route path="/observatory/knowledge-base/failure-taxonomy" component={VigilFailureTaxonomy} />
