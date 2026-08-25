@@ -7,6 +7,7 @@ import "./vigil-ux-v3.css";
 import "./vigil-ux-v4.css";
 import "./vigil-ux-v5.css";
 import "./vigil-ux-v6.css";
+import "./vigil-standards-dossier.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
@@ -18,7 +19,7 @@ import VigilCaseFile from "@/pages/vigil-case-file";
 import VigilAbout from "@/pages/vigil-about";
 import EvidenceChainReport from "@/pages/evidence-chain-report";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
-import { VigilExternalRequirements, VigilExternalSources } from "@/pages/vigil-reference-knowledge";
+import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
 import Datasets from "@/pages/datasets";
 import About from "@/pages/about";
@@ -52,8 +53,8 @@ function Router() {
 
       {/* Governance Lessons remains a LEARN projection; the Knowledge Base itself is broader. */}
       <Route path="/observatory/lessons" component={VigilKnowledgeBase} />
-      <Route path="/observatory/knowledge-base/external-requirements" component={VigilExternalRequirements} />
-      <Route path="/observatory/knowledge-base/standards-sources" component={VigilExternalSources} />
+      <Route path="/observatory/knowledge-base/external-requirements" component={VigilStandardsBaseline} />
+      <Route path="/observatory/knowledge-base/standards-sources" component={VigilStandardsBaseline} />
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 
