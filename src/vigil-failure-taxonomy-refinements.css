@@ -1,0 +1,84 @@
+/* Refinements for the VIGIL Failure Taxonomy manual navigation. */
+
+.vigil-taxonomy-manual-layout.is-contents-collapsed {
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+}
+
+.vigil-taxonomy-manual-contents-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.vigil-taxonomy-manual-contents-head h2 {
+  margin: 0;
+}
+
+.vigil-taxonomy-manual-collapse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.38rem;
+  background: hsl(var(--background));
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.vigil-taxonomy-manual-collapse svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.vigil-taxonomy-manual-collapse:hover,
+.vigil-taxonomy-manual-collapse:focus-visible {
+  border-color: hsl(var(--primary) / 0.55);
+  background: hsl(var(--muted) / 0.45);
+  color: hsl(var(--foreground));
+}
+
+.vigil-taxonomy-manual-contents.is-collapsed {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 3.25rem;
+  min-width: 3.25rem;
+  padding: 0.6rem;
+  overflow: hidden;
+}
+
+.vigil-taxonomy-manual-contents.is-collapsed .vigil-taxonomy-manual-contents-head {
+  width: 100%;
+  justify-content: center;
+}
+
+.vigil-taxonomy-manual-family-prefix {
+  margin-right: 0.4rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.42em;
+  font-weight: 700;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  vertical-align: middle;
+}
+
+@media (max-width: 1050px) {
+  .vigil-taxonomy-manual-layout.is-contents-collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-taxonomy-manual-contents.is-collapsed {
+    position: static;
+    width: 3.25rem;
+    min-width: 3.25rem;
+    min-height: 3.25rem;
+    max-height: none;
+  }
+}
