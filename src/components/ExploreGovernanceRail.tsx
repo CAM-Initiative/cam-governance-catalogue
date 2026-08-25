@@ -5,8 +5,15 @@ const initiativeResources = [
     id: "vigil-observatory",
     title: "VIGIL Observatory",
     subtitle: "Evidence, taxonomy & governance knowledge",
-    purpose: "Case Files, the VIGIL AI Governance Failure Taxonomy, governance standards, policy materials and source-linked public research.",
+    purpose: "The public entry point for VIGIL governance knowledge, standards, taxonomy and policy materials.",
     href: "/observatory/knowledge-base",
+  },
+  {
+    id: "case-files",
+    title: "Case Files",
+    subtitle: "AI failure incident database",
+    purpose: "Documented AI failure-mode investigations with evidence, classification, diagnosis, repair and learning.",
+    href: "/observatory/cases",
   },
   {
     id: "datasets",
@@ -44,7 +51,7 @@ export function ExploreGovernanceRail() {
   return (
     <aside aria-label="Explore AI governance" className="home-governance-panel">
       <div className="home-governance-heading">
-        <p>Explore AI Governance</p>
+        <p className="home-governance-section-label">Explore AI Governance</p>
       </div>
 
       <div className="home-governance-links">
@@ -63,7 +70,7 @@ export function ExploreGovernanceRail() {
       </div>
 
       <div className="home-governance-external">
-        <p>External tools</p>
+        <p className="home-governance-section-label">External Tools</p>
         <div className="home-governance-links">
           {externalResources.map((resource) => (
             <a className="home-governance-card group" href={resource.href} key={resource.label} rel="noreferrer" target="_blank">
