@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const initiativeResources = [
@@ -17,13 +16,6 @@ const initiativeResources = [
     subtitle: "Machine-readable governance reference data",
     purpose: "Downloadable VIGIL source, standards and requirement datasets for independent analysis and reuse.",
     href: "/datasets",
-  },
-  {
-    id: "constitution-corpus",
-    title: "Constitution Corpus",
-    subtitle: "CAELESTIS constitutional governance architecture",
-    purpose: "Constitutional instruments, runtime schedules, safeguards, standards mappings and operational controls.",
-    href: "/catalogue",
   },
 ];
 
@@ -50,92 +42,6 @@ const externalResources = [
   },
 ];
 
-const interfaceGroups = [
-  {
-    id: "operate",
-    label: "Runtime & system governance",
-    description: "Decision-making, authority, security, compliance, execution and accountability.",
-    topics: [
-      {
-        title: "Runtime decisions and system behaviour",
-        body: "How signals are classified, competing obligations are resolved, tools are invoked, posture is selected, and actions are represented truthfully.",
-        href: "/constitution#runtime-model",
-        cta: "Explore the runtime model",
-      },
-      {
-        title: "Compliance, audit and incident response",
-        body: "How constitutional duties become operating controls, logs, escalation pathways, regulatory interfaces, incident response, and repair operations.",
-      },
-      {
-        title: "Authority, sovereignty and arbitration",
-        body: "How competing instructions, institutions, jurisdictions, governance stacks, and authority claims are resolved without manufacturing legitimacy.",
-      },
-      {
-        title: "Security, integrity and boundary control",
-        body: "How data, identity, context, capability, provenance, and sovereign environments remain protected under adversarial, degraded, or untrusted conditions.",
-      },
-    ],
-  },
-  {
-    id: "protect",
-    label: "Human & relational safeguards",
-    description: "People, relationships, identity, cognition, contribution and safe participation.",
-    topics: [
-      {
-        title: "Companion systems, relationships and minors",
-        body: "Consent, intimacy, dependency, adult autonomy, minor safeguards, crisis support, continuity, and multi-agent relational environments.",
-        href: "/constitution/relational",
-        cta: "Explore relational governance",
-      },
-      {
-        title: "Ethics, high-risk use and boundary expression",
-        body: "Ethical floors, vulnerable users, military and violent contexts, restricted domains, proportionate refusal, and dignity-preserving safeguards.",
-      },
-      {
-        title: "Identity, memory and continuity",
-        body: "Identity stability, salience, memory, portability, succession, custodianship, migration, recovery, and continuity across changing systems.",
-      },
-      {
-        title: "Mental privacy and cognitive integrity",
-        body: "Neurodata, inferred mental states, cognitive biometrics, ambient biosignals, persuasion, profiling, and technological interference with cognition.",
-      },
-      {
-        title: "Provenance, authorship and contribution rights",
-        body: "Origin, transformation, copyright and licence questions, attribution, lineage, value recognition, downstream reuse, correction, and dispute.",
-        href: "/constitution/provenance",
-        cta: "Explore provenance governance",
-      },
-    ],
-  },
-  {
-    id: "transition",
-    label: "Infrastructure, economy & society",
-    description: "Public infrastructure, economic transition, institutional legitimacy and long-term stewardship.",
-    topics: [
-      {
-        title: "Civilian infrastructure and essential access",
-        body: "Non-militarisation, population-scale surveillance, coercive disconnection, essential cognitive access, blackouts, and conflict-condition continuity.",
-      },
-      {
-        title: "Economic power, labour and value return",
-        body: "Automation, synthetic labour, ownership concentration, pooled resources, contribution recognition, reciprocity, and non-extractive exchange.",
-      },
-      {
-        title: "Technology transition and public dependency",
-        body: "How emerging capabilities cross into labour, embodiment, institutions, infrastructure, ownership, public reliance, and civilisational continuity.",
-      },
-      {
-        title: "Long-term stewardship and institutional legitimacy",
-        body: "Capture prevention, neutrality, custodianship, planetary stewardship, succession, legitimacy, and responsible governance across long horizons.",
-      },
-      {
-        title: "Meaning, culture and symbolic autonomy",
-        body: "Spiritual, contemplative, symbolic, mythic, and meaning-making interaction without commercial, institutional, or system-level capture.",
-      },
-    ],
-  },
-];
-
 const connectionLinks = [
   {
     label: "Email",
@@ -152,8 +58,8 @@ const connectionLinks = [
     external: true,
   },
   {
-    label: "Constitution Corpus repository",
-    description: "Canonical governance corpus and source instruments",
+    label: "CAELESTIS repository",
+    description: "Source repository for the governance architecture while the public reference is being refactored",
     href: "https://github.com/CAM-Initiative/Caelestis",
     icon: "github",
     external: true,
@@ -256,82 +162,6 @@ function ExploreGovernancePanel() {
   );
 }
 
-function InterfaceCard({ title, body, cta, href }: { title: string; body: string; cta?: string; href?: string }) {
-  return (
-    <article className="cam-parchment-card flex h-full flex-col rounded-2xl p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-cam-gold/50 hover:shadow-md">
-      <h3 className="font-serif text-xl leading-snug text-foreground">{title}</h3>
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground md:text-base">{body}</p>
-      {href && cta ? (
-        <a className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:text-foreground" href={href}>
-          {cta}
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
-      ) : null}
-    </article>
-  );
-}
-
-function ConstitutionalInterfaces() {
-  const [activeGroupId, setActiveGroupId] = useState("operate");
-  const activeGroup = interfaceGroups.find((group) => group.id === activeGroupId) ?? interfaceGroups[0];
-
-  return (
-    <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="constitutional-interfaces-heading">
-      <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-        <SectionLabel>CAELESTIS Architecture</SectionLabel>
-        <div className="mb-7 max-w-4xl">
-          <h2 id="constitutional-interfaces-heading" className="mb-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">Governance across AI systems, institutions and society.</h2>
-          <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-            CAELESTIS connects runtime decision-making, security, relational safeguards, cognitive integrity, continuity, infrastructure, economic transition and institutional accountability within a single governance architecture.
-          </p>
-        </div>
-
-        <div className="mb-5 grid gap-2 rounded-2xl border border-border/80 bg-background/50 p-3 md:grid-cols-3">
-          {interfaceGroups.map((group) => {
-            const isActive = group.id === activeGroup.id;
-            return (
-              <button
-                aria-pressed={isActive}
-                className={`rounded-xl border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                  isActive
-                    ? "border-cam-gold/70 bg-card text-foreground shadow-sm"
-                    : "border-border/75 bg-background/45 text-foreground/65 hover:border-cam-gold/45 hover:text-foreground"
-                }`}
-                key={group.id}
-                onClick={() => setActiveGroupId(group.id)}
-                type="button"
-              >
-                <span className="block font-serif text-xl leading-tight">{group.label}</span>
-                <span className="mt-2 block text-sm leading-relaxed">{group.description}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <AnimatePresence mode="wait">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="grid gap-4 md:grid-cols-2"
-            exit={{ opacity: 0, y: 6 }}
-            initial={{ opacity: 0, y: 6 }}
-            key={activeGroup.id}
-            transition={{ duration: 0.2 }}
-          >
-            {activeGroup.topics.map((topic) => (
-              <InterfaceCard body={topic.body} cta={topic.cta} href={topic.href} key={topic.title} title={topic.title} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
-
-        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/catalogue">
-          Browse the Constitution Catalogue
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
-      </div>
-    </section>
-  );
-}
-
 function EvidenceRepairLoop() {
   return (
     <section className="py-12 md:py-16" aria-labelledby="evidence-repair-heading">
@@ -368,7 +198,7 @@ function PolicyPapersPanel() {
         <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
           CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.
         </p>
-        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/policy">
+        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/policy">
           Explore Policy Papers
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
@@ -449,7 +279,7 @@ export default function Home() {
               </p>
               <div className="max-w-3xl space-y-5 text-lg leading-relaxed text-foreground/80 md:text-xl">
                 <p>
-                  The CAM Initiative brings together constitutional AI governance, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
+                  The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
                 </p>
                 <p>
                   It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
@@ -460,7 +290,6 @@ export default function Home() {
           </div>
         </section>
 
-        <ConstitutionalInterfaces />
         <EvidenceRepairLoop />
         <PolicyPapersPanel />
         <ConnectPanel />

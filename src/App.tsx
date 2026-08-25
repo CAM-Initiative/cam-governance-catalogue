@@ -10,12 +10,9 @@ import "./vigil-ux-v6.css";
 import "./vigil-standards-dossier.css";
 import "./vigil-standards-dossier-refinements.css";
 import "./vigil-failure-taxonomy.css";
+import "./public-surface-refinements.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
-import Constitution from "@/pages/constitution";
-import RelationalGovernance from "@/pages/relational-governance-final";
-import Provenance from "@/pages/provenance";
-import Catalogue from "@/pages/catalogue";
 import VigilCases from "@/pages/vigil-cases";
 import VigilCaseFile from "@/pages/vigil-case-file";
 import VigilAbout from "@/pages/vigil-about";
@@ -34,11 +31,6 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
-      <Route path="/constitution/runtime" component={Constitution} />
-      <Route path="/constitution/relational" component={RelationalGovernance} />
-      <Route path="/constitution/provenance" component={Provenance} />
-      <Route path="/constitution" component={Constitution} />
-      <Route path="/catalogue" component={Catalogue} />
       <Route path="/datasets" component={Datasets} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
@@ -60,6 +52,7 @@ function Router() {
       <Route path="/observatory/knowledge-base/standards-sources" component={VigilStandardsBaseline} />
       <Route path="/observatory/knowledge-base/failure-taxonomy/:taxonomyId" component={VigilFailureTaxonomy} />
       <Route path="/observatory/knowledge-base/failure-taxonomy" component={VigilFailureTaxonomy} />
+      <Route path="/observatory/knowledge-base/policy" component={Policy} />
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 

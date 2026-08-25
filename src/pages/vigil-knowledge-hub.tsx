@@ -24,13 +24,27 @@ function isFailureModeRecord(record: Record<string, unknown>) {
   return /^VIGIL-\d{4}-FM-\d{4}$/i.test(id) || type === "failure_mode";
 }
 
-function CollectionCard({ href, title, description, meta, beta = false, actionLabel = "Browse collection" }: { href?: string; title: string; description: string; meta: string; beta?: boolean; actionLabel?: string }) {
+function CollectionCard({
+  href,
+  title,
+  description,
+  meta,
+  chip,
+  actionLabel = "Browse collection",
+}: {
+  href?: string;
+  title: string;
+  description: string;
+  meta: string;
+  chip?: string;
+  actionLabel?: string;
+}) {
   return (
     <article className="vigil-knowledge-collection">
       <div className="vigil-knowledge-copy">
         <div className="vigil-knowledge-title-row">
           <h2>{title}</h2>
-          {beta ? <span className="cam-beta-chip">Beta</span> : null}
+          {chip ? <span className="cam-beta-chip">{chip}</span> : null}
         </div>
         <p>{description}</p>
         <div className="vigil-knowledge-card-footer">
@@ -89,7 +103,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse the curated AI Governance Standards Baseline, documented VIGIL Case Files and the evolving governance failure taxonomy.</p>
+            <p>Browse the AI Governance Standards Baseline, documented VIGIL Case Files, the governance failure taxonomy, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -98,7 +112,7 @@ export default function VigilKnowledgeHub() {
               title="AI Governance Standards Baseline"
               description="A curated reference set of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
               meta={baselineMeta}
-              beta
+              chip="Beta"
               actionLabel="Browse sources & clauses"
             />
             <CollectionCard
@@ -113,8 +127,21 @@ export default function VigilKnowledgeHub() {
               title="Governance Failure Taxonomy"
               description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and classes with recognition criteria, exclusions, examples and relationships."
               meta={taxonomyMeta}
-              beta
+              chip="Beta"
               actionLabel="Browse taxonomy"
+            />
+            <CollectionCard
+              href="/observatory/knowledge-base/policy"
+              title="Policy"
+              description="CAM Initiative policy papers, submissions and public-interest governance proposals translating evidence and governance analysis into practical institutional and regulatory recommendations."
+              meta="Public policy papers and submissions"
+              actionLabel="Browse policy"
+            />
+            <CollectionCard
+              title="CAELESTIS Architecture Model"
+              description="The public architecture reference is undergoing a substantive refactor. It will return here when the structure, source material and presentation are ready for publication."
+              meta="Coming Soon"
+              chip="Refactoring"
             />
           </section>
         </div>
