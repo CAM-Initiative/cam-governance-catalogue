@@ -118,7 +118,7 @@ function reviewSystemLabel(event?: ExternalReviewEvent) {
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return <label className="vigil-search-control vigil-standards-search">
     <Search aria-hidden="true" />
-    <span className="sr-only">Search AI Governance Standards Baseline</span>
+    <span className="sr-only">Search AI Governance Standards — Compliance Baseline</span>
     <input type="search" value={value} onChange={(event) => onChange(event.target.value)} placeholder="Search source, governance theme, lifecycle stage, clause, duty or actor…" />
     {value && <button type="button" onClick={() => onChange("")} aria-label="Clear search"><X /></button>}
   </label>;
@@ -425,12 +425,12 @@ export default function VigilStandardsBaseline() {
     <section className="vigil-standards-shell" aria-labelledby="standards-heading">
       <header className="vigil-standards-header">
         <p className="vigil-library-kicker">VIGIL Observatory</p>
-        <h1 id="standards-heading">AI Governance Standards Baseline</h1>
+        <h1 id="standards-heading">AI Governance Standards — Compliance Baseline</h1>
         <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question.</p>
       </header>
 
-      {state.status === "loading" && <div className="vigil-reference-state">Loading AI Governance Standards Baseline…</div>}
-      {state.status === "unavailable" && <div className="vigil-reference-state"><h2>AI Governance Standards Baseline unavailable</h2><p>{state.message}</p></div>}
+      {state.status === "loading" && <div className="vigil-reference-state">Loading AI Governance Standards — Compliance Baseline…</div>}
+      {state.status === "unavailable" && <div className="vigil-reference-state"><h2>AI Governance Standards — Compliance Baseline unavailable</h2><p>{state.message}</p></div>}
       {state.status === "ready" && <>
         <section className="vigil-standards-toolbar" aria-label="Search and filter AI governance sources">
           <SearchControl value={query} onChange={setQuery} />
