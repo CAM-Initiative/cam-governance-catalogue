@@ -29,6 +29,20 @@ const TABS: Array<{ id: SourceTab; number: string; label: string }> = [
   { id: "review", number: "04", label: "Evidence & Review" },
 ];
 
+/*
+ * Canonical VIGIL provenance currently establishes the production model but
+ * does not identify the specific AI model that performed each historical
+ * external-source review. The public surface must expose that gap rather than
+ * invent retrospective specificity. See VIGIL-AUTHORSHIP-PROVENANCE-1.
+ */
+const EXTERNAL_REVIEW_PROVENANCE = {
+  system: "AI system · specific model not recorded",
+  productionMode: "Semi-autonomous",
+  humanRole: "Contract approver",
+  humanReview: "Not reviewed",
+  humanVerification: "Not verified",
+};
+
 function clean(value?: string) {
   return value?.replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
@@ -78,11 +92,23 @@ function formatReviewDate(value?: string) {
   return new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
 }
 
+function nextReviewDate(value?: string) {
+  if (!value) return "Not scheduled";
+  const parsed = new Date(`${value}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return "Not scheduled";
+  parsed.setUTCDate(parsed.getUTCDate() + 90);
+  return new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(parsed);
+}
+
 function reviewIsDue(value?: string) {
   if (!value) return true;
   const reviewed = new Date(`${value}T00:00:00Z`).getTime();
   if (Number.isNaN(reviewed)) return true;
   return Date.now() - reviewed > 90 * 24 * 60 * 60 * 1000;
+}
+
+function listLabel(values?: string[]) {
+  return values?.length ? values.map(knowledgeLabel).join(" · ") : "Not yet classified";
 }
 
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -92,11 +118,6 @@ function SearchControl({ value, onChange }: { value: string; onChange: (value: s
     <input type="search" value={value} onChange={(event) => onChange(event.target.value)} placeholder="Search source, governance theme, lifecycle stage, clause, duty or actor…" />
     {value && <button type="button" onClick={() => onChange("")} aria-label="Clear search"><X /></button>}
   </label>;
-}
-
-function KnowledgeTags({ values }: { values?: string[] }) {
-  if (!values?.length) return <p className="vigil-standards-empty-copy">Not yet classified.</p>;
-  return <div className="vigil-standards-tags">{values.map((value) => <span key={value}>{knowledgeLabel(value)}</span>)}</div>;
 }
 
 function Fact({ label, value }: { label: string; value?: string }) {
@@ -127,20 +148,95 @@ function ClauseDetail({ requirement, source }: { requirement: ExternalRequiremen
   </div>;
 }
 
+function clauseCoverageCopy(scope?: ExternalSourceScopeEntry) {
+  const status = comparable(scope?.extraction_status);
+  const access = comparable(scope?.source_access_status);
+  const recordedScope = scope?.extraction_scope_notes?.trim();
+
+  if (status === "blocked access") {
+    return {
+      heading: "Primary-text review is blocked",
+      body: recordedScope || "Clause-level requirements are not represented because the primary normative text has not been available for lawful substantive review.",
+      qualification: access.includes("metadata")
+        ? "Only official metadata or an abstract is available. VIGIL does not infer normative clauses from metadata; controlled standards require lawful primary-text access before clause-level extraction."
+        : undefined,
+    };
+  }
+
+  if (status === "supporting only") {
+    return {
+      heading: "Clause decomposition is outside the current scope",
+      body: recordedScope || "This source is retained as supporting authority rather than as a first-class clause-level requirement corpus.",
+      qualification: access.includes("licensed")
+        ? "Lawful licensed primary-text access is recorded. Copyrighted source text is not reproduced; the absence of clause records reflects the bounded extraction scope, not a prohibition on analytical abstraction."
+        : undefined,
+    };
+  }
+
+  if (status === "context only") {
+    return {
+      heading: "Context source — no clause decomposition",
+      body: recordedScope || "This source is retained for context, comparison or taxonomy architecture rather than clause-level governance requirements.",
+    };
+  }
+
+  if (status === "partial") {
+    return {
+      heading: "Clause review is incomplete",
+      body: recordedScope || "The substantive review is partial and the current public dataset does not yet contain clause-level records for this source.",
+    };
+  }
+
+  if (status === "complete") {
+    return {
+      heading: "No clause records met the bounded extraction criterion",
+      body: recordedScope || "A substantive review is recorded, but it did not produce public clause-level records under VIGIL's current governance-significant extraction criterion.",
+    };
+  }
+
+  return {
+    heading: "Clause coverage is not yet represented",
+    body: recordedScope || "The current source-scope record does not establish a published clause-level extraction for this source.",
+  };
+}
+
+function ClauseCoverageCard({ scope }: { scope?: ExternalSourceScopeEntry }) {
+  const copy = clauseCoverageCopy(scope);
+  const outstanding = [...(scope?.known_unreviewed_sections ?? []), ...(scope?.inaccessible_sections ?? [])]
+    .filter((value, index, values) => values.indexOf(value) === index);
+
+  return <article className="vigil-standards-empty-card">
+    <p className="vigil-library-kicker">Clause coverage</p>
+    <h3>{copy.heading}</h3>
+    <p>{copy.body}</p>
+    {copy.qualification ? <p>{copy.qualification}</p> : null}
+    {outstanding.length ? <p><strong>Not represented:</strong> {outstanding.join(" · ")}</p> : null}
+    <dl className="vigil-standards-empty-facts">
+      <Fact label="Coverage status" value={clean(scope?.extraction_status)} />
+      <Fact label="Source access" value={clean(scope?.source_access_status)} />
+    </dl>
+  </article>;
+}
+
 function StandardsDossier({
   source,
+  scope,
   clauses,
   previousVersions,
   activeTab,
   onTab,
 }: {
   source: ExternalSourceEntry;
+  scope?: ExternalSourceScopeEntry;
   clauses: ExternalRequirementDetail[];
   previousVersions: ExternalSourceEntry[];
   activeTab: SourceTab;
   onTab: (tab: SourceTab) => void;
 }) {
   const due = reviewIsDue(source.last_substantive_reviewed);
+  const reviewMethod = scope?.extraction_scope_notes?.trim()
+    || "A substantive source review is recorded, but the current public source-scope record does not describe the extraction method in greater detail.";
+
   return <section className="vigil-standards-dossier" aria-label={`${source.title} reference dossier`}>
     <nav className="vigil-standards-tabs" aria-label={`${source.title} sections`}>
       {TABS.map((tab) => <button key={tab.id} type="button" className={activeTab === tab.id ? "is-active" : ""} onClick={() => onTab(tab.id)} aria-pressed={activeTab === tab.id}>
@@ -160,20 +256,20 @@ function StandardsDossier({
           <Fact label="Source type" value={clean(source.source_class)} />
           <Fact label="Version" value={source.source_version} />
           <Fact label="Lifecycle state" value={clean(source.source_lifecycle_state)} />
-          <Fact label="Publication date" value={source.publication_date} />
-          <Fact label="Effective date" value={source.effective_date} />
+          <Fact label="Publication date" value={source.publication_date ?? undefined} />
+          <Fact label="Effective date" value={source.effective_date ?? undefined} />
         </dl>
       </div>}
 
-      {activeTab === "relevance" && <div className="vigil-standards-relevance">
-        <section>
+      {activeTab === "relevance" && <div className="vigil-standards-reading vigil-standards-relevance">
+        <div className="vigil-standards-reading-main">
           <p className="vigil-library-kicker">Where it matters</p>
           <p>{source.relevance_scope || "A separate relevance scope is not yet published for this source."}</p>
-        </section>
-        <div className="vigil-standards-relevance-grid">
-          <section><p className="vigil-library-kicker">AI governance relevance</p><KnowledgeTags values={source.ai_governance_relevance} /></section>
-          <section><p className="vigil-library-kicker">Relevant lifecycle stages</p><KnowledgeTags values={source.applicable_lifecycle_stages} /></section>
         </div>
+        <dl className="vigil-standards-facts">
+          <Fact label="AI governance relevance" value={listLabel(source.ai_governance_relevance)} />
+          <Fact label="Relevant lifecycle stages" value={listLabel(source.applicable_lifecycle_stages)} />
+        </dl>
       </div>}
 
       {activeTab === "clauses" && <div className="vigil-standards-clauses">
@@ -185,15 +281,34 @@ function StandardsDossier({
             <ChevronDown aria-hidden="true" />
           </summary>
           <ClauseDetail requirement={clause} source={source} />
-        </details>) : <div className="vigil-standards-empty-tab"><p>No public clause records are currently represented for this source.</p></div>}
+        </details>) : <div className="vigil-standards-empty-tab"><ClauseCoverageCard scope={scope} /></div>}
       </div>}
 
       {activeTab === "review" && <div className="vigil-standards-review">
-        <div className="vigil-standards-review-lead">
-          <div><p className="vigil-library-kicker">Substantive review</p><p>{formatReviewDate(source.last_substantive_reviewed)}</p></div>
-          {due ? <span className="vigil-status-chip" data-tone="moderate">Review due</span> : null}
+        <div className="vigil-standards-reading">
+          <div className="vigil-standards-reading-main vigil-standards-review-main">
+            <div className="vigil-standards-review-heading">
+              <div><p className="vigil-library-kicker">Substantive review</p><p className="vigil-standards-review-date">{formatReviewDate(source.last_substantive_reviewed)}</p></div>
+              {due ? <span className="vigil-status-chip" data-tone="moderate">Review due</span> : null}
+            </div>
+            <div className="vigil-standards-review-method">
+              <p className="vigil-library-kicker">Review method</p>
+              <p>{reviewMethod}</p>
+            </div>
+            <p className="vigil-standards-review-note">Review freshness is calculated from the last substantive source review. Routine metadata updates do not reset this date. The next review date is 90 days after the substantive review date.</p>
+          </div>
+          <dl className="vigil-standards-facts">
+            <Fact label="Review system" value={EXTERNAL_REVIEW_PROVENANCE.system} />
+            <Fact label="Production mode" value={EXTERNAL_REVIEW_PROVENANCE.productionMode} />
+            <Fact label="Reviewed" value={formatReviewDate(source.last_substantive_reviewed)} />
+            <Fact label="Next review" value={nextReviewDate(source.last_substantive_reviewed)} />
+            <Fact label="Source access" value={clean(scope?.source_access_status)} />
+            <Fact label="Extraction status" value={clean(scope?.extraction_status)} />
+            <Fact label="Human role" value={EXTERNAL_REVIEW_PROVENANCE.humanRole} />
+            <Fact label="Human substantive review" value={EXTERNAL_REVIEW_PROVENANCE.humanReview} />
+            <Fact label="Human source verification" value={EXTERNAL_REVIEW_PROVENANCE.humanVerification} />
+          </dl>
         </div>
-        <p className="vigil-standards-review-note">Review freshness is calculated from the last substantive source review. Routine metadata updates do not reset this date.</p>
         {previousVersions.length ? <section className="vigil-standards-versions">
           <p className="vigil-library-kicker">Previous versions</p>
           <ul>{previousVersions.map((version) => <li key={externalSourceKey(version)}><span>{version.source_version}{version.source_lifecycle_state ? ` · ${clean(version.source_lifecycle_state)}` : ""}</span>{version.official_locator ? <a href={version.official_locator} target="_blank" rel="noreferrer" aria-label={`Open version ${version.source_version}`}><ExternalLink aria-hidden="true" /></a> : null}</li>)}</ul>
@@ -256,7 +371,7 @@ export default function VigilStandardsBaseline() {
       if (sourceType !== "all" && source.source_class !== sourceType) return false;
       if (!terms.length) return true;
       const clauses = clausesBySource.get(key) ?? [];
-      const haystack = [source.title, source.issuer, source.jurisdiction, source.source_class, source.source_version, source.public_summary, source.relevance_scope, source.last_substantive_reviewed, ...(source.ai_governance_relevance ?? []), ...(source.applicable_lifecycle_stages ?? []), canonicalIdentifierLabel(source), ...clauses.flatMap((clause) => [clause.clause_or_control, clause.requirement_summary, clause.governance_expectation, ...(clause.applicable_actor ?? []), ...(clause.governed_object ?? []), ...(clause.lifecycle_stage ?? []), ...(clause.governance_concepts ?? [])])].filter(Boolean).join(" ").toLowerCase();
+      const haystack = [source.title, source.issuer, source.jurisdiction, source.source_class, source.source_version, source.public_summary, source.relevance_scope, source.last_substantive_reviewed, scope?.extraction_status, scope?.extraction_scope_notes, scope?.source_access_status, ...(source.ai_governance_relevance ?? []), ...(source.applicable_lifecycle_stages ?? []), canonicalIdentifierLabel(source), ...clauses.flatMap((clause) => [clause.clause_or_control, clause.requirement_summary, clause.governance_expectation, ...(clause.applicable_actor ?? []), ...(clause.governed_object ?? []), ...(clause.lifecycle_stage ?? []), ...(clause.governance_concepts ?? [])])].filter(Boolean).join(" ").toLowerCase();
       return terms.every((term) => haystack.includes(term));
     }).sort((a, b) => a.title.localeCompare(b.title) || b.source_version.localeCompare(a.source_version));
   }, [clausesBySource, jurisdiction, query, scopeBySource, sourceType, state]);
@@ -286,6 +401,7 @@ export default function VigilStandardsBaseline() {
           <div className="vigil-standards-list-head" aria-hidden="true"><span>Source</span><span>Jurisdiction / type</span><span>Clauses</span><span /></div>
           {visibleSources.map((source) => {
             const key = externalSourceKey(source);
+            const scope = scopeBySource.get(key);
             const clauses = clausesBySource.get(key) ?? [];
             const isOpen = openSource === key;
             const previousVersions = (versionsByIdentity.get(sourceIdentity(source)) ?? []).filter((version) => scopeBySource.get(externalSourceKey(version))?.extraction_status === "superseded-version").sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true }));
@@ -299,7 +415,7 @@ export default function VigilStandardsBaseline() {
                 </button>
                 {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink aria-hidden="true" /></a> : null}
               </div>
-              {isOpen ? <StandardsDossier source={source} clauses={clauses} previousVersions={previousVersions} activeTab={activeTab} onTab={setActiveTab} /> : null}
+              {isOpen ? <StandardsDossier source={source} scope={scope} clauses={clauses} previousVersions={previousVersions} activeTab={activeTab} onTab={setActiveTab} /> : null}
             </article>;
           })}
           {!visibleSources.length ? <div className="vigil-empty-panel">No sources match the current search and filters.</div> : null}

@@ -1,0 +1,129 @@
+/* Final refinements for the AI Governance Standards dossier.
+   Loaded after the base dossier stylesheet so these rules can stay narrow. */
+
+/* Let whitespace — not another rule — separate the page introduction from search. */
+.vigil-standards-header {
+  padding-bottom: 0.85rem;
+  border-bottom: 0;
+}
+
+.vigil-standards-toolbar {
+  padding-top: 1rem;
+}
+
+/* Governance relevance now uses the same definition-list grammar as Overview. */
+.vigil-standards-relevance .vigil-standards-facts dd {
+  line-height: 1.6;
+}
+
+/* Empty clause states should read as bounded evidence cards, not generic blank panels. */
+.vigil-standards-empty-tab {
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  color: hsl(var(--foreground));
+}
+
+.vigil-standards-empty-card {
+  padding: 1rem 1.05rem;
+  border: 1px dashed hsl(var(--border) / 0.95);
+  border-radius: 0.45rem;
+  background: hsl(var(--card) / 0.16);
+}
+
+.vigil-standards-empty-card h3 {
+  margin: 0.3rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.08rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.vigil-standards-empty-card > p:not(.vigil-library-kicker) {
+  max-width: 74rem;
+  margin: 0.48rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-empty-card > p strong {
+  color: hsl(var(--foreground));
+}
+
+.vigil-standards-empty-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0.9rem 0 0;
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-standards-empty-facts dt {
+  font-family: var(--app-font-mono);
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-empty-facts dd {
+  margin: 0.22rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+/* Evidence & Review mirrors the Case File evidence-card hierarchy: review
+   narrative on the left, explicit provenance/freshness metadata on the right. */
+.vigil-standards-review-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vigil-standards-review-date {
+  margin: 0.3rem 0 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.45 !important;
+  color: hsl(var(--foreground));
+}
+
+.vigil-standards-review-method {
+  margin-top: 1rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid hsl(var(--border) / 0.7);
+}
+
+.vigil-standards-review-method > p:last-child {
+  margin: 0.4rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.62;
+}
+
+.vigil-standards-review-note {
+  margin-top: 0.9rem;
+}
+
+@media (max-width: 620px) {
+  .vigil-standards-header {
+    padding-bottom: 0.72rem;
+  }
+
+  .vigil-standards-toolbar {
+    padding-top: 0.8rem;
+  }
+
+  .vigil-standards-empty-tab {
+    padding: 0.85rem;
+  }
+
+  .vigil-standards-empty-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-standards-review-heading {
+    flex-direction: column;
+  }
+}

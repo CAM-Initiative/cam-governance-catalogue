@@ -99,12 +99,13 @@
   line-height: 1.58;
 }
 
-/* Search and filters are part of the Case Files surface, not a second card. */
+/* Search and filters are part of the Case Files surface, not a second card.
+   There is deliberately no divider between the page description and search:
+   whitespace provides the hierarchy instead of another box edge. */
 .vigil-case-library-page .vigil-library-toolbar {
   margin: 0;
-  padding: 0.8rem 1.35rem 0.9rem;
+  padding: 0.95rem 1.35rem 0.9rem;
   border: 0;
-  border-top: 1px solid hsl(var(--border) / 0.7);
   border-radius: 0;
   background: transparent;
   box-shadow: none;

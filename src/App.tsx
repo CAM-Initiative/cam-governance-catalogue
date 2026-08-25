@@ -8,6 +8,7 @@ import "./vigil-ux-v4.css";
 import "./vigil-ux-v5.css";
 import "./vigil-ux-v6.css";
 import "./vigil-standards-dossier.css";
+import "./vigil-standards-dossier-refinements.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
