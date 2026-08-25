@@ -68,7 +68,7 @@ function relationshipTarget(
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return <label className="vigil-search-control vigil-taxonomy-manual-search">
     <Search aria-hidden="true" />
-    <span className="sr-only">Search the VIGIL Failure Taxonomy contents</span>
+    <span className="sr-only">Search the VIGIL AI Governance Failure Taxonomy contents</span>
     <input
       type="search"
       value={value}
@@ -115,7 +115,7 @@ function ManualContents({
   return <nav
     id="taxonomy-contents"
     className={`vigil-taxonomy-manual-contents${collapsed ? " is-collapsed" : ""}`}
-    aria-label="VIGIL Failure Taxonomy contents"
+    aria-label="VIGIL AI Governance Failure Taxonomy contents"
   >
     <div className="vigil-taxonomy-manual-contents-head">
       {!collapsed ? <h2>Contents</h2> : null}
@@ -228,7 +228,7 @@ function FamilyManualSection({
   const family = document.family;
   return <section className="vigil-taxonomy-manual-family" id={family.family_id.toLowerCase()}>
     <header className="vigil-taxonomy-manual-family-hero">
-      <h2><span className="vigil-taxonomy-manual-family-prefix">Failure Family:</span> {family.name}</h2>
+      <h2>{family.name}</h2>
       <p className="vigil-taxonomy-manual-plain">{family.plain_english}</p>
       <p className="vigil-taxonomy-manual-meta">
         <strong>Immutable ID:</strong> <code>{family.family_id}</code>
@@ -256,6 +256,11 @@ function FamilyManualSection({
         <h3>Scope</h3>
         <ul>{family.scope.map((scope) => <li key={scope}>{scope}</li>)}</ul>
       </> : null}
+
+      <section className="vigil-taxonomy-manual-examples" aria-label={`Examples for ${family.name}`}>
+        <h3>Examples</h3>
+        <p>No Case File examples are linked to this failure family yet.</p>
+      </section>
 
       {family.allowed_class_ids?.length ? <details>
         <summary><strong>Allowed identifiers</strong></summary>
@@ -329,7 +334,6 @@ export default function VigilFailureTaxonomy() {
   const classCount = state.status === "ready"
     ? state.data.index.families.reduce((sum, family) => sum + family.class_count, 0)
     : 0;
-  const description = state.status === "ready" ? state.data.families[0]?.standard.description : undefined;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-taxonomy-manual-page">
     <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
@@ -338,18 +342,18 @@ export default function VigilFailureTaxonomy() {
           <div>
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <div className="vigil-taxonomy-header-title-row">
-              <h1 id="taxonomy-heading">{state.status === "ready" ? state.data.index.standard.name : "VIGIL Failure Taxonomy"}</h1>
+              <h1 id="taxonomy-heading">VIGIL AI Governance Failure Taxonomy</h1>
               <span className="cam-beta-chip">Beta</span>
             </div>
-            <p className="vigil-library-description">{description ?? "A structured classification standard for recurring AI governance failure mechanisms."}</p>
+            <p className="vigil-library-description">A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with explicit recognition criteria and classification boundaries.</p>
             {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
               Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} failure classes
             </p> : null}
           </div>
         </header>
 
-        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Failure Taxonomy…</div> : null}
-        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
+        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL AI Governance Failure Taxonomy…</div> : null}
+        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL AI Governance Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
 
         {state.status === "ready" && selectedFamily ? <div className={`vigil-taxonomy-manual-layout${contentsCollapsed ? " is-contents-collapsed" : ""}`}>
           <ManualContents
