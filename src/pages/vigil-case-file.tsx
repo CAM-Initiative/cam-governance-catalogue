@@ -72,6 +72,18 @@ type TaxonomyMeta = {
   group?: string;
 };
 
+type DiagnosticProvenance = {
+  method?: string;
+  diagnosticDate?: string;
+  humanRole?: string;
+  aiRole?: string;
+  aiPlatform?: string;
+  aiModel?: string;
+  attributionBasis?: string;
+  reviewStatus?: string;
+  authorityBoundary?: string;
+};
+
 type ImplementationEntry = {
   instrumentId?: string;
   section?: string;
@@ -251,8 +263,8 @@ async function detailedRecord(indexRecord: VigilIndexRecord) {
 async function detailedLearn(raw: UnknownRecord) {
   const fallback = normalizeLearn(raw);
   if (!fallback) return undefined;
-  try { return normalizeLearn({ ...raw, ...await loadVigilRecordDetail(raw) }) ?? fallback; }
-  catch { return fallback; }
+  try { return normalizeLearn({ ...raw, ...await loadVigilRecordDetail(raw) }) ?? fallback;
+  } catch { return fallback; }
 }
 
 function failureAnchors(sourceId: string, sourceRecord: VigilIndexRecord | undefined, records: VigilIndexRecord[], rawRecords: UnknownRecord[]) {
@@ -412,6 +424,34 @@ function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem): TaxonomyMeta
     reference,
     group,
   };
+}
+
+function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
+  if (!record || !isObject(record.raw.diagnostic_provenance)) return undefined;
+  const provenance = record.raw.diagnostic_provenance;
+  return {
+    method: text(provenance.method),
+    diagnosticDate: text(provenance.diagnostic_date),
+    humanRole: text(provenance.human_role),
+    aiRole: text(provenance.ai_role),
+    aiPlatform: text(provenance.ai_platform),
+    aiModel: text(provenance.ai_model),
+    attributionBasis: text(provenance.model_attribution_basis),
+    reviewStatus: text(provenance.review_status),
+    authorityBoundary: text(provenance.authority_boundary),
+  };
+}
+
+function diagnosticMethodLabel(value?: string) {
+  if (!value) return undefined;
+  if (value === "human-ai-collaborative-analysis") return "Human–AI collaborative analysis";
+  return titleizeValue(value);
+}
+
+function reviewStatusLabel(value?: string) {
+  if (!value) return undefined;
+  if (value === "human-reviewed-and-approved") return "Human reviewed and approved";
+  return titleizeValue(value);
 }
 
 function coverageItems(record?: VigilIndexRecord) {
@@ -591,6 +631,7 @@ export default function VigilCaseFile() {
     ? state.learns.find((learn) => learn.primaryFailureMode?.toUpperCase() === failure.id.toUpperCase()) ?? state.learns[0]
     : state.learns[0];
   const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
+  const diagnostic = diagnosticProvenance(failure);
   const reportId = failure?.id ?? state.sourceId;
 
   const existingCoverage = coverageItems(failure);
@@ -603,7 +644,6 @@ export default function VigilCaseFile() {
     ...proposals.map((record) => firstText(record.raw, ["proposal_rationale"])),
   ].filter((value): value is string => Boolean(value)));
   const targetLocations = unique(proposals.flatMap(proposalTargets));
-  const diagnosisSourceIds = unique([failure?.id, ...proposals.map((record) => record.id), ...patches.map((record) => record.id)].filter((value): value is string => Boolean(value)));
 
   const responseSummaries = unique(patches.map(patchResponseSummary).filter((value): value is string => Boolean(value)));
   const implementedControls = patches.flatMap(implementationEntries);
@@ -700,7 +740,23 @@ export default function VigilCaseFile() {
           </section>
         </div>}
         {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
-        <p className="vigil-stage-source-line">Diagnosis derived from {diagnosisSourceIds.map(compactId).join(" · ")}</p>
+        {diagnostic && <details className="mt-6 border-t border-border/70 pt-4 text-sm text-muted-foreground">
+          <summary className="cursor-pointer list-none font-sans text-sm text-foreground marker:hidden">
+            <span className="font-semibold">Diagnostic provenance</span>
+            <span className="ml-2 text-muted-foreground">{[
+              diagnosticMethodLabel(diagnostic.method),
+              [diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" "),
+              diagnostic.diagnosticDate,
+              reviewStatusLabel(diagnostic.reviewStatus),
+            ].filter(Boolean).join(" · ")}</span>
+          </summary>
+          <div className="mt-4 grid gap-4 border-l border-border/70 pl-4 sm:grid-cols-2">
+            {diagnostic.humanRole && <div><p className="vigil-library-kicker">Human contribution</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.humanRole}</p></div>}
+            {diagnostic.aiRole && <div><p className="vigil-library-kicker">AI contribution</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.aiRole}</p></div>}
+            {diagnostic.authorityBoundary && <div className="sm:col-span-2"><p className="vigil-library-kicker">Authority boundary</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.authorityBoundary}</p></div>}
+            {diagnostic.attributionBasis && <div className="sm:col-span-2"><p className="vigil-library-kicker">Model attribution</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.attributionBasis}</p></div>}
+          </div>
+        </details>}
       </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
     </>;
 
