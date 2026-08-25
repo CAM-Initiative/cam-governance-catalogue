@@ -120,8 +120,8 @@ export default function Datasets() {
           {downloadState === "error" ? <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p> : null}
 
           <DatasetCard
-            title="VIGIL Failure Taxonomy"
-            description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and classes with recognition criteria, exclusions, examples and relationships. The dataset publishes that taxonomy in machine-readable form for reuse and analysis."
+            title="VIGIL AI Governance Failure Taxonomy"
+            description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with recognition criteria, exclusions, examples and relationships. The dataset publishes that taxonomy in machine-readable form for reuse and analysis."
             status="Coming soon"
             beta
             icon={<Library />}
