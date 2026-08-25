@@ -99,15 +99,30 @@
   line-height: 1.58;
 }
 
+/* Search and filters are part of the Case Files surface, not a second card. */
 .vigil-case-library-page .vigil-library-toolbar {
-  padding: 0.75rem 0.85rem 0;
+  margin: 0;
+  padding: 0.8rem 1.35rem 0.9rem;
+  border: 0;
+  border-top: 1px solid hsl(var(--border) / 0.7);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-case-library-page .vigil-search-row {
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .vigil-case-library-page .vigil-result-summary {
   min-height: 28px;
+  padding-inline: 0;
   border-top: 0;
-  font-size: 0.52rem;
-  letter-spacing: 0.055em;
+  background: transparent;
+  font-size: 0.72rem;
+  letter-spacing: 0.045em;
 }
 
 .vigil-case-library-page .vigil-case-table-head {
@@ -182,6 +197,55 @@
 .vigil-knowledge-hub-page .vigil-knowledge-copy a {
   margin-top: 0;
   padding-top: 0;
+}
+
+/* Standards Baseline: match the quieter Case Files grammar. */
+.vigil-baseline-page .vigil-reference-hero {
+  border-bottom: 1px solid hsl(var(--border) / 0.7);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-baseline-page .vigil-baseline-toolbar {
+  margin-top: 0;
+  padding: 0.9rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Downloads belong on the Datasets page; this surface is for browsing. */
+.vigil-baseline-page .vigil-baseline-download,
+.vigil-baseline-page .vigil-baseline-download-error {
+  display: none !important;
+}
+
+.vigil-baseline-page .vigil-reference-controls {
+  margin-top: 0;
+  padding: 0.9rem 0;
+  border-top: 1px solid hsl(var(--border) / 0.7);
+  border-bottom: 1px solid hsl(var(--border) / 0.7);
+  background: transparent;
+}
+
+.vigil-baseline-page .vigil-baseline-library {
+  margin-top: 0.9rem;
+  border-inline: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vigil-baseline-page .vigil-baseline-source-detail,
+.vigil-baseline-page .vigil-baseline-clause-detail {
+  background: hsl(var(--card) / 0.16);
+}
+
+.vigil-baseline-page .vigil-baseline-clause-table,
+.vigil-baseline-page .vigil-baseline-provenance,
+.vigil-baseline-page .vigil-baseline-source-about {
+  border-radius: 0.2rem;
+  box-shadow: none;
 }
 
 @media (max-width: 760px) {
