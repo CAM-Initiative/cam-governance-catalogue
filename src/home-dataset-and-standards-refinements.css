@@ -1,0 +1,60 @@
+/* Focused public-surface refinements for the homepage datasets panel and standards dossier. */
+
+.home-datasets-panel {
+  display: grid;
+  gap: 1.35rem;
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+  border: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 1rem;
+  background: hsl(var(--card) / 0.5);
+  box-shadow: 0 16px 36px hsl(var(--foreground) / 0.035);
+}
+
+.home-datasets-panel h2 {
+  margin: 0;
+}
+
+.home-datasets-panel p {
+  margin: 0;
+}
+
+.home-datasets-copy {
+  max-width: 56rem;
+}
+
+.home-datasets-kicker {
+  margin-bottom: 0.55rem !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.home-datasets-description {
+  margin-top: 0.9rem !important;
+  color: hsl(var(--muted-foreground));
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.home-datasets-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@media (min-width: 760px) {
+  .home-datasets-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+
+/* The 03 Clauses tab already names the active presentation. Do not repeat
+   another 03 / Clauses section heading above the clause list. This targets
+   only the standards dossier presentation, not VIGIL Case Files. */
+.vigil-standard-detail-section:has(.vigil-standard-file-clauses) > .vigil-standard-section-heading {
+  display: none;
+}
