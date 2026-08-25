@@ -1,48 +1,47 @@
 import { useState, type ReactNode } from "react";
-import { Shell } from "@/components/layout/Shell";
-import { motion } from "framer-motion";
 import { Check, Copy } from "lucide-react";
+import { Shell } from "@/components/layout/Shell";
 
 const citations = [
   {
-    label: "Umbrella CAM Initiative citation",
+    label: "CAM Initiative",
     citation: "CAM Initiative. CAM Initiative public governance infrastructure. 2026. https://www.cam-initiative.org",
   },
   {
-    label: "VIGIL citation",
+    label: "VIGIL",
     citation: "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. 2026. https://www.cam-initiative.org/vigil",
   },
   {
-    label: "CAM governance corpus citation",
+    label: "CAELESTIS Architecture Model",
     citation: "O’Rourke, M. V. (2026). Caelestis Architecture Model / CAM governance corpus. Zenodo. https://zenodo.org/records/20686316",
   },
 ];
 
 const maintainedLayers = [
   {
-    label: "Global governance architecture",
-    eyebrow: "CAM governance corpus",
-    body: "Constitutional instruments, domain instruments, annexes, schedules, supplements, taxonomies, and governance doctrine.",
+    label: "VIGIL Observatory",
+    eyebrow: "Evidence and diagnosis",
+    body: "Public Case Files, failure classification, evidence-to-repair records, review provenance and traceable governance learning.",
   },
   {
-    label: "VIGIL evidence-to-repair system",
-    eyebrow: "Evidence, diagnosis and repair",
-    body: "Public observations, failure modes, proposals, patches, accountability gaps, design failures, and traceable repair activity.",
+    label: "AI Governance Standards",
+    eyebrow: "Compliance baseline",
+    body: "A curated source and requirement reference for laws, standards, frameworks and technical guidance relevant to AI governance.",
   },
   {
     label: "Public datasets",
-    eyebrow: "Machine-readable governance reference data",
-    body: "Downloadable governance-source, external-requirement and developing failure-taxonomy datasets maintained through VIGIL for research, comparison, audit, and independent analysis.",
+    eyebrow: "Machine-readable reference data",
+    body: "Downloadable standards, source, requirement and emerging failure-taxonomy datasets for research, comparison and independent analysis.",
   },
   {
-    label: "Taxonomies and metadata standards",
-    eyebrow: "Controlled vocabularies",
-    body: "Record schemas, failure classifications, domain codes, crosswalks, lifecycle states, and validation guidance.",
+    label: "Policy",
+    eyebrow: "Public-interest governance",
+    body: "Policy papers and submissions that translate governance analysis, evidence and emerging technology risks into practical institutional proposals.",
   },
   {
-    label: "Public catalogue and implementation materials",
-    eyebrow: "Publication infrastructure",
-    body: "Website materials, repository documentation, validator guidance, and public-facing summaries.",
+    label: "CAELESTIS Architecture Model",
+    eyebrow: "Governance architecture · refactoring",
+    body: "The underlying governance architecture remains in active refactoring. The current public archival release is preserved through Zenodo while the website reference surface is being rebuilt.",
   },
 ];
 
@@ -59,131 +58,74 @@ function CopyButton({ text }: { text: string }) {
     }
   };
 
-  return (
-    <button
-      aria-label="Copy citation"
-      className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold transition-colors hover:bg-background/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      onClick={handleCopy}
-      type="button"
-    >
-      {copied ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
-      {copied ? "Copied" : "Copy"}
-    </button>
-  );
+  return <button className="public-reference-copy" type="button" onClick={handleCopy} aria-label="Copy citation">
+    {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+    {copied ? "Copied" : "Copy"}
+  </button>;
 }
 
-function SectionHeading({ eyebrow }: { eyebrow: string }) {
-  return (
-    <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-sm font-semibold uppercase tracking-[0.22em] text-cam-gold">{eyebrow}</p>
-      <hr className="gold-rule flex-1" />
-    </div>
-  );
-}
-
-function ContentPanel({ children }: { children: ReactNode }) {
-  return <article className="rounded-2xl border border-border/80 bg-background/30 p-6 shadow-sm">{children}</article>;
+function ReferenceSection({ number, eyebrow, title, children }: { number: string; eyebrow: string; title: string; children: ReactNode }) {
+  return <section className="public-reference-section">
+    <header className="public-reference-section-heading">
+      <span>{number}</span>
+      <div><p>{eyebrow}</p><h2>{title}</h2></div>
+    </header>
+    <div className="public-reference-section-body">{children}</div>
+  </section>;
 }
 
 export default function About() {
-  return (
-    <Shell>
-      <main className="container mx-auto max-w-5xl px-6 py-12 md:px-10 md:py-16">
-        <motion.header animate={{ opacity: 1, y: 0 }} className="mb-14" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-          <p className="mb-3 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">Public-benefit governance infrastructure</p>
-          <h1 className="mb-3 font-serif text-4xl leading-tight text-foreground md:text-5xl">About the CAM Initiative</h1>
-          <hr className="gold-rule mb-8 w-24" />
-        </motion.header>
+  return <Shell>
+    <main className="public-reference-page">
+      <div className="container mx-auto max-w-[1120px] px-4 py-8 sm:px-6 md:px-10 md:py-12">
+        <article className="public-reference-document">
+          <header className="public-reference-hero">
+            <p className="public-reference-kicker">CAM Initiative</p>
+            <h1>About the CAM Initiative</h1>
+            <p>The CAM Initiative is an independent Australian public-benefit AI governance initiative developing open governance infrastructure for understanding systems, diagnosing failures, supporting compliance and translating evidence into accountable repair.</p>
+          </header>
 
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <SectionHeading eyebrow="Institutional context" />
-          <ContentPanel>
-            <div className="space-y-4 text-base leading-relaxed text-foreground/75">
-              <p>
-                The CAM Initiative is an independent Australian, unincorporated public-benefit AI governance initiative founded and led by Dr Michelle Vivian O’Rourke. It provides the public institutional identity through which the CAELESTIS Architecture Model, VIGIL, associated governance datasets, and policy materials are developed, maintained and published.
-              </p>
-              <p>
-                The CAM Initiative and the Caelestis Architecture Model are not affiliated with the separate Caelestis project at{" "}
-                <a className="text-cam-gold underline decoration-cam-gold/40 underline-offset-4 hover:text-foreground" href="https://caelestis-project.eu/" rel="noreferrer" target="_blank">
-                  caelestis-project.eu
-                </a>
-                .
-              </p>
+          <ReferenceSection number="01" eyebrow="Institutional context" title="Independent public-interest governance work">
+            <div className="public-reference-reading">
+              <p>The CAM Initiative is founded and led by Dr Michelle Vivian O’Rourke. It provides the public institutional identity through which VIGIL, the CAELESTIS Architecture Model, governance datasets and policy materials are developed, maintained and published.</p>
+              <p>The current public website deliberately concentrates on the surfaces that are mature enough to support public use. VIGIL, datasets and policy remain public; the CAELESTIS reference surface is being refactored rather than presented as settled architecture.</p>
             </div>
-          </ContentPanel>
-        </motion.section>
+          </ReferenceSection>
 
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <SectionHeading eyebrow="Purpose" />
-          <ContentPanel>
-            <div className="space-y-4 text-base leading-relaxed text-foreground/75">
-              <p>
-                The CAM Initiative develops open governance architecture for increasingly capable AI systems and the institutions responsible for them. Its work connects constitutional and operational controls, external governance requirements, evidence-to-repair methods, machine-readable reference data, and public policy analysis.
-              </p>
-              <p>
-                VIGIL provides the empirical feedback layer: observed failures and governance evidence can be recorded, classified, traced to affected controls, and used to support review, repair and verification.
-              </p>
+          <ReferenceSection number="02" eyebrow="Purpose" title="Make governance obligations and system failure easier to see">
+            <div className="public-reference-reading">
+              <p>The Initiative connects AI governance architecture, external governance requirements, evidence-to-repair methods, machine-readable reference data and public policy analysis.</p>
+              <p>VIGIL provides the empirical feedback layer: observed failures can be preserved as evidence, classified by mechanism, traced through governance response and revisited as systems and external requirements change.</p>
             </div>
-          </ContentPanel>
-        </motion.section>
+          </ReferenceSection>
 
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <SectionHeading eyebrow="Why it matters" />
-          <ContentPanel>
-            <div className="space-y-4 text-base leading-relaxed text-foreground/75">
-              <p>The CAM Initiative began from the question of how increasingly capable AI systems can be governed at runtime across conflicting instructions, jurisdictions, institutions, technical environments, and social contexts.</p>
-              <p>CAM treats governance as an architecture rather than a policy statement alone: a constraint model, an arbitration structure, and a runtime-facing language for responsibility.</p>
-              <p>VIGIL records what happens in practice so observed failures can become reviewable evidence and accountable repair.</p>
+          <ReferenceSection number="03" eyebrow="Public work" title="What the CAM Initiative maintains">
+            <div className="public-reference-list">
+              {maintainedLayers.map((layer) => <article key={layer.label}>
+                <div><p>{layer.eyebrow}</p><h3>{layer.label}</h3></div>
+                <p>{layer.body}</p>
+              </article>)}
             </div>
-          </ContentPanel>
-        </motion.section>
+          </ReferenceSection>
 
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <SectionHeading eyebrow="What the CAM Initiative maintains" />
-          <div className="grid gap-4 md:grid-cols-2">
-            {maintainedLayers.map((layer, index) => (
-              <motion.article className="rounded-2xl border border-border/80 bg-card/80 p-5 shadow-sm" initial={{ opacity: 0, y: 8 }} key={layer.label} transition={{ duration: 0.45, delay: index * 0.06 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">{layer.eyebrow}</p>
-                <h2 className="mb-3 font-serif text-xl leading-snug text-foreground md:text-2xl">{layer.label}</h2>
-                <p className="text-base leading-relaxed text-foreground/75">{layer.body}</p>
-              </motion.article>
-            ))}
-          </div>
-        </motion.section>
+          <ReferenceSection number="04" eyebrow="Access and independence" title="Public access without pretending everything is finished">
+            <div className="public-reference-reading">
+              <p>The public site does not provide user accounts or a private upload portal. Public materials are made available for reference, governance development, research and public-interest use, subject to the applicable citation, copyright, trademark and licence conditions.</p>
+              <p>The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+              <p><a href="/privacy">Read the privacy policy →</a></p>
+            </div>
+          </ReferenceSection>
 
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <SectionHeading eyebrow="Privacy and public access" />
-          <ContentPanel>
-            <div className="flex flex-col gap-5 text-base leading-relaxed text-foreground/75 md:flex-row md:items-center md:justify-between">
-              <p className="max-w-3xl">The public site does not provide user accounts or a private upload portal. The privacy policy explains what information may be received through ordinary website access and direct email contact.</p>
-              <a className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-card/85 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" href="/privacy">
-                Read the privacy policy
-              </a>
+          <ReferenceSection number="05" eyebrow="Citation" title="How to cite the public work">
+            <div className="public-reference-citations">
+              {citations.map((item) => <article key={item.label}>
+                <div className="public-reference-citation-heading"><h3>{item.label}</h3><CopyButton text={item.citation} /></div>
+                <p>{item.citation}</p>
+              </article>)}
             </div>
-          </ContentPanel>
-        </motion.section>
-
-        <motion.section className="mb-12" initial={{ opacity: 0, y: 12 }} transition={{ duration: 0.7 }} viewport={{ once: true }} whileInView={{ opacity: 1, y: 0 }}>
-          <div id="citations" className="scroll-mt-24"><SectionHeading eyebrow="Citation / public access" /></div>
-          <ContentPanel>
-            <div className="mb-5 space-y-3 text-base leading-relaxed text-foreground/75">
-              <p>CAM materials are publicly accessible for reference, governance development, research, and public-interest use.</p>
-              <p>Public access does not waive citation, copyright, trademark, attribution, or applicable licence requirements. Cite the relevant CAM instrument or VIGIL record directly where possible.</p>
-            </div>
-            <div className="space-y-4">
-              {citations.map((item) => (
-                <div className="rounded-xl border border-border/90 bg-card/85 p-4" key={item.label}>
-                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-cam-gold">{item.label}</p>
-                    <CopyButton text={item.citation} />
-                  </div>
-                  <blockquote className="border-l-2 border-cam-gold/70 pl-4 font-mono text-sm leading-relaxed text-foreground md:text-[15px]">{item.citation}</blockquote>
-                </div>
-              ))}
-            </div>
-          </ContentPanel>
-        </motion.section>
-      </main>
-    </Shell>
-  );
+          </ReferenceSection>
+        </article>
+      </div>
+    </main>
+  </Shell>;
 }
