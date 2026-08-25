@@ -1,11 +1,10 @@
-/* The Standards source page follows the Case File ticket/tab grammar, but the
-   03 Clauses tab already names the clause presentation. Remove only that
-   redundant in-panel heading; Case File stage headings and the other Standards
-   section headings remain untouched. */
-.vigil-standard-file-page .vigil-standard-detail-section:has(.vigil-standard-file-clauses) > .vigil-standard-section-heading {
+/* Standard-source detail pages use the Case File ticket and tab controls, but the
+   active tab already names the section. Remove the repeated section heading
+   across all standards tabs while leaving VIGIL Case File stage headings alone. */
+.vigil-standard-file-page .vigil-standard-section-heading {
   display: none;
 }
 
-.vigil-standard-file-page .vigil-standard-detail-section:has(.vigil-standard-file-clauses) > .vigil-standard-section-body {
+.vigil-standard-file-page .vigil-standard-section-body {
   padding-top: 0.9rem;
 }
