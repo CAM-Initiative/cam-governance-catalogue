@@ -11,6 +11,7 @@ import {
   loadExternalSources,
   type ExternalRequirement,
   type ExternalRequirementDetail,
+  type ExternalReviewEvent,
   type ExternalSourceEntry,
   type ExternalSourceScopeEntry,
 } from "@/lib/vigilExternalKnowledge";
@@ -28,20 +29,6 @@ const TABS: Array<{ id: SourceTab; number: string; label: string }> = [
   { id: "clauses", number: "03", label: "Clauses" },
   { id: "review", number: "04", label: "Evidence & Review" },
 ];
-
-/*
- * Canonical VIGIL provenance currently establishes the production model but
- * does not identify the specific AI model that performed each historical
- * external-source review. The public surface must expose that gap rather than
- * invent retrospective specificity. See VIGIL-AUTHORSHIP-PROVENANCE-1.
- */
-const EXTERNAL_REVIEW_PROVENANCE = {
-  system: "AI system · specific model not recorded",
-  productionMode: "Semi-autonomous",
-  humanRole: "Contract approver",
-  humanReview: "Not reviewed",
-  humanVerification: "Not verified",
-};
 
 function clean(value?: string) {
   return value?.replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -109,6 +96,23 @@ function reviewIsDue(value?: string) {
 
 function listLabel(values?: string[]) {
   return values?.length ? values.map(knowledgeLabel).join(" · ") : "Not yet classified";
+}
+
+function currentReviewEvent(source: ExternalSourceEntry) {
+  const provenance = source.substantive_review_provenance;
+  if (!provenance?.review_events?.length) return undefined;
+  return provenance.review_events.find((event) => event.review_event_id === provenance.current_review_event_id)
+    ?? [...provenance.review_events].sort((a, b) => a.review_date.localeCompare(b.review_date)).at(-1);
+}
+
+function reviewMethodLabel(event?: ExternalReviewEvent) {
+  if (!event) return undefined;
+  return [clean(event.review_method.access_method), clean(event.review_method.scope_method)].filter(Boolean).join(" · ");
+}
+
+function reviewSystemLabel(event?: ExternalReviewEvent) {
+  if (!event) return undefined;
+  return [event.review_system.provider, event.review_system.platform].filter(Boolean).join(" · ");
 }
 
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -218,6 +222,24 @@ function ClauseCoverageCard({ scope }: { scope?: ExternalSourceScopeEntry }) {
   </article>;
 }
 
+function ReviewHistory({ events }: { events: ExternalReviewEvent[] }) {
+  if (events.length < 2) return null;
+  const ordered = [...events].sort((a, b) => b.review_date.localeCompare(a.review_date));
+  return <details className="vigil-standards-review-history">
+    <summary>Review history <span>{events.length} events</span></summary>
+    <div className="vigil-standards-review-history-list">
+      {ordered.map((event) => <article key={event.review_event_id}>
+        <div className="vigil-standards-review-history-heading">
+          <strong>{formatReviewDate(event.review_date)}</strong>
+          <span>{event.review_system.provider} · {event.review_system.model}</span>
+        </div>
+        <p>{event.review_scope}</p>
+        <small>{reviewMethodLabel(event)}</small>
+      </article>)}
+    </div>
+  </details>;
+}
+
 function StandardsDossier({
   source,
   scope,
@@ -233,9 +255,13 @@ function StandardsDossier({
   activeTab: SourceTab;
   onTab: (tab: SourceTab) => void;
 }) {
-  const due = reviewIsDue(source.last_substantive_reviewed);
-  const reviewMethod = scope?.extraction_scope_notes?.trim()
-    || "A substantive source review is recorded, but the current public source-scope record does not describe the extraction method in greater detail.";
+  const reviewEvent = currentReviewEvent(source);
+  const reviewDate = reviewEvent?.review_date ?? source.last_substantive_reviewed;
+  const due = reviewIsDue(reviewDate);
+  const reviewScope = reviewEvent?.review_scope?.trim()
+    || scope?.extraction_scope_notes?.trim()
+    || "A substantive source review is recorded, but the current public source record does not describe the analytical scope in greater detail.";
+  const reviewEvents = source.substantive_review_provenance?.review_events ?? [];
 
   return <section className="vigil-standards-dossier" aria-label={`${source.title} reference dossier`}>
     <nav className="vigil-standards-tabs" aria-label={`${source.title} sections`}>
@@ -288,27 +314,32 @@ function StandardsDossier({
         <div className="vigil-standards-reading">
           <div className="vigil-standards-reading-main vigil-standards-review-main">
             <div className="vigil-standards-review-heading">
-              <div><p className="vigil-library-kicker">Substantive review</p><p className="vigil-standards-review-date">{formatReviewDate(source.last_substantive_reviewed)}</p></div>
+              <div><p className="vigil-library-kicker">VIGIL review</p><p className="vigil-standards-review-date">{formatReviewDate(reviewDate)}</p></div>
               {due ? <span className="vigil-status-chip" data-tone="moderate">Review due</span> : null}
             </div>
             <div className="vigil-standards-review-method">
-              <p className="vigil-library-kicker">Review method</p>
-              <p>{reviewMethod}</p>
+              <p className="vigil-library-kicker">What the review establishes</p>
+              {reviewEvent ? <p><strong>{reviewEvent.review_system.provider} {reviewEvent.review_system.model}</strong> performed the substantive analytical review through {reviewEvent.review_system.platform}. {reviewScope}</p> : <p>{reviewScope}</p>}
+              {scope?.extraction_scope_notes && comparable(scope.extraction_scope_notes) !== comparable(reviewScope) ? <p className="vigil-standards-review-boundary"><strong>Extraction boundary:</strong> {scope.extraction_scope_notes}</p> : null}
             </div>
-            <p className="vigil-standards-review-note">Review freshness is calculated from the last substantive source review. Routine metadata updates do not reset this date. The next review date is 90 days after the substantive review date.</p>
+            <p className="vigil-standards-review-note">Review freshness is calculated from the last substantive analytical review. Routine metadata updates do not reset this date. The next substantive review is due 90 calendar days after the current review event.</p>
           </div>
           <dl className="vigil-standards-facts">
-            <Fact label="Review system" value={EXTERNAL_REVIEW_PROVENANCE.system} />
-            <Fact label="Production mode" value={EXTERNAL_REVIEW_PROVENANCE.productionMode} />
-            <Fact label="Reviewed" value={formatReviewDate(source.last_substantive_reviewed)} />
-            <Fact label="Next review" value={nextReviewDate(source.last_substantive_reviewed)} />
+            <Fact label="AI system" value={reviewSystemLabel(reviewEvent) ?? "Review provenance not yet published"} />
+            <Fact label="Model" value={reviewEvent?.review_system.model ?? "Review provenance not yet published"} />
+            <Fact label="Review role" value={clean(reviewEvent?.ai_role)} />
+            <Fact label="Review method" value={reviewMethodLabel(reviewEvent)} />
+            <Fact label="Production mode" value={clean(reviewEvent?.generation_mode)} />
+            <Fact label="Reviewed" value={formatReviewDate(reviewDate)} />
+            <Fact label="Next review" value={nextReviewDate(reviewDate)} />
             <Fact label="Source access" value={clean(scope?.source_access_status)} />
             <Fact label="Extraction status" value={clean(scope?.extraction_status)} />
-            <Fact label="Human role" value={EXTERNAL_REVIEW_PROVENANCE.humanRole} />
-            <Fact label="Human substantive review" value={EXTERNAL_REVIEW_PROVENANCE.humanReview} />
-            <Fact label="Human source verification" value={EXTERNAL_REVIEW_PROVENANCE.humanVerification} />
+            <Fact label="Human role" value={clean(reviewEvent?.human_role)} />
+            <Fact label="Human substantive review" value={clean(reviewEvent?.human_review_status)} />
+            <Fact label="Human source verification" value={clean(reviewEvent?.human_verification_status)} />
           </dl>
         </div>
+        <ReviewHistory events={reviewEvents} />
         {previousVersions.length ? <section className="vigil-standards-versions">
           <p className="vigil-library-kicker">Previous versions</p>
           <ul>{previousVersions.map((version) => <li key={externalSourceKey(version)}><span>{version.source_version}{version.source_lifecycle_state ? ` · ${clean(version.source_lifecycle_state)}` : ""}</span>{version.official_locator ? <a href={version.official_locator} target="_blank" rel="noreferrer" aria-label={`Open version ${version.source_version}`}><ExternalLink aria-hidden="true" /></a> : null}</li>)}</ul>
@@ -371,7 +402,21 @@ export default function VigilStandardsBaseline() {
       if (sourceType !== "all" && source.source_class !== sourceType) return false;
       if (!terms.length) return true;
       const clauses = clausesBySource.get(key) ?? [];
-      const haystack = [source.title, source.issuer, source.jurisdiction, source.source_class, source.source_version, source.public_summary, source.relevance_scope, source.last_substantive_reviewed, scope?.extraction_status, scope?.extraction_scope_notes, scope?.source_access_status, ...(source.ai_governance_relevance ?? []), ...(source.applicable_lifecycle_stages ?? []), canonicalIdentifierLabel(source), ...clauses.flatMap((clause) => [clause.clause_or_control, clause.requirement_summary, clause.governance_expectation, ...(clause.applicable_actor ?? []), ...(clause.governed_object ?? []), ...(clause.lifecycle_stage ?? []), ...(clause.governance_concepts ?? [])])].filter(Boolean).join(" ").toLowerCase();
+      const reviewTerms = (source.substantive_review_provenance?.review_events ?? []).flatMap((event) => [
+        event.review_date,
+        event.review_system.provider,
+        event.review_system.platform,
+        event.review_system.model,
+        event.ai_role,
+        event.generation_mode,
+        event.review_method.access_method,
+        event.review_method.scope_method,
+        event.review_scope,
+        event.human_role,
+        event.human_review_status,
+        event.human_verification_status,
+      ]);
+      const haystack = [source.title, source.issuer, source.jurisdiction, source.source_class, source.source_version, source.public_summary, source.relevance_scope, source.last_substantive_reviewed, scope?.extraction_status, scope?.extraction_scope_notes, scope?.source_access_status, ...reviewTerms, ...(source.ai_governance_relevance ?? []), ...(source.applicable_lifecycle_stages ?? []), canonicalIdentifierLabel(source), ...clauses.flatMap((clause) => [clause.clause_or_control, clause.requirement_summary, clause.governance_expectation, ...(clause.applicable_actor ?? []), ...(clause.governed_object ?? []), ...(clause.lifecycle_stage ?? []), ...(clause.governance_concepts ?? [])])].filter(Boolean).join(" ").toLowerCase();
       return terms.every((term) => haystack.includes(term));
     }).sort((a, b) => a.title.localeCompare(b.title) || b.source_version.localeCompare(a.source_version));
   }, [clausesBySource, jurisdiction, query, scopeBySource, sourceType, state]);
