@@ -7,17 +7,17 @@ import { loadVigilRegistryRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 
 type HubState = {
-  lessons?: number;
+  caseFiles?: number;
   clauses?: number;
   sources?: number;
   clausesAvailable?: boolean;
   sourcesAvailable?: boolean;
 };
 
-function isLearnRecord(record: Record<string, unknown>) {
+function isFailureModeRecord(record: Record<string, unknown>) {
   const id = String(record.id ?? record.record_id ?? "");
   const type = String(record.record_type ?? "").toLowerCase();
-  return /^VIGIL-\d{4}-LEARN-\d{4}$/i.test(id) || type === "learn";
+  return /^VIGIL-\d{4}-FM-\d{4}$/i.test(id) || type === "failure_mode";
 }
 
 function CollectionCard({ href, title, description, meta, beta = false, actionLabel = "Browse collection" }: { href?: string; title: string; description: string; meta: string; beta?: boolean; actionLabel?: string }) {
@@ -49,7 +49,7 @@ export default function VigilKnowledgeHub() {
       .then(([registry, clauses, sources]) => {
         if (cancelled) return;
         setState({
-          lessons: registry.records.filter((record) => isLearnRecord(record)).length,
+          caseFiles: registry.records.filter((record) => isFailureModeRecord(record)).length,
           clauses: clauses.status === "ready" ? clauses.data.length : undefined,
           sources: sources.status === "ready"
             ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
@@ -66,9 +66,9 @@ export default function VigilKnowledgeHub() {
     ? `${state.sources ?? 0} sources${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses` : ""}`
     : "Dataset unavailable";
 
-  const lessonsMeta = state.lessons === undefined
-    ? "Published learning records"
-    : `${state.lessons} published ${state.lessons === 1 ? "record" : "records"}`;
+  const caseFilesMeta = state.caseFiles === undefined
+    ? "AI failure mode investigations"
+    : `${state.caseFiles} case ${state.caseFiles === 1 ? "file" : "files"}`;
 
   return (
     <Shell>
@@ -78,16 +78,10 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse reusable governance lessons, the curated AI Governance Standards Baseline and the evolving VIGIL governance failure taxonomy.</p>
+            <p>Browse the curated AI Governance Standards Baseline, documented VIGIL Case Files and the evolving governance failure taxonomy.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
-            <CollectionCard
-              href="/observatory/lessons"
-              title="Governance Lessons"
-              description="Published LEARN records showing what happened, the governance misconception, the bounded lesson and how it should inform future decisions."
-              meta={lessonsMeta}
-            />
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
               title="AI Governance Standards Baseline"
@@ -95,6 +89,13 @@ export default function VigilKnowledgeHub() {
               meta={baselineMeta}
               beta
               actionLabel="Browse sources & clauses"
+            />
+            <CollectionCard
+              href="/observatory/cases"
+              title="Case Files"
+              description="Documented AI failure-mode investigations organised through Observation, Diagnosis, Classification, Repair, Learn and References, with record-local evidence and traceable governance repair."
+              meta={caseFilesMeta}
+              actionLabel="Browse case files"
             />
             <CollectionCard
               title="Governance Failure Taxonomy"
