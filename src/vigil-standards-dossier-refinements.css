@@ -1,103 +1,346 @@
-/* Final refinements for the AI Governance Standards compliance baseline.
-   Loaded after the base dossier stylesheet so these rules can stay narrow. */
+/* Final refinements for the AI Governance Standards — Compliance Baseline.
+   This surface deliberately follows the calmer Case Files grammar. */
 
-/* Flatten the page into one reference surface rather than a stack of cards. */
-.vigil-standards-shell {
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+.vigil-standards-page .container {
+  padding-top: 1.35rem;
 }
 
+.vigil-standards-shell {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.8rem;
+  background: hsl(var(--background));
+  box-shadow: none;
+}
+
+/* Match the Case Files introduction. Whitespace, not a divider, separates the
+   description from the search controls. */
 .vigil-standards-header {
-  padding: 0 0 1.2rem;
-  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  align-items: flex-start;
+  padding: 1.25rem 1.35rem 1rem;
+  border-bottom: 0;
+  background: hsl(var(--background));
 }
 
 .vigil-standards-header h1 {
   margin-top: 0.28rem;
-  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-size: clamp(1.8rem, 2.1vw, 2.25rem);
 }
 
-.vigil-standards-header > p:last-child {
-  max-width: 58rem;
+.vigil-standards-header .vigil-library-description {
+  max-width: 760px;
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  line-height: 1.58;
 }
 
 .vigil-standards-toolbar {
-  margin-top: 0.9rem;
-  padding: 0 0 0.85rem;
-  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  margin: 0;
+  padding: 0.95rem 1.35rem 0.9rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .vigil-standards-toolbar > label:not(.vigil-standards-search) {
-  padding: 0.35rem 0.15rem 0.45rem;
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.42rem 0.6rem 0.5rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.42rem;
+  background: hsl(var(--background));
+}
+
+.vigil-standards-toolbar > label > span {
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-toolbar select {
+  width: 100%;
   border: 0;
-  border-bottom: 1px solid hsl(var(--border));
-  border-radius: 0;
+  outline: 0;
   background: transparent;
+  font-size: 0.9rem;
+  color: hsl(var(--foreground));
 }
 
 .vigil-standards-result-line {
-  padding-top: 0.15rem;
+  padding-top: 0.1rem;
+  border: 0;
 }
 
-.vigil-standards-list-head {
-  padding-inline: 0.35rem 3.25rem;
+/* Each standard now behaves like a Case File row: title and summary lead,
+   supporting classification sits to the right, and the whole record opens. */
+.vigil-standards-library {
+  overflow: hidden;
+  border-top: 1px solid hsl(var(--border));
+  background: hsl(var(--background));
+}
+
+.vigil-standards-source-card {
+  border-bottom: 1px solid hsl(var(--border) / 0.78);
+}
+
+.vigil-standards-source-card:last-child {
+  border-bottom: 0;
+}
+
+.vigil-standards-source-card-row {
+  position: relative;
+}
+
+.vigil-standards-source-card-button {
+  display: grid;
+  grid-template-columns: minmax(520px, 1fr) minmax(150px, 190px) minmax(120px, 150px) 28px;
+  gap: 0.8rem;
+  align-items: center;
+  width: 100%;
+  min-height: 92px;
+  padding: 0.72rem 4.2rem 0.72rem 0.95rem;
+  border: 0;
   background: transparent;
+  text-align: left;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: background 130ms ease;
 }
 
-.vigil-standards-source-row > button {
-  min-height: 5rem;
-  padding-left: 0.35rem;
+.vigil-standards-source-card-button:hover,
+.vigil-standards-source-card.is-open .vigil-standards-source-card-button {
+  background: hsl(var(--secondary) / 0.22);
 }
 
-.vigil-standards-source-row > button:hover,
-.vigil-standards-source.is-open .vigil-standards-source-row > button {
-  background: hsl(var(--secondary) / 0.12);
+.vigil-standards-source-card-button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -2px;
 }
 
+.vigil-standards-source-card-primary {
+  display: grid;
+  grid-template-columns: minmax(96px, 118px) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  min-width: 0;
+}
+
+.vigil-standards-source-card-id {
+  padding-top: 0.15rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.025em;
+  color: hsl(var(--primary));
+  overflow-wrap: anywhere;
+}
+
+.vigil-standards-source-card-id small {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.67rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-source-card-copy {
+  min-width: 0;
+}
+
+.vigil-standards-source-card-copy strong,
+.vigil-standards-source-card-copy span,
+.vigil-standards-source-card-secondary strong,
+.vigil-standards-source-card-secondary small {
+  display: block;
+}
+
+.vigil-standards-source-card-copy strong {
+  font-family: var(--app-font-sans);
+  font-size: 0.96rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+.vigil-standards-source-card-copy span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  margin-top: 0.25rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-source-card-secondary strong {
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.vigil-standards-source-card-secondary small {
+  margin-top: 0.18rem;
+  font-size: 0.78rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-source-card-count {
+  display: block;
+  font-size: 0.78rem;
+  line-height: 1.42;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-source-card-count strong {
+  margin-right: 0.18rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.16rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+.vigil-standards-source-card-button > svg {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--muted-foreground));
+  transition: transform 0.16s ease;
+}
+
+.vigil-standards-source-card.is-open .vigil-standards-source-card-button > svg {
+  transform: rotate(180deg);
+}
+
+.vigil-standards-source-card-row > a {
+  position: absolute;
+  right: 1.05rem;
+  top: 50%;
+  display: inline-flex;
+  width: 1.7rem;
+  height: 1.7rem;
+  transform: translateY(-50%);
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary));
+}
+
+.vigil-standards-source-card-row > a svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+/* An opened standard remains part of the same record rather than becoming a
+   second nested card. */
 .vigil-standards-dossier {
-  border-top: 1px solid hsl(var(--border) / 0.72);
+  border-top: 1px solid hsl(var(--border));
   background: hsl(var(--background));
 }
 
 .vigil-standards-tabs {
-  gap: 1.2rem;
-  padding: 0 0.35rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  overflow-x: auto;
   border-bottom: 1px solid hsl(var(--border));
-  background: transparent;
+  background: hsl(var(--background));
 }
 
 .vigil-standards-tabs button {
-  min-height: 3rem;
-  padding: 0.7rem 0;
-  border-right: 0;
+  min-height: 3.1rem;
+  padding: 0.72rem 0.8rem;
+  border: 0;
+  border-right: 1px solid hsl(var(--border));
+  border-bottom: 2px solid transparent;
   background: transparent;
+  text-align: left;
+  font-family: var(--app-font-sans);
+  font-size: 0.84rem;
+  font-weight: 620;
+  color: hsl(var(--foreground) / 0.76);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vigil-standards-tabs button:last-child {
+  border-right: 0;
+}
+
+.vigil-standards-tabs button span {
+  margin-right: 0.32rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 750;
+  color: hsl(var(--primary));
+}
+
+.vigil-standards-tabs button.is-active,
+.vigil-standards-tabs button:hover {
+  background: hsl(var(--vigil-nav-active) / 0.28);
 }
 
 .vigil-standards-tabs button.is-active {
-  background: transparent;
+  border-bottom-color: hsl(var(--primary));
+  color: hsl(var(--foreground));
 }
 
 .vigil-standards-tab-panel {
-  padding: 1.15rem 0.35rem 1.3rem;
+  min-height: 12rem;
+  padding: 1.1rem 1.2rem 1.25rem;
 }
 
-/* Governance relevance and review metadata use the same calm fact grammar. */
 .vigil-standards-reading {
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.72fr);
+  gap: 1.6rem;
+}
+
+.vigil-standards-reading-main > p:not(.vigil-library-kicker) {
+  margin: 0.45rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.vigil-standards-reading-main > p + p:not(.vigil-library-kicker) {
+  margin-top: 0.8rem;
 }
 
 .vigil-standards-facts {
-  padding-left: 1.5rem;
-  border-left: 1px solid hsl(var(--border) / 0.72);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+  margin: 0;
+  padding-left: 1.35rem;
+  border-left: 1px dashed hsl(var(--border));
+  align-content: start;
+}
+
+.vigil-standards-facts dt,
+.vigil-standards-empty-facts dt {
+  font-family: var(--app-font-mono);
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-facts dd,
+.vigil-standards-empty-facts dd {
+  margin: 0.22rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: hsl(var(--foreground));
 }
 
 .vigil-standards-relevance .vigil-standards-facts dd {
   line-height: 1.6;
 }
 
-/* Empty clause states should read as bounded evidence notes, not cards. */
 .vigil-standards-empty-tab {
   padding: 1.15rem 0;
   text-align: left;
@@ -142,31 +385,14 @@
   border-top: 1px solid hsl(var(--border) / 0.72);
 }
 
-.vigil-standards-empty-facts dt {
-  font-family: var(--app-font-mono);
-  font-size: 0.69rem;
-  font-weight: 700;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground));
-}
-
-.vigil-standards-empty-facts dd {
-  margin: 0.22rem 0 0;
-  font-size: 0.84rem;
-  line-height: 1.45;
-}
-
 .vigil-standards-clauses {
-  margin: -1.15rem -0.35rem -1.3rem;
+  margin: -1.1rem -1.2rem -1.25rem;
 }
 
 .vigil-standards-clause-detail {
   background: hsl(var(--card) / 0.1);
 }
 
-/* Evidence & Review mirrors the Case File evidence hierarchy: narrative on the
-   left, explicit provenance and review metadata on the right. */
 .vigil-standards-review-heading {
   display: flex;
   align-items: flex-start;
@@ -202,7 +428,6 @@
   color: hsl(var(--foreground));
 }
 
-/* Review-event history stays collapsed by default. */
 .vigil-standards-review-history {
   margin-top: 1rem;
   border-top: 1px solid hsl(var(--border) / 0.7);
@@ -278,37 +503,116 @@
 }
 
 @media (max-width: 900px) {
+  .vigil-standards-toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vigil-standards-search {
+    grid-column: 1 / -1;
+  }
+
+  .vigil-standards-source-card-button {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.45rem 0.8rem;
+    min-height: 6.4rem;
+    padding-right: 4rem;
+  }
+
+  .vigil-standards-source-card-primary {
+    grid-column: 1;
+  }
+
+  .vigil-standards-source-card-secondary {
+    grid-column: 1;
+  }
+
+  .vigil-standards-source-card-count {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    text-align: right;
+  }
+
+  .vigil-standards-source-card-button > svg {
+    display: none;
+  }
+
+  .vigil-standards-tabs {
+    grid-template-columns: repeat(4, minmax(10.5rem, 1fr));
+  }
+
+  .vigil-standards-reading {
+    grid-template-columns: 1fr;
+  }
+
   .vigil-standards-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding: 1rem 0 0;
     border-left: 0;
-    border-top: 1px solid hsl(var(--border) / 0.72);
+    border-top: 1px dashed hsl(var(--border));
   }
 }
 
 @media (max-width: 620px) {
+  .vigil-standards-page .container {
+    padding-inline: 0.65rem;
+  }
+
+  .vigil-standards-shell {
+    border-radius: 0.65rem;
+  }
+
   .vigil-standards-header {
-    padding-bottom: 0.8rem;
+    padding: 1rem 0.95rem 0.85rem;
+  }
+
+  .vigil-standards-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .vigil-standards-header .vigil-library-description {
+    font-size: 0.9rem;
   }
 
   .vigil-standards-toolbar {
-    margin-top: 0.7rem;
+    grid-template-columns: 1fr;
+    padding: 0.65rem 0.95rem 0.8rem;
   }
 
-  .vigil-standards-tabs {
-    gap: 0;
-    padding-inline: 0;
+  .vigil-standards-search {
+    grid-column: auto;
   }
 
-  .vigil-standards-tabs button {
-    padding-inline: 0.7rem;
+  .vigil-standards-result-line {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 0.75rem;
+  }
+
+  .vigil-standards-result-line span:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+
+  .vigil-standards-source-card-primary {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .vigil-standards-source-card-id {
+    padding-top: 0;
+  }
+
+  .vigil-standards-source-card-id small {
+    display: inline;
+    margin-left: 0.4rem;
+  }
+
+  .vigil-standards-source-card-button {
+    padding-left: 0.95rem;
   }
 
   .vigil-standards-tab-panel {
-    padding-inline: 0;
-  }
-
-  .vigil-standards-empty-tab {
-    padding: 0.85rem 0;
+    padding-inline: 0.95rem;
   }
 
   .vigil-standards-empty-facts {
