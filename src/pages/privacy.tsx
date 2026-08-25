@@ -1,4 +1,5 @@
 import { Shell } from "@/components/layout/Shell";
+import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 
 const sections = [
   ["Overview", "This policy explains the current CAM Initiative website. The site is published as a static public website and does not provide an online VIGIL submission portal, user accounts, or a private evidence-upload service."],
@@ -16,7 +17,11 @@ const sections = [
 export default function Privacy() {
   return <Shell>
     <main className="public-reference-page">
-      <div className="container mx-auto max-w-[1040px] px-4 py-8 sm:px-6 md:px-10 md:py-12">
+      <div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-12">
+        <div className="home-sticky-governance public-reference-governance-rail">
+          <ExploreGovernanceRail />
+        </div>
+
         <article className="public-reference-document">
           <header className="public-reference-hero">
             <p className="public-reference-kicker">CAM Initiative</p>
