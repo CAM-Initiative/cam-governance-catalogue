@@ -1,4 +1,4 @@
-/* Refinements for the VIGIL Failure Taxonomy manual navigation. */
+/* Refinements for the VIGIL AI Governance Failure Taxonomy manual navigation. */
 
 .vigil-taxonomy-manual-layout.is-contents-collapsed {
   grid-template-columns: 3.25rem minmax(0, 1fr);
@@ -58,15 +58,28 @@
   justify-content: center;
 }
 
-.vigil-taxonomy-manual-family-prefix {
-  margin-right: 0.4rem;
-  font-family: var(--app-font-mono);
-  font-size: 0.42em;
-  font-weight: 700;
-  letter-spacing: 0.085em;
-  text-transform: uppercase;
+.vigil-taxonomy-manual-examples {
+  margin-top: 1.35rem;
+  padding-top: 0.15rem;
+}
+
+.vigil-taxonomy-manual-examples h3 {
+  margin: 0 0 0.42rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.22rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.vigil-taxonomy-manual-examples p {
+  margin: 0;
+  padding: 0.78rem 0.9rem;
+  border: 1px dashed hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--muted) / 0.18);
+  font-size: 0.9rem;
+  line-height: 1.55;
   color: hsl(var(--muted-foreground));
-  vertical-align: middle;
 }
 
 @media (max-width: 1050px) {
