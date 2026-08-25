@@ -740,23 +740,38 @@ export default function VigilCaseFile() {
           </section>
         </div>}
         {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
-        {diagnostic && <details className="mt-6 border-t border-border/70 pt-4 text-sm text-muted-foreground">
-          <summary className="cursor-pointer list-none font-sans text-sm text-foreground marker:hidden">
-            <span className="font-semibold">Diagnostic provenance</span>
-            <span className="ml-2 text-muted-foreground">{[
-              diagnosticMethodLabel(diagnostic.method),
-              [diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" "),
-              diagnostic.diagnosticDate,
-              reviewStatusLabel(diagnostic.reviewStatus),
-            ].filter(Boolean).join(" · ")}</span>
-          </summary>
-          <div className="mt-4 grid gap-4 border-l border-border/70 pl-4 sm:grid-cols-2">
-            {diagnostic.humanRole && <div><p className="vigil-library-kicker">Human contribution</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.humanRole}</p></div>}
-            {diagnostic.aiRole && <div><p className="vigil-library-kicker">AI contribution</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.aiRole}</p></div>}
-            {diagnostic.authorityBoundary && <div className="sm:col-span-2"><p className="vigil-library-kicker">Authority boundary</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.authorityBoundary}</p></div>}
-            {diagnostic.attributionBasis && <div className="sm:col-span-2"><p className="vigil-library-kicker">Model attribution</p><p className="mt-1 leading-relaxed text-muted-foreground">{diagnostic.attributionBasis}</p></div>}
+        {diagnostic && <section className="vigil-evidence-card" aria-labelledby="diagnostic-provenance-heading">
+          <header className="vigil-evidence-header">
+            <div className="vigil-evidence-title-row">
+              <div>
+                <p className="vigil-evidence-kicker">Diagnostic provenance</p>
+                <h3 id="diagnostic-provenance-heading">{diagnosticMethodLabel(diagnostic.method) ?? "Diagnostic analysis"}</h3>
+              </div>
+            </div>
+            <dl className="vigil-evidence-source-meta" aria-label="Diagnostic provenance details">
+              {(diagnostic.aiPlatform || diagnostic.aiModel) && <div className="vigil-evidence-meta-field"><dt>AI collaborator</dt><dd>{[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")}</dd></div>}
+              {diagnostic.diagnosticDate && <div className="vigil-evidence-meta-field"><dt>Diagnosed</dt><dd>{diagnostic.diagnosticDate}</dd></div>}
+              {diagnostic.reviewStatus && <div className="vigil-evidence-meta-field"><dt>Review status</dt><dd>{reviewStatusLabel(diagnostic.reviewStatus)}</dd></div>}
+            </dl>
+          </header>
+          <div className="vigil-evidence-grid">
+            {diagnostic.humanRole && <section className="vigil-evidence-column">
+              <h4>Human contribution</h4>
+              <p>{diagnostic.humanRole}</p>
+            </section>}
+            {diagnostic.aiRole && <section className="vigil-evidence-column vigil-evidence-interpretation">
+              <h4>AI contribution</h4>
+              <p>{diagnostic.aiRole}</p>
+            </section>}
           </div>
-        </details>}
+          {(diagnostic.authorityBoundary || diagnostic.attributionBasis) && <details className="vigil-evidence-limitations">
+            <summary>Authority and attribution</summary>
+            <div className="vigil-evidence-boundary-list">
+              {diagnostic.authorityBoundary && <p><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
+              {diagnostic.attributionBasis && <p><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
+            </div>
+          </details>}
+        </section>}
       </article> : <p className="vigil-case-empty">No structured governance-gap assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
     </>;
 
