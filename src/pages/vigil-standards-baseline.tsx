@@ -240,14 +240,7 @@ function ReviewHistory({ events }: { events: ExternalReviewEvent[] }) {
   </details>;
 }
 
-function StandardsDossier({
-  source,
-  scope,
-  clauses,
-  previousVersions,
-  activeTab,
-  onTab,
-}: {
+function StandardsDossier({ source, scope, clauses, previousVersions, activeTab, onTab }: {
   source: ExternalSourceEntry;
   scope?: ExternalSourceScopeEntry;
   clauses: ExternalRequirementDetail[];
@@ -421,18 +414,20 @@ export default function VigilStandardsBaseline() {
   const sourceCount = state.status === "ready" ? new Set(state.sources.filter((source) => scopeBySource.get(externalSourceKey(source))?.extraction_status !== "superseded-version").map(sourceIdentity)).size : 0;
   const clauseCount = state.status === "ready" ? state.requirements.length : 0;
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-standards-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
-    <section className="vigil-standards-shell" aria-labelledby="standards-heading">
-      <header className="vigil-standards-header">
-        <p className="vigil-library-kicker">VIGIL Observatory</p>
-        <h1 id="standards-heading">AI Governance Standards — Compliance Baseline</h1>
-        <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question.</p>
+  return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-standards-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
+    <section className="vigil-library-shell vigil-standards-shell" aria-labelledby="standards-heading">
+      <header className="vigil-library-header vigil-standards-header">
+        <div>
+          <p className="vigil-library-kicker">VIGIL Observatory</p>
+          <h1 id="standards-heading">AI Governance Standards — Compliance Baseline</h1>
+          <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question.</p>
+        </div>
       </header>
 
       {state.status === "loading" && <div className="vigil-reference-state">Loading AI Governance Standards — Compliance Baseline…</div>}
       {state.status === "unavailable" && <div className="vigil-reference-state"><h2>AI Governance Standards — Compliance Baseline unavailable</h2><p>{state.message}</p></div>}
       {state.status === "ready" && <>
-        <section className="vigil-standards-toolbar" aria-label="Search and filter AI governance sources">
+        <section className="vigil-library-toolbar vigil-standards-toolbar" aria-label="Search and filter AI governance sources">
           <SearchControl value={query} onChange={setQuery} />
           <label><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option key={value} value={value}>{clean(value) ?? value}</option>)}</select></label>
           <label><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
@@ -440,19 +435,21 @@ export default function VigilStandardsBaseline() {
         </section>
 
         <section className="vigil-standards-library" aria-label="AI governance standards sources">
-          <div className="vigil-standards-list-head" aria-hidden="true"><span>Source</span><span>Jurisdiction / type</span><span>Clauses</span><span /></div>
           {visibleSources.map((source) => {
             const key = externalSourceKey(source);
             const scope = scopeBySource.get(key);
             const clauses = clausesBySource.get(key) ?? [];
             const isOpen = openSource === key;
             const previousVersions = (versionsByIdentity.get(sourceIdentity(source)) ?? []).filter((version) => scopeBySource.get(externalSourceKey(version))?.extraction_status === "superseded-version").sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true }));
-            return <article className={`vigil-standards-source${isOpen ? " is-open" : ""}`} key={key}>
-              <div className="vigil-standards-source-row">
-                <button type="button" onClick={() => { setOpenSource(isOpen ? null : key); setActiveTab("overview"); }} aria-expanded={isOpen}>
-                  <span className="vigil-standards-source-primary"><strong>{source.title}</strong><small>{canonicalIdentifierLabel(source)} · Version {source.source_version}</small></span>
-                  <span className="vigil-standards-source-secondary"><strong>{source.jurisdiction ?? "Jurisdiction not specified"}</strong><small>{clean(source.source_class) ?? "Source type not specified"}</small></span>
-                  <span className="vigil-standards-source-count"><strong>{clauses.length}</strong> clause{clauses.length === 1 ? "" : "s"}</span>
+            return <article className={`vigil-standards-source vigil-standards-source-card${isOpen ? " is-open" : ""}`} key={key}>
+              <div className="vigil-standards-source-card-row">
+                <button className="vigil-standards-source-card-button" type="button" onClick={() => { setOpenSource(isOpen ? null : key); setActiveTab("overview"); }} aria-expanded={isOpen}>
+                  <span className="vigil-standards-source-card-primary">
+                    <span className="vigil-standards-source-card-id">{canonicalIdentifierLabel(source)}<small>Version {source.source_version}</small></span>
+                    <span className="vigil-standards-source-card-copy"><strong>{source.title}</strong><span>{sourcePublicSummary(source)}</span></span>
+                  </span>
+                  <span className="vigil-standards-source-card-secondary"><strong>{source.jurisdiction ?? "Jurisdiction not specified"}</strong><small>{clean(source.source_class) ?? "Source type not specified"}</small></span>
+                  <span className="vigil-standards-source-card-count"><strong>{clauses.length}</strong> clause{clauses.length === 1 ? "" : "s"}</span>
                   <ChevronDown aria-hidden="true" />
                 </button>
                 {source.official_locator ? <a href={source.official_locator} target="_blank" rel="noreferrer" aria-label={`Open official source for ${source.title}`} title="Open official source"><ExternalLink aria-hidden="true" /></a> : null}
