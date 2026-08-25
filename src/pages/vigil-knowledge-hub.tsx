@@ -122,6 +122,7 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/observatory/cases"
               title="Case Files"
+              subtitle="AI Failure Incident Database"
               description="Documented AI failure-mode investigations organised through Observation, Diagnosis, Classification, Repair, Learn and References, with record-local evidence and traceable governance repair."
               meta={caseFilesMeta}
               actionLabel="Browse case files"
