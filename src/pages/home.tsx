@@ -8,7 +8,7 @@ const initiativeResources = [
     title: "VIGIL Observatory",
     subtitle: "Evidence, failure taxonomy & public datasets",
     purpose: "Case Files grouped through the VIGIL Runtime & Governance Failure Taxonomy, with source evidence, governance requirements, repair history and public data.",
-    href: "/observatory/cases",
+    href: "/observatory/knowledge-base",
   },
   {
     id: "datasets",
