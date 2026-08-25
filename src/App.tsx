@@ -17,7 +17,7 @@ import Catalogue from "@/pages/catalogue";
 import VigilCases from "@/pages/vigil-cases";
 import VigilCaseFile from "@/pages/vigil-case-file";
 import VigilAbout from "@/pages/vigil-about";
-import EvidenceChainReport from "@/pages/evidence-chain-report-deterministic";
+import EvidenceChainReport from "@/pages/evidence-chain-report-printable";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
 import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
