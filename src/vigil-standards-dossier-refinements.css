@@ -1,33 +1,116 @@
-/* Final refinements for the AI Governance Standards dossier.
+/* Final refinements for the AI Governance Standards compliance baseline.
    Loaded after the base dossier stylesheet so these rules can stay narrow. */
 
-/* Let whitespace — not another rule — separate the page introduction from search. */
+/* Flatten the page into one reference surface rather than a stack of cards. */
+.vigil-standards-shell {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
 .vigil-standards-header {
-  padding-bottom: 0.85rem;
-  border-bottom: 0;
+  padding: 0 0 1.2rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-standards-header h1 {
+  margin-top: 0.28rem;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+}
+
+.vigil-standards-header > p:last-child {
+  max-width: 58rem;
 }
 
 .vigil-standards-toolbar {
-  padding-top: 1rem;
+  margin-top: 0.9rem;
+  padding: 0 0 0.85rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
 }
 
-/* Governance relevance now uses the same definition-list grammar as Overview. */
+.vigil-standards-toolbar > label:not(.vigil-standards-search) {
+  padding: 0.35rem 0.15rem 0.45rem;
+  border: 0;
+  border-bottom: 1px solid hsl(var(--border));
+  border-radius: 0;
+  background: transparent;
+}
+
+.vigil-standards-result-line {
+  padding-top: 0.15rem;
+}
+
+.vigil-standards-list-head {
+  padding-inline: 0.35rem 3.25rem;
+  background: transparent;
+}
+
+.vigil-standards-source-row > button {
+  min-height: 5rem;
+  padding-left: 0.35rem;
+}
+
+.vigil-standards-source-row > button:hover,
+.vigil-standards-source.is-open .vigil-standards-source-row > button {
+  background: hsl(var(--secondary) / 0.12);
+}
+
+.vigil-standards-dossier {
+  border-top: 1px solid hsl(var(--border) / 0.72);
+  background: hsl(var(--background));
+}
+
+.vigil-standards-tabs {
+  gap: 1.2rem;
+  padding: 0 0.35rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: transparent;
+}
+
+.vigil-standards-tabs button {
+  min-height: 3rem;
+  padding: 0.7rem 0;
+  border-right: 0;
+  background: transparent;
+}
+
+.vigil-standards-tabs button.is-active {
+  background: transparent;
+}
+
+.vigil-standards-tab-panel {
+  padding: 1.15rem 0.35rem 1.3rem;
+}
+
+/* Governance relevance and review metadata use the same calm fact grammar. */
+.vigil-standards-reading {
+  gap: 2rem;
+}
+
+.vigil-standards-facts {
+  padding-left: 1.5rem;
+  border-left: 1px solid hsl(var(--border) / 0.72);
+}
+
 .vigil-standards-relevance .vigil-standards-facts dd {
   line-height: 1.6;
 }
 
-/* Empty clause states should read as bounded evidence cards, not generic blank panels. */
+/* Empty clause states should read as bounded evidence notes, not cards. */
 .vigil-standards-empty-tab {
-  padding: 1.1rem 1.2rem;
+  padding: 1.15rem 0;
   text-align: left;
   color: hsl(var(--foreground));
 }
 
 .vigil-standards-empty-card {
-  padding: 1rem 1.05rem;
-  border: 1px dashed hsl(var(--border) / 0.95);
-  border-radius: 0.45rem;
-  background: hsl(var(--card) / 0.16);
+  max-width: 72rem;
+  padding: 0.15rem 0 0.15rem 1rem;
+  border: 0;
+  border-left: 2px solid hsl(var(--primary) / 0.7);
+  border-radius: 0;
+  background: transparent;
 }
 
 .vigil-standards-empty-card h3 {
@@ -39,7 +122,7 @@
 }
 
 .vigil-standards-empty-card > p:not(.vigil-library-kicker) {
-  max-width: 74rem;
+  max-width: 68rem;
   margin: 0.48rem 0 0;
   font-size: 0.86rem;
   line-height: 1.6;
@@ -74,8 +157,16 @@
   line-height: 1.45;
 }
 
-/* Evidence & Review mirrors the Case File evidence-card hierarchy: review
-   narrative on the left, explicit provenance/freshness metadata on the right. */
+.vigil-standards-clauses {
+  margin: -1.15rem -0.35rem -1.3rem;
+}
+
+.vigil-standards-clause-detail {
+  background: hsl(var(--card) / 0.1);
+}
+
+/* Evidence & Review mirrors the Case File evidence hierarchy: narrative on the
+   left, explicit provenance and review metadata on the right. */
 .vigil-standards-review-heading {
   display: flex;
   align-items: flex-start;
@@ -111,12 +202,7 @@
   color: hsl(var(--foreground));
 }
 
-.vigil-standards-review-note {
-  margin-top: 0.9rem;
-}
-
-/* Review-event history is intentionally collapsed by default. It preserves the
-   analytical chronology without turning the primary review panel into a ledger. */
+/* Review-event history stays collapsed by default. */
 .vigil-standards-review-history {
   margin-top: 1rem;
   border-top: 1px solid hsl(var(--border) / 0.7);
@@ -191,17 +277,38 @@
   margin-top: 0.35rem;
 }
 
+@media (max-width: 900px) {
+  .vigil-standards-facts {
+    padding: 1rem 0 0;
+    border-left: 0;
+    border-top: 1px solid hsl(var(--border) / 0.72);
+  }
+}
+
 @media (max-width: 620px) {
   .vigil-standards-header {
-    padding-bottom: 0.72rem;
+    padding-bottom: 0.8rem;
   }
 
   .vigil-standards-toolbar {
-    padding-top: 0.8rem;
+    margin-top: 0.7rem;
+  }
+
+  .vigil-standards-tabs {
+    gap: 0;
+    padding-inline: 0;
+  }
+
+  .vigil-standards-tabs button {
+    padding-inline: 0.7rem;
+  }
+
+  .vigil-standards-tab-panel {
+    padding-inline: 0;
   }
 
   .vigil-standards-empty-tab {
-    padding: 0.85rem;
+    padding: 0.85rem 0;
   }
 
   .vigil-standards-empty-facts {
