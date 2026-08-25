@@ -83,11 +83,14 @@ function ManualContents({
   families,
   query,
   setQuery,
+  activeFamilyId,
 }: {
   families: FailureTaxonomyFamilyDocument[];
   query: string;
   setQuery: (value: string) => void;
+  activeFamilyId?: string;
 }) {
+  const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(() => new Set());
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const visible = families.map((document) => {
     if (!terms.length) return { document, classes: document.classes };
@@ -96,6 +99,15 @@ function ManualContents({
     return { document, classes: familyMatches ? document.classes : classes };
   }).filter(({ classes }) => classes.length);
 
+  function toggleFamily(familyId: string) {
+    setExpandedFamilies((current) => {
+      const next = new Set(current);
+      if (next.has(familyId)) next.delete(familyId);
+      else next.add(familyId);
+      return next;
+    });
+  }
+
   return <nav id="taxonomy-contents" className="vigil-taxonomy-manual-contents" aria-label="VIGIL Failure Taxonomy contents">
     <div className="vigil-taxonomy-manual-contents-head">
       <p className="vigil-library-kicker">Reference navigation</p>
@@ -103,18 +115,35 @@ function ManualContents({
     </div>
     <SearchControl value={query} onChange={setQuery} />
     <ol>
-      {visible.map(({ document, classes }) => <li key={document.family.family_id}>
-        <Link href={`/observatory/knowledge-base/failure-taxonomy/${document.family.family_id}`} onClick={() => setQuery("")}>
-          <span>{document.family.name}</span>
-          <code>{document.family.family_id}</code>
-        </Link>
-        <ul>{classes.map((item) => <li key={item.class_id}>
-          <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={() => setQuery("")}>
-            <span>{item.name}</span>
-            <code>{item.class_id}</code>
-          </Link>
-        </li>)}</ul>
-      </li>)}
+      {visible.map(({ document, classes }) => {
+        const familyId = document.family.family_id;
+        const expanded = expandedFamilies.has(familyId);
+        const active = familyId === activeFamilyId;
+        return <li key={familyId} className={active ? "is-active" : undefined}>
+          <div className="vigil-taxonomy-manual-family-link-row">
+            <button
+              type="button"
+              className="vigil-taxonomy-manual-expand"
+              onClick={() => toggleFamily(familyId)}
+              aria-expanded={expanded}
+              aria-controls={`${familyId}-contents-classes`}
+              aria-label={`${expanded ? "Collapse" : "Expand"} ${document.family.name}`}
+            >
+              <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+            </button>
+            <Link href={`/observatory/knowledge-base/failure-taxonomy/${familyId}`} onClick={() => setQuery("")}>
+              {document.family.name}
+            </Link>
+          </div>
+          {expanded ? <ul id={`${familyId}-contents-classes`}>
+            {classes.map((item) => <li key={item.class_id}>
+              <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={() => setQuery("")}>
+                {item.name}
+              </Link>
+            </li>)}
+          </ul> : null}
+        </li>;
+      })}
     </ol>
     {!visible.length ? <p className="vigil-taxonomy-manual-no-match">No taxonomy entries match this search.</p> : null}
   </nav>;
@@ -227,7 +256,6 @@ function FamilyManualSection({
     <div className="vigil-taxonomy-manual-class-list">
       {document.classes.map((item) => <ClassManualCard key={item.class_id} item={item} classById={classById} />)}
     </div>
-    <a className="vigil-taxonomy-manual-back" href="#taxonomy-contents">Back to contents ↑</a>
   </section>;
 }
 
@@ -255,46 +283,67 @@ export default function VigilFailureTaxonomy() {
     for (const document of families) for (const item of document.classes) map.set(item.class_id.toUpperCase(), item);
     return map;
   }, [families]);
+  const familyByClassId = useMemo(() => {
+    const map = new Map<string, FailureTaxonomyFamilyDocument>();
+    for (const document of families) for (const item of document.classes) map.set(item.class_id.toUpperCase(), document);
+    return map;
+  }, [families]);
+  const selectedFamily = useMemo(() => {
+    if (!families.length) return undefined;
+    if (requestedId) {
+      const directFamily = families.find((document) => document.family.family_id.toUpperCase() === requestedId.toUpperCase());
+      if (directFamily) return directFamily;
+      const classFamily = familyByClassId.get(requestedId.toUpperCase());
+      if (classFamily) return classFamily;
+    }
+    return families[0];
+  }, [families, familyByClassId, requestedId]);
 
   useEffect(() => {
-    if (state.status !== "ready" || !requestedId) return;
-    const target = document.getElementById(requestedId.toLowerCase());
+    if (state.status !== "ready" || !requestedId || !selectedFamily) return;
+    const targetId = requestedId.toUpperCase().startsWith("VIGIL-FC-") ? requestedId : selectedFamily.family.family_id;
+    const target = document.getElementById(targetId.toLowerCase());
     if (!target) return;
     window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
-  }, [requestedId, state.status]);
+  }, [requestedId, selectedFamily, state.status]);
 
   const classCount = state.status === "ready"
     ? state.data.index.families.reduce((sum, family) => sum + family.class_count, 0)
     : 0;
   const description = state.status === "ready" ? state.data.families[0]?.standard.description : undefined;
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-taxonomy-manual-page">
-    <div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-      <header className="vigil-taxonomy-manual-cover">
-        <p className="vigil-taxonomy-manual-eyebrow">VIGIL Observatory · Knowledge Base</p>
-        <h1>{state.status === "ready" ? state.data.index.standard.name : "VIGIL Failure Taxonomy"}</h1>
-        <p className="vigil-taxonomy-manual-subtitle">Full reference</p>
-        {description ? <p className="vigil-taxonomy-manual-description">{description}</p> : null}
-        {state.status === "ready" ? <p className="vigil-taxonomy-manual-cover-meta">
-          <strong>Version:</strong> {state.data.index.standard.version}
-          <span>·</span>
-          <strong>Status:</strong> {state.data.index.standard.status}
-          <span>·</span>
-          <strong>Families:</strong> {state.data.index.families.length}
-          <span>·</span>
-          <strong>Failure classes:</strong> {classCount}
-        </p> : null}
-      </header>
+  return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-taxonomy-manual-page">
+    <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
+      <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="taxonomy-heading">
+        <header className="vigil-library-header vigil-taxonomy-header">
+          <div>
+            <p className="vigil-library-kicker">VIGIL Observatory</p>
+            <div className="vigil-taxonomy-header-title-row">
+              <h1 id="taxonomy-heading">{state.status === "ready" ? state.data.index.standard.name : "VIGIL Failure Taxonomy"}</h1>
+              <span className="cam-beta-chip">Beta</span>
+            </div>
+            <p className="vigil-library-description">{description ?? "A structured classification standard for recurring AI governance failure mechanisms."}</p>
+            {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
+              Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} failure classes
+            </p> : null}
+          </div>
+        </header>
 
-      {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Failure Taxonomy…</div> : null}
-      {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
+        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Failure Taxonomy…</div> : null}
+        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
 
-      {state.status === "ready" ? <div className="vigil-taxonomy-manual-layout">
-        <ManualContents families={families} query={query} setQuery={setQuery} />
-        <div className="vigil-taxonomy-manual-document">
-          {families.map((document) => <FamilyManualSection key={document.family.family_id} document={document} classById={classById} />)}
-        </div>
-      </div> : null}
+        {state.status === "ready" && selectedFamily ? <div className="vigil-taxonomy-manual-layout">
+          <ManualContents
+            families={families}
+            query={query}
+            setQuery={setQuery}
+            activeFamilyId={selectedFamily.family.family_id}
+          />
+          <div className="vigil-taxonomy-manual-document" aria-live="polite">
+            <FamilyManualSection document={selectedFamily} classById={classById} />
+          </div>
+        </div> : null}
+      </section>
     </div>
   </main></Shell>;
 }
