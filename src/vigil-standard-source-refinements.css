@@ -1,0 +1,10 @@
+/* Standard-source detail pages use the Case File ticket and tab controls, but the
+   tab itself already names the active section. Do not repeat that label again
+   inside the standards presentation. Case File stage headings are untouched. */
+.vigil-standard-file-page .vigil-standard-section-heading {
+  display: none;
+}
+
+.vigil-standard-file-page .vigil-standard-section-body {
+  padding-top: 0.9rem;
+}
