@@ -31,7 +31,7 @@ const maintainedLayers = [
   },
   {
     label: "AI Governance Standards",
-    eyebrow: "Compliance baseline",
+    eyebrow: "Governance requirements",
     body: "A curated source and requirement reference for laws, standards, frameworks and technical guidance relevant to AI governance.",
   },
   {
