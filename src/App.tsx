@@ -9,6 +9,7 @@ import "./vigil-ux-v5.css";
 import "./vigil-ux-v6.css";
 import "./vigil-standards-dossier.css";
 import "./vigil-standards-dossier-refinements.css";
+import "./vigil-standard-source-refinements.css";
 import "./vigil-failure-taxonomy.css";
 import "./vigil-failure-taxonomy-refinements.css";
 import "./public-surface-refinements.css";
