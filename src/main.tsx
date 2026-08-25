@@ -23,6 +23,5 @@ import "./vigil-case-file-polish.css";
 import "./vigil-case-library-simplify.css";
 import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
-import "./home-dataset-and-standards-refinements.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
