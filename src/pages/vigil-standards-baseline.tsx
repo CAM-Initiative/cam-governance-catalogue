@@ -162,7 +162,7 @@ function clauseCoverageCopy(scope?: ExternalSourceScopeEntry) {
       heading: "Primary-text review is blocked",
       body: recordedScope || "Clause-level requirements are not represented because the primary normative text has not been available for lawful substantive review.",
       qualification: access.includes("metadata")
-        ? "Only official metadata or an abstract is available. VIGIL does not infer normative clauses from metadata; controlled standards require lawful primary-text access before clause-level extraction."
+        ? "Only official metadata or an abstract is available. VIGIL does not infer normative clauses from metadata; controlled standards require lawful primary-text access before clause-level review."
         : undefined,
     };
   }
@@ -172,7 +172,7 @@ function clauseCoverageCopy(scope?: ExternalSourceScopeEntry) {
       heading: "Clause decomposition is outside the current scope",
       body: recordedScope || "This source is retained as supporting authority rather than as a first-class clause-level requirement corpus.",
       qualification: access.includes("licensed")
-        ? "Lawful licensed primary-text access is recorded. Copyrighted source text is not reproduced; the absence of clause records reflects the bounded extraction scope, not a prohibition on analytical abstraction."
+        ? "Lawful licensed primary-text access is recorded. Copyrighted source text is not reproduced; the absence of clause records reflects the bounded review scope, not a prohibition on analytical abstraction."
         : undefined,
     };
   }
@@ -193,14 +193,14 @@ function clauseCoverageCopy(scope?: ExternalSourceScopeEntry) {
 
   if (status === "complete") {
     return {
-      heading: "No clause records met the bounded extraction criterion",
-      body: recordedScope || "A substantive review is recorded, but it did not produce public clause-level records under VIGIL's current governance-significant extraction criterion.",
+      heading: "No clause records met the bounded review criterion",
+      body: recordedScope || "A substantive review is recorded, but it did not produce public clause-level records under VIGIL's current governance-significant review criterion.",
     };
   }
 
   return {
     heading: "Clause coverage is not yet represented",
-    body: recordedScope || "The current source-scope record does not establish a published clause-level extraction for this source.",
+    body: recordedScope || "The current source-scope record does not establish a published clause-level review for this source.",
   };
 }
 
@@ -320,9 +320,8 @@ function StandardsDossier({
             <div className="vigil-standards-review-method">
               <p className="vigil-library-kicker">What the review establishes</p>
               {reviewEvent ? <p><strong>{reviewEvent.review_system.provider} {reviewEvent.review_system.model}</strong> performed the substantive analytical review through {reviewEvent.review_system.platform}. {reviewScope}</p> : <p>{reviewScope}</p>}
-              {scope?.extraction_scope_notes && comparable(scope.extraction_scope_notes) !== comparable(reviewScope) ? <p className="vigil-standards-review-boundary"><strong>Extraction boundary:</strong> {scope.extraction_scope_notes}</p> : null}
+              {scope?.extraction_scope_notes && comparable(scope.extraction_scope_notes) !== comparable(reviewScope) ? <p className="vigil-standards-review-boundary"><strong>Coverage boundary:</strong> {scope.extraction_scope_notes}</p> : null}
             </div>
-            <p className="vigil-standards-review-note">Review freshness is calculated from the last substantive analytical review. Routine metadata updates do not reset this date. The next substantive review is due 90 calendar days after the current review event.</p>
           </div>
           <dl className="vigil-standards-facts">
             <Fact label="AI system" value={reviewSystemLabel(reviewEvent) ?? "Review provenance not yet published"} />
@@ -333,10 +332,8 @@ function StandardsDossier({
             <Fact label="Reviewed" value={formatReviewDate(reviewDate)} />
             <Fact label="Next review" value={nextReviewDate(reviewDate)} />
             <Fact label="Source access" value={clean(scope?.source_access_status)} />
-            <Fact label="Extraction status" value={clean(scope?.extraction_status)} />
-            <Fact label="Human role" value={clean(reviewEvent?.human_role)} />
-            <Fact label="Human substantive review" value={clean(reviewEvent?.human_review_status)} />
-            <Fact label="Human source verification" value={clean(reviewEvent?.human_verification_status)} />
+            <Fact label="Review coverage" value={clean(scope?.extraction_status)} />
+            <Fact label="Human review" value={clean(reviewEvent?.human_review_status)} />
           </dl>
         </div>
         <ReviewHistory events={reviewEvents} />
