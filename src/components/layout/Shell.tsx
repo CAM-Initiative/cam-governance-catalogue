@@ -10,7 +10,7 @@ const mobileLinks = [
   { href: "/observatory/about", label: "About VIGIL", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Failure Taxonomy", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL AI Governance Failure Taxonomy", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
@@ -25,7 +25,7 @@ const vigilLinks = [
   { href: "/observatory/about", label: "About VIGIL" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/cases", label: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "AI Governance Failure Taxonomy" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
