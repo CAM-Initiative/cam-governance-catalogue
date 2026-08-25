@@ -79,54 +79,6 @@ function SearchControl({ value, onChange }: { value: string; onChange: (value: s
   </label>;
 }
 
-function Contents({
-  families,
-  query,
-  onSelect,
-}: {
-  families: FailureTaxonomyFamilyDocument[];
-  query: string;
-  onSelect: () => void;
-}) {
-  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const visible = families.map((document) => {
-    if (!terms.length) return { document, classes: document.classes };
-    const familyMatches = terms.every((term) => familyHaystack(document).includes(term));
-    const classes = document.classes.filter((item) => terms.every((term) => classHaystack(item).includes(term)));
-    return { document, classes: familyMatches ? document.classes : classes };
-  }).filter(({ classes }) => classes.length);
-
-  return <nav id="taxonomy-contents" className="vigil-taxonomy-manual-contents" aria-label="VIGIL Failure Taxonomy contents">
-    <div className="vigil-taxonomy-manual-contents-head">
-      <p className="vigil-library-kicker">Reference navigation</p>
-      <h2>Contents</h2>
-    </div>
-    <SearchControl value={query} onChange={() => {}} />
-    <div className="vigil-taxonomy-manual-contents-search-proxy">
-      <SearchControlProxy />
-    </div>
-    <ol>
-      {visible.map(({ document, classes }) => <li key={document.family.family_id}>
-        <Link href={`/observatory/knowledge-base/failure-taxonomy/${document.family.family_id}`} onClick={onSelect}>
-          <span>{document.family.name}</span>
-          <code>{document.family.family_id}</code>
-        </Link>
-        <ul>{classes.map((item) => <li key={item.class_id}>
-          <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={onSelect}>
-            <span>{item.name}</span>
-            <code>{item.class_id}</code>
-          </Link>
-        </li>)}</ul>
-      </li>)}
-    </ol>
-    {!visible.length ? <p className="vigil-taxonomy-manual-no-match">No taxonomy entries match this search.</p> : null}
-  </nav>;
-}
-
-function SearchControlProxy() {
-  return null;
-}
-
 function ManualContents({
   families,
   query,
@@ -144,8 +96,6 @@ function ManualContents({
     return { document, classes: familyMatches ? document.classes : classes };
   }).filter(({ classes }) => classes.length);
 
-  const clearAndScroll = () => setQuery("");
-
   return <nav id="taxonomy-contents" className="vigil-taxonomy-manual-contents" aria-label="VIGIL Failure Taxonomy contents">
     <div className="vigil-taxonomy-manual-contents-head">
       <p className="vigil-library-kicker">Reference navigation</p>
@@ -154,12 +104,12 @@ function ManualContents({
     <SearchControl value={query} onChange={setQuery} />
     <ol>
       {visible.map(({ document, classes }) => <li key={document.family.family_id}>
-        <Link href={`/observatory/knowledge-base/failure-taxonomy/${document.family.family_id}`} onClick={clearAndScroll}>
+        <Link href={`/observatory/knowledge-base/failure-taxonomy/${document.family.family_id}`} onClick={() => setQuery("")}>
           <span>{document.family.name}</span>
           <code>{document.family.family_id}</code>
         </Link>
         <ul>{classes.map((item) => <li key={item.class_id}>
-          <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={clearAndScroll}>
+          <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={() => setQuery("")}>
             <span>{item.name}</span>
             <code>{item.class_id}</code>
           </Link>
