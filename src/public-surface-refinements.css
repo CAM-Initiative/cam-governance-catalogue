@@ -1,0 +1,29 @@
+/* Final public-surface refinements for the August 2026 catalogue pass. */
+
+/* The Registry now carries canonical split homepage hero binaries. Use the
+ * immutable split-assets commit rather than cropping the former combined art. */
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child::before {
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/CAM_HERO.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 {
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/VIGIL_HERO.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+/* Knowledge Base cards should read as interactive reference tiles. The hover
+ * state is intentionally a darker paper tone rather than a lift animation. */
+.vigil-knowledge-hub-page .vigil-knowledge-collection {
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-collection:hover,
+.vigil-knowledge-hub-page .vigil-knowledge-collection:focus-within {
+  border-color: hsl(var(--primary) / 0.34);
+  background: hsl(var(--muted) / 0.68);
+}

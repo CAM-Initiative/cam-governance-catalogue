@@ -1,0 +1,138 @@
+/* AI Governance Standards Baseline — reference dossier grammar aligned to VIGIL Case Files. */
+.vigil-standards-page { background: hsl(var(--background)); }
+.vigil-standards-shell { overflow: hidden; border: 1px solid hsl(var(--border)); border-radius: .8rem; background: hsl(var(--background)); }
+.vigil-standards-header { padding: 1.25rem 1.35rem 1rem; border-bottom: 1px solid hsl(var(--border)); }
+.vigil-standards-header h1 { margin: .28rem 0 0; font-family: var(--app-font-serif); font-size: clamp(1.8rem,2.1vw,2.3rem); line-height: 1.08; }
+.vigil-standards-header > p:last-child { max-width: 62rem; margin: .55rem 0 0; font-size: .96rem; line-height: 1.62; color: hsl(var(--muted-foreground)); }
+
+.vigil-standards-toolbar { display: grid; grid-template-columns: minmax(0,1fr) minmax(12rem,.24fr) minmax(12rem,.24fr); gap: .65rem; padding: .8rem .85rem .7rem; border-bottom: 1px solid hsl(var(--border)); }
+.vigil-standards-toolbar > label:not(.vigil-standards-search) { display: grid; gap: .25rem; padding: .42rem .6rem .5rem; border: 1px solid hsl(var(--border)); border-radius: .4rem; background: hsl(var(--background)); }
+.vigil-standards-toolbar > label > span { font-family: var(--app-font-mono); font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.vigil-standards-toolbar select { width: 100%; border: 0; outline: 0; background: transparent; font-size: .9rem; color: hsl(var(--foreground)); }
+.vigil-standards-result-line { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 1rem; min-height: 1.5rem; font-size: .78rem; color: hsl(var(--muted-foreground)); }
+.vigil-standards-result-line strong { color: hsl(var(--foreground)); }
+.vigil-standards-result-line button { margin-left: auto; border: 0; background: transparent; font-size: .78rem; font-weight: 650; color: hsl(var(--primary)); cursor: pointer; }
+
+.vigil-standards-library { overflow: hidden; }
+.vigil-standards-list-head,
+.vigil-standards-source-row > button { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(12rem,.8fr) minmax(7rem,.35fr) 1rem; gap: .8rem; align-items: center; }
+.vigil-standards-list-head { min-height: 2.45rem; padding: 0 3.5rem 0 .9rem; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--card)/.38); font-family: var(--app-font-mono); font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.vigil-standards-source { border-bottom: 1px solid hsl(var(--border)/.78); }
+.vigil-standards-source:last-child { border-bottom: 0; }
+.vigil-standards-source-row { position: relative; }
+.vigil-standards-source-row > button { width: 100%; min-height: 5.6rem; padding: .78rem 3.5rem .78rem .9rem; border: 0; background: transparent; text-align: left; color: hsl(var(--foreground)); cursor: pointer; }
+.vigil-standards-source-row > button:hover,
+.vigil-standards-source.is-open .vigil-standards-source-row > button { background: hsl(var(--secondary)/.18); }
+.vigil-standards-source-row > a { position: absolute; right: 1.05rem; top: 50%; display: inline-flex; width: 1.7rem; height: 1.7rem; transform: translateY(-50%); align-items: center; justify-content: center; color: hsl(var(--primary)); }
+.vigil-standards-source-row > a svg { width: .95rem; height: .95rem; }
+.vigil-standards-source-primary strong,
+.vigil-standards-source-primary small,
+.vigil-standards-source-secondary strong,
+.vigil-standards-source-secondary small { display: block; }
+.vigil-standards-source-primary strong { font-size: 1rem; font-weight: 650; line-height: 1.38; }
+.vigil-standards-source-primary small { margin-top: .22rem; font-family: var(--app-font-mono); font-size: .76rem; line-height: 1.4; color: hsl(var(--primary)); }
+.vigil-standards-source-secondary strong { font-size: .86rem; font-weight: 600; line-height: 1.4; }
+.vigil-standards-source-secondary small { margin-top: .18rem; font-size: .78rem; color: hsl(var(--muted-foreground)); }
+.vigil-standards-source-count { font-size: .76rem; color: hsl(var(--muted-foreground)); }
+.vigil-standards-source-count strong { margin-right: .18rem; font-family: var(--app-font-serif); font-size: 1.16rem; font-weight: 500; color: hsl(var(--foreground)); }
+.vigil-standards-source-row > button > svg { width: 1rem; height: 1rem; color: hsl(var(--muted-foreground)); transition: transform .16s ease; }
+.vigil-standards-source.is-open .vigil-standards-source-row > button > svg { transform: rotate(180deg); }
+
+.vigil-standards-dossier { border-top: 1px solid hsl(var(--border)); background: hsl(var(--background)); }
+.vigil-standards-tabs { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); align-items: end; overflow-x: auto; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--background)); }
+.vigil-standards-tabs button { min-height: 3.25rem; padding: .72rem .8rem; border: 0; border-right: 1px solid hsl(var(--border)); border-bottom: 2px solid transparent; background: hsl(var(--background)); text-align: left; font-family: var(--app-font-sans); font-size: .84rem; font-weight: 620; color: hsl(var(--foreground)/.76); cursor: pointer; white-space: nowrap; }
+.vigil-standards-tabs button:last-child { border-right: 0; }
+.vigil-standards-tabs button span { margin-right: .32rem; font-family: var(--app-font-mono); font-size: .74rem; font-weight: 750; color: hsl(var(--primary)); }
+.vigil-standards-tabs button.is-active { background: hsl(var(--vigil-nav-active)/.52); border-bottom-color: hsl(var(--primary)); color: hsl(var(--foreground)); }
+.vigil-standards-tab-panel { min-height: 12rem; padding: 1.1rem 1.2rem 1.25rem; }
+
+.vigil-standards-reading { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(18rem,.72fr); gap: 1.6rem; }
+.vigil-standards-reading-main > p:not(.vigil-library-kicker) { margin: .45rem 0 0; font-size: .94rem; line-height: 1.65; }
+.vigil-standards-reading-main > p + p:not(.vigil-library-kicker) { margin-top: .8rem; }
+.vigil-standards-facts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .85rem 1rem; margin: 0; padding-left: 1.35rem; border-left: 1px dashed hsl(var(--border)); align-content: start; }
+.vigil-standards-facts dt { font-family: var(--app-font-mono); font-size: .69rem; font-weight: 700; letter-spacing: .055em; text-transform: uppercase; color: hsl(var(--muted-foreground)); }
+.vigil-standards-facts dd { margin: .22rem 0 0; font-size: .86rem; line-height: 1.45; color: hsl(var(--foreground)); }
+
+.vigil-standards-relevance > section > p:last-child { max-width: 70rem; margin: .45rem 0 0; font-size: .95rem; line-height: 1.64; }
+.vigil-standards-relevance-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.2rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid hsl(var(--border)); }
+.vigil-standards-tags { display: flex; flex-wrap: wrap; gap: .42rem; margin-top: .45rem; }
+.vigil-standards-tags span { padding: .35rem .56rem; border: 1px solid hsl(var(--border)); border-radius: 999px; font-size: .76rem; font-weight: 560; color: hsl(var(--foreground)/.86); }
+.vigil-standards-empty-copy { margin: .4rem 0 0; font-size: .84rem; color: hsl(var(--muted-foreground)); }
+
+.vigil-standards-clauses { margin: -1.1rem -1.2rem -1.25rem; }
+.vigil-standards-clause { border-bottom: 1px solid hsl(var(--border)/.75); }
+.vigil-standards-clause:last-child { border-bottom: 0; }
+.vigil-standards-clause > summary { display: grid; grid-template-columns: minmax(8rem,.45fr) minmax(0,1.8fr) minmax(8rem,.55fr) 1rem; gap: .75rem; align-items: center; min-height: 4.25rem; padding: .65rem 1rem; list-style: none; cursor: pointer; }
+.vigil-standards-clause > summary::-webkit-details-marker { display: none; }
+.vigil-standards-clause[open] > summary,
+.vigil-standards-clause > summary:hover { background: hsl(var(--secondary)/.18); }
+.vigil-standards-clause-ref { font-family: var(--app-font-mono); font-size: .76rem; font-weight: 700; color: hsl(var(--primary)); }
+.vigil-standards-clause-copy { font-size: .9rem; line-height: 1.48; }
+.vigil-standards-clause-type { font-size: .78rem; color: hsl(var(--muted-foreground)); }
+.vigil-standards-clause summary svg { width: .9rem; height: .9rem; color: hsl(var(--muted-foreground)); transition: transform .16s ease; }
+.vigil-standards-clause[open] summary svg { transform: rotate(180deg); }
+.vigil-standards-clause-detail { position: relative; padding: .9rem 1rem 1rem; border-top: 1px solid hsl(var(--border)); background: hsl(var(--card)/.18); }
+.vigil-standards-clause-detail dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem 1rem; margin: 0; }
+.vigil-standards-clause-detail dt { font-family: var(--app-font-mono); font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: hsl(var(--muted-foreground)); }
+.vigil-standards-clause-detail dd { margin: .2rem 0 0; font-size: .86rem; line-height: 1.55; }
+.vigil-standards-clause-detail > p { margin: .75rem 0 0; font-size: .84rem; line-height: 1.5; color: hsl(var(--muted-foreground)); }
+.vigil-standards-clause-detail > a { position: absolute; right: 1rem; bottom: .8rem; color: hsl(var(--primary)); }
+.vigil-standards-clause-detail > a svg { width: .95rem; height: .95rem; }
+.vigil-standards-empty-tab { padding: 2rem 1.2rem; text-align: center; color: hsl(var(--muted-foreground)); }
+
+.vigil-standards-review-lead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-bottom: .9rem; border-bottom: 1px solid hsl(var(--border)); }
+.vigil-standards-review-lead p:last-child { margin: .3rem 0 0; font-size: .96rem; }
+.vigil-standards-review-note { max-width: 60rem; margin: .85rem 0 0; font-size: .86rem; line-height: 1.55; color: hsl(var(--muted-foreground)); }
+.vigil-standards-versions { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid hsl(var(--border)); }
+.vigil-standards-versions ul { margin: .5rem 0 0; padding: 0; list-style: none; }
+.vigil-standards-versions li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem 0; border-bottom: 1px solid hsl(var(--border)/.65); font-size: .84rem; }
+.vigil-standards-versions li:last-child { border-bottom: 0; }
+.vigil-standards-versions a { color: hsl(var(--primary)); }
+.vigil-standards-versions svg { width: .9rem; height: .9rem; }
+
+@media (max-width: 900px) {
+  .vigil-standards-toolbar { grid-template-columns: 1fr 1fr; }
+  .vigil-standards-search { grid-column: 1 / -1; }
+  .vigil-standards-list-head { display: none; }
+  .vigil-standards-source-row > button { grid-template-columns: minmax(0,1fr) auto; gap: .45rem .8rem; min-height: 6.4rem; padding-right: 3.4rem; }
+  .vigil-standards-source-primary { grid-column: 1; }
+  .vigil-standards-source-secondary { grid-column: 1; }
+  .vigil-standards-source-count { grid-column: 2; grid-row: 1 / span 2; align-self: center; text-align: right; }
+  .vigil-standards-source-row > button > svg { display: none; }
+  .vigil-standards-tabs { grid-template-columns: repeat(4,minmax(10.5rem,1fr)); }
+  .vigil-standards-reading { grid-template-columns: 1fr; }
+  .vigil-standards-facts { grid-template-columns: repeat(2,minmax(0,1fr)); padding: 1rem 0 0; border-left: 0; border-top: 1px dashed hsl(var(--border)); }
+}
+
+@media (max-width: 620px) {
+  .vigil-standards-page .container { padding-inline: .65rem; }
+  .vigil-standards-shell { border-radius: .65rem; }
+  .vigil-standards-header { padding: 1rem .95rem .85rem; }
+  .vigil-standards-header h1 { font-size: 1.65rem; }
+  .vigil-standards-header > p:last-child { font-size: .9rem; }
+  .vigil-standards-toolbar { grid-template-columns: 1fr; padding: .65rem; }
+  .vigil-standards-search { grid-column: auto; }
+  .vigil-standards-result-line { display: grid; grid-template-columns: 1fr auto; gap: .35rem .75rem; }
+  .vigil-standards-result-line span:nth-child(2) { grid-column: 1 / -1; }
+  .vigil-standards-result-line button { margin-left: 0; }
+  .vigil-standards-source-row > button { min-height: 7rem; padding: .7rem 3rem .7rem .75rem; }
+  .vigil-standards-source-primary strong { font-size: .94rem; }
+  .vigil-standards-source-primary small { font-size: .69rem; }
+  .vigil-standards-source-secondary strong { font-size: .8rem; }
+  .vigil-standards-source-secondary small { font-size: .73rem; }
+  .vigil-standards-source-count { font-size: .7rem; }
+  .vigil-standards-source-count strong { display: block; margin: 0; font-size: 1.05rem; }
+  .vigil-standards-tabs { grid-template-columns: repeat(4,minmax(9rem,1fr)); }
+  .vigil-standards-tabs button { min-height: 3rem; padding: .62rem .7rem; font-size: .78rem; }
+  .vigil-standards-tab-panel { padding: .9rem .85rem 1rem; }
+  .vigil-standards-facts,
+  .vigil-standards-relevance-grid,
+  .vigil-standards-clause-detail dl { grid-template-columns: 1fr; }
+  .vigil-standards-clauses { margin: -.9rem -.85rem -1rem; }
+  .vigil-standards-clause > summary { grid-template-columns: 1fr auto; gap: .3rem .65rem; min-height: 5.3rem; padding: .65rem .75rem; }
+  .vigil-standards-clause-ref,
+  .vigil-standards-clause-copy { grid-column: 1; }
+  .vigil-standards-clause-type { grid-column: 1; font-size: .72rem; }
+  .vigil-standards-clause summary svg { grid-column: 2; grid-row: 1 / span 3; }
+  .vigil-standards-review-lead { align-items: flex-start; flex-direction: column; }
+}

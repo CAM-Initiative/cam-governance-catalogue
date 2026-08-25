@@ -1,119 +1,398 @@
-/*
- * Homepage surface and horizontal-flow alignment.
- *
- * The homepage uses one continuous CAM canvas. Content cards retain their own
- * raised surfaces, but top-level sections do not alternate parchment bands.
- */
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child,
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section[aria-labelledby="constitutional-interfaces-heading"],
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section#policy-papers {
-  background-color: hsl(var(--background)) !important;
+/* Homepage identity, persistent navigation rail and supporting public-surface refinements. */
+
+.home-page {
+  overflow-x: clip;
+  background: hsl(var(--background));
 }
 
-/* Explore AI Governance section label: deliberately secondary to the main
- * CAELESTIS hero, one typographic step above the External tools label. */
-aside[aria-label="Explore AI governance"] > div:first-child > p {
-  color: #000 !important;
-  font-size: 0.875rem !important;
-  letter-spacing: 0.14em !important;
+.home-identity-hero {
+  border-bottom: 1px solid hsl(var(--border) / 0.65);
+  background: hsl(var(--background));
 }
 
-html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-child > p {
-  color: #fff !important;
-}
-
-/*
- * Explore AI Governance uses one card grammar for CAM resources and external
- * tools. Desktop users get compact discovery cards that expand on hover/focus;
- * touch and small-screen devices retain the explanatory copy by default.
- */
-.home-governance-detail {
-  overflow: hidden;
-}
-
-/* Internal CAM resources use the same compact visual language as external
- * reference tools. Their former subtitle is redundant with the description. */
-.home-governance-card[href^="/"] {
-  border-color: hsl(var(--primary) / 0.2) !important;
-  border-radius: 0.5rem !important;
-  background: hsl(var(--card) / 0.55) !important;
-  padding: 0.625rem 0.75rem !important;
-}
-
-.home-governance-card[href^="/"]:hover,
-.home-governance-card[href^="/"]:focus-visible {
-  border-color: hsl(var(--primary) / 0.45) !important;
-  background: hsl(var(--card)) !important;
-}
-
-.home-governance-card[href^="/"] > span:first-child {
+.home-identity-kicker {
+  margin: 0 0 1rem;
+  text-align: center;
   font-family: var(--app-font-mono);
-  font-size: 0.875rem;
-  font-weight: 650;
-  line-height: 1.35;
-  letter-spacing: 0.1em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: hsl(var(--primary));
 }
 
-.home-governance-card[href^="/"] > span:first-child > span:first-child {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  font-weight: inherit !important;
-  line-height: inherit !important;
-  color: inherit !important;
+.home-identity-artwork {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.75rem);
+  width: min(100%, 82rem);
+  margin: 0 auto;
 }
 
-.home-governance-card[href^="/"] .home-governance-detail > span:first-child {
-  display: none;
+.home-identity-image {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: 29rem;
+  object-fit: contain;
+  object-position: center;
 }
 
-.home-governance-card[href^="/"] .home-governance-detail > span:last-child {
-  margin-top: 0 !important;
-  font-size: 0.9375rem !important;
-  line-height: 1.55 !important;
+.home-identity-divider {
+  display: block;
+  width: 1px;
+  height: clamp(8rem, 18vw, 14rem);
+  background: hsl(var(--primary) / 0.3);
 }
 
-@media (hover: hover) and (pointer: fine) {
+.home-identity-tagline {
+  margin: clamp(1.2rem, 2.5vw, 2rem) auto 0;
+  text-align: center;
+  font-family: var(--app-font-mono);
+  font-size: clamp(0.78rem, 1.25vw, 0.96rem);
+  line-height: 1.65;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.home-main-rail {
+  border-bottom: 1px solid hsl(var(--border) / 0.65);
+}
+
+.home-main-rail-layout {
+  display: grid;
+  max-width: 96rem;
+  gap: 2rem;
+}
+
+.home-main-copy {
+  min-width: 0;
+}
+
+.home-about-section {
+  padding-bottom: 2.9rem;
+}
+
+.home-rail-section {
+  padding: 2.9rem 0;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.home-main-copy > .home-rail-section:last-child {
+  padding-bottom: 0.35rem;
+}
+
+/* Desktop explorer: a persistent navigation rail, not a content card. */
+@media (min-width: 1024px) {
+  .home-main-rail-layout {
+    grid-template-columns: minmax(13.5rem, 15.75rem) minmax(0, 1fr);
+    gap: clamp(2rem, 3.5vw, 3.75rem);
+    align-items: start;
+  }
+
+  .home-sticky-governance {
+    position: sticky;
+    top: 4.5rem;
+    align-self: start;
+    max-height: calc(100vh - 5.5rem);
+    overflow-y: auto;
+    padding-right: 1rem;
+    border-right: 1px solid hsl(var(--border) / 0.72);
+    scrollbar-width: thin;
+  }
+
+  .home-main-copy {
+    width: 100%;
+    max-width: 68rem;
+  }
+}
+
+.home-governance-panel {
+  width: 100%;
+  background: transparent;
+}
+
+.home-governance-heading {
+  padding: 0.2rem 0.2rem 0.8rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+/* Both rail labels deliberately share one exact selector so they cannot drift. */
+.home-governance-panel .home-governance-section-label {
+  margin: 0;
+  padding-inline: 0.2rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.home-governance-links {
+  display: grid;
+}
+
+.home-governance-card {
+  display: block;
+  padding: 0.82rem 0.35rem 0.78rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.52);
+  border-radius: 0.2rem;
+  color: inherit;
+  text-decoration: none;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.home-governance-card:hover,
+.home-governance-card:focus-visible {
+  background: hsl(var(--muted) / 0.34);
+  outline: none;
+}
+
+.home-governance-card:focus-visible {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.7);
+}
+
+.home-governance-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--foreground));
+}
+
+.home-governance-card-title svg {
+  color: hsl(var(--primary));
+  opacity: 0.75;
+}
+
+.home-governance-detail {
+  overflow: hidden;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem;
+  line-height: 1.52;
+}
+
+.home-governance-detail > span {
+  display: block;
+}
+
+.home-governance-detail > span:first-child:not(:last-child) {
+  margin-top: 0.4rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.68);
+}
+
+.home-governance-detail > span:last-child:not(:first-child) {
+  margin-top: 0.25rem;
+}
+
+/* One full row of breathing room after the last internal link. */
+.home-governance-external {
+  margin-top: 0;
+  padding-top: 1.2rem;
+}
+
+.home-governance-external .home-governance-section-label {
+  margin-bottom: 0.2rem;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
   .home-governance-card .home-governance-detail {
     max-height: 0;
-    margin-top: 0 !important;
+    margin-top: 0;
     opacity: 0;
-    transform: translateY(-0.2rem);
-    transition: max-height 220ms ease, margin-top 220ms ease, opacity 160ms ease, transform 220ms ease;
+    transform: translateY(-0.12rem);
+    transition: max-height 200ms ease, margin-top 200ms ease, opacity 150ms ease, transform 200ms ease;
   }
 
   .home-governance-card:hover .home-governance-detail,
   .home-governance-card:focus-visible .home-governance-detail,
   .home-governance-card:focus-within .home-governance-detail {
-    max-height: 12rem;
+    max-height: 10rem;
+    margin-top: 0.3rem;
     opacity: 1;
     transform: translateY(0);
   }
+}
 
-  .home-governance-card:hover .home-governance-detail,
-  .home-governance-card:focus-visible .home-governance-detail {
-    margin-top: 0.45rem !important;
+.home-datasets-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: end;
+  padding: 1.35rem 1.45rem;
+  border: 1px solid hsl(var(--border) / 0.78);
+  border-radius: 0.72rem;
+  background: hsl(var(--card) / 0.28);
+}
+
+.home-datasets-kicker {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.home-datasets-panel h2 {
+  margin: 0.35rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.18;
+}
+
+.home-datasets-panel p:not(.home-datasets-kicker) {
+  max-width: 50rem;
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: hsl(var(--muted-foreground));
+}
+
+.home-datasets-panel > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-bottom: 0.18rem;
+  border-bottom: 1px solid hsl(var(--primary) / 0.5);
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.home-connect-intro {
+  max-width: 54rem;
+}
+
+.home-connect-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.5rem;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+  border-left: 1px solid hsl(var(--border) / 0.72);
+}
+
+.home-connect-link {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-right: 1px solid hsl(var(--border) / 0.72);
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  color: inherit;
+  text-decoration: none;
+  transition: background 150ms ease;
+}
+
+.home-connect-link:hover,
+.home-connect-link:focus-visible {
+  background: hsl(var(--muted) / 0.34);
+  outline: none;
+}
+
+.home-connect-icon {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: 999px;
+  color: hsl(var(--primary));
+}
+
+.home-connect-link-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.08rem;
+  line-height: 1.3;
+  color: hsl(var(--foreground));
+}
+
+.home-connect-link-description {
+  display: block;
+  margin-top: 0.22rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 1023px) {
+  .home-sticky-governance {
+    order: 2;
+  }
+
+  .home-main-copy {
+    order: 1;
+  }
+
+  .home-governance-panel {
+    padding: 1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    background: hsl(var(--card) / 0.38);
+  }
+
+  .home-governance-card-title {
+    color: hsl(var(--foreground));
   }
 }
 
-/*
- * Connect follows the same top-level section rhythm as Policy Papers. The
- * source component now omits the redundant intermediate kicker; the outer
- * wrapper remains visually flat so the contact grid is not nested in a card.
- */
-#connect > article {
-  border: 0 !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-}
+@media (max-width: 760px) {
+  .home-identity-artwork {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
 
-@media (min-width: 1024px) {
-  #connect > article > div {
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) !important;
-    align-items: center !important;
-    gap: 1.5rem !important;
+  .home-identity-divider {
+    width: min(70%, 20rem);
+    height: 1px;
+    margin: 0.15rem auto;
+  }
+
+  .home-identity-image {
+    width: min(100%, 42rem);
+    margin-inline: auto;
+  }
+
+  .home-datasets-panel {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .home-datasets-panel > a {
+    justify-self: start;
+  }
+
+  .home-connect-links {
+    grid-template-columns: 1fr;
   }
 }

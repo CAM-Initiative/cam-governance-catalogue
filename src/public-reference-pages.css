@@ -1,0 +1,305 @@
+/* Calm public-reference grammar shared by About and Privacy. */
+.public-reference-page {
+  background: hsl(var(--background));
+}
+
+.public-reference-layout {
+  display: grid;
+  max-width: 96rem;
+  gap: 2rem;
+}
+
+.public-reference-document {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.72rem;
+  background: hsl(var(--background));
+}
+
+.public-reference-hero {
+  padding: 1.35rem 1.4rem 1.25rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.public-reference-kicker,
+.public-reference-section-heading p {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.public-reference-hero h1 {
+  margin: 0.28rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(2.15rem, 4vw, 3.35rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.public-reference-hero > p:not(.public-reference-kicker):not(.public-reference-meta) {
+  max-width: 58rem;
+  margin: 0.72rem 0 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: hsl(var(--muted-foreground));
+}
+
+.public-reference-meta {
+  margin: 0.8rem 0 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.public-reference-section {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.34fr) minmax(0, 1fr);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.public-reference-section:last-child {
+  border-bottom: 0;
+}
+
+.public-reference-section-heading {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1.15rem 1.15rem 1.2rem 1.35rem;
+  border-right: 1px solid hsl(var(--border));
+}
+
+.public-reference-section-heading > span,
+.public-reference-policy-section header > span {
+  flex: 0 0 auto;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 750;
+  color: hsl(var(--primary));
+}
+
+.public-reference-section-heading h2 {
+  margin: 0.25rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.38rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.public-reference-section-body {
+  min-width: 0;
+  padding: 1.15rem 1.35rem 1.3rem;
+}
+
+.public-reference-reading {
+  max-width: 48rem;
+}
+
+.public-reference-reading p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.68;
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.public-reference-reading p + p {
+  margin-top: 0.82rem;
+}
+
+.public-reference-reading a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.38);
+  text-underline-offset: 0.2em;
+}
+
+.public-reference-list {
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.public-reference-list article {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.42fr) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.public-reference-list article:last-child {
+  border-bottom: 0;
+}
+
+.public-reference-list article > div > p {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.public-reference-list h3,
+.public-reference-citation-heading h3 {
+  margin: 0.18rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.94rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.public-reference-list article > p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+
+.public-reference-citations {
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.public-reference-citations > article {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.public-reference-citations > article:last-child {
+  border-bottom: 0;
+}
+
+.public-reference-citation-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.public-reference-citations > article > p {
+  margin: 0.45rem 0 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  line-height: 1.58;
+  color: hsl(var(--foreground) / 0.8);
+}
+
+.public-reference-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  cursor: pointer;
+}
+
+.public-reference-copy svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.public-reference-policy-list {
+  display: grid;
+}
+
+.public-reference-policy-section {
+  display: grid;
+  grid-template-columns: minmax(13rem, 0.42fr) minmax(0, 1fr);
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.public-reference-policy-section:last-child {
+  border-bottom: 0;
+}
+
+.public-reference-policy-section header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.72rem;
+  padding: 1rem 1.15rem 1rem 1.35rem;
+  border-right: 1px solid hsl(var(--border));
+}
+
+.public-reference-policy-section h2 {
+  margin: 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.12rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.public-reference-policy-section > p {
+  margin: 0;
+  padding: 1rem 1.35rem 1.08rem;
+  font-size: 0.9rem;
+  line-height: 1.64;
+  color: hsl(var(--foreground) / 0.84);
+}
+
+@media (min-width: 1024px) {
+  .public-reference-layout {
+    grid-template-columns: minmax(13.5rem, 15.75rem) minmax(0, 1fr);
+    gap: clamp(2rem, 3.5vw, 3.75rem);
+    align-items: start;
+  }
+}
+
+@media (max-width: 1023px) {
+  .public-reference-governance-rail {
+    display: none;
+  }
+}
+
+@media (max-width: 820px) {
+  .public-reference-section,
+  .public-reference-policy-section {
+    grid-template-columns: 1fr;
+  }
+
+  .public-reference-section-heading,
+  .public-reference-policy-section header {
+    border-right: 0;
+    border-bottom: 1px solid hsl(var(--border) / 0.7);
+  }
+
+  .public-reference-list article {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .public-reference-page .container {
+    padding-inline: 0.65rem;
+  }
+
+  .public-reference-document {
+    border-radius: 0.58rem;
+  }
+
+  .public-reference-hero {
+    padding: 1rem;
+  }
+
+  .public-reference-hero h1 {
+    font-size: 2rem;
+  }
+
+  .public-reference-section-heading,
+  .public-reference-section-body,
+  .public-reference-policy-section header,
+  .public-reference-policy-section > p {
+    padding-inline: 1rem;
+  }
+}

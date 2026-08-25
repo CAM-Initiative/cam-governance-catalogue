@@ -7,14 +7,11 @@ const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/about", label: "About VIGIL", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
-  { href: "/constitution", label: "Constitution", internal: true },
-  { href: "/catalogue", label: "Catalogue", internal: true },
-  { href: "/constitution/relational", label: "Relational Governance", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL AI Governance Failure Taxonomy", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
-  { href: "/policy", label: "Policy Papers", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
@@ -24,29 +21,19 @@ const homeLinks = [
   { href: "/privacy", label: "Privacy" },
 ];
 
-const constitutionLinks = [
-  { href: "/constitution", label: "Overview" },
-  { href: "/catalogue", label: "Catalogue" },
-  { href: "/constitution/relational", label: "Relational Governance" },
-];
-
 const vigilLinks = [
   { href: "/observatory/about", label: "About VIGIL" },
-  { href: "/observatory/cases", label: "Case Files" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
+  { href: "/observatory/cases", label: "Case Files" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "AI Governance Failure Taxonomy" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about" || location === "/privacy";
-  const isConstitutionActive = location === "/catalogue" || location === "/constitution" || location.startsWith("/constitution/");
   const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
-
-  const links = [
-    { href: "/datasets", label: "Datasets", active: location === "/datasets" || location.startsWith("/datasets/") },
-    { href: "/policy", label: "Policy", active: location === "/policy" || location.startsWith("/policy/") },
-  ];
+  const isDatasetsActive = location === "/datasets" || location.startsWith("/datasets/");
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -109,7 +96,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
             <div className="group relative">
               <Link
-                href="/observatory/cases"
+                href="/observatory/knowledge-base"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
@@ -135,44 +122,17 @@ export function Shell({ children }: { children: ReactNode }) {
               </div>
             </div>
 
-            <div className="group relative">
+            <div className="flex items-center gap-8">
               <Link
-                href="/constitution"
+                href="/datasets"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isConstitutionActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  isDatasetsActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Constitution
+                Datasets
               </Link>
-              <div className="invisible absolute left-0 top-full min-w-56 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
-                  {constitutionLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-card hover:text-foreground"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              <ThemeToggle />
             </div>
-
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  link.active ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <ThemeToggle />
           </nav>
         </div>
 
@@ -186,7 +146,6 @@ export function Shell({ children }: { children: ReactNode }) {
                     href={link.href}
                     className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
                       location === link.href ||
-                      (link.href === "/constitution" && isConstitutionActive) ||
                       (link.href.startsWith("/observatory/") && location.startsWith(link.href))
                         ? "bg-primary/10 text-primary"
                         : "text-muted-foreground hover:bg-card hover:text-foreground"

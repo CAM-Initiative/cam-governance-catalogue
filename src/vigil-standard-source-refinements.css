@@ -1,0 +1,10 @@
+/* Standard-source detail pages use the Case File ticket and tab controls, but the
+   active tab already names the section. Remove the repeated section heading
+   across all standards tabs while leaving VIGIL Case File stage headings alone. */
+.vigil-standard-file-page .vigil-standard-section-heading {
+  display: none;
+}
+
+.vigil-standard-file-page .vigil-standard-section-body {
+  padding-top: 0.9rem;
+}

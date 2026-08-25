@@ -208,6 +208,12 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* The Diagnosis tab already identifies its case context elsewhere; the
+ * redundant "Diagnosis derived from FM-…" line adds no reader value. */
+.vigil-diagnosis-view > .vigil-stage-source-line {
+  display: none;
+}
+
 /* Respond: concise outcome, implemented controls, state and residual scope. */
 .vigil-response-overview {
   padding: 0.92rem;

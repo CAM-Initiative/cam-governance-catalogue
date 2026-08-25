@@ -46,6 +46,37 @@ export type ExternalRequirementDetail = ExternalRequirement & {
   review_limitations?: string[];
 };
 
+export type ExternalReviewSystem = {
+  provider: string;
+  platform: string;
+  model: string;
+};
+
+export type ExternalReviewMethod = {
+  access_method: string;
+  scope_method: string;
+};
+
+export type ExternalReviewEvent = {
+  review_event_id: string;
+  review_date: string;
+  review_system: ExternalReviewSystem;
+  ai_role: string;
+  generation_mode: string;
+  review_method: ExternalReviewMethod;
+  review_scope: string;
+  source_scope_reference: string;
+  limitations_reference: string[];
+  human_role: string;
+  human_review_status: string;
+  human_verification_status: string;
+};
+
+export type ExternalSubstantiveReviewProvenance = {
+  current_review_event_id: string;
+  review_events: ExternalReviewEvent[];
+};
+
 export type ExternalSourceEntry = {
   vigil_source_id: string;
   external_source_id: string;
@@ -64,6 +95,7 @@ export type ExternalSourceEntry = {
   applicable_lifecycle_stages?: string[];
   relevance_scope?: string;
   last_substantive_reviewed?: string;
+  substantive_review_provenance?: ExternalSubstantiveReviewProvenance;
   notes?: string | null;
   review_state?: string;
   review_eligible?: boolean;
