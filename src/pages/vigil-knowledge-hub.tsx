@@ -106,7 +106,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse AI governance standards, documented VIGIL Case Files, the governance failure taxonomy, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
+            <p>Browse AI governance standards, documented VIGIL Case Files, the AI governance failure taxonomy, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -128,8 +128,8 @@ export default function VigilKnowledgeHub() {
             />
             <CollectionCard
               href="/observatory/knowledge-base/failure-taxonomy"
-              title="Governance Failure Taxonomy"
-              description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and classes with recognition criteria, exclusions, examples and relationships."
+              title="AI Governance Failure Taxonomy"
+              description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with recognition criteria, exclusions, examples and relationships."
               meta={taxonomyMeta}
               chip="Beta"
               actionLabel="Browse taxonomy"
