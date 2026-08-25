@@ -5,6 +5,7 @@ import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilRegistryRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
+import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
 
 type HubState = {
   caseFiles?: number;
@@ -12,6 +13,9 @@ type HubState = {
   sources?: number;
   clausesAvailable?: boolean;
   sourcesAvailable?: boolean;
+  taxonomyFamilies?: number;
+  taxonomyClasses?: number;
+  taxonomyAvailable?: boolean;
 };
 
 function isFailureModeRecord(record: Record<string, unknown>) {
@@ -45,8 +49,8 @@ export default function VigilKnowledgeHub() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadVigilRegistryRecords(), loadExternalRequirements(), loadExternalSources()])
-      .then(([registry, clauses, sources]) => {
+    Promise.all([loadVigilRegistryRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex()])
+      .then(([registry, clauses, sources, taxonomy]) => {
         if (cancelled) return;
         setState({
           caseFiles: registry.records.filter((record) => isFailureModeRecord(record)).length,
@@ -56,6 +60,9 @@ export default function VigilKnowledgeHub() {
             : undefined,
           clausesAvailable: clauses.status === "ready",
           sourcesAvailable: sources.status === "ready",
+          taxonomyFamilies: taxonomy.status === "ready" ? taxonomy.data.families.length : undefined,
+          taxonomyClasses: taxonomy.status === "ready" ? taxonomy.data.families.reduce((sum, family) => sum + family.class_count, 0) : undefined,
+          taxonomyAvailable: taxonomy.status === "ready",
         });
       })
       .catch(() => !cancelled && setState({}));
@@ -69,6 +76,10 @@ export default function VigilKnowledgeHub() {
   const caseFilesMeta = state.caseFiles === undefined
     ? "AI failure mode investigations"
     : `${state.caseFiles} case ${state.caseFiles === 1 ? "file" : "files"}`;
+
+  const taxonomyMeta = state.taxonomyAvailable
+    ? `${state.taxonomyFamilies ?? 0} families · ${state.taxonomyClasses ?? 0} failure classes`
+    : "Internal standard";
 
   return (
     <Shell>
@@ -98,10 +109,12 @@ export default function VigilKnowledgeHub() {
               actionLabel="Browse case files"
             />
             <CollectionCard
+              href="/observatory/knowledge-base/failure-taxonomy"
               title="Governance Failure Taxonomy"
-              description="Internally developed interpretive standard for classifying recurring AI runtime and governance failure mechanisms. The taxonomy is in public beta while its dedicated browsing surface continues to develop."
-              meta="Internal standard"
+              description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and classes with recognition criteria, exclusions, examples and relationships."
+              meta={taxonomyMeta}
               beta
+              actionLabel="Browse taxonomy"
             />
           </section>
         </div>

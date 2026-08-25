@@ -9,6 +9,7 @@ import "./vigil-ux-v5.css";
 import "./vigil-ux-v6.css";
 import "./vigil-standards-dossier.css";
 import "./vigil-standards-dossier-refinements.css";
+import "./vigil-failure-taxonomy.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Constitution from "@/pages/constitution";
@@ -21,6 +22,7 @@ import VigilAbout from "@/pages/vigil-about";
 import EvidenceChainReport from "@/pages/evidence-chain-report-printable";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
 import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
+import VigilFailureTaxonomy from "@/pages/vigil-failure-taxonomy";
 import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
 import Datasets from "@/pages/datasets";
 import About from "@/pages/about";
@@ -56,6 +58,8 @@ function Router() {
       <Route path="/observatory/lessons" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base/external-requirements" component={VigilStandardsBaseline} />
       <Route path="/observatory/knowledge-base/standards-sources" component={VigilStandardsBaseline} />
+      <Route path="/observatory/knowledge-base/failure-taxonomy/:taxonomyId" component={VigilFailureTaxonomy} />
+      <Route path="/observatory/knowledge-base/failure-taxonomy" component={VigilFailureTaxonomy} />
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 
