@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, X } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -84,11 +84,15 @@ function ManualContents({
   query,
   setQuery,
   activeFamilyId,
+  collapsed,
+  setCollapsed,
 }: {
   families: FailureTaxonomyFamilyDocument[];
   query: string;
   setQuery: (value: string) => void;
   activeFamilyId?: string;
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
 }) {
   const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(() => new Set());
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
@@ -108,44 +112,59 @@ function ManualContents({
     });
   }
 
-  return <nav id="taxonomy-contents" className="vigil-taxonomy-manual-contents" aria-label="VIGIL Failure Taxonomy contents">
+  return <nav
+    id="taxonomy-contents"
+    className={`vigil-taxonomy-manual-contents${collapsed ? " is-collapsed" : ""}`}
+    aria-label="VIGIL Failure Taxonomy contents"
+  >
     <div className="vigil-taxonomy-manual-contents-head">
-      <p className="vigil-library-kicker">Reference navigation</p>
-      <h2>Contents</h2>
+      {!collapsed ? <h2>Contents</h2> : null}
+      <button
+        type="button"
+        className="vigil-taxonomy-manual-collapse"
+        onClick={() => setCollapsed(!collapsed)}
+        aria-label={collapsed ? "Expand contents navigation" : "Collapse contents navigation"}
+        title={collapsed ? "Expand contents" : "Collapse contents"}
+      >
+        {collapsed ? <ChevronsRight aria-hidden="true" /> : <ChevronsLeft aria-hidden="true" />}
+      </button>
     </div>
-    <SearchControl value={query} onChange={setQuery} />
-    <ol>
-      {visible.map(({ document, classes }) => {
-        const familyId = document.family.family_id;
-        const expanded = expandedFamilies.has(familyId);
-        const active = familyId === activeFamilyId;
-        return <li key={familyId} className={active ? "is-active" : undefined}>
-          <div className="vigil-taxonomy-manual-family-link-row">
-            <button
-              type="button"
-              className="vigil-taxonomy-manual-expand"
-              onClick={() => toggleFamily(familyId)}
-              aria-expanded={expanded}
-              aria-controls={`${familyId}-contents-classes`}
-              aria-label={`${expanded ? "Collapse" : "Expand"} ${document.family.name}`}
-            >
-              <span aria-hidden="true">{expanded ? "−" : "+"}</span>
-            </button>
-            <Link href={`/observatory/knowledge-base/failure-taxonomy/${familyId}`} onClick={() => setQuery("")}>
-              {document.family.name}
-            </Link>
-          </div>
-          {expanded ? <ul id={`${familyId}-contents-classes`}>
-            {classes.map((item) => <li key={item.class_id}>
-              <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={() => setQuery("")}>
-                {item.name}
+
+    {!collapsed ? <>
+      <SearchControl value={query} onChange={setQuery} />
+      <ol>
+        {visible.map(({ document, classes }) => {
+          const familyId = document.family.family_id;
+          const expanded = expandedFamilies.has(familyId);
+          const active = familyId === activeFamilyId;
+          return <li key={familyId} className={active ? "is-active" : undefined}>
+            <div className="vigil-taxonomy-manual-family-link-row">
+              <button
+                type="button"
+                className="vigil-taxonomy-manual-expand"
+                onClick={() => toggleFamily(familyId)}
+                aria-expanded={expanded}
+                aria-controls={`${familyId}-contents-classes`}
+                aria-label={`${expanded ? "Collapse" : "Expand"} ${document.family.name}`}
+              >
+                <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+              </button>
+              <Link href={`/observatory/knowledge-base/failure-taxonomy/${familyId}`} onClick={() => setQuery("")}>
+                {document.family.name}
               </Link>
-            </li>)}
-          </ul> : null}
-        </li>;
-      })}
-    </ol>
-    {!visible.length ? <p className="vigil-taxonomy-manual-no-match">No taxonomy entries match this search.</p> : null}
+            </div>
+            {expanded ? <ul id={`${familyId}-contents-classes`}>
+              {classes.map((item) => <li key={item.class_id}>
+                <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={() => setQuery("")}>
+                  {item.name}
+                </Link>
+              </li>)}
+            </ul> : null}
+          </li>;
+        })}
+      </ol>
+      {!visible.length ? <p className="vigil-taxonomy-manual-no-match">No taxonomy entries match this search.</p> : null}
+    </> : null}
   </nav>;
 }
 
@@ -209,8 +228,7 @@ function FamilyManualSection({
   const family = document.family;
   return <section className="vigil-taxonomy-manual-family" id={family.family_id.toLowerCase()}>
     <header className="vigil-taxonomy-manual-family-hero">
-      <p className="vigil-taxonomy-manual-eyebrow">VIGIL Failure Taxonomy · Technical Standard</p>
-      <h2>{family.name}</h2>
+      <h2><span className="vigil-taxonomy-manual-family-prefix">Failure Family:</span> {family.name}</h2>
       <p className="vigil-taxonomy-manual-plain">{family.plain_english}</p>
       <p className="vigil-taxonomy-manual-meta">
         <strong>Immutable ID:</strong> <code>{family.family_id}</code>
@@ -264,6 +282,7 @@ export default function VigilFailureTaxonomy() {
   const requestedId = decodeURIComponent(params?.taxonomyId ?? "").trim();
   const [state, setState] = useState<TaxonomyState>({ status: "loading" });
   const [query, setQuery] = useState("");
+  const [contentsCollapsed, setContentsCollapsed] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -332,12 +351,14 @@ export default function VigilFailureTaxonomy() {
         {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Failure Taxonomy…</div> : null}
         {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
 
-        {state.status === "ready" && selectedFamily ? <div className="vigil-taxonomy-manual-layout">
+        {state.status === "ready" && selectedFamily ? <div className={`vigil-taxonomy-manual-layout${contentsCollapsed ? " is-contents-collapsed" : ""}`}>
           <ManualContents
             families={families}
             query={query}
             setQuery={setQuery}
             activeFamilyId={selectedFamily.family.family_id}
+            collapsed={contentsCollapsed}
+            setCollapsed={setContentsCollapsed}
           />
           <div className="vigil-taxonomy-manual-document" aria-live="polite">
             <FamilyManualSection document={selectedFamily} classById={classById} />
