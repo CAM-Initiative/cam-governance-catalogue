@@ -27,6 +27,7 @@ function isFailureModeRecord(record: Record<string, unknown>) {
 function CollectionCard({
   href,
   title,
+  subtitle,
   description,
   meta,
   chip,
@@ -34,6 +35,7 @@ function CollectionCard({
 }: {
   href?: string;
   title: string;
+  subtitle?: string;
   description: string;
   meta: string;
   chip?: string;
@@ -46,6 +48,7 @@ function CollectionCard({
           <h2>{title}</h2>
           {chip ? <span className="cam-beta-chip">{chip}</span> : null}
         </div>
+        {subtitle ? <p className="mt-1 font-mono text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">{subtitle}</p> : null}
         <p>{description}</p>
         <div className="vigil-knowledge-card-footer">
           <p className="vigil-knowledge-meta">{meta}</p>
@@ -103,13 +106,14 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse the AI Governance Standards Baseline, documented VIGIL Case Files, the governance failure taxonomy, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
+            <p>Browse AI governance standards, documented VIGIL Case Files, the governance failure taxonomy, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
             <CollectionCard
               href="/observatory/knowledge-base/standards-sources"
-              title="AI Governance Standards Baseline"
+              title="AI Governance Standards"
+              subtitle="Compliance Baseline"
               description="A curated reference set of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
               meta={baselineMeta}
               chip="Beta"
