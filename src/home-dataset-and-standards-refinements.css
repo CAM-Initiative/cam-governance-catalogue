@@ -10,16 +10,20 @@
   box-shadow: 0 16px 36px hsl(var(--foreground) / 0.035);
 }
 
+.home-datasets-panel > div:first-child {
+  max-width: 56rem;
+}
+
 .home-datasets-panel h2 {
   margin: 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.65rem, 3vw, 2.2rem);
+  line-height: 1.15;
+  color: hsl(var(--foreground));
 }
 
 .home-datasets-panel p {
   margin: 0;
-}
-
-.home-datasets-copy {
-  max-width: 56rem;
 }
 
 .home-datasets-kicker {
@@ -32,17 +36,39 @@
   color: hsl(var(--primary));
 }
 
-.home-datasets-description {
+.home-datasets-panel > div:first-child > p:last-child {
   margin-top: 0.9rem !important;
   color: hsl(var(--muted-foreground));
   font-size: 1rem;
   line-height: 1.72;
 }
 
-.home-datasets-actions {
-  display: flex;
+.home-datasets-panel > a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  width: fit-content;
   align-items: center;
-  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0.72rem 0.9rem;
+  border: 1px solid hsl(var(--primary) / 0.4);
+  border-radius: 0.75rem;
+  background: hsl(var(--card) / 0.75);
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.home-datasets-panel > a:hover,
+.home-datasets-panel > a:focus-visible {
+  border-color: hsl(var(--primary) / 0.65);
+  color: hsl(var(--foreground));
+  background: hsl(var(--card));
+  outline: none;
 }
 
 @media (min-width: 760px) {
