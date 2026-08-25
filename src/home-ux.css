@@ -200,15 +200,17 @@
 }
 
 .home-governance-external {
-  margin-top: 1.2rem;
+  margin-top: 1rem;
 }
 
 .home-governance-external > p {
   margin: 0 0 0.2rem;
+  padding-inline: 0.2rem;
   font-family: var(--app-font-mono);
-  font-size: 0.65rem;
+  font-size: 0.71rem;
   font-weight: 700;
-  letter-spacing: 0.13em;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: hsl(var(--muted-foreground));
 }
