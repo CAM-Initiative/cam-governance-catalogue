@@ -1,106 +1,105 @@
-/*
- * Homepage surface and horizontal-flow alignment.
- *
- * The homepage uses one continuous CAM canvas. Content cards retain their own
- * raised surfaces, but top-level sections do not alternate parchment bands.
- */
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child,
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section#policy-papers {
-  background-color: hsl(var(--background)) !important;
+/* Homepage identity, navigation rail and supporting public-surface refinements. */
+
+.home-page {
+  background: hsl(var(--background));
 }
 
-/*
- * Homepage identity artwork.
- *
- * The Registry now publishes the CAELESTIS and VIGIL hero artwork as separate
- * canonical PNGs. Render those assets independently and contain each image in
- * its own viewport so neither side is cropped, duplicated or stretched.
- */
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
-  position: relative;
+.home-identity-hero {
+  border-bottom: 1px solid hsl(var(--border) / 0.65);
+  background: hsl(var(--background));
+}
+
+.home-identity-kicker {
+  margin: 0 0 1rem;
+  text-align: center;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.home-identity-artwork {
   display: grid;
-  min-width: 0;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
   align-items: center;
-  column-gap: clamp(0.8rem, 2vw, 1.6rem);
+  gap: clamp(1rem, 3vw, 2.75rem);
+  width: min(100%, 82rem);
+  margin: 0 auto;
 }
 
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child::before {
-  content: "";
+.home-identity-image {
   display: block;
   width: 100%;
-  aspect-ratio: 708 / 329;
-  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/CAM_HERO.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  max-width: 100%;
+  max-height: 29rem;
+  object-fit: contain;
+  object-position: center;
 }
 
-/* Keep the umbrella label available to assistive technology without placing
- * text above the artwork. */
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > p:first-child {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+.home-identity-divider {
+  display: block;
+  width: 1px;
+  height: clamp(8rem, 18vw, 14rem);
+  background: hsl(var(--primary) / 0.3);
 }
 
-/* The existing H1 retains its semantic text while its visible viewport renders
- * the dedicated VIGIL hero asset. */
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 {
-  width: 100%;
-  aspect-ratio: 615 / 329;
-  margin: 0 !important;
-  overflow: hidden;
-  color: transparent !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/VIGIL_HERO.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+.home-identity-tagline {
+  margin: clamp(1.2rem, 2.5vw, 2rem) auto 0;
+  text-align: center;
+  font-family: var(--app-font-mono);
+  font-size: clamp(0.78rem, 1.25vw, 0.96rem);
+  line-height: 1.65;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
 }
 
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 * {
-  color: transparent !important;
-  font-size: 0 !important;
-  line-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
+.home-main-rail {
+  border-bottom: 1px solid hsl(var(--border) / 0.65);
 }
 
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > hr,
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > p:not(:first-child),
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > div:last-child {
-  grid-column: 1 / -1;
+.home-about-section {
+  padding-bottom: 2.9rem;
 }
 
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > hr {
-  width: 100% !important;
-  margin-top: clamp(1rem, 2vw, 1.4rem) !important;
+.home-rail-section {
+  padding: 2.9rem 0;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.home-main-copy > .home-rail-section:last-child {
+  padding-bottom: 0.35rem;
+}
+
+@media (min-width: 1024px) {
+  .home-sticky-governance {
+    position: sticky;
+    top: 4.75rem;
+    align-self: start;
+  }
 }
 
 @media (max-width: 760px) {
-  main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
+  .home-identity-artwork {
     grid-template-columns: 1fr;
-    row-gap: 0.55rem;
+    gap: 0.6rem;
   }
 
-  main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child::before,
-  main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 {
-    width: min(100%, 44rem);
-    margin-inline: auto !important;
+  .home-identity-divider {
+    width: min(70%, 20rem);
+    height: 1px;
+    margin: 0.15rem auto;
+  }
+
+  .home-identity-image {
+    width: min(100%, 42rem);
+    margin-inline: auto;
   }
 }
 
-/* Explore AI Governance section label: deliberately secondary to the main
- * CAELESTIS hero, one typographic step above the External tools label. */
+/* Explore AI Governance section label. */
 aside[aria-label="Explore AI governance"] > div:first-child > p {
   color: #000 !important;
   font-size: 0.875rem !important;
@@ -111,17 +110,14 @@ html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-ch
   color: #fff !important;
 }
 
-/*
- * Explore AI Governance uses one card grammar for CAM resources and external
- * tools. Desktop users get compact discovery cards that expand on hover/focus;
- * touch and small-screen devices retain the explanatory copy by default.
- */
+.home-governance-panel {
+  width: 100%;
+}
+
 .home-governance-detail {
   overflow: hidden;
 }
 
-/* Internal CAM resources use the same compact visual language as external
- * reference tools. Their former subtitle is redundant with the description. */
 .home-governance-card[href^="/"] {
   border-color: hsl(var(--primary) / 0.2) !important;
   border-radius: 0.5rem !important;
@@ -186,11 +182,7 @@ html[data-theme="dark"] aside[aria-label="Explore AI governance"] > div:first-ch
   }
 }
 
-/*
- * Connect follows the same top-level section rhythm as Policy Papers. The
- * source component now omits the redundant intermediate kicker; the outer
- * wrapper remains visually flat so the contact grid is not nested in a card.
- */
+/* Connect remains a flat top-level section rather than a nested parchment card. */
 #connect > article {
   border: 0 !important;
   border-radius: 0 !important;
