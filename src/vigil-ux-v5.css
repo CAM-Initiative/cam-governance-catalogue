@@ -354,6 +354,41 @@
   color: hsl(var(--muted-foreground));
 }
 
+.vigil-about-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.95rem 0.95rem 0.9rem;
+  padding: 0.25rem 0.1rem 0.3rem;
+  border-bottom: 1px solid hsl(var(--primary) / 0.4);
+  color: hsl(var(--primary));
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.vigil-about-action svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: transform 150ms ease;
+}
+
+.vigil-about-action:hover,
+.vigil-about-action:focus-visible {
+  border-color: hsl(var(--foreground) / 0.65);
+  color: hsl(var(--foreground));
+  outline: none;
+}
+
+.vigil-about-action:hover svg,
+.vigil-about-action:focus-visible svg {
+  transform: translateX(0.18rem);
+}
+
 /* Dedicated report route is the printable artefact. Keep headings with their opening content. */
 @media print {
   .report-page .report-cover,
