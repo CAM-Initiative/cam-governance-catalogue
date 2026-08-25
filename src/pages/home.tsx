@@ -113,50 +113,39 @@ function ExploreGovernancePanel() {
     <motion.aside
       animate={{ opacity: 1, y: 0 }}
       aria-label="Explore AI governance"
-      className="home-governance-panel cam-parchment-card rounded-2xl border border-cam-gold/35 p-4 shadow-sm"
+      className="home-governance-panel"
       initial={{ opacity: 0, y: 14 }}
       transition={{ duration: 0.55, delay: 0.05 }}
     >
-      <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
-        <p className="font-mono text-base font-semibold uppercase tracking-[0.16em] text-cam-gold">Explore AI Governance</p>
-        <span className="h-2 w-2 rounded-full bg-cam-gold/80" aria-hidden="true" />
+      <div className="home-governance-heading">
+        <p>Explore AI Governance</p>
       </div>
 
-      <div className="grid gap-2">
+      <div className="home-governance-links">
         {initiativeResources.map((resource) => (
-          <a
-            className="home-governance-card group rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2.5 transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            href={resource.href}
-            key={resource.id}
-          >
-            <span className="flex items-center justify-between gap-3 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-cam-gold">
+          <a className="home-governance-card group" href={resource.href} key={resource.id}>
+            <span className="home-governance-card-title">
               <span>{resource.title}</span>
               <ArrowRight className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
             <span className="home-governance-detail block">
-              <span className="mt-1.5 block font-mono text-[13px] font-semibold uppercase tracking-[0.1em] text-cam-gold">{resource.subtitle}</span>
-              <span className="mt-2 block text-[15px] leading-relaxed text-muted-foreground">{resource.purpose}</span>
+              <span>{resource.subtitle}</span>
+              <span>{resource.purpose}</span>
             </span>
           </a>
         ))}
       </div>
 
-      <div className="mt-4 border-t border-cam-gold/25 pt-3">
-        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-foreground/55">External tools</p>
-        <div className="grid gap-2">
+      <div className="home-governance-external">
+        <p>External tools</p>
+        <div className="home-governance-links">
           {externalResources.map((resource) => (
-            <a
-              className="home-governance-card group rounded-lg border border-cam-gold/20 bg-card/55 px-3 py-2.5 transition hover:border-cam-gold/45 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              href={resource.href}
-              key={resource.label}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <span className="flex items-center justify-between gap-3 font-mono text-sm font-semibold uppercase tracking-[0.1em] text-cam-gold">
+            <a className="home-governance-card group" href={resource.href} key={resource.label} rel="noreferrer" target="_blank">
+              <span className="home-governance-card-title">
                 <span>{resource.label}</span>
                 <ExternalLink className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
-              <span className="home-governance-detail mt-2 block text-[15px] leading-relaxed text-muted-foreground">{resource.description}</span>
+              <span className="home-governance-detail block">{resource.description}</span>
             </a>
           ))}
         </div>
@@ -208,45 +197,37 @@ function PolicyPapersPanel() {
 
 function ConnectPanel() {
   return (
-    <section className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16" id="connect">
+    <section className="home-rail-section" id="connect" aria-labelledby="connect-heading">
       <SectionLabel>Connect</SectionLabel>
-      <article className="cam-parchment-card rounded-3xl border border-cam-gold/35 p-5 shadow-xl md:p-8">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
-          <div className="max-w-2xl">
-            <h2 className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
-            <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-              Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL accessible.
-            </p>
-          </div>
+      <div className="home-connect-intro">
+        <h2 id="connect-heading" className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
+        <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
+          Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL accessible.
+        </p>
+      </div>
 
-          <nav aria-label="Connect with the CAM Initiative" className="overflow-hidden rounded-2xl border border-cam-gold/30 bg-[hsl(36_48%_96%)] shadow-sm">
-            <div className="grid sm:grid-cols-2">
-              {connectionLinks.map((link, index) => (
-                <a
-                  className={`group flex min-h-24 items-start gap-3 p-4 transition hover:bg-[hsl(36_52%_93%)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${
-                    index % 2 === 0 ? "sm:border-r sm:border-cam-gold/25" : ""
-                  } ${index < connectionLinks.length - 2 ? "border-b border-cam-gold/25" : ""}`}
-                  href={link.href}
-                  key={link.label}
-                  rel={link.external ? "noreferrer" : undefined}
-                  target={link.external ? "_blank" : undefined}
-                >
-                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cam-gold/35 bg-card text-cam-gold">
-                    <ConnectionIcon icon={link.icon} />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-center justify-between gap-3">
-                      <span className="font-serif text-xl leading-tight text-foreground">{link.label}</span>
-                      {link.external ? <ExternalLink className="h-3.5 w-3.5 shrink-0 text-foreground/45 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0 text-foreground/45 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />}
-                    </span>
-                    <span className="mt-1 block text-sm leading-snug text-foreground/65">{link.description}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
-          </nav>
-        </div>
-      </article>
+      <nav aria-label="Connect with the CAM Initiative" className="home-connect-links">
+        {connectionLinks.map((link) => (
+          <a
+            className="home-connect-link group"
+            href={link.href}
+            key={link.label}
+            rel={link.external ? "noreferrer" : undefined}
+            target={link.external ? "_blank" : undefined}
+          >
+            <span className="home-connect-icon">
+              <ConnectionIcon icon={link.icon} />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="home-connect-link-title">
+                <span>{link.label}</span>
+                {link.external ? <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+              </span>
+              <span className="home-connect-link-description">{link.description}</span>
+            </span>
+          </a>
+        ))}
+      </nav>
     </section>
   );
 }
@@ -254,7 +235,7 @@ function ConnectPanel() {
 export default function Home() {
   return (
     <Shell>
-      <main className="home-page overflow-hidden">
+      <main className="home-page">
         <section className="home-identity-hero" aria-labelledby="home-identity-heading">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
@@ -274,7 +255,7 @@ export default function Home() {
         </section>
 
         <section className="home-main-rail" aria-label="CAM Initiative overview and navigation">
-          <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-12 md:px-10 md:py-16 lg:grid-cols-[minmax(18rem,22rem)_minmax(0,1fr)] lg:items-start lg:gap-12">
+          <div className="home-main-rail-layout container mx-auto px-6 py-12 md:px-10 md:py-16">
             <div className="home-sticky-governance">
               <ExploreGovernancePanel />
             </div>
@@ -295,11 +276,10 @@ export default function Home() {
 
               <EvidenceRepairLoop />
               <PolicyPapersPanel />
+              <ConnectPanel />
             </div>
           </div>
         </section>
-
-        <ConnectPanel />
       </main>
     </Shell>
   );
