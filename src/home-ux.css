@@ -119,8 +119,10 @@
   border-bottom: 1px solid hsl(var(--border) / 0.72);
 }
 
-.home-governance-heading p {
+/* Both rail labels deliberately share one exact selector so they cannot drift. */
+.home-governance-panel .home-governance-section-label {
   margin: 0;
+  padding-inline: 0.2rem;
   font-family: var(--app-font-mono);
   font-size: 0.71rem;
   font-weight: 700;
@@ -199,20 +201,14 @@
   margin-top: 0.25rem;
 }
 
+/* One full row of breathing room after the last internal link. */
 .home-governance-external {
-  margin-top: 1rem;
+  margin-top: 0;
+  padding-top: 1.2rem;
 }
 
-.home-governance-external > p {
-  margin: 0 0 0.2rem;
-  padding-inline: 0.2rem;
-  font-family: var(--app-font-mono);
-  font-size: 0.71rem;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground));
+.home-governance-external .home-governance-section-label {
+  margin-bottom: 0.2rem;
 }
 
 @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
@@ -232,6 +228,59 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.home-datasets-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: end;
+  padding: 1.35rem 1.45rem;
+  border: 1px solid hsl(var(--border) / 0.78);
+  border-radius: 0.72rem;
+  background: hsl(var(--card) / 0.28);
+}
+
+.home-datasets-kicker {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.home-datasets-panel h2 {
+  margin: 0.35rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.18;
+}
+
+.home-datasets-panel p:not(.home-datasets-kicker) {
+  max-width: 50rem;
+  margin: 0.7rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: hsl(var(--muted-foreground));
+}
+
+.home-datasets-panel > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-bottom: 0.18rem;
+  border-bottom: 1px solid hsl(var(--primary) / 0.5);
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .home-connect-intro {
@@ -332,6 +381,15 @@
   .home-identity-image {
     width: min(100%, 42rem);
     margin-inline: auto;
+  }
+
+  .home-datasets-panel {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .home-datasets-panel > a {
+    justify-self: start;
   }
 
   .home-connect-links {
