@@ -7,9 +7,10 @@ const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/about", label: "About VIGIL", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Failure Taxonomy", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
@@ -22,8 +23,9 @@ const homeLinks = [
 
 const vigilLinks = [
   { href: "/observatory/about", label: "About VIGIL" },
-  { href: "/observatory/cases", label: "Case Files" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
+  { href: "/observatory/cases", label: "Case Files" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -94,7 +96,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
             <div className="group relative">
               <Link
-                href="/observatory/cases"
+                href="/observatory/knowledge-base"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
