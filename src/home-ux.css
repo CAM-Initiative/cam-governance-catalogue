@@ -10,20 +10,38 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   background-color: hsl(var(--background)) !important;
 }
 
-/* Homepage identity artwork. The original live hero copy remains in the DOM
- * for search and assistive technology, but is visually replaced by the
- * approved CAM / VIGIL identity artwork. */
+/*
+ * Homepage identity artwork.
+ *
+ * CAELESTIS and VIGIL use separate artwork so they can sit side-by-side on
+ * larger screens and stack at a readable size on narrow screens. The existing
+ * live heading remains available semantically while the visual lock-up is
+ * supplied by the approved Registry assets. The original CAM Initiative
+ * explanatory copy remains live text beneath the artwork.
+ */
 main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
   position: relative;
+  display: grid;
   min-width: 0;
-  aspect-ratio: 1535 / 900;
-  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/97f5f04286bf6e3b6b40bdf20bfce9e17adb4fdf/Images/CAM_VIGIL_HERO.png");
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.87fr);
+  align-items: center;
+  column-gap: clamp(0.8rem, 2vw, 1.6rem);
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child::before {
+  content: "";
+  display: block;
+  width: 100%;
+  aspect-ratio: 708 / 329;
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/2d4ee282ea476f58b783bbb1deae74bd7a5144ef/Images/CAM_HERO.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > * {
+/* Keep the umbrella label available to assistive technology without placing
+ * text above the artwork. */
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > p:first-child {
   position: absolute !important;
   width: 1px !important;
   height: 1px !important;
@@ -35,11 +53,52 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   border: 0 !important;
 }
 
-@media (max-width: 1023px) {
+/* The existing H1 retains its semantic text but becomes the VIGIL artwork
+ * surface visually. */
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 {
+  width: 100%;
+  aspect-ratio: 615 / 329;
+  margin: 0 !important;
+  overflow: hidden;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/2d4ee282ea476f58b783bbb1deae74bd7a5144ef/Images/VIGIL_HERO.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 * {
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > hr,
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > p:not(:first-child),
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > div:last-child {
+  grid-column: 1 / -1;
+}
+
+main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > hr {
+  width: 100% !important;
+  margin-top: clamp(1rem, 2vw, 1.4rem) !important;
+}
+
+@media (max-width: 760px) {
   main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
-    width: 100%;
-    max-width: 70rem;
-    margin-inline: auto;
+    grid-template-columns: 1fr;
+    row-gap: 0.55rem;
+  }
+
+  main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child::before,
+  main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 {
+    width: min(100%, 44rem);
+    margin-inline: auto !important;
   }
 }
 
