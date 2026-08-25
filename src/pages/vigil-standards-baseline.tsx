@@ -153,19 +153,19 @@ export default function VigilStandardsBaseline() {
       <header className="vigil-library-header vigil-standards-header">
         <div>
           <p className="vigil-library-kicker">VIGIL Observatory</p>
-          <h1 id="standards-heading">AI Governance Standards — Compliance Baseline</h1>
+          <h1 id="standards-heading">AI Governance Standards</h1>
           <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question.</p>
         </div>
       </header>
 
-      {state.status === "loading" && <div className="vigil-registry-notice">Loading AI Governance Standards — Compliance Baseline…</div>}
-      {state.status === "unavailable" && <div className="vigil-registry-notice is-error"><strong>AI Governance Standards — Compliance Baseline unavailable.</strong> {state.message}</div>}
+      {state.status === "loading" && <div className="vigil-registry-notice">Loading AI Governance Standards…</div>}
+      {state.status === "unavailable" && <div className="vigil-registry-notice is-error"><strong>AI Governance Standards unavailable.</strong> {state.message}</div>}
       {state.status === "ready" && <>
         <section className="vigil-library-toolbar vigil-standards-toolbar" aria-label="Search and filter AI governance sources">
           <div className="vigil-search-row vigil-case-table-search vigil-standards-search-row">
             <label className="vigil-search-control vigil-standards-search">
               <Search aria-hidden="true" />
-              <span className="sr-only">Search AI Governance Standards — Compliance Baseline</span>
+              <span className="sr-only">Search AI Governance Standards</span>
               <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search source, governance theme, lifecycle stage, clause, duty or actor…" />
               {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search"><X /></button>}
             </label>
