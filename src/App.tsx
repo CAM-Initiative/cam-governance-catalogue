@@ -10,6 +10,7 @@ import "./vigil-ux-v6.css";
 import "./vigil-standards-dossier.css";
 import "./vigil-standards-dossier-refinements.css";
 import "./vigil-failure-taxonomy.css";
+import "./vigil-failure-taxonomy-refinements.css";
 import "./public-surface-refinements.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
