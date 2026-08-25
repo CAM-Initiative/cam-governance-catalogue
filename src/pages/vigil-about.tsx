@@ -52,8 +52,8 @@ export default function VigilAbout() {
         {taxonomyPrinciples.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
       </div>
       <p className="vigil-about-note">Taxonomy classification is interpretive. It does not by itself establish legal liability, regulatory status, enforcement authority or final incident truth. Those claims require their own evidence and authority.</p>
-      <Link className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/failure-taxonomy">
-        Browse the taxonomy <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy">
+        Browse the taxonomy <ArrowRight aria-hidden="true" />
       </Link>
     </section>
 
@@ -63,8 +63,8 @@ export default function VigilAbout() {
       <div className="vigil-about-boundary-grid">
         {knowledgeSurfaces.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
       </div>
-      <Link className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base">
-        Open the Knowledge Base <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      <Link className="vigil-about-action" href="/observatory/knowledge-base">
+        Open the Knowledge Base <ArrowRight aria-hidden="true" />
       </Link>
     </section>
   </div></main></Shell>;
