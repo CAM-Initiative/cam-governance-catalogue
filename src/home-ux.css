@@ -5,7 +5,6 @@
  * raised surfaces, but top-level sections do not alternate parchment bands.
  */
 main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child,
-main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section[aria-labelledby="constitutional-interfaces-heading"],
 main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section#policy-papers {
   background-color: hsl(var(--background)) !important;
 }
@@ -13,17 +12,15 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
 /*
  * Homepage identity artwork.
  *
- * The Registry's original combined CAM/VIGIL hero is the canonical binary.
- * Two responsive viewports crop the left and right halves so the identities
- * can still sit side-by-side on larger screens and stack cleanly on narrow
- * screens. This avoids depending on the malformed temporary split PNGs while
- * preserving the live semantic heading and explanatory copy.
+ * The Registry now publishes the CAELESTIS and VIGIL hero artwork as separate
+ * canonical PNGs. Render those assets independently and contain each image in
+ * its own viewport so neither side is cropped, duplicated or stretched.
  */
 main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child {
   position: relative;
   display: grid;
   min-width: 0;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.87fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   align-items: center;
   column-gap: clamp(0.8rem, 2vw, 1.6rem);
 }
@@ -33,10 +30,10 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   display: block;
   width: 100%;
   aspect-ratio: 708 / 329;
-  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/a48448d63d36305e55bf118fbbe75c9d735562ca/Images/CAM_VIGIL_HERO.png");
-  background-position: left center;
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/CAM_HERO.png");
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: auto 100%;
+  background-size: contain;
 }
 
 /* Keep the umbrella label available to assistive technology without placing
@@ -53,8 +50,8 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   border: 0 !important;
 }
 
-/* The existing H1 retains its semantic text while the right-hand viewport
- * shows the VIGIL half of the canonical combined artwork. */
+/* The existing H1 retains its semantic text while its visible viewport renders
+ * the dedicated VIGIL hero asset. */
 main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 {
   width: 100%;
   aspect-ratio: 615 / 329;
@@ -63,10 +60,10 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   color: transparent !important;
   font-size: 0 !important;
   line-height: 0 !important;
-  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/a48448d63d36305e55bf118fbbe75c9d735562ca/Images/CAM_VIGIL_HERO.png");
-  background-position: right center;
+  background-image: url("https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/VIGIL_HERO.png");
+  background-position: center;
   background-repeat: no-repeat;
-  background-size: auto 100%;
+  background-size: contain;
 }
 
 main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section:first-child > div > div:first-child > h1 * {
