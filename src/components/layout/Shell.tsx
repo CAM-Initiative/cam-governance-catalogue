@@ -120,15 +120,17 @@ export function Shell({ children }: { children: ReactNode }) {
               </div>
             </div>
 
-            <Link
-              href="/datasets"
-              className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                isDatasetsActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Datasets
-            </Link>
-            <ThemeToggle />
+            <div className="flex items-center gap-8">
+              <Link
+                href="/datasets"
+                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
+                  isDatasetsActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Datasets
+              </Link>
+              <ThemeToggle />
+            </div>
           </nav>
         </div>
 
