@@ -70,7 +70,9 @@ export function ExploreGovernanceRail() {
       </div>
 
       <div className="home-governance-external">
-        <p className="home-governance-section-label">External Tools</p>
+        <div className="home-governance-heading home-governance-external-heading">
+          <p className="home-governance-section-label">External Tools</p>
+        </div>
         <div className="home-governance-links">
           {externalResources.map((resource) => (
             <a className="home-governance-card group" href={resource.href} key={resource.label} rel="noreferrer" target="_blank">
