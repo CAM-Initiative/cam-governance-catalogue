@@ -204,6 +204,10 @@ export default function VigilStandardSource() {
   const [activeTab, setActiveTab] = useState<SourceTab>("overview");
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [requestedKey]);
+
+  useEffect(() => {
     let cancelled = false;
     Promise.all([loadExternalSources(), loadExternalRequirements(), loadExternalRequirementDetails(), loadExternalSourceScope()])
       .then(([sources, requirements, details, scopes]) => {
@@ -234,7 +238,7 @@ export default function VigilStandardSource() {
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state">Loading standard…</div></div></main></Shell>;
   if (state.status === "unavailable") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard unavailable</h2><p>{state.message}</p></div></div></main></Shell>;
-  if (!source) return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard not found</h2><p>The requested source is not represented in the current compliance baseline.</p></div></div></main></Shell>;
+  if (!source) return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard not found</h2><p>The requested source is not represented in the current standards library.</p></div></div></main></Shell>;
 
   const reviewEvent = currentReviewEvent(source);
   const reviewDate = reviewEvent?.review_date ?? source.last_substantive_reviewed;
@@ -248,7 +252,7 @@ export default function VigilStandardSource() {
 
     <header className="vigil-case-file-hero vigil-case-file-hero-v4">
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">AI Governance Standards · Compliance Baseline</p>
+        <p className="vigil-library-kicker">AI Governance Standards</p>
         <h1>{source.title}</h1>
         <p className="vigil-case-file-summary">{sourcePublicSummary(source)}</p>
       </div>
