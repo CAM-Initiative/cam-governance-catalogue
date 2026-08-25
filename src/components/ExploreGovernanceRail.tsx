@@ -11,7 +11,7 @@ const initiativeResources = [
   {
     id: "case-files",
     title: "Case Files",
-    subtitle: "AI failure incident database",
+    subtitle: "Documented failure investigations",
     purpose: "Documented AI failure-mode investigations with evidence, classification, diagnosis, repair and learning.",
     href: "/observatory/cases",
   },
