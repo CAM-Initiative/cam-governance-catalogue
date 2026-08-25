@@ -121,7 +121,7 @@ export default function Datasets() {
 
           <DatasetCard
             title="VIGIL Failure Taxonomy"
-            description="A machine-readable classification of the recurring AI-system and governance failure patterns used across VIGIL. The dataset will expose the taxonomy structure, canonical failure families and classes, and the public definitions used to classify failure-mode records."
+            description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and classes with recognition criteria, exclusions, examples and relationships. The dataset publishes that taxonomy in machine-readable form for reuse and analysis."
             status="Coming soon"
             beta
             icon={<Library />}
