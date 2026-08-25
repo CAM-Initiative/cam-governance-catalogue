@@ -106,7 +106,7 @@ export default function Datasets() {
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
-            title="AI Governance Standards — Compliance Baseline"
+            title="AI Governance Standards"
             description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources."
             status={status}
             beta
