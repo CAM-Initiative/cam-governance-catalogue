@@ -1,0 +1,28 @@
+/* Shared Explore AI Governance rail refinements.
+   Keep the internal/external section labels identical and preserve a clear
+   single visual gap before External Tools across Home, About and Privacy. */
+.home-governance-panel .home-governance-section-label {
+  margin: 0;
+  padding: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.home-governance-panel .home-governance-heading {
+  padding: 0.2rem 0.2rem 0.8rem;
+}
+
+.home-governance-panel .home-governance-external {
+  margin-top: 1rem;
+  padding-top: 0.95rem;
+}
+
+.home-governance-panel .home-governance-external > .home-governance-section-label {
+  padding-inline: 0.2rem;
+  margin-bottom: 0.2rem;
+}
