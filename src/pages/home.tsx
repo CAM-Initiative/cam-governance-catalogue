@@ -96,16 +96,16 @@ function DatasetsPanel() {
   return (
     <section className="home-rail-section" aria-labelledby="datasets-home-heading" id="datasets-home">
       <SectionLabel>Datasets</SectionLabel>
-      <div className="home-datasets-panel">
-        <div>
-          <p className="home-datasets-kicker">Downloadable governance reference data</p>
-          <h2 id="datasets-home-heading">Use the underlying governance data directly.</h2>
-          <p>
-            The CAM Initiative publishes machine-readable governance reference data and archival releases for independent research, comparison and reuse. The datasets surface brings together VIGIL standards and source records, structured governance requirements, and the current CAELESTIS archival release, with additional public datasets added as they mature.
-          </p>
-        </div>
-        <a href="/datasets">Open datasets <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></a>
-      </div>
+      <h2 id="datasets-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+        Use the underlying governance data directly.
+      </h2>
+      <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+        The CAM Initiative publishes machine-readable governance reference data and archival releases for independent research, comparison and reuse. The datasets surface brings together VIGIL standards and source records, structured governance requirements, and the current CAELESTIS archival release, with additional public datasets added as they mature.
+      </p>
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets">
+        Explore Datasets
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </a>
     </section>
   );
 }
