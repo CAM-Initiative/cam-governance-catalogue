@@ -2,12 +2,15 @@ import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
+const CAM_HERO = "https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/CAM_HERO.png";
+const VIGIL_HERO = "https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/VIGIL_HERO.png";
+
 const initiativeResources = [
   {
     id: "vigil-observatory",
     title: "VIGIL Observatory",
-    subtitle: "Evidence, failure taxonomy & public datasets",
-    purpose: "Case Files grouped through the VIGIL Runtime & Governance Failure Taxonomy, with source evidence, governance requirements, repair history and public data.",
+    subtitle: "Evidence, taxonomy & governance knowledge",
+    purpose: "Case Files, the VIGIL AI Governance Failure Taxonomy, governance standards, policy materials and source-linked public research.",
     href: "/observatory/knowledge-base",
   },
   {
@@ -110,9 +113,9 @@ function ExploreGovernancePanel() {
     <motion.aside
       animate={{ opacity: 1, y: 0 }}
       aria-label="Explore AI governance"
-      className="cam-parchment-card rounded-2xl border border-cam-gold/35 p-4 shadow-xl"
-      initial={{ opacity: 0, y: 18 }}
-      transition={{ duration: 0.7, delay: 0.1 }}
+      className="home-governance-panel cam-parchment-card rounded-2xl border border-cam-gold/35 p-4 shadow-sm"
+      initial={{ opacity: 0, y: 14 }}
+      transition={{ duration: 0.55, delay: 0.05 }}
     >
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-cam-gold/30 pb-3">
         <p className="font-mono text-base font-semibold uppercase tracking-[0.16em] text-cam-gold">Explore AI Governance</p>
@@ -164,45 +167,41 @@ function ExploreGovernancePanel() {
 
 function EvidenceRepairLoop() {
   return (
-    <section className="py-12 md:py-16" aria-labelledby="evidence-repair-heading">
-      <div className="container mx-auto max-w-6xl px-6 md:px-10">
-        <SectionLabel>VIGIL: Evidence to Repair</SectionLabel>
-        <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-          Turn real-world AI failures into evidence for accountable repair.
-        </h2>
-        <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-          <p>
-            VIGIL is an evidence-to-repair system for AI governance. It captures safety incidents and governance failures, diagnoses the control breakdown, maps the evidence to required safeguards, and supports traceable runtime repair and verification.
-          </p>
-          <p>
-            Cases are grouped through the <strong className="font-semibold text-foreground">VIGIL Runtime &amp; Governance Failure Taxonomy</strong>, a shared classification standard that distinguishes structural failure mechanisms from their manifestations, causes, severity, evidence state and repair responsibility. This makes recurring failure patterns comparable across different systems and deployment contexts.
-          </p>
-        </div>
-        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
-          Explore VIGIL
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
+    <section className="home-rail-section" aria-labelledby="evidence-repair-heading">
+      <SectionLabel>VIGIL: Evidence to Repair</SectionLabel>
+      <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+        Turn real-world AI failures into evidence for accountable repair.
+      </h2>
+      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+        <p>
+          VIGIL is an evidence-to-repair system for AI governance. It captures safety incidents and governance failures, diagnoses the control breakdown, maps the evidence to required safeguards, and supports traceable runtime repair and verification.
+        </p>
+        <p>
+          Cases are grouped through the <strong className="font-semibold text-foreground">VIGIL AI Governance Failure Taxonomy</strong>, which separates broad failure families from specific failure classes so recurring mechanisms can be compared across systems and deployment contexts.
+        </p>
       </div>
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
+        Explore VIGIL
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </a>
     </section>
   );
 }
 
 function PolicyPapersPanel() {
   return (
-    <section className="border-y border-border/60 bg-[hsl(38_40%_94%)]" aria-labelledby="policy-papers-home-heading" id="policy-papers">
-      <div className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
-        <SectionLabel>Policy</SectionLabel>
-        <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-          Turn governance architecture into practical public policy.
-        </h2>
-        <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-          CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.
-        </p>
-        <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/policy">
-          Explore Policy Papers
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-        </a>
-      </div>
+    <section className="home-rail-section" aria-labelledby="policy-papers-home-heading" id="policy-papers">
+      <SectionLabel>Policy</SectionLabel>
+      <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+        Turn governance analysis into practical public policy.
+      </h2>
+      <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+        CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.
+      </p>
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/policy">
+        Explore Policy Papers
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </a>
     </section>
   );
 }
@@ -255,43 +254,51 @@ function ConnectPanel() {
 export default function Home() {
   return (
     <Shell>
-      <main className="overflow-hidden">
-        <section className="border-b border-border/60 bg-[hsl(38_40%_93%)]">
-          <div className="container mx-auto grid w-full max-w-[100rem] gap-12 px-5 py-14 sm:px-6 md:gap-16 md:px-8 md:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(27rem,0.85fr)] lg:items-center xl:gap-20">
-            <motion.div animate={{ opacity: 1, y: 0 }} className="max-w-none" initial={{ opacity: 0, y: 16 }} transition={{ duration: 0.7 }}>
-              <p className="mb-4 font-mono text-[15px] uppercase tracking-[0.22em] text-cam-gold">CAM Initiative · Open AI Governance</p>
-              <h1 className="mb-5 max-w-5xl text-foreground">
-                <span className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_1px_minmax(0,0.9fr)] sm:items-center sm:gap-6">
-                  <span className="block">
-                    <span className="block whitespace-nowrap font-serif text-5xl leading-[0.98] tracking-[0.06em] sm:text-6xl md:text-7xl">CAELESTIS</span>
-                    <span className="mt-2 block font-serif text-3xl leading-tight tracking-normal sm:text-4xl md:text-5xl">Architecture Model</span>
-                  </span>
-                  <span className="hidden h-24 w-px bg-cam-gold/35 sm:block" aria-hidden="true" />
-                  <span className="block border-t border-cam-gold/35 pt-4 sm:border-t-0 sm:pt-0">
-                    <span className="block font-serif text-4xl leading-[0.98] tracking-[0.045em] sm:text-5xl md:text-6xl">VIGIL</span>
-                    <span className="mt-2 block font-mono text-sm font-semibold uppercase tracking-[0.18em] text-cam-gold sm:text-base">Observatory</span>
-                  </span>
-                </span>
-              </h1>
-              <hr className="gold-rule mb-5 w-24" />
-              <p className="mb-8 font-mono text-sm uppercase tracking-[0.18em] text-cam-gold md:text-[15px]">
-                Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.
-              </p>
-              <div className="max-w-3xl space-y-5 text-lg leading-relaxed text-foreground/80 md:text-xl">
-                <p>
-                  The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
-                </p>
-                <p>
-                  It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
-                </p>
-              </div>
-            </motion.div>
-            <ExploreGovernancePanel />
+      <main className="home-page overflow-hidden">
+        <section className="home-identity-hero" aria-labelledby="home-identity-heading">
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="container mx-auto w-full max-w-[100rem] px-5 py-12 sm:px-6 md:px-8 md:py-16 lg:py-20"
+            initial={{ opacity: 0, y: 14 }}
+            transition={{ duration: 0.7 }}
+          >
+            <p className="home-identity-kicker">CAM Initiative · Open AI Governance</p>
+            <h1 id="home-identity-heading" className="sr-only">CAELESTIS Architecture Model and VIGIL Observatory</h1>
+            <div className="home-identity-artwork" aria-hidden="true">
+              <img src={CAM_HERO} alt="" className="home-identity-image" />
+              <span className="home-identity-divider" />
+              <img src={VIGIL_HERO} alt="" className="home-identity-image" />
+            </div>
+            <p className="home-identity-tagline">Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.</p>
+          </motion.div>
+        </section>
+
+        <section className="home-main-rail" aria-label="CAM Initiative overview and navigation">
+          <div className="container mx-auto grid max-w-6xl gap-9 px-6 py-12 md:px-10 md:py-16 lg:grid-cols-[minmax(18rem,22rem)_minmax(0,1fr)] lg:items-start lg:gap-12">
+            <div className="home-sticky-governance">
+              <ExploreGovernancePanel />
+            </div>
+
+            <div className="home-main-copy">
+              <section className="home-about-section" aria-labelledby="home-about-heading">
+                <SectionLabel>CAM Initiative</SectionLabel>
+                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Open AI governance infrastructure for understanding systems and making failure visible.</h2>
+                <div className="space-y-5 text-[17px] leading-relaxed text-foreground/80 md:text-lg">
+                  <p>
+                    The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
+                  </p>
+                  <p>
+                    It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
+                  </p>
+                </div>
+              </section>
+
+              <EvidenceRepairLoop />
+              <PolicyPapersPanel />
+            </div>
           </div>
         </section>
 
-        <EvidenceRepairLoop />
-        <PolicyPapersPanel />
         <ConnectPanel />
       </main>
     </Shell>
