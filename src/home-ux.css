@@ -84,11 +84,7 @@
   padding-bottom: 0.35rem;
 }
 
-/*
- * Desktop explorer: this is a navigation rail, not a content card. It follows
- * the viewport while the editorial column scrolls and remains available for
- * the full body of the homepage.
- */
+/* Desktop explorer: a persistent navigation rail, not a content card. */
 @media (min-width: 1024px) {
   .home-main-rail-layout {
     grid-template-columns: minmax(13.5rem, 15.75rem) minmax(0, 1fr);
@@ -126,12 +122,12 @@
 .home-governance-heading p {
   margin: 0;
   font-family: var(--app-font-mono);
-  font-size: 0.79rem;
+  font-size: 0.71rem;
   font-weight: 700;
   line-height: 1.4;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: hsl(var(--foreground));
+  color: hsl(var(--muted-foreground));
 }
 
 .home-governance-links {
@@ -140,9 +136,9 @@
 
 .home-governance-card {
   display: block;
-  padding: 0.72rem 0.25rem;
-  border-bottom: 1px solid hsl(var(--border) / 0.58);
-  border-radius: 0.35rem;
+  padding: 0.82rem 0.35rem 0.78rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.52);
+  border-radius: 0.2rem;
   color: inherit;
   text-decoration: none;
   transition: background 150ms ease, color 150ms ease;
@@ -150,7 +146,7 @@
 
 .home-governance-card:hover,
 .home-governance-card:focus-visible {
-  background: hsl(var(--muted) / 0.42);
+  background: hsl(var(--muted) / 0.34);
   outline: none;
 }
 
@@ -163,20 +159,25 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.7rem;
-  font-family: var(--app-font-mono);
-  font-size: 0.76rem;
-  font-weight: 700;
-  line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--app-font-sans);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--foreground));
+}
+
+.home-governance-card-title svg {
   color: hsl(var(--primary));
+  opacity: 0.75;
 }
 
 .home-governance-detail {
   overflow: hidden;
   color: hsl(var(--muted-foreground));
-  font-size: 0.82rem;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  line-height: 1.52;
 }
 
 .home-governance-detail > span {
@@ -184,28 +185,28 @@
 }
 
 .home-governance-detail > span:first-child:not(:last-child) {
-  margin-top: 0.36rem;
-  font-family: var(--app-font-mono);
-  font-size: 0.67rem;
-  font-weight: 650;
+  margin-top: 0.4rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
   line-height: 1.45;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: hsl(var(--foreground) / 0.62);
+  letter-spacing: 0;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.68);
 }
 
 .home-governance-detail > span:last-child:not(:first-child) {
-  margin-top: 0.32rem;
+  margin-top: 0.25rem;
 }
 
 .home-governance-external {
-  margin-top: 1.1rem;
+  margin-top: 1.2rem;
 }
 
 .home-governance-external > p {
   margin: 0 0 0.2rem;
   font-family: var(--app-font-mono);
-  font-size: 0.67rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -217,7 +218,7 @@
     max-height: 0;
     margin-top: 0;
     opacity: 0;
-    transform: translateY(-0.15rem);
+    transform: translateY(-0.12rem);
     transition: max-height 200ms ease, margin-top 200ms ease, opacity 150ms ease, transform 200ms ease;
   }
 
@@ -307,6 +308,10 @@
     border: 1px solid hsl(var(--border));
     border-radius: 0.75rem;
     background: hsl(var(--card) / 0.38);
+  }
+
+  .home-governance-card-title {
+    color: hsl(var(--foreground));
   }
 }
 
