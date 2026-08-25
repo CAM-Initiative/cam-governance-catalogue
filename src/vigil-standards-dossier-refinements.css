@@ -96,14 +96,99 @@
   border-top: 1px solid hsl(var(--border) / 0.7);
 }
 
-.vigil-standards-review-method > p:last-child {
+.vigil-standards-review-method > p:last-child,
+.vigil-standards-review-method > p:not(.vigil-library-kicker) {
   margin: 0.4rem 0 0;
   font-size: 0.88rem;
   line-height: 1.62;
 }
 
+.vigil-standards-review-boundary {
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-review-boundary strong {
+  color: hsl(var(--foreground));
+}
+
 .vigil-standards-review-note {
   margin-top: 0.9rem;
+}
+
+/* Review-event history is intentionally collapsed by default. It preserves the
+   analytical chronology without turning the primary review panel into a ledger. */
+.vigil-standards-review-history {
+  margin-top: 1rem;
+  border-top: 1px solid hsl(var(--border) / 0.7);
+}
+
+.vigil-standards-review-history > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+.vigil-standards-review-history > summary::-webkit-details-marker {
+  display: none;
+}
+
+.vigil-standards-review-history > summary span {
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-review-history-list {
+  border-top: 1px solid hsl(var(--border) / 0.6);
+}
+
+.vigil-standards-review-history-list article {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.6);
+}
+
+.vigil-standards-review-history-list article:last-child {
+  border-bottom: 0;
+}
+
+.vigil-standards-review-history-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vigil-standards-review-history-heading strong {
+  font-size: 0.84rem;
+}
+
+.vigil-standards-review-history-heading span,
+.vigil-standards-review-history-list small {
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-standards-review-history-list p {
+  max-width: 72rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-standards-review-history-list small {
+  display: block;
+  margin-top: 0.35rem;
 }
 
 @media (max-width: 620px) {
@@ -123,7 +208,8 @@
     grid-template-columns: 1fr;
   }
 
-  .vigil-standards-review-heading {
+  .vigil-standards-review-heading,
+  .vigil-standards-review-history-heading {
     flex-direction: column;
   }
 }
