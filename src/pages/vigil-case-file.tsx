@@ -361,7 +361,6 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       publisher: text(source.author_or_publisher ?? source.publisher ?? source.source_platform),
       date: text(source.source_date ?? source.date ?? source.published_date),
       url: text(source.source_url ?? source.url ?? source.archive_url),
-      description: text(source.source_context ?? source.description ?? source.relevance_note),
     }];
   });
 }
@@ -823,7 +822,6 @@ export default function VigilCaseFile() {
           <div>
             <strong>{source.title}</strong>
             {(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}
-            {source.description && <p>{source.description}</p>}
             {source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}
           </div>
         </li>)}
