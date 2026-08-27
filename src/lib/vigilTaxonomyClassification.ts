@@ -23,6 +23,10 @@ export function taxonomyClassification(record: UnknownRecord) {
   return isObject(record.taxonomy_classification) ? record.taxonomy_classification : undefined;
 }
 
+function taxonomyClassificationSummary(record: UnknownRecord) {
+  return isObject(record.taxonomy_classification_summary) ? record.taxonomy_classification_summary : undefined;
+}
+
 function classLabel(value: unknown) {
   if (!isObject(value)) return undefined;
   return text(value.class_name) ?? text(value.name) ?? text(value.class_code) ?? text(value.class_id);
@@ -35,18 +39,28 @@ function familyLabel(value: unknown) {
 
 export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const classification = taxonomyClassification(record);
-  if (!classification) return "Not classified";
+  if (classification) {
+    const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
+    const primaryClass = classLabel(classification.primary_class);
+    if (primaryClass) return primaryClass;
 
-  const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
-  const primaryClass = classLabel(classification.primary_class);
-  if (primaryClass) return primaryClass;
+    const primaryFamily = familyLabel(classification.primary_family);
+    if (status === "family-only" && primaryFamily) return `${primaryFamily} · Family only`;
+    if (status === "candidate-new-class") return primaryFamily ? `${primaryFamily} · Candidate new class` : "Candidate new class";
+    if (status === "unmapped") return "Unmapped";
+    if (status === "deferred") return "Deferred";
+    if (status === "classified") return "Classified";
+    return primaryFamily ?? "Not classified";
+  }
 
-  const primaryFamily = familyLabel(classification.primary_family);
-  if (status === "family-only" && primaryFamily) return `${primaryFamily} · Family only`;
-  if (status === "candidate-new-class") return primaryFamily ? `${primaryFamily} · Candidate new class` : "Candidate new class";
+  const summary = taxonomyClassificationSummary(record);
+  const status = text(summary?.classification_status) as TaxonomyClassificationStatus | undefined;
+  if (status === "classified") return "Classified";
+  if (status === "family-only") return "Family only";
+  if (status === "candidate-new-class") return "Candidate new class";
   if (status === "unmapped") return "Unmapped";
   if (status === "deferred") return "Deferred";
-  return primaryFamily ?? "Not classified";
+  return "Not classified";
 }
 
 function familyId(value: unknown) {
