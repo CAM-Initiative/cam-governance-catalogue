@@ -99,7 +99,8 @@ assert.match(printableReport, /CaseTaxonomyClassification/);
 assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
 assert.match(printableReport, /report-taxonomy-parity-slot/);
 assert.match(printableReport, /report-taxonomy-reference/);
-assert.match(printableReport, /document\.title = `VIGIL Case File — \$\{compactFailureId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
+assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactFailureId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
+assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
 
 // The deterministic report has a report-specific typography/layout layer. Evidence
 // is single-column in report mode, source-link icons are removed, taxonomy can flow
@@ -122,14 +123,18 @@ assert.match(polishCss, /\.report-legacy-taxonomy/);
 assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 
 // The printed artefact closes with an explicit use/third-party reliance notice
-// and accurately reflects the current canonical VIGIL reuse licence.
+// and treats the compiled report as a protected publication distinct from the
+// separately reusable underlying VIGIL Observatory content.
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
-assert.match(printableReport, /VIGIL materials © 2026 Dr Michelle O'Rourke/);
-assert.match(printableReport, /CC BY-NC-SA 4\.0/);
+assert.match(printableReport, /Copyright © 2026 Dr Michelle O'Rourke\. All rights reserved/);
+assert.match(printableReport, /VIGIL Observatory Case File report may be cited and quoted with appropriate attribution/);
+assert.match(printableReport, /Reproduction or redistribution of the report in whole or substantial part requires permission/);
+assert.match(printableReport, /Underlying VIGIL Observatory material remains subject to the VIGIL Observatory Licence and Reuse Terms/);
+assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);
 assert.doesNotMatch(printableReport, /Aeon Governance Lab/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
-console.log("VIGIL Case File investigation status, taxonomy references/download, deterministic PDF layout and reliance contract passed");
+console.log("VIGIL Observatory Case File investigation status, taxonomy references/download, deterministic PDF layout and publication-rights contract passed");
