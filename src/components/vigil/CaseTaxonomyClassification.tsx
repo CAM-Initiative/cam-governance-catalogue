@@ -161,7 +161,7 @@ function CanonicalMechanism({ item, label }: { item: ResolvedClassification; lab
 }
 
 function ExplicitState({ status, family }: { status?: ClassificationStatus; family?: ResolvedClassification }) {
-  const familyDefinition = family?.family?.family.definition;
+  const familyDefinition = family?.family?.definition;
   if (status === "family-only" && family) return <>
     <CanonicalMechanism item={family} label="Primary family" />
     <p className="vigil-case-empty">This Failure Mode is classified to a canonical VIGIL failure family, but no canonical failure class has been assigned.</p>
