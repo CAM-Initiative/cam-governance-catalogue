@@ -176,7 +176,7 @@ export default function VigilCases() {
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">
                   <span><strong>{records.length}</strong> case files</span>
-                  <span><strong>{families.length}</strong> classification states</span>
+                  <span><strong>{families.length}</strong> taxonomy states</span>
                   {updated && <span>Updated <strong>{updated}</strong></span>}
                 </div>
               )}
@@ -198,7 +198,7 @@ export default function VigilCases() {
                 </label>
 
                 <label className="vigil-family-select">
-                  <span>Classification status</span>
+                  <span>Taxonomy status</span>
                   <select value={family} onChange={(event) => setFamily(event.target.value)}>
                     <option value="">All statuses ({records.length})</option>
                     {families.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
@@ -218,7 +218,7 @@ export default function VigilCases() {
             <section className="vigil-case-table" aria-label="AI failure mode Case Files">
               <div className="vigil-case-table-head">
                 <SortHeading label="Failure Mode" sortKey="id" sort={sort} onSort={updateSort} />
-                <SortHeading label="Classification" sortKey="family" sort={sort} onSort={updateSort} />
+                <SortHeading label="Taxonomy status" sortKey="family" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
@@ -235,14 +235,14 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Classification"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
+                        <CaseCell label="Taxonomy status"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
                   );
                 })}
-                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another classification status.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another taxonomy status.</div>}
               </div>
             </section>
 
