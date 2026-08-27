@@ -7,6 +7,8 @@ import {
   loadExternalSources,
 } from "@/lib/vigilExternalKnowledge";
 
+const VIGIL_TAXONOMY_HTML = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.FailureTaxonomy.FullReference.html";
+
 type DatasetState = {
   sourcesCount?: number;
   clausesCount?: number;
@@ -118,9 +120,11 @@ export default function Datasets() {
 
           <DatasetCard
             title="VIGIL AI Governance Failure Taxonomy"
-            description="A machine-readable classification reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with explicit recognition criteria and boundaries."
-            status="Coming soon"
+            description="Human-readable generated reference for the canonical VIGIL failure taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
+            status="Generated reference · VIGIL"
             beta
+            downloadHref={VIGIL_TAXONOMY_HTML}
+            downloadLabel="Download HTML reference"
             icon={<Library />}
           />
 
