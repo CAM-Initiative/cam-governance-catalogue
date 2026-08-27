@@ -5,6 +5,8 @@ import { resolve } from "node:path";
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
 const caseLibrary = await readFile(resolve(repoRoot, "src/pages/vigil-cases.tsx"), "utf8");
+const printableReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8");
+const polishCss = await readFile(resolve(repoRoot, "src/polish.css"), "utf8");
 const taxonomyPanel = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
 const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTaxonomy.ts"), "utf8");
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
@@ -68,12 +70,12 @@ assert.match(caseLibrary, /class_id/);
 assert.match(caseLibrary, /return isTaxonomyClassified\(record\) \? "Classified" : "Not Classified"/);
 assert.match(caseLibrary, /failureTypeCounts\(records\)/);
 assert.match(caseLibrary, /canonicalComparisonKey\(failureTypeLabel\(record\)\)/);
-assert.match(caseLibrary, /Classification status/);
-assert.match(caseLibrary, /SortHeading label="Classification"/);
+assert.match(caseLibrary, /Taxonomy status/);
+assert.match(caseLibrary, /SortHeading label="Taxonomy status"/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
 assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 
-// Section 06 must include the canonical taxonomy records that Section 03 resolves.
+// Section 06 in the interactive Case File includes canonical taxonomy records.
 assert.match(caseFile, /loadTaxonomyReferenceTargets\(failure\.raw\)/);
 assert.match(caseFile, /taxonomyReferences\.map/);
 assert.match(caseFile, /VIGIL Failure Taxonomy/);
@@ -82,4 +84,19 @@ assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
 
-console.log("VIGIL Case File taxonomy wiring, binary landing status, technical detail and reference contract passed");
+// The deterministic printable projection must reuse the full taxonomy renderer,
+// append the same taxonomy references, and set an FM-specific document title so
+// browser-generated PDF filenames do not collide.
+assert.match(printableReport, /CaseTaxonomyClassification/);
+assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
+assert.match(printableReport, /report-taxonomy-parity-slot/);
+assert.match(printableReport, /report-taxonomy-reference/);
+assert.match(printableReport, /document\.title = `VIGIL Case File — \$\{compactFailureId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
+
+// Printing must flow naturally instead of forcing one stage per page.
+assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
+assert.match(polishCss, /break-before: auto !important/);
+assert.match(polishCss, /\.report-legacy-taxonomy/);
+assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
+
+console.log("VIGIL Case File taxonomy status, technical detail, references and deterministic PDF parity contract passed");
