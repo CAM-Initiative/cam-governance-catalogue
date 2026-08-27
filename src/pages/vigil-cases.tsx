@@ -4,10 +4,9 @@ import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
-import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
+import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
-import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
   | { status: "loading" }
@@ -34,8 +33,36 @@ function caseSummary(record: VigilIndexRecord) {
     ?? "No public failure definition is currently available.";
 }
 
+function isObject(value: unknown): value is UnknownRecord {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function isTaxonomyClassified(record: VigilIndexRecord) {
+  // The Case Files table consumes the lean VIGIL registry projection, where the
+  // native taxonomy mapping is published as taxonomy_classification_summary.
+  const summary = isObject(record.raw.taxonomy_classification_summary)
+    ? record.raw.taxonomy_classification_summary
+    : undefined;
+  const summaryStatus = typeof summary?.classification_status === "string"
+    ? summary.classification_status.trim().toLowerCase()
+    : "";
+  const summaryClassId = typeof summary?.class_id === "string" ? summary.class_id.trim() : "";
+  if (summaryStatus === "classified" || Boolean(summaryClassId)) return true;
+
+  // Full FM detail can also reach this component in development/test fixtures.
+  const full = isObject(record.raw.taxonomy_classification)
+    ? record.raw.taxonomy_classification
+    : undefined;
+  const fullStatus = typeof full?.classification_status === "string"
+    ? full.classification_status.trim().toLowerCase()
+    : "";
+  const primaryClass = isObject(full?.primary_class) ? full.primary_class : undefined;
+  const fullClassId = typeof primaryClass?.class_id === "string" ? primaryClass.class_id.trim() : "";
+  return fullStatus === "classified" || Boolean(fullClassId);
+}
+
 function failureTypeLabel(record: VigilIndexRecord) {
-  return taxonomyFailureTypeLabel(record.raw);
+  return isTaxonomyClassified(record) ? "Classified" : "Not Classified";
 }
 
 function failureTypeCounts(records: VigilIndexRecord[]): FailureTypeCount[] {
@@ -149,7 +176,7 @@ export default function VigilCases() {
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">
                   <span><strong>{records.length}</strong> case files</span>
-                  <span><strong>{families.length}</strong> failure types</span>
+                  <span><strong>{families.length}</strong> classification states</span>
                   {updated && <span>Updated <strong>{updated}</strong></span>}
                 </div>
               )}
@@ -171,9 +198,9 @@ export default function VigilCases() {
                 </label>
 
                 <label className="vigil-family-select">
-                  <span>Failure type</span>
+                  <span>Classification status</span>
                   <select value={family} onChange={(event) => setFamily(event.target.value)}>
-                    <option value="">All types ({records.length})</option>
+                    <option value="">All statuses ({records.length})</option>
                     {families.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
                   </select>
                 </label>
@@ -191,7 +218,7 @@ export default function VigilCases() {
             <section className="vigil-case-table" aria-label="AI failure mode Case Files">
               <div className="vigil-case-table-head">
                 <SortHeading label="Failure Mode" sortKey="id" sort={sort} onSort={updateSort} />
-                <SortHeading label="Failure Type" sortKey="family" sort={sort} onSort={updateSort} />
+                <SortHeading label="Classification" sortKey="family" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
@@ -208,14 +235,14 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Failure Type"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
+                        <CaseCell label="Classification"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
                   );
                 })}
-                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another failure type.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another classification status.</div>}
               </div>
             </section>
 
