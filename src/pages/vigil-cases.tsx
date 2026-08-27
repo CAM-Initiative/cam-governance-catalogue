@@ -38,8 +38,6 @@ function isObject(value: unknown): value is UnknownRecord {
 }
 
 function isTaxonomyClassified(record: VigilIndexRecord) {
-  // The Case Files table consumes the lean VIGIL registry projection, where the
-  // native taxonomy mapping is published as taxonomy_classification_summary.
   const summary = isObject(record.raw.taxonomy_classification_summary)
     ? record.raw.taxonomy_classification_summary
     : undefined;
@@ -49,7 +47,6 @@ function isTaxonomyClassified(record: VigilIndexRecord) {
   const summaryClassId = typeof summary?.class_id === "string" ? summary.class_id.trim() : "";
   if (summaryStatus === "classified" || Boolean(summaryClassId)) return true;
 
-  // Full FM detail can also reach this component in development/test fixtures.
   const full = isObject(record.raw.taxonomy_classification)
     ? record.raw.taxonomy_classification
     : undefined;
@@ -176,7 +173,7 @@ export default function VigilCases() {
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">
                   <span><strong>{records.length}</strong> case files</span>
-                  <span><strong>{families.length}</strong> taxonomy states</span>
+                  <span><strong>{families.length}</strong> investigation states</span>
                   {updated && <span>Updated <strong>{updated}</strong></span>}
                 </div>
               )}
@@ -198,7 +195,7 @@ export default function VigilCases() {
                 </label>
 
                 <label className="vigil-family-select">
-                  <span>Taxonomy status</span>
+                  <span>Investigation status</span>
                   <select value={family} onChange={(event) => setFamily(event.target.value)}>
                     <option value="">All statuses ({records.length})</option>
                     {families.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
@@ -218,7 +215,7 @@ export default function VigilCases() {
             <section className="vigil-case-table" aria-label="AI failure mode Case Files">
               <div className="vigil-case-table-head">
                 <SortHeading label="Failure Mode" sortKey="id" sort={sort} onSort={updateSort} />
-                <SortHeading label="Taxonomy status" sortKey="family" sort={sort} onSort={updateSort} />
+                <SortHeading label="Investigation status" sortKey="family" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
@@ -235,14 +232,14 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Taxonomy status"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
+                        <CaseCell label="Investigation status"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
                   );
                 })}
-                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another taxonomy status.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another investigation status.</div>}
               </div>
             </section>
 
