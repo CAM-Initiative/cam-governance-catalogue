@@ -106,7 +106,7 @@ export default function EvidenceChainReportPrintable() {
   useEffect(() => {
     if (!reportFailure) return;
     const previousTitle = document.title;
-    document.title = `VIGIL Case File — ${compactFailureId(reportFailure.id)} — ${reportFailure.title}`;
+    document.title = `VIGIL Observatory Case File — ${compactFailureId(reportFailure.id)} — ${reportFailure.title}`;
     return () => { document.title = previousTitle; };
   }, [reportFailure]);
 
@@ -174,7 +174,7 @@ export default function EvidenceChainReportPrintable() {
         <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
         <span className="min-w-0">
           <strong>{reference.id} — {reference.title}</strong>
-          <span className="text-muted-foreground"> — VIGIL Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</span>
+          <span className="text-muted-foreground"> — VIGIL Observatory Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</span>
           <br />
           <a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a>
         </span>
@@ -212,10 +212,10 @@ export default function EvidenceChainReportPrintable() {
     <section className="report-reliance-notice mx-auto max-w-6xl border-t border-border/60 px-4 py-5 text-muted-foreground sm:px-6 md:px-10" aria-labelledby="report-reliance-heading">
       <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
       <p className="mt-2">
-        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
       </p>
       <p className="report-copyright mt-3">
-        VIGIL materials © 2026 Dr Michelle O'Rourke. Licensed under CC BY-NC-SA 4.0 except where otherwise stated. Reuse remains subject to the VIGIL Licence and Reuse Terms, and third-party source materials remain subject to their own rights and licences.
+        Copyright © 2026 Dr Michelle O'Rourke. All rights reserved. This VIGIL Observatory Case File report may be cited and quoted with appropriate attribution. Reproduction or redistribution of the report in whole or substantial part requires permission. Underlying VIGIL Observatory material remains subject to the VIGIL Observatory Licence and Reuse Terms, and third-party source materials remain subject to their respective rights and licences.
       </p>
     </section>
   </div>;
