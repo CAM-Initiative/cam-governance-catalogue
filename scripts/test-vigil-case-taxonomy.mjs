@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
 const caseLibrary = await readFile(resolve(repoRoot, "src/pages/vigil-cases.tsx"), "utf8");
+const datasets = await readFile(resolve(repoRoot, "src/pages/datasets.tsx"), "utf8");
 const printableReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8");
 const polishCss = await readFile(resolve(repoRoot, "src/polish.css"), "utf8");
 const reportCss = await readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8");
@@ -62,17 +63,17 @@ assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
 assert.match(taxonomyLoader, /index\.families\.map/);
 assert.match(taxonomyLoader, /entry\.file/);
 
-// The Case Files landing page deliberately exposes only a binary classification
-// state. It must read the lean registry's taxonomy_classification_summary rather
-// than legacy failure-family fields or requiring full FM detail.
+// The Case Files landing page deliberately exposes only a binary mapped/not-mapped
+// outcome but describes it to the public as investigation status rather than taxonomy jargon.
 assert.match(caseLibrary, /taxonomy_classification_summary/);
 assert.match(caseLibrary, /classification_status/);
 assert.match(caseLibrary, /class_id/);
 assert.match(caseLibrary, /return isTaxonomyClassified\(record\) \? "Classified" : "Not Classified"/);
 assert.match(caseLibrary, /failureTypeCounts\(records\)/);
 assert.match(caseLibrary, /canonicalComparisonKey\(failureTypeLabel\(record\)\)/);
-assert.match(caseLibrary, /Taxonomy status/);
-assert.match(caseLibrary, /SortHeading label="Taxonomy status"/);
+assert.match(caseLibrary, /Investigation status/);
+assert.match(caseLibrary, /SortHeading label="Investigation status"/);
+assert.doesNotMatch(caseLibrary, /Taxonomy status/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
 assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 
@@ -85,9 +86,15 @@ assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
 
-// The deterministic printable projection must reuse the full taxonomy renderer,
-// append the same taxonomy references, and set an FM-specific document title so
-// browser-generated PDF filenames do not collide.
+// The canonical VIGIL-generated full-reference HTML is surfaced from Datasets
+// without maintaining an independently versioned copy in the catalogue repository.
+assert.match(datasets, /VIGIL\.FailureTaxonomy\.FullReference\.html/);
+assert.match(datasets, /Generated reference · VIGIL/);
+assert.match(datasets, /Download HTML reference/);
+assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);
+
+// The deterministic printable projection reuses the full taxonomy renderer,
+// appends the same taxonomy references, and sets an FM-specific document title.
 assert.match(printableReport, /CaseTaxonomyClassification/);
 assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
 assert.match(printableReport, /report-taxonomy-parity-slot/);
@@ -103,16 +110,26 @@ assert.match(reportCss, /grid-template-columns: 1fr !important/);
 assert.match(reportCss, /\.vigil-taxonomy-record-card \{[\s\S]*break-inside: auto !important/);
 assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
 
+// The internal deterministic-projection handoff footer must never appear in the
+// public report; the printable wrapper supplies the formal reliance/licence close.
+assert.match(reportCss, /main\.container > footer \{\s*display: none !important;/s);
+assert.doesNotMatch(printableReport, /deterministic print projection of the corresponding VIGIL Case File/);
+
 // Printing must flow naturally instead of forcing one stage per page.
 assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 assert.match(polishCss, /break-before: auto !important/);
 assert.match(polishCss, /\.report-legacy-taxonomy/);
 assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 
-// The printed artefact closes with an explicit use/third-party reliance notice.
+// The printed artefact closes with an explicit use/third-party reliance notice
+// and accurately reflects the current canonical VIGIL reuse licence.
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
+assert.match(printableReport, /VIGIL materials © 2026 Aeon Governance Lab/);
+assert.match(printableReport, /CC BY-NC-SA 4\.0/);
+assert.match(printableReport, /Dr Michelle Vivian O’Rourke is a named VIGIL author/);
 assert.match(reportCss, /\.report-reliance-notice/);
+assert.match(reportCss, /\.report-copyright/);
 
-console.log("VIGIL Case File taxonomy status, technical detail, references, deterministic PDF layout and reliance contract passed");
+console.log("VIGIL Case File investigation status, taxonomy references/download, deterministic PDF layout and reliance contract passed");
