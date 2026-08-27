@@ -186,7 +186,7 @@ export default function EvidenceChainReportPrintable() {
       <div className="mx-auto flex max-w-6xl flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="font-mono text-xs font-semibold uppercase tracking-[0.1em] text-cam-gold">Print sections</p>
-          <p className="mt-1 text-sm text-muted-foreground">The report uses the deterministic Case File projection. Choose which populated or empty sections to include in the printed PDF.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Choose which populated or empty sections to include in the printed PDF.</p>
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {REPORT_SECTIONS.map((section) => <label key={section.number} className="inline-flex cursor-pointer items-center gap-2 text-sm text-foreground">
@@ -212,7 +212,10 @@ export default function EvidenceChainReportPrintable() {
     <section className="report-reliance-notice mx-auto max-w-6xl border-t border-border/60 px-4 py-5 text-muted-foreground sm:px-6 md:px-10" aria-labelledby="report-reliance-heading">
       <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
       <p className="mt-2">
-        This report is provided for research and informational purposes as a deterministic projection of the corresponding VIGIL Case File. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+      </p>
+      <p className="report-copyright mt-3">
+        © 2026 Dr Michelle O’Rourke. VIGIL Observatory. All rights reserved. Limited quotation, reproduction and redistribution for research, education, criticism, review and other lawful fair-dealing or fair-use purposes is permitted with attribution to the VIGIL Observatory and identification of the relevant record or report. No endorsement, warranty or transfer of ownership is implied.
       </p>
     </section>
   </div>;
