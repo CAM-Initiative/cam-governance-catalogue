@@ -4,8 +4,9 @@
 **Repository / Layer:** CAM Governance Interface Web UX  
 **Licence Version:** 1.0  
 **Effective Date:** 2026-06-01  
-**Licensor:** Aeon Governance Lab / CAM Initiative  
-**Maintainer:** Office of the Planetary Custodian  
+**Licensor:** Dr Michelle O'Rourke  
+**Maintainer:** Dr Michelle O'Rourke  
+**Copyright:** © 2026 Dr Michelle O'Rourke. All rights reserved except as expressly licensed below.  
 
 ---
 
@@ -29,7 +30,7 @@ For the purposes of this licence:
 
 **Non-Commercial Use** means use that is not primarily intended for commercial advantage, revenue generation, paid product integration, resale, proprietary platform enhancement, commercial analytics, model training, dataset construction, or paid service delivery.
 
-**Attribution** means clear acknowledgement of the CAM Governance Interface, CAM Initiative, and Aeon Governance Lab, including a link to the source repository or public project page where reasonably practicable.
+**Attribution** means clear acknowledgement of the CAM Governance Interface and Dr Michelle O'Rourke, including a link to the source repository or public project page where reasonably practicable.
 
 ---
 
@@ -49,7 +50,7 @@ Subject to the terms of this licence, you may:
 
 Any permitted use must:
 
-1. preserve attribution to CAM Initiative, Aeon Governance Lab, and the CAM Governance Interface;
+1. preserve attribution to Dr Michelle O'Rourke and the CAM Governance Interface;
 2. retain this licence notice in copies or substantial portions of the Interface;
 3. clearly indicate if modifications have been made;
 4. avoid representing modified versions as official CAM Initiative infrastructure unless expressly authorised;
@@ -60,7 +61,7 @@ Any permitted use must:
 
 ## 5. Non-Commercial Restriction
 
-The Interface may not be used for commercial purposes without prior written permission from Aeon Governance Lab.
+The Interface may not be used for commercial purposes without prior written permission from Dr Michelle O'Rourke.
 
 Prohibited commercial uses include, but are not limited to:
 
@@ -75,7 +76,7 @@ Prohibited commercial uses include, but are not limited to:
 
 ## 6. No Model-Training or Dataset Reconstruction Without Permission
 
-The Interface, its source code, generated outputs, registry-loading logic, UI structure, documentation, and any bundled or displayed governance materials may not be used to train, fine-tune, evaluate, benchmark, or improve machine learning models or AI systems without prior written permission from Aeon Governance Lab.
+The Interface, its source code, generated outputs, registry-loading logic, UI structure, documentation, and any bundled or displayed governance materials may not be used to train, fine-tune, evaluate, benchmark, or improve machine learning models or AI systems without prior written permission from Dr Michelle O'Rourke.
 
 This restriction includes, but is not limited to:
 
@@ -103,7 +104,7 @@ In the event of conflict between this licence and a more specific licence attach
 
 You may not use the Interface or modified versions of it in a way that:
 
-1. falsely implies endorsement by CAM Initiative, Aeon Governance Lab, or the Office of the Planetary Custodian;
+1. falsely implies endorsement by Dr Michelle O'Rourke, the CAM Initiative, or an associated governance office;
 2. misrepresents unofficial modifications as adopted CAM governance doctrine;
 3. obscures record provenance, source context, confidence state, or lifecycle status;
 4. presents provisional, draft, observation, proposal, or patch-note material as final adopted doctrine unless expressly stated;
@@ -131,7 +132,7 @@ Use of the Interface is at your own risk.
 
 ## 11. Limitation of Liability
 
-To the maximum extent permitted by law, Aeon Governance Lab, CAM Initiative, the Office of the Planetary Custodian, maintainers, contributors, and associated stewards shall not be liable for any claim, damage, loss, liability, or expense arising from use of the Interface, including reliance on displayed governance materials, registry data, source links, generated indexes, or interface outputs.
+To the maximum extent permitted by law, Dr Michelle O'Rourke, maintainers, contributors, and associated stewards shall not be liable for any claim, damage, loss, liability, or expense arising from use of the Interface, including reliance on displayed governance materials, registry data, source links, generated indexes, or interface outputs.
 
 ---
 
@@ -147,7 +148,7 @@ Sections concerning attribution, non-commercial restriction, no model-training, 
 
 ## 13. Permission Requests
 
-Requests for commercial use, model-training use, bulk extraction, paid integration, sublicensing, or other uses outside this licence should be directed to Aeon Governance Lab / CAM Initiative.
+Requests for commercial use, model-training use, bulk extraction, paid integration, sublicensing, or other uses outside this licence should be directed to Dr Michelle O'Rourke.
 
 Written permission is required before any such use.
 
@@ -157,11 +158,11 @@ Written permission is required before any such use.
 
 Where reasonably practicable, use the following attribution for the Interface codebase:
 
-> CAM Governance Interface © Aeon Governance Lab / CAM Initiative. Used under the CAM Governance Interface Licence v1.0.
+> CAM Governance Interface © 2026 Dr Michelle O'Rourke. Used under the CAM Governance Interface Licence v1.0.
 
 For modified versions:
 
-> Based on the CAM Governance Interface © Aeon Governance Lab / CAM Initiative. Modified by [name/entity]. Original project and governance materials remain subject to their respective licences.
+> Based on the CAM Governance Interface © 2026 Dr Michelle O'Rourke. Modified by [name/entity]. Original project and governance materials remain subject to their respective licences.
 
 This attribution notice is not a scholarly citation for CAM instruments, VIGIL records, or archive/DOI releases. Use the applicable CITATION.cff, DOI record, or repository-specific citation guidance for those materials.
 
