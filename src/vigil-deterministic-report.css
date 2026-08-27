@@ -13,7 +13,8 @@
 .vigil-deterministic-report-host .report-section summary,
 .vigil-deterministic-report-host .report-section a,
 .vigil-deterministic-report-host .report-section .vigil-case-empty,
-.vigil-deterministic-report-host footer {
+.vigil-deterministic-report-host footer,
+.vigil-deterministic-report-host .report-reliance-notice p {
   font-size: 0.95rem !important;
   line-height: 1.58 !important;
 }
@@ -151,6 +152,23 @@
   line-height: 1.58 !important;
 }
 
+/* The closing notice is part of the report record, not the ordinary website footer. */
+.vigil-deterministic-report-host .report-reliance-notice {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  padding-bottom: 1.25rem;
+}
+
+.vigil-deterministic-report-host .report-reliance-notice h2 {
+  margin: 0;
+}
+
+.vigil-deterministic-report-host .report-reliance-notice p {
+  margin: 0.55rem 0 0;
+  max-width: 68rem;
+  color: hsl(var(--foreground) / 0.72);
+}
+
 @media (max-width: 760px) {
   .vigil-deterministic-report-host .vigil-evidence-source-meta,
   .vigil-deterministic-report-host .vigil-evidence-review-meta,
@@ -197,7 +215,8 @@
   .vigil-deterministic-report-host .report-section dd,
   .vigil-deterministic-report-host .report-section summary,
   .vigil-deterministic-report-host .report-section a,
-  .vigil-deterministic-report-host footer {
+  .vigil-deterministic-report-host footer,
+  .vigil-deterministic-report-host .report-reliance-notice p {
     font-size: 10.5pt !important;
     line-height: 1.48 !important;
   }
@@ -246,5 +265,12 @@
   .vigil-deterministic-report-host .report-section:last-of-type strong {
     font-size: 10.5pt !important;
     line-height: 1.48 !important;
+  }
+
+  .vigil-deterministic-report-host .report-reliance-notice {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin: 0.45cm 0 0 !important;
+    padding: 0.4cm 0 0 !important;
   }
 }
