@@ -7,6 +7,7 @@ const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx
 const caseLibrary = await readFile(resolve(repoRoot, "src/pages/vigil-cases.tsx"), "utf8");
 const printableReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8");
 const polishCss = await readFile(resolve(repoRoot, "src/polish.css"), "utf8");
+const reportCss = await readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8");
 const taxonomyPanel = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
 const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTaxonomy.ts"), "utf8");
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
@@ -93,10 +94,25 @@ assert.match(printableReport, /report-taxonomy-parity-slot/);
 assert.match(printableReport, /report-taxonomy-reference/);
 assert.match(printableReport, /document\.title = `VIGIL Case File — \$\{compactFailureId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
 
+// The deterministic report has a report-specific typography/layout layer. Evidence
+// is single-column in report mode, source-link icons are removed, taxonomy can flow
+// across pages, and references use the same body scale as the rest of the report.
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
+assert.match(reportCss, /grid-template-columns: 1fr !important/);
+assert.match(reportCss, /\.vigil-taxonomy-record-card \{[\s\S]*break-inside: auto !important/);
+assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
+
 // Printing must flow naturally instead of forcing one stage per page.
 assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 assert.match(polishCss, /break-before: auto !important/);
 assert.match(polishCss, /\.report-legacy-taxonomy/);
 assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 
-console.log("VIGIL Case File taxonomy status, technical detail, references and deterministic PDF parity contract passed");
+// The printed artefact closes with an explicit use/third-party reliance notice.
+assert.match(printableReport, /Use and reliance notice/);
+assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
+assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
+assert.match(reportCss, /\.report-reliance-notice/);
+
+console.log("VIGIL Case File taxonomy status, technical detail, references, deterministic PDF layout and reliance contract passed");
