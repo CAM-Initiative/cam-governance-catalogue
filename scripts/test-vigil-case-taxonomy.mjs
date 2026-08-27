@@ -4,8 +4,10 @@ import { resolve } from "node:path";
 
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
+const caseLibrary = await readFile(resolve(repoRoot, "src/pages/vigil-cases.tsx"), "utf8");
 const taxonomyPanel = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
 const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTaxonomy.ts"), "utf8");
+const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification failureId=\{failure\.id\} raw=\{failure\.raw\}/);
@@ -61,4 +63,26 @@ assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
 assert.match(taxonomyLoader, /index\.families\.map/);
 assert.match(taxonomyLoader, /entry\.file/);
 
-console.log("VIGIL Case File taxonomy wiring and technical-detail contract passed");
+// The Case Files landing page must use the VIGIL-native primary class rather than
+// the retired failure_family projection for display, filtering and sorting.
+assert.match(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
+assert.match(caseLibrary, /failureTypeCounts\(records\)/);
+assert.match(caseLibrary, /canonicalComparisonKey\(failureTypeLabel\(record\)\)/);
+assert.doesNotMatch(caseLibrary, /record\.failure_family/);
+assert.match(taxonomyClassification, /class_name/);
+assert.match(taxonomyClassification, /classification_status/);
+assert.match(taxonomyClassification, /family-only/);
+assert.match(taxonomyClassification, /candidate-new-class/);
+assert.match(taxonomyClassification, /unmapped/);
+assert.match(taxonomyClassification, /deferred/);
+
+// Section 06 must include the canonical taxonomy records that Section 03 resolves.
+assert.match(caseFile, /loadTaxonomyReferenceTargets\(failure\.raw\)/);
+assert.match(caseFile, /taxonomyReferences\.map/);
+assert.match(caseFile, /VIGIL Failure Taxonomy/);
+assert.match(caseFile, /reference\.id} — \{reference\.title/);
+assert.match(taxonomyClassification, /dataset\.sourceRoot/);
+assert.match(taxonomyClassification, /indexEntry\.file/);
+assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
+
+console.log("VIGIL Case File taxonomy wiring, landing labels, technical detail and reference contract passed");
