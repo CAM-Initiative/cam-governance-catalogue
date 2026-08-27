@@ -86,12 +86,19 @@ assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
 
-// The canonical VIGIL-generated full-reference HTML is surfaced from Datasets
-// without maintaining an independently versioned copy in the catalogue repository.
-assert.match(datasets, /VIGIL\.FailureTaxonomy\.FullReference\.html/);
-assert.match(datasets, /Generated reference · VIGIL/);
-assert.match(datasets, /Download HTML reference/);
+// Datasets downloads the generated VIGIL Observatory publication as a real PDF
+// blob instead of navigating users to raw GitHub HTML. The main-branch URL is
+// canonical; the working-branch fallback exists only so branch previews remain testable.
+assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
+assert.match(datasets, /VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference\.pdf/);
+assert.match(datasets, /Download PDF reference/);
+assert.match(datasets, /Technical reference · VIGIL Observatory/);
+assert.match(datasets, /downloadRemoteFile/);
+assert.match(datasets, /response\.blob\(\)/);
+assert.match(datasets, /anchor\.download = filename/);
 assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);
+assert.doesNotMatch(datasets, /Download HTML reference/);
+assert.doesNotMatch(datasets, /VIGIL\.FailureTaxonomy\.FullReference\.html/);
 
 // The deterministic printable projection reuses the full taxonomy renderer,
 // appends the same taxonomy references, and sets an FM-specific document title.
@@ -137,4 +144,4 @@ assert.doesNotMatch(printableReport, /Aeon Governance Lab/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
-console.log("VIGIL Observatory Case File investigation status, taxonomy references/download, deterministic PDF layout and publication-rights contract passed");
+console.log("VIGIL Observatory Case File investigation status, taxonomy PDF download, deterministic report layout and publication-rights contract passed");
