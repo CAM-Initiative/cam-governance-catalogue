@@ -5,14 +5,9 @@ import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE } from "@/lib/vigilRegistry";
-import {
-  canonicalComparisonKey,
-  deriveFailureFamilyCounts,
-  normalizeFailureFamilyLabel,
-  normalizeRecords,
-  type VigilIndexRecord,
-} from "@/lib/vigilPresentation";
+import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
+import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
   | { status: "loading" }
@@ -22,6 +17,8 @@ type PageState =
 type SortKey = "id" | "family" | "severity";
 type SortDirection = "asc" | "desc";
 type SortState = { key: SortKey; direction: SortDirection };
+
+type FailureTypeCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, SU: 5 };
@@ -37,8 +34,20 @@ function caseSummary(record: VigilIndexRecord) {
     ?? "No public failure definition is currently available.";
 }
 
-function familyLabel(record: VigilIndexRecord) {
-  return normalizeFailureFamilyLabel(record.failure_family)?.replace(/\s+Failures$/i, "") ?? record.failure_family ?? "Not classified";
+function failureTypeLabel(record: VigilIndexRecord) {
+  return taxonomyFailureTypeLabel(record.raw);
+}
+
+function failureTypeCounts(records: VigilIndexRecord[]): FailureTypeCount[] {
+  const counts = new Map<string, FailureTypeCount>();
+  for (const record of records) {
+    const label = failureTypeLabel(record);
+    const key = canonicalComparisonKey(label);
+    const existing = counts.get(key);
+    if (existing) existing.count += 1;
+    else counts.set(key, { key, label, count: 1 });
+  }
+  return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
 }
 
 function severityRank(record: VigilIndexRecord) {
@@ -52,7 +61,7 @@ function failureModeCases(records: VigilIndexRecord[]) {
 function compareCases(a: VigilIndexRecord, b: VigilIndexRecord, sort: SortState) {
   let comparison = 0;
   if (sort.key === "severity") comparison = severityRank(a) - severityRank(b);
-  else if (sort.key === "family") comparison = familyLabel(a).localeCompare(familyLabel(b), undefined, { sensitivity: "base" });
+  else if (sort.key === "family") comparison = failureTypeLabel(a).localeCompare(failureTypeLabel(b), undefined, { sensitivity: "base" });
   else comparison = a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
 
   if (comparison === 0) comparison = a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
@@ -99,7 +108,7 @@ export default function VigilCases() {
   }, []);
 
   const records = state.status === "ready" ? state.records : [];
-  const families = useMemo(() => deriveFailureFamilyCounts(records), [records]);
+  const families = useMemo(() => failureTypeCounts(records), [records]);
   const updated = useMemo(() => {
     const dates = values(records, (record) => record.record_last_updated ?? record.publicDisplay.dates.lastUpdated ?? record.date_recorded).sort();
     return dates.length ? dates[dates.length - 1] : undefined;
@@ -107,7 +116,7 @@ export default function VigilCases() {
 
   const filtered = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
-    if (family && canonicalComparisonKey(normalizeFailureFamilyLabel(record.failure_family)) !== family) return false;
+    if (family && canonicalComparisonKey(failureTypeLabel(record)) !== family) return false;
     return true;
   }), [family, records, search]);
 
@@ -165,7 +174,7 @@ export default function VigilCases() {
                   <span>Failure type</span>
                   <select value={family} onChange={(event) => setFamily(event.target.value)}>
                     <option value="">All types ({records.length})</option>
-                    {families.map((entry) => <option key={entry.key} value={entry.key}>{entry.label.replace(/\s+Failures$/i, "")} ({entry.count})</option>)}
+                    {families.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
                   </select>
                 </label>
               </div>
@@ -199,7 +208,7 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Failure Type"><span className="vigil-case-table-text">{familyLabel(record)}</span></CaseCell>
+                        <CaseCell label="Failure Type"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
