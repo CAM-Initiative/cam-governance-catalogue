@@ -209,5 +209,11 @@ export default function EvidenceChainReportPrintable() {
       classificationSlot,
     ) : null}
     {taxonomyReferencePortal}
+    <section className="report-reliance-notice mx-auto max-w-6xl border-t border-border/60 px-4 py-5 text-muted-foreground sm:px-6 md:px-10" aria-labelledby="report-reliance-heading">
+      <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
+      <p className="mt-2">
+        This report is provided for research and informational purposes as a deterministic projection of the corresponding VIGIL Case File. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+      </p>
+    </section>
   </div>;
 }
