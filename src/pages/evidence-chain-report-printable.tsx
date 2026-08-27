@@ -96,7 +96,7 @@ export default function EvidenceChainReportPrintable() {
           });
         }
       } catch {
-        // The deterministic report remains usable even if taxonomy enrichment is unavailable.
+        // The report remains usable even if taxonomy enrichment is unavailable.
       }
     }
     void resolveFailure();
@@ -215,7 +215,7 @@ export default function EvidenceChainReportPrintable() {
         This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
       </p>
       <p className="report-copyright mt-3">
-        © 2026 Dr Michelle O’Rourke. VIGIL Observatory. All rights reserved. Limited quotation, reproduction and redistribution for research, education, criticism, review and other lawful fair-dealing or fair-use purposes is permitted with attribution to the VIGIL Observatory and identification of the relevant record or report. No endorsement, warranty or transfer of ownership is implied.
+        VIGIL materials © 2026 Aeon Governance Lab. Licensed under CC BY-NC-SA 4.0 except where otherwise stated. Dr Michelle Vivian O’Rourke is a named VIGIL author in the canonical citation metadata. Reuse remains subject to the VIGIL Licence and Reuse Terms, and third-party source materials remain subject to their own rights and licences.
       </p>
     </section>
   </div>;
