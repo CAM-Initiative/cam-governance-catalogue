@@ -19,8 +19,6 @@ type ClassificationRef = {
 type ParsedClassification = {
   status?: ClassificationStatus;
   taxonomyVersion?: string;
-  basis?: string;
-  confidence?: string;
   primary: ClassificationRef;
   secondary: ClassificationRef[];
 };
@@ -81,8 +79,6 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   return {
     status,
     taxonomyVersion: text(value.taxonomy_version),
-    basis: text(value.classification_basis),
-    confidence: text(value.classification_confidence),
     primary: {
       familyId: text(primaryFamily?.family_id),
       classId: text(primaryClass?.class_id),
