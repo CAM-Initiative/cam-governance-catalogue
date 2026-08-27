@@ -8,13 +8,17 @@ import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
-  normalizeFailureFamilyLabel,
   normalizeRecords,
   normalizeVigilRecord,
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
+import {
+  loadTaxonomyReferenceTargets,
+  taxonomyFailureTypeLabel,
+  type TaxonomyReferenceTarget,
+} from "@/lib/vigilTaxonomyClassification";
 
 type CaseChain = {
   observations: string[];
@@ -64,13 +68,6 @@ type AffectedSystem = {
   systemType?: string;
   interfaceSurface?: string;
   deploymentContext?: string;
-};
-
-type TaxonomyMeta = {
-  code?: string;
-  name?: string;
-  reference?: string;
-  group?: string;
 };
 
 type DiagnosticProvenance = {
@@ -399,33 +396,6 @@ function dedupeSystems(records: VigilIndexRecord[]) {
   });
 }
 
-function taxonomyCodeFromReference(reference?: string) {
-  return reference?.match(/primary classification\s+([A-Z0-9._-]+)/i)?.[1];
-}
-
-function canonicalCodeFromGroup(group?: string) {
-  const normalized = group?.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-  return normalized ? `OPS.FF.${normalized}` : undefined;
-}
-
-function taxonomyNameFromReference(reference?: string) {
-  if (!reference) return undefined;
-  const afterDash = reference.split("—").slice(1).join("—").trim();
-  if (!afterDash) return undefined;
-  return afterDash.replace(/;\s*primary classification.*$/i, "").trim() || undefined;
-}
-
-function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem): TaxonomyMeta {
-  const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]) ?? learn?.taxonomyReference;
-  const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
-  return {
-    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode ?? taxonomyCodeFromReference(reference) ?? canonicalCodeFromGroup(group),
-    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]) ?? learn?.canonicalFailureName ?? taxonomyNameFromReference(reference),
-    reference,
-    group,
-  };
-}
-
 function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
   if (!record || !isObject(record.raw.diagnostic_provenance)) return undefined;
   const provenance = record.raw.diagnostic_provenance;
@@ -564,6 +534,12 @@ function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
 
+function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
+  if (reference.relationship === "primary") return "Primary taxonomy classification";
+  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
+  return "Family-only taxonomy classification";
+}
+
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
   const [, failureParams] = useRoute("/observatory/failure-modes/:recordId");
@@ -571,6 +547,7 @@ export default function VigilCaseFile() {
   const sourceId = decodeURIComponent(caseParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
+  const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
 
   useEffect(() => setActiveStage("observe"), [sourceId]);
 
@@ -618,19 +595,27 @@ export default function VigilCaseFile() {
   const externalSources = useMemo(() => state.status === "ready" && failure ? dedupeEvidence([failure, ...observations].flatMap(externalEvidenceFor)) : [], [failure, observations, state]);
   const affectedSystems = useMemo(() => failure ? dedupeSystems([failure, ...observations]) : dedupeSystems(observations), [failure, observations]);
 
+  useEffect(() => {
+    let cancelled = false;
+    if (!failure) {
+      setTaxonomyReferences([]);
+      return () => { cancelled = true; };
+    }
+    void loadTaxonomyReferenceTargets(failure.raw)
+      .then((references) => { if (!cancelled) setTaxonomyReferences(references); })
+      .catch(() => { if (!cancelled) setTaxonomyReferences([]); });
+    return () => { cancelled = true; };
+  }, [failure]);
+
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Case File…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = byId.get(state.sourceId);
   const title = failure?.title ?? state.learns[0]?.title ?? sourceRecord?.title ?? "VIGIL Case File";
   const summary = failure?.publicDisplay.finding ?? sourceRecord?.publicDisplay.finding ?? failureDetail?.definition ?? sourceRecord?.summary;
-  const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
+  const family = failure ? taxonomyFailureTypeLabel(failure.raw) : undefined;
   const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated;
   const recordCount = state.records.length + state.learns.length;
-  const learnForFailure = failure
-    ? state.learns.find((learn) => learn.primaryFailureMode?.toUpperCase() === failure.id.toUpperCase()) ?? state.learns[0]
-    : state.learns[0];
-  const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
   const diagnostic = diagnosticProvenance(failure);
   const reportId = failure?.id ?? state.sourceId;
 
@@ -649,7 +634,7 @@ export default function VigilCaseFile() {
   const implementedControls = patches.flatMap(implementationEntries);
   const implementationStates = unique(patches.map(implementationState).filter((value): value is string => Boolean(value)));
   const remainingScopes = unique([...patches.flatMap(remainingScope), ...proposals.flatMap(remainingScope)]);
-  const referenceCount = externalSources.length + state.records.length + state.learns.length;
+  const referenceCount = externalSources.length + taxonomyReferences.length + state.records.length + state.learns.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -812,15 +797,23 @@ export default function VigilCaseFile() {
             {source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}
           </div>
         </li>)}
-        {state.records.map((record, index) => <li key={record.id}>
+        {taxonomyReferences.map((reference, index) => <li key={`${reference.relationship}-${reference.id}`}>
           <span>[{externalSources.length + index + 1}]</span>
+          <div>
+            <strong>{reference.id} — {reference.title}</strong>
+            <p>VIGIL Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</p>
+            <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
+          </div>
+        </li>)}
+        {state.records.map((record, index) => <li key={record.id}>
+          <span>[{externalSources.length + taxonomyReferences.length + index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
             {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
           </div>
         </li>)}
         {state.learns.map((learn, index) => <li key={learn.id}>
-          <span>[{externalSources.length + state.records.length + index + 1}]</span>
+          <span>[{externalSources.length + taxonomyReferences.length + state.records.length + index + 1}]</span>
           <div>
             <strong>{learn.id} — {learn.title}</strong>
             {learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">{learn.githubUrl}</a>}
