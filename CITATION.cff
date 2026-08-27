@@ -1,5 +1,5 @@
 cff-version: 1.3.0
-message: "If you use or cite the CAM Governance Interface, please cite the CAM Initiative umbrella citation and, where applicable, the specific interface repository metadata below."
+message: "If you use or cite the CAM Governance Interface, please cite Dr Michelle O'Rourke and, where applicable, the specific interface repository metadata below."
 
 title: "CAM Governance Interface"
 type: software
@@ -8,10 +8,8 @@ abstract: "The CAM Governance Interface is the public Web UX layer for navigatin
 authors:
 
 * family-names: "O'Rourke"
-  given-names: "Michelle Vivian"
-  name-particle: "Dr."
-* name: "Aeon Governance Lab"
-* name: "CAM Initiative"
+  given-names: "Michelle"
+  name-particle: "Dr"
 
 repository-code: "https://github.com/CAM-Initiative/cam-governance-catalogue"
 url: "https://cam-initiative.github.io/cam-governance-catalogue/"
@@ -33,10 +31,12 @@ keywords:
 * "governance UX"
 
 preferred-citation:
-type: generic
-title: "Caelestis Architecture Model public governance infrastructure"
-authors:
-- name: "CAM Initiative"
-year: 2026
-url: "https://www.cam-initiative.org"
-notes: "Maintained by Aeon Governance Lab. Umbrella citation: CAM Initiative. Caelestis Architecture Model public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org"
+  type: generic
+  title: "CAM Governance Interface"
+  authors:
+    - family-names: "O'Rourke"
+      given-names: "Michelle"
+      name-particle: "Dr"
+  year: 2026
+  url: "https://www.cam-initiative.org"
+  notes: "The CAM Governance Interface is maintained and published by Dr Michelle O'Rourke."
