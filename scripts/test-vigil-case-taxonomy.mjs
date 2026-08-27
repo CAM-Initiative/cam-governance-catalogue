@@ -23,15 +23,11 @@ assert.match(taxonomyPanel, /familyById/);
 assert.match(taxonomyPanel, /Primary structural mechanism/);
 assert.match(taxonomyPanel, /Additional independently evidenced structural mechanisms/);
 
-// Section 03 must use the same calm Case File card grammar as evidence/diagnosis cards,
-// not a bespoke flat taxonomy summary.
 assert.match(taxonomyPanel, /vigil-evidence-card vigil-taxonomy-record-card/);
 assert.match(taxonomyPanel, /vigil-evidence-header/);
 assert.match(taxonomyPanel, /vigil-evidence-source-meta/);
 assert.match(taxonomyPanel, /vigil-evidence-grid/);
 
-// Resolved taxonomy records must expose substantive canonical technical detail,
-// not only IDs/names or a lossy one-line summary.
 for (const detail of [
   "Technical taxonomy record",
   "Governing family invariant",
@@ -63,18 +59,19 @@ assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
 assert.match(taxonomyLoader, /index\.families\.map/);
 assert.match(taxonomyLoader, /entry\.file/);
 
-// The Case Files landing page must use the VIGIL-native primary class rather than
-// the retired failure_family projection for display, filtering and sorting.
-assert.match(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
+// The Case Files landing page deliberately exposes only a binary classification
+// state. It must read the lean registry's taxonomy_classification_summary rather
+// than legacy failure-family fields or requiring full FM detail.
+assert.match(caseLibrary, /taxonomy_classification_summary/);
+assert.match(caseLibrary, /classification_status/);
+assert.match(caseLibrary, /class_id/);
+assert.match(caseLibrary, /return isTaxonomyClassified\(record\) \? "Classified" : "Not Classified"/);
 assert.match(caseLibrary, /failureTypeCounts\(records\)/);
 assert.match(caseLibrary, /canonicalComparisonKey\(failureTypeLabel\(record\)\)/);
+assert.match(caseLibrary, /Classification status/);
+assert.match(caseLibrary, /SortHeading label="Classification"/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
-assert.match(taxonomyClassification, /class_name/);
-assert.match(taxonomyClassification, /classification_status/);
-assert.match(taxonomyClassification, /family-only/);
-assert.match(taxonomyClassification, /candidate-new-class/);
-assert.match(taxonomyClassification, /unmapped/);
-assert.match(taxonomyClassification, /deferred/);
+assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 
 // Section 06 must include the canonical taxonomy records that Section 03 resolves.
 assert.match(caseFile, /loadTaxonomyReferenceTargets\(failure\.raw\)/);
@@ -85,4 +82,4 @@ assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
 
-console.log("VIGIL Case File taxonomy wiring, landing labels, technical detail and reference contract passed");
+console.log("VIGIL Case File taxonomy wiring, binary landing status, technical detail and reference contract passed");
