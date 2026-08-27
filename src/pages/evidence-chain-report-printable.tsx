@@ -1,5 +1,11 @@
+import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRoute } from "wouter";
+import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
+import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { normalizeRecords } from "@/lib/vigilPresentation";
+import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
 
 const REPORT_SECTIONS = [
   { number: "01", label: "Observation" },
@@ -11,6 +17,14 @@ const REPORT_SECTIONS = [
 ] as const;
 
 type IncludedSections = Record<string, boolean>;
+
+type ReportFailure = {
+  id: string;
+  title: string;
+  severity?: string;
+  raw: UnknownRecord;
+  taxonomyReferences: TaxonomyReferenceTarget[];
+};
 
 const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
@@ -31,10 +45,70 @@ function sectionHasSubstantiveContent(section: HTMLElement, number: string) {
   return !(EMPTY_SECTION_MARKERS[number] ?? []).some((marker) => text.includes(marker));
 }
 
+function compactFailureId(id: string) {
+  return id.replace(/^VIGIL-\d{4}-/i, "");
+}
+
+function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
+  if (reference.relationship === "primary") return "Primary taxonomy classification";
+  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
+  return "Family-only taxonomy classification";
+}
+
+function text(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
 export default function EvidenceChainReportPrintable() {
+  const [, params] = useRoute("/observatory/reports/:recordId");
+  const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const hostRef = useRef<HTMLDivElement>(null);
+  const referenceBaseCountRef = useRef(0);
   const [includedSections, setIncludedSections] = useState<IncludedSections>(() => Object.fromEntries(REPORT_SECTIONS.map((section) => [section.number, true])));
   const [defaultsResolved, setDefaultsResolved] = useState(false);
+  const [reportFailure, setReportFailure] = useState<ReportFailure>();
+  const [classificationSlot, setClassificationSlot] = useState<HTMLElement | null>(null);
+  const [referenceList, setReferenceList] = useState<HTMLOListElement | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function resolveFailure() {
+      try {
+        const registry = await loadVigilRegistryRecords();
+        const records = normalizeRecords(registry.records);
+        const source = records.find((record) => record.id.toUpperCase() === sourceId.toUpperCase());
+        if (!source) return;
+        const failureId = source.record_type === "failure_mode"
+          ? source.id
+          : source.publicDisplay.chain.failureModes[0];
+        if (!failureId) return;
+        const failureIndex = records.find((record) => record.id.toUpperCase() === failureId.toUpperCase());
+        if (!failureIndex) return;
+        const raw = await loadVigilRecordDetail(failureIndex.raw);
+        const taxonomyReferences = await loadTaxonomyReferenceTargets(raw);
+        if (!cancelled) {
+          setReportFailure({
+            id: failureIndex.id,
+            title: text(raw.title) ?? failureIndex.title,
+            severity: text(raw.severity) ?? failureIndex.severity,
+            raw,
+            taxonomyReferences,
+          });
+        }
+      } catch {
+        // The deterministic report remains usable even if taxonomy enrichment is unavailable.
+      }
+    }
+    void resolveFailure();
+    return () => { cancelled = true; };
+  }, [sourceId]);
+
+  useEffect(() => {
+    if (!reportFailure) return;
+    const previousTitle = document.title;
+    document.title = `VIGIL Case File — ${compactFailureId(reportFailure.id)} — ${reportFailure.title}`;
+    return () => { document.title = previousTitle; };
+  }, [reportFailure]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -48,6 +122,24 @@ export default function EvidenceChainReportPrintable() {
         const number = sectionNumber(section);
         if (!number) continue;
         next[number] = sectionHasSubstantiveContent(section, number);
+
+        if (number === "03") {
+          const legacyBody = section.children.item(1) as HTMLElement | null;
+          if (legacyBody && !section.querySelector(".report-taxonomy-parity-slot")) {
+            legacyBody.classList.add("report-legacy-taxonomy");
+            const slot = document.createElement("div");
+            slot.className = "report-taxonomy-parity-slot";
+            section.appendChild(slot);
+            setClassificationSlot(slot);
+          }
+        }
+        if (number === "06") {
+          const list = section.querySelector<HTMLOListElement>("ol");
+          if (list) {
+            referenceBaseCountRef.current = list.children.length;
+            setReferenceList(list);
+          }
+        }
       }
       for (const item of REPORT_SECTIONS) if (next[item.number] === undefined) next[item.number] = true;
       setIncludedSections(next);
@@ -77,6 +169,18 @@ export default function EvidenceChainReportPrintable() {
 
   const includedCount = useMemo(() => REPORT_SECTIONS.filter((section) => includedSections[section.number] !== false).length, [includedSections]);
 
+  const taxonomyReferencePortal = referenceList && reportFailure?.taxonomyReferences.length
+    ? createPortal(<>{reportFailure.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
+        <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
+        <span className="min-w-0">
+          <strong>{reference.id} — {reference.title}</strong>
+          <span className="text-muted-foreground"> — VIGIL Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</span>
+          <br />
+          <a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a>
+        </span>
+      </li>)}</>, referenceList)
+    : null;
+
   return <div ref={hostRef} className="vigil-deterministic-report-host">
     <aside className="print:hidden sticky top-0 z-40 border-b border-border bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:px-6 md:px-10" aria-label="PDF section controls">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -100,5 +204,10 @@ export default function EvidenceChainReportPrintable() {
       </div>
     </aside>
     <EvidenceChainReportDeterministic />
+    {classificationSlot && reportFailure ? createPortal(
+      <CaseTaxonomyClassification failureId={reportFailure.id} raw={reportFailure.raw} severityLabel={reportFailure.severity} />,
+      classificationSlot,
+    ) : null}
+    {taxonomyReferencePortal}
   </div>;
 }
