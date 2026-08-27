@@ -126,9 +126,9 @@ assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
-assert.match(printableReport, /VIGIL materials © 2026 Aeon Governance Lab/);
+assert.match(printableReport, /VIGIL materials © 2026 Dr Michelle O'Rourke/);
 assert.match(printableReport, /CC BY-NC-SA 4\.0/);
-assert.match(printableReport, /Dr Michelle Vivian O’Rourke is a named VIGIL author/);
+assert.doesNotMatch(printableReport, /Aeon Governance Lab/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
