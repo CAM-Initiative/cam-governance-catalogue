@@ -6,6 +6,13 @@
   max-width: 72rem !important;
 }
 
+/* The underlying deterministic renderer still carries an internal implementation
+   note in its footer. The public printable wrapper supplies the formal reliance and
+   licence notice, so the internal note must not be rendered. */
+.vigil-deterministic-report-host main.container > footer {
+  display: none !important;
+}
+
 /* One report typography system. */
 .vigil-deterministic-report-host .report-section p:not(.report-label),
 .vigil-deterministic-report-host .report-section li,
@@ -13,7 +20,6 @@
 .vigil-deterministic-report-host .report-section summary,
 .vigil-deterministic-report-host .report-section a,
 .vigil-deterministic-report-host .report-section .vigil-case-empty,
-.vigil-deterministic-report-host footer,
 .vigil-deterministic-report-host .report-reliance-notice p {
   font-size: 0.95rem !important;
   line-height: 1.58 !important;
@@ -169,6 +175,11 @@
   color: hsl(var(--foreground) / 0.72);
 }
 
+.vigil-deterministic-report-host .report-copyright {
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--border) / 0.5);
+}
+
 @media (max-width: 760px) {
   .vigil-deterministic-report-host .vigil-evidence-source-meta,
   .vigil-deterministic-report-host .vigil-evidence-review-meta,
@@ -187,7 +198,8 @@
   .vigil-deterministic-report-host > div > main > nav,
   .vigil-deterministic-report-host footer.mt-auto,
   .vigil-deterministic-report-host aside.print\:hidden,
-  .vigil-deterministic-report-host .print\:hidden {
+  .vigil-deterministic-report-host .print\:hidden,
+  .vigil-deterministic-report-host main.container > footer {
     display: none !important;
   }
 
@@ -215,7 +227,6 @@
   .vigil-deterministic-report-host .report-section dd,
   .vigil-deterministic-report-host .report-section summary,
   .vigil-deterministic-report-host .report-section a,
-  .vigil-deterministic-report-host footer,
   .vigil-deterministic-report-host .report-reliance-notice p {
     font-size: 10.5pt !important;
     line-height: 1.48 !important;
@@ -272,5 +283,9 @@
     page-break-inside: avoid;
     margin: 0.45cm 0 0 !important;
     padding: 0.4cm 0 0 !important;
+  }
+
+  .vigil-deterministic-report-host .report-copyright {
+    padding-top: 0.3cm;
   }
 }
