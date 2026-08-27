@@ -122,41 +122,89 @@ function statusLabel(status?: ClassificationStatus) {
 
 function Meta({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
   if (!value) return null;
-  return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
+  return <div className="vigil-evidence-meta-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
+}
+
+function BulletList({ items }: { items?: string[] }) {
+  if (!items?.length) return null;
+  return <ul className="vigil-learning-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
+}
+
+function RelationshipList({ items }: { items?: { type: string; target_id: string; note?: string }[] }) {
+  if (!items?.length) return null;
+  return <ul className="vigil-learning-list">{items.map((item, index) => <li key={`${item.type}-${item.target_id}-${index}`}><strong>{item.type.replaceAll("_", " ")}</strong> · <span className="is-mono">{item.target_id}</span>{item.note ? ` — ${item.note}` : ""}</li>)}</ul>;
 }
 
 function CanonicalMechanism({ item, label }: { item: ResolvedClassification; label: string }) {
   const family = item.family?.family;
   const classificationClass = item.class;
-  return <article className="vigil-classification-summary vigil-classification-summary-v6">
-    <div className="vigil-classification-topline">
-      <span>{label}</span>
-      {item.confidence && <strong>Confidence <b>{item.confidence}</b></strong>}
-    </div>
-    <div className="vigil-classification-identity">
-      <dl>
+  const unresolved = (item.classId && !classificationClass) || (item.familyId && !family);
+  const title = classificationClass?.name ?? family?.name ?? "Canonical taxonomy mapping";
+  const technicalDefinition = classificationClass?.definition ?? family?.definition;
+  const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
+
+  return <article className="vigil-evidence-card vigil-taxonomy-record-card">
+    <header className="vigil-evidence-header">
+      <div className="vigil-evidence-title-row">
+        <div>
+          <p className="vigil-evidence-kicker">{label}</p>
+          <h3>{title}</h3>
+        </div>
+      </div>
+      <dl className="vigil-evidence-source-meta" aria-label={`${label} taxonomy identity`}>
         <Meta label="Family ID" value={family?.family_id ?? item.familyId} mono />
-        <Meta label="Family" value={family?.name} />
         <Meta label="Family code" value={family?.family_code} mono />
         <Meta label="Class ID" value={classificationClass?.class_id ?? item.classId} mono />
-        <Meta label="Class" value={classificationClass?.name} />
         <Meta label="Class code" value={classificationClass?.class_code} mono />
-        <Meta label="Abstraction" value={classificationClass?.abstraction} />
+        <Meta label="Abstraction" value={classificationClass?.abstraction ?? family?.abstraction} />
+        <Meta label="Confidence" value={item.confidence} />
       </dl>
-    </div>
-    {(classificationClass?.definition || family?.definition) && <section className="vigil-diagnosis-definition">
-      <p className="vigil-library-kicker">Canonical taxonomy definition</p>
-      <p>{classificationClass?.definition ?? family?.definition}</p>
-    </section>}
-    {classificationClass?.plain_english && <section className="vigil-diagnosis-definition">
-      <p className="vigil-library-kicker">Plain-English description</p>
-      <p>{classificationClass.plain_english}</p>
-    </section>}
-    {item.basis && <section className="vigil-diagnosis-definition">
-      <p className="vigil-library-kicker">Classification basis</p>
-      <p>{item.basis}</p>
-    </section>}
-    {((item.classId && !classificationClass) || (item.familyId && !family)) && <p className="vigil-case-empty">The record contains an immutable taxonomy identifier that is not present in the current published VIGIL taxonomy. No legacy taxonomy fallback has been applied.</p>}
+    </header>
+
+    {(plainEnglish || technicalDefinition) && <div className="vigil-evidence-grid">
+      {plainEnglish && <section className="vigil-evidence-column">
+        <h4>Plain-English description</h4>
+        <p>{plainEnglish}</p>
+      </section>}
+      {technicalDefinition && <section className="vigil-evidence-column vigil-evidence-interpretation">
+        <h4>Canonical technical definition</h4>
+        <p>{technicalDefinition}</p>
+      </section>}
+    </div>}
+
+    {item.basis && <div className="vigil-evidence-grid">
+      <section className="vigil-evidence-column">
+        <h4>Why this Case File maps here</h4>
+        <p>{item.basis}</p>
+      </section>
+      {family?.invariant && <section className="vigil-evidence-column vigil-evidence-interpretation">
+        <h4>Governing family invariant</h4>
+        <p>{family.invariant}</p>
+      </section>}
+    </div>}
+
+    {(classificationClass || family) && <details className="vigil-evidence-limitations" open>
+      <summary>Technical taxonomy record</summary>
+      <div className="vigil-evidence-boundary-list">
+        {family && <>
+          <p><strong>Family.</strong> {family.name} <span className="is-mono">({family.family_id})</span></p>
+          <p><strong>Family definition.</strong> {family.definition}</p>
+          <p><strong>Inclusion rule.</strong> {family.inclusion_rule}</p>
+          <p><strong>Exclusion rule.</strong> {family.exclusion_rule}</p>
+          {family.scope?.length ? <section><p className="vigil-library-kicker">Family scope</p><BulletList items={family.scope} /></section> : null}
+        </>}
+
+        {classificationClass && <>
+          {classificationClass.recognition?.required_conditions?.length ? <section><p className="vigil-library-kicker">Recognition conditions</p><BulletList items={classificationClass.recognition.required_conditions} /></section> : null}
+          {classificationClass.exclusions?.length ? <section><p className="vigil-library-kicker">Class exclusions</p><BulletList items={classificationClass.exclusions} /></section> : null}
+          {classificationClass.examples?.length ? <section><p className="vigil-library-kicker">Canonical examples</p><BulletList items={classificationClass.examples} /></section> : null}
+          {classificationClass.relationships?.length ? <section><p className="vigil-library-kicker">Taxonomy relationships</p><RelationshipList items={classificationClass.relationships} /></section> : null}
+          {classificationClass.aliases?.length ? <section><p className="vigil-library-kicker">Aliases</p><BulletList items={classificationClass.aliases} /></section> : null}
+        </>}
+      </div>
+    </details>}
+
+    {unresolved && <p className="vigil-case-empty">The FM contains an immutable taxonomy identifier that is not present in the current published VIGIL taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </article>;
 }
 
@@ -193,25 +241,29 @@ export function CaseTaxonomyClassification({ failureId, raw, severityLabel }: Pr
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
 
-  if (parsed.status !== "classified") return <>
+  if (parsed.status !== "classified") return <div className="vigil-taxonomy-classification-view">
     <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-\d{4}-/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
     <div className="vigil-classification-topline"><span>Taxonomy state</span><strong><b>{statusLabel(parsed.status)}</b></strong></div>
     <ExplicitState status={parsed.status} family={primary} />
-  </>;
+  </div>;
 
   return <div className="vigil-taxonomy-classification-view">
     <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-\d{4}-/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
     <div className="vigil-classification-topline"><span>Taxonomy state</span><strong><b>{statusLabel(parsed.status)}</b></strong></div>
+
     <CanonicalMechanism item={primary} label="Primary structural mechanism" />
+
     {secondaries.length > 0 && <section className="vigil-secondary-classifications">
       <div className="vigil-case-subheading">
         <p className="vigil-library-kicker">Secondary classifications</p>
         <h3>Additional independently evidenced structural mechanisms</h3>
+        <p>These are separate structural mechanisms evidenced in the same Case File. They do not replace or dilute the primary mechanism.</p>
       </div>
-      <div className="vigil-observation-list">
+      <div className="vigil-evidence-list">
         {secondaries.map((item, index) => <CanonicalMechanism key={`${item.classId ?? item.familyId ?? index}`} item={item} label={`Secondary mechanism ${index + 1}`} />)}
       </div>
     </section>}
+
     {parsed.taxonomyVersion && <p className="vigil-stage-source-line">VIGIL Failure Taxonomy {parsed.taxonomyVersion}</p>}
   </div>;
 }
