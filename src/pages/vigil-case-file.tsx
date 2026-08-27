@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
+import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
 import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -680,21 +681,7 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {failure ? <article className="vigil-classification-summary vigil-classification-summary-v6">
-        <div className="vigil-classification-topline">
-          <span>{compactId(failure.id)}</span>
-          <strong>Severity <b>{severityDisplay(failure.severity)}</b></strong>
-        </div>
-        <div className="vigil-classification-identity">
-          <dl>
-            <Field label="Canonical code" value={taxonomy.code} mono />
-            <Field label="Failure type" value={family} />
-            <Field label="Canonical failure name" value={taxonomy.name} />
-            <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
-            <Field label="Failure Mode Corpus Reference" value={taxonomy.reference} />
-          </dl>
-        </div>
-      </article> : <p className="vigil-case-empty">No current taxonomy classification is linked yet. The diagnosis may require a new or revised failure class.</p>}
+      {failure ? <CaseTaxonomyClassification failureId={failure.id} raw={failure.raw} severityLabel={severityDisplay(failure.severity)} /> : <p className="vigil-case-empty">No Failure Mode is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
