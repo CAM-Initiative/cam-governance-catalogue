@@ -111,15 +111,17 @@ assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
 
 // The deterministic report has a report-specific typography/layout layer. Evidence
 // is single-column in report mode, source-link icons are removed, taxonomy can flow
-// across pages, and references use the same body scale as the rest of the report.
+// across pages, references use the same body scale, and printing retains an explicit
+// report-owned horizontal inset so browser margin settings cannot push content to the edge.
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
 assert.match(reportCss, /grid-template-columns: 1fr !important/);
 assert.match(reportCss, /\.vigil-taxonomy-record-card \{[\s\S]*break-inside: auto !important/);
 assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
+assert.match(reportCss, /padding-inline: 0\.75cm !important/);
 
 // The internal deterministic-projection handoff footer must never appear in the
-// public report; the printable wrapper supplies the formal reliance/licence close.
+// public report; the printable wrapper supplies the formal reliance/copyright close.
 assert.match(reportCss, /main\.container > footer \{\s*display: none !important;/s);
 assert.doesNotMatch(printableReport, /deterministic print projection of the corresponding VIGIL Case File/);
 
@@ -129,19 +131,19 @@ assert.match(polishCss, /break-before: auto !important/);
 assert.match(polishCss, /\.report-legacy-taxonomy/);
 assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 
-// The printed artefact closes with an explicit use/third-party reliance notice
-// and treats the compiled report as a protected publication distinct from the
-// separately reusable underlying VIGIL Observatory content.
+// The printed artefact closes with an explicit use/third-party reliance notice and
+// a simple copyright notice. It must not imply that permission is required to use,
+// reproduce or redistribute the report.
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
-assert.match(printableReport, /Copyright © 2026 Dr Michelle O'Rourke\. All rights reserved/);
-assert.match(printableReport, /VIGIL Observatory Case File report may be cited and quoted with appropriate attribution/);
-assert.match(printableReport, /Reproduction or redistribution of the report in whole or substantial part requires permission/);
-assert.match(printableReport, /Underlying VIGIL Observatory material remains subject to the VIGIL Observatory Licence and Reuse Terms/);
+assert.match(printableReport, /Copyright © 2026 Dr Michelle O'Rourke\./);
+assert.doesNotMatch(printableReport, /All rights reserved/);
+assert.doesNotMatch(printableReport, /requires permission/);
+assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
 assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);
 assert.doesNotMatch(printableReport, /Aeon Governance Lab/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
-console.log("VIGIL Observatory Case File investigation status, taxonomy PDF download, deterministic report layout and publication-rights contract passed");
+console.log("VIGIL Observatory Case File investigation status, taxonomy PDF download, deterministic report layout and copyright contract passed");
