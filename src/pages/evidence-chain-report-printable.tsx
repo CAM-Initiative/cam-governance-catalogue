@@ -215,7 +215,7 @@ export default function EvidenceChainReportPrintable() {
         This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
       </p>
       <p className="report-copyright mt-3">
-        Copyright © 2026 Dr Michelle O'Rourke. All rights reserved. This VIGIL Observatory Case File report may be cited and quoted with appropriate attribution. Reproduction or redistribution of the report in whole or substantial part requires permission. Underlying VIGIL Observatory material remains subject to the VIGIL Observatory Licence and Reuse Terms, and third-party source materials remain subject to their respective rights and licences.
+        Copyright © 2026 Dr Michelle O'Rourke.
       </p>
     </section>
   </div>;

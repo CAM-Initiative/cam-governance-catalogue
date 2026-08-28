@@ -8,7 +8,7 @@
 
 /* The underlying deterministic renderer still carries an internal implementation
    note in its footer. The public printable wrapper supplies the formal reliance and
-   licence notice, so the internal note must not be rendered. */
+   copyright notice, so the internal note must not be rendered. */
 .vigil-deterministic-report-host main.container > footer {
   display: none !important;
 }
@@ -190,7 +190,15 @@
 
 @media print {
   @page {
-    margin: 1.35cm 1.45cm;
+    margin: 1.35cm 1.2cm;
+  }
+
+  /* Keep a report-owned printable inset even when the browser's print settings
+     use minimal page margins. This prevents cards, rules and references from
+     running visually into the paper edge. */
+  .vigil-deterministic-report-host {
+    box-sizing: border-box;
+    padding-inline: 0.75cm !important;
   }
 
   /* The normal website shell is useful on screen, not inside a formal report. */
