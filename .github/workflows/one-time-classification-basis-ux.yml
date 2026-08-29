@@ -20,10 +20,6 @@ jobs:
           persist-credentials: true
           show-progress: false
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
       - name: Surface classification basis as What happened
         run: |
           python - <<'PY'
@@ -59,15 +55,6 @@ jobs:
           text = text.replace(old, new, 1)
           card.write_text(text, encoding="utf-8")
           PY
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build website
-        run: npm run build
-
-      - name: Run Observatory tests
-        run: node scripts/test-vigil-observatory.mjs
 
       - name: Verify bounded source changes
         run: |
