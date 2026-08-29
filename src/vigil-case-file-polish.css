@@ -141,6 +141,34 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   color: hsl(var(--foreground) / 0.82) !important;
 }
 
+/* The taxonomy classification basis is public explanatory copy, not loose metadata.
+   Present it as the full-width opening reading panel before source facts and interpretation. */
+.vigil-case-file-page .vigil-evidence-what-happened {
+  margin: 0 1.25rem 1rem;
+  padding: 1.05rem 1.1rem 1.15rem;
+  border-radius: 0.78rem;
+  background: hsl(var(--card) / 0.4);
+}
+
+.vigil-case-file-page .vigil-evidence-what-happened h4 {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: normal;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-case-file-page .vigil-evidence-what-happened p {
+  margin: 0.62rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.98rem;
+  line-height: 1.66;
+  color: hsl(var(--foreground) / 0.9);
+}
+
 @media (max-width: 820px) {
   .vigil-case-file-page .vigil-diagnosis-mechanism-pair {
     grid-template-columns: 1fr;
