@@ -1,0 +1,91 @@
+name: One-time classification basis UX repair
+
+on:
+  push:
+    branches:
+      - agent/case-reference-bibliography-fix
+    paths:
+      - ".github/workflows/one-time-classification-basis-ux.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/case-reference-bibliography-fix
+          persist-credentials: true
+          show-progress: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Surface classification basis as What happened
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          lib = Path("src/lib/vigilPublicDisplay.ts")
+          text = lib.read_text(encoding="utf-8")
+          old = '''  evidenceModalities: string[];\n  confirmedEvidence?: string;\n  interpretiveConclusion?: string;'''
+          new = '''  evidenceModalities: string[];\n  whatHappened?: string;\n  confirmedEvidence?: string;\n  interpretiveConclusion?: string;'''
+          if text.count(old) != 1:
+              raise SystemExit(f"Refusing lib patch: expected one PublicEvidenceCard anchor, found {text.count(old)}")
+          text = text.replace(old, new, 1)
+
+          old = '''  const recordReviewer = firstText(record, [\n    "interpretive_provenance.current_ai_review.reviewer_model",\n    "interpretive_provenance.current_ai_review.reviewer_platform",\n  ]);\n\n  const evidence = sources.map((source, index): PublicEvidenceCard => {'''
+          new = '''  const recordReviewer = firstText(record, [\n    "interpretive_provenance.current_ai_review.reviewer_model",\n    "interpretive_provenance.current_ai_review.reviewer_platform",\n  ]);\n  const classificationBasis = firstText(record, ["taxonomy_classification.classification_basis"]);\n\n  const evidence = sources.map((source, index): PublicEvidenceCard => {'''
+          if text.count(old) != 1:
+              raise SystemExit(f"Refusing lib patch: expected one derive anchor, found {text.count(old)}")
+          text = text.replace(old, new, 1)
+
+          old = '''      evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),\n      confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"]),'''
+          new = '''      evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),\n      whatHappened: index === 0 ? classificationBasis : undefined,\n      confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"]),'''
+          if text.count(old) != 1:
+              raise SystemExit(f"Refusing lib patch: expected one evidence return anchor, found {text.count(old)}")
+          text = text.replace(old, new, 1)
+          lib.write_text(text, encoding="utf-8")
+
+          card = Path("src/components/vigil/EvidenceCard.tsx")
+          text = card.read_text(encoding="utf-8")
+          old = '''      <div className="vigil-evidence-grid">\n        {evidence.confirmedEvidence && <section className="vigil-evidence-column">'''
+          new = '''      {evidence.whatHappened && <section className="vigil-evidence-what-happened">\n        <h4>What happened</h4>\n        <p>{evidence.whatHappened}</p>\n      </section>}\n\n      <div className="vigil-evidence-grid">\n        {evidence.confirmedEvidence && <section className="vigil-evidence-column">'''
+          if text.count(old) != 1:
+              raise SystemExit(f"Refusing EvidenceCard patch: expected one grid anchor, found {text.count(old)}")
+          text = text.replace(old, new, 1)
+          card.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build website
+        run: npm run build
+
+      - name: Run Observatory tests
+        run: node scripts/test-vigil-observatory.mjs
+
+      - name: Verify bounded source changes
+        run: |
+          changed="$(git diff --name-only)"
+          expected="src/components/vigil/EvidenceCard.tsx
+          src/lib/vigilPublicDisplay.ts"
+          if [ "$changed" != "$expected" ]; then
+            echo "Unexpected changed files:"
+            printf '%s\n' "$changed"
+            exit 1
+          fi
+          grep -q 'What happened' src/components/vigil/EvidenceCard.tsx
+          grep -q 'taxonomy_classification.classification_basis' src/lib/vigilPublicDisplay.ts
+
+      - name: Commit UX repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/vigil/EvidenceCard.tsx src/lib/vigilPublicDisplay.ts
+          git commit -m "Surface taxonomy classification basis in case evidence"
+          git push
