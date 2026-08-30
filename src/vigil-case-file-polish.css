@@ -60,25 +60,38 @@
   line-height: 1.6;
 }
 
-/* Diagnosis mechanism fields use the same soft reading-panel grammar as the taxonomy prototype. */
-.vigil-case-file-page .vigil-diagnosis-mechanism {
+/* Diagnosis uses the same dossier-card grammar as Observation and Evidence Source:
+   one bordered reading surface with soft internal panels instead of table-like cells. */
+.vigil-case-file-page .vigil-diagnosis-view {
   display: grid;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
-.vigil-case-file-page .vigil-diagnosis-definition,
-.vigil-case-file-page .vigil-diagnosis-mechanism-pair > section {
-  padding: 1.05rem 1.15rem;
-  border-radius: 0.78rem;
-  background: hsl(var(--card) / 0.36);
+.vigil-case-file-page .vigil-diagnosis-mechanism,
+.vigil-case-file-page .vigil-diagnosis-grid {
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
-.vigil-case-file-page .vigil-diagnosis-definition > p:last-child,
-.vigil-case-file-page .vigil-diagnosis-mechanism-pair > section > p:last-child {
-  margin: 0.48rem 0 0;
+.vigil-case-file-page .vigil-diagnosis-mechanism {
+  display: grid;
+  gap: 0;
+  margin-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-diagnosis-definition {
+  padding: 1.25rem var(--vigil-case-card-pad) 1.1rem;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vigil-case-file-page .vigil-diagnosis-definition > p:last-child {
+  margin: 0.62rem 0 0;
   font-size: 0.98rem;
-  line-height: 1.65;
+  line-height: 1.66;
   color: hsl(var(--foreground) / 0.9);
 }
 
@@ -86,6 +99,46 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
+  padding: 0 1.25rem 1.1rem;
+}
+
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair > section,
+.vigil-case-file-page .vigil-diagnosis-grid > section {
+  min-width: 0;
+  padding: 1.05rem 1.1rem 1.15rem;
+  border: 0;
+  border-radius: 0.78rem;
+  background: hsl(var(--card) / 0.33);
+}
+
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair > section > p:last-child,
+.vigil-case-file-page .vigil-diagnosis-grid > section > p:last-child {
+  margin: 0.62rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.66;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-diagnosis-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.vigil-case-file-page .vigil-diagnosis-targets {
+  padding: 1rem 1.15rem 1.05rem;
+  border: 0;
+  border-left: 4px solid hsl(var(--muted-foreground) / 0.42);
+  border-radius: 0.7rem;
+  background: hsl(var(--card) / 0.38);
+}
+
+.vigil-case-file-page .vigil-diagnosis-targets > p:last-child,
+.vigil-case-file-page .vigil-diagnosis-targets li {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground) / 0.88);
 }
 
 /* The homepage internal and external resource titles are one typographic system. */
@@ -130,7 +183,9 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 /* Diagnosis reading headings match the evidence-card reading headings. */
-.vigil-case-file-page .vigil-diagnosis-mechanism-pair .vigil-library-kicker {
+.vigil-case-file-page .vigil-diagnosis-mechanism-pair .vigil-library-kicker,
+.vigil-case-file-page .vigil-diagnosis-grid .vigil-library-kicker,
+.vigil-case-file-page .vigil-diagnosis-targets .vigil-library-kicker {
   margin: 0;
   font-family: var(--app-font-sans) !important;
   font-size: 0.92rem !important;
@@ -170,7 +225,8 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 @media (max-width: 820px) {
-  .vigil-case-file-page .vigil-diagnosis-mechanism-pair {
+  .vigil-case-file-page .vigil-diagnosis-mechanism-pair,
+  .vigil-case-file-page .vigil-diagnosis-grid {
     grid-template-columns: 1fr;
   }
 
