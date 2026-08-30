@@ -27,3 +27,9 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
   border-color: hsl(var(--primary) / 0.34);
   background: hsl(var(--muted) / 0.68);
 }
+
+/* Deterministic Case File report section headings should read as part of the
+ * same parchment container rather than as a contrasting white strip. */
+.vigil-deterministic-report-host .report-section > header {
+  background: transparent;
+}
