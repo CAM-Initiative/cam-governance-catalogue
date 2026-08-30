@@ -42,6 +42,7 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
           <MetaField label="Publisher" value={evidence.publisher} />
           <MetaField label="Published" value={evidence.date} />
           <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
+          <MetaField label="Evidence confidence" value={evidence.confidence ? titleizeValue(evidence.confidence) : undefined} />
         </dl>
       </header>
 

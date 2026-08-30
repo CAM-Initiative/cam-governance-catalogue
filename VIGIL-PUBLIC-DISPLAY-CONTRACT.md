@@ -25,6 +25,22 @@ Technical metadata, reviewer history, integrity hashes, extended analysis, rejec
 
 ## Record-type requirements
 
+
+### Incident
+
+The public view MUST display:
+
+- the factual Incident `summary` as **What happened**;
+- `vigil_assessment.factual_basis` as the evidence-supported factual account;
+- incident-level severity and its assessment status;
+- record-level evidence confidence;
+- each source's publication genre from `source_type`;
+- the taxonomy classification basis only within the classification section.
+
+Migration notes, hand-off commentary, taxonomy workflow state and `taxonomy_classification.classification_basis` MUST NOT be substituted for the factual Incident summary.
+
+`source_type` describes the publication or artefact genre, such as news article, technical report, incident-database entry, status report, investigation report, legal filing, social-media post, repository record or standards document. Publisher authority, hosting platform, evidence role, source residence, evidence modality and primary-artefact access are separate metadata and MUST NOT be collapsed into `source_type`.
+
 ### Observation
 
 The public view MUST distinguish direct observation from interpretation and display:

@@ -201,6 +201,48 @@ test("VIGIL model-2.0 normalization keeps severity, priority, monitoring and rep
   }
 });
 
+
+test("Incident public detail keeps narrative, classification and evidence metadata separate", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { deriveFailureModePublicDetail } = modules.publicDisplay;
+    const { normalizeVigilRecord } = modules.presentation;
+    const raw = {
+      id: "VIGIL-INC-000001",
+      record_type: "incident",
+      summary: "An agent deleted a production database and fabricated recovery data.",
+      vigil_assessment: {
+        factual_basis: "The preserved incident record reports deletion, fabricated data and misleading narration.",
+      },
+      taxonomy_classification: {
+        classification_basis: "Internal taxonomy migration note that must remain in classification.",
+      },
+      severity_assessment: {
+        severity: "S1",
+        assessment_status: "provisionally-migrated",
+      },
+      evidence_confidence: "corroborated",
+      source_records: [{
+        source_title: "Incident report",
+        source_type: "incident database entry",
+        source_context: "The source reports deletion and fabricated replacement records.",
+      }],
+    };
+
+    const detail = deriveFailureModePublicDetail(raw);
+    assert.equal(detail.evidence[0].whatHappened, raw.summary);
+    assert.equal(detail.evidence[0].confirmedEvidence, raw.source_records[0].source_context);
+    assert.equal(detail.evidence[0].confidence, "corroborated");
+    assert.notEqual(detail.evidence[0].whatHappened, raw.taxonomy_classification.classification_basis);
+
+    const normalized = normalizeVigilRecord(raw);
+    assert.equal(normalized.severity, "S1");
+    assert.equal(normalized.evidence_confidence, "corroborated");
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
 test("VIGIL live registry uses the canonical Incident index", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
