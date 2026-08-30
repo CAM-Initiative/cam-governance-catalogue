@@ -892,7 +892,8 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
     "interpretive_provenance.current_ai_review.reviewer_model",
     "interpretive_provenance.current_ai_review.reviewer_platform",
   ]);
-  const classificationBasis = firstText(record, ["taxonomy_classification.classification_basis"]);
+  const incidentWhatHappened = firstText(record, ["summary"]);
+  const incidentFactualBasis = firstText(record, ["vigil_assessment.factual_basis"]);
 
   const evidence = sources.map((source, index): PublicEvidenceCard => {
     const limitations = collectLists(source, [
@@ -932,8 +933,9 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
         "direct_review",
       ]),
       evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),
-      whatHappened: index === 0 ? classificationBasis : undefined,
-      confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"]),
+      whatHappened: index === 0 ? incidentWhatHappened : undefined,
+      confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"])
+        ?? (index === 0 ? incidentFactualBasis : undefined),
       interpretiveConclusion: firstText(source, ["interpretive_conclusion", "relevance_note", "interpretation"]),
       evidenceBoundary: limitations,
       confidence: firstText(source, ["evidence_confidence", "confidence"]) ?? firstText(record, ["evidence_confidence", "failure_classification.confidence"]),

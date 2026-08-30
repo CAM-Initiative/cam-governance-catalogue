@@ -741,7 +741,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     sectors: arrayFrom(getNestedField(record, ["jurisdiction_summary.sector", "jurisdiction_summary.sectors", "sector", "sectors", "ecosystem_area"])),
     failure_family: getNestedField(record, ["classification_summary.failure_family", "failure_family"]),
     failure_subtype: getNestedField(record, ["classification_summary.failure_subtype", "failure_subtype", "failure_mode"]),
-    severity: getNestedField(record, ["classification_summary.severity", "failure_classification.severity", "severity"]),
+    severity: getNestedField(record, ["severity_assessment.severity", "severity_assessment_summary.severity", "classification_summary.severity", "failure_classification.severity", "severity"]),
     likelihood: getNestedField(record, ["classification_summary.likelihood", "likelihood"]),
     triage_priority: getNestedField(record, ["triage_summary.triage_priority", "triage.triage_priority", "triage_priority"]),
     triage_status: getNestedField(record, ["triage_summary.triage_status", "triage.triage_status", "triage_status"]),
