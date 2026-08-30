@@ -10,14 +10,14 @@ const deprecatedFileNames = [
   ["VIGIL", "Closed" + "Records", "json"].join("."),
   ["VIGIL", "Records", "Index", "json"].join("."),
   ["VIGIL", "Records", "json"].join("."),
+  ["VIGIL", "Failures", "Index", "json"].join("."),
 ];
 const deprecatedFolders = [
-  ["vigil", "records", "observations", ""].join("/"),
   ["vigil", "records", "proposals", ""].join("/"),
   ["vigil", "records", "failures", ""].join("/"),
 ];
-const canonicalRegistryUrl = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Registry.Index.json";
 const canonicalIncidentRegistryUrl = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json";
+const canonicalIncidentRegistryBlobUrl = "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -33,28 +33,23 @@ for (const file of filesToScan) {
 }
 
 const sourceConfig = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
-assert(sourceConfig.vigil.registry_index_url === canonicalRegistryUrl, "VIGIL registry source must use the default-branch master index URL");
-assert(sourceConfig.vigil.github_blob_url === "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Registry.Index.json", "VIGIL GitHub blob URL must point to the default-branch master index");
+assert(sourceConfig.vigil.registry_index_url === canonicalIncidentRegistryUrl, "VIGIL registry source must use the default-branch Incident index URL");
+assert(sourceConfig.vigil.github_blob_url === canonicalIncidentRegistryBlobUrl, "VIGIL GitHub blob URL must point to the default-branch Incident index");
 assert(sourceConfig.vigil.incident_registry_index_url === canonicalIncidentRegistryUrl, "VIGIL Incident source must use the default-branch Incident index URL");
-assert(sourceConfig.vigil.incident_registry_github_blob_url === "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json", "VIGIL Incident GitHub blob URL must point to the default-branch Incident index");
+assert(sourceConfig.vigil.incident_registry_github_blob_url === canonicalIncidentRegistryBlobUrl, "VIGIL Incident GitHub blob URL must point to the default-branch Incident index");
 
 const loader = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
 assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Live registry fetch should use cache busting");
 assert(loader.includes("cacheBustUrl(VIGIL_INCIDENT_REGISTRY_URL)"), "Incident registry fetch should use cache busting");
-assert(loader.includes("Array.isArray(registry.records)"), "Loader should support a combined records array");
-assert(loader.includes("registryPointerEntries(registry.registries)"), "Loader should support child registry pointers");
-assert(loader.includes("pointer.raw_url"), "Loader should fetch child registries from raw_url when available");
+assert(loader.includes("Array.isArray(registry.records)"), "Loader should support the Incident registry records array");
 assert(loader.includes("record.github_blob_url"), "Source links should prefer registry github_blob_url");
 assert(loader.includes("record.raw_url"), "Raw links should prefer registry raw_url");
 assert(loader.includes("${record.path}"), "Fallback links should use record.path");
 assert(!loader.includes("record_type") || !loader.includes("/${record_type}"), "Fallback links must not be built from record_type plus id");
 
 const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
-for (const label of ["Failure Modes", "Observations", "Proposals", "Patch Notes"]) {
-  assert(page.includes(label), `Record type filter should expose ${label}`);
-}
 assert(page.includes("record.record_state"), "State filters should read record_state");
 assert(page.includes("VIGIL registry could not be loaded from the live registry source"), "UI should show a clear live-registry failure message");
 assert((page + loader).includes("Showing cached fallback registry data"), "UI should show a cached fallback message");
 
-console.log("VIGIL registry source validation passed.");
+console.log("VIGIL Incident registry source validation passed.");
