@@ -6,6 +6,7 @@ import {
   loadExternalRequirements,
   loadExternalSources,
 } from "@/lib/vigilExternalKnowledge";
+import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 
 const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
@@ -15,6 +16,7 @@ const VIGIL_TAXONOMY_PDF_URLS = [
 ];
 
 type DatasetState = {
+  caseFilesCount?: number;
   sourcesCount?: number;
   clausesCount?: number;
   loaded: boolean;
@@ -96,10 +98,15 @@ export default function Datasets() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadExternalSources(), loadExternalRequirements()]).then(([sources, clauses]) => {
+    Promise.all([
+      loadVigilIncidentRecords().catch(() => undefined),
+      loadExternalSources(),
+      loadExternalRequirements(),
+    ]).then(([incidents, sources, clauses]) => {
       if (cancelled) return;
       setState({
         loaded: true,
+        caseFilesCount: incidents?.records.length,
         sourcesCount: sources.status === "ready"
           ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
           : undefined,
@@ -109,7 +116,13 @@ export default function Datasets() {
     return () => { cancelled = true; };
   }, []);
 
-  const status = !state.loaded
+  const caseFilesStatus = !state.loaded
+    ? "Loading dataset"
+    : state.caseFilesCount === undefined
+      ? "Dataset unavailable"
+      : `${state.caseFilesCount.toLocaleString()} Case Files`;
+
+  const standardsStatus = !state.loaded
     ? "Loading dataset"
     : state.sourcesCount === undefined
       ? "Dataset unavailable"
@@ -149,9 +162,19 @@ export default function Datasets() {
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
+            title="VIGIL Observatory Case Files"
+            description="The canonical machine-readable Incident index behind the public VIGIL Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL."
+            status={caseFilesStatus}
+            beta
+            downloadHref={VIGIL_INCIDENT_REGISTRY_URL}
+            downloadLabel="Open JSON index"
+            icon={<Library />}
+          />
+
+          <DatasetCard
             title="AI Governance Standards"
             description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources."
-            status={status}
+            status={standardsStatus}
             beta
             onDownload={downloadDataset}
             downloading={downloadState === "working"}
