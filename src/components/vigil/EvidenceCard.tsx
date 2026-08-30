@@ -58,7 +58,7 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
         </section>}
 
         {(evidence.interpretiveConclusion || hasReviewMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
-          <h4>VIGIL interpretation</h4>
+          <h4>Evidence relevance</h4>
           {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
           {hasReviewMeta && <dl className="vigil-evidence-review-meta" aria-label="VIGIL review details">
             <MetaField label="Reviewer" value={evidence.reviewer} />
