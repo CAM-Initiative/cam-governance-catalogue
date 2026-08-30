@@ -936,7 +936,7 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
       whatHappened: index === 0 ? incidentWhatHappened : undefined,
       confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"])
         ?? (index === 0 ? incidentFactualBasis : undefined),
-      interpretiveConclusion: firstText(source, ["interpretive_conclusion", "relevance_note", "interpretation"]),
+      interpretiveConclusion: firstText(source, ["interpretive_reliance", "interpretive_conclusion", "relevance_note", "interpretation"]),
       evidenceBoundary: limitations,
       confidence: firstText(source, ["evidence_confidence", "confidence"]) ?? firstText(record, ["evidence_confidence", "failure_classification.confidence"]),
       reviewer: sourceReviewer ?? recordReviewer,
