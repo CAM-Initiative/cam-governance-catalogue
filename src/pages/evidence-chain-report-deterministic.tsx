@@ -3,7 +3,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
   normalizeFailureFamilyLabel,
   normalizeRecords,
@@ -444,26 +444,23 @@ export default function EvidenceChainReportDeterministic() {
     let cancelled = false;
     async function load() {
       try {
-        const registry = await loadVigilRegistryRecords();
+        const registry = await loadVigilIncidentRecords();
         const normalized = normalizeRecords(registry.records);
         const indexById = new Map(normalized.map((record) => [record.id, record]));
-        const rawById = new Map(registry.records.map((raw) => [recordId(raw), raw]).filter((entry): entry is [string, UnknownRecord] => Boolean(entry[0])));
         const sourceIndex = indexById.get(sourceId);
-        const sourceRaw = rawById.get(sourceId);
-        if (!sourceIndex && !sourceRaw) throw new Error(`The canonical VIGIL registry does not contain ${sourceId}.`);
+        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
 
-        const sourceRecord = sourceIndex ? await detailedRecord(sourceIndex) : undefined;
-        const anchorFailureIds = failureAnchors(sourceId, sourceRecord, normalized, registry.records);
-        if (!anchorFailureIds.length) throw new Error(`No authoritative failure mode could be resolved for ${sourceId}.`);
-        const chain = reconstructCaseChain(sourceId, sourceRecord, anchorFailureIds, normalized, registry.records);
-
-        const recordDetails: VigilIndexRecord[] = [];
-        for (const id of [...chain.observations, ...chain.failureModes, ...chain.proposals, ...chain.patches]) {
-          const index = indexById.get(id);
-          if (index) recordDetails.push(id === sourceRecord?.id ? sourceRecord : await detailedRecord(index));
-        }
-        const learns = (await Promise.all(chain.learns.map((id) => rawById.get(id)).filter((raw): raw is UnknownRecord => Boolean(raw)).map(detailedLearn))).filter((item): item is LearnItem => Boolean(item));
-        if (!cancelled) setState({ status: "ready", sourceId, anchorFailureIds, records: recordDetails, learns, chain, generatedAt: new Date().toISOString() });
+        const incident = await detailedRecord(sourceIndex);
+        const chain: CaseChain = { observations: [], failureModes: [incident.id], proposals: [], patches: [], learns: [] };
+        if (!cancelled) setState({
+          status: "ready",
+          sourceId,
+          anchorFailureIds: [incident.id],
+          records: [incident],
+          learns: [],
+          chain,
+          generatedAt: new Date().toISOString(),
+        });
       } catch (error) {
         if (!cancelled) setState({ status: "error", message: (error as Error).message });
       }
@@ -489,7 +486,9 @@ export default function EvidenceChainReportDeterministic() {
   const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
   const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
   const existingCoverage = coverageItems(failure);
-  const governanceGap = failure ? firstText(failure.raw, ["governance_gap"]) : undefined;
+  const governanceGap = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation", "governance_gap"]) : undefined;
+  const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
+  const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const repairHypothesis = failure ? firstText(failure.raw, ["repair_hypothesis"]) : undefined;
   const requiredChanges = unique(proposals.map(proposalRequiredChange).filter((value): value is string => Boolean(value)));
   if (!requiredChanges.length && repairHypothesis) requiredChanges.push(repairHypothesis);
@@ -500,7 +499,7 @@ export default function EvidenceChainReportDeterministic() {
   const targetLocations = unique(proposals.flatMap(proposalTargets));
   const responseSummaries = unique(patches.map(patchResponseSummary).filter((value): value is string => Boolean(value)));
   const title = failure?.title ?? learnForFailure?.title ?? "VIGIL Case File";
-  const summary = failure?.publicDisplay.finding ?? failureDetail?.definition ?? failure?.summary;
+  const summary = failure?.summary ?? failure?.publicDisplay.finding;
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -521,7 +520,7 @@ export default function EvidenceChainReportDeterministic() {
         <h1 className="mt-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h1>
         {summary && <p className="mt-3 max-w-4xl text-base leading-relaxed text-foreground/80">{summary}</p>}
         <dl className="mt-5 grid gap-3 border-t border-border/60 pt-4 sm:grid-cols-3">
-          <Field label="Case file" value={failure?.id ?? state.sourceId} />
+          <Field label="Incident" value={failure?.id ?? state.sourceId} />
           <Field label="Severity" value={failure?.severity ? titleizeValue(failure.severity) : undefined} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
@@ -555,10 +554,10 @@ export default function EvidenceChainReportDeterministic() {
 
         <Stage number="02" label="Diagnosis">
           {failure ? <div className="space-y-4">
-            <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Failure definition</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{failureDetail?.definition ?? failure.publicDisplay.finding ?? failure.summary}</p></section>
+            <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceGap ?? failure.publicDisplay.finding ?? failure.summary}</p></section>
             <div className="grid gap-4 sm:grid-cols-2">
-              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Recognition threshold</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p></section>
-              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p></section>
+              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <section><p className="report-label">Existing coverage</p>{existingCoverage.length ? <div className="mt-2 space-y-2">{existingCoverage.map((coverage) => <div key={coverage.key} className="rounded-lg border border-border/70 bg-white/50 p-3"><strong>{[coverage.instrument, coverage.section].filter(Boolean).join(" · ") || "Existing corpus coverage"}</strong>{coverage.coverageType && <p className="mt-1 text-sm text-cam-gold">{coverage.coverageType}</p>}{coverage.relevance && <p className="mt-1 text-sm leading-relaxed text-foreground/80">{coverage.relevance}</p>}</div>)}</div> : <p className="mt-2 text-base text-muted-foreground">No explicit existing-coverage assessment is stated.</p>}</section>
@@ -577,7 +576,7 @@ export default function EvidenceChainReportDeterministic() {
               <Field label="Failure type" value={family} />
               <Field label="Canonical failure name" value={taxonomy.name} />
               <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
-              <Field label="Failure Mode Corpus Reference" value={taxonomy.reference} />
+              <Field label="Taxonomy reference" value={taxonomy.reference} />
               <Field label="Severity" value={failure.severity ? titleizeValue(failure.severity) : undefined} />
             </dl>
           </article> : <Empty>No current taxonomy classification is linked.</Empty>}

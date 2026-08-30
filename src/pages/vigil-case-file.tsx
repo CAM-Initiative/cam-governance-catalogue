@@ -6,7 +6,7 @@ import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
-import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
   normalizeRecords,
   normalizeVigilRecord,
@@ -483,7 +483,7 @@ function remainingScope(record: VigilIndexRecord) {
 }
 
 function compactId(id: string) {
-  return id.replace(/^VIGIL-\d{4}-/i, "");
+  return id.replace(/^VIGIL-(?:\d{4}-)?/i, "");
 }
 
 function severityDisplay(value?: string) {
@@ -542,9 +542,10 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
 
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
+  const [, incidentParams] = useRoute("/observatory/incidents/:recordId");
   const [, failureParams] = useRoute("/observatory/failure-modes/:recordId");
   const [, vigilParams] = useRoute("/vigil/:recordId");
-  const sourceId = decodeURIComponent(caseParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
+  const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
   const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
@@ -555,26 +556,23 @@ export default function VigilCaseFile() {
     let cancelled = false;
     async function load() {
       try {
-        const registry = await loadVigilRegistryRecords();
+        const registry = await loadVigilIncidentRecords();
         const normalized = normalizeRecords(registry.records);
         const indexById = new Map(normalized.map((record) => [record.id, record]));
-        const rawById = new Map(registry.records.map((raw) => [recordId(raw), raw]).filter((entry): entry is [string, UnknownRecord] => Boolean(entry[0])));
         const sourceIndex = indexById.get(sourceId);
-        const sourceRaw = rawById.get(sourceId);
-        if (!sourceIndex && !sourceRaw) throw new Error(`The canonical VIGIL registry does not contain ${sourceId}.`);
+        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
 
-        const sourceRecord = sourceIndex ? await detailedRecord(sourceIndex) : undefined;
-        const anchorFailureIds = failureAnchors(sourceId, sourceRecord, normalized, registry.records);
-        if (!anchorFailureIds.length) throw new Error(`No authoritative failure mode could be resolved for ${sourceId}.`);
-        const chain = reconstructCaseChain(sourceId, sourceRecord, anchorFailureIds, normalized, registry.records);
-
-        const recordDetails: VigilIndexRecord[] = [];
-        for (const id of [...chain.observations, ...chain.failureModes, ...chain.proposals, ...chain.patches]) {
-          const index = indexById.get(id);
-          if (index) recordDetails.push(id === sourceRecord?.id ? sourceRecord : await detailedRecord(index));
-        }
-        const learns = (await Promise.all(chain.learns.map((id) => rawById.get(id)).filter((raw): raw is UnknownRecord => Boolean(raw)).map(detailedLearn))).filter((item): item is LearnItem => Boolean(item));
-        if (!cancelled) setState({ status: "ready", sourceId, anchorFailureIds, records: recordDetails, learns, chain, generatedAt: new Date().toISOString() });
+        const incident = await detailedRecord(sourceIndex);
+        const chain: CaseChain = { observations: [], failureModes: [incident.id], proposals: [], patches: [], learns: [] };
+        if (!cancelled) setState({
+          status: "ready",
+          sourceId,
+          anchorFailureIds: [incident.id],
+          records: [incident],
+          learns: [],
+          chain,
+          generatedAt: new Date().toISOString(),
+        });
       } catch (error) {
         if (!cancelled) setState({ status: "error", message: (error as Error).message });
       }
@@ -611,16 +609,19 @@ export default function VigilCaseFile() {
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = byId.get(state.sourceId);
-  const title = failure?.title ?? state.learns[0]?.title ?? sourceRecord?.title ?? "VIGIL Case File";
-  const summary = failure?.publicDisplay.finding ?? sourceRecord?.publicDisplay.finding ?? failureDetail?.definition ?? sourceRecord?.summary;
+  const title = sourceRecord?.title ?? "VIGIL Case File";
+  const summary = sourceRecord?.summary ?? sourceRecord?.publicDisplay.finding;
   const family = failure ? taxonomyFailureTypeLabel(failure.raw) : undefined;
-  const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated;
+  const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated ?? failure?.date_recorded;
   const recordCount = state.records.length + state.learns.length;
   const diagnostic = diagnosticProvenance(failure);
   const reportId = failure?.id ?? state.sourceId;
 
   const existingCoverage = coverageItems(failure);
-  const governanceGap = failure ? firstText(failure.raw, ["governance_gap"]) : undefined;
+  const governanceGap = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation", "governance_gap"]) : undefined;
+  const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
+  const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
+  const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const repairHypothesis = failure ? firstText(failure.raw, ["repair_hypothesis"]) : undefined;
   const requiredChanges = unique(proposals.map(proposalRequiredChange).filter((value): value is string => Boolean(value)));
   if (!requiredChanges.length && repairHypothesis) requiredChanges.push(repairHypothesis);
@@ -666,24 +667,24 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {failure ? <CaseTaxonomyClassification failureId={failure.id} raw={failure.raw} severityLabel={severityDisplay(failure.severity)} /> : <p className="vigil-case-empty">No Failure Mode is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
+      {failure ? <CaseTaxonomyClassification failureId={failure.id} raw={failure.raw} severityLabel={severityDisplay(failure.severity)} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
       {(failure || existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
         {failure && <div className="vigil-diagnosis-mechanism">
           <section className="vigil-diagnosis-definition">
-            <p className="vigil-library-kicker">Failure definition</p>
-            <p>{failureDetail?.definition ?? failure.publicDisplay.finding ?? failure.summary}</p>
+            <p className="vigil-library-kicker">VIGIL governance assessment</p>
+            <p>{governanceGap ?? failure.publicDisplay.finding ?? failure.summary}</p>
           </section>
           <div className="vigil-diagnosis-mechanism-pair">
             <section>
-              <p className="vigil-library-kicker">Recognition threshold</p>
-              <p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p>
+              <p className="vigil-library-kicker">Factual basis</p>
+              <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
             </section>
             <section>
               <p className="vigil-library-kicker">Governance significance</p>
-              <p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p>
+              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
           </div>
         </div>}
@@ -710,6 +711,7 @@ export default function VigilCaseFile() {
             {placementRationales.length > 0 ? <TextList items={placementRationales} /> : <p>No separate placement rationale is currently published.</p>}
           </section>
         </div>}
+        {assessmentBoundaries.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Assessment boundaries</p><TextList items={assessmentBoundaries} /></section>}
         {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
         {diagnostic && <section className="vigil-evidence-card" aria-labelledby="diagnostic-provenance-heading">
           <header className="vigil-evidence-header">
@@ -833,13 +835,13 @@ export default function VigilCaseFile() {
 
     <header className="vigil-case-file-hero vigil-case-file-hero-v4">
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">VIGIL Case File · AI failure mode investigation</p>
+        <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
         <h1>{title}</h1>
         {summary && <p className="vigil-case-file-summary">{summary}</p>}
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
-          <Field label="Case file" value={failure ? compactId(failure.id) : compactId(state.sourceId)} mono />
+          <Field label="Incident" value={failure ? compactId(failure.id) : compactId(state.sourceId)} mono />
           <Field label="Failure type" value={family} />
           <Field label="Severity" value={severityDisplay(failure?.severity)} />
           <Field label="Updated" value={updated} mono />

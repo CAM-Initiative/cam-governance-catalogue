@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
-import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
 
@@ -45,8 +45,8 @@ function sectionHasSubstantiveContent(section: HTMLElement, number: string) {
   return !(EMPTY_SECTION_MARKERS[number] ?? []).some((marker) => text.includes(marker));
 }
 
-function compactFailureId(id: string) {
-  return id.replace(/^VIGIL-\d{4}-/i, "");
+function compactIncidentId(id: string) {
+  return id.replace(/^VIGIL-(?:\d{4}-)?/i, "");
 }
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
@@ -57,6 +57,10 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
 
 function text(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function isObject(value: unknown): value is UnknownRecord {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 export default function EvidenceChainReportPrintable() {
@@ -74,23 +78,17 @@ export default function EvidenceChainReportPrintable() {
     let cancelled = false;
     async function resolveFailure() {
       try {
-        const registry = await loadVigilRegistryRecords();
+        const registry = await loadVigilIncidentRecords();
         const records = normalizeRecords(registry.records);
         const source = records.find((record) => record.id.toUpperCase() === sourceId.toUpperCase());
-        if (!source) return;
-        const failureId = source.record_type === "failure_mode"
-          ? source.id
-          : source.publicDisplay.chain.failureModes[0];
-        if (!failureId) return;
-        const failureIndex = records.find((record) => record.id.toUpperCase() === failureId.toUpperCase());
-        if (!failureIndex) return;
-        const raw = await loadVigilRecordDetail(failureIndex.raw);
+        if (!source || source.record_type !== "incident") return;
+        const raw = await loadVigilRecordDetail(source.raw);
         const taxonomyReferences = await loadTaxonomyReferenceTargets(raw);
         if (!cancelled) {
           setReportFailure({
-            id: failureIndex.id,
-            title: text(raw.title) ?? failureIndex.title,
-            severity: text(raw.severity) ?? failureIndex.severity,
+            id: source.id,
+            title: text(raw.title) ?? text(isObject(raw.record_identity) ? raw.record_identity.title : undefined) ?? source.title,
+            severity: text(raw.severity) ?? source.severity,
             raw,
             taxonomyReferences,
           });
@@ -106,7 +104,7 @@ export default function EvidenceChainReportPrintable() {
   useEffect(() => {
     if (!reportFailure) return;
     const previousTitle = document.title;
-    document.title = `VIGIL Observatory Case File — ${compactFailureId(reportFailure.id)} — ${reportFailure.title}`;
+    document.title = `VIGIL Observatory Case File — ${compactIncidentId(reportFailure.id)} — ${reportFailure.title}`;
     return () => { document.title = previousTitle; };
   }, [reportFailure]);
 

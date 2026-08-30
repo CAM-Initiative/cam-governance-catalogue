@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
-import { loadVigilRegistryRecords, VIGIL_REGISTRY_SOURCE, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL, type UnknownRecord } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
 
@@ -23,14 +23,13 @@ const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, SU: 5 };
 
 function compactId(id: string) {
-  return id.replace(/^VIGIL-\d{4}-/i, "");
+  return id.replace(/^VIGIL-(?:\d{4}-)?/i, "");
 }
 
 function caseSummary(record: VigilIndexRecord) {
-  return record.publicDisplay.failure?.definition
+  return record.summary
     ?? record.publicDisplay.finding
-    ?? record.summary
-    ?? "No public failure definition is currently available.";
+    ?? "No public Incident summary is currently available.";
 }
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -38,6 +37,11 @@ function isObject(value: unknown): value is UnknownRecord {
 }
 
 function isTaxonomyClassified(record: VigilIndexRecord) {
+  const topLevelStatus = typeof record.raw.classification_status === "string"
+    ? record.raw.classification_status.trim().toLowerCase()
+    : "";
+  if (topLevelStatus === "classified" || topLevelStatus === "provisionally-classified") return true;
+
   const summary = isObject(record.raw.taxonomy_classification_summary)
     ? record.raw.taxonomy_classification_summary
     : undefined;
@@ -53,13 +57,15 @@ function isTaxonomyClassified(record: VigilIndexRecord) {
   const fullStatus = typeof full?.classification_status === "string"
     ? full.classification_status.trim().toLowerCase()
     : "";
-  const primaryClass = isObject(full?.primary_class) ? full.primary_class : undefined;
+  const primaryClass = isObject(full?.primary_classification)
+    ? full.primary_classification
+    : isObject(full?.primary_class) ? full.primary_class : undefined;
   const fullClassId = typeof primaryClass?.class_id === "string" ? primaryClass.class_id.trim() : "";
-  return fullStatus === "classified" || Boolean(fullClassId);
+  return fullStatus === "classified" || fullStatus === "provisionally-classified" || Boolean(fullClassId);
 }
 
 function failureTypeLabel(record: VigilIndexRecord) {
-  return isTaxonomyClassified(record) ? "Classified" : "Not Classified";
+  return isTaxonomyClassified(record) ? "Classified" : "Unclassified";
 }
 
 function failureTypeCounts(records: VigilIndexRecord[]): FailureTypeCount[] {
@@ -78,8 +84,8 @@ function severityRank(record: VigilIndexRecord) {
   return SEVERITY_ORDER[String(record.severity ?? "SU").trim().toUpperCase()] ?? 6;
 }
 
-function failureModeCases(records: VigilIndexRecord[]) {
-  return records.filter((record) => record.record_type === "failure_mode");
+function incidentCases(records: VigilIndexRecord[]) {
+  return records.filter((record) => record.record_type === "incident");
 }
 
 function compareCases(a: VigilIndexRecord, b: VigilIndexRecord, sort: SortState) {
@@ -122,10 +128,10 @@ export default function VigilCases() {
 
   useEffect(() => {
     let cancelled = false;
-    loadVigilRegistryRecords()
+    loadVigilIncidentRecords()
       .then((result) => {
         if (cancelled) return;
-        setState({ status: "ready", records: failureModeCases(normalizeRecords(result.records)), notice: result.message });
+        setState({ status: "ready", records: incidentCases(normalizeRecords(result.records)), notice: result.message });
       })
       .catch((error) => !cancelled && setState({ status: "error", message: (error as Error).message }));
     return () => { cancelled = true; };
@@ -166,9 +172,9 @@ export default function VigilCases() {
           <section className="vigil-library-shell" aria-labelledby="case-files-heading">
             <header className="vigil-library-header">
               <div>
-                <p className="vigil-library-kicker">VIGIL AI failure mode investigations</p>
+                <p className="vigil-library-kicker">VIGIL AI Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
-                <p className="vigil-library-description">Browse documented AI failure modes, newest first, then open an investigation through the six-stage Observation, Classification, Diagnosis, Repair, Learn and References model.</p>
+                <p className="vigil-library-description">Browse documented AI Incidents, newest first, then open an investigation through the six-stage Observation, Diagnosis, Classification, Repair, Learn and References model.</p>
               </div>
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">
@@ -195,9 +201,9 @@ export default function VigilCases() {
                 </label>
 
                 <label className="vigil-family-select">
-                  <span>Investigation status</span>
+                  <span>Failure type</span>
                   <select value={family} onChange={(event) => setFamily(event.target.value)}>
-                    <option value="">All statuses ({records.length})</option>
+                    <option value="">All types ({records.length})</option>
                     {families.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
                   </select>
                 </label>
@@ -208,14 +214,14 @@ export default function VigilCases() {
               </div>
             </section>
 
-            {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_REGISTRY_SOURCE.registry_index_url}…</div>}
+            {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
             {state.status === "ready" && state.notice && <div className="vigil-registry-notice">{state.notice}</div>}
 
-            <section className="vigil-case-table" aria-label="AI failure mode Case Files">
+            <section className="vigil-case-table" aria-label="AI Incident Case Files">
               <div className="vigil-case-table-head">
-                <SortHeading label="Failure Mode" sortKey="id" sort={sort} onSort={updateSort} />
-                <SortHeading label="Investigation status" sortKey="family" sort={sort} onSort={updateSort} />
+                <SortHeading label="Incident" sortKey="id" sort={sort} onSort={updateSort} />
+                <SortHeading label="Failure type" sortKey="family" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
@@ -232,14 +238,14 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Investigation status"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
+                        <CaseCell label="Failure type"><span className="vigil-case-table-text">{failureTypeLabel(record)}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
                   );
                 })}
-                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another investigation status.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another failure type.</div>}
               </div>
             </section>
 

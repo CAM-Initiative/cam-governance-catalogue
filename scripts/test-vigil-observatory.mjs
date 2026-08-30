@@ -67,6 +67,9 @@ test("VIGIL normalization preserves canonical public identity and citation metad
 
     const untitled = normalizeVigilRecord({ id: "VIGIL-2026-FM-0002" });
     assert.equal(untitled.title, "VIGIL-2026-FM-0002");
+    const incident = normalizeVigilRecord({ id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident" });
+    assert.equal(incident.record_type, "incident");
+    assert.equal(incident.type_label, "INC");
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -214,6 +217,31 @@ test("VIGIL live registry resolver follows the master child indexes", async () =
     assert.equal(records[0].source_registry, "failure_modes");
     assert.equal(requested.length, 1);
     assert.doesNotMatch(requested[0], /VIGIL\.(Records|ActiveRecords|ClosedRecords|Records\.Index)\.json/);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test("Case Files load the dedicated canonical Incident index", async () => {
+  const { tempDir, modules } = await loadVigilModules();
+  try {
+    const { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } = modules.registry;
+    assert.equal(VIGIL_INCIDENT_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json");
+
+    const requested = [];
+    const result = await loadVigilIncidentRecords(async (url, init) => {
+      requested.push({ url, init });
+      return {
+        ok: true,
+        json: async () => ({ records: [{ id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident" }] }),
+      };
+    });
+
+    assert.equal(result.records.length, 1);
+    assert.equal(result.records[0].record_type, "incident");
+    assert.equal(result.loadedFromFallback, false);
+    assert.match(requested[0].url, /VIGIL\.Incidents\.Index\.json\?v=/);
+    assert.deepEqual(requested[0].init, { cache: "no-store" });
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -431,6 +459,7 @@ test("public Observatory routes use Case Files and intentionally omit the retire
   const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
   assert.match(app, /path="\/observatory\/cases\/:recordId"/);
   assert.match(app, /path="\/observatory\/cases"/);
+  assert.match(app, /path="\/observatory\/incidents\/:recordId"/);
   assert.match(app, /path="\/observatory\/failure-modes\/:recordId"/);
   assert.match(app, /path="\/observatory\/failure-modes"/);
   assert.match(app, /path="\/observatory\/incidents"/);
@@ -444,13 +473,16 @@ test("public Observatory routes use Case Files and intentionally omit the retire
   assert.match(app, /component=\{VigilCaseFile\}/);
 });
 
-test("Case Files are the current FM-centred public investigation surface", async () => {
+test("Case Files are the current Incident-centred public investigation surface", async () => {
   const cases = await readFile(resolve(repoRoot, "src/pages/vigil-cases.tsx"), "utf8");
   const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
   const evidenceRepair = await readFile(resolve(repoRoot, "src/lib/vigilEvidenceRepair.ts"), "utf8");
   const nav = await readFile(resolve(repoRoot, "src/components/vigil/VigilObservatoryNav.tsx"), "utf8");
 
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
+  assert.match(cases, /loadVigilIncidentRecords/);
+  assert.match(cases, /record\.record_type === "incident"/);
+  assert.match(cases, /SortHeading label="Incident"/);
   assert.match(cases, /Describe the behaviour you’re seeing/);
   assert.match(cases, /matchesVigilSearch\(record\.searchText, search\)/);
   assert.match(cases, /useState<SortState>\(\{ key: "id", direction: "desc" \}\)/);

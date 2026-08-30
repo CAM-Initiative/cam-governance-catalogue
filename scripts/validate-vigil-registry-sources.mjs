@@ -17,6 +17,7 @@ const deprecatedFolders = [
   ["vigil", "records", "failures", ""].join("/"),
 ];
 const canonicalRegistryUrl = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Registry.Index.json";
+const canonicalIncidentRegistryUrl = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -34,9 +35,12 @@ for (const file of filesToScan) {
 const sourceConfig = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
 assert(sourceConfig.vigil.registry_index_url === canonicalRegistryUrl, "VIGIL registry source must use the default-branch master index URL");
 assert(sourceConfig.vigil.github_blob_url === "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Registry.Index.json", "VIGIL GitHub blob URL must point to the default-branch master index");
+assert(sourceConfig.vigil.incident_registry_index_url === canonicalIncidentRegistryUrl, "VIGIL Incident source must use the default-branch Incident index URL");
+assert(sourceConfig.vigil.incident_registry_github_blob_url === "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json", "VIGIL Incident GitHub blob URL must point to the default-branch Incident index");
 
 const loader = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
 assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Live registry fetch should use cache busting");
+assert(loader.includes("cacheBustUrl(VIGIL_INCIDENT_REGISTRY_URL)"), "Incident registry fetch should use cache busting");
 assert(loader.includes("Array.isArray(registry.records)"), "Loader should support a combined records array");
 assert(loader.includes("registryPointerEntries(registry.registries)"), "Loader should support child registry pointers");
 assert(loader.includes("pointer.raw_url"), "Loader should fetch child registries from raw_url when available");

@@ -64,15 +64,15 @@ assert.match(taxonomyLoader, /index\.families\.map/);
 assert.match(taxonomyLoader, /entry\.file/);
 
 // The Case Files landing page deliberately exposes only a binary mapped/not-mapped
-// outcome but describes it to the public as investigation status rather than taxonomy jargon.
+// outcome under the retained public "Failure type" label.
 assert.match(caseLibrary, /taxonomy_classification_summary/);
 assert.match(caseLibrary, /classification_status/);
 assert.match(caseLibrary, /class_id/);
-assert.match(caseLibrary, /return isTaxonomyClassified\(record\) \? "Classified" : "Not Classified"/);
+assert.match(caseLibrary, /return isTaxonomyClassified\(record\) \? "Classified" : "Unclassified"/);
 assert.match(caseLibrary, /failureTypeCounts\(records\)/);
 assert.match(caseLibrary, /canonicalComparisonKey\(failureTypeLabel\(record\)\)/);
-assert.match(caseLibrary, /Investigation status/);
-assert.match(caseLibrary, /SortHeading label="Investigation status"/);
+assert.match(caseLibrary, /Failure type/);
+assert.match(caseLibrary, /SortHeading label="Failure type"/);
 assert.doesNotMatch(caseLibrary, /Taxonomy status/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
 assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
@@ -101,12 +101,12 @@ assert.doesNotMatch(datasets, /Download HTML reference/);
 assert.doesNotMatch(datasets, /VIGIL\.FailureTaxonomy\.FullReference\.html/);
 
 // The deterministic printable projection reuses the full taxonomy renderer,
-// appends the same taxonomy references, and sets an FM-specific document title.
+// appends the same taxonomy references, and sets an Incident-specific document title.
 assert.match(printableReport, /CaseTaxonomyClassification/);
 assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
 assert.match(printableReport, /report-taxonomy-parity-slot/);
 assert.match(printableReport, /report-taxonomy-reference/);
-assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactFailureId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
+assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactIncidentId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
 assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
 
 // The deterministic report has a report-specific typography/layout layer. Evidence

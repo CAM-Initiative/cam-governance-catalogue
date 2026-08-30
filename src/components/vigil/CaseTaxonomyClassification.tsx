@@ -7,7 +7,7 @@ import {
 } from "@/lib/vigilFailureTaxonomy";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
-type ClassificationStatus = "classified" | "family-only" | "candidate-new-class" | "unmapped" | "deferred";
+type ClassificationStatus = "classified" | "provisionally-classified" | "unclassified" | "family-only" | "candidate-new-class" | "unmapped" | "deferred";
 
 type ClassificationRef = {
   familyId?: string;
@@ -61,6 +61,7 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   const value = isObject(raw.taxonomy_classification) ? raw.taxonomy_classification : undefined;
   if (!value) return { primary: {}, secondary: [] };
 
+  const primaryClassification = isObject(value.primary_classification) ? value.primary_classification : undefined;
   const primaryFamily = isObject(value.primary_family) ? value.primary_family : undefined;
   const primaryClass = isObject(value.primary_class) ? value.primary_class : undefined;
   const status = text(value.classification_status) as ClassificationStatus | undefined;
@@ -80,10 +81,10 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
     status,
     taxonomyVersion: text(value.taxonomy_version),
     primary: {
-      familyId: text(primaryFamily?.family_id),
-      classId: text(primaryClass?.class_id),
-      basis: text(value.classification_basis),
-      confidence: text(value.classification_confidence),
+      familyId: text(primaryClassification?.family_id ?? primaryFamily?.family_id),
+      classId: text(primaryClassification?.class_id ?? primaryClass?.class_id),
+      basis: text(primaryClassification?.classification_basis ?? value.classification_basis),
+      confidence: text(primaryClassification?.classification_confidence ?? value.classification_confidence),
     },
     secondary,
   };
@@ -112,6 +113,8 @@ function resolveClassification(dataset: FailureTaxonomyDataset, reference: Class
 function statusLabel(status?: ClassificationStatus) {
   switch (status) {
     case "classified": return "Classified";
+    case "provisionally-classified": return "Provisionally classified";
+    case "unclassified": return "Unclassified";
     case "family-only": return "Family only";
     case "candidate-new-class": return "Candidate new class";
     case "unmapped": return "Unmapped";
@@ -204,7 +207,7 @@ function CanonicalMechanism({ item, label }: { item: ResolvedClassification; lab
       </div>
     </details>}
 
-    {unresolved && <p className="vigil-case-empty">The FM contains an immutable taxonomy identifier that is not present in the current published VIGIL taxonomy. No legacy taxonomy fallback has been applied.</p>}
+    {unresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </article>;
 }
 
@@ -212,12 +215,12 @@ function ExplicitState({ status, family }: { status?: ClassificationStatus; fami
   const familyDefinition = family?.family?.definition;
   if (status === "family-only" && family) return <>
     <CanonicalMechanism item={family} label="Primary family" />
-    <p className="vigil-case-empty">This Failure Mode is classified to a canonical VIGIL failure family, but no canonical failure class has been assigned.</p>
+    <p className="vigil-case-empty">This Incident is classified to a canonical VIGIL failure family, but no canonical failure class has been assigned.</p>
   </>;
   if (status === "candidate-new-class") return <p className="vigil-case-empty">A new failure class has been identified as a candidate, but no immutable VIGIL class ID has been allocated. The Case File therefore does not present a provisional class as canonical.{familyDefinition ? ` The current family context is: ${familyDefinition}` : ""}</p>;
-  if (status === "unmapped") return <p className="vigil-case-empty">No canonical VIGIL taxonomy mapping currently exists for this Failure Mode. The record remains explicitly unmapped rather than being forced into a legacy or approximate class.</p>;
+  if (status === "unmapped") return <p className="vigil-case-empty">No canonical VIGIL taxonomy mapping currently exists for this Incident. The record remains explicitly unmapped rather than being forced into a legacy or approximate class.</p>;
   if (status === "deferred") return <p className="vigil-case-empty">Taxonomy classification is explicitly deferred in the VIGIL record. No class is rendered until the structural classification review is completed.</p>;
-  return <p className="vigil-case-empty">No VIGIL-native taxonomy classification is recorded for this Failure Mode. Section 03 will populate when the FM receives a canonical family/class mapping.</p>;
+  return <p className="vigil-case-empty">No VIGIL-native taxonomy classification is recorded for this Incident. Section 03 will populate when the Incident receives a canonical family/class mapping.</p>;
 }
 
 export function CaseTaxonomyClassification({ failureId, raw, severityLabel }: Props) {
@@ -241,14 +244,14 @@ export function CaseTaxonomyClassification({ failureId, raw, severityLabel }: Pr
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
 
-  if (parsed.status !== "classified") return <div className="vigil-taxonomy-classification-view">
-    <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-\d{4}-/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
+  if (parsed.status !== "classified" && parsed.status !== "provisionally-classified") return <div className="vigil-taxonomy-classification-view">
+    <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-(?:\d{4}-)?/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
     <div className="vigil-classification-topline"><span>Taxonomy state</span><strong><b>{statusLabel(parsed.status)}</b></strong></div>
     <ExplicitState status={parsed.status} family={primary} />
   </div>;
 
   return <div className="vigil-taxonomy-classification-view">
-    <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-\d{4}-/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
+    <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-(?:\d{4}-)?/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
     <div className="vigil-classification-topline"><span>Taxonomy state</span><strong><b>{statusLabel(parsed.status)}</b></strong></div>
 
     <CanonicalMechanism item={primary} label="Primary structural mechanism" />

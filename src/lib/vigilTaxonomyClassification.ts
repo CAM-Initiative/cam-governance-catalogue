@@ -1,7 +1,7 @@
 import { loadFailureTaxonomy, type FailureTaxonomyDataset } from "@/lib/vigilFailureTaxonomy";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
-export type TaxonomyClassificationStatus = "classified" | "family-only" | "candidate-new-class" | "unmapped" | "deferred";
+export type TaxonomyClassificationStatus = "classified" | "provisionally-classified" | "unclassified" | "family-only" | "candidate-new-class" | "unmapped" | "deferred";
 
 export type TaxonomyReferenceTarget = {
   id: string;
@@ -41,6 +41,9 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const classification = taxonomyClassification(record);
   if (classification) {
     const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
+    if (record.record_type === "incident") {
+      return status === "classified" || status === "provisionally-classified" ? "Classified" : "Unclassified";
+    }
     const primaryClass = classLabel(classification.primary_class);
     if (primaryClass) return primaryClass;
 
@@ -114,13 +117,16 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
   };
 
   const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
-  if (status === "classified") add("primary", classification.primary_family, classification.primary_class);
+  const incidentPrimary = isObject(classification.primary_classification) ? classification.primary_classification : undefined;
+  if ((status === "classified" || status === "provisionally-classified") && incidentPrimary) add("primary", incidentPrimary, incidentPrimary);
+  else if (status === "classified") add("primary", classification.primary_family, classification.primary_class);
   else if (status === "family-only") add("family-only", classification.primary_family);
 
   if (Array.isArray(classification.secondary_classifications)) {
     for (const item of classification.secondary_classifications) {
       if (!isObject(item)) continue;
-      add("secondary", item.family, item.class);
+      if (item.family_id || item.class_id) add("secondary", item, item);
+      else add("secondary", item.family, item.class);
     }
   }
   return references;
