@@ -125,10 +125,11 @@ type Unavailable = { status: "unavailable"; attemptedUrl: string; message: strin
 export type ExternalLoadResult<T> = Ready<T> | Unavailable;
 
 const VIGIL_RAW_ROOT = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil";
-export const VIGIL_EXTERNAL_REQUIREMENTS_INDEX_URL = `${VIGIL_RAW_ROOT}/external_requirements/requirements-index.json`;
-export const VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL = `${VIGIL_RAW_ROOT}/external_requirements/requirements.json`;
-export const VIGIL_EXTERNAL_SOURCE_SCOPE_URL = `${VIGIL_RAW_ROOT}/external_requirements/source-scope.json`;
-export const VIGIL_EXTERNAL_SOURCE_REGISTRY_URL = `${VIGIL_RAW_ROOT}/external_sources/source-registry.json`;
+const VIGIL_EXTERNAL_GOVERNANCE_ROOT = `${VIGIL_RAW_ROOT}/external_governance`;
+export const VIGIL_EXTERNAL_REQUIREMENTS_INDEX_URL = `${VIGIL_EXTERNAL_GOVERNANCE_ROOT}/requirements/requirements-index.json`;
+export const VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL = `${VIGIL_EXTERNAL_GOVERNANCE_ROOT}/requirements/requirements.json`;
+export const VIGIL_EXTERNAL_SOURCE_SCOPE_URL = `${VIGIL_EXTERNAL_GOVERNANCE_ROOT}/requirements/source-scope.json`;
+export const VIGIL_EXTERNAL_SOURCE_REGISTRY_URL = `${VIGIL_EXTERNAL_GOVERNANCE_ROOT}/sources/source-registry.json`;
 export const VIGIL_EXTERNAL_LEGACY_SOURCES_URL = `${VIGIL_RAW_ROOT}/external_sources/ledger.json`;
 // Compatibility exports for callers that previously expected one source URL.
 export const VIGIL_EXTERNAL_REQUIREMENTS_URL = VIGIL_EXTERNAL_REQUIREMENTS_INDEX_URL;
