@@ -22,6 +22,7 @@ const childRegistryRecordKeys = ["failure_modes", "observations", "proposals", "
 
 export const VIGIL_REGISTRY_SOURCE = registrySources.vigil;
 export const VIGIL_REGISTRY_URL = VIGIL_REGISTRY_SOURCE.registry_index_url;
+export const VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE.incident_registry_index_url;
 export const VIGIL_FALLBACK_URL = `${import.meta.env.BASE_URL}data/vigil-registry-fallback.json`;
 
 export function cacheBustUrl(url: string, version = Date.now()) {
@@ -206,6 +207,13 @@ export async function loadVigilRegistryRecords(fetcher: FetchLike = fetch): Prom
   const result = await loadVigilRegistry(fetcher);
   const records = await resolveVigilRegistryRecords(result.data, fetcher);
   return { ...result, records };
+}
+
+export async function loadVigilIncidentRecords(fetcher: FetchLike = fetch): Promise<RegistryLoadResult & { records: UnknownRecord[] }> {
+  const attemptedUrl = cacheBustUrl(VIGIL_INCIDENT_REGISTRY_URL);
+  const data = await fetchJson(fetcher, attemptedUrl);
+  const records = recordsFromRegistryPayload(data).map((record) => isObject(record) ? record : { summary: record });
+  return { data, attemptedUrl, loadedFromFallback: false, records };
 }
 
 export function githubBlobUrlForRecord(record: { github_blob_url?: string; path?: string }) {

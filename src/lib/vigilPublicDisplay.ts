@@ -97,6 +97,7 @@ export type PublicEvidenceCard = {
   archiveUrl?: string;
   directReviewStatus?: string;
   evidenceModalities: string[];
+  whatHappened?: string;
   confirmedEvidence?: string;
   interpretiveConclusion?: string;
   evidenceBoundary: string[];
@@ -891,6 +892,7 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
     "interpretive_provenance.current_ai_review.reviewer_model",
     "interpretive_provenance.current_ai_review.reviewer_platform",
   ]);
+  const classificationBasis = firstText(record, ["taxonomy_classification.classification_basis"]);
 
   const evidence = sources.map((source, index): PublicEvidenceCard => {
     const limitations = collectLists(source, [
@@ -930,6 +932,7 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
         "direct_review",
       ]),
       evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),
+      whatHappened: index === 0 ? classificationBasis : undefined,
       confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"]),
       interpretiveConclusion: firstText(source, ["interpretive_conclusion", "relevance_note", "interpretation"]),
       evidenceBoundary: limitations,

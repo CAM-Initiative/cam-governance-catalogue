@@ -19,15 +19,15 @@ type PendingJsonAction = { action: "copy" | "download"; record: VigilIndexRecord
 
 const preferredStatuses = ["open", "watching", "triage", "routed", "deferred", "implemented", "closed", "closed-no-action", "closed-actioned"];
 const exportNotice = "Filtered VIGIL index-entry export from the CAM Governance Interface. Full canonical records remain in CAM-Initiative/Vigil and are loaded per record on demand.";
-const vigilRecommendedCitation = "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org/vigil";
-const camInitiativeCitationHeader = "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
+const vigilRecommendedCitation = "Dr Michelle O'Rourke. VIGIL: Evidence-to-Repair Governance Ledger. 2026. https://www.cam-initiative.org/vigil";
+const camInitiativeCitationHeader = "Dr Michelle O'Rourke. CAM Initiative public governance infrastructure. 2026. https://www.cam-initiative.org";
 const vigilReuseNotice = "This is public-benefit governance infrastructure. Please cite VIGIL if you use this record or export. Public access does not imply unrestricted reuse. If this work is useful to you, please consider supporting CAM Initiative.";
 const vigilSupportUrl = "https://buymeacoffee.com/cam_initiative";
 const vigilCitation = {
   recommended_citation: vigilRecommendedCitation,
   title: "VIGIL: Evidence-to-Repair Governance Ledger",
   publisher: "CAM Initiative",
-  maintainer: "Aeon Governance Lab",
+  maintainer: "Dr Michelle O'Rourke",
   year: "2026",
   url: "https://www.cam-initiative.org/vigil",
   repository: "https://github.com/CAM-Initiative/Vigil",

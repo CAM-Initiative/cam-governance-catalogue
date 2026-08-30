@@ -7,6 +7,13 @@ import {
   loadExternalSources,
 } from "@/lib/vigilExternalKnowledge";
 
+const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference.pdf";
+const VIGIL_TAXONOMY_PDF_URLS = [
+  "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
+  // Working-branch fallback keeps catalogue previews testable until the canonical VIGIL publication commit is merged.
+  "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/hugging-face-authority-reconciliation/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
+];
+
 type DatasetState = {
   sourcesCount?: number;
   clausesCount?: number;
@@ -46,7 +53,7 @@ function DatasetCard({
           <h2>{title}</h2>
         </div>
         {onDownload ? <button type="button" className="vigil-baseline-download shrink-0" onClick={onDownload} disabled={downloading}>
-          {downloading ? "Preparing dataset…" : downloadLabel}<Download aria-hidden="true" />
+          {downloading ? "Preparing download…" : downloadLabel}<Download aria-hidden="true" />
         </button> : null}
         {!onDownload && downloadHref ? <a className="vigil-baseline-download shrink-0" href={downloadHref} target="_blank" rel="noreferrer">
           {downloadLabel}<Download aria-hidden="true" />
@@ -57,9 +64,35 @@ function DatasetCard({
   </article>;
 }
 
+async function downloadRemoteFile(urls: string[], filename: string) {
+  let lastError: unknown;
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Download returned HTTP ${response.status}`);
+      const blob = await response.blob();
+      if (!blob.size) throw new Error("Downloaded publication was empty");
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = filename;
+      anchor.style.display = "none";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+      return;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("The publication could not be downloaded");
+}
+
 export default function Datasets() {
   const [state, setState] = useState<DatasetState>({ loaded: false });
   const [downloadState, setDownloadState] = useState<"idle" | "working" | "error">("idle");
+  const [taxonomyDownloadState, setTaxonomyDownloadState] = useState<"idle" | "working" | "error">("idle");
 
   useEffect(() => {
     let cancelled = false;
@@ -92,6 +125,16 @@ export default function Datasets() {
     }
   }
 
+  async function downloadTaxonomyPublication() {
+    setTaxonomyDownloadState("working");
+    try {
+      await downloadRemoteFile(VIGIL_TAXONOMY_PDF_URLS, VIGIL_TAXONOMY_PDF_NAME);
+      setTaxonomyDownloadState("idle");
+    } catch {
+      setTaxonomyDownloadState("error");
+    }
+  }
+
   return <Shell>
     <main className="vigil-knowledge-hub-page vigil-datasets-page">
       <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
@@ -117,12 +160,16 @@ export default function Datasets() {
           {downloadState === "error" ? <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p> : null}
 
           <DatasetCard
-            title="VIGIL AI Governance Failure Taxonomy"
-            description="A machine-readable classification reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with explicit recognition criteria and boundaries."
-            status="Coming soon"
+            title="VIGIL Observatory AI Governance Failure Taxonomy"
+            description="Generated full-reference PDF for the canonical VIGIL Observatory failure taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
+            status="Technical reference · VIGIL Observatory"
             beta
+            onDownload={downloadTaxonomyPublication}
+            downloading={taxonomyDownloadState === "working"}
+            downloadLabel="Download PDF reference"
             icon={<Library />}
           />
+          {taxonomyDownloadState === "error" ? <p className="vigil-baseline-download-error">The taxonomy reference PDF could not be downloaded. Please try again.</p> : null}
 
           <DatasetCard
             title="CAELESTIS Architecture Model"

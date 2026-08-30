@@ -97,7 +97,7 @@ const searchSummaryNames = [
 
 const blankStrings = new Set(["", "[]", "{}"]);
 const unspecifiedStrings = new Set(["unknown", "not specified", "unspecified", "n/a", "na", "none", "null", "undefined"]);
-const vigilRecordIdPattern = /^VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4}$/i;
+const vigilRecordIdPattern = /^(?:VIGIL-INC-\d{6}|VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d{4})$/i;
 
 const canonicalFailureFamilyLabelMap: Record<string, string> = {
   execution: "Execution Failures",
@@ -259,6 +259,7 @@ export function normalizeRecordType(input: UnknownRecord | string | undefined): 
   for (const candidate of candidates.filter(isMeaningfulText)) {
     const normalized = candidate.trim().toLowerCase().replace(/[-\s]+/g, "_");
     if (["obs", "observation", "observations", "emerging_tech_signal"].includes(normalized) || /(^|_)obs(_|$)/.test(normalized)) return "observation";
+    if (["inc", "incident", "incidents"].includes(normalized) || /(^|_)inc(_|$)/.test(normalized)) return "incident";
     if (["fm", "failure_mode", "failure_modes", "failuremode", "failure_mode_observation"].includes(normalized) || /(^|_)fm(_|$)/.test(normalized)) return "failure_mode";
     if (["prop", "proposal", "proposals", "proposal_development_expansion"].includes(normalized) || /(^|_)prop(_|$)/.test(normalized)) return "proposal";
     if (["patch", "patches", "patch_note", "patch_notes", "patchnote", "implemented_patch_note"].includes(normalized) || /(^|_)patch(_|$)/.test(normalized)) return "patch_note";
@@ -272,6 +273,7 @@ export function normalizeRecordType(input: UnknownRecord | string | undefined): 
 export function normalizeRecordTypeLabel(value: string | undefined) {
   const normalized = normalizeRecordType(value);
   if (normalized === "observation") return "Observations";
+  if (normalized === "incident") return "Incidents";
   if (normalized === "failure_mode") return "Failure Modes";
   if (normalized === "proposal") return "Proposals";
   if (normalized === "patch_note") return "Patch Notes";
@@ -487,6 +489,7 @@ function resolveObservedProduct(record: UnknownRecord) {
 }
 
 export function recordTypeBadge(recordType: string) {
+  if (recordType === "incident") return "INC";
   if (recordType === "observation") return "OBS";
   if (recordType === "failure_mode") return "FM";
   if (recordType === "proposal") return "PROP";

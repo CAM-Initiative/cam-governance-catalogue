@@ -126,18 +126,91 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article {
 section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + div[aria-hidden="true"] {
   height: 13.5rem;
 }
+
 @media print {
-  @page { margin: 1.35cm; }
+  @page { margin: 1.45cm 1.35cm; }
+
+  /* A formal report should not print the ordinary website navigation or social footer. */
+  .vigil-deterministic-report-host .sticky,
+  .vigil-deterministic-report-host .print\:hidden,
+  .vigil-deterministic-report-host header.sticky,
+  .vigil-deterministic-report-host footer.mt-auto {
+    display: none !important;
+  }
+
+  .vigil-deterministic-report-host,
+  .vigil-deterministic-report-host > div,
+  .vigil-deterministic-report-host main {
+    display: block !important;
+    min-height: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   .report-page { max-width: none !important; padding: 0 !important; }
   .report-page > div { display: block !important; }
-  .report-cover { break-after: page; }
+  .report-cover { break-after: auto; page-break-after: auto; }
   .report-step-index { display: none !important; }
   .report-section-excluded { display: none !important; }
-  .report-section { margin-top: 0 !important; break-before: page; break-inside: auto !important; page-break-inside: auto !important; box-shadow: none !important; border-radius: 0 !important; background: transparent !important; padding: 0 !important; }
-  .report-section:first-of-type { break-before: auto; }
-  .report-section > div:first-child { break-after: avoid; page-break-after: avoid; }
+
+  /* Let the document flow. Forced page-per-stage pagination created blank and nearly blank pages. */
+  .report-section {
+    margin: 0 0 0.55cm !important;
+    break-before: auto !important;
+    page-break-before: auto !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .report-section > header,
+  .report-section > div:first-child {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  .report-section article,
+  .report-section details,
+  .report-section dl,
+  .report-section .vigil-evidence-card,
+  .report-section .vigil-taxonomy-record-card {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .report-section ol,
+  .report-section ul,
+  .report-citations {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  .report-section li {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .report-legacy-taxonomy {
+    display: none !important;
+  }
+
+  .report-taxonomy-parity-slot {
+    margin-top: 0.25cm;
+  }
+
+  .report-taxonomy-reference a,
+  .report-section a {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
   .report-record { break-inside: avoid; page-break-inside: avoid; }
-  .report-citations { break-inside: auto !important; page-break-inside: auto !important; }
   .report-record a { display: none !important; }
   .report-label { color: #665b4f !important; }
   .report-page footer { break-before: auto; }

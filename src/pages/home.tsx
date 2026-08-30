@@ -1,10 +1,26 @@
+import { useEffect, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
-const CAM_HERO = "https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/CAM_HERO.png";
-const VIGIL_HERO = "https://raw.githubusercontent.com/CAM-Initiative/Registry/ab54240387ec4856b99c91a7dfe73d159914d309/Images/VIGIL_HERO.png";
+const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
+const HERO_IMAGES = {
+  light: {
+    cam: `${REGISTRY_IMAGE_BASE}/CAM_HERO.png`,
+    vigil: `${REGISTRY_IMAGE_BASE}/VIGIL_HERO.png`,
+  },
+  dark: {
+    cam: `${REGISTRY_IMAGE_BASE}/CAM_HERO_DARKMODE.png`,
+    vigil: `${REGISTRY_IMAGE_BASE}/VIGIL_HERO_DARKMODE.png`,
+  },
+} as const;
+
+type HeroTheme = keyof typeof HERO_IMAGES;
+
+function currentHeroTheme(): HeroTheme {
+  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+}
 
 const connectionLinks = [
   {
@@ -166,6 +182,16 @@ function ConnectPanel() {
 }
 
 export default function Home() {
+  const [heroTheme, setHeroTheme] = useState<HeroTheme>(() => currentHeroTheme());
+
+  useEffect(() => {
+    const syncTheme = () => setHeroTheme(currentHeroTheme());
+    window.addEventListener("cam-theme-change", syncTheme);
+    return () => window.removeEventListener("cam-theme-change", syncTheme);
+  }, []);
+
+  const heroImages = HERO_IMAGES[heroTheme];
+
   return (
     <Shell>
       <main className="home-page">
@@ -179,9 +205,9 @@ export default function Home() {
             <p className="home-identity-kicker">CAM Initiative · Open AI Governance</p>
             <h1 id="home-identity-heading" className="sr-only">CAELESTIS Architecture Model and VIGIL Observatory</h1>
             <div className="home-identity-artwork" aria-hidden="true">
-              <img src={CAM_HERO} alt="" className="home-identity-image" />
+              <img src={heroImages.cam} alt="" className="home-identity-image" />
               <span className="home-identity-divider" />
-              <img src={VIGIL_HERO} alt="" className="home-identity-image" />
+              <img src={heroImages.vigil} alt="" className="home-identity-image" />
             </div>
             <p className="home-identity-tagline">Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.</p>
           </motion.div>

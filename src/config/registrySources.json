@@ -1,8 +1,10 @@
 {
   "vigil": {
-    "label": "VIGIL Registry",
-    "registry_index_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Registry.Index.json",
-    "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Registry.Index.json",
+    "label": "VIGIL Incident Registry",
+    "registry_index_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json",
+    "github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json",
+    "incident_registry_index_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json",
+    "incident_registry_github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json",
     "repo": "CAM-Initiative/Vigil",
     "branch": "main"
   },

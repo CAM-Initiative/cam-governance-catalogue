@@ -41,9 +41,10 @@ function Router() {
 
       <Route path="/observatory/about" component={VigilAbout} />
 
-      {/* VIGIL public investigations. Case Files are FM-centred; historical URLs remain compatible. */}
+      {/* VIGIL public investigations. Case Files are anchored to canonical Incident records. */}
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/cases" component={VigilCases} />
+      <Route path="/observatory/incidents/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/failure-modes/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/failure-modes" component={VigilCases} />
 
@@ -61,7 +62,7 @@ function Router() {
       <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 
-      {/* Compatibility routes resolve into the FM-centred public investigation surface. */}
+      {/* Compatibility routes resolve into the Incident-centred public investigation surface. */}
       <Route path="/observatory/incidents" component={VigilCases} />
       <Route path="/observatory/repairs" component={VigilCases} />
       <Route path="/observatory" component={VigilCases} />

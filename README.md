@@ -317,9 +317,9 @@ or the applicable repository licence file.
 
 If citing the CAM Governance Interface, use the repository citation metadata where available.
 
-Suggested short-form (Umbrella) citation:
+Suggested short-form citation:
 
-> CAM Initiative. Caelestis Architecture Model public governance infrastructure. Maintained by Aeon Governance Lab. 2026.
+> Dr Michelle O'Rourke. CAM Governance Interface. 2026.
 
 See:
 

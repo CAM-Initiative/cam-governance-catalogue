@@ -32,7 +32,7 @@ const filterLabels: Record<string, string> = {
 };
 const missingPurposeMessage = "Purpose statement not yet available in catalogue metadata.";
 const noAdditionalMetadataMessage = "No additional catalogue metadata is currently available for this instrument.";
-const catalogueCitation = "CAM Initiative. CAM Initiative public governance infrastructure. Maintained by Aeon Governance Lab. 2026. https://www.cam-initiative.org";
+const catalogueCitation = "Dr Michelle O'Rourke. CAM Initiative public governance infrastructure. 2026. https://www.cam-initiative.org";
 const catalogueReuseNotice = "This is public-benefit governance infrastructure. Please cite CAM Initiative if you use this material. If this work is useful, support helps cover infrastructure, archival, publication, and maintenance costs.";
 const catalogueSupportUrl = "https://buymeacoffee.com/cam_initiative";
 const pageSize = 20;

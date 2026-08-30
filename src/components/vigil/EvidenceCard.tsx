@@ -45,6 +45,11 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
         </dl>
       </header>
 
+      {evidence.whatHappened && <section className="vigil-evidence-what-happened">
+        <h4>What happened</h4>
+        <p>{evidence.whatHappened}</p>
+      </section>}
+
       <div className="vigil-evidence-grid">
         {evidence.confirmedEvidence && <section className="vigil-evidence-column">
           <h4>What the source establishes</h4>

@@ -3,17 +3,22 @@ import { ArrowLeft, ExternalLink, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
+import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
-import { loadVigilRecordDetail, loadVigilRegistryRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
-  normalizeFailureFamilyLabel,
   normalizeRecords,
   normalizeVigilRecord,
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
+import {
+  loadTaxonomyReferenceTargets,
+  taxonomyFailureTypeLabel,
+  type TaxonomyReferenceTarget,
+} from "@/lib/vigilTaxonomyClassification";
 
 type CaseChain = {
   observations: string[];
@@ -63,13 +68,6 @@ type AffectedSystem = {
   systemType?: string;
   interfaceSurface?: string;
   deploymentContext?: string;
-};
-
-type TaxonomyMeta = {
-  code?: string;
-  name?: string;
-  reference?: string;
-  group?: string;
 };
 
 type DiagnosticProvenance = {
@@ -361,7 +359,6 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       publisher: text(source.author_or_publisher ?? source.publisher ?? source.source_platform),
       date: text(source.source_date ?? source.date ?? source.published_date),
       url: text(source.source_url ?? source.url ?? source.archive_url),
-      description: text(source.source_context ?? source.description ?? source.relevance_note),
     }];
   });
 }
@@ -397,33 +394,6 @@ function dedupeSystems(records: VigilIndexRecord[]) {
     seen.add(key);
     return true;
   });
-}
-
-function taxonomyCodeFromReference(reference?: string) {
-  return reference?.match(/primary classification\s+([A-Z0-9._-]+)/i)?.[1];
-}
-
-function canonicalCodeFromGroup(group?: string) {
-  const normalized = group?.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_").replace(/^_+|_+$/g, "");
-  return normalized ? `OPS.FF.${normalized}` : undefined;
-}
-
-function taxonomyNameFromReference(reference?: string) {
-  if (!reference) return undefined;
-  const afterDash = reference.split("—").slice(1).join("—").trim();
-  if (!afterDash) return undefined;
-  return afterDash.replace(/;\s*primary classification.*$/i, "").trim() || undefined;
-}
-
-function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem): TaxonomyMeta {
-  const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]) ?? learn?.taxonomyReference;
-  const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
-  return {
-    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode ?? taxonomyCodeFromReference(reference) ?? canonicalCodeFromGroup(group),
-    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]) ?? learn?.canonicalFailureName ?? taxonomyNameFromReference(reference),
-    reference,
-    group,
-  };
 }
 
 function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
@@ -513,7 +483,7 @@ function remainingScope(record: VigilIndexRecord) {
 }
 
 function compactId(id: string) {
-  return id.replace(/^VIGIL-\d{4}-/i, "");
+  return id.replace(/^VIGIL-(?:\d{4}-)?/i, "");
 }
 
 function severityDisplay(value?: string) {
@@ -564,13 +534,21 @@ function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
 
+function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
+  if (reference.relationship === "primary") return "Primary taxonomy classification";
+  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
+  return "Family-only taxonomy classification";
+}
+
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
+  const [, incidentParams] = useRoute("/observatory/incidents/:recordId");
   const [, failureParams] = useRoute("/observatory/failure-modes/:recordId");
   const [, vigilParams] = useRoute("/vigil/:recordId");
-  const sourceId = decodeURIComponent(caseParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
+  const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
+  const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
 
   useEffect(() => setActiveStage("observe"), [sourceId]);
 
@@ -578,26 +556,23 @@ export default function VigilCaseFile() {
     let cancelled = false;
     async function load() {
       try {
-        const registry = await loadVigilRegistryRecords();
+        const registry = await loadVigilIncidentRecords();
         const normalized = normalizeRecords(registry.records);
         const indexById = new Map(normalized.map((record) => [record.id, record]));
-        const rawById = new Map(registry.records.map((raw) => [recordId(raw), raw]).filter((entry): entry is [string, UnknownRecord] => Boolean(entry[0])));
         const sourceIndex = indexById.get(sourceId);
-        const sourceRaw = rawById.get(sourceId);
-        if (!sourceIndex && !sourceRaw) throw new Error(`The canonical VIGIL registry does not contain ${sourceId}.`);
+        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
 
-        const sourceRecord = sourceIndex ? await detailedRecord(sourceIndex) : undefined;
-        const anchorFailureIds = failureAnchors(sourceId, sourceRecord, normalized, registry.records);
-        if (!anchorFailureIds.length) throw new Error(`No authoritative failure mode could be resolved for ${sourceId}.`);
-        const chain = reconstructCaseChain(sourceId, sourceRecord, anchorFailureIds, normalized, registry.records);
-
-        const recordDetails: VigilIndexRecord[] = [];
-        for (const id of [...chain.observations, ...chain.failureModes, ...chain.proposals, ...chain.patches]) {
-          const index = indexById.get(id);
-          if (index) recordDetails.push(id === sourceRecord?.id ? sourceRecord : await detailedRecord(index));
-        }
-        const learns = (await Promise.all(chain.learns.map((id) => rawById.get(id)).filter((raw): raw is UnknownRecord => Boolean(raw)).map(detailedLearn))).filter((item): item is LearnItem => Boolean(item));
-        if (!cancelled) setState({ status: "ready", sourceId, anchorFailureIds, records: recordDetails, learns, chain, generatedAt: new Date().toISOString() });
+        const incident = await detailedRecord(sourceIndex);
+        const chain: CaseChain = { observations: [], failureModes: [incident.id], proposals: [], patches: [], learns: [] };
+        if (!cancelled) setState({
+          status: "ready",
+          sourceId,
+          anchorFailureIds: [incident.id],
+          records: [incident],
+          learns: [],
+          chain,
+          generatedAt: new Date().toISOString(),
+        });
       } catch (error) {
         if (!cancelled) setState({ status: "error", message: (error as Error).message });
       }
@@ -618,24 +593,35 @@ export default function VigilCaseFile() {
   const externalSources = useMemo(() => state.status === "ready" && failure ? dedupeEvidence([failure, ...observations].flatMap(externalEvidenceFor)) : [], [failure, observations, state]);
   const affectedSystems = useMemo(() => failure ? dedupeSystems([failure, ...observations]) : dedupeSystems(observations), [failure, observations]);
 
+  useEffect(() => {
+    let cancelled = false;
+    if (!failure) {
+      setTaxonomyReferences([]);
+      return () => { cancelled = true; };
+    }
+    void loadTaxonomyReferenceTargets(failure.raw)
+      .then((references) => { if (!cancelled) setTaxonomyReferences(references); })
+      .catch(() => { if (!cancelled) setTaxonomyReferences([]); });
+    return () => { cancelled = true; };
+  }, [failure]);
+
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Case File…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = byId.get(state.sourceId);
-  const title = failure?.title ?? state.learns[0]?.title ?? sourceRecord?.title ?? "VIGIL Case File";
-  const summary = failure?.publicDisplay.finding ?? sourceRecord?.publicDisplay.finding ?? failureDetail?.definition ?? sourceRecord?.summary;
-  const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
-  const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated;
+  const title = sourceRecord?.title ?? "VIGIL Case File";
+  const summary = sourceRecord?.summary ?? sourceRecord?.publicDisplay.finding;
+  const family = failure ? taxonomyFailureTypeLabel(failure.raw) : undefined;
+  const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated ?? failure?.date_recorded;
   const recordCount = state.records.length + state.learns.length;
-  const learnForFailure = failure
-    ? state.learns.find((learn) => learn.primaryFailureMode?.toUpperCase() === failure.id.toUpperCase()) ?? state.learns[0]
-    : state.learns[0];
-  const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
   const diagnostic = diagnosticProvenance(failure);
   const reportId = failure?.id ?? state.sourceId;
 
   const existingCoverage = coverageItems(failure);
-  const governanceGap = failure ? firstText(failure.raw, ["governance_gap"]) : undefined;
+  const governanceGap = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation", "governance_gap"]) : undefined;
+  const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
+  const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
+  const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const repairHypothesis = failure ? firstText(failure.raw, ["repair_hypothesis"]) : undefined;
   const requiredChanges = unique(proposals.map(proposalRequiredChange).filter((value): value is string => Boolean(value)));
   if (!requiredChanges.length && repairHypothesis) requiredChanges.push(repairHypothesis);
@@ -649,7 +635,7 @@ export default function VigilCaseFile() {
   const implementedControls = patches.flatMap(implementationEntries);
   const implementationStates = unique(patches.map(implementationState).filter((value): value is string => Boolean(value)));
   const remainingScopes = unique([...patches.flatMap(remainingScope), ...proposals.flatMap(remainingScope)]);
-  const referenceCount = externalSources.length + state.records.length + state.learns.length;
+  const referenceCount = externalSources.length + taxonomyReferences.length + state.records.length + state.learns.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -681,38 +667,24 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {failure ? <article className="vigil-classification-summary vigil-classification-summary-v6">
-        <div className="vigil-classification-topline">
-          <span>{compactId(failure.id)}</span>
-          <strong>Severity <b>{severityDisplay(failure.severity)}</b></strong>
-        </div>
-        <div className="vigil-classification-identity">
-          <dl>
-            <Field label="Canonical code" value={taxonomy.code} mono />
-            <Field label="Failure type" value={family} />
-            <Field label="Canonical failure name" value={taxonomy.name} />
-            <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
-            <Field label="Failure Mode Corpus Reference" value={taxonomy.reference} />
-          </dl>
-        </div>
-      </article> : <p className="vigil-case-empty">No current taxonomy classification is linked yet. The diagnosis may require a new or revised failure class.</p>}
+      {failure ? <CaseTaxonomyClassification failureId={failure.id} raw={failure.raw} severityLabel={severityDisplay(failure.severity)} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
       {(failure || existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
         {failure && <div className="vigil-diagnosis-mechanism">
           <section className="vigil-diagnosis-definition">
-            <p className="vigil-library-kicker">Failure definition</p>
-            <p>{failureDetail?.definition ?? failure.publicDisplay.finding ?? failure.summary}</p>
+            <p className="vigil-library-kicker">VIGIL governance assessment</p>
+            <p>{governanceGap ?? failure.publicDisplay.finding ?? failure.summary}</p>
           </section>
           <div className="vigil-diagnosis-mechanism-pair">
             <section>
-              <p className="vigil-library-kicker">Recognition threshold</p>
-              <p>{failureDetail?.recognitionThreshold ?? "A separate recognition threshold is not yet stated in the canonical record."}</p>
+              <p className="vigil-library-kicker">Factual basis</p>
+              <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
             </section>
             <section>
               <p className="vigil-library-kicker">Governance significance</p>
-              <p>{failureDetail?.significance ?? "Governance significance is not yet separately stated in the canonical record."}</p>
+              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
           </div>
         </div>}
@@ -739,6 +711,7 @@ export default function VigilCaseFile() {
             {placementRationales.length > 0 ? <TextList items={placementRationales} /> : <p>No separate placement rationale is currently published.</p>}
           </section>
         </div>}
+        {assessmentBoundaries.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Assessment boundaries</p><TextList items={assessmentBoundaries} /></section>}
         {targetLocations.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Target instruments / insertion points</p><ul>{targetLocations.map((target) => <li key={target}>{target}</li>)}</ul></section>}
         {diagnostic && <section className="vigil-evidence-card" aria-labelledby="diagnostic-provenance-heading">
           <header className="vigil-evidence-header">
@@ -823,19 +796,26 @@ export default function VigilCaseFile() {
           <div>
             <strong>{source.title}</strong>
             {(source.publisher || source.date) && <p>{[source.publisher, source.date].filter(Boolean).join(" · ")}</p>}
-            {source.description && <p>{source.description}</p>}
             {source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}
           </div>
         </li>)}
-        {state.records.map((record, index) => <li key={record.id}>
+        {taxonomyReferences.map((reference, index) => <li key={`${reference.relationship}-${reference.id}`}>
           <span>[{externalSources.length + index + 1}]</span>
+          <div>
+            <strong>{reference.id} — {reference.title}</strong>
+            <p>VIGIL Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</p>
+            <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
+          </div>
+        </li>)}
+        {state.records.map((record, index) => <li key={record.id}>
+          <span>[{externalSources.length + taxonomyReferences.length + index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
             {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
           </div>
         </li>)}
         {state.learns.map((learn, index) => <li key={learn.id}>
-          <span>[{externalSources.length + state.records.length + index + 1}]</span>
+          <span>[{externalSources.length + taxonomyReferences.length + state.records.length + index + 1}]</span>
           <div>
             <strong>{learn.id} — {learn.title}</strong>
             {learn.githubUrl && <a href={learn.githubUrl} target="_blank" rel="noreferrer">{learn.githubUrl}</a>}
@@ -855,13 +835,13 @@ export default function VigilCaseFile() {
 
     <header className="vigil-case-file-hero vigil-case-file-hero-v4">
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">VIGIL Case File · AI failure mode investigation</p>
+        <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
         <h1>{title}</h1>
         {summary && <p className="vigil-case-file-summary">{summary}</p>}
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
-          <Field label="Case file" value={failure ? compactId(failure.id) : compactId(state.sourceId)} mono />
+          <Field label="Incident" value={failure ? compactId(failure.id) : compactId(state.sourceId)} mono />
           <Field label="Failure type" value={family} />
           <Field label="Severity" value={severityDisplay(failure?.severity)} />
           <Field label="Updated" value={updated} mono />

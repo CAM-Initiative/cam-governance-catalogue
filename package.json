@@ -11,7 +11,7 @@
     "validate:palette": "node scripts/validate-cam-palette.mjs",
     "sync:vigil": "node scripts/sync-vigil-records.mjs",
     "validate:vigil": "node scripts/validate-vigil-registry-sources.mjs",
-    "test:vigil": "node --test scripts/test-vigil-observatory.mjs",
+    "test:vigil": "node --test scripts/test-vigil-observatory.mjs scripts/test-vigil-case-references.mjs scripts/test-vigil-case-taxonomy.mjs",
     "test:knowledge-base": "node scripts/test-vigil-knowledge-base.mjs",
     "sync:cam": "node scripts/sync-cam-governance.mjs"
   },

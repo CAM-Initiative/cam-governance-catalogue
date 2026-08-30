@@ -2,7 +2,7 @@
 
 ## Overview
 
-Interactive website for the CAM Initiative — an independent constitutional AI governance project (Aeon Governance Lab). Built as a self-hosted replacement for the Wix site, targeting export to GitHub Pages at https://github.com/CAM-Initiative/WebDesign.
+Interactive website for the CAM Initiative — an independent constitutional AI governance project by Dr Michelle O'Rourke. Built as a self-hosted replacement for the Wix site, targeting export to GitHub Pages at https://github.com/CAM-Initiative/WebDesign.
 
 ## Stack
 
