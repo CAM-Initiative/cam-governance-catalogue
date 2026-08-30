@@ -618,7 +618,8 @@ export default function VigilCaseFile() {
   const reportId = failure?.id ?? state.sourceId;
 
   const existingCoverage = coverageItems(failure);
-  const governanceGap = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation", "governance_gap"]) : undefined;
+  const governanceAssessment = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const governanceGaps = failure ? firstTextList(failure.raw, ["governance_gap", "corpus_coverage.remaining_gaps", "repair_status.remaining_gaps", "remaining_gaps"]) : [];
   const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
@@ -671,11 +672,11 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "diagnose") return <>
-      {(failure || existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
+      {(failure || existingCoverage.length > 0 || governanceAssessment || governanceGaps.length > 0 || requiredChanges.length > 0 || placementRationales.length > 0 || targetLocations.length > 0) ? <article className="vigil-diagnosis-view">
         {failure && <div className="vigil-diagnosis-mechanism">
           <section className="vigil-diagnosis-definition">
             <p className="vigil-library-kicker">VIGIL governance assessment</p>
-            <p>{governanceGap ?? failure.publicDisplay.finding ?? failure.summary}</p>
+            <p>{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
           </section>
           <div className="vigil-diagnosis-mechanism-pair">
             <section>
@@ -688,7 +689,7 @@ export default function VigilCaseFile() {
             </section>
           </div>
         </div>}
-        {(existingCoverage.length > 0 || governanceGap || requiredChanges.length > 0 || placementRationales.length > 0) && <div className="vigil-diagnosis-grid">
+        {(failure || existingCoverage.length > 0 || governanceGaps.length > 0 || requiredChanges.length > 0 || placementRationales.length > 0) && <div className="vigil-diagnosis-grid">
           <section>
             <p className="vigil-library-kicker">Existing coverage</p>
             {existingCoverage.length > 0 ? <div className="vigil-coverage-list">{existingCoverage.map((coverage) => <div key={coverage.key}>
@@ -700,7 +701,7 @@ export default function VigilCaseFile() {
           </section>
           <section className="is-gap">
             <p className="vigil-library-kicker">Gap identified</p>
-            <p>{governanceGap ?? proposals[0]?.publicDisplay.proposal?.problem ?? "No separate governance-gap statement is currently published."}</p>
+            {governanceGaps.length > 0 ? <TextList items={governanceGaps} /> : proposals[0]?.publicDisplay.proposal?.problem ? <p>{proposals[0].publicDisplay.proposal.problem}</p> : <p>No separate governance gap has yet been established for this Incident.</p>}
           </section>
           <section>
             <p className="vigil-library-kicker">Required governance change</p>
