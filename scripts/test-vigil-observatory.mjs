@@ -201,22 +201,25 @@ test("VIGIL model-2.0 normalization keeps severity, priority, monitoring and rep
   }
 });
 
-test("VIGIL live registry resolver follows the master child indexes", async () => {
+test("VIGIL live registry uses the canonical Incident index", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
-    const { resolveVigilRegistryRecords, VIGIL_REGISTRY_URL } = modules.registry;
-    assert.equal(VIGIL_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Registry.Index.json");
+    const { loadVigilRegistry, VIGIL_REGISTRY_URL } = modules.registry;
+    assert.equal(VIGIL_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json");
 
     const requested = [];
-    const fetcher = async (url) => {
-      requested.push(url);
-      return { ok: true, json: async () => ({ records: [{ id: "VIGIL-2026-FM-0003", title: "Loaded from child registry" }] }) };
-    };
-    const records = await resolveVigilRegistryRecords({ registries: { failure_modes: { raw_url: "https://example.test/vigil/failure-modes.json" } } }, fetcher);
-    assert.equal(records.length, 1);
-    assert.equal(records[0].source_registry, "failure_modes");
+    const result = await loadVigilRegistry(async (url, init) => {
+      requested.push({ url, init });
+      return {
+        ok: true,
+        json: async () => ({ records: [{ id: "VIGIL-INC-000003", record_type: "incident", title: "Loaded from Incident registry" }] }),
+      };
+    });
+    assert.equal(result.loadedFromFallback, false);
+    assert.match(result.attemptedUrl, /VIGIL\.Incidents\.Index\.json\?v=/);
     assert.equal(requested.length, 1);
-    assert.doesNotMatch(requested[0], /VIGIL\.(Records|ActiveRecords|ClosedRecords|Records\.Index)\.json/);
+    assert.match(requested[0].url, /VIGIL\.Incidents\.Index\.json\?v=/);
+    assert.deepEqual(requested[0].init, { cache: "no-store" });
   } finally {
     await rm(tempDir, { recursive: true, force: true });
   }
