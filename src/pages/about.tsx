@@ -95,7 +95,7 @@ export default function About() {
             <p>The CAM Initiative is a registered business and Australian AI governance initiative operated by The Phoenix Covenant Pty Ltd. It develops and publishes open governance infrastructure for understanding AI systems, diagnosing governance failures, supporting compliance and translating evidence into accountable repair.</p>
           </header>
 
-          <ReferenceSection number="01" eyebrow="Institutional context" title="Independent public-interest governance work">
+          <ReferenceSection number="01" eyebrow="Institutional context" title="Australian public-interest governance work">
             <div className="public-reference-reading">
               <p>The CAM Initiative was founded and is led by Dr Michelle Vivian O’Rourke. Through the Initiative, VIGIL, the CAELESTIS Architecture Model, governance datasets and policy materials are developed, maintained and published.</p>
               <p>The current public website deliberately concentrates on the surfaces that are mature enough to support public use. VIGIL, datasets and policy remain public; the CAELESTIS reference surface is being refactored rather than presented as settled architecture.</p>
