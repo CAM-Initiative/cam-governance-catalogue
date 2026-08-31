@@ -141,10 +141,10 @@ assert.doesNotMatch(caseFile, /These linked OBS, RESEARCH, FM, PROP, PATCH and L
 assert.doesNotMatch(caseFile, /ImplementationProvenance/);
 assert.match(caseFile, /referenceCount/);
 assert.match(caseFile, /state\.records\.map/);
-assert.match(caseFile, /state\.learns\.map/);
+assert.doesNotMatch(caseFile, /state\.learns\.map/);
 assert.doesNotMatch(caseFile, /Canonical record <ExternalLink/);
 assert.match(caseFile, />\{recordLink\(record\)\}<\/a>/);
-assert.match(caseFile, />\{learn\.githubUrl\}<\/a>/);
+assert.doesNotMatch(caseFile, />\{learn\.githubUrl\}<\/a>/);
 assert.doesNotMatch(caseFile, /stageId === "record"/);
 assert.doesNotMatch(caseFile, /Sources &amp; provenance/);
 assert.match(cases, /useState<SortState>\(\{ key: "id", direction: "desc" \}\)/);

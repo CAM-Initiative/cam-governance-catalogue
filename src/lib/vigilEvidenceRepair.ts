@@ -41,5 +41,15 @@ export const VIGIL_EVIDENCE_REPAIR_SECTIONS = [
 
 export const VIGIL_PUBLIC_REPORT_SECTIONS = VIGIL_EVIDENCE_REPAIR_SECTIONS;
 
+export const VIGIL_INCIDENT_CASE_SECTIONS = [
+  VIGIL_EVIDENCE_REPAIR_SECTIONS[0],
+  VIGIL_EVIDENCE_REPAIR_SECTIONS[1],
+  VIGIL_EVIDENCE_REPAIR_SECTIONS[2],
+  {
+    ...VIGIL_REFERENCES_SECTION,
+    number: "04",
+  },
+] as const;
+
 export type VigilEvidenceRepairSectionId = typeof VIGIL_EVIDENCE_REPAIR_SECTIONS[number]["id"];
 export type VigilPublicReportSectionId = typeof VIGIL_PUBLIC_REPORT_SECTIONS[number]["id"];

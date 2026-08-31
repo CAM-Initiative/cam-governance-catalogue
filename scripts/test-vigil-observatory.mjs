@@ -539,11 +539,13 @@ test("Case Files are the current Incident-centred public investigation surface",
   assert.match(evidenceRepair, /number: "04",\s*label: "Repair"/s);
   assert.match(evidenceRepair, /number: "05",\s*label: "Learn"/s);
   assert.match(evidenceRepair, /number: "06",\s*label: "References"/s);
+  assert.match(evidenceRepair, /VIGIL_INCIDENT_CASE_SECTIONS/);
   assert.ok(evidenceRepair.indexOf('label: "Diagnosis"') < evidenceRepair.indexOf('label: "Classification"'));
 
-  assert.match(caseFile, /CASE_VIEWS = VIGIL_EVIDENCE_REPAIR_SECTIONS/);
-  assert.match(caseFile, /VIGIL_EVIDENCE_REPAIR_SECTIONS\.map/);
+  assert.match(caseFile, /CASE_VIEWS = VIGIL_INCIDENT_CASE_SECTIONS/);
+  assert.match(caseFile, /CASE_VIEWS\.map/);
   assert.match(caseFile, /stageId === "references"/);
+  assert.doesNotMatch(caseFile, /stageId === "repair"/);
   assert.match(caseFile, /Generate report \/ PDF/);
   assert.match(caseFile, /\/observatory\/reports\/\$\{encodeURIComponent\(reportId\)\}/);
   assert.match(nav, /return null/);
@@ -579,7 +581,7 @@ test("About VIGIL, homepage and shell reflect the current public information arc
   assert.doesNotMatch(shell, /Full Ledger/);
 });
 
-test("deterministic report route preserves the six-stage Case File composition and PDF controls", async () => {
+test("deterministic Incident report preserves evidence, diagnosis, classification and PDF controls", async () => {
   const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
   const printable = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8");
   const deterministic = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8");
@@ -590,18 +592,15 @@ test("deterministic report route preserves the six-stage Case File composition a
   assert.match(printable, /\["01", "Observation"\]|number: "01", label: "Observation"/);
   assert.match(printable, /number: "02", label: "Diagnosis"/);
   assert.match(printable, /number: "03", label: "Classification"/);
-  assert.match(printable, /number: "04", label: "Repair"/);
-  assert.match(printable, /number: "05", label: "Learn"/);
-  assert.match(printable, /number: "06", label: "References"/);
+  assert.match(printable, /number: "04", label: "References"/);
+  assert.doesNotMatch(printable, /label: "Repair"/);
   assert.match(printable, /aria-label="PDF section controls"/);
   assert.match(printable, /type="checkbox"/);
   assert.match(printable, /section\.dataset\.reportIncluded/);
-  assert.match(deterministic, /const REPORT_STAGES = \[/);
-  assert.match(deterministic, /\["01", "Observation"\]/);
-  assert.match(deterministic, /\["02", "Diagnosis"\]/);
-  assert.match(deterministic, /\["03", "Classification"\]/);
-  assert.match(deterministic, /\["04", "Repair"\]/);
-  assert.match(deterministic, /\["05", "Learn"\]/);
-  assert.match(deterministic, /\["06", "References"\]/);
+  assert.match(deterministic, /<Stage number="01" label="Observation">/);
+  assert.match(deterministic, /<Stage number="02" label="Diagnosis">/);
+  assert.match(deterministic, /<Stage number="03" label="Classification">/);
+  assert.match(deterministic, /<Stage number="04" label="References">/);
+  assert.doesNotMatch(deterministic, /label="Repair"/);
   assert.doesNotMatch(deterministic, /text-\[(?:9|10|11)px\]/);
 });
