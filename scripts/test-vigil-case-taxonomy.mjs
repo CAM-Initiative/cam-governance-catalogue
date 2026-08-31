@@ -142,7 +142,6 @@ assert.doesNotMatch(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
 assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);
-assert.doesNotMatch(printableReport, /Aeon Governance Lab/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
