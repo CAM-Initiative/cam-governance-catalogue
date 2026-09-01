@@ -10,14 +10,22 @@ function MetaField({ label, value }: { label: string; value?: string }) {
 function visibleBoundaryItems(items: string[]) {
   return items.filter((item) => {
     const normalized = item.trim().toLowerCase().replace(/[_\s]+/g, "-");
-    return ![
+    if ([
       "directly-reviewed",
       "direct-reviewed",
       "reviewed-directly",
       "available",
       "true",
       "yes",
-    ].includes(normalized);
+    ].includes(normalized)) return false;
+
+    // Migration/reconciliation boilerplate is provenance, not a meaningful public
+    // evidence limitation. Keep source-specific limits, such as inaccessible
+    // artefacts or missing underlying material, and suppress generic process notes.
+    const prose = item.trim().toLowerCase();
+    if (prose.startsWith("this metadata pass does not retroactively claim direct inspection")) return false;
+    if (prose.startsWith("incident admission does not determine legal liability")) return false;
+    return true;
   });
 }
 
