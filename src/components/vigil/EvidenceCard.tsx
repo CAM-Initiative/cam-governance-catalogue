@@ -24,9 +24,6 @@ function visibleBoundaryItems(items: string[]) {
       "yes",
     ].includes(normalized)) return false;
 
-    // Migration/reconciliation boilerplate is provenance, not a meaningful public
-    // evidence limitation. Keep source-specific limits, such as inaccessible
-    // artefacts or missing underlying material, and suppress generic process notes.
     const prose = item.trim().toLowerCase();
     if (prose.startsWith("this metadata pass does not retroactively claim direct inspection")) return false;
     if (prose.startsWith("incident admission does not determine legal liability")) return false;
@@ -39,8 +36,12 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
   const modalities = evidence.evidenceModalities.length
     ? evidence.evidenceModalities.map(titleizeValue).join(" · ")
     : undefined;
-  const hasProvenanceMeta = Boolean(
-    evidence.reviewer
+  const hasMetadata = Boolean(
+    evidence.publisher
+    || evidence.date
+    || evidence.sourceType
+    || evidence.evidenceStatus
+    || evidence.reviewer
     || evidence.sourceAccess
     || evidence.reviewDate
     || evidence.directReviewStatus
@@ -62,12 +63,6 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
             {evidence.archiveUrl && <a href={evidence.archiveUrl} target="_blank" rel="noreferrer" aria-label="Open archived source" title="Open archived source"><ExternalLink aria-hidden="true" /></a>}
           </div>
         </div>
-        <dl className="vigil-evidence-source-meta" aria-label="Evidence source details">
-          <MetaField label="Publisher" value={evidence.publisher} />
-          <MetaField label="Published" value={evidence.date} />
-          <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
-          <MetaField label="Evidence status" value={evidence.evidenceStatus ? titleizeValue(evidence.evidenceStatus) : undefined} />
-        </dl>
       </header>
 
       {evidence.whatHappened && <section className="vigil-evidence-column vigil-evidence-what-happened">
@@ -75,17 +70,27 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
         <p>{evidence.whatHappened}</p>
       </section>}
 
-      <div className="vigil-evidence-grid">
-        {evidence.confirmedEvidence && <section className="vigil-evidence-column">
-          <h4>What the source establishes</h4>
-          <p>{evidence.confirmedEvidence}</p>
-        </section>}
+      <div className="vigil-evidence-analysis-layout">
+        <div className="vigil-evidence-reading-stack">
+          {evidence.confirmedEvidence && <section className="vigil-evidence-column">
+            <h4>What the source establishes</h4>
+            <p>{evidence.confirmedEvidence}</p>
+          </section>}
 
-        {(evidence.interpretiveConclusion || evidence.evidenceStatusBasis || hasProvenanceMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
-          <h4>Evidence relevance</h4>
-          {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
-          {evidence.evidenceStatusBasis && <p><strong>Evidence-status basis.</strong> {evidence.evidenceStatusBasis}</p>}
-          {hasProvenanceMeta && <dl className="vigil-evidence-review-meta" aria-label="Evidence provenance details">
+          {(evidence.interpretiveConclusion || evidence.evidenceStatusBasis) && <section className="vigil-evidence-column vigil-evidence-interpretation">
+            <h4>Evidence relevance</h4>
+            {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
+            {evidence.evidenceStatusBasis && <p><strong>Evidence-status basis.</strong> {evidence.evidenceStatusBasis}</p>}
+          </section>}
+        </div>
+
+        {hasMetadata && <aside className="vigil-evidence-metadata-panel" aria-label="Evidence metadata">
+          <p className="vigil-diagnostic-meta-label">Evidence metadata</p>
+          <dl className="vigil-evidence-review-meta">
+            <MetaField label="Publisher" value={evidence.publisher} />
+            <MetaField label="Published" value={evidence.date} />
+            <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
+            <MetaField label="Evidence status" value={evidence.evidenceStatus ? titleizeValue(evidence.evidenceStatus) : undefined} />
             <MetaField label="Source role" value={evidence.sourceRole ? titleizeValue(evidence.sourceRole) : undefined} />
             <MetaField label="Source residence" value={evidence.sourceResidence ? titleizeValue(evidence.sourceResidence) : undefined} />
             <MetaField label="Evidence modality" value={modalities} />
@@ -93,8 +98,8 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
             <MetaField label="Reviewed" value={evidence.reviewDate} />
             <MetaField label="Source access" value={evidence.sourceAccess ? titleizeValue(evidence.sourceAccess) : undefined} />
             <MetaField label="Direct artefact review" value={evidence.directReviewStatus ? titleizeValue(evidence.directReviewStatus) : undefined} />
-          </dl>}
-        </section>}
+          </dl>
+        </aside>}
       </div>
 
       {boundaries.length > 0 && <details className="vigil-evidence-limitations">
