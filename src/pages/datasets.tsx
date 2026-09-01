@@ -12,7 +12,7 @@ const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Observatory-AI-Governance-Failure-Taxonom
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
   // Working-branch fallback keeps catalogue previews testable until the canonical VIGIL publication commit is merged.
-  "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/hugging-face-authority-reconciliation/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
+  "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/bounded-incident-classification-provenance-repair/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
 
 type DatasetState = {
@@ -24,6 +24,7 @@ type DatasetState = {
 
 function DatasetCard({
   title,
+  eyebrow,
   description,
   status,
   beta = false,
@@ -34,6 +35,7 @@ function DatasetCard({
   icon,
 }: {
   title: string;
+  eyebrow?: string;
   description: string;
   status: string;
   beta?: boolean;
@@ -48,6 +50,7 @@ function DatasetCard({
     <div className="vigil-knowledge-copy">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
+          {eyebrow ? <p className="vigil-library-kicker">{eyebrow}</p> : null}
           <div className="vigil-development-kicker-row">
             <p className="vigil-library-kicker">{status}</p>
             {beta ? <span className="cam-beta-chip">Beta</span> : null}
@@ -162,7 +165,8 @@ export default function Datasets() {
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
           <DatasetCard
-            title="VIGIL Observatory Case Files"
+            eyebrow="VIGIL Observatory"
+            title="Case Files"
             description="The canonical machine-readable Incident index behind the public VIGIL Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL."
             status={caseFilesStatus}
             beta
@@ -195,7 +199,8 @@ export default function Datasets() {
           {taxonomyDownloadState === "error" ? <p className="vigil-baseline-download-error">The taxonomy reference PDF could not be downloaded. Please try again.</p> : null}
 
           <DatasetCard
-            title="CAELESTIS Architecture Model"
+            eyebrow="CAELESTIS Architecture Model"
+            title="Constitutional AI Runtime Safety Framework"
             description="Archived public release of the CAELESTIS Architecture Model governance corpus. The current downloadable release is version 1.1.0, preserved through Zenodo with a persistent DOI."
             status="Version 1.1.0 · Zenodo"
             downloadHref="https://doi.org/10.5281/zenodo.20686316"
