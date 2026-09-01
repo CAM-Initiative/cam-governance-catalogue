@@ -36,10 +36,18 @@ function visibleBoundaryItems(items: string[]) {
 
 export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
   const boundaries = visibleBoundaryItems(evidence.evidenceBoundary);
-  const hasReviewMeta = Boolean(evidence.reviewer || evidence.sourceAccess || evidence.reviewDate || evidence.directReviewStatus);
   const modalities = evidence.evidenceModalities.length
     ? evidence.evidenceModalities.map(titleizeValue).join(" · ")
     : undefined;
+  const hasProvenanceMeta = Boolean(
+    evidence.reviewer
+    || evidence.sourceAccess
+    || evidence.reviewDate
+    || evidence.directReviewStatus
+    || evidence.sourceRole
+    || evidence.sourceResidence
+    || modalities,
+  );
 
   return (
     <article className="vigil-evidence-card">
@@ -58,10 +66,7 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
           <MetaField label="Publisher" value={evidence.publisher} />
           <MetaField label="Published" value={evidence.date} />
           <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
-          <MetaField label="Source role" value={evidence.sourceRole ? titleizeValue(evidence.sourceRole) : undefined} />
-          <MetaField label="Source residence" value={evidence.sourceResidence ? titleizeValue(evidence.sourceResidence) : undefined} />
           <MetaField label="Evidence status" value={evidence.evidenceStatus ? titleizeValue(evidence.evidenceStatus) : undefined} />
-          <MetaField label="Evidence modality" value={modalities} />
         </dl>
       </header>
 
@@ -76,11 +81,14 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
           <p>{evidence.confirmedEvidence}</p>
         </section>}
 
-        {(evidence.interpretiveConclusion || evidence.evidenceStatusBasis || hasReviewMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
+        {(evidence.interpretiveConclusion || evidence.evidenceStatusBasis || hasProvenanceMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
           <h4>Evidence relevance</h4>
           {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
           {evidence.evidenceStatusBasis && <p><strong>Evidence-status basis.</strong> {evidence.evidenceStatusBasis}</p>}
-          {hasReviewMeta && <dl className="vigil-evidence-review-meta" aria-label="VIGIL review details">
+          {hasProvenanceMeta && <dl className="vigil-evidence-review-meta" aria-label="Evidence provenance details">
+            <MetaField label="Source role" value={evidence.sourceRole ? titleizeValue(evidence.sourceRole) : undefined} />
+            <MetaField label="Source residence" value={evidence.sourceResidence ? titleizeValue(evidence.sourceResidence) : undefined} />
+            <MetaField label="Evidence modality" value={modalities} />
             <MetaField label="Reviewer" value={evidence.reviewer} />
             <MetaField label="Reviewed" value={evidence.reviewDate} />
             <MetaField label="Source access" value={evidence.sourceAccess ? titleizeValue(evidence.sourceAccess) : undefined} />
