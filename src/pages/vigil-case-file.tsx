@@ -185,6 +185,12 @@ function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance |
 
 function diagnosticMethodLabel(value?: string) {
   if (!value) return undefined;
+  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (
+    normalized.includes("incident-02-record-split")
+    || normalized.includes("occurrence-reconciliation")
+    || normalized.includes("incident-02")
+  ) return undefined;
   if (value === "human-ai-collaborative-analysis") return "Human–AI collaborative analysis";
   return titleizeValue(value);
 }
@@ -363,48 +369,45 @@ export default function VigilCaseFile() {
           </section>
           <div className="vigil-diagnosis-mechanism-pair">
             <section>
-              <p className="vigil-library-kicker">Factual basis</p>
+              <p className="vigil-diagnostic-meta-label">Factual basis</p>
               <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
             </section>
             <section>
-              <p className="vigil-library-kicker">Governance significance</p>
+              <p className="vigil-diagnostic-meta-label">Governance significance</p>
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
           </div>
+          {assessmentBoundaries.length > 0 && <section className="vigil-diagnostic-limitations">
+            <p className="vigil-diagnostic-meta-label">Diagnostic limitations</p>
+            <TextList items={assessmentBoundaries} />
+          </section>}
         </div>}
-        {assessmentBoundaries.length > 0 && <section className="vigil-diagnosis-targets"><p className="vigil-library-kicker">Assessment boundaries</p><TextList items={assessmentBoundaries} /></section>}
-        {diagnostic && <section className="vigil-evidence-card" aria-labelledby="diagnostic-provenance-heading">
-          <header className="vigil-evidence-header">
-            <div className="vigil-evidence-title-row">
-              <div>
-                <p className="vigil-evidence-kicker">Diagnostic provenance</p>
-                <h3 id="diagnostic-provenance-heading">{diagnosticMethodLabel(diagnostic.method) ?? "Diagnostic analysis"}</h3>
-              </div>
-            </div>
-            <dl className="vigil-evidence-source-meta" aria-label="Diagnostic provenance details">
+        {diagnostic && <details className="vigil-diagnostic-relevance">
+          <summary>Diagnostic relevance</summary>
+          <div className="vigil-diagnostic-relevance-body">
+            <dl className="vigil-evidence-source-meta" aria-label="Diagnostic relevance details">
+              {diagnosticMethodLabel(diagnostic.method) && <div className="vigil-evidence-meta-field"><dt>Method</dt><dd>{diagnosticMethodLabel(diagnostic.method)}</dd></div>}
               {(diagnostic.aiPlatform || diagnostic.aiModel) && <div className="vigil-evidence-meta-field"><dt>AI collaborator</dt><dd>{[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")}</dd></div>}
               {diagnostic.diagnosticDate && <div className="vigil-evidence-meta-field"><dt>Diagnosed</dt><dd>{diagnostic.diagnosticDate}</dd></div>}
               {diagnostic.reviewStatus && <div className="vigil-evidence-meta-field"><dt>Review status</dt><dd>{reviewStatusLabel(diagnostic.reviewStatus)}</dd></div>}
             </dl>
-          </header>
-          <div className="vigil-evidence-grid">
-            {diagnostic.humanRole && <section className="vigil-evidence-column">
-              <h4>Human contribution</h4>
-              <p>{diagnostic.humanRole}</p>
-            </section>}
-            {diagnostic.aiRole && <section className="vigil-evidence-column vigil-evidence-interpretation">
-              <h4>AI contribution</h4>
-              <p>{diagnostic.aiRole}</p>
-            </section>}
-          </div>
-          {(diagnostic.authorityBoundary || diagnostic.attributionBasis) && <details className="vigil-evidence-limitations">
-            <summary>Authority and attribution</summary>
-            <div className="vigil-evidence-boundary-list">
+            <div className="vigil-diagnostic-contributions">
+              {diagnostic.humanRole && <section>
+                <p className="vigil-diagnostic-meta-label">Human contribution</p>
+                <p>{diagnostic.humanRole}</p>
+              </section>}
+              {diagnostic.aiRole && <section>
+                <p className="vigil-diagnostic-meta-label">AI contribution</p>
+                <p>{diagnostic.aiRole}</p>
+              </section>}
+            </div>
+            {(diagnostic.authorityBoundary || diagnostic.attributionBasis) && <section className="vigil-diagnostic-authority">
+              <p className="vigil-diagnostic-meta-label">Authority and attribution</p>
               {diagnostic.authorityBoundary && <p><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
               {diagnostic.attributionBasis && <p><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
-            </div>
-          </details>}
-        </section>}
+            </section>}
+          </div>
+        </details>}
       </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
     </>;
 
