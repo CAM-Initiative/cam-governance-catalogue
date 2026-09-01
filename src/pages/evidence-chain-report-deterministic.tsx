@@ -118,6 +118,16 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
   });
 }
 
+function sourceEvidenceStatus(record: VigilIndexRecord | undefined, index: number) {
+  if (!record || !Array.isArray(record.raw.source_records)) return {};
+  const source = record.raw.source_records[index];
+  if (!isObject(source)) return {};
+  return {
+    evidenceStatus: text(source.evidence_status),
+    evidenceStatusBasis: text(source.evidence_status_basis),
+  };
+}
+
 function dedupeEvidence(evidence: ExternalEvidence[]) {
   const seen = new Set<string>();
   return evidence.filter((source) => {
@@ -283,7 +293,7 @@ export default function EvidenceChainReportDeterministic() {
               </dl>
             </article>)}</div>
           </section>}
-          {failureDetail?.evidence.length ? <div className="mt-4 space-y-3">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
+          {failureDetail?.evidence.length ? <div className="mt-4 space-y-3">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(failure, index) }} />)}</div> : null}
           {!failureDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
         </Stage>
 
