@@ -16,12 +16,7 @@ import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
 type ReportState =
   | { status: "loading" }
   | { status: "error"; message: string }
-  | {
-      status: "ready";
-      sourceId: string;
-      records: VigilIndexRecord[];
-      generatedAt: string;
-    };
+  | { status: "ready"; sourceId: string; records: VigilIndexRecord[]; generatedAt: string };
 
 type ExternalEvidence = {
   title: string;
@@ -39,6 +34,18 @@ type AffectedSystem = {
   systemType?: string;
   interfaceSurface?: string;
   deploymentContext?: string;
+};
+
+type DiagnosticProvenance = {
+  method?: string;
+  diagnosticDate?: string;
+  humanRole?: string;
+  aiRole?: string;
+  aiPlatform?: string;
+  aiModel?: string;
+  attributionBasis?: string;
+  reviewStatus?: string;
+  authorityBoundary?: string;
 };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -61,6 +68,19 @@ function firstText(record: UnknownRecord, paths: string[]) {
     if (value) return value;
   }
   return undefined;
+}
+
+function textList(value: unknown): string[] {
+  const values = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
+  return values.flatMap((item) => text(item) ? [text(item)!] : []);
+}
+
+function firstTextList(record: UnknownRecord, paths: string[]) {
+  for (const path of paths) {
+    const values = textList(valueAt(record, path));
+    if (values.length) return values;
+  }
+  return [];
 }
 
 function mergeRecordDetail(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
@@ -131,6 +151,22 @@ function dedupeSystems(records: VigilIndexRecord[]) {
   });
 }
 
+function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
+  if (!record || !isObject(record.raw.diagnostic_provenance)) return undefined;
+  const provenance = record.raw.diagnostic_provenance;
+  return {
+    method: text(provenance.method),
+    diagnosticDate: text(provenance.diagnostic_date),
+    humanRole: text(provenance.human_role),
+    aiRole: text(provenance.ai_role),
+    aiPlatform: text(provenance.ai_platform),
+    aiModel: text(provenance.ai_model),
+    attributionBasis: text(provenance.model_attribution_basis),
+    reviewStatus: text(provenance.review_status),
+    authorityBoundary: text(provenance.authority_boundary),
+  };
+}
+
 function taxonomyMeta(record: VigilIndexRecord) {
   const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]);
   const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
@@ -146,8 +182,13 @@ function Field({ label, value }: { label: string; value?: string }) {
   return <div><dt className="report-label">{label}</dt><dd className="mt-1 text-base leading-relaxed text-foreground/85">{value}</dd></div>;
 }
 
+function TextList({ items }: { items: string[] }) {
+  if (!items.length) return null;
+  return <ul className="mt-2 space-y-2 text-base leading-relaxed text-foreground/85">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
+}
+
 function Stage({ number, label, children }: { number: string; label: string; children: ReactNode }) {
-  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-5 md:p-6">
+  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-white p-5 md:p-6">
     <header className="flex items-start gap-4 border-b border-[hsl(38_25%_80%)] pb-4">
       <span className="font-mono text-base tracking-[0.12em] text-cam-gold">{number}</span>
       <h2 className="font-serif text-2xl text-foreground">{label}</h2>
@@ -157,7 +198,7 @@ function Stage({ number, label, children }: { number: string; label: string; chi
 }
 
 function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-lg border border-dashed border-border/70 bg-white/35 p-4 text-base leading-relaxed text-muted-foreground">{children}</p>;
+  return <p className="rounded-lg border border-dashed border-border/70 p-4 text-base leading-relaxed text-muted-foreground">{children}</p>;
 }
 
 export default function EvidenceChainReportDeterministic() {
@@ -174,14 +215,8 @@ export default function EvidenceChainReportDeterministic() {
         const indexById = new Map(normalized.map((record) => [record.id, record]));
         const sourceIndex = indexById.get(sourceId);
         if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
-
         const incident = await detailedRecord(sourceIndex);
-        if (!cancelled) setState({
-          status: "ready",
-          sourceId,
-          records: [incident],
-          generatedAt: new Date().toISOString(),
-        });
+        if (!cancelled) setState({ status: "ready", sourceId, records: [incident], generatedAt: new Date().toISOString() });
       } catch (error) {
         if (!cancelled) setState({ status: "error", message: (error as Error).message });
       }
@@ -199,13 +234,13 @@ export default function EvidenceChainReportDeterministic() {
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
-  const taxonomy: ReturnType<typeof taxonomyMeta> = failure
-    ? taxonomyMeta(failure)
-    : { code: undefined, name: undefined, reference: undefined };
+  const taxonomy: ReturnType<typeof taxonomyMeta> = failure ? taxonomyMeta(failure) : { code: undefined, name: undefined, reference: undefined };
   const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
   const governanceAssessment = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
+  const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
+  const diagnostic = diagnosticProvenance(failure);
   const title = failure?.title ?? "VIGIL Case File";
   const summary = failure?.summary ?? failure?.publicDisplay.finding;
 
@@ -236,8 +271,8 @@ export default function EvidenceChainReportDeterministic() {
       <div className="space-y-5">
         <Stage number="01" label="Observation">
           {affectedSystems.length > 0 && <section className="mb-5">
-            <p className="report-label">Affected systems</p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="rounded-lg border border-border/70 bg-white/50 p-4">
+            <p className="vigil-evidence-kicker">Affected systems</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
               <dl className="grid gap-3 sm:grid-cols-2">
                 <Field label="Provider / platform" value={system.provider} />
                 <Field label="Product / service" value={system.product} />
@@ -248,30 +283,46 @@ export default function EvidenceChainReportDeterministic() {
               </dl>
             </article>)}</div>
           </section>}
-          {observations.length > 0 && <div className="space-y-3">{observations.map((record) => <article key={record.id} className="rounded-lg border border-border/70 bg-white/50 p-4">
-            <p className="font-mono text-sm text-cam-gold">{record.id}</p>
-            <h3 className="mt-1 font-serif text-xl text-foreground">{record.title}</h3>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85">{record.publicDisplay.observation?.observed ?? record.publicDisplay.finding ?? record.summary}</p>
-            {record.publicDisplay.observation?.context && <div className="mt-3"><p className="report-label">Context</p><p className="mt-1 text-base leading-relaxed text-foreground/80">{record.publicDisplay.observation.context}</p></div>}
-            {record.publicDisplay.observation?.interpretation && <div className="mt-3"><p className="report-label">VIGIL interpretation</p><p className="mt-1 text-base leading-relaxed text-foreground/80">{record.publicDisplay.observation.interpretation}</p></div>}
-          </article>)}</div>}
           {failureDetail?.evidence.length ? <div className="mt-4 space-y-3">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
-          {!observations.length && !failureDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
+          {!failureDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Diagnosis">
-          {failure ? <div className="space-y-4">
-            <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p></section>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+          {failure ? <article className="space-y-5">
+            <section>
+              <p className="vigil-evidence-kicker">VIGIL governance assessment</p>
+              <p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
+            </section>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <section><p className="vigil-evidence-kicker">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section><p className="vigil-evidence-kicker">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
             </div>
-          </div> : <Empty>No structured diagnosis is available.</Empty>}
+            {assessmentBoundaries.length > 0 && <section>
+              <p className="vigil-evidence-kicker">Assessment boundaries</p>
+              <TextList items={assessmentBoundaries} />
+            </section>}
+            {diagnostic && <details className="vigil-evidence-limitations">
+              <summary>Diagnostic provenance</summary>
+              <div className="vigil-evidence-boundary-list">
+                <dl className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Method" value={diagnostic.method ? titleizeValue(diagnostic.method) : undefined} />
+                  <Field label="Diagnosed" value={diagnostic.diagnosticDate} />
+                  <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ") || undefined} />
+                  <Field label="Review status" value={diagnostic.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
+                </dl>
+                {diagnostic.humanRole && <p><strong>Human contribution.</strong> {diagnostic.humanRole}</p>}
+                {diagnostic.aiRole && <p><strong>AI contribution.</strong> {diagnostic.aiRole}</p>}
+                {diagnostic.authorityBoundary && <p><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
+                {diagnostic.attributionBasis && <p><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
+              </div>
+            </details>}
+          </article> : <Empty>No structured diagnosis is available.</Empty>}
         </Stage>
 
         <Stage number="03" label="Classification">
-          {failure ? <article className="rounded-lg border border-border/70 bg-white/50 p-4">
-            <dl className="grid gap-4 sm:grid-cols-2">
+          {failure ? <article>
+            <p className="vigil-evidence-kicker">Taxonomy classification</p>
+            <dl className="mt-3 grid gap-4 sm:grid-cols-2">
               <Field label="Canonical code" value={taxonomy.code} />
               <Field label="Failure type" value={family} />
               <Field label="Canonical failure name" value={taxonomy.name} />
@@ -283,12 +334,15 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
 
         <Stage number="04" label="References">
-          {references.length > 0 ? <ol className="space-y-3">{references.map((reference, index) => <li key={reference.key} className="flex gap-3 text-base leading-relaxed text-foreground/85"><span className="font-mono text-sm text-cam-gold">[{index + 1}]</span><span className="min-w-0"><strong>{reference.label}</strong>{reference.detail ? <span className="text-muted-foreground"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}</span></li>)}</ol> : <Empty>No references are currently available.</Empty>}
+          {references.length > 0 ? <>
+            <p className="vigil-evidence-kicker">Evidence and record references</p>
+            <ol className="mt-3 space-y-3">{references.map((reference, index) => <li key={reference.key} className="flex gap-3 text-base leading-relaxed text-foreground/85"><span className="font-mono text-sm text-cam-gold">[{index + 1}]</span><span className="min-w-0"><strong>{reference.label}</strong>{reference.detail ? <span className="text-muted-foreground"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}</span></li>)}</ol>
+          </> : <Empty>No references are currently available.</Empty>}
         </Stage>
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same failure anchor, case-chain reconstruction and record-local evidence scope as the interactive Case File; it does not add evidence from adjacent failure modes merely because records are cross-linked elsewhere in VIGIL.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same Incident anchor and record-local evidence scope as the interactive Case File; it does not add repair-layer material or adjacent Failure Mode analysis to the historical occurrence.
       </footer>
     </main>
   </Shell>;
