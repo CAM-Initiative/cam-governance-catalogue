@@ -2,6 +2,11 @@ import { ExternalLink } from "lucide-react";
 import type { PublicEvidenceCard } from "@/lib/vigilPublicDisplay";
 import { titleizeValue } from "@/lib/vigilPresentation";
 
+type EvidenceCardInput = PublicEvidenceCard & {
+  evidenceStatus?: string;
+  evidenceStatusBasis?: string;
+};
+
 function MetaField({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return <div className="vigil-evidence-meta-field"><dt>{label}</dt><dd>{value}</dd></div>;
@@ -29,7 +34,7 @@ function visibleBoundaryItems(items: string[]) {
   });
 }
 
-export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
+export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
   const boundaries = visibleBoundaryItems(evidence.evidenceBoundary);
   const hasReviewMeta = Boolean(evidence.reviewer || evidence.sourceAccess || evidence.reviewDate || evidence.directReviewStatus);
   const modalities = evidence.evidenceModalities.length
@@ -55,6 +60,7 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
           <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
           <MetaField label="Source role" value={evidence.sourceRole ? titleizeValue(evidence.sourceRole) : undefined} />
           <MetaField label="Source residence" value={evidence.sourceResidence ? titleizeValue(evidence.sourceResidence) : undefined} />
+          <MetaField label="Evidence status" value={evidence.evidenceStatus ? titleizeValue(evidence.evidenceStatus) : undefined} />
           <MetaField label="Evidence modality" value={modalities} />
         </dl>
       </header>
@@ -70,9 +76,10 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
           <p>{evidence.confirmedEvidence}</p>
         </section>}
 
-        {(evidence.interpretiveConclusion || hasReviewMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
+        {(evidence.interpretiveConclusion || evidence.evidenceStatusBasis || hasReviewMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
           <h4>Evidence relevance</h4>
           {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
+          {evidence.evidenceStatusBasis && <p><strong>Evidence-status basis.</strong> {evidence.evidenceStatusBasis}</p>}
           {hasReviewMeta && <dl className="vigil-evidence-review-meta" aria-label="VIGIL review details">
             <MetaField label="Reviewer" value={evidence.reviewer} />
             <MetaField label="Reviewed" value={evidence.reviewDate} />
