@@ -262,6 +262,8 @@ export default function EvidenceChainReportDeterministic() {
   const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
+  const severityBasis = failure ? firstText(failure.raw, ["severity_assessment.assessment_basis"]) : undefined;
+  const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
   const diagnostic = diagnosticProvenance(failure);
   const title = failure?.title ?? "VIGIL Case File";
   const summary = failure?.summary ?? failure?.publicDisplay.finding;
@@ -315,32 +317,32 @@ export default function EvidenceChainReportDeterministic() {
               <p className="vigil-evidence-kicker">VIGIL governance assessment</p>
               <p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
             </section>
-            <div className="grid gap-5 sm:grid-cols-2">
-              <section><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
-            </div>
-            {assessmentBoundaries.length > 0 && <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4">
-              <p className="report-label">Diagnostic limitations</p>
-              <TextList items={assessmentBoundaries} />
-            </section>}
-            {diagnostic && <section className="rounded-lg border border-border/60 bg-[hsl(38_48%_97%)] p-4">
-              <p className="report-label">Diagnostic relevance</p>
-              <dl className="mt-3 grid gap-4 sm:grid-cols-2">
-                <Field label="Method" value={diagnosticMethodLabel(diagnostic.method)} />
-                <Field label="Diagnosed" value={diagnostic.diagnosticDate} />
-                <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ") || undefined} />
-                <Field label="Review status" value={diagnostic.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
-              </dl>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                {diagnostic.humanRole && <div><p className="report-label">Human contribution</p><p className="mt-1 text-base leading-relaxed text-foreground/85">{diagnostic.humanRole}</p></div>}
-                {diagnostic.aiRole && <div><p className="report-label">AI contribution</p><p className="mt-1 text-base leading-relaxed text-foreground/85">{diagnostic.aiRole}</p></div>}
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.85fr)]">
+              <div className="grid gap-4">
+                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
               </div>
-              {(diagnostic.authorityBoundary || diagnostic.attributionBasis) && <div className="mt-4">
-                <p className="report-label">Authority and attribution</p>
-                {diagnostic.authorityBoundary && <p className="mt-1 text-base leading-relaxed text-foreground/85"><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
-                {diagnostic.attributionBasis && <p className="mt-1 text-base leading-relaxed text-foreground/85"><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
-              </div>}
-            </section>}
+              <aside className="rounded-lg bg-[hsl(38_48%_97%)] p-4">
+                <p className="report-label">Diagnostic relevance</p>
+                <dl className="mt-3 grid gap-4">
+                  <Field label="Severity" value={failure.severity ? titleizeValue(failure.severity) : undefined} />
+                  <Field label="Severity basis" value={severityBasis} />
+                  <Field label="Severity assessed" value={severityAssessedOn} />
+                  <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />
+                  <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
+                  <Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} />
+                  <Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
+                  <Field label="Human contribution" value={diagnostic?.humanRole} />
+                  <Field label="AI contribution" value={diagnostic?.aiRole} />
+                  <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+                  <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+                </dl>
+              </aside>
+            </div>
+            {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open>
+              <summary>Limits of the diagnosis</summary>
+              <div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div>
+            </details>}
           </article> : <Empty>No structured diagnosis is available.</Empty>}
         </Stage>
 
@@ -353,7 +355,6 @@ export default function EvidenceChainReportDeterministic() {
               <Field label="Canonical failure name" value={taxonomy.name} />
               <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
               <Field label="Taxonomy reference" value={taxonomy.reference} />
-              <Field label="Severity" value={failure.severity ? titleizeValue(failure.severity) : undefined} />
             </dl>
           </article> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
