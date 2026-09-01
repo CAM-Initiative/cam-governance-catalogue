@@ -325,6 +325,8 @@ export default function VigilCaseFile() {
   const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
+  const severityBasis = failure ? firstText(failure.raw, ["severity_assessment.assessment_basis"]) : undefined;
+  const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
   const referenceCount = externalSources.length + taxonomyReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
@@ -367,47 +369,42 @@ export default function VigilCaseFile() {
             <p className="vigil-library-kicker">VIGIL governance assessment</p>
             <p>{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
           </section>
-          <div className="vigil-diagnosis-mechanism-pair">
-            <section>
-              <p className="vigil-diagnostic-meta-label">Factual basis</p>
-              <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
-            </section>
-            <section>
-              <p className="vigil-diagnostic-meta-label">Governance significance</p>
-              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
-            </section>
-          </div>
-          {assessmentBoundaries.length > 0 && <section className="vigil-diagnostic-limitations">
-            <p className="vigil-diagnostic-meta-label">Diagnostic limitations</p>
-            <TextList items={assessmentBoundaries} />
-          </section>}
-        </div>}
-        {diagnostic && <details className="vigil-diagnostic-relevance">
-          <summary>Diagnostic relevance</summary>
-          <div className="vigil-diagnostic-relevance-body">
-            <dl className="vigil-evidence-source-meta" aria-label="Diagnostic relevance details">
-              {diagnosticMethodLabel(diagnostic.method) && <div className="vigil-evidence-meta-field"><dt>Method</dt><dd>{diagnosticMethodLabel(diagnostic.method)}</dd></div>}
-              {(diagnostic.aiPlatform || diagnostic.aiModel) && <div className="vigil-evidence-meta-field"><dt>AI collaborator</dt><dd>{[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")}</dd></div>}
-              {diagnostic.diagnosticDate && <div className="vigil-evidence-meta-field"><dt>Diagnosed</dt><dd>{diagnostic.diagnosticDate}</dd></div>}
-              {diagnostic.reviewStatus && <div className="vigil-evidence-meta-field"><dt>Review status</dt><dd>{reviewStatusLabel(diagnostic.reviewStatus)}</dd></div>}
-            </dl>
-            <div className="vigil-diagnostic-contributions">
-              {diagnostic.humanRole && <section>
-                <p className="vigil-diagnostic-meta-label">Human contribution</p>
-                <p>{diagnostic.humanRole}</p>
-              </section>}
-              {diagnostic.aiRole && <section>
-                <p className="vigil-diagnostic-meta-label">AI contribution</p>
-                <p>{diagnostic.aiRole}</p>
-              </section>}
+
+          <div className="vigil-diagnosis-analysis-layout">
+            <div className="vigil-diagnosis-reading-stack">
+              <section>
+                <p className="vigil-diagnostic-meta-label">Factual basis</p>
+                <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
+              </section>
+              <section>
+                <p className="vigil-diagnostic-meta-label">Governance significance</p>
+                <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+              </section>
             </div>
-            {(diagnostic.authorityBoundary || diagnostic.attributionBasis) && <section className="vigil-diagnostic-authority">
-              <p className="vigil-diagnostic-meta-label">Authority and attribution</p>
-              {diagnostic.authorityBoundary && <p><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
-              {diagnostic.attributionBasis && <p><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
-            </section>}
+
+            <aside className="vigil-diagnosis-metadata-panel" aria-label="Diagnostic metadata">
+              <p className="vigil-diagnostic-meta-label">Diagnostic relevance</p>
+              <dl className="vigil-evidence-review-meta">
+                <Field label="Severity" value={severityDisplay(failure.severity)} />
+                <Field label="Severity basis" value={severityBasis} />
+                <Field label="Severity assessed" value={severityAssessedOn} />
+                {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
+                {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
+                <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
+                <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
+                <Field label="Human contribution" value={diagnostic?.humanRole} />
+                <Field label="AI contribution" value={diagnostic?.aiRole} />
+                <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+                <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+              </dl>
+            </aside>
           </div>
-        </details>}
+
+          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations">
+            <summary>Limits of the diagnosis</summary>
+            <div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div>
+          </details>}
+        </div>}
       </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
     </>;
 
