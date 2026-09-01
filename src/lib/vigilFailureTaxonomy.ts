@@ -25,6 +25,22 @@ export type FailureTaxonomyRelationship = {
   note?: string;
 };
 
+export type FailureTaxonomyRecognition = {
+  required_conditions?: string[];
+};
+
+export type FailureTaxonomySubtype = {
+  name: string;
+  plain_english?: string;
+  definition?: string;
+  recognition?: FailureTaxonomyRecognition;
+  exclusions?: string[];
+  examples?: string[];
+  aliases?: string[];
+  historical_class_id?: string;
+  historical_class_code?: string;
+};
+
 export type FailureTaxonomyClass = {
   class_id: string;
   class_code: string;
@@ -34,13 +50,12 @@ export type FailureTaxonomyClass = {
   abstraction: string;
   plain_english: string;
   definition: string;
-  recognition?: {
-    required_conditions?: string[];
-  };
+  recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   relationships?: FailureTaxonomyRelationship[];
   aliases?: string[];
+  subtypes?: FailureTaxonomySubtype[];
 };
 
 export type FailureTaxonomyFamily = {
@@ -88,16 +103,17 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 const TAXONOMY_PATH = "vigil/taxonomy";
 const VIGIL_MAIN_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/${TAXONOMY_PATH}`;
-const VIGIL_PROTOTYPE_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/failure-taxonomy-prototype/${TAXONOMY_PATH}`;
+const VIGIL_WORKING_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/bounded-incident-classification-provenance-repair/${TAXONOMY_PATH}`;
 
 export const VIGIL_FAILURE_TAXONOMY_INDEX_URL = `${VIGIL_MAIN_TAXONOMY_ROOT}/VIGIL.FailureTaxonomy.Index.json`;
+export const VIGIL_FAILURE_TAXONOMY_PREVIEW_INDEX_URL = `${VIGIL_WORKING_TAXONOMY_ROOT}/VIGIL.FailureTaxonomy.Index.json`;
 
 function candidateRoots() {
-  // Production always consumes canonical VIGIL main. The working-branch fallback
-  // exists only so local/Codespaces development can build the UI before the
-  // taxonomy package is promoted upstream.
+  // Production consumes canonical VIGIL main. Local/Codespaces development uses
+  // the active VIGIL working branch first so the interface can be inspected
+  // against unreleased Incident/taxonomy changes before both repositories merge.
   return import.meta.env.DEV
-    ? [VIGIL_MAIN_TAXONOMY_ROOT, VIGIL_PROTOTYPE_TAXONOMY_ROOT]
+    ? [VIGIL_WORKING_TAXONOMY_ROOT, VIGIL_MAIN_TAXONOMY_ROOT]
     : [VIGIL_MAIN_TAXONOMY_ROOT];
 }
 
@@ -123,7 +139,7 @@ export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Prom
   return {
     status: "unavailable",
     attemptedUrl: lastUrl,
-    message: `The VIGIL Failure Taxonomy dataset is not yet available from the canonical public source (${lastStatus}).`,
+    message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${lastStatus}).`,
   };
 }
 
@@ -144,7 +160,7 @@ export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<F
           index,
           families,
           sourceRoot: root,
-          previewSource: root === VIGIL_PROTOTYPE_TAXONOMY_ROOT,
+          previewSource: root === VIGIL_WORKING_TAXONOMY_ROOT,
         },
       };
     } catch (error) {
@@ -155,6 +171,6 @@ export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<F
   return {
     status: "unavailable",
     attemptedUrl: lastUrl,
-    message: `The VIGIL Failure Taxonomy dataset is not yet available from the canonical public source (${lastStatus}).`,
+    message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${lastStatus}).`,
   };
 }

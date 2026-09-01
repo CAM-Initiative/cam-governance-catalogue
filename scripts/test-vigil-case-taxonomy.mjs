@@ -12,6 +12,8 @@ const reportCss = await readFile(resolve(repoRoot, "src/vigil-deterministic-repo
 const taxonomyPanel = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
 const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTaxonomy.ts"), "utf8");
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
+const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
+const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification failureId=\{failure\.id\} raw=\{failure\.raw\}/);
@@ -45,14 +47,27 @@ for (const detail of [
   "Taxonomy relationships",
   "Aliases",
   "Why this Case File maps here",
+  "Recognition subtypes and historical folded classes",
+  "Historical class ID",
 ]) {
   assert.match(taxonomyPanel, new RegExp(detail), `missing canonical taxonomy detail: ${detail}`);
 }
 
-for (const state of ["classified", "family-only", "candidate-new-class", "unmapped", "deferred"]) {
+for (const state of [
+  "classified",
+  "provisionally-classified",
+  "classification-disputed",
+  "requires-human-review",
+  "unclassified",
+  "family-only",
+  "candidate-new-class",
+  "unmapped",
+  "deferred",
+]) {
   assert.match(taxonomyPanel, new RegExp(`\\"${state}\\"`), `missing explicit taxonomy state ${state}`);
 }
 
+assert.match(taxonomyPanel, /currently proposed taxonomy mapping for a disputed classification/);
 assert.match(taxonomyPanel, /No legacy taxonomy fallback has been applied/);
 assert.doesNotMatch(taxonomyPanel, /OPS\.FF/);
 assert.doesNotMatch(taxonomyPanel, /canonical_failure_group/);
@@ -62,6 +77,27 @@ assert.doesNotMatch(taxonomyPanel, /failure_subtype/);
 assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
 assert.match(taxonomyLoader, /index\.families\.map/);
 assert.match(taxonomyLoader, /entry\.file/);
+assert.match(taxonomyLoader, /agent\/bounded-incident-classification-provenance-repair/);
+assert.match(taxonomyLoader, /VIGIL_WORKING_TAXONOMY_ROOT, VIGIL_MAIN_TAXONOMY_ROOT/);
+assert.match(taxonomyLoader, /subtypes\?: FailureTaxonomySubtype\[\]/);
+
+// Local/Codespaces inspection must resolve both the Incident index and canonical
+// record-detail pointers against the active VIGIL working branch. Production stays
+// canonical because vigilPreviewUrl is a no-op outside import.meta.env.DEV.
+assert.match(vigilRegistry, /VIGIL_WORKING_BRANCH = "agent\/bounded-incident-classification-provenance-repair"/);
+assert.match(vigilRegistry, /function vigilPreviewUrl/);
+assert.match(vigilRegistry, /VIGIL_INCIDENT_REGISTRY_URL = vigilPreviewUrl/);
+assert.match(vigilRegistry, /if \(record\.raw_url\) return vigilPreviewUrl\(record\.raw_url\)/);
+assert.match(vigilRegistry, /const branch = import\.meta\.env\.DEV \? VIGIL_WORKING_BRANCH/);
+
+// Evidence cards no longer expose the retired aggregate "Evidence confidence"
+// label. They expose source provenance dimensions that remain valid under the
+// source-level evidence-status architecture while the canonical record remains
+// available for the full evidence-status basis.
+assert.doesNotMatch(evidenceCard, /Evidence confidence/);
+for (const label of ["Source role", "Source residence", "Evidence modality", "Direct artefact review"]) {
+  assert.match(evidenceCard, new RegExp(label), `missing source-level evidence metadata: ${label}`);
+}
 
 // The Case Files landing page deliberately exposes only a binary mapped/not-mapped
 // outcome under the retained public "Failure type" label.
@@ -85,6 +121,8 @@ assert.match(caseFile, /reference\.id} — \{reference\.title/);
 assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
+assert.match(taxonomyClassification, /classification-disputed/);
+assert.match(taxonomyClassification, /requires-human-review/);
 
 // Datasets downloads the generated VIGIL Observatory publication as a real PDF
 // blob instead of navigating users to raw GitHub HTML. The main-branch URL is
@@ -145,4 +183,4 @@ assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
-console.log("VIGIL Observatory Case File investigation status, taxonomy PDF download, deterministic report layout and copyright contract passed");
+console.log("VIGIL Observatory Case File taxonomy, working-branch preview, richer source metadata and deterministic report contract passed");

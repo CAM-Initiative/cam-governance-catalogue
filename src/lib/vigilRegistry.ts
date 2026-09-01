@@ -19,10 +19,18 @@ type RegistryPointer = {
 };
 
 const childRegistryRecordKeys = ["failure_modes", "observations", "proposals", "patch_notes", "records", "items"];
+const VIGIL_WORKING_BRANCH = "agent/bounded-incident-classification-provenance-repair";
+const VIGIL_MAIN_SEGMENT = "/CAM-Initiative/Vigil/main/";
+const VIGIL_WORKING_SEGMENT = `/CAM-Initiative/Vigil/${VIGIL_WORKING_BRANCH}/`;
+
+function vigilPreviewUrl(url: string) {
+  if (!import.meta.env.DEV) return url;
+  return url.includes(VIGIL_MAIN_SEGMENT) ? url.replace(VIGIL_MAIN_SEGMENT, VIGIL_WORKING_SEGMENT) : url;
+}
 
 export const VIGIL_REGISTRY_SOURCE = registrySources.vigil;
-export const VIGIL_REGISTRY_URL = VIGIL_REGISTRY_SOURCE.registry_index_url;
-export const VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE.incident_registry_index_url;
+export const VIGIL_REGISTRY_URL = vigilPreviewUrl(VIGIL_REGISTRY_SOURCE.registry_index_url);
+export const VIGIL_INCIDENT_REGISTRY_URL = vigilPreviewUrl(VIGIL_REGISTRY_SOURCE.incident_registry_index_url);
 export const VIGIL_FALLBACK_URL = `${import.meta.env.BASE_URL}data/vigil-registry-fallback.json`;
 
 export function cacheBustUrl(url: string, version = Date.now()) {
@@ -112,8 +120,8 @@ function parseResearchMarkdown(source: string): UnknownRecord {
 }
 
 async function fetchCanonicalDetail(fetcher: FetchLike, url: string): Promise<unknown> {
-  const response = await fetcher(url, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Unable to load ${url} (${response.status})`);
+  const response = await fetcher(vigilPreviewUrl(url), { cache: "no-store" });
+  if (!response.ok) throw new Error(`Unable to load ${vigilPreviewUrl(url)} (${response.status})`);
   if (isMarkdownUrl(url)) return parseResearchMarkdown(await response.text());
   return response.json() as Promise<unknown>;
 }
@@ -163,7 +171,7 @@ export async function resolveVigilRegistryRecords(registry: unknown, fetcher: Fe
   const childRecordSets = await Promise.all(childRegistries.map(async (pointer, index) => {
     const childUrl = pointer.raw_url ?? pointer.registry_index_url ?? pointer.url;
     if (!childUrl) return [];
-    const childPayload = await fetchJson(fetcher, cacheBustUrl(childUrl));
+    const childPayload = await fetchJson(fetcher, cacheBustUrl(vigilPreviewUrl(childUrl)));
     return recordsFromRegistryPayload(childPayload).map((record) => {
       const normalizedRecord: UnknownRecord = isObject(record) ? { ...record } : { summary: record };
       if (normalizedRecord.source_registry === undefined) normalizedRecord.source_registry = sourceRegistryLabel(pointer, index);
@@ -179,7 +187,7 @@ export async function loadVigilRegistry(
   liveRegistryUrl = VIGIL_REGISTRY_URL,
   fallbackRegistryUrl = VIGIL_FALLBACK_URL,
 ): Promise<RegistryLoadResult> {
-  const attemptedUrl = cacheBustUrl(liveRegistryUrl);
+  const attemptedUrl = cacheBustUrl(vigilPreviewUrl(liveRegistryUrl));
 
   try {
     const liveRegistry = await fetchJson(fetcher, attemptedUrl);
@@ -217,15 +225,17 @@ export async function loadVigilIncidentRecords(fetcher: FetchLike = fetch): Prom
 }
 
 export function githubBlobUrlForRecord(record: { github_blob_url?: string; path?: string }) {
-  if (record.github_blob_url) return record.github_blob_url;
+  if (record.github_blob_url) return vigilPreviewUrl(record.github_blob_url);
   if (!record.path) return undefined;
-  return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+  const branch = import.meta.env.DEV ? VIGIL_WORKING_BRANCH : VIGIL_REGISTRY_SOURCE.branch;
+  return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${branch}/${record.path}`;
 }
 
 export function rawUrlForRecord(record: { raw_url?: string; path?: string }) {
-  if (record.raw_url) return record.raw_url;
+  if (record.raw_url) return vigilPreviewUrl(record.raw_url);
   if (!record.path) return undefined;
-  return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+  const branch = import.meta.env.DEV ? VIGIL_WORKING_BRANCH : VIGIL_REGISTRY_SOURCE.branch;
+  return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${branch}/${record.path}`;
 }
 
 export async function loadVigilRecordDetail(

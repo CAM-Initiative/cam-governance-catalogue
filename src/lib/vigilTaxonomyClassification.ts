@@ -1,7 +1,16 @@
 import { loadFailureTaxonomy, type FailureTaxonomyDataset } from "@/lib/vigilFailureTaxonomy";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
-export type TaxonomyClassificationStatus = "classified" | "provisionally-classified" | "unclassified" | "family-only" | "candidate-new-class" | "unmapped" | "deferred";
+export type TaxonomyClassificationStatus =
+  | "classified"
+  | "provisionally-classified"
+  | "classification-disputed"
+  | "requires-human-review"
+  | "unclassified"
+  | "family-only"
+  | "candidate-new-class"
+  | "unmapped"
+  | "deferred";
 
 export type TaxonomyReferenceTarget = {
   id: string;
@@ -42,7 +51,10 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   if (classification) {
     const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
     if (record.record_type === "incident") {
-      return status === "classified" || status === "provisionally-classified" ? "Classified" : "Unclassified";
+      if (status === "classified" || status === "provisionally-classified") return "Classified";
+      if (status === "classification-disputed") return "Classification disputed";
+      if (status === "requires-human-review") return "Requires human review";
+      return "Unclassified";
     }
     const primaryClass = classLabel(classification.primary_class);
     if (primaryClass) return primaryClass;
@@ -52,13 +64,17 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
     if (status === "candidate-new-class") return primaryFamily ? `${primaryFamily} · Candidate new class` : "Candidate new class";
     if (status === "unmapped") return "Unmapped";
     if (status === "deferred") return "Deferred";
+    if (status === "classification-disputed") return "Classification disputed";
+    if (status === "requires-human-review") return "Requires human review";
     if (status === "classified") return "Classified";
     return primaryFamily ?? "Not classified";
   }
 
   const summary = taxonomyClassificationSummary(record);
   const status = text(summary?.classification_status) as TaxonomyClassificationStatus | undefined;
-  if (status === "classified") return "Classified";
+  if (status === "classified" || status === "provisionally-classified") return "Classified";
+  if (status === "classification-disputed") return "Classification disputed";
+  if (status === "requires-human-review") return "Requires human review";
   if (status === "family-only") return "Family only";
   if (status === "candidate-new-class") return "Candidate new class";
   if (status === "unmapped") return "Unmapped";
@@ -118,9 +134,13 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
 
   const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
   const incidentPrimary = isObject(classification.primary_classification) ? classification.primary_classification : undefined;
-  if ((status === "classified" || status === "provisionally-classified") && incidentPrimary) add("primary", incidentPrimary, incidentPrimary);
-  else if (status === "classified") add("primary", classification.primary_family, classification.primary_class);
-  else if (status === "family-only") add("family-only", classification.primary_family);
+  if (["classified", "provisionally-classified", "classification-disputed"].includes(status ?? "") && incidentPrimary) {
+    add("primary", incidentPrimary, incidentPrimary);
+  } else if (status === "classified") {
+    add("primary", classification.primary_family, classification.primary_class);
+  } else if (status === "family-only") {
+    add("family-only", classification.primary_family);
+  }
 
   if (Array.isArray(classification.secondary_classifications)) {
     for (const item of classification.secondary_classifications) {
