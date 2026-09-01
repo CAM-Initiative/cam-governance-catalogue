@@ -261,7 +261,7 @@ function ExplicitState({ status, family }: { status?: ClassificationStatus; fami
   return <p className="vigil-case-empty">No VIGIL-native taxonomy classification is recorded for this Incident. Section 03 will populate when the Incident receives a canonical family/class mapping.</p>;
 }
 
-export function CaseTaxonomyClassification({ failureId, raw, severityLabel }: Props) {
+export function CaseTaxonomyClassification({ raw }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const [taxonomy, setTaxonomy] = useState<TaxonomyState>({ status: "loading" });
 
@@ -284,13 +284,11 @@ export function CaseTaxonomyClassification({ failureId, raw, severityLabel }: Pr
   const renderPrimary = parsed.status === "classified" || parsed.status === "provisionally-classified" || parsed.status === "classification-disputed";
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
-    <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-(?:\d{4}-)?/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
     <div className="vigil-classification-topline"><span>Taxonomy state</span><strong><b>{statusLabel(parsed.status)}</b></strong></div>
     <ExplicitState status={parsed.status} family={primary} />
   </div>;
 
   return <div className="vigil-taxonomy-classification-view">
-    <div className="vigil-classification-topline"><span>{failureId.replace(/^VIGIL-(?:\d{4}-)?/i, "")}</span><strong>Severity <b>{severityLabel}</b></strong></div>
     <div className="vigil-classification-topline"><span>Taxonomy state</span><strong><b>{statusLabel(parsed.status)}</b></strong></div>
 
     {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
