@@ -177,6 +177,18 @@ function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance |
   };
 }
 
+function diagnosticMethodLabel(value?: string) {
+  if (!value) return undefined;
+  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (
+    normalized.includes("incident-02-record-split")
+    || normalized.includes("occurrence-reconciliation")
+    || normalized.includes("incident-02")
+  ) return undefined;
+  if (value === "human-ai-collaborative-analysis") return "Human–AI collaborative analysis";
+  return titleizeValue(value);
+}
+
 function taxonomyMeta(record: VigilIndexRecord) {
   const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]);
   const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
@@ -198,8 +210,8 @@ function TextList({ items }: { items: string[] }) {
 }
 
 function Stage({ number, label, children }: { number: string; label: string; children: ReactNode }) {
-  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-white p-5 md:p-6">
-    <header className="flex items-start gap-4 border-b border-[hsl(38_25%_80%)] pb-4">
+  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_98%)] p-5 md:p-6">
+    <header className="-mx-1 flex items-start gap-4 border-b border-[hsl(38_25%_80%)] bg-[hsl(38_48%_98%)] px-1 pb-4">
       <span className="font-mono text-base tracking-[0.12em] text-cam-gold">{number}</span>
       <h2 className="font-serif text-2xl text-foreground">{label}</h2>
     </header>
@@ -280,9 +292,9 @@ export default function EvidenceChainReportDeterministic() {
 
       <div className="space-y-5">
         <Stage number="01" label="Observation">
-          {affectedSystems.length > 0 && <section className="mb-5">
-            <p className="vigil-evidence-kicker">Affected systems</p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
+          {affectedSystems.length > 0 && <section className="mb-5 rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
+            <p className="report-label">Affected systems</p>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
               <dl className="grid gap-3 sm:grid-cols-2">
                 <Field label="Provider / platform" value={system.provider} />
                 <Field label="Product / service" value={system.product} />
@@ -304,28 +316,31 @@ export default function EvidenceChainReportDeterministic() {
               <p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
             </section>
             <div className="grid gap-5 sm:grid-cols-2">
-              <section><p className="vigil-evidence-kicker">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><p className="vigil-evidence-kicker">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+              <section><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
             </div>
-            {assessmentBoundaries.length > 0 && <section>
-              <p className="vigil-evidence-kicker">Assessment boundaries</p>
+            {assessmentBoundaries.length > 0 && <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4">
+              <p className="report-label">Diagnostic limitations</p>
               <TextList items={assessmentBoundaries} />
             </section>}
-            {diagnostic && <details className="vigil-evidence-limitations">
-              <summary>Diagnostic provenance</summary>
-              <div className="vigil-evidence-boundary-list">
-                <dl className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Method" value={diagnostic.method ? titleizeValue(diagnostic.method) : undefined} />
-                  <Field label="Diagnosed" value={diagnostic.diagnosticDate} />
-                  <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ") || undefined} />
-                  <Field label="Review status" value={diagnostic.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
-                </dl>
-                {diagnostic.humanRole && <p><strong>Human contribution.</strong> {diagnostic.humanRole}</p>}
-                {diagnostic.aiRole && <p><strong>AI contribution.</strong> {diagnostic.aiRole}</p>}
-                {diagnostic.authorityBoundary && <p><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
-                {diagnostic.attributionBasis && <p><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
+            {diagnostic && <section className="rounded-lg border border-border/60 bg-[hsl(38_48%_97%)] p-4">
+              <p className="report-label">Diagnostic relevance</p>
+              <dl className="mt-3 grid gap-4 sm:grid-cols-2">
+                <Field label="Method" value={diagnosticMethodLabel(diagnostic.method)} />
+                <Field label="Diagnosed" value={diagnostic.diagnosticDate} />
+                <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ") || undefined} />
+                <Field label="Review status" value={diagnostic.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
+              </dl>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {diagnostic.humanRole && <div><p className="report-label">Human contribution</p><p className="mt-1 text-base leading-relaxed text-foreground/85">{diagnostic.humanRole}</p></div>}
+                {diagnostic.aiRole && <div><p className="report-label">AI contribution</p><p className="mt-1 text-base leading-relaxed text-foreground/85">{diagnostic.aiRole}</p></div>}
               </div>
-            </details>}
+              {(diagnostic.authorityBoundary || diagnostic.attributionBasis) && <div className="mt-4">
+                <p className="report-label">Authority and attribution</p>
+                {diagnostic.authorityBoundary && <p className="mt-1 text-base leading-relaxed text-foreground/85"><strong>Authority boundary.</strong> {diagnostic.authorityBoundary}</p>}
+                {diagnostic.attributionBasis && <p className="mt-1 text-base leading-relaxed text-foreground/85"><strong>Model attribution.</strong> {diagnostic.attributionBasis}</p>}
+              </div>}
+            </section>}
           </article> : <Empty>No structured diagnosis is available.</Empty>}
         </Stage>
 
