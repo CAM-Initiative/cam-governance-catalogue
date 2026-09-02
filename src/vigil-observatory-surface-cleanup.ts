@@ -72,6 +72,25 @@ function makeOverviewSourcesCollapsible() {
   });
 }
 
+function alphabetizeTaxonomyContents() {
+  const contents = document.querySelector<HTMLElement>("#taxonomy-contents");
+  const familyList = contents?.querySelector<HTMLOListElement>(":scope > ol");
+  if (!familyList) return;
+
+  const sortChildrenByVisibleName = (list: HTMLOListElement | HTMLUListElement) => {
+    const items = Array.from(list.children).filter((child): child is HTMLLIElement => child instanceof HTMLLIElement);
+    const sorted = [...items].sort((left, right) => {
+      const leftName = left.querySelector<HTMLAnchorElement>(":scope > .vigil-taxonomy-manual-family-link-row a, :scope > a")?.textContent?.trim() ?? "";
+      const rightName = right.querySelector<HTMLAnchorElement>(":scope > .vigil-taxonomy-manual-family-link-row a, :scope > a")?.textContent?.trim() ?? "";
+      return leftName.localeCompare(rightName, undefined, { sensitivity: "base", numeric: true });
+    });
+    if (items.some((item, index) => item !== sorted[index])) sorted.forEach((item) => list.append(item));
+  };
+
+  sortChildrenByVisibleName(familyList);
+  familyList.querySelectorAll<HTMLUListElement>(":scope > li > ul").forEach((classList) => sortChildrenByVisibleName(classList));
+}
+
 function polishIncidentDiagnosisSeverity() {
   const diagnosis = document.querySelector<HTMLElement>(".vigil-case-file-page .vigil-diagnosis-mechanism");
   const metadataPanel = diagnosis?.querySelector<HTMLElement>(".vigil-diagnosis-metadata-panel");
@@ -124,6 +143,7 @@ function applyObservatorySurfaceCleanup() {
   polishCaseFilesKicker();
   polishOfficialSourceLinks();
   makeOverviewSourcesCollapsible();
+  alphabetizeTaxonomyContents();
   polishIncidentDiagnosisSeverity();
 }
 
