@@ -20,6 +20,7 @@ import "./sitewide-typography-floor.css";
 import "./vigil-evidence-reading-hierarchy.css";
 import "./vigil-case-file-dossier.css";
 import "./vigil-case-file-polish.css";
+import "./vigil-incident-severity-refinement.css";
 import "./vigil-case-library-simplify.css";
 import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
