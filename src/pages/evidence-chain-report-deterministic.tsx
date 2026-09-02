@@ -189,6 +189,21 @@ function diagnosticMethodLabel(value?: string) {
   return titleizeValue(value);
 }
 
+function severityDisplay(value?: string) {
+  const raw = value?.trim();
+  if (!raw) return "Not assessed";
+  const code = raw.toUpperCase();
+  const labels: Record<string, string> = {
+    S0: "Critical",
+    S1: "High",
+    S2: "Moderate",
+    S3: "Low",
+    S4: "Negligible",
+    SU: "To be assessed",
+  };
+  return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
+}
+
 function taxonomyMeta(record: VigilIndexRecord) {
   const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]);
   const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
@@ -285,9 +300,8 @@ export default function EvidenceChainReportDeterministic() {
         <p className="font-mono text-sm uppercase tracking-[0.16em] text-cam-gold">VIGIL Case File · deterministic report</p>
         <h1 className="mt-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h1>
         {summary && <p className="mt-3 max-w-4xl text-base leading-relaxed text-foreground/80">{summary}</p>}
-        <dl className="mt-5 grid gap-3 border-t border-border/60 pt-4 sm:grid-cols-3">
+        <dl className="mt-5 grid gap-3 border-t border-border/60 pt-4 sm:grid-cols-2">
           <Field label="Incident" value={failure?.id ?? state.sourceId} />
-          <Field label="Severity" value={failure?.severity ? titleizeValue(failure.severity) : undefined} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
       </header>
@@ -295,7 +309,7 @@ export default function EvidenceChainReportDeterministic() {
       <div className="space-y-5">
         <Stage number="01" label="Observation">
           {affectedSystems.length > 0 && <section className="mb-5 rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
-            <p className="report-label">Affected systems</p>
+            <p className="report-substantive-label">Affected systems</p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
               <dl className="grid gap-3 sm:grid-cols-2">
                 <Field label="Provider / platform" value={system.provider} />
@@ -317,16 +331,23 @@ export default function EvidenceChainReportDeterministic() {
               <p className="vigil-evidence-kicker">VIGIL governance assessment</p>
               <p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
             </section>
+
+            <section className="report-severity-assessment rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
+              <p className="report-substantive-label">Severity assessment</p>
+              <dl className="mt-3 grid gap-4 sm:grid-cols-[minmax(10rem,0.34fr)_minmax(0,1fr)]">
+                <Field label="Severity" value={severityDisplay(failure.severity)} />
+                <Field label="Severity basis" value={severityBasis} />
+              </dl>
+            </section>
+
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.85fr)]">
               <div className="grid gap-4">
-                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
               </div>
               <aside className="rounded-lg bg-[hsl(38_48%_97%)] p-4">
-                <p className="report-label">Diagnostic relevance</p>
+                <p className="report-label">Diagnostic metadata</p>
                 <dl className="mt-3 grid gap-4">
-                  <Field label="Severity" value={failure.severity ? titleizeValue(failure.severity) : undefined} />
-                  <Field label="Severity basis" value={severityBasis} />
                   <Field label="Severity assessed" value={severityAssessedOn} />
                   <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />
                   <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
