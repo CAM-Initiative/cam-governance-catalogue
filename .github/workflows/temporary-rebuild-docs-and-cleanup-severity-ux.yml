@@ -1,0 +1,63 @@
+name: Temporary rebuild docs and cleanup severity UX
+
+on:
+  push:
+    branches:
+      - agent/incident-severity-ux-refinement
+    paths:
+      - ".github/workflows/temporary-rebuild-docs-and-cleanup-severity-ux.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild-cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/incident-severity-ux-refinement
+          persist-credentials: true
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate palette
+        run: node scripts/validate-cam-palette.mjs
+
+      - name: Build website
+        run: pnpm exec vite build
+
+      - name: Prepare GitHub Pages routes
+        run: node scripts/prepare-github-pages.js
+
+      - name: Validate published docs output
+        run: python scripts/validate-docs-published-output.py
+
+      - name: Retire temporary workflows and commit published output
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f \
+            .github/workflows/temporary-align-incident-severity-ux.yml \
+            .github/workflows/temporary-align-incident-severity-ux-v2.yml \
+            .github/workflows/temporary-commit-incident-severity-ux.yml \
+            .github/workflows/temporary-rebuild-docs-and-cleanup-severity-ux.yml
+          git add docs
+          git commit -m "chore: publish structured Incident severity UX [skip ci]"
+          git push origin HEAD:agent/incident-severity-ux-refinement
