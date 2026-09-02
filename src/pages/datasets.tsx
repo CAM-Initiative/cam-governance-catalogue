@@ -11,8 +11,6 @@ import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vig
 const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
-  // Working-branch fallback keeps catalogue previews testable until the canonical VIGIL publication commit is merged.
-  "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/bounded-incident-classification-provenance-repair/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
 
 type DatasetState = {
