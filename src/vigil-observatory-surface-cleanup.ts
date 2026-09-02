@@ -72,10 +72,59 @@ function makeOverviewSourcesCollapsible() {
   });
 }
 
+function polishIncidentDiagnosisSeverity() {
+  const diagnosis = document.querySelector<HTMLElement>(".vigil-case-file-page .vigil-diagnosis-mechanism");
+  const metadataPanel = diagnosis?.querySelector<HTMLElement>(".vigil-diagnosis-metadata-panel");
+  if (!diagnosis || !metadataPanel) return;
+
+  const metadataHeading = metadataPanel.querySelector<HTMLElement>(":scope > .vigil-diagnostic-meta-label");
+  if (metadataHeading && metadataHeading.textContent?.trim() !== "Diagnostic metadata") {
+    metadataHeading.textContent = "Diagnostic metadata";
+  }
+
+  if (diagnosis.dataset.severityUxReady !== "true") {
+    const layout = diagnosis.querySelector<HTMLElement>(".vigil-diagnosis-analysis-layout");
+    const metadataList = metadataPanel.querySelector<HTMLDListElement>(".vigil-evidence-review-meta");
+    const metadataFields = Array.from(metadataList?.children ?? []) as HTMLElement[];
+    const severityFields = metadataFields.filter((field) => {
+      const label = field.querySelector("dt")?.textContent?.trim();
+      return label === "Severity" || label === "Severity basis";
+    });
+
+    if (layout && severityFields.length) {
+      const section = document.createElement("section");
+      section.className = "vigil-severity-assessment";
+      section.setAttribute("aria-label", "Severity assessment");
+
+      const heading = document.createElement("div");
+      heading.className = "vigil-case-subheading";
+      const kicker = document.createElement("p");
+      kicker.className = "vigil-library-kicker";
+      kicker.textContent = "Severity assessment";
+      const title = document.createElement("h3");
+      title.textContent = "Occurrence-level impact assessment";
+      heading.append(kicker, title);
+
+      const grid = document.createElement("div");
+      grid.className = "vigil-severity-assessment-grid";
+      severityFields.forEach((field) => grid.append(field));
+      section.append(heading, grid);
+      layout.before(section);
+    }
+
+    diagnosis.dataset.severityUxReady = "true";
+  }
+
+  document.querySelectorAll<HTMLElement>(".vigil-case-file-page .vigil-case-meta-panel .vigil-case-field").forEach((field) => {
+    if (field.querySelector("dt")?.textContent?.trim() === "Severity") field.remove();
+  });
+}
+
 function applyObservatorySurfaceCleanup() {
   polishCaseFilesKicker();
   polishOfficialSourceLinks();
   makeOverviewSourcesCollapsible();
+  polishIncidentDiagnosisSeverity();
 }
 
 if (typeof document !== "undefined") {
