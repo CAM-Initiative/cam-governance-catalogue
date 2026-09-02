@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { loadVigilRegistryRecords } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
 
@@ -17,12 +17,6 @@ type HubState = {
   taxonomyClasses?: number;
   taxonomyAvailable?: boolean;
 };
-
-function isFailureModeRecord(record: Record<string, unknown>) {
-  const id = String(record.id ?? record.record_id ?? "");
-  const type = String(record.record_type ?? "").toLowerCase();
-  return /^VIGIL-\d{4}-FM-\d{4}$/i.test(id) || type === "failure_mode";
-}
 
 function CollectionCard({
   href,
@@ -63,11 +57,11 @@ export default function VigilKnowledgeHub() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadVigilRegistryRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex()])
-      .then(([registry, clauses, sources, taxonomy]) => {
+    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex()])
+      .then(([incidents, clauses, sources, taxonomy]) => {
         if (cancelled) return;
         setState({
-          caseFiles: registry.records.filter((record) => isFailureModeRecord(record)).length,
+          caseFiles: incidents.records.length,
           clauses: clauses.status === "ready" ? clauses.data.length : undefined,
           sources: sources.status === "ready"
             ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
@@ -88,7 +82,7 @@ export default function VigilKnowledgeHub() {
     : "Dataset unavailable";
 
   const caseFilesMeta = state.caseFiles === undefined
-    ? "AI failure mode investigations"
+    ? "AI Incident investigations"
     : `${state.caseFiles} case ${state.caseFiles === 1 ? "file" : "files"}`;
 
   const taxonomyMeta = state.taxonomyAvailable
@@ -118,7 +112,7 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/observatory/cases"
               title="Case Files"
-              description="Documented AI failure-mode investigations organised through Observation, Diagnosis, Classification, Repair, Learn and References, with record-local evidence and traceable governance repair."
+              description="Documented AI Incident investigations organised through Observation, Diagnosis, Classification and References, with record-local evidence and occurrence-level governance analysis."
               meta={caseFilesMeta}
               actionLabel="Browse case files"
             />
