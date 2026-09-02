@@ -69,6 +69,7 @@ export default function EvidenceChainReportPrintable() {
   const [reportFailure, setReportFailure] = useState<ReportFailure>();
   const [classificationSlot, setClassificationSlot] = useState<HTMLElement | null>(null);
   const [referenceList, setReferenceList] = useState<HTMLOListElement | null>(null);
+  const [referenceSection, setReferenceSection] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -128,6 +129,7 @@ export default function EvidenceChainReportPrintable() {
           }
         }
         if (number === "04") {
+          setReferenceSection(section);
           const list = section.querySelector<HTMLOListElement>("ol");
           if (list) {
             referenceBaseCountRef.current = list.children.length;
@@ -175,6 +177,19 @@ export default function EvidenceChainReportPrintable() {
       </li>)}</>, referenceList)
     : null;
 
+  const reliancePortal = referenceSection ? createPortal(
+    <section className="report-reliance-notice border-t border-border/60 pt-5 text-muted-foreground" aria-labelledby="report-reliance-heading">
+      <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
+      <p className="mt-2">
+        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+      </p>
+      <p className="report-copyright mt-3">
+        Copyright © 2026 Dr Michelle O'Rourke.
+      </p>
+    </section>,
+    referenceSection,
+  ) : null;
+
   return <div ref={hostRef} className="vigil-deterministic-report-host">
     <aside className="print:hidden sticky top-0 z-40 border-b border-border bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:px-6 md:px-10" aria-label="PDF section controls">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -203,14 +218,6 @@ export default function EvidenceChainReportPrintable() {
       classificationSlot,
     ) : null}
     {taxonomyReferencePortal}
-    <section className="report-reliance-notice mx-auto max-w-6xl border-t border-border/60 px-4 py-5 text-muted-foreground sm:px-6 md:px-10" aria-labelledby="report-reliance-heading">
-      <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
-      <p className="mt-2">
-        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
-      </p>
-      <p className="report-copyright mt-3">
-        Copyright © 2026 Dr Michelle O'Rourke.
-      </p>
-    </section>
+    {reliancePortal}
   </div>;
 }
