@@ -214,7 +214,7 @@ export default function EvidenceChainReportPrintable() {
     </aside>
     <EvidenceChainReportDeterministic />
     {classificationSlot && reportFailure ? createPortal(
-      <CaseTaxonomyClassification failureId={reportFailure.id} raw={reportFailure.raw} severityLabel={reportFailure.severity ?? "Not assessed"} />,
+      <CaseTaxonomyClassification failureId={reportFailure.id} raw={reportFailure.raw} />,
       classificationSlot,
     ) : null}
     {taxonomyReferencePortal}

@@ -194,12 +194,11 @@ function severityDisplay(value?: string) {
   if (!raw) return "Not assessed";
   const code = raw.toUpperCase();
   const labels: Record<string, string> = {
-    S0: "Critical",
-    S1: "High",
-    S2: "Moderate",
-    S3: "Low",
-    S4: "Negligible",
-    SU: "To be assessed",
+    S1: "Critical",
+    S2: "High",
+    S3: "Moderate",
+    S4: "Low",
+    SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
@@ -277,8 +276,14 @@ export default function EvidenceChainReportDeterministic() {
   const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
-  const severityBasis = failure ? firstText(failure.raw, ["severity_assessment.assessment_basis"]) : undefined;
-  const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
+  const severityStatus = failure ? firstText(failure.raw, ["severity_assessment.assessment_status"]) : undefined;
+const severityMaterialisedConsequence = failure ? firstText(failure.raw, ["severity_assessment.materialised_consequence"]) : undefined;
+const severityAffectedScope = failure ? firstText(failure.raw, ["severity_assessment.affected_scope"]) : undefined;
+const severitySeriousnessPersistence = failure ? firstText(failure.raw, ["severity_assessment.seriousness_and_persistence"]) : undefined;
+const severityQuantitativeInformation = failure ? firstText(failure.raw, ["severity_assessment.quantitative_information"]) : undefined;
+const severityEvidentiaryLimits = failure ? firstText(failure.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
+const severityBandRationale = failure ? firstText(failure.raw, ["severity_assessment.band_rationale"]) : undefined;
+const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
   const diagnostic = diagnosticProvenance(failure);
   const title = failure?.title ?? "VIGIL Case File";
   const summary = failure?.summary ?? failure?.publicDisplay.finding;
@@ -326,46 +331,27 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
 
         <Stage number="02" label="Diagnosis">
-          {failure ? <article className="space-y-5">
-            <section>
-              <p className="vigil-evidence-kicker">VIGIL governance assessment</p>
-              <p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
-            </section>
-
-            <section className="report-severity-assessment rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
-              <p className="report-substantive-label">Severity assessment</p>
-              <dl className="mt-3 grid gap-4 sm:grid-cols-[minmax(10rem,0.34fr)_minmax(0,1fr)]">
-                <Field label="Severity" value={severityDisplay(failure.severity)} />
-                <Field label="Severity basis" value={severityBasis} />
-              </dl>
-            </section>
-
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.85fr)]">
-              <div className="grid gap-4">
-                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
-              </div>
-              <aside className="rounded-lg bg-[hsl(38_48%_97%)] p-4">
-                <p className="report-label">Diagnostic metadata</p>
-                <dl className="mt-3 grid gap-4">
-                  <Field label="Severity assessed" value={severityAssessedOn} />
-                  <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />
-                  <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
-                  <Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} />
-                  <Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
-                  <Field label="Human contribution" value={diagnostic?.humanRole} />
-                  <Field label="AI contribution" value={diagnostic?.aiRole} />
-                  <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
-                  <Field label="Model attribution" value={diagnostic?.attributionBasis} />
-                </dl>
-              </aside>
+        {failure ? <article className="space-y-5">
+          <section><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p></section>
+          <section className="report-severity-assessment rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
+            <p className="report-substantive-label">Occurrence-level severity</p>
+            <dl className="mt-3 grid gap-4 sm:grid-cols-3"><Field label="Severity" value={severityDisplay(failure.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Materialised consequence</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
+              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Affected scope</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
+              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Seriousness & persistence</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
+              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Quantitative information</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
+              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Evidentiary limits</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
+              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Why this severity band</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
             </div>
-            {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open>
-              <summary>Limits of the diagnosis</summary>
-              <div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div>
-            </details>}
-          </article> : <Empty>No structured diagnosis is available.</Empty>}
-        </Stage>
+          </section>
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.85fr)]">
+            <div className="grid gap-4"><section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
+            <aside className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Diagnostic provenance</p><dl className="mt-3 grid gap-4"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Diagnosed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
+          </div>
+          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the diagnosis</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
+        </article> : <Empty>No structured diagnosis is available.</Empty>}
+      </Stage>
 
         <Stage number="03" label="Classification">
           {failure ? <article>

@@ -41,7 +41,6 @@ type ResolvedClassification = ClassificationRef & {
 type Props = {
   failureId: string;
   raw: UnknownRecord;
-  severityLabel: string;
 };
 
 type TaxonomyState =

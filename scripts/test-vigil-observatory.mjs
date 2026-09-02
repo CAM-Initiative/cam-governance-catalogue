@@ -106,6 +106,14 @@ test("VIGIL normalization rejects non-canonical identifiers and indexes source m
   }
 });
 
+test("Case File keeps structured Incident severity in diagnosis rather than taxonomy classification", async () => {
+  const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
+  const taxonomy = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
+  for (const field of ["materialised_consequence", "affected_scope", "seriousness_and_persistence", "quantitative_information", "evidentiary_limits", "band_rationale"]) assert.ok(caseFile.includes(`severity_assessment.${field}`));
+  assert.ok(caseFile.includes("Occurrence-level severity"));
+  assert.equal(taxonomy.includes("severityLabel"), false);
+});
+
 test("VIGIL normalization resolves canonical system and platform fields", async () => {
   const { tempDir, modules } = await loadVigilModules();
   try {
