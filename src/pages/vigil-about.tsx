@@ -39,7 +39,17 @@ export default function VigilAbout() {
       <p className="vigil-about-record-intro">Each public Case File follows the same six-stage report structure: Observation, Diagnosis, Classification, Repair, Learn and References. That structure keeps the evidence of what happened separate from the diagnosis of the failure mechanism, the taxonomy classification and any proposed or implemented governance response.</p>
       <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL six-stage evidence-to-repair report model" tabIndex={0}>
         <div className="vigil-about-flow">
-          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>Stage {section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}
+          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => {
+            const isPrototype = section.number === "04" || section.number === "05";
+            return <article key={section.number}>
+              <div className="flex items-center justify-between gap-2">
+                <span>Stage {section.number}</span>
+                {isPrototype ? <span className="cam-beta-chip">Prototype</span> : null}
+              </div>
+              <h3>{section.label}</h3>
+              <p>{section.description}</p>
+            </article>;
+          })}
         </div>
       </div>
       <p className="vigil-about-note">A reported incident is not automatically a new failure class. VIGIL first asks what mechanism failed, whether that mechanism is already represented in the taxonomy, and what the available evidence actually supports.</p>
