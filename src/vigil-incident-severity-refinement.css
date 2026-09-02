@@ -1,5 +1,7 @@
 /* Incident diagnosis severity refinement.
-   Severity is substantive occurrence-level diagnosis, while reviewer/method fields remain metadata. */
+   Severity is substantive occurrence-level diagnosis, while reviewer/method fields remain metadata.
+   This file also establishes the Diagnosis heading contract so later generic metadata styles cannot
+   collapse substantive labels back to metadata scale. */
 
 .vigil-case-file-page .vigil-severity-assessment {
   margin: 0 1.25rem 1.1rem;
@@ -51,17 +53,17 @@
   color: hsl(var(--foreground) / 0.9);
 }
 
-/* Factual basis and Governance significance use the same quiet heading grammar
-   as Observation's substantive evidence headings. */
+/* Substantive Diagnosis labels mirror Observation's reading labels: uppercase grey,
+   but visibly larger than metadata labels. */
 .vigil-case-file-page .vigil-diagnosis-reading-stack > section > .vigil-diagnostic-meta-label {
   margin: 0 !important;
   font-family: var(--app-font-sans) !important;
   font-size: 0.8rem !important;
   font-weight: 650 !important;
   line-height: 1.35 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-  color: hsl(var(--foreground) / 0.74) !important;
+  letter-spacing: 0.07em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--muted-foreground) / 0.72) !important;
 }
 
 .vigil-case-file-page .vigil-diagnosis-reading-stack > section > p:last-child {
