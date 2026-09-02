@@ -1,0 +1,86 @@
+name: Temporary commit Incident severity UX
+
+on:
+  push:
+    branches:
+      - agent/incident-severity-ux-refinement
+    paths:
+      - ".github/workflows/temporary-commit-incident-severity-ux.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  commit-severity-ux:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/incident-severity-ux-refinement
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Apply the reviewed structured-severity patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source = Path('.github/workflows/temporary-align-incident-severity-ux-v2.yml').read_text(encoding='utf-8')
+          marker = "          python - <<'PY'\n"
+          start = source.index(marker) + len(marker)
+          end = source.index("\n          PY\n", start)
+          script = source[start:end]
+          # Remove the workflow YAML indentation before executing the Python body.
+          script = '\n'.join(line[10:] if line.startswith('          ') else line for line in script.splitlines())
+          namespace = {'__name__': '__main__'}
+          exec(compile(script, '<structured-severity-patch>', 'exec'), namespace)
+          PY
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Compile production site
+        run: pnpm exec vite build
+
+      - name: Verify severity/classification boundary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          case = Path('src/pages/vigil-case-file.tsx').read_text(encoding='utf-8')
+          report = Path('src/pages/evidence-chain-report-deterministic.tsx').read_text(encoding='utf-8')
+          taxonomy = Path('src/components/vigil/CaseTaxonomyClassification.tsx').read_text(encoding='utf-8')
+          fields = [
+              'materialised_consequence', 'affected_scope', 'seriousness_and_persistence',
+              'quantitative_information', 'evidentiary_limits', 'band_rationale'
+          ]
+          for field in fields:
+              assert f'severity_assessment.{field}' in case, field
+              assert f'severity_assessment.{field}' in report, field
+          assert 'Occurrence-level severity' in case
+          assert 'severityLabel' not in taxonomy
+          print('Structured Incident severity remains in Diagnosis and is absent from taxonomy Classification.')
+          PY
+
+      - name: Commit severity UX alignment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/pages/vigil-case-file.tsx \
+            src/pages/evidence-chain-report-deterministic.tsx \
+            src/pages/evidence-chain-report-printable.tsx \
+            src/components/vigil/CaseTaxonomyClassification.tsx \
+            src/vigil-incident-severity-refinement.css \
+            scripts/test-vigil-observatory.mjs \
+            VIGIL-PUBLIC-DISPLAY-CONTRACT.md
+          git commit -m "feat: render structured Incident severity in diagnosis"
+          git push origin HEAD:agent/incident-severity-ux-refinement
