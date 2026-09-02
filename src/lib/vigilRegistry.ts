@@ -67,16 +67,12 @@ function parseResearchMarkdown(source: string): UnknownRecord {
   const frontMatter = lines.slice(1, end).join("\n").trim();
   let metadata: UnknownRecord = {};
 
-  // VIGIL research artefacts deliberately preserve their structured metadata as
-  // JSON inside Markdown front matter. Support that canonical form first, then
-  // retain the small YAML fallback for future hand-authored research records.
   if (frontMatter.startsWith("{")) {
     try {
       const parsed = JSON.parse(frontMatter) as unknown;
       if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) metadata = parsed as UnknownRecord;
     } catch {
-      // Fall through to the conservative YAML parser below. The canonical body
-      // remains readable even if a future record has malformed front matter.
+      // Fall through to the conservative YAML parser below.
     }
   }
 

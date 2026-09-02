@@ -13,45 +13,10 @@ import {
 } from "@/lib/vigilPresentation";
 import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
 
-type CaseChain = {
-  observations: string[];
-  failureModes: string[];
-  proposals: string[];
-  patches: string[];
-  learns: string[];
-};
-
-type LearnItem = {
-  id: string;
-  title: string;
-  summary?: string;
-  abstractedLearning?: string;
-  whatHappened: string[];
-  governanceMisconception: string[];
-  integratedLearning: string[];
-  riskIfNotIntegrated: string[];
-  futureApplication: string[];
-  generalisationBoundary?: string;
-  primaryFailureMode?: string;
-  primaryFailureFamilyCode?: string;
-  canonicalFailureName?: string;
-  taxonomyReference?: string;
-  raw: UnknownRecord;
-  githubUrl?: string;
-};
-
 type ReportState =
   | { status: "loading" }
   | { status: "error"; message: string }
-  | {
-      status: "ready";
-      sourceId: string;
-      anchorFailureIds: string[];
-      records: VigilIndexRecord[];
-      learns: LearnItem[];
-      chain: CaseChain;
-      generatedAt: string;
-    };
+  | { status: "ready"; sourceId: string; records: VigilIndexRecord[]; generatedAt: string };
 
 type ExternalEvidence = {
   title: string;
@@ -71,16 +36,17 @@ type AffectedSystem = {
   deploymentContext?: string;
 };
 
-const VIGIL_ID = /VIGIL-\d{4}-(?:OBS|RESEARCH|FM|PROP|PATCH|LEARN)-\d{4}/gi;
-const LEARN_ID = /^VIGIL-\d{4}-LEARN-\d{4}$/i;
-const REPORT_STAGES = [
-  ["01", "Observation"],
-  ["02", "Diagnosis"],
-  ["03", "Classification"],
-  ["04", "Repair"],
-  ["05", "Learn"],
-  ["06", "References"],
-] as const;
+type DiagnosticProvenance = {
+  method?: string;
+  diagnosticDate?: string;
+  humanRole?: string;
+  aiRole?: string;
+  aiPlatform?: string;
+  aiModel?: string;
+  attributionBasis?: string;
+  reviewStatus?: string;
+  authorityBoundary?: string;
+};
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -96,17 +62,6 @@ function text(value: unknown): string | undefined {
   return undefined;
 }
 
-function textList(value: unknown): string[] {
-  const values = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
-  const seen = new Set<string>();
-  return values.flatMap((item) => text(item) ? [text(item)!] : []).filter((item) => {
-    const key = item.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
 function firstText(record: UnknownRecord, paths: string[]) {
   for (const path of paths) {
     const value = text(valueAt(record, path));
@@ -115,109 +70,17 @@ function firstText(record: UnknownRecord, paths: string[]) {
   return undefined;
 }
 
-function objectList(value: unknown): UnknownRecord[] {
-  return Array.isArray(value) ? value.filter(isObject) : [];
+function textList(value: unknown): string[] {
+  const values = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
+  return values.flatMap((item) => text(item) ? [text(item)!] : []);
 }
 
-function firstObjectList(record: UnknownRecord, paths: string[]) {
+function firstTextList(record: UnknownRecord, paths: string[]) {
   for (const path of paths) {
-    const values = objectList(valueAt(record, path));
+    const values = textList(valueAt(record, path));
     if (values.length) return values;
   }
   return [];
-}
-
-function recordId(raw: UnknownRecord) {
-  return text(raw.id ?? raw.record_id ?? (isObject(raw.record_identity) ? raw.record_identity.record_id : undefined));
-}
-
-function unique(values: string[]) {
-  const seen = new Set<string>();
-  return values.filter((value) => {
-    const key = value.toUpperCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
-function referencedIds(raw: UnknownRecord) {
-  return unique(JSON.stringify(raw).match(VIGIL_ID) ?? []);
-}
-
-function emptyChain(): CaseChain {
-  return { observations: [], failureModes: [], proposals: [], patches: [], learns: [] };
-}
-
-function addId(chain: CaseChain, id: string, anchorFailureIds?: string[]) {
-  if (/-OBS-|-RESEARCH-/i.test(id)) chain.observations.push(id);
-  else if (/-FM-/i.test(id)) {
-    if (!anchorFailureIds || anchorFailureIds.length === 0 || anchorFailureIds.some((anchor) => anchor.toUpperCase() === id.toUpperCase())) chain.failureModes.push(id);
-  }
-  else if (/-PROP-/i.test(id)) chain.proposals.push(id);
-  else if (/-PATCH-/i.test(id)) chain.patches.push(id);
-  else if (/-LEARN-/i.test(id)) chain.learns.push(id);
-}
-
-function normalizeChain(chain: CaseChain): CaseChain {
-  return {
-    observations: unique(chain.observations),
-    failureModes: unique(chain.failureModes),
-    proposals: unique(chain.proposals),
-    patches: unique(chain.patches),
-    learns: unique(chain.learns),
-  };
-}
-
-function mergeChain(target: CaseChain, source: CaseChain, anchorFailureIds?: string[]) {
-  for (const id of [...source.observations, ...source.failureModes, ...source.proposals, ...source.patches, ...source.learns]) addId(target, id, anchorFailureIds);
-  return normalizeChain(target);
-}
-
-function chainIds(chain: CaseChain) {
-  return [...chain.observations, ...chain.failureModes, ...chain.proposals, ...chain.patches, ...chain.learns];
-}
-
-function chainFromRecord(record: VigilIndexRecord): CaseChain {
-  const publicChain = record.publicDisplay.chain;
-  const chain: CaseChain = {
-    observations: [...publicChain.observations],
-    failureModes: [...publicChain.failureModes],
-    proposals: [...publicChain.proposals],
-    patches: [...publicChain.patches],
-    learns: [],
-  };
-  addId(chain, record.id);
-  return normalizeChain(chain);
-}
-
-function taxonomyLink(raw: UnknownRecord) {
-  const links = raw.failure_taxonomy_links;
-  return Array.isArray(links) && isObject(links[0]) ? links[0] : undefined;
-}
-
-function normalizeLearn(raw: UnknownRecord): LearnItem | undefined {
-  const id = recordId(raw);
-  if (!id || !LEARN_ID.test(id)) return undefined;
-  const taxonomy = taxonomyLink(raw);
-  return {
-    id,
-    title: text(raw.report_title ?? raw.title ?? (isObject(raw.record_identity) ? raw.record_identity.title : undefined)) ?? id,
-    summary: text(raw.summary),
-    abstractedLearning: text(raw.abstracted_learning),
-    whatHappened: textList(raw.what_happened),
-    governanceMisconception: textList(raw.governance_misconception),
-    integratedLearning: textList(raw.integrated_learning ?? raw.must_not_be_forgotten),
-    riskIfNotIntegrated: textList(raw.risk_if_not_integrated),
-    futureApplication: textList(raw.future_application),
-    generalisationBoundary: text(raw.generalisation_boundary),
-    primaryFailureMode: text(raw.primary_failure_mode) ?? text(taxonomy?.primary_failure_mode),
-    primaryFailureFamilyCode: text(raw.primary_failure_family_code) ?? text(taxonomy?.primary_failure_family_code),
-    canonicalFailureName: text(raw.canonical_failure_name) ?? text(taxonomy?.canonical_failure_name),
-    taxonomyReference: text(raw.taxonomy_reference) ?? text(taxonomy?.taxonomy_reference),
-    raw,
-    githubUrl: text(raw.github_blob_url ?? raw.raw_url),
-  };
 }
 
 function mergeRecordDetail(indexRecord: VigilIndexRecord, detail: UnknownRecord) {
@@ -233,86 +96,6 @@ function mergeRecordDetail(indexRecord: VigilIndexRecord, detail: UnknownRecord)
 async function detailedRecord(indexRecord: VigilIndexRecord) {
   try { return mergeRecordDetail(indexRecord, await loadVigilRecordDetail(indexRecord.raw)); }
   catch { return indexRecord; }
-}
-
-async function detailedLearn(raw: UnknownRecord) {
-  const fallback = normalizeLearn(raw);
-  if (!fallback) return undefined;
-  try { return normalizeLearn({ ...raw, ...await loadVigilRecordDetail(raw) }) ?? fallback; }
-  catch { return fallback; }
-}
-
-function failureAnchors(sourceId: string, sourceRecord: VigilIndexRecord | undefined, records: VigilIndexRecord[], rawRecords: UnknownRecord[]) {
-  if (sourceRecord?.record_type === "failure_mode") return [sourceRecord.id];
-  if (sourceRecord?.publicDisplay.chain.failureModes.length) return [sourceRecord.publicDisplay.chain.failureModes[0]];
-
-  const directlyLinked = records
-    .filter((record) => record.record_type === "failure_mode")
-    .filter((record) => {
-      const linked = new Set([...record.publicDisplay.chain.observations, ...referencedIds(record.raw)].map((id) => id.toUpperCase()));
-      return linked.has(sourceId.toUpperCase());
-    })
-    .map((record) => record.id)
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-  if (directlyLinked.length) return [directlyLinked[0]];
-
-  const referenced = rawRecords.flatMap((raw) => {
-    const ids = referencedIds(raw);
-    return ids.some((id) => id.toUpperCase() === sourceId.toUpperCase()) ? ids.filter((id) => /-FM-/i.test(id)) : [];
-  }).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-  return referenced.length ? [referenced[0]] : [];
-}
-
-function intersects(values: string[], targets: Set<string>) {
-  return values.some((value) => targets.has(value.toUpperCase()));
-}
-
-function reconstructCaseChain(sourceId: string, sourceRecord: VigilIndexRecord | undefined, anchorFailureIds: string[], records: VigilIndexRecord[], rawRecords: UnknownRecord[]) {
-  let chain = emptyChain();
-  if (sourceRecord) chain = mergeChain(chain, chainFromRecord(sourceRecord), anchorFailureIds);
-  addId(chain, sourceId, anchorFailureIds);
-  for (const anchorId of anchorFailureIds) addId(chain, anchorId, anchorFailureIds);
-
-  for (const anchorId of anchorFailureIds) {
-    const anchor = records.find((record) => record.id.toUpperCase() === anchorId.toUpperCase());
-    if (anchor) chain = mergeChain(chain, chainFromRecord(anchor), anchorFailureIds);
-  }
-
-  for (let pass = 0; pass < 4; pass += 1) {
-    const before = chainIds(chain).map((id) => id.toUpperCase()).sort().join("|");
-    const known = new Set(chainIds(chain).map((id) => id.toUpperCase()));
-    const anchors = new Set(anchorFailureIds.map((id) => id.toUpperCase()));
-    const knownProposals = new Set(chain.proposals.map((id) => id.toUpperCase()));
-
-    for (const record of records) {
-      if (record.record_type === "learn" || record.record_type === "failure_mode" && !anchors.has(record.id.toUpperCase())) continue;
-      const rawRefs = referencedIds(record.raw);
-      const recordFailureLinks = record.publicDisplay.chain.failureModes.map((id) => id.toUpperCase());
-      const directlyKnown = known.has(record.id.toUpperCase());
-      const tiedToAnchor = recordFailureLinks.some((id) => anchors.has(id)) || intersects(rawRefs, anchors);
-      const tiedToProposal = record.publicDisplay.chain.proposals.some((id) => knownProposals.has(id.toUpperCase())) || intersects(rawRefs, knownProposals);
-      if (!directlyKnown && !tiedToAnchor && !tiedToProposal) continue;
-      addId(chain, record.id, anchorFailureIds);
-      chain = mergeChain(chain, chainFromRecord(record), anchorFailureIds);
-    }
-
-    const expandedKnown = new Set(chainIds(chain).map((id) => id.toUpperCase()));
-    for (const raw of rawRecords) {
-      const id = recordId(raw);
-      if (!id || !LEARN_ID.test(id)) continue;
-      const refs = referencedIds(raw);
-      if (id.toUpperCase() !== sourceId.toUpperCase() && !intersects(refs, expandedKnown) && !intersects(refs, anchors)) continue;
-      addId(chain, id, anchorFailureIds);
-      for (const linkedId of refs) addId(chain, linkedId, anchorFailureIds);
-    }
-
-    chain.failureModes = [...anchorFailureIds];
-    chain = normalizeChain(chain);
-    const after = chainIds(chain).map((id) => id.toUpperCase()).sort().join("|");
-    if (after === before) break;
-  }
-  chain.failureModes = [...anchorFailureIds];
-  return normalizeChain(chain);
 }
 
 function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
@@ -333,6 +116,16 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       description: text(source.source_context ?? source.description ?? source.relevance_note),
     }];
   });
+}
+
+function sourceEvidenceStatus(record: VigilIndexRecord | undefined, index: number) {
+  if (!record || !Array.isArray(record.raw.source_records)) return {};
+  const source = record.raw.source_records[index];
+  if (!isObject(source)) return {};
+  return {
+    evidenceStatus: text(source.evidence_status),
+    evidenceStatusBasis: text(source.evidence_status_basis),
+  };
 }
 
 function dedupeEvidence(evidence: ExternalEvidence[]) {
@@ -368,46 +161,40 @@ function dedupeSystems(records: VigilIndexRecord[]) {
   });
 }
 
-function coverageItems(record?: VigilIndexRecord) {
-  if (!record) return [];
-  return firstObjectList(record.raw, ["existing_cam_coverage", "existing_coverage"]).map((item, index) => ({
-    key: `${text(item.instrument ?? item.instrument_id) ?? "coverage"}-${index}`,
-    instrument: text(item.instrument ?? item.instrument_id),
-    section: text(item.section ?? item.provision),
-    coverageType: text(item.coverage_type ?? item.relationship),
-    relevance: text(item.relevance ?? item.coverage_summary),
-    internalFailure: text(item.internal_failure),
-  }));
+function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
+  if (!record || !isObject(record.raw.diagnostic_provenance)) return undefined;
+  const provenance = record.raw.diagnostic_provenance;
+  return {
+    method: text(provenance.method),
+    diagnosticDate: text(provenance.diagnostic_date),
+    humanRole: text(provenance.human_role),
+    aiRole: text(provenance.ai_role),
+    aiPlatform: text(provenance.ai_platform),
+    aiModel: text(provenance.ai_model),
+    attributionBasis: text(provenance.model_attribution_basis),
+    reviewStatus: text(provenance.review_status),
+    authorityBoundary: text(provenance.authority_boundary),
+  };
 }
 
-function proposalTargets(record: VigilIndexRecord) {
-  return unique([
-    ...textList(valueAt(record.raw, "proposal_scope.cam_instruments")),
-    ...textList(valueAt(record.raw, "cam_internal.target_instruments")),
-    ...textList(valueAt(record.raw, "implementation_notes.suggested_insertion_points")),
-  ]);
+function diagnosticMethodLabel(value?: string) {
+  if (!value) return undefined;
+  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
+  if (
+    normalized.includes("incident-02-record-split")
+    || normalized.includes("occurrence-reconciliation")
+    || normalized.includes("incident-02")
+  ) return undefined;
+  if (value === "human-ai-collaborative-analysis") return "Human–AI collaborative analysis";
+  return titleizeValue(value);
 }
 
-function proposalRequiredChange(record: VigilIndexRecord) {
-  return record.publicDisplay.proposal?.proposedOutcome
-    ?? firstText(record.raw, ["proposal_scope.scope_summary", "proposal_rationale"])
-    ?? record.publicDisplay.finding
-    ?? record.summary;
-}
-
-function patchResponseSummary(record: VigilIndexRecord) {
-  return record.publicDisplay.patch?.repairSummary
-    ?? record.publicDisplay.patch?.outcome
-    ?? record.publicDisplay.finding
-    ?? record.summary;
-}
-
-function taxonomyMeta(record: VigilIndexRecord, learn?: LearnItem) {
-  const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]) ?? learn?.taxonomyReference;
+function taxonomyMeta(record: VigilIndexRecord) {
+  const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]);
   const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
   return {
-    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? learn?.primaryFailureFamilyCode ?? (group ? `OPS.FF.${group.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_")}` : undefined),
-    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]) ?? learn?.canonicalFailureName,
+    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? (group ? `OPS.FF.${group.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_")}` : undefined),
+    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]),
     reference,
   };
 }
@@ -418,12 +205,13 @@ function Field({ label, value }: { label: string; value?: string }) {
 }
 
 function TextList({ items }: { items: string[] }) {
-  return <ul className="mt-2 list-disc space-y-1 pl-5 text-base leading-relaxed text-foreground/85">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
+  if (!items.length) return null;
+  return <ul className="mt-2 space-y-2 text-base leading-relaxed text-foreground/85">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
 }
 
 function Stage({ number, label, children }: { number: string; label: string; children: ReactNode }) {
-  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-5 md:p-6">
-    <header className="flex items-start gap-4 border-b border-[hsl(38_25%_80%)] pb-4">
+  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_98%)] p-5 md:p-6">
+    <header className="-mx-1 flex items-start gap-4 border-b border-[hsl(38_25%_80%)] bg-[hsl(38_48%_98%)] px-1 pb-4">
       <span className="font-mono text-base tracking-[0.12em] text-cam-gold">{number}</span>
       <h2 className="font-serif text-2xl text-foreground">{label}</h2>
     </header>
@@ -432,7 +220,7 @@ function Stage({ number, label, children }: { number: string; label: string; chi
 }
 
 function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-lg border border-dashed border-border/70 bg-white/35 p-4 text-base leading-relaxed text-muted-foreground">{children}</p>;
+  return <p className="rounded-lg border border-dashed border-border/70 p-4 text-base leading-relaxed text-muted-foreground">{children}</p>;
 }
 
 export default function EvidenceChainReportDeterministic() {
@@ -449,18 +237,8 @@ export default function EvidenceChainReportDeterministic() {
         const indexById = new Map(normalized.map((record) => [record.id, record]));
         const sourceIndex = indexById.get(sourceId);
         if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
-
         const incident = await detailedRecord(sourceIndex);
-        const chain: CaseChain = { observations: [], failureModes: [incident.id], proposals: [], patches: [], learns: [] };
-        if (!cancelled) setState({
-          status: "ready",
-          sourceId,
-          anchorFailureIds: [incident.id],
-          records: [incident],
-          learns: [],
-          chain,
-          generatedAt: new Date().toISOString(),
-        });
+        if (!cancelled) setState({ status: "ready", sourceId, records: [incident], generatedAt: new Date().toISOString() });
       } catch (error) {
         if (!cancelled) setState({ status: "error", message: (error as Error).message });
       }
@@ -469,12 +247,8 @@ export default function EvidenceChainReportDeterministic() {
     return () => { cancelled = true; };
   }, [sourceId]);
 
-  const byId = useMemo(() => new Map(state.status === "ready" ? state.records.map((record) => [record.id, record]) : []), [state]);
-  const observations = state.status === "ready" ? state.chain.observations.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)) : [];
-  const failures = state.status === "ready" ? state.chain.failureModes.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)) : [];
-  const proposals = state.status === "ready" ? state.chain.proposals.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)) : [];
-  const patches = state.status === "ready" ? state.chain.patches.map((id) => byId.get(id)).filter((record): record is VigilIndexRecord => Boolean(record)) : [];
-  const failure = state.status === "ready" ? failures.find((record) => state.anchorFailureIds[0]?.toUpperCase() === record.id.toUpperCase()) ?? failures[0] : undefined;
+  const observations: VigilIndexRecord[] = [];
+  const failure = state.status === "ready" ? state.records[0] : undefined;
   const failureDetail = useMemo(() => failure ? deriveFailureModePublicDetail(failure.raw, failure.publicDisplay) : undefined, [failure]);
   const externalSources = useMemo(() => state.status === "ready" && failure ? dedupeEvidence([failure, ...observations].flatMap(externalEvidenceFor)) : [], [failure, observations, state]);
   const affectedSystems = useMemo(() => failure ? dedupeSystems([failure, ...observations]) : dedupeSystems(observations), [failure, observations]);
@@ -482,29 +256,21 @@ export default function EvidenceChainReportDeterministic() {
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
-  const learnForFailure = failure ? state.learns.find((learn) => learn.primaryFailureMode?.toUpperCase() === failure.id.toUpperCase()) ?? state.learns[0] : state.learns[0];
-  const taxonomy = failure ? taxonomyMeta(failure, learnForFailure) : {};
+  const taxonomy: ReturnType<typeof taxonomyMeta> = failure ? taxonomyMeta(failure) : { code: undefined, name: undefined, reference: undefined };
   const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
-  const existingCoverage = coverageItems(failure);
-  const governanceGap = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation", "governance_gap"]) : undefined;
+  const governanceAssessment = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
-  const repairHypothesis = failure ? firstText(failure.raw, ["repair_hypothesis"]) : undefined;
-  const requiredChanges = unique(proposals.map(proposalRequiredChange).filter((value): value is string => Boolean(value)));
-  if (!requiredChanges.length && repairHypothesis) requiredChanges.push(repairHypothesis);
-  const placementRationales = unique([
-    ...patches.map((record) => firstText(record.raw, ["decision_trace.decision_summary"])),
-    ...proposals.map((record) => firstText(record.raw, ["proposal_rationale"])),
-  ].filter((value): value is string => Boolean(value)));
-  const targetLocations = unique(proposals.flatMap(proposalTargets));
-  const responseSummaries = unique(patches.map(patchResponseSummary).filter((value): value is string => Boolean(value)));
-  const title = failure?.title ?? learnForFailure?.title ?? "VIGIL Case File";
+  const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
+  const severityBasis = failure ? firstText(failure.raw, ["severity_assessment.assessment_basis"]) : undefined;
+  const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
+  const diagnostic = diagnosticProvenance(failure);
+  const title = failure?.title ?? "VIGIL Case File";
   const summary = failure?.summary ?? failure?.publicDisplay.finding;
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
     ...state.records.map((record) => ({ key: record.id, label: `${record.id} — ${record.title}`, detail: [record.record_last_updated, record.record_version ? `Version ${record.record_version}` : undefined].filter(Boolean).join(" · "), url: record.github_blob_url ?? record.raw_url })),
-    ...state.learns.map((learn) => ({ key: learn.id, label: `${learn.id} — ${learn.title}`, detail: "VIGIL LEARN record", url: learn.githubUrl })),
   ];
 
   return <Shell>
@@ -528,9 +294,9 @@ export default function EvidenceChainReportDeterministic() {
 
       <div className="space-y-5">
         <Stage number="01" label="Observation">
-          {affectedSystems.length > 0 && <section className="mb-5">
+          {affectedSystems.length > 0 && <section className="mb-5 rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
             <p className="report-label">Affected systems</p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="rounded-lg border border-border/70 bg-white/50 p-4">
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
               <dl className="grid gap-3 sm:grid-cols-2">
                 <Field label="Provider / platform" value={system.provider} />
                 <Field label="Product / service" value={system.product} />
@@ -541,77 +307,68 @@ export default function EvidenceChainReportDeterministic() {
               </dl>
             </article>)}</div>
           </section>}
-          {observations.length > 0 && <div className="space-y-3">{observations.map((record) => <article key={record.id} className="rounded-lg border border-border/70 bg-white/50 p-4">
-            <p className="font-mono text-sm text-cam-gold">{record.id}</p>
-            <h3 className="mt-1 font-serif text-xl text-foreground">{record.title}</h3>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85">{record.publicDisplay.observation?.observed ?? record.publicDisplay.finding ?? record.summary}</p>
-            {record.publicDisplay.observation?.context && <div className="mt-3"><p className="report-label">Context</p><p className="mt-1 text-base leading-relaxed text-foreground/80">{record.publicDisplay.observation.context}</p></div>}
-            {record.publicDisplay.observation?.interpretation && <div className="mt-3"><p className="report-label">VIGIL interpretation</p><p className="mt-1 text-base leading-relaxed text-foreground/80">{record.publicDisplay.observation.interpretation}</p></div>}
-          </article>)}</div>}
-          {failureDetail?.evidence.length ? <div className="mt-4 space-y-3">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
-          {!observations.length && !failureDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
+          {failureDetail?.evidence.length ? <div className="mt-4 space-y-3">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(failure, index) }} />)}</div> : null}
+          {!failureDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Diagnosis">
-          {failure ? <div className="space-y-4">
-            <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceGap ?? failure.publicDisplay.finding ?? failure.summary}</p></section>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section className="rounded-lg border border-border/70 bg-white/50 p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+          {failure ? <article className="space-y-5">
+            <section>
+              <p className="vigil-evidence-kicker">VIGIL governance assessment</p>
+              <p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
+            </section>
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.85fr)]">
+              <div className="grid gap-4">
+                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+                <section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+              </div>
+              <aside className="rounded-lg bg-[hsl(38_48%_97%)] p-4">
+                <p className="report-label">Diagnostic relevance</p>
+                <dl className="mt-3 grid gap-4">
+                  <Field label="Severity" value={failure.severity ? titleizeValue(failure.severity) : undefined} />
+                  <Field label="Severity basis" value={severityBasis} />
+                  <Field label="Severity assessed" value={severityAssessedOn} />
+                  <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />
+                  <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
+                  <Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} />
+                  <Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} />
+                  <Field label="Human contribution" value={diagnostic?.humanRole} />
+                  <Field label="AI contribution" value={diagnostic?.aiRole} />
+                  <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+                  <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+                </dl>
+              </aside>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <section><p className="report-label">Existing coverage</p>{existingCoverage.length ? <div className="mt-2 space-y-2">{existingCoverage.map((coverage) => <div key={coverage.key} className="rounded-lg border border-border/70 bg-white/50 p-3"><strong>{[coverage.instrument, coverage.section].filter(Boolean).join(" · ") || "Existing corpus coverage"}</strong>{coverage.coverageType && <p className="mt-1 text-sm text-cam-gold">{coverage.coverageType}</p>}{coverage.relevance && <p className="mt-1 text-sm leading-relaxed text-foreground/80">{coverage.relevance}</p>}</div>)}</div> : <p className="mt-2 text-base text-muted-foreground">No explicit existing-coverage assessment is stated.</p>}</section>
-              <section><p className="report-label">Gap identified</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceGap ?? proposals[0]?.publicDisplay.proposal?.problem ?? "No separate governance-gap statement is currently published."}</p></section>
-              <section><p className="report-label">Required governance change</p>{requiredChanges.length ? <TextList items={requiredChanges} /> : <p className="mt-2 text-base text-muted-foreground">No separate required-change statement is currently published.</p>}</section>
-              <section><p className="report-label">Placement / decision rationale</p>{placementRationales.length ? <TextList items={placementRationales} /> : <p className="mt-2 text-base text-muted-foreground">No separate placement rationale is currently published.</p>}</section>
-            </div>
-            {targetLocations.length > 0 && <section><p className="report-label">Target instruments / insertion points</p><TextList items={targetLocations} /></section>}
-          </div> : <Empty>No structured diagnosis is available.</Empty>}
+            {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open>
+              <summary>Limits of the diagnosis</summary>
+              <div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div>
+            </details>}
+          </article> : <Empty>No structured diagnosis is available.</Empty>}
         </Stage>
 
         <Stage number="03" label="Classification">
-          {failure ? <article className="rounded-lg border border-border/70 bg-white/50 p-4">
-            <dl className="grid gap-4 sm:grid-cols-2">
+          {failure ? <article>
+            <p className="vigil-evidence-kicker">Taxonomy classification</p>
+            <dl className="mt-3 grid gap-4 sm:grid-cols-2">
               <Field label="Canonical code" value={taxonomy.code} />
               <Field label="Failure type" value={family} />
               <Field label="Canonical failure name" value={taxonomy.name} />
               <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
               <Field label="Taxonomy reference" value={taxonomy.reference} />
-              <Field label="Severity" value={failure.severity ? titleizeValue(failure.severity) : undefined} />
             </dl>
           </article> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
 
-        <Stage number="04" label="Repair">
-          {patches.length > 0 ? <div className="space-y-3">{patches.map((record) => <article key={record.id} className="rounded-lg border border-border/70 bg-white/50 p-4">
-            <p className="font-mono text-sm text-cam-gold">{record.id}</p>
-            <h3 className="mt-1 font-serif text-xl text-foreground">{record.title}</h3>
-            <p className="mt-2 text-base leading-relaxed text-foreground/85">{patchResponseSummary(record)}</p>
-            {record.publicDisplay.corpusProvisions.length > 0 && <div className="mt-4 space-y-3">{record.publicDisplay.corpusProvisions.map((provision, index) => <section key={`${provision.instrumentId}-${provision.section}-${index}`} className="border-t border-border/60 pt-3"><p className="report-label">{[provision.instrumentId, provision.section].filter(Boolean).join(" · ") || "Implemented control"}</p>{provision.heading && <p className="mt-1 font-serif text-lg">{provision.heading.replace(/^#+\s*/, "")}</p>}{provision.finalWording && <p className="mt-2 whitespace-pre-wrap text-base leading-relaxed text-foreground/80">{provision.finalWording}</p>}</section>)}</div>}
-          </article>)}</div> : <Empty>No PATCH is linked yet.</Empty>}
-        </Stage>
-
-        <Stage number="05" label="Learn">
-          {state.learns.length > 0 ? <div className="space-y-3">{state.learns.map((learn) => <article key={learn.id} className="rounded-lg border border-border/70 bg-white/50 p-4">
-            <p className="font-mono text-sm text-cam-gold">{learn.id}</p>
-            <h3 className="mt-1 font-serif text-xl text-foreground">{learn.title}</h3>
-            {learn.abstractedLearning && <p className="mt-3 text-base leading-relaxed text-foreground/85">{learn.abstractedLearning}</p>}
-            {learn.whatHappened.length > 0 && <section className="mt-4"><p className="report-label">What happened</p><TextList items={learn.whatHappened} /></section>}
-            {learn.governanceMisconception.length > 0 && <section className="mt-4"><p className="report-label">Governance reasoning</p><TextList items={learn.governanceMisconception} /></section>}
-            {learn.integratedLearning.length > 0 && <section className="mt-4"><p className="report-label">Key takeaways</p><TextList items={learn.integratedLearning} /></section>}
-            {learn.riskIfNotIntegrated.length > 0 && <section className="mt-4"><p className="report-label">Governance risks</p><TextList items={learn.riskIfNotIntegrated} /></section>}
-            {learn.futureApplication.length > 0 && <section className="mt-4"><p className="report-label">Future application</p><TextList items={learn.futureApplication} /></section>}
-            {learn.generalisationBoundary && <section className="mt-4"><p className="report-label">Limitations</p><p className="mt-2 text-base leading-relaxed text-foreground/80">{learn.generalisationBoundary}</p></section>}
-          </article>)}</div> : <Empty>No published LEARN record is linked.</Empty>}
-        </Stage>
-
-        <Stage number="06" label="References">
-          {references.length > 0 ? <ol className="space-y-3">{references.map((reference, index) => <li key={reference.key} className="flex gap-3 text-base leading-relaxed text-foreground/85"><span className="font-mono text-sm text-cam-gold">[{index + 1}]</span><span className="min-w-0"><strong>{reference.label}</strong>{reference.detail ? <span className="text-muted-foreground"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}</span></li>)}</ol> : <Empty>No references are currently available.</Empty>}
+        <Stage number="04" label="References">
+          {references.length > 0 ? <>
+            <p className="vigil-evidence-kicker">Evidence and record references</p>
+            <ol className="mt-3 space-y-3">{references.map((reference, index) => <li key={reference.key} className="flex gap-3 text-base leading-relaxed text-foreground/85"><span className="font-mono text-sm text-cam-gold">[{index + 1}]</span><span className="min-w-0"><strong>{reference.label}</strong>{reference.detail ? <span className="text-muted-foreground"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}</span></li>)}</ol>
+          </> : <Empty>No references are currently available.</Empty>}
         </Stage>
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same failure anchor, case-chain reconstruction and record-local evidence scope as the interactive Case File; it does not add evidence from adjacent failure modes merely because records are cross-linked elsewhere in VIGIL.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same Incident anchor and record-local evidence scope as the interactive Case File; it does not add repair-layer material or adjacent Failure Mode analysis to the historical occurrence.
       </footer>
     </main>
   </Shell>;

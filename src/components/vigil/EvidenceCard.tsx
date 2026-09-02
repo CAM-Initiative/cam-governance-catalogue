@@ -2,6 +2,11 @@ import { ExternalLink } from "lucide-react";
 import type { PublicEvidenceCard } from "@/lib/vigilPublicDisplay";
 import { titleizeValue } from "@/lib/vigilPresentation";
 
+type EvidenceCardInput = PublicEvidenceCard & {
+  evidenceStatus?: string;
+  evidenceStatusBasis?: string;
+};
+
 function MetaField({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return <div className="vigil-evidence-meta-field"><dt>{label}</dt><dd>{value}</dd></div>;
@@ -10,20 +15,40 @@ function MetaField({ label, value }: { label: string; value?: string }) {
 function visibleBoundaryItems(items: string[]) {
   return items.filter((item) => {
     const normalized = item.trim().toLowerCase().replace(/[_\s]+/g, "-");
-    return ![
+    if ([
       "directly-reviewed",
       "direct-reviewed",
       "reviewed-directly",
       "available",
       "true",
       "yes",
-    ].includes(normalized);
+    ].includes(normalized)) return false;
+
+    const prose = item.trim().toLowerCase();
+    if (prose.startsWith("this metadata pass does not retroactively claim direct inspection")) return false;
+    if (prose.startsWith("incident admission does not determine legal liability")) return false;
+    return true;
   });
 }
 
-export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
+export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
   const boundaries = visibleBoundaryItems(evidence.evidenceBoundary);
-  const hasReviewMeta = Boolean(evidence.reviewer || evidence.sourceAccess || evidence.reviewDate);
+  const modalities = evidence.evidenceModalities.length
+    ? evidence.evidenceModalities.map(titleizeValue).join(" · ")
+    : undefined;
+  const hasMetadata = Boolean(
+    evidence.publisher
+    || evidence.date
+    || evidence.sourceType
+    || evidence.evidenceStatus
+    || evidence.reviewer
+    || evidence.sourceAccess
+    || evidence.reviewDate
+    || evidence.directReviewStatus
+    || evidence.sourceRole
+    || evidence.sourceResidence
+    || modalities,
+  );
 
   return (
     <article className="vigil-evidence-card">
@@ -38,12 +63,6 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
             {evidence.archiveUrl && <a href={evidence.archiveUrl} target="_blank" rel="noreferrer" aria-label="Open archived source" title="Open archived source"><ExternalLink aria-hidden="true" /></a>}
           </div>
         </div>
-        <dl className="vigil-evidence-source-meta" aria-label="Evidence source details">
-          <MetaField label="Publisher" value={evidence.publisher} />
-          <MetaField label="Published" value={evidence.date} />
-          <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
-          <MetaField label="Evidence confidence" value={evidence.confidence ? titleizeValue(evidence.confidence) : undefined} />
-        </dl>
       </header>
 
       {evidence.whatHappened && <section className="vigil-evidence-column vigil-evidence-what-happened">
@@ -51,21 +70,36 @@ export function EvidenceCard({ evidence }: { evidence: PublicEvidenceCard }) {
         <p>{evidence.whatHappened}</p>
       </section>}
 
-      <div className="vigil-evidence-grid">
-        {evidence.confirmedEvidence && <section className="vigil-evidence-column">
-          <h4>What the source establishes</h4>
-          <p>{evidence.confirmedEvidence}</p>
-        </section>}
+      <div className="vigil-evidence-analysis-layout">
+        <div className="vigil-evidence-reading-stack">
+          {evidence.confirmedEvidence && <section className="vigil-evidence-column">
+            <h4>What the source establishes</h4>
+            <p>{evidence.confirmedEvidence}</p>
+          </section>}
 
-        {(evidence.interpretiveConclusion || hasReviewMeta) && <section className="vigil-evidence-column vigil-evidence-interpretation">
-          <h4>Evidence relevance</h4>
-          {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
-          {hasReviewMeta && <dl className="vigil-evidence-review-meta" aria-label="VIGIL review details">
+          {(evidence.interpretiveConclusion || evidence.evidenceStatusBasis) && <section className="vigil-evidence-column vigil-evidence-interpretation">
+            <h4>Evidence relevance</h4>
+            {evidence.interpretiveConclusion && <p>{evidence.interpretiveConclusion}</p>}
+            {evidence.evidenceStatusBasis && <p><strong>Evidence-status basis.</strong> {evidence.evidenceStatusBasis}</p>}
+          </section>}
+        </div>
+
+        {hasMetadata && <aside className="vigil-evidence-metadata-panel" aria-label="Evidence metadata">
+          <p className="vigil-diagnostic-meta-label">Evidence metadata</p>
+          <dl className="vigil-evidence-review-meta">
+            <MetaField label="Publisher" value={evidence.publisher} />
+            <MetaField label="Published" value={evidence.date} />
+            <MetaField label="Source type" value={evidence.sourceType ? titleizeValue(evidence.sourceType) : undefined} />
+            <MetaField label="Evidence status" value={evidence.evidenceStatus ? titleizeValue(evidence.evidenceStatus) : undefined} />
+            <MetaField label="Source role" value={evidence.sourceRole ? titleizeValue(evidence.sourceRole) : undefined} />
+            <MetaField label="Source residence" value={evidence.sourceResidence ? titleizeValue(evidence.sourceResidence) : undefined} />
+            <MetaField label="Evidence modality" value={modalities} />
             <MetaField label="Reviewer" value={evidence.reviewer} />
             <MetaField label="Reviewed" value={evidence.reviewDate} />
             <MetaField label="Source access" value={evidence.sourceAccess ? titleizeValue(evidence.sourceAccess) : undefined} />
-          </dl>}
-        </section>}
+            <MetaField label="Direct artefact review" value={evidence.directReviewStatus ? titleizeValue(evidence.directReviewStatus) : undefined} />
+          </dl>
+        </aside>}
       </div>
 
       {boundaries.length > 0 && <details className="vigil-evidence-limitations">

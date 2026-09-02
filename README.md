@@ -1,49 +1,75 @@
 # CAM Governance Interface
 
-The **CAM Governance Interface** is the public Web UX layer for navigating the Caelestis Architecture Model (CAM) governance corpus and related public registry systems.
+The **CAM Governance Interface** is the public Web UX layer for the CAM Initiative. It provides navigable access to the CAELESTIS constitutional AI governance corpus, the VIGIL Observatory, public datasets, technical references, and related governance materials.
 
-It provides:
+The interface is a presentation layer. Canonical governance instruments, VIGIL records, taxonomies, schemas and generated registries remain authoritative in their source repositories.
 
-* a constitutional orientation hub;
-* a runtime governance model viewer;
-* relational governance explainers;
-* a searchable CAM instrument catalogue;
-* public-facing registry and provenance links; and
-* the VIGIL observatory for digital ecosystem health signals, observations, failure modes, proposals, and patch notes.
+## Public surfaces
 
-The interface is designed to make CAM governance material easier to inspect, browse, filter, cite, and connect across domains.
+The site currently provides:
 
----
+- the CAM constitutional and runtime governance interface;
+- searchable CAM governance instruments;
+- VIGIL Observatory Case Files based on canonical Incident records;
+- VIGIL Failure Taxonomy family and class references;
+- deterministic Case File reports suitable for printing or PDF export;
+- source-level evidence and diagnostic provenance displays;
+- downloadable AI-governance standards data; and
+- archived CAELESTIS releases and public reference material.
 
-## Purpose
+## Repository role
 
-The CAM Governance Interface acts as a public presentation and navigation layer for CAM-adjacent governance infrastructure.
+This repository owns the public interface, static-site build, registry-loading logic, display projections and interface-specific cached fallbacks. It does **not** own the canonical CAM or VIGIL datasets.
 
-It does not create CAM doctrine, amend adopted instruments, or determine the legal or governance effect of source materials.
+Canonical sources include:
 
-Instead, it presents structured public data from CAM and VIGIL sources so that governance records can be reviewed, linked, searched, and interpreted in context.
+- **CAELESTIS governance corpus:** `CAM-Initiative/Caelestis`
+- **VIGIL Incident registry and Failure Taxonomy:** `CAM-Initiative/Vigil`
 
----
+The public site consumes the canonical `main` branch of those repositories.
 
-## Repository Role
+## VIGIL Observatory
 
-This repository hosts the Web UX for CAM governance materials.
+VIGIL Case Files are occurrence-centred public records. The interface keeps the layers distinct:
 
-It is responsible for:
+- **Observation / evidence:** what the sources establish;
+- **Diagnosis:** VIGIL's bounded governance interpretation, severity and diagnostic limitations;
+- **Classification:** mapping of the occurrence to the reusable VIGIL Failure Taxonomy where supported; and
+- **References:** evidence, canonical record and taxonomy references.
 
-* rendering the public CAM interface;
-* building the static GitHub Pages output;
-* loading live CAM catalogue registry data with a cached fallback;
-* loading live VIGIL registry data;
-* preserving source links and provenance paths;
-* providing fallback data where appropriate; and
-* exposing public navigation pathways across CAM instruments and VIGIL records.
+The interface does not treat CAM repair state as part of the historical Incident itself.
 
-The interface consumes registry data. It is not the canonical source of truth for the underlying CAM instruments or VIGIL records.
+### Canonical Incident index
 
----
+```text
+https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json
+```
 
-## Run Locally
+### Canonical Failure Taxonomy index
+
+```text
+https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/VIGIL.FailureTaxonomy.Index.json
+```
+
+The generated VIGIL taxonomy technical reference is also loaded from the VIGIL `main` branch.
+
+## CAELESTIS governance data
+
+The canonical generated governance index is:
+
+```text
+https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON
+```
+
+The interface keeps a generated fallback cache at:
+
+```text
+docs/data/cam-governance-fallback.json
+```
+
+The fallback exists for interface resilience and is not the canonical source of truth.
+
+## Local development
 
 Use Node 20, as specified in `.nvmrc`, and `pnpm`.
 
@@ -52,279 +78,53 @@ pnpm install
 pnpm run dev
 ```
 
----
-
-## Build for GitHub Pages
+## Build
 
 ```bash
 pnpm run build
 ```
 
-Build output is written to:
+GitHub Pages output is generated into:
 
 ```text
-/docs
+docs/
 ```
 
-for GitHub Pages publication.
+The published site uses the `main` branch `/docs` output.
 
----
+## Data sync and validation
 
-## GitHub Pages Settings
-
-Use the following GitHub Pages settings:
-
-```text
-Branch: main
-Folder: /docs
-```
-
----
-
-## Data Sources
-
-The interface uses both local build-time data and live external registry data.
-
-Core local data files include:
-
-```text
-/docs/data/runtime-flow.json
-/docs/data/problem-pathways.json
-```
-
-The canonical CAM/Caelestis generated governance index is:
-
-```text
-Governance/CAM.Governance.JSON
-```
-
-in the `CAM-Initiative/Caelestis` repository. Its live raw registry URL is:
-
-```text
-https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON
-```
-
-That canonical source is a JSON object with a numeric `count` and an `items` array. Each item preserves the catalogue-compatible governance instrument shape used by the interface, including fields such as `id`, `cycle_year`, `stack`, `domain`, `instrument_class`, `hierarchy_type`, `hierarchy_number`, `parent_id`, `seal`, `link`, `title`, `summary`, `status`, `effect`, `enforcement`, `review_state`, `authority_role`, `version`, `HASH`, `pinned_sha`, `updated_at`, `last_updated_utc`, `purpose`, and `is_derived` where present.
-
-The CAM cached fallback generated for this interface is:
-
-```text
-/docs/data/cam-governance-fallback.json
-```
-
-The legacy Interface snapshot remains in the repository for backward compatibility only:
-
-```text
-/docs/data/cam-governance.json
-```
-
-It is no longer the catalogue page's sole source of truth. The Interface first attempts the live Caelestis registry URL at runtime and falls back to `cam-governance-fallback.json` if the live source cannot be loaded.
-
-The live VIGIL registry source is:
-
-```text
-https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Registry.Index.json
-```
-
-An optional cached VIGIL fallback may be generated at build time:
-
-```text
-/docs/data/vigil-registry-fallback.json
-```
-
-Runtime Governance and Relational Governance sit under the Constitution section.
-
-VIGIL is exposed as CAM’s public AI governance observatory and digital ecosystem health register.
-
----
-
-## CAM Catalogue Sync
-
-The catalogue page is populated at runtime from the live Caelestis governance index configured in:
-
-```text
-src/config/registrySources.json
-```
-
-The CAM source entry points at the default-branch generated file:
-
-```text
-https://raw.githubusercontent.com/CAM-Initiative/Caelestis/main/Governance/CAM.Governance.JSON
-```
-
-Run the CAM sync command to refresh the Interface fallback cache:
-
-```bash
-pnpm run sync:cam
-```
-
-The sync writes:
-
-```text
-docs/data/cam-governance-fallback.json
-docs/data/cam-governance-sync-meta.json
-```
-
-`cam-governance-fallback.json` is an Interface cache of the Caelestis canonical generated index. `cam-governance-sync-meta.json` records the source URL, source path, fallback file, record count, sync timestamp, data-fetched timestamp, and sync status.
-
-The distinction is intentional:
-
-* **Canonical source:** `CAM-Initiative/Caelestis` owns and generates `Governance/CAM.Governance.JSON`.
-* **Interface cached fallback:** this repository stores `docs/data/cam-governance-fallback.json` so the static interface can still render catalogue data when the live registry request fails.
-* **Legacy snapshot:** `docs/data/cam-governance.json` remains only for compatibility and emergency seeding. New catalogue loading and validation use the live CAM registry plus the generated fallback.
-
-If the live source is unavailable during sync, the script retains an existing fallback or seeds from the legacy snapshot unless `CAM_SYNC_STRICT=1` is set.
-
----
-
-## VIGIL Observatory
-
-The VIGIL page displays public governance records from the live VIGIL registry.
-
-VIGIL records may include:
-
-* observations;
-* failure modes;
-* proposals;
-* patch notes;
-* research or supporting records; and
-* related governance metadata.
-
-VIGIL is a public evidence-to-repair governance ledger for AI system observations, failure modes, proposals, patch notes, and related governance records.
-
-The interface presents VIGIL records for review, filtering, navigation, and citation. It does not itself determine whether a record is adopted, implemented, resolved, or binding.
-
----
-
-## VIGIL Interface Sync
-
-The VIGIL page is populated at runtime from the live VIGIL master registry index:
-
-```text
-VIGIL.Registry.Index.json
-```
-
-on the VIGIL repository default branch.
-
-The VIGIL source configuration lives in:
-
-```text
-src/config/registrySources.json
-```
-
-The interface treats VIGIL as an external live registry source so newly generated registry entries can appear without pinning the interface to an archival commit.
-
-During CAM interface builds, the `sync:vigil` script may write:
-
-```text
-docs/data/vigil-registry-fallback.json
-```
-
-as an optional cached fallback.
-
-Runtime loading always attempts the live registry first. If the live registry cannot be loaded, the interface may display a clear fallback notice and use cached data where available.
-
-Record source links are read from generated registry metadata, including:
-
-* `github_blob_url`
-* `raw_url`
-* `path`
-
-The interface should not hard-code old VIGIL record paths or deprecated registry filenames.
-
----
-
-## VIGIL Registry Dispatch
-
-After the VIGIL repository routes records, validates records, rebuilds generated registry JSON files, and commits those generated files, the VIGIL workflow may send a `repository_dispatch` event to this repository.
-
-Expected dispatch event type:
-
-```text
-vigil-records-updated
-```
-
-The dispatch should use a repository secret token with permission to dispatch to the CAM interface repository, for example:
-
-```text
-CAM_INTERFACE_DISPATCH_TOKEN
-```
-
-This allows the CAM Governance Interface to rebuild or refresh after VIGIL registry updates.
-
----
-
-## VIGIL Live Entry Files
-
-The canonical live VIGIL entry point is:
-
-```text
-VIGIL.Registry.Index.json
-```
-
----
-
-## Validate Catalogue References
-
-Run:
-
-```bash
-pnpm run validate:catalogue
-```
-
-This checks catalogue references against `docs/data/cam-governance-fallback.json`, verifies CAM sync metadata, and detects missing, internally inconsistent, or stale CAM fallback data. Set `CAM_FALLBACK_MAX_AGE_DAYS` to adjust the default 45-day freshness threshold.
-
----
-
-## Common Commands
-
-```bash
-pnpm install
-pnpm run dev
-pnpm run build
-pnpm run validate:catalogue
-pnpm run sync:cam
-```
-
-CAM and VIGIL fallback sync may be run with:
+Common commands include:
 
 ```bash
 pnpm run sync:cam
 pnpm run sync:vigil
+pnpm run validate:catalogue
+pnpm run build
 ```
 
----
+VIGIL and CAM source configuration is maintained in:
+
+```text
+src/config/registrySources.json
+```
+
+Generated fallback data should remain clearly subordinate to the canonical upstream registries.
+
+## Publication behaviour
+
+The site is built as a static GitHub Pages application. Public pages and generated reports must contain reader-facing content only; maintainer work notes, branch-state instructions, migration notes and implementation handoffs are not public copy.
 
 ## Licence
 
-The CAM Governance Interface is licensed under the CAM Governance Interface Licence.
+The CAM Governance Interface source and interface materials are governed by the repository licence. Underlying CAM instruments, VIGIL records, schemas, taxonomies, external source materials and generated datasets may have separate reuse terms.
 
-This licence governs the Web UX layer, source code, interface layout, registry-loading logic, presentation components, and associated interface documentation.
-
-The underlying CAM instruments, VIGIL records, schemas, governance texts, taxonomies, external source materials, and generated registries may be subject to separate licences or reuse restrictions.
-
-See:
-
-```text
-LICENSE.md
-```
-
-or the applicable repository licence file.
-
----
+See `LICENSE.md` for the interface licence.
 
 ## Citation
 
-If citing the CAM Governance Interface, use the repository citation metadata where available.
-
 Suggested short-form citation:
 
-> Dr Michelle O'Rourke. CAM Governance Interface. 2026.
+> Dr Michelle O'Rourke. *CAM Governance Interface*. 2026.
 
-See:
-
-```text
-CITATION.cff
-```
-
-where available.
+Repository citation metadata is provided in `CITATION.cff`.

@@ -11,9 +11,7 @@ const REPORT_SECTIONS = [
   { number: "01", label: "Observation" },
   { number: "02", label: "Diagnosis" },
   { number: "03", label: "Classification" },
-  { number: "04", label: "Repair" },
-  { number: "05", label: "Learn" },
-  { number: "06", label: "References" },
+  { number: "04", label: "References" },
 ] as const;
 
 type IncludedSections = Record<string, boolean>;
@@ -30,9 +28,7 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
   "02": ["No structured diagnosis is available."],
   "03": ["No current taxonomy classification is linked."],
-  "04": ["No PATCH is linked yet."],
-  "05": ["No published LEARN record is linked."],
-  "06": ["No references are currently available."],
+  "04": ["No references are currently available."],
 };
 
 function sectionNumber(section: HTMLElement) {
@@ -131,7 +127,7 @@ export default function EvidenceChainReportPrintable() {
             setClassificationSlot(slot);
           }
         }
-        if (number === "06") {
+        if (number === "04") {
           const list = section.querySelector<HTMLOListElement>("ol");
           if (list) {
             referenceBaseCountRef.current = list.children.length;
@@ -198,12 +194,12 @@ export default function EvidenceChainReportPrintable() {
             <span>{section.label}</span>
           </label>)}
         </div>
-        <p className="text-xs text-muted-foreground lg:text-right">{includedCount} of 6 included</p>
+        <p className="text-xs text-muted-foreground lg:text-right">{includedCount} of {REPORT_SECTIONS.length} included</p>
       </div>
     </aside>
     <EvidenceChainReportDeterministic />
     {classificationSlot && reportFailure ? createPortal(
-      <CaseTaxonomyClassification failureId={reportFailure.id} raw={reportFailure.raw} severityLabel={reportFailure.severity} />,
+      <CaseTaxonomyClassification failureId={reportFailure.id} raw={reportFailure.raw} severityLabel={reportFailure.severity ?? "Not assessed"} />,
       classificationSlot,
     ) : null}
     {taxonomyReferencePortal}

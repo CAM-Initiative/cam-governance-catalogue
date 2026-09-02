@@ -12,6 +12,8 @@ const reportCss = await readFile(resolve(repoRoot, "src/vigil-deterministic-repo
 const taxonomyPanel = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
 const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTaxonomy.ts"), "utf8");
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
+const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
+const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification failureId=\{failure\.id\} raw=\{failure\.raw\}/);
@@ -45,14 +47,27 @@ for (const detail of [
   "Taxonomy relationships",
   "Aliases",
   "Why this Case File maps here",
+  "Recognition subtypes and historical folded classes",
+  "Historical class ID",
 ]) {
   assert.match(taxonomyPanel, new RegExp(detail), `missing canonical taxonomy detail: ${detail}`);
 }
 
-for (const state of ["classified", "family-only", "candidate-new-class", "unmapped", "deferred"]) {
+for (const state of [
+  "classified",
+  "provisionally-classified",
+  "classification-disputed",
+  "requires-human-review",
+  "unclassified",
+  "family-only",
+  "candidate-new-class",
+  "unmapped",
+  "deferred",
+]) {
   assert.match(taxonomyPanel, new RegExp(`\\"${state}\\"`), `missing explicit taxonomy state ${state}`);
 }
 
+assert.match(taxonomyPanel, /currently proposed taxonomy mapping for a disputed classification/);
 assert.match(taxonomyPanel, /No legacy taxonomy fallback has been applied/);
 assert.doesNotMatch(taxonomyPanel, /OPS\.FF/);
 assert.doesNotMatch(taxonomyPanel, /canonical_failure_group/);
@@ -62,9 +77,23 @@ assert.doesNotMatch(taxonomyPanel, /failure_subtype/);
 assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
 assert.match(taxonomyLoader, /index\.families\.map/);
 assert.match(taxonomyLoader, /entry\.file/);
+assert.match(taxonomyLoader, /CAM-Initiative\/Vigil\/main/);
+assert.doesNotMatch(taxonomyLoader, /agent\/bounded-incident-classification-provenance-repair/);
+assert.match(taxonomyLoader, /subtypes\?: FailureTaxonomySubtype\[\]/);
 
-// The Case Files landing page deliberately exposes only a binary mapped/not-mapped
-// outcome under the retained public "Failure type" label.
+// Both local and production rendering consume the canonical VIGIL main branch.
+assert.doesNotMatch(vigilRegistry, /VIGIL_WORKING_BRANCH/);
+assert.doesNotMatch(vigilRegistry, /vigilPreviewUrl/);
+assert.match(vigilRegistry, /VIGIL_REGISTRY_URL = VIGIL_REGISTRY_SOURCE\.registry_index_url/);
+assert.match(vigilRegistry, /VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
+assert.match(vigilRegistry, /if \(record\.raw_url\) return record\.raw_url/);
+assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.branch/);
+
+assert.doesNotMatch(evidenceCard, /Evidence confidence/);
+for (const label of ["Source role", "Source residence", "Evidence modality", "Direct artefact review"]) {
+  assert.match(evidenceCard, new RegExp(label), `missing source-level evidence metadata: ${label}`);
+}
+
 assert.match(caseLibrary, /taxonomy_classification_summary/);
 assert.match(caseLibrary, /classification_status/);
 assert.match(caseLibrary, /class_id/);
@@ -77,7 +106,6 @@ assert.doesNotMatch(caseLibrary, /Taxonomy status/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
 assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 
-// Section 06 in the interactive Case File includes canonical taxonomy records.
 assert.match(caseFile, /loadTaxonomyReferenceTargets\(failure\.raw\)/);
 assert.match(caseFile, /taxonomyReferences\.map/);
 assert.match(caseFile, /VIGIL Failure Taxonomy/);
@@ -85,10 +113,10 @@ assert.match(caseFile, /reference\.id} — \{reference\.title/);
 assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
+assert.match(taxonomyClassification, /classification-disputed/);
+assert.match(taxonomyClassification, /requires-human-review/);
 
-// Datasets downloads the generated VIGIL Observatory publication as a real PDF
-// blob instead of navigating users to raw GitHub HTML. The main-branch URL is
-// canonical; the working-branch fallback exists only so branch previews remain testable.
+// Dataset downloads use canonical VIGIL main only.
 assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
 assert.match(datasets, /VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference\.pdf/);
 assert.match(datasets, /Download PDF reference/);
@@ -97,11 +125,11 @@ assert.match(datasets, /downloadRemoteFile/);
 assert.match(datasets, /response\.blob\(\)/);
 assert.match(datasets, /anchor\.download = filename/);
 assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);
+assert.match(datasets, /CAM-Initiative\/Vigil\/main\/vigil\/taxonomy\/generated/);
+assert.doesNotMatch(datasets, /agent\/bounded-incident-classification-provenance-repair/);
 assert.doesNotMatch(datasets, /Download HTML reference/);
 assert.doesNotMatch(datasets, /VIGIL\.FailureTaxonomy\.FullReference\.html/);
 
-// The deterministic printable projection reuses the full taxonomy renderer,
-// appends the same taxonomy references, and sets an Incident-specific document title.
 assert.match(printableReport, /CaseTaxonomyClassification/);
 assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
 assert.match(printableReport, /report-taxonomy-parity-slot/);
@@ -109,10 +137,6 @@ assert.match(printableReport, /report-taxonomy-reference/);
 assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactIncidentId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
 assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
 
-// The deterministic report has a report-specific typography/layout layer. Evidence
-// is single-column in report mode, source-link icons are removed, taxonomy can flow
-// across pages, references use the same body scale, and printing retains an explicit
-// report-owned horizontal inset so browser margin settings cannot push content to the edge.
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
 assert.match(reportCss, /grid-template-columns: 1fr !important/);
@@ -120,20 +144,14 @@ assert.match(reportCss, /\.vigil-taxonomy-record-card \{[\s\S]*break-inside: aut
 assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
 assert.match(reportCss, /padding-inline: 0\.75cm !important/);
 
-// The internal deterministic-projection handoff footer must never appear in the
-// public report; the printable wrapper supplies the formal reliance/copyright close.
 assert.match(reportCss, /main\.container > footer \{\s*display: none !important;/s);
 assert.doesNotMatch(printableReport, /deterministic print projection of the corresponding VIGIL Case File/);
 
-// Printing must flow naturally instead of forcing one stage per page.
 assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 assert.match(polishCss, /break-before: auto !important/);
 assert.match(polishCss, /\.report-legacy-taxonomy/);
 assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 
-// The printed artefact closes with an explicit use/third-party reliance notice and
-// a simple copyright notice. It must not imply that permission is required to use,
-// reproduce or redistribute the report.
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
@@ -142,8 +160,7 @@ assert.doesNotMatch(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
 assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);
-assert.doesNotMatch(printableReport, /Aeon Governance Lab/);
 assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
-console.log("VIGIL Observatory Case File investigation status, taxonomy PDF download, deterministic report layout and copyright contract passed");
+console.log("VIGIL Observatory Case File taxonomy, canonical-main sources, richer source metadata and deterministic report contract passed");

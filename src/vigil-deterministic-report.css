@@ -1,6 +1,6 @@
 /* Deterministic VIGIL report presentation.
    Keep the interactive Case File grammar intact while giving the report/print surface
-   one consistent reading scale and a print-first single-column flow. */
+   one consistent reading scale and a print-first flow. */
 
 .vigil-deterministic-report-host main.container {
   max-width: 72rem !important;
@@ -39,11 +39,18 @@
 .vigil-deterministic-report-host .report-label,
 .vigil-deterministic-report-host .vigil-evidence-kicker,
 .vigil-deterministic-report-host .vigil-library-kicker,
+.vigil-deterministic-report-host .vigil-diagnostic-meta-label,
 .vigil-deterministic-report-host .vigil-evidence-meta-field dt,
 .vigil-deterministic-report-host .vigil-case-field dt {
   font-size: 0.7rem !important;
   line-height: 1.35 !important;
   letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-kicker {
+  color: hsl(var(--cam-gold)) !important;
 }
 
 .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
@@ -52,8 +59,8 @@
   line-height: 1.5 !important;
 }
 
-/* Report evidence should use the full page width. The interactive two-column
-   interpretation layout is too compressed in a printable report. */
+/* Report evidence uses a balanced reading/metadata layout instead of two equal
+   prose columns, which avoids large blank areas under short interpretation copy. */
 .vigil-deterministic-report-host .vigil-evidence-card {
   width: 100%;
 }
@@ -78,18 +85,53 @@
   padding-top: 0.75rem !important;
 }
 
+.vigil-deterministic-report-host .vigil-evidence-analysis-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(15rem, 0.8fr) !important;
+  gap: 0.8rem !important;
+  padding: 0 1.1rem 1rem !important;
+  align-items: stretch;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-reading-stack {
+  display: grid !important;
+  gap: 0.8rem !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column,
+.vigil-deterministic-report-host .vigil-evidence-metadata-panel {
+  width: auto !important;
+  padding: 0.9rem 1rem 1rem !important;
+  border: 0 !important;
+  border-radius: 0.65rem !important;
+  background: hsl(38 48% 97%) !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column + .vigil-evidence-column {
+  border-left: 0 !important;
+  border-top: 0 !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-metadata-panel > .vigil-diagnostic-meta-label {
+  margin: 0 0 0.65rem !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-metadata-panel .vigil-evidence-review-meta {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0.6rem !important;
+}
+
+/* Taxonomy cards still use the older evidence-grid utility. */
 .vigil-deterministic-report-host .vigil-evidence-grid {
   display: block !important;
 }
 
 .vigil-deterministic-report-host .vigil-evidence-column {
   width: 100% !important;
-  padding: 0.9rem 1.1rem 1rem !important;
-}
-
-.vigil-deterministic-report-host .vigil-evidence-column + .vigil-evidence-column {
-  border-left: 0 !important;
-  border-top: 1px solid hsl(var(--border) / 0.7) !important;
 }
 
 .vigil-deterministic-report-host .vigil-evidence-review-meta {
@@ -101,7 +143,8 @@
   padding: 0.75rem 1.1rem 0.9rem !important;
 }
 
-.vigil-deterministic-report-host .vigil-evidence-boundary-list p {
+.vigil-deterministic-report-host .vigil-evidence-boundary-list p,
+.vigil-deterministic-report-host .vigil-evidence-boundary-list li {
   font-size: 0.9rem !important;
   line-height: 1.52 !important;
 }
@@ -182,6 +225,7 @@
 
 @media (max-width: 760px) {
   .vigil-deterministic-report-host .vigil-evidence-source-meta,
+  .vigil-deterministic-report-host .vigil-evidence-analysis-layout,
   .vigil-deterministic-report-host .vigil-evidence-review-meta,
   .vigil-deterministic-report-host .vigil-taxonomy-record-card .vigil-evidence-source-meta {
     grid-template-columns: 1fr !important;
@@ -193,15 +237,11 @@
     margin: 1.35cm 1.2cm;
   }
 
-  /* Keep a report-owned printable inset even when the browser's print settings
-     use minimal page margins. This prevents cards, rules and references from
-     running visually into the paper edge. */
   .vigil-deterministic-report-host {
     box-sizing: border-box;
     padding-inline: 0.75cm !important;
   }
 
-  /* The normal website shell is useful on screen, not inside a formal report. */
   .vigil-deterministic-report-host header.sticky,
   .vigil-deterministic-report-host > div > main > nav,
   .vigil-deterministic-report-host footer.mt-auto,
@@ -252,6 +292,7 @@
   .vigil-deterministic-report-host .report-label,
   .vigil-deterministic-report-host .vigil-evidence-kicker,
   .vigil-deterministic-report-host .vigil-library-kicker,
+  .vigil-deterministic-report-host .vigil-diagnostic-meta-label,
   .vigil-deterministic-report-host .vigil-evidence-meta-field dt,
   .vigil-deterministic-report-host .vigil-case-field dt {
     font-size: 7.8pt !important;
@@ -259,7 +300,8 @@
 
   .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
   .vigil-deterministic-report-host .vigil-case-field dd,
-  .vigil-deterministic-report-host .vigil-evidence-boundary-list p {
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list p,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list li {
     font-size: 9.5pt !important;
   }
 
@@ -270,7 +312,8 @@
   }
 
   .vigil-deterministic-report-host .vigil-evidence-header,
-  .vigil-deterministic-report-host .vigil-evidence-column,
+  .vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column,
+  .vigil-deterministic-report-host .vigil-evidence-metadata-panel,
   .vigil-deterministic-report-host .vigil-evidence-review-meta,
   .vigil-deterministic-report-host .vigil-evidence-limitations {
     break-inside: avoid;
