@@ -103,19 +103,8 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 const TAXONOMY_PATH = "vigil/taxonomy";
 const VIGIL_MAIN_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/${TAXONOMY_PATH}`;
-const VIGIL_WORKING_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/bounded-incident-classification-provenance-repair/${TAXONOMY_PATH}`;
 
 export const VIGIL_FAILURE_TAXONOMY_INDEX_URL = `${VIGIL_MAIN_TAXONOMY_ROOT}/VIGIL.FailureTaxonomy.Index.json`;
-export const VIGIL_FAILURE_TAXONOMY_PREVIEW_INDEX_URL = `${VIGIL_WORKING_TAXONOMY_ROOT}/VIGIL.FailureTaxonomy.Index.json`;
-
-function candidateRoots() {
-  // Production consumes canonical VIGIL main. Local/Codespaces development uses
-  // the active VIGIL working branch first so the interface can be inspected
-  // against unreleased Incident/taxonomy changes before both repositories merge.
-  return import.meta.env.DEV
-    ? [VIGIL_WORKING_TAXONOMY_ROOT, VIGIL_MAIN_TAXONOMY_ROOT]
-    : [VIGIL_MAIN_TAXONOMY_ROOT];
-}
 
 async function fetchJson<T>(url: string, fetcher: FetchLike) {
   const response = await fetcher(`${url}?v=${Date.now()}`, { cache: "no-store" });
@@ -124,53 +113,39 @@ async function fetchJson<T>(url: string, fetcher: FetchLike) {
 }
 
 export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Promise<FailureTaxonomyLoadResult<FailureTaxonomyIndex>> {
-  let lastUrl = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
-  let lastStatus = "unavailable";
-  for (const root of candidateRoots()) {
-    const url = `${root}/VIGIL.FailureTaxonomy.Index.json`;
-    lastUrl = url;
-    try {
-      const data = await fetchJson<FailureTaxonomyIndex>(url, fetcher);
-      return { status: "ready", data, attemptedUrl: url };
-    } catch (error) {
-      lastStatus = (error as Error).message;
-    }
+  const url = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
+  try {
+    const data = await fetchJson<FailureTaxonomyIndex>(url, fetcher);
+    return { status: "ready", data, attemptedUrl: url };
+  } catch (error) {
+    return {
+      status: "unavailable",
+      attemptedUrl: url,
+      message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${(error as Error).message}).`,
+    };
   }
-  return {
-    status: "unavailable",
-    attemptedUrl: lastUrl,
-    message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${lastStatus}).`,
-  };
 }
 
 export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<FailureTaxonomyLoadResult<FailureTaxonomyDataset>> {
-  let lastUrl = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
-  let lastStatus = "unavailable";
-
-  for (const root of candidateRoots()) {
-    const indexUrl = `${root}/VIGIL.FailureTaxonomy.Index.json`;
-    lastUrl = indexUrl;
-    try {
-      const index = await fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher);
-      const families = await Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${root}/${entry.file}`, fetcher)));
-      return {
-        status: "ready",
-        attemptedUrl: indexUrl,
-        data: {
-          index,
-          families,
-          sourceRoot: root,
-          previewSource: root === VIGIL_WORKING_TAXONOMY_ROOT,
-        },
-      };
-    } catch (error) {
-      lastStatus = (error as Error).message;
-    }
+  const indexUrl = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
+  try {
+    const index = await fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher);
+    const families = await Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${VIGIL_MAIN_TAXONOMY_ROOT}/${entry.file}`, fetcher)));
+    return {
+      status: "ready",
+      attemptedUrl: indexUrl,
+      data: {
+        index,
+        families,
+        sourceRoot: VIGIL_MAIN_TAXONOMY_ROOT,
+        previewSource: false,
+      },
+    };
+  } catch (error) {
+    return {
+      status: "unavailable",
+      attemptedUrl: indexUrl,
+      message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${(error as Error).message}).`,
+    };
   }
-
-  return {
-    status: "unavailable",
-    attemptedUrl: lastUrl,
-    message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${lastStatus}).`,
-  };
 }
