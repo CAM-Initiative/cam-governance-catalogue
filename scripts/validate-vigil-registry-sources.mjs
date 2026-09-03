@@ -1,55 +1,44 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
 
-const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const filesToScan = ["src/pages/vigil.tsx", "src/lib/vigilRegistry.ts", "src/lib/vigilPresentation.ts", "README.md", "scripts/sync-vigil-records.mjs"];
-const deprecatedFileNames = [
-  ["VIGIL", "Active" + "Records", "json"].join("."),
-  ["VIGIL", "Closed" + "Records", "json"].join("."),
-  ["VIGIL", "Records", "Index", "json"].join("."),
-  ["VIGIL", "Records", "json"].join("."),
-  ["VIGIL", "Failures", "Index", "json"].join("."),
-];
-const deprecatedFolders = [
-  ["vigil", "records", "proposals", ""].join("/"),
-  ["vigil", "records", "failures", ""].join("/"),
-];
-const canonicalIncidentRegistryUrl = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json";
-const canonicalIncidentRegistryBlobUrl = "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json";
+const repoRoot = resolve(new URL("..", import.meta.url).pathname);
+const canonicalRegistryUrl = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json";
+const canonicalBlobUrl = "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-for (const file of filesToScan) {
-  const text = await readFile(resolve(repoRoot, file), "utf8");
-  for (const forbidden of [...deprecatedFileNames, ...deprecatedFolders]) {
-    assert(!text.includes(forbidden), `${file} still references ${forbidden}`);
-  }
-  assert(!/github\.com\/CAM-Initiative\/Vigil\/blob\/[0-9a-f]{7,40}\//i.test(text), `${file} pins a VIGIL blob link to a commit`);
-  assert(!/raw\.githubusercontent\.com\/CAM-Initiative\/Vigil\/[0-9a-f]{7,40}\//i.test(text), `${file} pins a VIGIL raw link to a commit`);
+const config = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
+assert(config.vigil.incident_registry_index_url === canonicalRegistryUrl, "VIGIL must use the canonical main-branch Incident index");
+assert(config.vigil.incident_registry_github_blob_url === canonicalBlobUrl, "VIGIL Incident source link must use the canonical main branch");
+assert(!("registry_index_url" in config.vigil), "VIGIL must not expose a generic multi-record registry source");
+assert(!("github_blob_url" in config.vigil), "VIGIL must not expose a generic multi-record registry link");
+
+const activeFiles = [
+  "src/lib/vigilRegistry.ts",
+  "src/lib/vigilPresentation.ts",
+  "src/lib/vigilPublicDisplay.ts",
+  "scripts/sync-vigil-records.mjs",
+  "src/public/vigil-ux-enhancements.js",
+];
+const retiredTokens = ["failure_modes", "related_failure_modes", "related_observations", "patch_notes", "proposals", "VIGIL.Failures.Index", "VIGIL.Observations.Index", "VIGIL.Research.Index", "VIGIL.Learn.Index", "_canonical_markdown_body", "loadVigilRegistryRecords"];
+for (const file of activeFiles) {
+  const source = await readFile(resolve(repoRoot, file), "utf8");
+  for (const token of retiredTokens) assert(!source.includes(token), `${file} still contains retired VIGIL consumer token ${token}`);
+  assert(!/CAM-Initiative\/Vigil\/(?:blob\/)?[0-9a-f]{7,40}\//i.test(source), `${file} pins VIGIL to a commit`);
 }
 
-const sourceConfig = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
-assert(sourceConfig.vigil.registry_index_url === canonicalIncidentRegistryUrl, "VIGIL registry source must use the default-branch Incident index URL");
-assert(sourceConfig.vigil.github_blob_url === canonicalIncidentRegistryBlobUrl, "VIGIL GitHub blob URL must point to the default-branch Incident index");
-assert(sourceConfig.vigil.incident_registry_index_url === canonicalIncidentRegistryUrl, "VIGIL Incident source must use the default-branch Incident index URL");
-assert(sourceConfig.vigil.incident_registry_github_blob_url === canonicalIncidentRegistryBlobUrl, "VIGIL Incident GitHub blob URL must point to the default-branch Incident index");
-
 const loader = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
-assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Live registry fetch should use cache busting");
-assert(loader.includes("cacheBustUrl(VIGIL_INCIDENT_REGISTRY_URL)"), "Incident registry fetch should use cache busting");
-assert(loader.includes("Array.isArray(registry.records)"), "Loader should support the Incident registry records array");
-assert(loader.includes("record.github_blob_url"), "Source links should prefer registry github_blob_url");
-assert(loader.includes("record.raw_url"), "Raw links should prefer registry raw_url");
-assert(loader.includes("${record.path}"), "Fallback links should use record.path");
-assert(!loader.includes("record_type") || !loader.includes("/${record_type}"), "Fallback links must not be built from record_type plus id");
+assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Incident registry fetch must use cache busting");
+assert(loader.includes('record.record_type !== "incident"'), "Registry loader must exclude non-Incident records");
+assert(loader.includes("record.github_blob_url"), "Canonical record links must prefer registry github_blob_url");
+assert(loader.includes("record.raw_url"), "Canonical raw links must prefer registry raw_url");
 
-const page = await readFile(resolve(repoRoot, "src/pages/vigil.tsx"), "utf8");
-assert(page.includes("record.record_state"), "State filters should read record_state");
-assert(page.includes("VIGIL registry could not be loaded from the live registry source"), "UI should show a clear live-registry failure message");
-assert((page + loader).includes("Showing cached fallback registry data"), "UI should show a cached fallback message");
+const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
+assert(Array.isArray(fallback.records) && fallback.records.length > 0, "VIGIL fallback must contain Incident records");
+assert(fallback.records.every((record) => record?.record_type === "incident"), "VIGIL fallback must not publish retired record classes");
+assert(fallback.records.every((record) => !("severity_assessment_basis" in record)), "VIGIL fallback must not republish the compatibility-only severity blob");
+assert(fallback.records.some((record) => record.severity_assessment?.materialised_consequence), "VIGIL fallback must retain structured occurrence-level severity analysis");
 
-console.log("VIGIL Incident registry source validation passed.");
+console.log(`VIGIL Incident-only registry validation passed (${fallback.records.length} fallback Incidents).`);

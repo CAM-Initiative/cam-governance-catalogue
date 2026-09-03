@@ -196,14 +196,6 @@ section[aria-labelledby="evidence-repair-heading"] > .overflow-x-auto article + 
     page-break-inside: avoid;
   }
 
-  .report-legacy-taxonomy {
-    display: none !important;
-  }
-
-  .report-taxonomy-parity-slot {
-    margin-top: 0.25cm;
-  }
-
   .report-taxonomy-reference a,
   .report-section a {
     overflow-wrap: anywhere;

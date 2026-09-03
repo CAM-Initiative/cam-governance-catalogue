@@ -129,59 +129,16 @@
   color: hsl(var(--muted-foreground));
 }
 
-/* LEARN should expose the substantive knowledge already present in canonical records. */
-.vigil-learning-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
-  margin-top: 0.7rem;
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.42rem;
-  overflow: hidden;
-}
-
-.vigil-learning-grid > section {
-  min-width: 0;
-  padding: 0.82rem 0.88rem;
-  border-bottom: 1px solid hsl(var(--border));
-}
-
-.vigil-learning-grid > section:nth-child(odd) {
-  border-right: 1px solid hsl(var(--border));
-}
-
-.vigil-learning-grid > section.is-risk {
-  background: hsl(var(--card) / 0.38);
-}
-
-.vigil-learning-grid > section > strong {
-  display: block;
-  font-family: var(--app-font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-  color: hsl(var(--primary));
-}
-
-.vigil-learning-grid > section > p,
-.vigil-learning-list {
+.vigil-taxonomy-list {
   margin: 0.38rem 0 0;
   font-size: 0.86rem;
   line-height: 1.55;
   color: hsl(var(--foreground) / 0.88);
-}
-
-.vigil-learning-list {
   padding-left: 1.15rem;
 }
 
-.vigil-learning-list li + li {
+.vigil-taxonomy-list li + li {
   margin-top: 0.28rem;
-}
-
-.vigil-learning-record > a {
-  display: inline-flex;
-  margin-top: 0.72rem;
 }
 
 /* Provenance points back to Evidence instead of repeating the entire external bibliography on screen. */
@@ -416,14 +373,12 @@
 
 @media (max-width: 900px) {
   .vigil-affected-system-grid,
-  .vigil-learning-grid,
   .vigil-about-record-grid,
   .vigil-about-boundary-grid {
     grid-template-columns: 1fr;
   }
 
   .vigil-affected-system-grid > article:nth-child(odd),
-  .vigil-learning-grid > section:nth-child(odd),
   .vigil-about-record-grid article:nth-child(odd),
   .vigil-about-boundary-grid article:nth-child(odd) {
     border-right: 0;

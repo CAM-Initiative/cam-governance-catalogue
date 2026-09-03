@@ -2,16 +2,16 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
+import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
-  normalizeFailureFamilyLabel,
   normalizeRecords,
   normalizeVigilRecord,
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
+import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 
 type ReportState =
   | { status: "loading" }
@@ -203,16 +203,6 @@ function severityDisplay(value?: string) {
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
 
-function taxonomyMeta(record: VigilIndexRecord) {
-  const reference = firstText(record.raw, ["failure_classification.taxonomy_reference", "taxonomy_reference"]);
-  const group = firstText(record.raw, ["failure_classification.canonical_failure_group", "canonical_failure_group"]);
-  return {
-    code: firstText(record.raw, ["failure_classification.primary_failure_family_code", "primary_failure_family_code", "failure_classification.canonical_failure_code", "canonical_failure_code"]) ?? (group ? `OPS.FF.${group.trim().toUpperCase().replace(/[^A-Z0-9]+/g, "_")}` : undefined),
-    name: firstText(record.raw, ["failure_classification.canonical_failure_name", "canonical_failure_name"]),
-    reference,
-  };
-}
-
 function Field({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return <div><dt className="report-label">{label}</dt><dd className="mt-1 text-base leading-relaxed text-foreground/85">{value}</dd></div>;
@@ -261,32 +251,29 @@ export default function EvidenceChainReportDeterministic() {
     return () => { cancelled = true; };
   }, [sourceId]);
 
-  const observations: VigilIndexRecord[] = [];
-  const failure = state.status === "ready" ? state.records[0] : undefined;
-  const failureDetail = useMemo(() => failure ? deriveFailureModePublicDetail(failure.raw, failure.publicDisplay) : undefined, [failure]);
-  const externalSources = useMemo(() => state.status === "ready" && failure ? dedupeEvidence([failure, ...observations].flatMap(externalEvidenceFor)) : [], [failure, observations, state]);
-  const affectedSystems = useMemo(() => failure ? dedupeSystems([failure, ...observations]) : dedupeSystems(observations), [failure, observations]);
+  const incident = state.status === "ready" ? state.records[0] : undefined;
+  const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
+  const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
-  const taxonomy: ReturnType<typeof taxonomyMeta> = failure ? taxonomyMeta(failure) : { code: undefined, name: undefined, reference: undefined };
-  const family = failure ? normalizeFailureFamilyLabel(failure.failure_family)?.replace(/\s+Failures$/i, "") ?? failure.failure_family : undefined;
-  const governanceAssessment = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
-  const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
-  const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
-  const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
-  const severityStatus = failure ? firstText(failure.raw, ["severity_assessment.assessment_status"]) : undefined;
-const severityMaterialisedConsequence = failure ? firstText(failure.raw, ["severity_assessment.materialised_consequence"]) : undefined;
-const severityAffectedScope = failure ? firstText(failure.raw, ["severity_assessment.affected_scope"]) : undefined;
-const severitySeriousnessPersistence = failure ? firstText(failure.raw, ["severity_assessment.seriousness_and_persistence"]) : undefined;
-const severityQuantitativeInformation = failure ? firstText(failure.raw, ["severity_assessment.quantitative_information"]) : undefined;
-const severityEvidentiaryLimits = failure ? firstText(failure.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
-const severityBandRationale = failure ? firstText(failure.raw, ["severity_assessment.band_rationale"]) : undefined;
-const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
-  const diagnostic = diagnosticProvenance(failure);
-  const title = failure?.title ?? "VIGIL Case File";
-  const summary = failure?.summary ?? failure?.publicDisplay.finding;
+  const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
+  const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
+  const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
+  const severityStatus = incident ? firstText(incident.raw, ["severity_assessment.assessment_status"]) : undefined;
+  const severityMaterialisedConsequence = incident ? firstText(incident.raw, ["severity_assessment.materialised_consequence"]) : undefined;
+  const severityAffectedScope = incident ? firstText(incident.raw, ["severity_assessment.affected_scope"]) : undefined;
+  const severitySeriousnessPersistence = incident ? firstText(incident.raw, ["severity_assessment.seriousness_and_persistence"]) : undefined;
+  const severityQuantitativeInformation = incident ? firstText(incident.raw, ["severity_assessment.quantitative_information"]) : undefined;
+  const severityEvidentiaryLimits = incident ? firstText(incident.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
+  const severityBandRationale = incident ? firstText(incident.raw, ["severity_assessment.band_rationale"]) : undefined;
+  const severityAssessedOn = incident ? firstText(incident.raw, ["severity_assessment.assessed_on"]) : undefined;
+  const diagnostic = diagnosticProvenance(incident);
+  const title = incident?.title ?? "VIGIL Case File";
+  const summary = incident?.summary ?? incident?.publicDisplay.finding;
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -297,7 +284,7 @@ const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessmen
     <VigilObservatoryNav />
     <main className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 md:px-10 md:py-10">
       <div className="print:hidden mb-6 flex items-center justify-between gap-4">
-        <Link href={`/observatory/cases/${encodeURIComponent(failure?.id ?? state.sourceId)}`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
+        <Link href={`/observatory/cases/${encodeURIComponent(incident?.id ?? state.sourceId)}`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
         <button type="button" onClick={() => window.print()} className="rounded-md border border-cam-gold/45 bg-background px-4 py-2 font-mono text-sm uppercase tracking-[0.08em] text-cam-gold">Print / save PDF</button>
       </div>
 
@@ -306,7 +293,7 @@ const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessmen
         <h1 className="mt-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h1>
         {summary && <p className="mt-3 max-w-4xl text-base leading-relaxed text-foreground/80">{summary}</p>}
         <dl className="mt-5 grid gap-3 border-t border-border/60 pt-4 sm:grid-cols-2">
-          <Field label="Incident" value={failure?.id ?? state.sourceId} />
+          <Field label="Incident" value={incident?.id ?? state.sourceId} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
       </header>
@@ -326,16 +313,16 @@ const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessmen
               </dl>
             </article>)}</div>
           </section>}
-          {failureDetail?.evidence.length ? <div className="mt-4 space-y-3">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(failure, index) }} />)}</div> : null}
-          {!failureDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
+          {incidentDetail?.evidence.length ? <div className="mt-4 space-y-3">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(incident, index) }} />)}</div> : null}
+          {!incidentDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Diagnosis">
-        {failure ? <article className="space-y-5">
-          <section><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p></section>
+        {incident ? <article className="space-y-5">
+          <section><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-severity-assessment rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
             <p className="report-substantive-label">Occurrence-level severity</p>
-            <dl className="mt-3 grid gap-4 sm:grid-cols-3"><Field label="Severity" value={severityDisplay(failure.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
+            <dl className="mt-3 grid gap-4 sm:grid-cols-3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Materialised consequence</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
               <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Affected scope</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
@@ -354,16 +341,7 @@ const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessmen
       </Stage>
 
         <Stage number="03" label="Classification">
-          {failure ? <article>
-            <p className="vigil-evidence-kicker">Taxonomy classification</p>
-            <dl className="mt-3 grid gap-4 sm:grid-cols-2">
-              <Field label="Canonical code" value={taxonomy.code} />
-              <Field label="Failure type" value={family} />
-              <Field label="Canonical failure name" value={taxonomy.name} />
-              <Field label="VIGIL mechanism subtype" value={failure.failure_subtype} />
-              <Field label="Taxonomy reference" value={taxonomy.reference} />
-            </dl>
-          </article> : <Empty>No current taxonomy classification is linked.</Empty>}
+          {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
 
         <Stage number="04" label="References">
@@ -375,7 +353,7 @@ const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessmen
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same Incident anchor and record-local evidence scope as the interactive Case File; it does not add repair-layer material or adjacent Failure Mode analysis to the historical occurrence.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; it does not add speculative mechanisms or separate repair-layer records.
       </footer>
     </main>
   </Shell>;

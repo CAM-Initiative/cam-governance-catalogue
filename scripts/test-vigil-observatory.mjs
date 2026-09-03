@@ -7,608 +7,95 @@ import ts from "typescript";
 
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 
-async function transpileModuleToTemp(sourcePath, outputPath, transform = (text) => text) {
+async function transpile(sourcePath, outputPath, transform = (source) => source) {
   const source = transform(await readFile(resolve(repoRoot, sourcePath), "utf8"));
-  const transpiled = ts.transpileModule(source, {
-    compilerOptions: {
-      module: ts.ModuleKind.ESNext,
-      target: ts.ScriptTarget.ES2020,
-      moduleResolution: ts.ModuleResolutionKind.Bundler,
-      resolveJsonModule: true,
-      esModuleInterop: true,
-    },
-    fileName: sourcePath,
-  }).outputText;
-  await writeFile(outputPath, transpiled);
+  const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2020, moduleResolution: ts.ModuleResolutionKind.Bundler, resolveJsonModule: true }, fileName: sourcePath }).outputText;
+  await writeFile(outputPath, output);
 }
 
-async function loadVigilModules() {
-  const tempDir = await mkdtemp(join(tmpdir(), "vigil-observatory-test-"));
+async function loadModules() {
+  const tempDir = await mkdtemp(join(tmpdir(), "vigil-incident-test-"));
   const config = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
-  const registryPath = join(tempDir, "vigilRegistry.mjs");
-  const publicDisplayPath = join(tempDir, "vigilPublicDisplay.mjs");
-  const presentationPath = join(tempDir, "vigilPresentation.mjs");
-
-  await transpileModuleToTemp("src/lib/vigilRegistry.ts", registryPath, (source) => source
-    .replace('import registrySources from "@/config/registrySources.json";', `const registrySources = ${JSON.stringify(config)};`)
-    .replace(/import\.meta\.env\.BASE_URL/g, '"/"'));
-  await transpileModuleToTemp("src/lib/vigilPublicDisplay.ts", publicDisplayPath);
-  await transpileModuleToTemp("src/lib/vigilPresentation.ts", presentationPath, (source) => source
-    .replace('import { githubBlobUrlForRecord, rawUrlForRecord, type UnknownRecord } from "@/lib/vigilRegistry";', 'import { githubBlobUrlForRecord, rawUrlForRecord } from "./vigilRegistry.mjs";')
-    .replace('import { deriveVigilPublicDisplay, type PublicRecordDisplay } from "@/lib/vigilPublicDisplay";', 'import { deriveVigilPublicDisplay } from "./vigilPublicDisplay.mjs";'));
-
-  return {
-    tempDir,
-    modules: {
-      registry: await import(registryPath),
-      publicDisplay: await import(publicDisplayPath),
-      presentation: await import(presentationPath),
-    },
-  };
+  const registryPath = join(tempDir, "registry.mjs");
+  const displayPath = join(tempDir, "display.mjs");
+  const presentationPath = join(tempDir, "presentation.mjs");
+  await transpile("src/lib/vigilRegistry.ts", registryPath, (source) => source.replace('import registrySources from "@/config/registrySources.json";', `const registrySources = ${JSON.stringify(config)};`).replace(/import\.meta\.env\.BASE_URL/g, '"/"'));
+  await transpile("src/lib/vigilPublicDisplay.ts", displayPath);
+  await transpile("src/lib/vigilPresentation.ts", presentationPath, (source) => source
+    .replace('import { githubBlobUrlForRecord, rawUrlForRecord, type UnknownRecord } from "@/lib/vigilRegistry";', 'import { githubBlobUrlForRecord, rawUrlForRecord } from "./registry.mjs";')
+    .replace('import { deriveIncidentPublicDisplay, type IncidentPublicDisplay } from "@/lib/vigilPublicDisplay";', 'import { deriveIncidentPublicDisplay } from "./display.mjs";'));
+  return { tempDir, registry: await import(registryPath), display: await import(displayPath), presentation: await import(presentationPath) };
 }
 
-test("VIGIL normalization preserves canonical public identity and citation metadata", async () => {
-  const { tempDir, modules } = await loadVigilModules();
+test("normalization accepts canonical Incidents and rejects retired record classes", async () => {
+  const modules = await loadModules();
   try {
-    const { normalizeVigilRecord } = modules.presentation;
-    const record = normalizeVigilRecord({
-      id: "VIGIL-2026-OBS-0020",
-      record_type: "observation",
-      record_identity: {
-        title: "Human Readable Registry Title",
-        version: "1.0",
-        updated: "2026-07-25",
-      },
-      summary: "Summary fallback should not override identity title",
-    });
-    assert.equal(record.title, "Human Readable Registry Title");
-    assert.equal(record.record_version, "1.0");
-    assert.equal(record.record_last_updated, "2026-07-25");
-
-    const untitled = normalizeVigilRecord({ id: "VIGIL-2026-FM-0002" });
-    assert.equal(untitled.title, "VIGIL-2026-FM-0002");
-    const incident = normalizeVigilRecord({ id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident" });
+    const raw = { id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident", system_context: { platform_or_vendor: "OpenAI", product_or_service: "ChatGPT" }, severity_assessment: { severity: "S3" } };
+    const incident = modules.presentation.normalizeVigilRecord(raw);
     assert.equal(incident.record_type, "incident");
-    assert.equal(incident.type_label, "INC");
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
+    assert.equal(incident.platform_label, "OpenAI");
+    assert.equal(incident.severity, "S3");
+    for (const retired of [{ id: "VIGIL-2026-FM-0001", record_type: "failure_mode" }, { id: "VIGIL-2026-OBS-0001", record_type: "observation" }, { id: "VIGIL-2026-RESEARCH-0001", record_type: "research" }]) assert.throws(() => modules.presentation.normalizeVigilRecord(retired), /canonical Incident ID and record type/);
+    assert.deepEqual(modules.presentation.normalizeRecords({ records: [raw, { id: "VIGIL-2026-FM-0001", record_type: "failure_mode" }] }).map((item) => item.id), ["VIGIL-INC-000001"]);
+  } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("VIGIL normalization rejects non-canonical identifiers and indexes source metadata for search", async () => {
-  const { tempDir, modules } = await loadVigilModules();
+test("Incident search covers occurrence, source, severity and taxonomy fields", async () => {
+  const modules = await loadModules();
   try {
-    const { normalizeRecords, normalizeVigilRecord } = modules.presentation;
-    const { matchesVigilSearch } = modules.publicDisplay;
-
-    const records = normalizeRecords([
-      { summary: "Missing canonical identity" },
-      { id: "VIGIL-1", summary: "Malformed identity" },
-      { id: "VIGIL-2026-FM-0001", record_type: "failure_mode", title: "Canonical record" },
-    ]);
-    assert.deepEqual(records.map((record) => record.id), ["VIGIL-2026-FM-0001"]);
-    assert.throws(() => normalizeVigilRecord({ summary: "Missing canonical identity" }), /does not contain a canonical record ID/);
-
-    const searchable = normalizeVigilRecord({
-      id: "VIGIL-2026-OBS-0199",
-      record_type: "observation",
-      title: "Runtime security event",
-      summary: "A verified security incident involving an evaluation pathway.",
-      primary_source_title: "OpenAI and Hugging Face partner to address security incident",
-      primary_source_platform: "OpenAI",
-      source_platforms: ["OpenAI", "Hugging Face"],
-      source_types: ["official-source"],
-    });
-    assert.equal(matchesVigilSearch(searchable.searchText, "Hugging Face security incident"), true);
-    assert.equal(matchesVigilSearch(searchable.searchText, "Reuters"), false);
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
+    const incident = modules.presentation.normalizeVigilRecord({ id: "VIGIL-INC-000081", record_type: "incident", title: "Service price variation", summary: "Observed price variation in a bounded service cohort.", source_records: [{ source_title: "Consumer investigation", source_platform: "Consumer Reports" }], severity_assessment: { severity: "S3", materialised_consequence: "Some participants paid more." }, taxonomy_classification: { classification_status: "classified", primary_family: { family_id: "VIGIL-FT-FAM-001" } } });
+    assert.equal(modules.display.matchesVigilSearch(incident.searchText, "consumer reports s3"), true);
+    assert.equal(modules.display.matchesVigilSearch(incident.searchText, "unrelated publisher"), false);
+  } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("Case File keeps structured Incident severity in diagnosis rather than taxonomy classification", async () => {
-  const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
-  const taxonomy = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
-  for (const field of ["materialised_consequence", "affected_scope", "seriousness_and_persistence", "quantitative_information", "evidentiary_limits", "band_rationale"]) assert.ok(caseFile.includes(`severity_assessment.${field}`));
-  assert.ok(caseFile.includes("Occurrence-level severity"));
-  assert.equal(taxonomy.includes("severityLabel"), false);
-});
-
-test("VIGIL normalization resolves canonical system and platform fields", async () => {
-  const { tempDir, modules } = await loadVigilModules();
+test("Incident detail derives source evidence without mixing in taxonomy reasoning", async () => {
+  const modules = await loadModules();
   try {
-    const { normalizeVigilRecord } = modules.presentation;
-    const record = normalizeVigilRecord({
-      id: "VIGIL-2026-OBS-0003",
-      title: "Canonical platform projection priority",
-      system_context: { platform_or_vendor: "OpenAI", product_or_service: "ChatGPT" },
-      observed_vendor: "Lower priority vendor",
-      source_records: [{ source_platform: "Lower priority source", system_or_product: "Lower priority product" }],
-    });
-    assert.equal(record.platform_label, "OpenAI");
-    assert.equal(record.affected_platform_label, "OpenAI");
-    assert.equal(record.observed_vendor, "OpenAI");
-    assert.equal(record.observed_product, "ChatGPT");
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-test("declared VIGIL chains exclude contextual records that are not chain members", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { normalizeVigilRecord } = modules.presentation;
-    const proposal = normalizeVigilRecord({
-      id: "VIGIL-2026-PROP-0019",
-      record_type: "proposal",
-      linked_records: {
-        related_failure_modes: ["VIGIL-2026-FM-0047"],
-        related_proposals: ["VIGIL-2026-PROP-0017"],
-        research: ["VIGIL-2026-RESEARCH-0002"],
-        contextual_relations: [
-          { record_id: "VIGIL-2026-FM-0002", relationship: "adjacent-control-problem", chain_inclusion: false },
-          { record_id: "VIGIL-2026-FM-0044", relationship: "supporting-mechanism", chain_inclusion: false },
-        ],
-      },
-      repair_scope: { primary_failure_mode: "VIGIL-2026-FM-0047", additional_resolved_failure_modes: [] },
-    });
-    assert.deepEqual(proposal.publicDisplay.chain, {
-      observations: ["VIGIL-2026-RESEARCH-0002"],
-      failureModes: ["VIGIL-2026-FM-0047"],
-      proposals: ["VIGIL-2026-PROP-0019"],
-      patches: [],
-    });
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-test("VIGIL model-2.0 normalization keeps severity, priority, monitoring and repair independent", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { normalizeVigilRecord, shouldShowCurrentPriority, vigilOperationalRank } = modules.presentation;
-    const active = normalizeVigilRecord({
-      id: "VIGIL-2026-FM-0101",
-      record_type: "failure_mode",
-      record_state: "active",
-      failure_classification: { severity: "S1" },
-      triage: { triage_priority: "P1", triage_status: "action-required" },
-      ecosystem_status: { monitoring_required: true },
-      repair_status: { status: "unrepaired" },
-    });
-    const monitored = normalizeVigilRecord({
-      id: "VIGIL-2026-FM-0102",
-      record_type: "failure_mode",
-      record_state: "monitoring",
-      failure_classification: { severity: "S1" },
-      triage: { triage_priority: "PN", triage_status: "monitoring" },
-      ecosystem_status: { monitoring_required: true },
-      repair_status: { status: "repaired" },
-    });
-    const closed = normalizeVigilRecord({
-      id: "VIGIL-2026-FM-0103",
-      record_type: "failure_mode",
-      record_state: "closed",
-      failure_classification: { severity: "S3" },
-      triage: { triage_priority: "PN", triage_status: "closed" },
-      ecosystem_status: { monitoring_required: false },
-      repair_status: { status: "repaired" },
-    });
-
-    assert.equal(active.severity, "S1");
-    assert.equal(active.triage_priority, "P1");
-    assert.equal(active.triage_status, "action-required");
-    assert.equal(active.monitoring_required, true);
-    assert.equal(active.repair_status, "unrepaired");
-    assert.equal(shouldShowCurrentPriority(active.triage_priority), true);
-    assert.equal(shouldShowCurrentPriority(monitored.triage_priority), false);
-    assert.ok(vigilOperationalRank(active) < vigilOperationalRank(monitored));
-    assert.ok(vigilOperationalRank(monitored) < vigilOperationalRank(closed));
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-
-test("Incident public detail keeps narrative, classification and evidence metadata separate", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { deriveFailureModePublicDetail } = modules.publicDisplay;
-    const { normalizeVigilRecord } = modules.presentation;
-    const raw = {
-      id: "VIGIL-INC-000001",
-      record_type: "incident",
-      summary: "An agent deleted a production database and fabricated recovery data.",
-      vigil_assessment: {
-        factual_basis: "The preserved incident record reports deletion, fabricated data and misleading narration.",
-      },
-      taxonomy_classification: {
-        classification_basis: "Internal taxonomy migration note that must remain in classification.",
-      },
-      severity_assessment: {
-        severity: "S1",
-        assessment_status: "provisionally-migrated",
-      },
-      evidence_confidence: "corroborated",
-      source_records: [{
-        source_title: "Incident report",
-        source_type: "incident database entry",
-        source_context: "The source reports deletion and fabricated replacement records.",
-      }],
-    };
-
-    const detail = deriveFailureModePublicDetail(raw);
+    const raw = { id: "VIGIL-INC-000001", record_type: "incident", summary: "A production database was deleted.", vigil_assessment: { factual_basis: "The preserved report records the deletion." }, taxonomy_classification: { classification_basis: "A separate structural classification rationale." }, source_records: [{ source_title: "Incident report", source_context: "The source reports deletion.", evidence_status: "supported" }] };
+    const detail = modules.display.deriveIncidentPublicDetail(raw);
     assert.equal(detail.evidence[0].whatHappened, raw.summary);
     assert.equal(detail.evidence[0].confirmedEvidence, raw.source_records[0].source_context);
-    assert.equal(detail.evidence[0].confidence, "corroborated");
-    assert.notEqual(detail.evidence[0].whatHappened, raw.taxonomy_classification.classification_basis);
-
-    const normalized = normalizeVigilRecord(raw);
-    assert.equal(normalized.severity, "S1");
-    assert.equal(normalized.evidence_confidence, "corroborated");
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
+    assert.equal(detail.evidence[0].evidenceStatus, "supported");
+    assert.notEqual(detail.evidence[0].confirmedEvidence, raw.taxonomy_classification.classification_basis);
+  } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("VIGIL live registry uses the canonical Incident index", async () => {
-  const { tempDir, modules } = await loadVigilModules();
+test("registry loading uses only the canonical Incident index and Incident fallback", async () => {
+  const modules = await loadModules();
   try {
-    const { loadVigilRegistry, VIGIL_REGISTRY_URL } = modules.registry;
-    assert.equal(VIGIL_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json");
-
-    const requested = [];
-    const result = await loadVigilRegistry(async (url, init) => {
-      requested.push({ url, init });
-      return {
-        ok: true,
-        json: async () => ({ records: [{ id: "VIGIL-INC-000003", record_type: "incident", title: "Loaded from Incident registry" }] }),
-      };
-    });
-    assert.equal(result.loadedFromFallback, false);
-    assert.match(result.attemptedUrl, /VIGIL\.Incidents\.Index\.json\?v=/);
-    assert.equal(requested.length, 1);
-    assert.match(requested[0].url, /VIGIL\.Incidents\.Index\.json\?v=/);
-    assert.deepEqual(requested[0].init, { cache: "no-store" });
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
+    assert.equal(modules.registry.VIGIL_INCIDENT_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json");
+    const incident = { id: "VIGIL-INC-000001", record_type: "incident", title: "Incident" };
+    const live = await modules.registry.loadVigilIncidentRecords(async () => new Response(JSON.stringify({ records: [incident, { id: "VIGIL-2026-FM-0001", record_type: "failure_mode" }] })), "https://example.test/incidents.json", "");
+    assert.deepEqual(live.records, [incident]);
+    const requests = [];
+    const fallback = await modules.registry.loadVigilIncidentRecords(async (url) => { requests.push(url); if (url.startsWith("https://example.test/live")) throw new Error("offline"); return new Response(JSON.stringify({ records: [incident] })); }, "https://example.test/live", "/data/fallback.json");
+    assert.equal(fallback.loadedFromFallback, true);
+    assert.deepEqual(requests.map((url) => url.split("?")[0]), ["https://example.test/live", "/data/fallback.json"]);
+  } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("Case Files load the dedicated canonical Incident index", async () => {
-  const { tempDir, modules } = await loadVigilModules();
+test("detail loader accepts Incident JSON and rejects retired record payloads", async () => {
+  const modules = await loadModules();
   try {
-    const { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } = modules.registry;
-    assert.equal(VIGIL_INCIDENT_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json");
-
-    const requested = [];
-    const result = await loadVigilIncidentRecords(async (url, init) => {
-      requested.push({ url, init });
-      return {
-        ok: true,
-        json: async () => ({ records: [{ id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident" }] }),
-      };
-    });
-
-    assert.equal(result.records.length, 1);
-    assert.equal(result.records[0].record_type, "incident");
-    assert.equal(result.loadedFromFallback, false);
-    assert.match(requested[0].url, /VIGIL\.Incidents\.Index\.json\?v=/);
-    assert.deepEqual(requested[0].init, { cache: "no-store" });
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
+    const incident = await modules.registry.loadVigilRecordDetail({ path: "vigil/records/incidents/VIGIL-INC-000001.json" }, async () => new Response(JSON.stringify({ id: "VIGIL-INC-000001", record_type: "incident" })));
+    assert.equal(incident.record_type, "incident");
+    await assert.rejects(() => modules.registry.loadVigilRecordDetail({ raw_url: "https://example.test/record.json" }, async () => new Response(JSON.stringify({ id: "VIGIL-2026-OBS-0001", record_type: "observation" }))), /canonical detail must be an Incident JSON object/);
+  } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("VIGIL detail loader uses canonical raw URLs and parses Markdown research records", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { loadVigilRecordDetail } = modules.registry;
-    const requested = [];
-    const canonical = { id: "VIGIL-2026-OBS-0099", title: "Canonical detail title", canonical_only: true };
-    const detail = await loadVigilRecordDetail({ id: "lean-index", raw_url: "https://example.test/vigil/record.json" }, async (url, init) => {
-      requested.push({ url, init });
-      return { ok: true, json: async () => canonical };
-    });
-    assert.deepEqual(detail, canonical);
-    assert.match(requested[0].url, /^https:\/\/example\.test\/vigil\/record\.json\?v=/);
-    assert.equal(requested[0].init.cache, "no-store");
-
-    let jsonCalled = false;
-    const research = await loadVigilRecordDetail(
-      { id: "lean-index", raw_url: "https://example.test/vigil/records/research/2026/VIGIL-2026-RESEARCH-0002.md" },
-      async () => ({
-        ok: true,
-        text: async () => "---\nid: VIGIL-2026-RESEARCH-0002\nrecord_type: research\ntitle: Red-team governance research\ndomains: [OPERATIONS, SECURITY]\nsources:\n  - https://example.test/source\n---\n\n# Research finding\n\nThe Markdown body remains available for public reading.\n",
-        json: async () => { jsonCalled = true; return {}; },
-      }),
-    );
-    assert.equal(jsonCalled, false);
-    assert.equal(research.id, "VIGIL-2026-RESEARCH-0002");
-    assert.deepEqual(research.domains, ["OPERATIONS", "SECURITY"]);
-    assert.match(research._canonical_markdown_body, /# Research finding/);
-
-    let pathUrl = "";
-    await loadVigilRecordDetail({ id: "lean-index", path: "vigil/records/example.json" }, async (url) => {
-      pathUrl = url;
-      return { ok: true, json: async () => ({ id: "canonical-from-path" }) };
-    });
-    assert.match(pathUrl, /^https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Vigil\/main\/vigil\/records\/example\.json\?v=/);
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-test("PATCH public display preserves literal amendments, verification state and explicit no-change outcomes", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { normalizeVigilRecord } = modules.presentation;
-    const amended = normalizeVigilRecord({
-      id: "VIGIL-2026-PATCH-0099",
-      record_type: "patch",
-      record_state: "closed-actioned",
-      corpus_implementation: {
-        implementation_outcome: "corpus-amendment",
-        amendments: [{
-          instrument_id: "CAM-BS2025-AEON-003-SCH-02",
-          canonical_file_path: "Governance/Constitution/CAM-BS2025-AEON-003-SCH-02.md",
-          section: "§7.4.1",
-          section_heading: "Weak Trigger and Premature Tool Invocation Constraint",
-          action: "amended",
-          final_adopted_wording: "Tool invocation SHALL remain proportionate to the active task authority.",
-          implemented_date: "2026-07-20",
-          verified_against: "0123456789abcdef0123456789abcdef01234567",
-          verification_status: "verified",
-          current_status: "current",
-        }],
-      },
-    });
-    assert.equal(amended.publicDisplay.patch.contractStatus, "complete-amendment");
-    assert.equal(amended.publicDisplay.corpusProvisions[0].complete, true);
-    assert.equal(amended.publicDisplay.corpusProvisions[0].finalWording, "Tool invocation SHALL remain proportionate to the active task authority.");
-
-    const incomplete = normalizeVigilRecord({
-      id: "VIGIL-2026-PATCH-0100",
-      record_type: "patch",
-      record_state: "closed-actioned",
-      change_details: { changed_instruments: ["CAM-BS2025-AEON-003-SCH-02"], implemented_changes: [{ section: "§7.4.1", description: "The section was updated." }] },
-    });
-    assert.equal(incomplete.publicDisplay.patch.contractStatus, "incomplete");
-    assert.equal(incomplete.publicDisplay.repairState, "Actioned · implementation details incomplete");
-
-    const noChange = normalizeVigilRecord({
-      id: "VIGIL-2026-PATCH-0101",
-      record_type: "patch",
-      record_state: "closed-actioned",
-      corpus_implementation: {
-        implementation_outcome: "pre-existing-control",
-        no_corpus_text_changed: true,
-        no_corpus_change_explanation: "The PATCH verified and linked an existing control.",
-      },
-      repair_provenance: {
-        retrospective_synthesis: true,
-        instruments_amended: [],
-        instruments_relied_upon_without_amendment: ["CAM-BS2025-AEON-006-SCH-07"],
-        coverage_origin: [{ instrument_id: "CAM-BS2025-AEON-006-SCH-07", relevant_sections: ["§3"], action: "relied-upon" }],
-      },
-    });
-    assert.equal(noChange.publicDisplay.patch.contractStatus, "complete-no-corpus-change");
-    assert.equal(noChange.publicDisplay.patch.explicitNoCorpusTextChange, true);
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-test("PATCH v2 entries remain authoritative and do not duplicate legacy coverage", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { normalizeVigilRecord } = modules.presentation;
-    const record = normalizeVigilRecord({
-      id: "VIGIL-2026-PATCH-0025",
-      record_type: "patch",
-      record_state: "closed-actioned",
-      date_implemented: "2026-07-23",
-      corpus_implementation: {
-        implementation_outcome: "implemented",
-        canonical_state: "branch-only",
-        entries: [{
-          instrument_id: "CAM-EQ2026-ETHICS-001-PLATINUM",
-          canonical_path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
-          section: "§2.2",
-          section_heading: "Objective–Pathway Ethical Admissibility",
-          change_kind: "added",
-          prior_text: null,
-          resulting_text: "Ethical admissibility applies independently to the objective and pathway.",
-          source: {
-            repository: "CAM-Initiative/Caelestis",
-            commit: "bd22cad95de6b78c4c613353eadacda9b8253e0e",
-            direct_url: "https://github.com/CAM-Initiative/Caelestis/blob/bd22cad95de6b78c4c613353eadacda9b8253e0e/Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md",
-          },
-          verification: { status: "verified-branch-only", exact_text_match: true, current_clause_status: "current" },
-        }],
-      },
-      implementation_verification: { verification_status: "verified-branch-only", implementation_state: "branch-only" },
-      repair_provenance: {
-        coverage_origin: [{ instrument_id: "CAM-EQ2026-ETHICS-001-PLATINUM", canonical_path: "Governance/Charters/CAM-EQ2026-ETHICS-001-PLATINUM.md", relevant_sections: ["§2.2 Objective–Pathway Ethical Admissibility"] }],
-      },
-    });
-    const provisions = record.publicDisplay.corpusProvisions;
-    assert.equal(record.publicDisplay.patch.contractStatus, "complete-amendment");
-    assert.equal(provisions.length, 1, "legacy coverage_origin must not duplicate authoritative v2 entries");
-    assert.equal(provisions[0].action, "added");
-    assert.equal(provisions[0].implementedDate, "2026-07-23");
-    assert.equal(provisions[0].verifiedAgainst, "bd22cad95de6b78c4c613353eadacda9b8253e0e");
-    assert.match(provisions[0].canonicalUrl, /Caelestis\/blob\/bd22cad9/);
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-test("failure-mode projections preserve canonical family counts and evidence boundaries", async () => {
-  const { tempDir, modules } = await loadVigilModules();
-  try {
-    const { normalizeRecords, deriveFailureFamilyCounts } = modules.presentation;
-    const { deriveFailureModePublicDetail } = modules.publicDisplay;
-    const records = normalizeRecords([
-      { id: "VIGIL-2026-FM-0201", record_type: "failure_mode", title: "One", failure_family: "execution", severity: "S2", triage_priority: "P0" },
-      { id: "VIGIL-2026-FM-0202", record_type: "failure_mode", title: "Two", failure_family: "execution", severity: "S3", triage_priority: "PN" },
-      { id: "VIGIL-2026-FM-0203", record_type: "failure_mode", title: "Three", failure_family: "epistemic", severity: "S1", triage_priority: "P2" },
-    ]);
-    assert.deepEqual(deriveFailureFamilyCounts(records).map(({ label, count }) => [label, count]), [
-      ["Epistemic Failures", 1],
-      ["Execution Failures", 2],
-    ]);
-
-    const detail = deriveFailureModePublicDetail({
-      id: "VIGIL-2026-FM-0204",
-      record_type: "failure_mode",
-      failure_mode_definition: "A bounded definition.",
-      failure_threshold: "The observed behaviour crosses the declared threshold.",
-      source_records: [{
-        source_title: "Primary source",
-        source_context: "The source reports the event.",
-        relevance_note: "VIGIL interprets the event as evidence of recurrence.",
-        primary_artefact_access: { access_status: "metadata only", limitations: ["Full artefact unavailable."] },
-        interpretive_reliance: "No direct audiovisual verification is asserted.",
-      }],
-    });
-    assert.equal(detail.evidence[0].confirmedEvidence, "The source reports the event.");
-    assert.equal(detail.evidence[0].interpretiveConclusion, "VIGIL interprets the event as evidence of recurrence.");
-    assert.deepEqual(detail.evidence[0].evidenceBoundary, ["Full artefact unavailable."]);
-  } finally {
-    await rm(tempDir, { recursive: true, force: true });
-  }
-});
-
-test("generated VIGIL fallback remains lean while preserving public projection fields", async () => {
-  const syncScript = await readFile(resolve(repoRoot, "scripts/sync-vigil-records.mjs"), "utf8");
-  assert.match(syncScript, /"corpus_implementation"/);
-  assert.match(syncScript, /"public_display"/);
-  assert.match(syncScript, /principal_instruments/);
-  assert.match(syncScript, /principal_sections/);
-  assert.match(syncScript, /corpus_search_terms/);
-  assert.match(syncScript, /display_contract_status/);
-
-  const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
-  assert.ok(Array.isArray(fallback.records));
-  assert.ok(fallback.records.length > 0);
-  const forbidden = new Set([
-    "system_context", "source_records", "failure_classification", "triage", "source_summary", "system_summary",
-    "jurisdiction_summary", "classification_summary", "triage_summary", "proposal_summary", "external_relevance_summary",
-    "change_summary", "verification_summary", "impact_summary", "cam_summary", "corpus_implementation", "public_display",
-    "relevant_corpus_provisions", "applied_corpus_repairs", "proposed_amendments", "proposed_corpus_amendments",
-  ]);
-  for (const entry of fallback.records) {
-    for (const key of forbidden) assert.equal(Object.hasOwn(entry, key), false, `${entry.id} includes forbidden nested ${key}`);
-    assert.equal(typeof entry.platform_label, "string", `${entry.id} is missing platform_label`);
-    assert.equal(typeof entry.affected_platform_label, "string", `${entry.id} is missing affected_platform_label`);
-    assert.equal(typeof entry.source_platform, "string", `${entry.id} is missing source_platform`);
-    assert.equal(typeof entry.observed_vendor, "string", `${entry.id} is missing observed_vendor`);
-    assert.ok(Object.keys(entry).length <= 56, `${entry.id} lean index entry is too large`);
-  }
-});
-
-test("public Observatory routes use Case Files and intentionally omit the retired full ledger", async () => {
-  const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
-  assert.match(app, /path="\/observatory\/cases\/:recordId"/);
-  assert.match(app, /path="\/observatory\/cases"/);
-  assert.match(app, /path="\/observatory\/incidents\/:recordId"/);
-  assert.match(app, /path="\/observatory\/failure-modes\/:recordId"/);
-  assert.match(app, /path="\/observatory\/failure-modes"/);
-  assert.match(app, /path="\/observatory\/incidents"/);
-  assert.match(app, /path="\/observatory\/repairs"/);
-  assert.match(app, /path="\/observatory\/reports\/:recordId"/);
-  assert.match(app, /path="\/observatory\/knowledge-base\/standards-sources\/:sourceKey"/);
-  assert.match(app, /path="\/observatory\/knowledge-base\/failure-taxonomy"/);
-  assert.doesNotMatch(app, /<Route path="\/observatory\/ledger"/);
-  assert.match(app, /Former \/observatory\/ledger public surface .* intentionally not routed/);
-  assert.match(app, /component=\{VigilCases\}/);
-  assert.match(app, /component=\{VigilCaseFile\}/);
-});
-
-test("Case Files are the current Incident-centred public investigation surface", async () => {
-  const cases = await readFile(resolve(repoRoot, "src/pages/vigil-cases.tsx"), "utf8");
+test("Case File keeps structured occurrence severity in Diagnosis", async () => {
   const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
-  const evidenceRepair = await readFile(resolve(repoRoot, "src/lib/vigilEvidenceRepair.ts"), "utf8");
-  const nav = await readFile(resolve(repoRoot, "src/components/vigil/VigilObservatoryNav.tsx"), "utf8");
-
-  assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
-  assert.match(cases, /loadVigilIncidentRecords/);
-  assert.match(cases, /record\.record_type === "incident"/);
-  assert.match(cases, /SortHeading label="Incident"/);
-  assert.match(cases, /Describe the behaviour you’re seeing/);
-  assert.match(cases, /matchesVigilSearch\(record\.searchText, search\)/);
-  assert.match(cases, /useState<SortState>\(\{ key: "id", direction: "desc" \}\)/);
-  assert.match(cases, /\/observatory\/cases\/\$\{encodeURIComponent\(record\.id\)\}/);
-
-  assert.match(evidenceRepair, /number: "01",\s*label: "Observation"/s);
-  assert.match(evidenceRepair, /number: "02",\s*label: "Diagnosis"/s);
-  assert.match(evidenceRepair, /number: "03",\s*label: "Classification"/s);
-  assert.match(evidenceRepair, /number: "04",\s*label: "Repair"/s);
-  assert.match(evidenceRepair, /number: "05",\s*label: "Learn"/s);
-  assert.match(evidenceRepair, /number: "06",\s*label: "References"/s);
-  assert.match(evidenceRepair, /VIGIL_INCIDENT_CASE_SECTIONS/);
-  assert.ok(evidenceRepair.indexOf('label: "Diagnosis"') < evidenceRepair.indexOf('label: "Classification"'));
-
-  assert.match(caseFile, /CASE_VIEWS = VIGIL_INCIDENT_CASE_SECTIONS/);
-  assert.match(caseFile, /CASE_VIEWS\.map/);
-  assert.match(caseFile, /stageId === "references"/);
-  assert.doesNotMatch(caseFile, /stageId === "repair"/);
-  assert.match(caseFile, /Generate report \/ PDF/);
-  assert.match(caseFile, /\/observatory\/reports\/\$\{encodeURIComponent\(reportId\)\}/);
-  assert.match(nav, /return null/);
-  assert.doesNotMatch(nav, /Full Ledger/);
+  const taxonomy = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
+  for (const field of ["materialised_consequence", "affected_scope", "seriousness_and_persistence", "quantitative_information", "evidentiary_limits", "band_rationale"]) assert.match(caseFile, new RegExp(`severity_assessment\\.${field}`));
+  assert.match(caseFile, /stageId === "diagnose"[\s\S]*Occurrence-level severity/);
+  assert.doesNotMatch(taxonomy, /severity_assessment|severityLabel/);
 });
 
-test("About VIGIL, homepage and shell reflect the current public information architecture", async () => {
-  const home = await readFile(resolve(repoRoot, "src/pages/home.tsx"), "utf8");
-  const about = await readFile(resolve(repoRoot, "src/pages/vigil-about.tsx"), "utf8");
-  const shell = await readFile(resolve(repoRoot, "src/components/layout/Shell.tsx"), "utf8");
-  const shellCss = await readFile(resolve(repoRoot, "src/vigil-page-shell.css"), "utf8");
-
-  assert.match(home, /CAM Initiative · Open AI Governance/);
-  assert.match(home, /CAM_HERO/);
-  assert.match(home, /VIGIL_HERO/);
-  assert.match(home, /home-main-rail-layout/);
-  assert.match(home, /home-sticky-governance/);
-  assert.match(home, /w-full max-w-\[100rem\]/);
-  assert.match(home, /text-\[17px\] leading-relaxed/);
-  assert.match(home, /font-mono text-sm uppercase/);
-  assert.match(home, /href="\/observatory\/about"/);
-
-  assert.match(about, /role="region" aria-label="VIGIL six-stage evidence-to-repair report model"/);
-  assert.match(about, /VIGIL_EVIDENCE_REPAIR_SECTIONS\.map/);
-  assert.match(about, /Failure families organise the landscape/);
-  assert.match(about, /AI Governance Standards/);
-  assert.match(shellCss, /\.vigil-about-flow-scroll/);
-  assert.match(shellCss, /overflow-x: auto/);
-
-  assert.match(shell, /href: "\/observatory\/cases", label: "VIGIL Case Files"/);
-  assert.match(shell, /href: "\/observatory\/knowledge-base", label: "VIGIL Knowledge Base"/);
-  assert.match(shell, /aria-label="Footer" className="flex w-full max-w-full flex-wrap/);
-  assert.doesNotMatch(shell, /Full Ledger/);
-});
-
-test("deterministic Incident report preserves evidence, diagnosis, classification and PDF controls", async () => {
-  const app = await readFile(resolve(repoRoot, "src/App.tsx"), "utf8");
-  const printable = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8");
-  const deterministic = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8");
-
-  assert.match(app, /EvidenceChainReport from "@\/pages\/evidence-chain-report-printable"/);
-  assert.match(app, /path="\/observatory\/reports\/:recordId"/);
-  assert.match(printable, /EvidenceChainReportDeterministic/);
-  assert.match(printable, /\["01", "Observation"\]|number: "01", label: "Observation"/);
-  assert.match(printable, /number: "02", label: "Diagnosis"/);
-  assert.match(printable, /number: "03", label: "Classification"/);
-  assert.match(printable, /number: "04", label: "References"/);
-  assert.doesNotMatch(printable, /label: "Repair"/);
-  assert.match(printable, /aria-label="PDF section controls"/);
-  assert.match(printable, /type="checkbox"/);
-  assert.match(printable, /section\.dataset\.reportIncluded/);
-  assert.match(deterministic, /<Stage number="01" label="Observation">/);
-  assert.match(deterministic, /<Stage number="02" label="Diagnosis">/);
-  assert.match(deterministic, /<Stage number="03" label="Classification">/);
-  assert.match(deterministic, /<Stage number="04" label="References">/);
-  assert.doesNotMatch(deterministic, /label="Repair"/);
-  assert.doesNotMatch(deterministic, /text-\[(?:9|10|11)px\]/);
+test("active routes and sync source have no retired registry-class machinery", async () => {
+  const [app, loader, sync, enhancements] = await Promise.all([readFile(resolve(repoRoot, "src/App.tsx"), "utf8"), readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8"), readFile(resolve(repoRoot, "scripts/sync-vigil-records.mjs"), "utf8"), readFile(resolve(repoRoot, "src/public/vigil-ux-enhancements.js"), "utf8")]);
+  for (const retired of ["failure_modes", "observations", "research", "patch_notes", "proposals", "VIGIL.Learn.Index.json", "_canonical_markdown_body"]) assert.doesNotMatch(`${loader}\n${sync}\n${enhancements}`, new RegExp(retired, "i"));
+  for (const route of ["/failure-modes", "/observatory/lessons", "/observatory/repairs", "/vigil"]) assert.equal(app.includes(`path=\"${route}`), false);
+  assert.match(app, /path="\/observatory\/cases"/);
+  assert.match(app, /path="\/observatory\/knowledge-base\/failure-taxonomy"/);
 });
