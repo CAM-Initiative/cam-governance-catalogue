@@ -1,0 +1,78 @@
+/* Deterministic report typography contract.
+   Substantive headings (Affected systems, Severity assessment, Factual basis,
+   Governance significance) are larger than metadata labels. Metadata labels remain
+   compact uppercase grey. Printed body copy must remain comfortably legible. */
+
+.vigil-deterministic-report-host .report-substantive-label {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.8rem !important;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .report-label {
+  font-size: 0.7rem !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment dd:first-of-type {
+  font-weight: 650;
+}
+
+/* The reliance notice belongs to section 04 and should visually close the reference list. */
+.vigil-deterministic-report-host .report-section:last-of-type > .report-reliance-notice {
+  margin: 1.15rem 0 0;
+  padding: 1rem 0 0;
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label),
+  .vigil-deterministic-report-host .report-section li,
+  .vigil-deterministic-report-host .report-section dd,
+  .vigil-deterministic-report-host .report-section summary,
+  .vigil-deterministic-report-host .report-section a,
+  .vigil-deterministic-report-host .report-reliance-notice p {
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
+  .vigil-deterministic-report-host .vigil-case-field dd,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list p,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list li {
+    font-size: 10.5pt !important;
+    line-height: 1.48 !important;
+  }
+
+  .vigil-deterministic-report-host .report-section:last-of-type ol,
+  .vigil-deterministic-report-host .report-section:last-of-type li,
+  .vigil-deterministic-report-host .report-section:last-of-type li span,
+  .vigil-deterministic-report-host .report-section:last-of-type a,
+  .vigil-deterministic-report-host .report-section:last-of-type strong {
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .vigil-deterministic-report-host .report-substantive-label {
+    font-size: 9pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-label,
+  .vigil-deterministic-report-host .vigil-evidence-kicker,
+  .vigil-deterministic-report-host .vigil-library-kicker,
+  .vigil-deterministic-report-host .vigil-diagnostic-meta-label,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dt,
+  .vigil-deterministic-report-host .vigil-case-field dt {
+    font-size: 8.5pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-section:last-of-type > .report-reliance-notice {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-top: 0.5cm !important;
+    padding-top: 0.4cm !important;
+  }
+}

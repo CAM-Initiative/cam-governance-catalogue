@@ -10,7 +10,7 @@ const citations = [
   },
   {
     label: "VIGIL",
-    citation: "CAM Initiative. VIGIL: Evidence-to-Repair Governance Ledger. 2026. https://www.cam-initiative.org/vigil",
+    citation: "CAM Initiative. VIGIL Observatory. 2026. https://www.cam-initiative.org/observatory/cases",
   },
   {
     label: "CAELESTIS Architecture Model",

@@ -185,9 +185,10 @@ export default function Datasets() {
           {downloadState === "error" ? <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p> : null}
 
           <DatasetCard
-            title="VIGIL Observatory AI Governance Failure Taxonomy"
+            eyebrow="VIGIL Observatory"
+            title="AI Governance Failure Taxonomy"
             description="Generated full-reference PDF for the canonical VIGIL Observatory failure taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
-            status="Technical reference · VIGIL Observatory"
+            status="Technical reference"
             beta
             onDownload={downloadTaxonomyPublication}
             downloading={taxonomyDownloadState === "working"}

@@ -1,0 +1,16 @@
+/* Incident diagnosis severity refinement.
+Severity is occurrence-level substantive diagnosis, independent of taxonomy classification.
+The structured severity panel deliberately mirrors the calm card hierarchy used by Section 01 Observation. */
+.vigil-case-file-page .vigil-severity-assessment { margin: 0 1.25rem 1.1rem; border: 1px solid hsl(var(--border) / 0.72); border-radius: var(--vigil-case-card-radius); background: hsl(var(--background)); box-shadow: var(--shadow-sm); overflow: hidden; }
+.vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading { padding: 1.15rem var(--vigil-case-card-pad) 0.85rem; border: 0; background: transparent; }
+.vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading h3 { margin: 0.22rem 0 0; font-size: 0.94rem; font-weight: 600; line-height: 1.45; color: hsl(var(--foreground) / 0.78); }
+.vigil-case-file-page .vigil-severity-summary-grid { display: grid; grid-template-columns: 1fr; }
+.vigil-case-file-page .vigil-severity-summary-grid > article { padding: 0.65rem var(--vigil-case-card-pad) 1.15rem; border: 0; }
+.vigil-case-file-page .vigil-severity-summary-grid dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem 2rem; max-width: 64rem; }
+.vigil-case-file-page .vigil-severity-summary-grid .vigil-case-field:first-child dd { font-size: 1.05rem; font-weight: 650; color: hsl(var(--foreground) / 0.9); }
+.vigil-case-file-page .vigil-severity-analysis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding: 0 1.25rem 1.25rem; }
+.vigil-case-file-page .vigil-severity-analysis-grid > section { min-width: 0; padding: 1.05rem 1.1rem 1.15rem; border-radius: 0.78rem; background: hsl(var(--card) / 0.33); }
+.vigil-case-file-page .vigil-severity-analysis-grid > section > .vigil-diagnostic-meta-label, .vigil-case-file-page .vigil-diagnosis-reading-stack > section > .vigil-diagnostic-meta-label { margin: 0 !important; font-family: var(--app-font-sans) !important; font-size: 0.8rem !important; font-weight: 650 !important; line-height: 1.35 !important; letter-spacing: 0.07em !important; text-transform: uppercase !important; color: hsl(var(--muted-foreground) / 0.72) !important; }
+.vigil-case-file-page .vigil-severity-analysis-grid > section > p:last-child, .vigil-case-file-page .vigil-diagnosis-reading-stack > section > p:last-child { margin-top: 0.52rem; font-size: 0.94rem; line-height: 1.58; color: hsl(var(--foreground) / 0.86); }
+.vigil-case-file-page .vigil-diagnosis-metadata-panel > .vigil-diagnostic-meta-label { margin: 0 0 0.8rem !important; }
+@media (max-width: 760px) { .vigil-case-file-page .vigil-severity-summary-grid dl, .vigil-case-file-page .vigil-severity-analysis-grid { grid-template-columns: 1fr; } }

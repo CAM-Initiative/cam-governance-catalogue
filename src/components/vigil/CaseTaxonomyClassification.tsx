@@ -39,9 +39,7 @@ type ResolvedClassification = ClassificationRef & {
 };
 
 type Props = {
-  failureId: string;
   raw: UnknownRecord;
-  severityLabel: string;
 };
 
 type TaxonomyState =
@@ -142,12 +140,12 @@ function Meta({ label, value, mono = false }: { label: string; value?: string; m
 
 function BulletList({ items }: { items?: string[] }) {
   if (!items?.length) return null;
-  return <ul className="vigil-learning-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
+  return <ul className="vigil-taxonomy-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
 }
 
 function RelationshipList({ items }: { items?: { type: string; target_id: string; note?: string }[] }) {
   if (!items?.length) return null;
-  return <ul className="vigil-learning-list">{items.map((item, index) => <li key={`${item.type}-${item.target_id}-${index}`}><strong>{item.type.replaceAll("_", " ")}</strong> · <span className="is-mono">{item.target_id}</span>{item.note ? ` — ${item.note}` : ""}</li>)}</ul>;
+  return <ul className="vigil-taxonomy-list">{items.map((item, index) => <li key={`${item.type}-${item.target_id}-${index}`}><strong>{item.type.replaceAll("_", " ")}</strong> · <span className="is-mono">{item.target_id}</span>{item.note ? ` — ${item.note}` : ""}</li>)}</ul>;
 }
 
 function Subtype({ subtype }: { subtype: FailureTaxonomySubtype }) {

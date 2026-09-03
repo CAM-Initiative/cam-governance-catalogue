@@ -16,7 +16,7 @@ const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts
 const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
-assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification failureId=\{failure\.id\} raw=\{failure\.raw\}/);
+assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
 
 assert.match(taxonomyPanel, /raw\.taxonomy_classification/);
 assert.match(taxonomyPanel, /primary_family/);
@@ -84,7 +84,6 @@ assert.match(taxonomyLoader, /subtypes\?: FailureTaxonomySubtype\[\]/);
 // Both local and production rendering consume the canonical VIGIL main branch.
 assert.doesNotMatch(vigilRegistry, /VIGIL_WORKING_BRANCH/);
 assert.doesNotMatch(vigilRegistry, /vigilPreviewUrl/);
-assert.match(vigilRegistry, /VIGIL_REGISTRY_URL = VIGIL_REGISTRY_SOURCE\.registry_index_url/);
 assert.match(vigilRegistry, /VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
 assert.match(vigilRegistry, /if \(record\.raw_url\) return record\.raw_url/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.branch/);
@@ -106,7 +105,7 @@ assert.doesNotMatch(caseLibrary, /Taxonomy status/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
 assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 
-assert.match(caseFile, /loadTaxonomyReferenceTargets\(failure\.raw\)/);
+assert.match(caseFile, /loadTaxonomyReferenceTargets\(incident\.raw\)/);
 assert.match(caseFile, /taxonomyReferences\.map/);
 assert.match(caseFile, /VIGIL Failure Taxonomy/);
 assert.match(caseFile, /reference\.id} — \{reference\.title/);
@@ -120,7 +119,7 @@ assert.match(taxonomyClassification, /requires-human-review/);
 assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
 assert.match(datasets, /VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference\.pdf/);
 assert.match(datasets, /Download PDF reference/);
-assert.match(datasets, /Technical reference · VIGIL Observatory/);
+assert.match(datasets, /status="Technical reference"/);
 assert.match(datasets, /downloadRemoteFile/);
 assert.match(datasets, /response\.blob\(\)/);
 assert.match(datasets, /anchor\.download = filename/);
@@ -130,11 +129,9 @@ assert.doesNotMatch(datasets, /agent\/bounded-incident-classification-provenance
 assert.doesNotMatch(datasets, /Download HTML reference/);
 assert.doesNotMatch(datasets, /VIGIL\.FailureTaxonomy\.FullReference\.html/);
 
-assert.match(printableReport, /CaseTaxonomyClassification/);
 assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
-assert.match(printableReport, /report-taxonomy-parity-slot/);
 assert.match(printableReport, /report-taxonomy-reference/);
-assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactIncidentId\(reportFailure\.id\)\} — \$\{reportFailure\.title\}`/);
+assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactIncidentId\(reportIncident\.id\)\} — \$\{reportIncident\.title\}`/);
 assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
 
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
@@ -149,7 +146,6 @@ assert.doesNotMatch(printableReport, /deterministic print projection of the corr
 
 assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 assert.match(polishCss, /break-before: auto !important/);
-assert.match(polishCss, /\.report-legacy-taxonomy/);
 assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
 
 assert.match(printableReport, /Use and reliance notice/);

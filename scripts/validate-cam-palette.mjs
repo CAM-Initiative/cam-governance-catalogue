@@ -9,7 +9,7 @@ const [indexCss, darkAppearance, constitutionCatalogueUx, main, report] = await 
   read("src/dark-appearance.css"),
   read("src/constitution-catalogue-ux.css"),
   read("src/main.tsx"),
-  read("src/pages/evidence-chain-report.tsx"),
+  read("src/pages/evidence-chain-report-deterministic.tsx"),
 ]);
 
 const failures = [];
@@ -29,8 +29,6 @@ requireText(indexCss, "--cam-corpus-heading: var(--cam-corpus-selected);", "Corp
 requireText(indexCss, "--cam-corpus-heading-foreground: var(--cam-corpus-selected-foreground);", "Corpus report heading must use the selected-surface foreground token.");
 requireText(indexCss, "--cam-corpus-metadata: var(--secondary);", "Corpus report metadata must use the shared secondary surface.");
 requireText(indexCss, "--cam-corpus-metadata-foreground: var(--secondary-foreground);", "Corpus report metadata must use the shared secondary foreground.");
-requireText(report, "bg-[hsl(var(--cam-corpus-heading))]", "Evidence report corpus headings must use the shared CAM heading surface.");
-requireText(report, "bg-[hsl(var(--cam-corpus-metadata))]", "Evidence report corpus metadata must use the shared CAM metadata surface.");
 if (/--cam-corpus-(?:heading|metadata):\s*var\(--(?:foreground|card-foreground|primary-foreground|secondary-foreground|cam-corpus-selected-foreground)\)/u.test(indexCss)) {
   failures.push("Corpus report backgrounds must use surface tokens, never foreground/text tokens.");
 }

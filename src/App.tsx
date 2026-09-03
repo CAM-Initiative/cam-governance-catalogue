@@ -24,7 +24,6 @@ import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
 import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
 import VigilStandardSource from "@/pages/vigil-standard-source";
 import VigilFailureTaxonomy from "@/pages/vigil-failure-taxonomy";
-import VigilKnowledgeBase from "@/pages/vigil-knowledge-base";
 import Datasets from "@/pages/datasets";
 import About from "@/pages/about";
 import Policy from "@/pages/policy";
@@ -45,30 +44,21 @@ function Router() {
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/cases" component={VigilCases} />
       <Route path="/observatory/incidents/:recordId" component={VigilCaseFile} />
-      <Route path="/observatory/failure-modes/:recordId" component={VigilCaseFile} />
-      <Route path="/observatory/failure-modes" component={VigilCases} />
 
       {/* Dedicated deterministic report composition for PDF/print output. */}
       <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
 
-      {/* Governance Lessons remains a LEARN projection; the Knowledge Base itself is broader. */}
-      <Route path="/observatory/lessons" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base/external-requirements" component={VigilStandardsBaseline} />
       <Route path="/observatory/knowledge-base/standards-sources/:sourceKey" component={VigilStandardSource} />
       <Route path="/observatory/knowledge-base/standards-sources" component={VigilStandardsBaseline} />
       <Route path="/observatory/knowledge-base/failure-taxonomy/:taxonomyId" component={VigilFailureTaxonomy} />
       <Route path="/observatory/knowledge-base/failure-taxonomy" component={VigilFailureTaxonomy} />
       <Route path="/observatory/knowledge-base/policy" component={Policy} />
-      <Route path="/observatory/knowledge-base/:recordId" component={VigilKnowledgeBase} />
       <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 
-      {/* Compatibility routes resolve into the Incident-centred public investigation surface. */}
+      {/* Incident-centred Observatory entry points. */}
       <Route path="/observatory/incidents" component={VigilCases} />
-      <Route path="/observatory/repairs" component={VigilCases} />
       <Route path="/observatory" component={VigilCases} />
-      {/* Former /observatory/ledger public surface is preserved as src/drafts/vigil-ledger.tsx and is intentionally not routed. */}
-      <Route path="/vigil/:recordId" component={VigilCaseFile} />
-      <Route path="/vigil" component={VigilCases} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,88 +1,12 @@
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
-export type CorpusProvision = {
-  instrumentId?: string;
-  instrumentTitle?: string;
-  canonicalPath?: string;
-  section?: string;
-  heading?: string;
-  action?: string;
-  relationship?: string;
-  finalWording?: string;
-  previousWording?: string;
-  implementedDate?: string;
-  verifiedAgainst?: string;
-  verificationStatus?: string;
-  currentStatus?: string;
-  canonicalUrl?: string;
-  implementationUrl?: string;
-  complete: boolean;
-};
-
-export type RecordChain = {
-  observations: string[];
-  failureModes: string[];
-  proposals: string[];
-  patches: string[];
-};
-
-export type PatchDisplayContractStatus =
-  | "complete-amendment"
-  | "complete-no-corpus-change"
-  | "incomplete"
-  | "not-applicable";
-
-export type PublicRecordDisplay = {
+export type IncidentPublicDisplay = {
   finding?: string;
   dates: {
     firstObserved?: string;
     published?: string;
     lastUpdated?: string;
-    implemented?: string;
   };
-  domains: string[];
-  systems: string[];
-  chain: RecordChain;
-  corpusProvisions: CorpusProvision[];
-  observation?: {
-    observed?: string;
-    context?: string;
-    interpretation?: string;
-    sourceModality: string[];
-    publicAccess?: string;
-  };
-  failure?: {
-    definition?: string;
-    triggers: string[];
-    manifestations: string[];
-    significance?: string;
-    affectedParties: string[];
-    corpusRelationship?: string;
-    repairStatus?: string;
-    repairNextAction?: string;
-  };
-  proposal?: {
-    problem?: string;
-    proposedOutcome?: string;
-    proposedWording?: string;
-    decisionStatus?: string;
-    resultingPatches: string[];
-  };
-  patch?: {
-    outcome: "corpus-amendment" | "pre-existing-control" | "non-corpus-repair" | "unknown";
-    explicitNoCorpusTextChange: boolean;
-    noCorpusChangeExplanation?: string;
-    repairSummary?: string;
-    implementationDate?: string;
-    verificationStatus?: string;
-    verifiedAgainst?: string;
-    residualMonitoring: string[];
-    contractStatus: PatchDisplayContractStatus;
-    contractMessage?: string;
-  };
-  lifecycleLabel?: string;
-  repairState?: string;
-  principalRepair?: string;
   searchTokens: string[];
 };
 
@@ -101,26 +25,16 @@ export type PublicEvidenceCard = {
   confirmedEvidence?: string;
   interpretiveConclusion?: string;
   evidenceBoundary: string[];
-  confidence?: string;
+  evidenceStatus?: string;
+  evidenceStatusBasis?: string;
   reviewer?: string;
   reviewDate?: string;
   sourceAccess?: string;
 };
 
-export type FailureModePublicDetail = {
-  definition?: string;
-  recognitionThreshold?: string;
-  significance?: string;
+export type IncidentPublicDetail = {
   evidence: PublicEvidenceCard[];
-  repairState?: string;
-  governanceControlSought?: string;
-  existingCoverage?: string;
-  governanceGap: string[];
-  proposedControl?: string;
-  implementedProvision?: string;
 };
-
-const VIGIL_ID_PATTERN = /VIGIL-\d{4}-(?:OBS|FM|PROP|PATCH|RESEARCH)-\d+/gi;
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -133,792 +47,82 @@ function valueAt(record: UnknownRecord, path: string): unknown {
   }, record);
 }
 
-function firstValue(record: UnknownRecord, paths: string[]): unknown {
-  for (const path of paths) {
-    const value = valueAt(record, path);
-    if (hasValue(value)) return value;
-  }
-  return undefined;
-}
-
-function hasValue(value: unknown): boolean {
-  if (value === null || value === undefined) return false;
-  if (typeof value === "string") return value.trim().length > 0;
-  if (Array.isArray(value)) return value.some(hasValue);
-  if (isObject(value)) return Object.values(value).some(hasValue);
-  return true;
-}
-
-function displayText(value: unknown, separator = "\n\n"): string | undefined {
-  if (!hasValue(value)) return undefined;
+function text(value: unknown): string | undefined {
   if (typeof value === "string") return value.trim() || undefined;
   if (typeof value === "number" || typeof value === "boolean") return String(value);
-  if (Array.isArray(value)) {
-    const values = value.map((item) => displayText(item, separator)).filter((item): item is string => Boolean(item));
-    return values.length ? values.join(separator) : undefined;
-  }
-  if (isObject(value)) {
-    const values = Object.entries(value)
-      .map(([key, item]) => {
-        const text = displayText(item, separator);
-        return text ? `${humanize(key)}: ${text}` : undefined;
-      })
-      .filter((item): item is string => Boolean(item));
-    return values.length ? values.join(separator) : undefined;
-  }
   return undefined;
 }
 
 function firstText(record: UnknownRecord, paths: string[]): string | undefined {
-  return displayText(firstValue(record, paths));
+  for (const path of paths) {
+    const value = text(valueAt(record, path));
+    if (value) return value;
+  }
+  return undefined;
 }
 
-function listFrom(value: unknown): string[] {
-  if (!hasValue(value)) return [];
-  const values = Array.isArray(value) ? value : [value];
-  return unique(values.flatMap((item) => {
-    if (typeof item === "string") {
-      return item.split(/\s*\|\s*|\s*;\s*/).map((entry) => entry.trim()).filter(Boolean);
-    }
-    const text = displayText(item, "; ");
-    return text ? [text] : [];
-  }));
-}
-
-function collectLists(record: UnknownRecord, paths: string[]) {
-  return unique(paths.flatMap((path) => listFrom(valueAt(record, path))));
-}
-
-function unique(values: Array<string | undefined>) {
+function textList(value: unknown): string[] {
+  const values = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
   const seen = new Set<string>();
-  return values.filter((value): value is string => {
-    const cleaned = value?.trim();
-    if (!cleaned) return false;
-    const key = cleaned.toLocaleLowerCase();
+  return values.flatMap((item) => {
+    const value = text(item);
+    return value ? [value] : [];
+  }).filter((item) => {
+    const key = item.toLowerCase();
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
 }
 
-function humanize(value: string) {
-  return value
-    .replace(/[_-]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/\b\w/g, (letter) => letter.toUpperCase())
-    .replace(/\bCam\b/g, "CAM")
-    .replace(/\bVigil\b/g, "VIGIL")
-    .replace(/\bAi\b/g, "AI");
-}
-
-function normalizedKey(value?: string) {
-  return String(value ?? "").trim().toLocaleLowerCase().replace(/[_\s]+/g, "-");
-}
-
-function recordIdsFrom(value: unknown): string[] {
-  if (!hasValue(value)) return [];
-  if (typeof value === "string") return unique(value.match(VIGIL_ID_PATTERN) ?? []);
-  if (Array.isArray(value)) return unique(value.flatMap(recordIdsFrom));
-  if (isObject(value)) {
-    const ownId = displayText(value.id ?? value.record_id);
-    return unique([
-      ...(ownId?.match(VIGIL_ID_PATTERN) ?? []),
-      ...Object.values(value).flatMap(recordIdsFrom),
-    ]);
-  }
+function collectText(value: unknown, depth = 0): string[] {
+  if (depth > 5 || value === undefined || value === null) return [];
+  if (typeof value === "string") return value.trim() ? [value.trim()] : [];
+  if (Array.isArray(value)) return value.flatMap((item) => collectText(item, depth + 1));
+  if (isObject(value)) return Object.values(value).flatMap((item) => collectText(item, depth + 1));
   return [];
 }
 
-function addRecordIds(target: string[], value: unknown) {
-  target.push(...recordIdsFrom(value));
-}
-
-function distributeRecordIds(chain: RecordChain, ids: string[]) {
-  for (const id of ids) {
-    if (/-OBS-|\-RESEARCH-/i.test(id)) chain.observations.push(id);
-    else if (/-FM-/i.test(id)) chain.failureModes.push(id);
-    else if (/-PROP-/i.test(id)) chain.proposals.push(id);
-    else if (/-PATCH-/i.test(id)) chain.patches.push(id);
-  }
-}
-
-function deriveRecordChain(record: UnknownRecord, recordType: string, id: string): RecordChain {
-  const chain: RecordChain = { observations: [], failureModes: [], proposals: [], patches: [] };
-  const linked = isObject(record.linked_records) ? record.linked_records : {};
-  const repairScope = isObject(record.repair_scope) ? record.repair_scope : undefined;
-
-  for (const key of ["related_observations", "source_observations", "observations", "research"]) {
-    addRecordIds(chain.observations, linked[key]);
-  }
-
-  if (repairScope) {
-    addRecordIds(chain.failureModes, repairScope.primary_failure_mode);
-    addRecordIds(chain.failureModes, repairScope.additional_resolved_failure_modes);
-  } else {
-    for (const key of ["related_failure_modes", "linked_failure_modes", "failure_modes", "target_failure_record"]) {
-      addRecordIds(chain.failureModes, linked[key]);
-    }
-  }
-
-  if (recordType !== "proposal") {
-    for (const key of ["related_proposals", "linked_proposals", "proposals"]) addRecordIds(chain.proposals, linked[key]);
-  }
-  for (const key of ["related_patch_notes", "related_patches", "resulting_patches", "patches"]) addRecordIds(chain.patches, linked[key]);
-
-  if (recordType === "observation" || recordType === "research") chain.observations.push(id);
-  if (recordType === "failure_mode") chain.failureModes.push(id);
-  if (recordType === "proposal") chain.proposals.push(id);
-  if (recordType === "patch_note" || recordType === "patch") chain.patches.push(id);
-
-  chain.observations = unique(chain.observations);
-  chain.failureModes = unique(chain.failureModes);
-  chain.proposals = unique(chain.proposals);
-  chain.patches = unique(chain.patches);
-  return chain;
-}
-
-function parseProvisionString(value: string): UnknownRecord {
-  const instrument = value.match(/\bCAM-[A-Z0-9-]+\b/i)?.[0];
-  const section = value.match(/§\s*[A-Za-z0-9.()[\]-]+/)?.[0];
-  const heading = section ? value.split(section)[1]?.replace(/^[\s—–:-]+/, "").trim() : undefined;
+export function deriveIncidentPublicDisplay(record: UnknownRecord): IncidentPublicDisplay {
   return {
-    instrument_id: instrument,
-    section,
-    section_heading: heading,
-    relationship: value,
-  };
-}
-
-function provisionObject(value: unknown): UnknownRecord | undefined {
-  if (typeof value === "string") return parseProvisionString(value);
-  return isObject(value) ? value : undefined;
-}
-
-function expandProvisionItem(value: unknown): UnknownRecord[] {
-  const item = provisionObject(value);
-  if (!item) return [];
-
-  const nestedSections = item.sections ?? item.relevant_sections;
-  if (!Array.isArray(nestedSections) || nestedSections.length === 0 || hasValue(item.section ?? item.section_number)) return [item];
-
-  return nestedSections.flatMap((section) => {
-    if (isObject(section)) return [{ ...item, ...section, sections: undefined, relevant_sections: undefined }];
-    const sectionText = displayText(section);
-    return sectionText ? [{ ...item, section: sectionText, sections: undefined, relevant_sections: undefined }] : [];
-  });
-}
-
-function provisionFromObject(item: UnknownRecord, defaults: Partial<CorpusProvision> = {}): CorpusProvision {
-  const instrumentId = firstText(item, ["instrument_id", "instrument_code", "instrument", "code"]) ?? defaults.instrumentId;
-  const instrumentTitle = firstText(item, ["instrument_title", "document_title", "title"]) ?? defaults.instrumentTitle;
-  const canonicalPath = firstText(item, ["canonical_file_path", "canonical_path", "file_path", "path", "source.path"]) ?? defaults.canonicalPath;
-  const section = firstText(item, ["section", "section_number", "clause", "relevant_section", "field"]) ?? defaults.section;
-  const heading = firstText(item, ["section_heading", "section_title", "heading", "clause_heading"]) ?? defaults.heading;
-  const action = firstText(item, ["action", "change_kind", "amendment_type", "change_type", "coverage_type"]) ?? defaults.action;
-  const relationship = firstText(item, ["relationship_to_failure", "relationship", "relevance", "failure_relevance", "description"]) ?? defaults.relationship;
-  const finalWording = firstText(item, [
-    "resulting_text",
-    "final_adopted_wording",
-    "implemented_text",
-    "adopted_wording",
-    "final_wording",
-    "literal_wording",
-    "exact_text",
-    "wording",
-    "clause_text",
-    "implemented_value",
-    "value",
-  ]) ?? defaults.finalWording;
-  const previousWording = firstText(item, ["prior_text", "previous_wording", "prior_wording", "removed_wording", "before_text"]) ?? defaults.previousWording;
-  const implementedDate = firstText(item, ["implemented_date", "date_implemented", "effective_date"]) ?? defaults.implementedDate;
-  const verifiedAgainst = firstText(item, ["verified_against", "corpus_commit", "commit_sha", "source.commit", "version"]) ?? defaults.verifiedAgainst;
-  const rawVerificationStatus = firstText(item, ["verification.status", "verification_status", "verification_state", "verified"]);
-  const exactTextMatch = explicitBoolean(item, ["verification.exact_text_match", "exact_text_match"]);
-  const verificationStatus = normalizedKey(rawVerificationStatus) === "verified-branch-only"
-    ? [
-        "Verified on Caelestis working branch",
-        exactTextMatch === true ? "exact text match" : undefined,
-        "not yet canonical",
-      ].filter(Boolean).join(" · ")
-    : rawVerificationStatus ?? defaults.verificationStatus;
-  const currentStatus = firstText(item, ["verification.current_clause_status", "current_status", "provision_status", "status"]) ?? defaults.currentStatus;
-  const canonicalUrl = firstText(item, ["source.direct_url", "canonical_source_url", "canonical_url", "corpus_url", "source_url"]) ?? defaults.canonicalUrl;
-  const implementationUrl = firstText(item, ["implementation_record_url", "implementation_commit_url", "commit_url", "amendment_url"]) ?? defaults.implementationUrl;
-  const actionKey = normalizedKey(action);
-  const exactRepair = finalWording || (actionKey.includes("repeal") || actionKey.includes("remove") ? previousWording : undefined);
-
-  return {
-    instrumentId,
-    instrumentTitle,
-    canonicalPath,
-    section,
-    heading,
-    action,
-    relationship,
-    finalWording,
-    previousWording,
-    implementedDate,
-    verifiedAgainst,
-    verificationStatus,
-    currentStatus,
-    canonicalUrl,
-    implementationUrl,
-    complete: Boolean(instrumentId && section && action && exactRepair && (canonicalPath || canonicalUrl)),
-  };
-}
-
-function mergeProvision(target: CorpusProvision, source: CorpusProvision): CorpusProvision {
-  const merged = Object.fromEntries(
-    Object.keys({ ...target, ...source }).map((key) => {
-      const typedKey = key as keyof CorpusProvision;
-      return [key, target[typedKey] || source[typedKey]];
-    }),
-  ) as CorpusProvision;
-  merged.complete = provisionFromObject({
-    instrument_id: merged.instrumentId,
-    instrument_title: merged.instrumentTitle,
-    canonical_file_path: merged.canonicalPath,
-    section: merged.section,
-    section_heading: merged.heading,
-    action: merged.action,
-    relationship: merged.relationship,
-    final_adopted_wording: merged.finalWording,
-    previous_wording: merged.previousWording,
-    implemented_date: merged.implementedDate,
-    verified_against: merged.verifiedAgainst,
-    verification_status: merged.verificationStatus,
-    current_status: merged.currentStatus,
-    canonical_source_url: merged.canonicalUrl,
-    implementation_record_url: merged.implementationUrl,
-  }).complete;
-  return merged;
-}
-
-function deriveCorpusProvisions(record: UnknownRecord): CorpusProvision[] {
-  const provisions: CorpusProvision[] = [];
-  const patchV2Entries = valueAt(record, "corpus_implementation.entries");
-  const hasPatchV2Entries = Array.isArray(patchV2Entries) && patchV2Entries.length > 0;
-  const structuredPaths = [
-    "corpus_implementation.entries",
-    "corpus_implementation.amendments",
-    "corpus_implementation.corpus_amendments",
-    "corpus_implementation.applied_repairs",
-    "applied_corpus_repairs",
-    "relevant_corpus_provisions",
-    "corpus_basis",
-    "proposed_amendments",
-    "proposed_corpus_amendments",
-    "proposal_details.target_provisions",
-    "cam_internal.target_instruments",
-    "existing_cam_coverage",
-    ...(hasPatchV2Entries ? [] : ["repair_provenance.coverage_origin"]),
-  ];
-
-  for (const path of structuredPaths) {
-    const value = valueAt(record, path);
-    const items = Array.isArray(value) ? value : hasValue(value) ? [value] : [];
-    const defaults = path === "corpus_implementation.entries"
-      ? { implementedDate: firstText(record, ["date_implemented", "corpus_implementation.date_implemented"]) }
-      : {};
-    for (const item of items.flatMap(expandProvisionItem)) provisions.push(provisionFromObject(item, defaults));
-  }
-
-  const implementedChanges = valueAt(record, "change_details.implemented_changes");
-  const changedInstruments = collectLists(record, [
-    "change_details.changed_instruments",
-    "change_details.changed_files_or_instruments",
-    "cam_internal.changed_instruments",
-    "repair_provenance.instruments_amended",
-  ]);
-  if (Array.isArray(implementedChanges)) {
-    const defaultInstrument = changedInstruments.length === 1 ? changedInstruments[0].match(/\bCAM-[A-Z0-9-]+\b/i)?.[0] ?? changedInstruments[0] : undefined;
-    for (const item of implementedChanges.flatMap(expandProvisionItem)) {
-      provisions.push(provisionFromObject(item, { instrumentId: defaultInstrument, action: "amended" }));
-    }
-  }
-
-  const changedComponents = collectLists(record, ["change_details.changed_components"]);
-  for (const component of changedComponents) {
-    if (component.match(/\bCAM-[A-Z0-9-]+\b/i) || component.includes("§")) {
-      provisions.push(provisionFromObject(parseProvisionString(component)));
-    }
-  }
-
-  const merged = new Map<string, CorpusProvision>();
-  for (const provision of provisions) {
-    if (!hasValue(provision.instrumentId) && !hasValue(provision.section) && !hasValue(provision.relationship)) continue;
-    const key = [
-      normalizedKey(provision.instrumentId),
-      normalizedKey(provision.section) || normalizedKey(provision.heading) || normalizedKey(provision.relationship),
-    ].join("|");
-    const existing = merged.get(key);
-    merged.set(key, existing ? mergeProvision(existing, provision) : provision);
-  }
-  return [...merged.values()];
-}
-
-function lifecycleLabel(status?: string) {
-  const key = normalizedKey(status);
-  const labels: Record<string, string> = {
-    active: "Active",
-    open: "Active",
-    triage: "Active",
-    routed: "Active",
-    watching: "Monitoring",
-    monitoring: "Monitoring",
-    "closed-actioned": "Closed—actioned",
-    implemented: "Closed—actioned",
-    closed: "Closed",
-    inactive: "Closed",
-    "closed-no-action": "Closed—no action",
-    deferred: "Deferred",
-    superseded: "Superseded",
-  };
-  return labels[key] ?? (status ? humanize(status) : undefined);
-}
-
-function explicitBoolean(record: UnknownRecord, paths: string[]) {
-  for (const path of paths) {
-    const value = valueAt(record, path);
-    if (typeof value === "boolean") return value;
-    if (typeof value === "string" && ["true", "yes"].includes(value.trim().toLocaleLowerCase())) return true;
-    if (typeof value === "string" && ["false", "no"].includes(value.trim().toLocaleLowerCase())) return false;
-  }
-  return undefined;
-}
-
-function derivePatchDisplay(
-  record: UnknownRecord,
-  provisions: CorpusProvision[],
-  recordState?: string,
-): PublicRecordDisplay["patch"] {
-  const outcomeText = firstText(record, [
-    "corpus_implementation.implementation_outcome",
-    "corpus_implementation.outcome",
-    "corpus_implementation.change_class",
-    "change_classification.doctrine_amendment_status",
-    "change_classification.implementation_level",
-    "repair_provenance.doctrine_change",
-  ]);
-  const outcomeKey = normalizedKey(outcomeText);
-  const projectedContractStatus = normalizedKey(firstText(record, [
-    "display_contract_status",
-    "public_display.display_contract_status",
-  ]));
-  const retrospective = explicitBoolean(record, ["repair_provenance.retrospective_synthesis"]) === true;
-  const amendedInstruments = collectLists(record, [
-    "corpus_implementation.instruments_amended",
-    "repair_provenance.instruments_amended",
-    "change_details.changed_instruments",
-    "cam_internal.changed_instruments",
-  ]);
-  const reliedUpon = collectLists(record, [
-    "corpus_implementation.instruments_relied_upon_without_amendment",
-    "repair_provenance.instruments_relied_upon_without_amendment",
-  ]);
-  const explicitNoChangeFlag = explicitBoolean(record, [
-    "corpus_implementation.no_corpus_text_changed",
-    "no_corpus_text_changed",
-  ]);
-  const noChangeOutcome = [
-    "no-corpus-change",
-    "no-corpus-text-change",
-    "relied-upon-without-amendment",
-  ].some((value) => outcomeKey.includes(value));
-  const explicitNoCorpusTextChange = explicitNoChangeFlag === true
-    || noChangeOutcome
-    || projectedContractStatus === "complete-no-corpus-change"
-    || (retrospective && amendedInstruments.length === 0 && reliedUpon.length > 0);
-  const rawVerificationStatus = firstText(record, [
-    "corpus_implementation.verification.verification_status",
-    "corpus_implementation.verification_status",
-    "implementation_verification.verification_status",
-    "verification_status",
-  ]);
-  const patchV2Entries = valueAt(record, "corpus_implementation.entries");
-  const allEntriesExact = Array.isArray(patchV2Entries)
-    && patchV2Entries.length > 0
-    && patchV2Entries.every((entry) => isObject(entry) && explicitBoolean(entry, ["verification.exact_text_match"]) === true);
-  const branchOnly = normalizedKey(firstText(record, [
-    "corpus_implementation.canonical_state",
-    "implementation_verification.implementation_state",
-  ])) === "branch-only";
-  const publicVerificationStatus = normalizedKey(rawVerificationStatus) === "verified-branch-only" && branchOnly
-    ? [
-        "Verified on Caelestis working branch",
-        allEntriesExact ? "exact text match" : undefined,
-        "not yet canonical",
-      ].filter(Boolean).join(" · ")
-    : rawVerificationStatus;
-
-  let outcome: NonNullable<PublicRecordDisplay["patch"]>["outcome"] = "unknown";
-  if (explicitNoCorpusTextChange && (retrospective || reliedUpon.length > 0 || outcomeKey.includes("pre-existing"))) outcome = "pre-existing-control";
-  else if (explicitNoCorpusTextChange) outcome = "non-corpus-repair";
-  else if (
-    amendedInstruments.length > 0
-    || provisions.some((provision) => provision.action && !normalizedKey(provision.action).includes("relied"))
-    || ["substantive", "amendment", "corpus-change"].some((value) => outcomeKey.includes(value))
-  ) outcome = "corpus-amendment";
-
-  const amendmentProvisions = provisions.filter((provision) => {
-    const action = normalizedKey(provision.action);
-    return !["relied-upon", "pre-existing", "coverage"].some((value) => action.includes(value));
-  });
-  const completeAmendment = projectedContractStatus === "complete-amendment" || (outcome === "corpus-amendment"
-    && amendmentProvisions.length > 0
-    && amendmentProvisions.every((provision) => provision.complete));
-  const contractStatus: PatchDisplayContractStatus = completeAmendment
-    ? "complete-amendment"
-    : explicitNoCorpusTextChange || projectedContractStatus === "complete-no-corpus-change"
-      ? "complete-no-corpus-change"
-      : "incomplete";
-  return {
-    outcome,
-    explicitNoCorpusTextChange,
-    noCorpusChangeExplanation: firstText(record, [
-      "corpus_implementation.no_corpus_change_explanation",
-      "corpus_implementation.repair_description",
-      "repair_provenance.repair_basis",
-      "change_details.doctrine_change",
-    ]),
-    repairSummary: firstText(record, [
-      "corpus_implementation.repair_summary",
-      "change_details.implemented_change",
-      "change_details.change_summary",
+    finding: firstText(record, [
+      "public_finding",
+      "vigil_assessment.governance_interpretation",
+      "vigil_assessment.factual_basis",
       "summary",
     ]),
-    implementationDate: firstText(record, [
-      "corpus_implementation.date_implemented",
-      "date_implemented",
-    ]),
-    verificationStatus: publicVerificationStatus,
-    verifiedAgainst: firstText(record, [
-      "corpus_implementation.verification.verified_against",
-      "corpus_implementation.verified_against",
-      "implementation_verification.verification_method",
-      "implementation_verification.evidence",
-    ]),
-    residualMonitoring: collectLists(record, [
-      "corpus_implementation.residual_monitoring",
-      "remaining_work.monitoring_notes",
-      "remaining_work.open_items",
-      "remaining_work.items",
-      "remaining_work",
-    ]),
-    contractStatus,
-    contractMessage: contractStatus === "incomplete"
-      ? "This PATCH does not yet contain complete, traceable corpus implementation details and does not explicitly declare that no corpus text changed."
-      : undefined,
-  };
-}
-
-function deriveRepairState(
-  recordType: string,
-  recordState: string | undefined,
-  chain: RecordChain,
-  patch: PublicRecordDisplay["patch"],
-  record: UnknownRecord,
-) {
-  if (patch) {
-    if (patch.contractStatus === "complete-amendment") return "Corpus repair documented";
-    if (patch.contractStatus === "complete-no-corpus-change") return "No corpus text changed";
-    return "Actioned · implementation details incomplete";
-  }
-  const projectedRepairState = firstText(record, ["repair_state", "public_display.repair_state"]);
-  if (projectedRepairState) return humanize(projectedRepairState);
-  const lifecycleKey = normalizedKey(recordState);
-  if (lifecycleKey === "closed-no-action") return "No action required";
-  if (lifecycleKey === "deferred") return "Deferred";
-  if (lifecycleKey === "superseded") return "Superseded";
-  if (recordType === "failure_mode") {
-    const explicit = firstText(record, ["repair_status.status", "repair_status.state", "triage.mitigation_status", "mitigation_status"]);
-    if (explicit) return humanize(explicit);
-    if (chain.patches.length) return "Repair linked";
-    if (["closed-actioned", "implemented"].includes(normalizedKey(recordState))) return "Repair stated; PATCH not linked";
-    return "No implemented repair linked";
-  }
-  if (recordType === "proposal") return chain.patches.length ? "Implemented through PATCH" : "Not yet implemented";
-  if (recordType === "observation") return chain.failureModes.length ? "Failure mode linked" : "Awaiting failure classification";
-  return undefined;
-}
-
-function principalRepair(provisions: CorpusProvision[]) {
-  const values = provisions.slice(0, 3).map((provision) => {
-    const instrument = provision.instrumentId ?? provision.instrumentTitle;
-    return [instrument, provision.section].filter(Boolean).join(" ");
-  }).filter(Boolean);
-  return values.length ? values.join("; ") : undefined;
-}
-
-export function deriveVigilPublicDisplay(
-  record: UnknownRecord,
-  options: { recordType: string; id: string; recordState?: string },
-): PublicRecordDisplay {
-  const { recordType, id, recordState } = options;
-  const chain = deriveRecordChain(record, recordType, id);
-  const corpusProvisions = deriveCorpusProvisions(record);
-  const domains = collectLists(record, [
-    "public_display.relevant_domains",
-    "relevant_domains",
-    "affected_domains",
-    "cam_internal.affected_domains",
-    "cam_internal.changed_domains",
-    "cam_summary.changed_domains",
-    "cam_summary.target_domains",
-    "change_details.changed_domains",
-    "target_domains",
-    "proposal_summary.cam_domains",
-  ]);
-  const systems = unique([
-    firstText(record, ["system_context.platform_or_vendor", "platform_or_vendor", "observed_vendor", "platform_label"]),
-    firstText(record, ["system_context.product_or_service", "system_context.specific_model_or_runtime", "product_or_service", "observed_product"]),
-  ]);
-  const patch = ["patch_note", "patch"].includes(recordType)
-    ? derivePatchDisplay(record, corpusProvisions, recordState)
-    : undefined;
-  const sourceLifecycleLabel = lifecycleLabel(recordState);
-  const displayedLifecycleLabel = sourceLifecycleLabel;
-
-  const observation = recordType === "observation" ? {
-    observed: firstText(record, [
-      "direct_observation",
-      "observation.observed",
-      "observation_summary",
-      "observed_behaviour",
-      "observed_behavior",
-      "distinguishing_observations",
-      "summary",
-    ]),
-    context: firstText(record, ["observation_context", "system_context.deployment_context", "system_context.interface_surface", "context"]),
-    interpretation: firstText(record, [
-      "interpretation",
-      "governance_interpretation",
-      "why_it_matters_to_CAM",
-      "analysis",
-    ]),
-    sourceModality: collectLists(record, [
-      "source_modality",
-      "source_modalities",
-      "source_summary.primary_source_type",
-      "source_records.0.source_type",
-    ]),
-    publicAccess: firstText(record, [
-      "public_access_status",
-      "source_summary.public_access_status",
-      "source_records.0.public_access_status",
-      "source_records.0.access_status",
-      "source_records.0.source_url_status",
-    ]),
-  } : undefined;
-
-  const failure = recordType === "failure_mode" ? {
-    definition: firstText(record, ["failure_mode_definition", "definition", "summary"]),
-    triggers: collectLists(record, [
-      "triggering_conditions",
-      "failure_threshold",
-      "failure_classification.triggering_conditions",
-      "failure_classification.failure_threshold",
-    ]),
-    manifestations: collectLists(record, [
-      "observed_manifestations",
-      "manifestations",
-      "distinguishing_observations",
-      "cam_internal.cam_observed_failure",
-    ]),
-    significance: firstText(record, [
-      "governance_significance",
-      "why_it_matters_to_CAM",
-      "governance_gap",
-      "cam_internal.cam_internal_failure_statement",
-    ]),
-    affectedParties: collectLists(record, [
-      "affected_parties",
-      "system_context.affected_population",
-      "failure_classification.affected_rights_or_interests",
-      "user_impact",
-    ]),
-    corpusRelationship: firstText(record, [
-      "corpus_failure_relationship",
-      "cam_internal.cam_failure_type",
-      "cam_internal.cam_compliance_status",
-      "governance_gap_type",
-    ]),
-    repairStatus: firstText(record, [
-      "repair_status.status",
-      "repair_status.state",
-      "triage.mitigation_status",
-      "mitigation_status",
-    ]),
-    repairNextAction: firstText(record, [
-      "repair_status.next_action",
-      "triage.recommended_next_step",
-      "recommended_next_step",
-    ]),
-  } : undefined;
-
-  const proposal = recordType === "proposal" ? {
-    problem: firstText(record, [
-      "problem_being_addressed",
-      "problem_statement",
-      "proposal_summary.problem",
-      "proposal_rationale",
-      "summary",
-    ]),
-    proposedOutcome: firstText(record, [
-      "proposed_governance_outcome",
-      "proposed_outcome",
-      "proposal_summary.proposed_outcome",
-      "proposal_summary.scope_summary",
-      "proposal_scope",
-      "recommended_controls",
-    ]),
-    proposedWording: firstText(record, [
-      "proposed_wording",
-      "draft_wording",
-      "proposed_amendment.wording",
-      "proposal_details.proposed_wording",
-    ]),
-    decisionStatus: firstText(record, [
-      "decision_status",
-      "proposal_summary.decision_status",
-      "proposal_summary.drafting_status",
-      "resolution_status",
-      "proposal_resolution",
-      "cam_internal.drafting_status",
-      "drafting_status",
-      "record_state",
-    ]),
-    resultingPatches: chain.patches,
-  } : undefined;
-
-  const finding = firstText(record, [
-    "public_display.public_finding",
-    "public_finding",
-    "record_identity.public_finding",
-    "finding",
-    "summary",
-    "failure_mode_definition",
-  ]);
-  const repairState = deriveRepairState(recordType, recordState, chain, patch, record);
-  const projectedInstruments = collectLists(record, ["principal_instruments", "principal_instrument"]);
-  const projectedSections = collectLists(record, ["principal_sections", "principal_section"]);
-  const projectedPrincipal = projectedInstruments.length
-    ? projectedInstruments.slice(0, 3).map((instrument, index) => [instrument, projectedSections[index] ?? (projectedInstruments.length === 1 ? projectedSections.join(", ") : undefined)].filter(Boolean).join(" ")).join("; ")
-    : undefined;
-  const principal = principalRepair(corpusProvisions)
-    ?? firstText(record, ["principal_repair"])
-    ?? projectedPrincipal;
-  const searchTokens = unique([
-    id,
-    finding,
-    recordState,
-    displayedLifecycleLabel,
-    repairState,
-    principal,
-    ...domains,
-    ...systems,
-    ...chain.observations,
-    ...chain.failureModes,
-    ...chain.proposals,
-    ...chain.patches,
-    ...collectLists(record, ["corpus_search_terms", "principal_instruments", "principal_sections"]),
-    ...corpusProvisions.flatMap((provision) => [
-      provision.instrumentId,
-      provision.instrumentTitle,
-      provision.canonicalPath,
-      provision.section,
-      provision.heading,
-      provision.action,
-      provision.relationship,
-    ]),
-  ]);
-
-  return {
-    finding,
     dates: {
-      firstObserved: firstText(record, [
-        "public_display.first_observed",
-        "first_observed",
-        "date_first_observed",
-        "date_observed",
-        "observation_date",
-        "source_records.0.source_date",
-      ]),
-      published: firstText(record, [
-        "public_display.published",
-        "date_published",
-        "published_at",
-        "record_identity.published",
-        "record_identity.created",
-        "date_recorded",
-      ]),
-      lastUpdated: firstText(record, [
-        "public_display.last_updated",
-        "last_updated",
-        "updated_at",
-        "record_identity.updated",
-        "date_updated",
-      ]),
-      implemented: firstText(record, ["date_implemented", "corpus_implementation.date_implemented"]),
+      firstObserved: firstText(record, ["occurred_from", "date_recorded", "source_records.0.source_date"]),
+      published: firstText(record, ["record_identity.created", "date_recorded"]),
+      lastUpdated: firstText(record, ["record_identity.updated", "record_last_updated", "date_recorded"]),
     },
-    domains,
-    systems,
-    chain,
-    corpusProvisions,
-    observation,
-    failure,
-    proposal,
-    patch,
-    lifecycleLabel: displayedLifecycleLabel,
-    repairState,
-    principalRepair: principal,
-    searchTokens,
+    searchTokens: collectText({
+      title: record.title,
+      summary: record.summary,
+      system: record.system_context,
+      jurisdiction: record.jurisdictional_context,
+      taxonomy: record.taxonomy_classification_summary ?? record.taxonomy_classification,
+      severity: record.severity_assessment,
+      sources: record.source_records,
+    }),
   };
 }
 
-export function deriveFailureModePublicDetail(record: UnknownRecord, display?: PublicRecordDisplay): FailureModePublicDetail {
-  const sources = Array.isArray(record.source_records)
-    ? record.source_records.filter(isObject)
-    : Array.isArray(record.evidence_sources)
-      ? record.evidence_sources.filter(isObject)
-      : [];
+export function deriveIncidentPublicDetail(record: UnknownRecord): IncidentPublicDetail {
+  const sources = Array.isArray(record.source_records) ? record.source_records.filter(isObject) : [];
   const recordReviewDate = firstText(record, [
     "interpretive_provenance.current_ai_review.review_date",
     "interpretive_provenance.review_history.0.review_date",
-    "triage.triage_review_date",
   ]);
   const recordReviewer = firstText(record, [
     "interpretive_provenance.current_ai_review.reviewer_model",
     "interpretive_provenance.current_ai_review.reviewer_platform",
   ]);
-  const incidentWhatHappened = firstText(record, ["summary"]);
+  const incidentSummary = firstText(record, ["summary"]);
   const incidentFactualBasis = firstText(record, ["vigil_assessment.factual_basis"]);
 
-  const evidence = sources.map((source, index): PublicEvidenceCard => {
-    const limitations = collectLists(source, [
-      "source_limitations",
-      "limitations",
-      "primary_artefact_access.limitations",
-      "known_limitations",
-    ]);
-    const sourceReviewer = firstText(source, [
-      "primary_artefact_access.reviewing_system",
-      "reviewer",
-      "reviewer_model",
-      "reviewing_system",
-    ]);
-    const sourceAccess = firstText(source, [
-      "primary_artefact_access.access_method",
-      "source_access_method",
-      "access_method",
-    ]);
-    const sourceReviewDate = firstText(source, [
-      "primary_artefact_access.review_date",
-      "review_date",
-      "retrieved_date",
-    ]);
-    return {
+  return {
+    evidence: sources.map((source, index) => ({
       title: firstText(source, ["source_title", "title", "name"]) ?? `Evidence source ${index + 1}`,
       publisher: firstText(source, ["author_or_publisher", "publisher", "source_platform", "author"]),
       date: firstText(source, ["source_date", "published_date", "date", "retrieved_date"]),
@@ -927,46 +131,23 @@ export function deriveFailureModePublicDetail(record: UnknownRecord, display?: P
       sourceRole: firstText(source, ["source_role", "evidence_role"]),
       sourceUrl: firstText(source, ["source_url", "url"]),
       archiveUrl: firstText(source, ["archive_url"]),
-      directReviewStatus: firstText(source, [
-        "primary_artefact_access.direct_primary_artefact_review",
-        "direct_review_status",
-        "direct_review",
-      ]),
-      evidenceModalities: collectLists(source, ["evidence_modality", "source_modality", "modalities"]),
-      whatHappened: index === 0 ? incidentWhatHappened : undefined,
+      directReviewStatus: firstText(source, ["primary_artefact_access.direct_primary_artefact_review", "direct_review_status", "direct_review"]),
+      evidenceModalities: textList(source.evidence_modality ?? source.source_modality ?? source.modalities),
+      whatHappened: index === 0 ? incidentSummary : undefined,
       confirmedEvidence: firstText(source, ["confirmed_evidence", "source_context", "description", "finding"])
         ?? (index === 0 ? incidentFactualBasis : undefined),
       interpretiveConclusion: firstText(source, ["interpretive_reliance", "interpretive_conclusion", "relevance_note", "interpretation"]),
-      evidenceBoundary: limitations,
-      confidence: firstText(source, ["evidence_confidence", "confidence"]) ?? firstText(record, ["evidence_confidence", "failure_classification.confidence"]),
-      reviewer: sourceReviewer ?? recordReviewer,
-      reviewDate: sourceReviewDate ?? recordReviewDate,
-      sourceAccess,
-    };
-  });
-
-  return {
-    definition: firstText(record, ["failure_mode_definition", "definition", "summary"]) ?? display?.failure?.definition,
-    recognitionThreshold: firstText(record, ["failure_threshold", "recognition_threshold", "threshold"]),
-    significance: firstText(record, ["why_it_matters", "why_it_matters_to_CAM", "governance_significance", "significance"]) ?? display?.failure?.significance,
-    evidence,
-    repairState: firstText(record, ["repair_status.status", "repair_status.state", "repair_status_value"]) ?? display?.repairState,
-    governanceControlSought: firstText(record, [
-      "governance_control_sought",
-      "recommended_control",
-      "recommended_controls",
-      "triage.recommended_next_step",
-      "triage.next_action",
-    ]),
-    existingCoverage: firstText(record, ["corpus_coverage.coverage_summary", "corpus_coverage.classification"]) ?? display?.failure?.corpusRelationship,
-    governanceGap: collectLists(record, ["corpus_coverage.remaining_gaps", "repair_status.remaining_gaps", "remaining_gaps"]),
-    proposedControl: firstText(record, ["proposed_control", "recommended_control", "recommended_controls"]),
-    implementedProvision: display?.principalRepair ?? firstText(record, ["principal_repair"]),
+      evidenceBoundary: textList(source.source_limitations ?? source.limitations ?? valueAt(source, "primary_artefact_access.limitations") ?? source.known_limitations),
+      evidenceStatus: firstText(source, ["evidence_status"]),
+      evidenceStatusBasis: firstText(source, ["evidence_status_basis"]),
+      reviewer: firstText(source, ["primary_artefact_access.reviewing_system", "reviewer", "reviewer_model", "reviewing_system"]) ?? recordReviewer,
+      reviewDate: firstText(source, ["primary_artefact_access.review_date", "review_date", "retrieved_date"]) ?? recordReviewDate,
+      sourceAccess: firstText(source, ["primary_artefact_access.access_method", "source_access_method", "access_method"]),
+    })),
   };
 }
 
 export function matchesVigilSearch(searchText: string, query: string) {
   const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
-  if (!terms.length) return true;
   return terms.every((term) => searchText.includes(term));
 }

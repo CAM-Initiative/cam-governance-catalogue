@@ -1,7 +1,6 @@
 import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRoute } from "wouter";
-import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
@@ -16,7 +15,7 @@ const REPORT_SECTIONS = [
 
 type IncludedSections = Record<string, boolean>;
 
-type ReportFailure = {
+type ReportIncident = {
   id: string;
   title: string;
   severity?: string;
@@ -66,13 +65,13 @@ export default function EvidenceChainReportPrintable() {
   const referenceBaseCountRef = useRef(0);
   const [includedSections, setIncludedSections] = useState<IncludedSections>(() => Object.fromEntries(REPORT_SECTIONS.map((section) => [section.number, true])));
   const [defaultsResolved, setDefaultsResolved] = useState(false);
-  const [reportFailure, setReportFailure] = useState<ReportFailure>();
-  const [classificationSlot, setClassificationSlot] = useState<HTMLElement | null>(null);
+  const [reportIncident, setReportIncident] = useState<ReportIncident>();
   const [referenceList, setReferenceList] = useState<HTMLOListElement | null>(null);
+  const [referenceSection, setReferenceSection] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    async function resolveFailure() {
+    async function resolveIncident() {
       try {
         const registry = await loadVigilIncidentRecords();
         const records = normalizeRecords(registry.records);
@@ -81,7 +80,7 @@ export default function EvidenceChainReportPrintable() {
         const raw = await loadVigilRecordDetail(source.raw);
         const taxonomyReferences = await loadTaxonomyReferenceTargets(raw);
         if (!cancelled) {
-          setReportFailure({
+          setReportIncident({
             id: source.id,
             title: text(raw.title) ?? text(isObject(raw.record_identity) ? raw.record_identity.title : undefined) ?? source.title,
             severity: text(raw.severity) ?? source.severity,
@@ -93,16 +92,16 @@ export default function EvidenceChainReportPrintable() {
         // The report remains usable even if taxonomy enrichment is unavailable.
       }
     }
-    void resolveFailure();
+    void resolveIncident();
     return () => { cancelled = true; };
   }, [sourceId]);
 
   useEffect(() => {
-    if (!reportFailure) return;
+    if (!reportIncident) return;
     const previousTitle = document.title;
-    document.title = `VIGIL Observatory Case File — ${compactIncidentId(reportFailure.id)} — ${reportFailure.title}`;
+    document.title = `VIGIL Observatory Case File — ${compactIncidentId(reportIncident.id)} — ${reportIncident.title}`;
     return () => { document.title = previousTitle; };
-  }, [reportFailure]);
+  }, [reportIncident]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -117,17 +116,8 @@ export default function EvidenceChainReportPrintable() {
         if (!number) continue;
         next[number] = sectionHasSubstantiveContent(section, number);
 
-        if (number === "03") {
-          const legacyBody = section.children.item(1) as HTMLElement | null;
-          if (legacyBody && !section.querySelector(".report-taxonomy-parity-slot")) {
-            legacyBody.classList.add("report-legacy-taxonomy");
-            const slot = document.createElement("div");
-            slot.className = "report-taxonomy-parity-slot";
-            section.appendChild(slot);
-            setClassificationSlot(slot);
-          }
-        }
         if (number === "04") {
+          setReferenceSection(section);
           const list = section.querySelector<HTMLOListElement>("ol");
           if (list) {
             referenceBaseCountRef.current = list.children.length;
@@ -163,8 +153,8 @@ export default function EvidenceChainReportPrintable() {
 
   const includedCount = useMemo(() => REPORT_SECTIONS.filter((section) => includedSections[section.number] !== false).length, [includedSections]);
 
-  const taxonomyReferencePortal = referenceList && reportFailure?.taxonomyReferences.length
-    ? createPortal(<>{reportFailure.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
+  const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
+    ? createPortal(<>{reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
         <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
         <span className="min-w-0">
           <strong>{reference.id} — {reference.title}</strong>
@@ -174,6 +164,19 @@ export default function EvidenceChainReportPrintable() {
         </span>
       </li>)}</>, referenceList)
     : null;
+
+  const reliancePortal = referenceSection ? createPortal(
+    <section className="report-reliance-notice border-t border-border/60 pt-5 text-muted-foreground" aria-labelledby="report-reliance-heading">
+      <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
+      <p className="mt-2">
+        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+      </p>
+      <p className="report-copyright mt-3">
+        Copyright © 2026 Dr Michelle O'Rourke.
+      </p>
+    </section>,
+    referenceSection,
+  ) : null;
 
   return <div ref={hostRef} className="vigil-deterministic-report-host">
     <aside className="print:hidden sticky top-0 z-40 border-b border-border bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:px-6 md:px-10" aria-label="PDF section controls">
@@ -198,19 +201,7 @@ export default function EvidenceChainReportPrintable() {
       </div>
     </aside>
     <EvidenceChainReportDeterministic />
-    {classificationSlot && reportFailure ? createPortal(
-      <CaseTaxonomyClassification failureId={reportFailure.id} raw={reportFailure.raw} severityLabel={reportFailure.severity ?? "Not assessed"} />,
-      classificationSlot,
-    ) : null}
     {taxonomyReferencePortal}
-    <section className="report-reliance-notice mx-auto max-w-6xl border-t border-border/60 px-4 py-5 text-muted-foreground sm:px-6 md:px-10" aria-labelledby="report-reliance-heading">
-      <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
-      <p className="mt-2">
-        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
-      </p>
-      <p className="report-copyright mt-3">
-        Copyright © 2026 Dr Michelle O'Rourke.
-      </p>
-    </section>
+    {reliancePortal}
   </div>;
 }

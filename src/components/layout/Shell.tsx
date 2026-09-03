@@ -32,7 +32,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isHomeActive = location === "/" || location === "/about" || location === "/privacy";
-  const isVigilActive = location === "/vigil" || location === "/observatory" || location.startsWith("/observatory/") || location.startsWith("/vigil/");
+  const isVigilActive = location === "/observatory" || location.startsWith("/observatory/");
   const isDatasetsActive = location === "/datasets" || location.startsWith("/datasets/");
 
   useEffect(() => {

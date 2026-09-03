@@ -68,7 +68,7 @@ const lifecycleStages: TransitionStage[] = [
       "Keep the capability separable from essential systems.",
       "Preserve the ability to disable, isolate, inspect, or withdraw it without public-service disruption.",
     ],
-    vigil: "Material incidents, unexplained behaviours, control failures, or recurring signals enter VIGIL as observations or candidate failure modes before normalisation.",
+    vigil: "Material incidents are represented as canonical occurrence-level VIGIL Incident records and classified against the maintained Failure Taxonomy.",
     sources: [
       source("CAM-BS2025-AEON-003-PLATINUM", "Constitutional governance logic"),
       source("CAM-EQ2026-OPERATIONS-005-PLATINUM", "Change governance and amendment operations"),

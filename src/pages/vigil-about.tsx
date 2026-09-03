@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { VIGIL_EVIDENCE_REPAIR_SECTIONS } from "@/lib/vigilEvidenceRepair";
+import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 
 const taxonomyPrinciples = [
   [
@@ -20,7 +20,7 @@ const taxonomyPrinciples = [
 ];
 
 const knowledgeSurfaces = [
-  ["Case Files", "Evidence-centred investigations of AI governance failures, organised through Observation, Diagnosis, Classification, Repair, Learn and References."],
+  ["Case Files", "Evidence-centred Incident investigations organised through Observation, Diagnosis, Classification and References."],
   ["AI Governance Failure Taxonomy", "The technical reference that defines failure families and failure classes used to compare recurring governance mechanisms across systems and incidents."],
   ["AI Governance Standards", "A compliance-oriented reference baseline of laws, standards, frameworks and technical guidance relevant to AI governance obligations and controls."],
   ["Policy", "Public-interest policy papers and submissions that translate evidence and governance analysis into institutional and regulatory proposals."],
@@ -31,15 +31,21 @@ export default function VigilAbout() {
     <header className="vigil-about-hero">
       <p className="vigil-library-kicker">VIGIL Observatory</p>
       <h1>About VIGIL</h1>
-      <p>VIGIL is a public AI-governance observatory that connects evidence, failure classification, governance requirements and repair. Its purpose is to make recurring failure mechanisms easier to identify, compare and trace from real-world evidence to accountable governance response.</p>
+      <p>VIGIL is a public AI-governance observatory centred on canonical Incident records. It connects occurrence evidence and diagnosis to a maintained failure taxonomy, while keeping standards and policy as distinct public reference systems.</p>
     </header>
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
-      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Evidence to repair</p><h2 id="vigil-method-heading">How a VIGIL Case File is structured</h2></div>
-      <p className="vigil-about-record-intro">Each public Case File follows the same six-stage report structure: Observation, Diagnosis, Classification, Repair, Learn and References. That structure keeps the evidence of what happened separate from the diagnosis of the failure mechanism, the taxonomy classification and any proposed or implemented governance response.</p>
-      <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL six-stage evidence-to-repair report model" tabIndex={0}>
+      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Incident analysis</p><h2 id="vigil-method-heading">How a VIGIL Case File is structured</h2></div>
+      <p className="vigil-about-record-intro">Each public Case File follows the same four-stage structure: Observation, Diagnosis, Classification and References. That structure keeps evidence of what happened separate from occurrence-level diagnosis and severity, taxonomy classification, and the material used to support those conclusions.</p>
+      <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL four-stage Incident Case File model" tabIndex={0}>
         <div className="vigil-about-flow">
-          {VIGIL_EVIDENCE_REPAIR_SECTIONS.map((section) => <article key={section.number}><span>Stage {section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}
+          {VIGIL_INCIDENT_CASE_SECTIONS.map((section) => {
+            return <article key={section.number}>
+              <div className="flex items-center justify-between gap-2"><span>Stage {section.number}</span></div>
+              <h3>{section.label}</h3>
+              <p>{section.description}</p>
+            </article>;
+          })}
         </div>
       </div>
       <p className="vigil-about-note">A reported incident is not automatically a new failure class. VIGIL first asks what mechanism failed, whether that mechanism is already represented in the taxonomy, and what the available evidence actually supports.</p>

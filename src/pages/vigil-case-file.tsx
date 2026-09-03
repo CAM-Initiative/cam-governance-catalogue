@@ -5,7 +5,7 @@ import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilEvidenceRepair";
+import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
   normalizeRecords,
@@ -13,7 +13,7 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { deriveFailureModePublicDetail } from "@/lib/vigilPublicDisplay";
+import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyFailureTypeLabel,
@@ -210,12 +210,11 @@ function severityDisplay(value?: string) {
   if (!raw) return "Not assessed";
   const code = raw.toUpperCase();
   const labels: Record<string, string> = {
-    S0: "Critical",
-    S1: "High",
-    S2: "Moderate",
-    S3: "Low",
-    S4: "Negligible",
-    SU: "To be assessed",
+    S1: "Critical",
+    S2: "High",
+    S3: "Moderate",
+    S4: "Low",
+    SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
@@ -257,9 +256,7 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
   const [, incidentParams] = useRoute("/observatory/incidents/:recordId");
-  const [, failureParams] = useRoute("/observatory/failure-modes/:recordId");
-  const [, vigilParams] = useRoute("/vigil/:recordId");
-  const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? failureParams?.recordId ?? vigilParams?.recordId ?? "").trim().replace(/\.md$/i, "");
+  const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? "").trim();
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
   const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
@@ -291,23 +288,22 @@ export default function VigilCaseFile() {
     return () => { cancelled = true; };
   }, [sourceId]);
 
-  const observations: VigilIndexRecord[] = [];
-  const failure = state.status === "ready" ? state.records[0] : undefined;
-  const failureDetail = useMemo(() => failure ? deriveFailureModePublicDetail(failure.raw, failure.publicDisplay) : undefined, [failure]);
-  const externalSources = useMemo(() => state.status === "ready" && failure ? dedupeEvidence([failure, ...observations].flatMap(externalEvidenceFor)) : [], [failure, observations, state]);
-  const affectedSystems = useMemo(() => failure ? dedupeSystems([failure, ...observations]) : dedupeSystems(observations), [failure, observations]);
+  const incident = state.status === "ready" ? state.records[0] : undefined;
+  const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
+  const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   useEffect(() => {
     let cancelled = false;
-    if (!failure) {
+    if (!incident) {
       setTaxonomyReferences([]);
       return () => { cancelled = true; };
     }
-    void loadTaxonomyReferenceTargets(failure.raw)
+    void loadTaxonomyReferenceTargets(incident.raw)
       .then((references) => { if (!cancelled) setTaxonomyReferences(references); })
       .catch(() => { if (!cancelled) setTaxonomyReferences([]); });
     return () => { cancelled = true; };
-  }, [failure]);
+  }, [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Case File…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
@@ -315,18 +311,23 @@ export default function VigilCaseFile() {
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Case File";
   const summary = sourceRecord?.summary ?? sourceRecord?.publicDisplay.finding;
-  const family = failure ? taxonomyFailureTypeLabel(failure.raw) : undefined;
-  const updated = failure?.record_last_updated ?? failure?.publicDisplay.dates.lastUpdated ?? failure?.date_recorded;
-  const recordCount = state.records.length;
-  const diagnostic = diagnosticProvenance(failure);
-  const reportId = failure?.id ?? state.sourceId;
+  const family = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
+  const diagnostic = diagnosticProvenance(incident);
+  const reportId = incident?.id ?? state.sourceId;
 
-  const governanceAssessment = failure ? firstText(failure.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
-  const factualBasis = failure ? firstText(failure.raw, ["vigil_assessment.factual_basis"]) : undefined;
-  const governanceSignificance = failure ? firstText(failure.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
-  const assessmentBoundaries = failure ? firstTextList(failure.raw, ["vigil_assessment.assessment_boundaries"]) : [];
-  const severityBasis = failure ? firstText(failure.raw, ["severity_assessment.assessment_basis"]) : undefined;
-  const severityAssessedOn = failure ? firstText(failure.raw, ["severity_assessment.assessed_on"]) : undefined;
+  const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
+  const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
+  const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
+  const severityStatus = incident ? firstText(incident.raw, ["severity_assessment.assessment_status"]) : undefined;
+  const severityMaterialisedConsequence = incident ? firstText(incident.raw, ["severity_assessment.materialised_consequence"]) : undefined;
+  const severityAffectedScope = incident ? firstText(incident.raw, ["severity_assessment.affected_scope"]) : undefined;
+  const severitySeriousnessPersistence = incident ? firstText(incident.raw, ["severity_assessment.seriousness_and_persistence"]) : undefined;
+  const severityQuantitativeInformation = incident ? firstText(incident.raw, ["severity_assessment.quantitative_information"]) : undefined;
+  const severityEvidentiaryLimits = incident ? firstText(incident.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
+  const severityBandRationale = incident ? firstText(incident.raw, ["severity_assessment.band_rationale"]) : undefined;
+  const severityAssessedOn = incident ? firstText(incident.raw, ["severity_assessment.assessed_on"]) : undefined;
   const referenceCount = externalSources.length + taxonomyReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
@@ -345,68 +346,63 @@ export default function VigilCaseFile() {
           </dl>
         </article>)}</div>
       </section>}
-      {observations.length > 0 && <div className="vigil-observation-list">{observations.map((record) => <article key={record.id} className="vigil-case-record vigil-observation-record">
-        <div className="vigil-case-record-heading"><span>{record.id}</span><h3>{record.title}</h3></div>
-        <p>{record.publicDisplay.observation?.observed ?? record.publicDisplay.finding ?? record.summary}</p>
-        {(record.publicDisplay.observation?.context || record.publicDisplay.observation?.interpretation) && <div className="vigil-observation-context">
-          {record.publicDisplay.observation?.context && <div><strong>Context</strong><p>{record.publicDisplay.observation.context}</p></div>}
-          {record.publicDisplay.observation?.interpretation && <div><strong>VIGIL interpretation</strong><p>{record.publicDisplay.observation.interpretation}</p></div>}
-        </div>}
-      </article>)}</div>}
-      {failureDetail?.evidence.length ? <div className="vigil-evidence-list">{failureDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
-      {!failureDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under References.</p>}
-      {affectedSystems.length === 0 && observations.length === 0 && !failureDetail?.evidence.length && externalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
+      {incidentDetail?.evidence.length ? <div className="vigil-evidence-list">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
+      {!incidentDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under References.</p>}
+      {affectedSystems.length === 0 && !incidentDetail?.evidence.length && externalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
     </>;
 
     if (stageId === "classify") return <>
-      {failure ? <CaseTaxonomyClassification failureId={failure.id} raw={failure.raw} severityLabel={severityDisplay(failure.severity)} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
+      {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
-      {(failure || governanceAssessment) ? <article className="vigil-diagnosis-view">
-        {failure && <div className="vigil-diagnosis-mechanism">
-          <section className="vigil-diagnosis-definition">
-            <p className="vigil-library-kicker">VIGIL governance assessment</p>
-            <p>{governanceAssessment ?? failure.publicDisplay.finding ?? failure.summary}</p>
-          </section>
+    {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
+      {incident && <div className="vigil-diagnosis-mechanism">
+        <section className="vigil-diagnosis-definition">
+          <p className="vigil-library-kicker">VIGIL governance assessment</p>
+          <p>{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
+        </section>
 
-          <div className="vigil-diagnosis-analysis-layout">
-            <div className="vigil-diagnosis-reading-stack">
-              <section>
-                <p className="vigil-diagnostic-meta-label">Factual basis</p>
-                <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
-              </section>
-              <section>
-                <p className="vigil-diagnostic-meta-label">Governance significance</p>
-                <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
-              </section>
-            </div>
-
-            <aside className="vigil-diagnosis-metadata-panel" aria-label="Diagnostic metadata">
-              <p className="vigil-diagnostic-meta-label">Diagnostic relevance</p>
-              <dl className="vigil-evidence-review-meta">
-                <Field label="Severity" value={severityDisplay(failure.severity)} />
-                <Field label="Severity basis" value={severityBasis} />
-                <Field label="Severity assessed" value={severityAssessedOn} />
-                {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
-                {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
-                <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
-                <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
-                <Field label="Human contribution" value={diagnostic?.humanRole} />
-                <Field label="AI contribution" value={diagnostic?.aiRole} />
-                <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
-                <Field label="Model attribution" value={diagnostic?.attributionBasis} />
-              </dl>
-            </aside>
+        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Materialised consequence and supported harm in this Incident</h3></div>
+          <div className="vigil-severity-summary-grid"><article><dl>
+            <Field label="Severity" value={severityDisplay(incident.severity)} />
+            <Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} />
+            <Field label="Assessed" value={severityAssessedOn} mono />
+          </dl></article></div>
+          <div className="vigil-severity-analysis-grid">
+            <section><p className="vigil-diagnostic-meta-label">Materialised consequence</p><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
+            <section><p className="vigil-diagnostic-meta-label">Affected scope</p><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
+            <section><p className="vigil-diagnostic-meta-label">Seriousness & persistence</p><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
+            <section><p className="vigil-diagnostic-meta-label">Quantitative information</p><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
+            <section><p className="vigil-diagnostic-meta-label">Evidentiary limits</p><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
+            <section><p className="vigil-diagnostic-meta-label">Why this severity band</p><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
           </div>
+        </section>
 
-          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations">
-            <summary>Limits of the diagnosis</summary>
-            <div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div>
-          </details>}
-        </div>}
-      </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
-    </>;
+        <div className="vigil-diagnosis-analysis-layout">
+          <div className="vigil-diagnosis-reading-stack">
+            <section><p className="vigil-diagnostic-meta-label">Factual basis</p><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+            <section><p className="vigil-diagnostic-meta-label">Governance significance</p><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+          </div>
+          <aside className="vigil-diagnosis-metadata-panel" aria-label="Diagnostic metadata">
+            <p className="vigil-diagnostic-meta-label">Diagnostic provenance</p>
+            <dl className="vigil-evidence-review-meta">
+              {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
+              {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
+              <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
+              <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
+              <Field label="Human contribution" value={diagnostic?.humanRole} />
+              <Field label="AI contribution" value={diagnostic?.aiRole} />
+              <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+              <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+            </dl>
+          </aside>
+        </div>
+        {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations"><summary>Limits of the diagnosis</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
+      </div>}
+    </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
+  </>;
 
     if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">
       <ol>
@@ -453,11 +449,10 @@ export default function VigilCaseFile() {
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
-          <Field label="Incident" value={failure ? compactId(failure.id) : compactId(state.sourceId)} mono />
+          <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
           <Field label="Failure type" value={family} />
-          <Field label="Severity" value={severityDisplay(failure?.severity)} />
+          <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
-          <Field label="Linked VIGIL records" value={String(recordCount)} />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
         </dl>
         <Link href={`/observatory/reports/${encodeURIComponent(reportId)}`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
