@@ -7,6 +7,7 @@ import {
   loadExternalSources,
 } from "@/lib/vigilExternalKnowledge";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
+import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
 
 const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
@@ -17,6 +18,8 @@ type DatasetState = {
   caseFilesCount?: number;
   sourcesCount?: number;
   clausesCount?: number;
+  taxonomyVersion?: string;
+  taxonomyPublicationDate?: string;
   loaded: boolean;
 };
 
@@ -103,7 +106,8 @@ export default function Datasets() {
       loadVigilIncidentRecords().catch(() => undefined),
       loadExternalSources(),
       loadExternalRequirements(),
-    ]).then(([incidents, sources, clauses]) => {
+      loadFailureTaxonomyIndex(),
+    ]).then(([incidents, sources, clauses, taxonomy]) => {
       if (cancelled) return;
       setState({
         loaded: true,
@@ -112,6 +116,8 @@ export default function Datasets() {
           ? new Set(sources.data.map((source) => source.external_source_id || source.vigil_source_id)).size
           : undefined,
         clausesCount: clauses.status === "ready" ? clauses.data.length : undefined,
+        taxonomyVersion: taxonomy.status === "ready" ? taxonomy.data.standard.version : undefined,
+        taxonomyPublicationDate: taxonomy.status === "ready" ? taxonomy.data.standard.publication_date ?? undefined : undefined,
       });
     });
     return () => { cancelled = true; };
@@ -128,6 +134,10 @@ export default function Datasets() {
     : state.sourcesCount === undefined
       ? "Dataset unavailable"
       : `${state.sourcesCount} AI-governance sources${state.clausesCount === undefined ? "" : ` · ${state.clausesCount.toLocaleString()} clauses`}`;
+
+  const taxonomyStatus = state.taxonomyVersion
+    ? `Version ${state.taxonomyVersion}${state.taxonomyPublicationDate ? ` · ${new Date(`${state.taxonomyPublicationDate}T00:00:00Z`).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}` : ""}`
+    : "Technical reference";
 
   async function downloadDataset() {
     setDownloadState("working");
@@ -188,7 +198,7 @@ export default function Datasets() {
             eyebrow="VIGIL Observatory"
             title="AI Governance Failure Taxonomy"
             description="Generated full-reference PDF for the canonical VIGIL Observatory failure taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
-            status="Technical reference"
+            status={taxonomyStatus}
             beta
             onDownload={downloadTaxonomyPublication}
             downloading={taxonomyDownloadState === "working"}
