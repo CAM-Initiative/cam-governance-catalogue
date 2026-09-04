@@ -41,7 +41,7 @@ jobs:
         run: pnpm run validate:palette
 
       - name: Test VIGIL Knowledge Base contract
-        run: pnpm run test:knowledge-base
+        run: node --test scripts/test-vigil-public-surfaces.mjs
 
       - name: Compile website source
         run: pnpm exec vite build
