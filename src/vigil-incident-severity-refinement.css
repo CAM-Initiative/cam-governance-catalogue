@@ -1,9 +1,9 @@
 /* Incident diagnosis severity refinement.
 Severity is occurrence-level substantive diagnosis, independent of taxonomy classification.
 The structured severity panel deliberately mirrors the calm card hierarchy used by Section 01 Observation. */
-.vigil-case-file-page .vigil-severity-assessment { margin: 0 1.25rem 1.1rem; border: 1px solid hsl(var(--border) / 0.72); border-radius: var(--vigil-case-card-radius); background: hsl(var(--background)); box-shadow: var(--shadow-sm); overflow: hidden; }
+.vigil-case-file-page .vigil-severity-assessment { margin: 0; border: 1px solid hsl(var(--border) / 0.72); border-radius: var(--vigil-case-card-radius); background: hsl(var(--background)); box-shadow: var(--shadow-sm); overflow: hidden; }
 .vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading { padding: 1.15rem var(--vigil-case-card-pad) 0.85rem; border: 0; background: transparent; }
-.vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading h3 { margin: 0.22rem 0 0; font-size: 0.94rem; font-weight: 600; line-height: 1.45; color: hsl(var(--foreground) / 0.78); }
+.vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading h3 { margin-top: 0.18rem; }
 .vigil-case-file-page .vigil-severity-summary-grid { display: grid; grid-template-columns: 1fr; }
 .vigil-case-file-page .vigil-severity-summary-grid > article { padding: 0.65rem var(--vigil-case-card-pad) 1.15rem; border: 0; }
 .vigil-case-file-page .vigil-severity-summary-grid dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem 2rem; max-width: 64rem; }
