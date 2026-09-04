@@ -358,11 +358,6 @@ export default function VigilCaseFile() {
     if (stageId === "diagnose") return <>
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
-        <section className="vigil-diagnosis-definition">
-          <p className="vigil-library-kicker">VIGIL governance assessment</p>
-          <p>{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
-        </section>
-
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Materialised consequence and supported harm in this Incident</h3></div>
           <div className="vigil-severity-summary-grid"><article><dl>
@@ -378,6 +373,11 @@ export default function VigilCaseFile() {
             <section><p className="vigil-diagnostic-meta-label">Evidentiary limits</p><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
             <section><p className="vigil-diagnostic-meta-label">Why this severity band</p><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
           </div>
+        </section>
+
+        <section className="vigil-diagnosis-definition">
+          <p className="vigil-library-kicker">VIGIL governance assessment</p>
+          <p>{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
         </section>
 
         <div className="vigil-diagnosis-analysis-layout">
