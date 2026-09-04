@@ -177,7 +177,6 @@ export default function Datasets() {
             title="Case Files"
             description="The canonical machine-readable Incident index behind the public VIGIL Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL."
             status={caseFilesStatus}
-            beta
             downloadHref={VIGIL_INCIDENT_REGISTRY_URL}
             downloadLabel="Open JSON index"
             icon={<Library />}
