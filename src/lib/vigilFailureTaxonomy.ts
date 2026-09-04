@@ -13,6 +13,7 @@ export type FailureTaxonomyIndex = {
   standard: {
     name: string;
     version: string;
+    publication_date?: string | null;
     status: string;
   };
   families: FailureTaxonomyIndexFamily[];

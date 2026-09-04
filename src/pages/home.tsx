@@ -204,10 +204,12 @@ export default function Home() {
           >
             <p className="home-identity-kicker">CAM Initiative · Open AI Governance</p>
             <h1 id="home-identity-heading" className="sr-only">CAELESTIS Architecture Model and VIGIL Observatory</h1>
-            <div className="home-identity-artwork" aria-hidden="true">
+            <div className="home-identity-artwork">
               <img src={heroImages.cam} alt="" className="home-identity-image" />
-              <span className="home-identity-divider" />
-              <img src={heroImages.vigil} alt="" className="home-identity-image" />
+              <span className="home-identity-divider" aria-hidden="true" />
+              <a className="home-identity-image-link" href="/observatory/cases" aria-label="Browse VIGIL Observatory Case Files">
+                <img src={heroImages.vigil} alt="" className="home-identity-image" />
+              </a>
             </div>
             <p className="home-identity-tagline">Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.</p>
           </motion.div>

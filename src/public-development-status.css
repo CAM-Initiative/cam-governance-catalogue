@@ -43,8 +43,8 @@
   color: hsl(var(--primary));
 }
 
-/* Homepage: one CAELESTIS product-level marker, plus compact VIGIL/Datasets
- * discovery markers in the existing governance resource panel. */
+/* Homepage: retain compact development markers only for surfaces that remain
+ * explicitly beta. Case Files is now treated as a stable public surface. */
 main.overflow-hidden:has(#evidence-repair-heading)
   > section:first-child
   > .container
@@ -67,7 +67,6 @@ main.overflow-hidden:has(#evidence-repair-heading)
   color: hsl(var(--primary));
 }
 
-.home-governance-card[href="/observatory/cases"] > span:first-child > span:first-child::after,
 .home-governance-card[href="/datasets"] > span:first-child > span:first-child::after {
   display: inline-flex;
   align-items: center;
@@ -83,10 +82,6 @@ main.overflow-hidden:has(#evidence-repair-heading)
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: hsl(var(--primary));
-}
-
-.home-governance-card[href="/observatory/cases"] > span:first-child > span:first-child::after {
-  content: "Beta";
 }
 
 .home-governance-card[href="/datasets"] > span:first-child > span:first-child::after {
@@ -140,7 +135,6 @@ html[data-theme="dark"] main.overflow-hidden:has(#evidence-repair-heading)
   > .container
   > div:first-child
   > p:first-child::after,
-html[data-theme="dark"] .home-governance-card[href="/observatory/cases"] > span:first-child > span:first-child::after,
 html[data-theme="dark"] .home-governance-card[href="/datasets"] > span:first-child > span:first-child::after {
   background: hsl(var(--primary) / 0.12);
 }

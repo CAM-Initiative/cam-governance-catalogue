@@ -30,6 +30,17 @@
   margin: 0 auto;
 }
 
+.home-identity-image-link {
+  display: block;
+  width: 100%;
+  border-radius: 0.35rem;
+}
+
+.home-identity-image-link:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 0.35rem;
+}
+
 .home-identity-image {
   display: block;
   width: 100%;

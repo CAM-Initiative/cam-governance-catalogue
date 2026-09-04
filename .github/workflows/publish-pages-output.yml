@@ -11,6 +11,8 @@ on:
       - "pnpm-lock.yaml"
       - "vite.config.ts"
       - "scripts/prepare-github-pages.js"
+      - "scripts/sync-cam-governance.mjs"
+      - "scripts/sync-vigil-records.mjs"
       - ".github/workflows/publish-pages-output.yml"
   workflow_dispatch:
 
@@ -46,6 +48,11 @@ jobs:
 
       - name: Validate CAM website palette
         run: pnpm run validate:palette
+
+      - name: Refresh public governance registries
+        run: |
+          pnpm run sync:cam
+          pnpm run sync:vigil
 
       - name: Rebuild published site
         run: |

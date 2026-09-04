@@ -159,7 +159,9 @@ def is_website_source(path: str) -> bool:
 
 def is_bundle_source(path: str) -> bool:
     normalized = normalize(path)
-    if normalized in WEBSITE_SOURCE_FILES:
+    # vite.config.ts can alter the generated bundle. The Pages post-processor
+    # changes route entrypoints/sitemap without necessarily changing hashed assets.
+    if normalized == "vite.config.ts":
         return True
     return (
         normalized.startswith("src/")

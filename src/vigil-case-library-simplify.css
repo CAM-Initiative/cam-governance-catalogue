@@ -164,14 +164,14 @@
 
 .vigil-knowledge-hub-page .vigil-knowledge-copy h2 {
   margin: 0;
-  font-size: 1.3rem;
-  line-height: 1.2;
+  font-size: 1.38rem;
+  line-height: 1.22;
 }
 
 .vigil-knowledge-hub-page .vigil-knowledge-copy > p:not(.vigil-knowledge-meta) {
-  margin-top: 0.75rem;
-  font-size: 0.92rem;
-  line-height: 1.62;
+  margin-top: 0.78rem;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .vigil-knowledge-card-footer {
@@ -186,8 +186,8 @@
 .vigil-knowledge-meta {
   margin: 0;
   font-family: var(--app-font-sans);
-  font-size: 0.78rem;
-  line-height: 1.4;
+  font-size: 0.84rem;
+  line-height: 1.45;
   color: hsl(var(--muted-foreground));
 }
 
