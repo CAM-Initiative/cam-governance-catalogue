@@ -92,7 +92,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-.vigil-case-file-page .vigil-diagnosis-definition > p:last-child {
+.vigil-case-file-page .vigil-diagnosis-assessment-summary {
   margin: 0.62rem 0 0;
   font-size: 0.98rem;
   line-height: 1.66;
@@ -222,6 +222,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.85fr);
   gap: 1rem;
+  margin-top: 1.15rem;
   padding: 0;
   align-items: stretch;
 }
@@ -268,7 +269,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 /* Diagnostic limitations mirror Limits of the evidence and collapse independently. */
 .vigil-case-file-page .vigil-diagnosis-limitations {
-  margin: 0 1.25rem 1.25rem;
+  margin: 1rem 0 0;
 }
 
 .vigil-case-file-page .vigil-diagnosis-limitations .vigil-evidence-boundary-list > ul {
