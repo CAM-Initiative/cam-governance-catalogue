@@ -30,6 +30,15 @@ export type FailureTaxonomyRecognition = {
   required_conditions?: string[];
 };
 
+export type FailureTaxonomyExternalReference = {
+  title: string;
+  publisher: string;
+  date?: string;
+  url?: string;
+  reference_role?: string;
+  evidence_note?: string;
+};
+
 export type FailureTaxonomySubtype = {
   name: string;
   plain_english?: string;
@@ -57,6 +66,7 @@ export type FailureTaxonomyClass = {
   relationships?: FailureTaxonomyRelationship[];
   aliases?: string[];
   subtypes?: FailureTaxonomySubtype[];
+  external_references?: FailureTaxonomyExternalReference[];
 };
 
 export type FailureTaxonomyFamily = {
