@@ -1,4 +1,4 @@
-import { loadFailureTaxonomy, type FailureTaxonomyDataset } from "@/lib/vigilFailureTaxonomy";
+import { loadFailureTaxonomy, type FailureTaxonomyDataset, type FailureTaxonomyExternalReference } from "@/lib/vigilFailureTaxonomy";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 export type TaxonomyClassificationStatus =
@@ -18,6 +18,7 @@ export type TaxonomyReferenceTarget = {
   url: string;
   familyId: string;
   relationship: "primary" | "secondary" | "family-only";
+  externalReferences: FailureTaxonomyExternalReference[];
 };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -95,10 +96,10 @@ function resolveFamilyFile(dataset: FailureTaxonomyDataset, targetFamilyId?: str
   return dataset.index.families.find((entry) => entry.family_id === targetFamilyId);
 }
 
-function resolveClassTitle(dataset: FailureTaxonomyDataset, targetClassId: string) {
+function resolveClass(dataset: FailureTaxonomyDataset, targetClassId: string) {
   for (const family of dataset.families) {
     const match = family.classes.find((entry) => entry.class_id === targetClassId);
-    if (match) return match.name;
+    if (match) return match;
   }
   return undefined;
 }
@@ -120,8 +121,9 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
     if (seen.has(key)) return;
     seen.add(key);
 
+    const resolvedClass = targetClassId ? resolveClass(dataset, targetClassId) : undefined;
     const title = targetClassId
-      ? resolveClassTitle(dataset, targetClassId) ?? classLabel(classValue) ?? targetClassId
+      ? resolvedClass?.name ?? classLabel(classValue) ?? targetClassId
       : familyLabel(familyValue) ?? indexEntry.name;
     references.push({
       id,
@@ -129,6 +131,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
       url: `${dataset.sourceRoot}/${indexEntry.file}`,
       familyId: targetFamilyId,
       relationship,
+      externalReferences: resolvedClass?.external_references ?? [],
     });
   };
 
