@@ -23,6 +23,16 @@ type ReportIncident = {
   taxonomyReferences: TaxonomyReferenceTarget[];
 };
 
+type TaxonomyEvidenceReference = {
+  key: string;
+  title: string;
+  publisher?: string;
+  date?: string;
+  url?: string;
+  role?: string;
+  classIds: string[];
+};
+
 const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
   "02": ["No structured diagnosis is available."],
@@ -56,6 +66,36 @@ function text(value: unknown) {
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function taxonomyEvidenceKey(reference: TaxonomyReferenceTarget["externalReferences"][number]) {
+  const url = text(reference.url)?.replace(/\/$/, "").toLowerCase();
+  if (url) return `url:${url}`;
+  return `meta:${[reference.publisher, reference.title, reference.date].map((value) => text(value)?.toLowerCase() ?? "").join("|")}`;
+}
+
+function collectTaxonomyEvidence(targets: TaxonomyReferenceTarget[]) {
+  const collected = new Map<string, TaxonomyEvidenceReference>();
+  for (const target of targets) {
+    for (const reference of target.externalReferences) {
+      const key = taxonomyEvidenceKey(reference);
+      const existing = collected.get(key);
+      if (existing) {
+        if (!existing.classIds.includes(target.id)) existing.classIds.push(target.id);
+        continue;
+      }
+      collected.set(key, {
+        key,
+        title: text(reference.title) ?? "Taxonomy evidence reference",
+        publisher: text(reference.publisher),
+        date: text(reference.date),
+        url: text(reference.url),
+        role: text(reference.reference_role),
+        classIds: [target.id],
+      });
+    }
+  }
+  return [...collected.values()];
 }
 
 export default function EvidenceChainReportPrintable() {
@@ -152,9 +192,14 @@ export default function EvidenceChainReportPrintable() {
   }, [includedSections, defaultsResolved]);
 
   const includedCount = useMemo(() => REPORT_SECTIONS.filter((section) => includedSections[section.number] !== false).length, [includedSections]);
+  const taxonomyEvidenceReferences = useMemo(
+    () => collectTaxonomyEvidence(reportIncident?.taxonomyReferences ?? []),
+    [reportIncident?.taxonomyReferences],
+  );
 
   const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
-    ? createPortal(<>{reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
+    ? createPortal(<>
+      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
         <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
         <span className="min-w-0">
           <strong>{reference.id} — {reference.title}</strong>
@@ -162,7 +207,22 @@ export default function EvidenceChainReportPrintable() {
           <br />
           <a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a>
         </span>
-      </li>)}</>, referenceList)
+      </li>)}
+      {taxonomyEvidenceReferences.map((reference, index) => {
+        const number = referenceBaseCountRef.current + reportIncident.taxonomyReferences.length + index + 1;
+        const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
+        return <li key={`taxonomy-evidence-${reference.key}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-evidence-reference">
+          <span className="font-mono text-sm text-cam-gold">[{number}]</span>
+          <span className="min-w-0">
+            <strong>{reference.title}</strong>
+            {meta ? <span className="text-muted-foreground"> — {meta}</span> : null}
+            <br />
+            <span className="text-muted-foreground">Taxonomy evidence supporting {reference.classIds.join(", ")}</span>
+            {reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}
+          </span>
+        </li>;
+      })}
+    </>, referenceList)
     : null;
 
   const reliancePortal = referenceSection ? createPortal(
