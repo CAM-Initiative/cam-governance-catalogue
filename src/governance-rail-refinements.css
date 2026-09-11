@@ -5,12 +5,27 @@
   margin: 0;
   padding: 0;
   font-family: var(--app-font-mono);
-  font-size: 0.71rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.45;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: hsl(var(--muted-foreground));
+}
+
+.home-governance-panel .home-governance-card-title {
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+}
+
+.home-governance-panel .home-governance-detail {
+  font-size: 0.875rem !important;
+  line-height: 1.58 !important;
+}
+
+.home-governance-panel .home-governance-detail > span:first-child:not(:last-child) {
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
 }
 
 .home-governance-panel .home-governance-heading {
