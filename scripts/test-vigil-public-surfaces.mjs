@@ -6,6 +6,13 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
+test("Explore AI governance rail keeps a readable typography floor", async () => {
+  const railCss = await read("src/governance-rail-refinements.css");
+  assert.match(railCss, /font-size: 0\.8rem;/);
+  assert.match(railCss, /\.home-governance-card-title \{[\s\S]*font-size: 0\.95rem !important;/);
+  assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
+});
+
 test("failure taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
   const [taxonomy, shellCss] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
