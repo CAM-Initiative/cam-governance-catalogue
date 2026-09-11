@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Iterable
 
@@ -24,6 +25,10 @@ GENERATED_ENTRYPOINTS = {
 }
 PUBLIC_SOURCE_PREFIX = "src/public/"
 SOURCE_ENTRYPOINT = "src/index.html"
+VIGIL_FALLBACK = Path("docs/data/vigil-registry-fallback.json")
+VIGIL_SITEMAP = Path("docs/sitemap.xml")
+VIGIL_CASE_ROOT = Path("docs/observatory/cases")
+VIGIL_CASE_URL_PREFIX = "https://www.cam-initiative.org/observatory/cases/"
 
 # The website is a Vite app rooted at src/ (see vite.config.ts). Keep this list
 # intentionally focused on files that feed the published site, and avoid VIGIL
@@ -187,6 +192,109 @@ def format_paths(paths: Iterable[str]) -> str:
     )
 
 
+
+def validate_vigil_publication_integrity() -> list[str]:
+    """Verify that published VIGIL cases, fallback data, and sitemap stay in lockstep."""
+    errors: list[str] = []
+
+    for required_path in (VIGIL_FALLBACK, VIGIL_SITEMAP, VIGIL_CASE_ROOT):
+        if not required_path.exists():
+            errors.append(f"Required VIGIL publication artifact is missing: {required_path}")
+    if errors:
+        return errors
+
+    try:
+        fallback = json.loads(VIGIL_FALLBACK.read_text())
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"Could not parse {VIGIL_FALLBACK}: {exc}"]
+
+    records = fallback.get("records")
+    if not isinstance(records, list):
+        return [f"{VIGIL_FALLBACK} must contain a records array."]
+
+    record_ids = [
+        record.get("id")
+        for record in records
+        if isinstance(record, dict)
+        and record.get("record_type") == "incident"
+        and isinstance(record.get("id"), str)
+    ]
+    if len(record_ids) != len(records):
+        errors.append(
+            f"{VIGIL_FALLBACK} contains non-Incident records or records without string ids."
+        )
+
+    declared_count = fallback.get("record_count")
+    if declared_count != len(record_ids):
+        errors.append(
+            f"{VIGIL_FALLBACK} declares record_count={declared_count!r}, "
+            f"but contains {len(record_ids)} Incident records."
+        )
+
+    duplicates = sorted({record_id for record_id in record_ids if record_ids.count(record_id) > 1})
+    if duplicates:
+        errors.append(
+            "Duplicate Incident ids in VIGIL fallback: " + ", ".join(duplicates)
+        )
+
+    try:
+        sitemap_root = ET.parse(VIGIL_SITEMAP).getroot()
+    except (OSError, ET.ParseError) as exc:
+        return errors + [f"Could not parse {VIGIL_SITEMAP}: {exc}"]
+
+    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    sitemap_urls = [
+        loc.text.strip()
+        for loc in sitemap_root.findall("sm:url/sm:loc", namespace)
+        if loc.text and loc.text.strip()
+    ]
+    sitemap_case_ids = [
+        url.removeprefix(VIGIL_CASE_URL_PREFIX).rstrip("/")
+        for url in sitemap_urls
+        if url.startswith(VIGIL_CASE_URL_PREFIX)
+        and url.removeprefix(VIGIL_CASE_URL_PREFIX).rstrip("/").startswith("VIGIL-INC-")
+    ]
+
+    record_id_set = set(record_ids)
+    sitemap_id_set = set(sitemap_case_ids)
+    missing_from_sitemap = sorted(record_id_set - sitemap_id_set)
+    stale_in_sitemap = sorted(sitemap_id_set - record_id_set)
+    if missing_from_sitemap:
+        errors.append(
+            "Incident records missing from docs/sitemap.xml: "
+            + ", ".join(missing_from_sitemap)
+        )
+    if stale_in_sitemap:
+        errors.append(
+            "Stale Incident URLs remain in docs/sitemap.xml: "
+            + ", ".join(stale_in_sitemap)
+        )
+    if len(sitemap_case_ids) != len(sitemap_id_set):
+        errors.append("docs/sitemap.xml contains duplicate VIGIL Incident URLs.")
+
+    published_case_ids = {
+        entry.name
+        for entry in VIGIL_CASE_ROOT.iterdir()
+        if entry.is_dir()
+        and entry.name.startswith("VIGIL-INC-")
+        and (entry / "index.html").is_file()
+    }
+    missing_case_pages = sorted(record_id_set - published_case_ids)
+    orphan_case_pages = sorted(published_case_ids - record_id_set)
+    if missing_case_pages:
+        errors.append(
+            "Incident records missing published case entrypoints: "
+            + ", ".join(missing_case_pages)
+        )
+    if orphan_case_pages:
+        errors.append(
+            "Published VIGIL case entrypoints have no fallback record: "
+            + ", ".join(orphan_case_pages)
+        )
+
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Fail when website source changed but published docs/ output did not."
@@ -224,6 +332,7 @@ def main() -> int:
     print(f"/docs output changes detected: {len(docs_changes)}")
 
     errors: list[str] = []
+    errors.extend(validate_vigil_publication_integrity())
 
     if website_source_changes and not docs_changes:
         errors.append(
