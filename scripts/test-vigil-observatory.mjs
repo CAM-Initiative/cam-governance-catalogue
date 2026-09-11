@@ -40,11 +40,24 @@ test("normalization accepts canonical Incidents and rejects retired record class
   } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("Incident search covers occurrence, source, severity and taxonomy fields", async () => {
+test("Incident search consumes the lightweight index search vocabulary", async () => {
   const modules = await loadModules();
   try {
-    const incident = modules.presentation.normalizeVigilRecord({ id: "VIGIL-INC-000081", record_type: "incident", title: "Service price variation", summary: "Observed price variation in a bounded service cohort.", source_records: [{ source_title: "Consumer investigation", source_platform: "Consumer Reports" }], severity_assessment: { severity: "S3", materialised_consequence: "Some participants paid more." }, taxonomy_classification: { classification_status: "classified", primary_family: { family_id: "VIGIL-FT-FAM-001" } } });
+    const incident = modules.presentation.normalizeVigilRecord({
+      id: "VIGIL-INC-000081",
+      record_type: "incident",
+      title: "Service price variation",
+      summary: "Observed price variation in a bounded service cohort.",
+      platform_or_vendor: "Example Provider",
+      severity: "S3",
+      classification_status: "classified",
+      primary_class_id: "VIGIL-FC-000001",
+      primary_family_id: "VIGIL-FF-0001",
+      search_terms: ["Consumer Reports", "consumer investigation", "VIGIL-FC-000001"],
+      path: "vigil/records/incidents/VIGIL-INC-000081.json",
+    });
     assert.equal(modules.display.matchesVigilSearch(incident.searchText, "consumer reports s3"), true);
+    assert.equal(modules.display.matchesVigilSearch(incident.searchText, "vigil-fc-000001"), true);
     assert.equal(modules.display.matchesVigilSearch(incident.searchText, "unrelated publisher"), false);
   } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
