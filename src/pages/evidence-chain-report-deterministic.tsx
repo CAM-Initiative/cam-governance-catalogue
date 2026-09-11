@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -344,7 +344,11 @@ export default function EvidenceChainReportDeterministic() {
           {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
 
-        <Stage number="04" label="References">
+        <Stage number="04" label="Repair">
+          {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <Empty>No governing invariant can be resolved from a canonical classification for this Incident.</Empty>}
+        </Stage>
+
+        <Stage number="05" label="References">
           {references.length > 0 ? <>
             <p className="vigil-evidence-kicker">Evidence and record references</p>
             <ol className="mt-3 space-y-3">{references.map((reference, index) => <li key={reference.key} className="flex gap-3 text-base leading-relaxed text-foreground/85"><span className="font-mono text-sm text-cam-gold">[{index + 1}]</span><span className="min-w-0"><strong>{reference.label}</strong>{reference.detail ? <span className="text-muted-foreground"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}</span></li>)}</ol>
@@ -353,7 +357,7 @@ export default function EvidenceChainReportDeterministic() {
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; it does not add speculative mechanisms or separate repair-layer records.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; the Repair section projects the governing invariant from the classified taxonomy family and does not assert implementation or verification.
       </footer>
     </main>
   </Shell>;
