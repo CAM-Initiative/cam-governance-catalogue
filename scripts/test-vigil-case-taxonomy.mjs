@@ -15,8 +15,9 @@ const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTa
 const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
 const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
 
-assert.match(caseFile, /import \{ CaseTaxonomyClassification \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
+assert.match(caseFile, /import \{ CaseTaxonomyClassification, CaseTaxonomyRepair \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
+assert.match(caseFile, /stageId === "repair"[\s\S]*<CaseTaxonomyRepair raw=\{incident\.raw\}/);
 
 assert.match(taxonomyPanel, /raw\.taxonomy_classification/);
 assert.match(taxonomyPanel, /primary_family/);
@@ -29,29 +30,32 @@ assert.match(taxonomyPanel, /familyById/);
 assert.match(taxonomyPanel, /Primary structural mechanism/);
 assert.match(taxonomyPanel, /Additional independently evidenced structural mechanisms/);
 
-assert.match(taxonomyPanel, /vigil-evidence-card vigil-taxonomy-record-card/);
-assert.match(taxonomyPanel, /vigil-evidence-header/);
-assert.match(taxonomyPanel, /vigil-evidence-source-meta/);
-assert.match(taxonomyPanel, /vigil-evidence-grid/);
+assert.match(taxonomyPanel, /vigil-classification-card/);
+assert.match(taxonomyPanel, /vigil-classification-layout/);
+assert.match(taxonomyPanel, /vigil-classification-metadata/);
+assert.match(taxonomyPanel, /vigil-repair-invariant-card/);
 
 for (const detail of [
-  "Technical taxonomy record",
-  "Governing family invariant",
-  "Family definition",
-  "Inclusion rule",
-  "Exclusion rule",
-  "Family scope",
-  "Recognition conditions",
-  "Class exclusions",
-  "Canonical examples",
-  "Taxonomy relationships",
-  "Aliases",
+  "What this failure means",
+  "Canonical definition",
   "Why this Case File maps here",
-  "Recognition subtypes and historical folded classes",
-  "Historical class ID",
+  "Classification metadata",
+  "Failure family",
+  "Failure class",
+  "Taxonomy version",
+  "View canonical taxonomy source",
 ]) {
-  assert.match(taxonomyPanel, new RegExp(detail), `missing canonical taxonomy detail: ${detail}`);
+  assert.match(taxonomyPanel, new RegExp(detail), `missing selective taxonomy detail: ${detail}`);
 }
+
+assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
+assert.match(taxonomyPanel, /Governing invariant/);
+assert.match(taxonomyPanel, /Additional governing invariant/);
+assert.match(taxonomyPanel, /family\.invariant/);
+assert.match(taxonomyPanel, /does not assert that a repair has been implemented or verified/);
+assert.doesNotMatch(taxonomyPanel, /Technical taxonomy record/);
+assert.doesNotMatch(taxonomyPanel, /Canonical examples/);
+assert.doesNotMatch(taxonomyPanel, /Recognition subtypes and historical folded classes/);
 
 for (const state of [
   "classified",
@@ -133,11 +137,14 @@ assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
 assert.match(printableReport, /report-taxonomy-reference/);
 assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactIncidentId\(reportIncident\.id\)\} — \$\{reportIncident\.title\}`/);
 assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
+assert.match(printableReport, /\{ number: "04", label: "Repair" \}/);
+assert.match(printableReport, /\{ number: "05", label: "References" \}/);
 
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
+assert.match(reportCss, /vigil-classification-layout/);
+assert.match(reportCss, /vigil-repair-invariant-card/);
 assert.match(reportCss, /grid-template-columns: 1fr !important/);
-assert.match(reportCss, /\.vigil-taxonomy-record-card \{[\s\S]*break-inside: auto !important/);
 assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
 assert.match(reportCss, /padding-inline: 0\.75cm !important/);
 
