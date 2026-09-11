@@ -201,26 +201,26 @@ export default function EvidenceChainReportPrintable() {
 
   const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
     ? createPortal(<>
-      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
-        <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
-        <span className="min-w-0">
+      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="report-reference-item report-taxonomy-reference">
+        <span className="report-reference-number">[{referenceBaseCountRef.current + index + 1}]</span>
+        <span className="report-reference-copy">
           <strong>{reference.id} — {reference.title}</strong>
-          <span className="text-muted-foreground"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
+          <span className="report-reference-meta"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
           <br />
-          <a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a>
+          <a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a>
         </span>
       </li>)}
       {taxonomyEvidenceReferences.map((reference, index) => {
         const number = referenceBaseCountRef.current + reportIncident.taxonomyReferences.length + index + 1;
         const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
-        return <li key={`taxonomy-evidence-${reference.key}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-evidence-reference">
-          <span className="font-mono text-sm text-cam-gold">[{number}]</span>
-          <span className="min-w-0">
+        return <li key={`taxonomy-evidence-${reference.key}`} className="report-reference-item report-taxonomy-evidence-reference">
+          <span className="report-reference-number">[{number}]</span>
+          <span className="report-reference-copy">
             <strong>{reference.title}</strong>
-            {meta ? <span className="text-muted-foreground"> — {meta}</span> : null}
+            {meta ? <span className="report-reference-meta"> — {meta}</span> : null}
             <br />
-            <span className="text-muted-foreground">Taxonomy evidence supporting {reference.classIds.join(", ")}</span>
-            {reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}
+            <span className="report-reference-meta">Taxonomy evidence supporting {reference.classIds.join(", ")}</span>
+            {reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}
           </span>
         </li>;
       })}
@@ -228,12 +228,12 @@ export default function EvidenceChainReportPrintable() {
     : null;
 
   const reliancePortal = referenceSection ? createPortal(
-    <section className="report-reliance-notice border-t border-border/60 pt-5 text-muted-foreground" aria-labelledby="report-reliance-heading">
+    <section className="report-reliance-notice" aria-labelledby="report-reliance-heading">
       <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
-      <p className="mt-2">
+      <p>
         This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
       </p>
-      <p className="report-copyright mt-3">
+      <p className="report-copyright">
         Copyright © 2026 Dr Michelle O'Rourke.
       </p>
     </section>,
