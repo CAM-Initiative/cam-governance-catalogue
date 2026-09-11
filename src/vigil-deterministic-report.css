@@ -125,7 +125,7 @@
   min-width: 0;
 }
 
-.vigil-deterministic-report-host .report-section p,
+.vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label):not(.vigil-evidence-kicker):not(.vigil-library-kicker):not(.vigil-diagnostic-meta-label),
 .vigil-deterministic-report-host .report-section li,
 .vigil-deterministic-report-host .report-section dd,
 .vigil-deterministic-report-host .report-section summary,
@@ -530,7 +530,7 @@
   padding-top: 0.3rem;
 }
 
-.vigil-deterministic-report-host .report-reference-number {
+.vigil-deterministic-report-host .report-section .report-reference-number {
   color: hsl(var(--report-gold));
   font-family: var(--app-font-mono);
   font-size: 0.72rem !important;
@@ -550,7 +550,7 @@
   color: hsl(var(--report-muted));
 }
 
-.vigil-deterministic-report-host .report-reference-url {
+.vigil-deterministic-report-host .report-section .report-reference-url {
   color: hsl(32 62% 25%);
   font-size: 0.78rem !important;
   line-height: 1.45 !important;
@@ -697,7 +697,7 @@
     line-height: 1.1 !important;
   }
 
-  .vigil-deterministic-report-host .report-section p,
+  .vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label):not(.vigil-evidence-kicker):not(.vigil-library-kicker):not(.vigil-diagnostic-meta-label),
   .vigil-deterministic-report-host .report-section li,
   .vigil-deterministic-report-host .report-section dd,
   .vigil-deterministic-report-host .report-section summary,
@@ -796,6 +796,11 @@
     page-break-inside: auto !important;
   }
 
+  .vigil-deterministic-report-host .report-diagnosis {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
   .vigil-deterministic-report-host .report-panel,
   .vigil-deterministic-report-host .report-subpanel,
   .vigil-deterministic-report-host .report-metadata-panel,
@@ -820,11 +825,11 @@
     border-top-width: 0.45pt !important;
   }
 
-  .vigil-deterministic-report-host .report-reference-number {
+  .vigil-deterministic-report-host .report-section .report-reference-number {
     font-size: 7.5pt !important;
   }
 
-  .vigil-deterministic-report-host .report-reference-url {
+  .vigil-deterministic-report-host .report-section .report-reference-url {
     font-size: 7.8pt !important;
     line-height: 1.4 !important;
   }
