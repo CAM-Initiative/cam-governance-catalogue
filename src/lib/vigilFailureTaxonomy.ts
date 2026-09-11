@@ -60,6 +60,7 @@ export type FailureTaxonomyClass = {
   abstraction: string;
   plain_english: string;
   definition: string;
+  invariant?: string;
   recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
