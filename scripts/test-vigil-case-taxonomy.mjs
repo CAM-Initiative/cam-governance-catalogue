@@ -54,7 +54,7 @@ assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
 assert.match(taxonomyPanel, /Governing invariant/);
 assert.match(taxonomyPanel, /Additional governing invariant/);
 assert.match(taxonomyPanel, /family\.invariant/);
-assert.match(taxonomyPanel, /does not assert that a repair has been implemented or verified/);
+assert.match(taxonomyPanel, /does not currently identify the specific CAELESTIS constitutional or run-time provision/);
 assert.doesNotMatch(taxonomyPanel, /Technical taxonomy record/);
 assert.doesNotMatch(taxonomyPanel, /Canonical examples/);
 assert.doesNotMatch(taxonomyPanel, /Recognition subtypes and historical folded classes/);
