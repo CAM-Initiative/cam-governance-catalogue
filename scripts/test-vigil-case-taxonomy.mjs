@@ -162,8 +162,12 @@ assert.match(reportCss, /report-hero-meta/);
 assert.match(reportCss, /report-section-header/);
 assert.match(reportCss, /report-analysis-grid/);
 assert.match(reportCss, /report-reference-list/);
-assert.match(reportCss, /font-size: 9\.6pt !important/);
-assert.match(reportCss, /font-size: 7\.2pt !important/);
+assert.match(reportCss, /font-size: 11pt !important/);
+assert.match(reportCss, /--report-paper: 0 0% 100%/);
+assert.match(reportCss, /--report-panel: 0 0% 100%/);
+assert.match(reportCss, /background: #fff !important/);
+assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
+assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
 assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
 assert.match(reportCss, /break-after: avoid-page/);
 
