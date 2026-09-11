@@ -41,7 +41,8 @@ function escapeHtml(value = "") {
 
 function routeUrl(route) {
   if (route === "/") return `${siteOrigin}/`;
-  return `${siteOrigin}${route.replace(/\\/+$/, "")}/`;
+  const normalizedRoute = route.endsWith("/") ? route : `${route}/`;
+  return `${siteOrigin}${normalizedRoute}`;
 }
 
 function pageHtml({ route, title, description, body = "" }) {
