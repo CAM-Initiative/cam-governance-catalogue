@@ -96,15 +96,19 @@ export function deriveIncidentPublicDisplay(record: UnknownRecord): IncidentPubl
       published: firstText(record, ["record_identity.created", "date_recorded"]),
       lastUpdated: firstText(record, ["record_identity.updated", "record_last_updated", "date_recorded"]),
     },
-    searchTokens: collectText({
-      title: record.title,
-      summary: record.summary,
-      system: record.system_context,
-      jurisdiction: record.jurisdictional_context,
-      taxonomy: record.taxonomy_classification_summary ?? record.taxonomy_classification,
-      severity: record.severity_assessment,
-      sources: record.source_records,
-    }),
+    searchTokens: collectText(
+      Array.isArray(record.search_terms) && record.search_terms.length
+        ? record.search_terms
+        : {
+            title: record.title,
+            summary: record.summary,
+            system: record.system_context,
+            jurisdiction: record.jurisdictional_context,
+            taxonomy: record.taxonomy_classification_summary ?? record.taxonomy_classification,
+            severity: record.severity_assessment,
+            sources: record.source_records,
+          },
+    ),
   };
 }
 
