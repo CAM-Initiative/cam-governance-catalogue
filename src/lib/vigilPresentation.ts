@@ -107,26 +107,35 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
   const publicDisplay = deriveIncidentPublicDisplay(record);
   const title = firstText(record, ["title", "record_identity.title"]) ?? id;
   const summary = firstText(record, ["summary"]) ?? "";
+  const explicitSearchTerms = Array.isArray(record.search_terms) ? record.search_terms : undefined;
   const searchText = collectText({
     id,
     title,
     summary,
     platform,
-    severity: record.severity_assessment ?? record.severity,
-    taxonomy: record.taxonomy_classification_summary ?? record.taxonomy_classification,
-    sources: record.source_records ?? {
-      titles: record.primary_source_title,
-      platforms: record.source_platforms,
-      types: record.source_types,
+    severity: record.severity ?? record.severity_assessment,
+    classification: {
+      status: record.classification_status,
+      classId: record.primary_class_id,
+      familyId: record.primary_family_id,
     },
-    system: record.system_context ?? {
-      vendor: record.platform_or_vendor,
-      product: record.product_or_service,
-      runtime: record.specific_model_or_runtime,
-    },
-    jurisdiction: record.jurisdictional_context ?? {
-      primary: record.primary_jurisdiction,
-      sector: record.sector,
+    indexTerms: explicitSearchTerms,
+    legacyIndex: explicitSearchTerms ? undefined : {
+      taxonomy: record.taxonomy_classification_summary ?? record.taxonomy_classification,
+      sources: record.source_records ?? {
+        titles: record.primary_source_title,
+        platforms: record.source_platforms,
+        types: record.source_types,
+      },
+      system: record.system_context ?? {
+        vendor: record.platform_or_vendor,
+        product: record.product_or_service,
+        runtime: record.specific_model_or_runtime,
+      },
+      jurisdiction: record.jurisdictional_context ?? {
+        primary: record.primary_jurisdiction,
+        sector: record.sector,
+      },
     },
     public: publicDisplay.searchTokens,
   }).join(" ").toLowerCase();
