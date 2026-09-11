@@ -3,7 +3,7 @@ import { ArrowLeft, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -355,6 +355,10 @@ export default function VigilCaseFile() {
       {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
     </>;
 
+    if (stageId === "repair") return <>
+      {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
+    </>;
+
     if (stageId === "diagnose") return <>
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
@@ -418,7 +422,7 @@ export default function VigilCaseFile() {
           <span>[{externalSources.length + index + 1}]</span>
           <div>
             <strong>{reference.id} — {reference.title}</strong>
-            <p>VIGIL Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</p>
+            <p>VIGIL Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</p>
             <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
           </div>
         </li>)}
