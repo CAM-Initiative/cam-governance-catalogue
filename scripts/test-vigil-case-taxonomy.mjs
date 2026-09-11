@@ -14,9 +14,12 @@ const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTax
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
 const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
 const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
+const mainTs = await readFile(resolve(repoRoot, "src/main.tsx"), "utf8");
+const deterministicReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8");
 
-assert.match(caseFile, /import \{ CaseTaxonomyClassification \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
+assert.match(caseFile, /import \{ CaseTaxonomyClassification, CaseTaxonomyRepair \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
+assert.match(caseFile, /stageId === "repair"[\s\S]*<CaseTaxonomyRepair raw=\{incident\.raw\}/);
 
 assert.match(taxonomyPanel, /raw\.taxonomy_classification/);
 assert.match(taxonomyPanel, /primary_family/);
@@ -29,29 +32,32 @@ assert.match(taxonomyPanel, /familyById/);
 assert.match(taxonomyPanel, /Primary structural mechanism/);
 assert.match(taxonomyPanel, /Additional independently evidenced structural mechanisms/);
 
-assert.match(taxonomyPanel, /vigil-evidence-card vigil-taxonomy-record-card/);
-assert.match(taxonomyPanel, /vigil-evidence-header/);
-assert.match(taxonomyPanel, /vigil-evidence-source-meta/);
-assert.match(taxonomyPanel, /vigil-evidence-grid/);
+assert.match(taxonomyPanel, /vigil-classification-card/);
+assert.match(taxonomyPanel, /vigil-classification-layout/);
+assert.match(taxonomyPanel, /vigil-classification-metadata/);
+assert.match(taxonomyPanel, /vigil-repair-invariant-card/);
 
 for (const detail of [
-  "Technical taxonomy record",
-  "Governing family invariant",
-  "Family definition",
-  "Inclusion rule",
-  "Exclusion rule",
-  "Family scope",
-  "Recognition conditions",
-  "Class exclusions",
-  "Canonical examples",
-  "Taxonomy relationships",
-  "Aliases",
+  "What this failure means",
+  "Canonical definition",
   "Why this Case File maps here",
-  "Recognition subtypes and historical folded classes",
-  "Historical class ID",
+  "Classification metadata",
+  "Failure family",
+  "Failure class",
+  "Taxonomy version",
+  "View canonical taxonomy source",
 ]) {
-  assert.match(taxonomyPanel, new RegExp(detail), `missing canonical taxonomy detail: ${detail}`);
+  assert.match(taxonomyPanel, new RegExp(detail), `missing selective taxonomy detail: ${detail}`);
 }
+
+assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
+assert.match(taxonomyPanel, /Governing invariant/);
+assert.match(taxonomyPanel, /Additional governing invariant/);
+assert.match(taxonomyPanel, /family\.invariant/);
+assert.match(taxonomyPanel, /does not currently identify the specific CAELESTIS constitutional or run-time provision/);
+assert.doesNotMatch(taxonomyPanel, /Technical taxonomy record/);
+assert.doesNotMatch(taxonomyPanel, /Canonical examples/);
+assert.doesNotMatch(taxonomyPanel, /Recognition subtypes and historical folded classes/);
 
 for (const state of [
   "classified",
@@ -109,6 +115,11 @@ assert.match(caseFile, /loadTaxonomyReferenceTargets\(incident\.raw\)/);
 assert.match(caseFile, /taxonomyReferences\.map/);
 assert.match(caseFile, /VIGIL Failure Taxonomy/);
 assert.match(caseFile, /reference\.id} — \{reference\.title/);
+assert.match(caseFile, /collectTaxonomyEvidence\(taxonomyReferences\)/);
+assert.match(caseFile, /taxonomyEvidenceReferences\.map/);
+assert.match(caseFile, /Taxonomy evidence supporting/);
+assert.match(caseFile, /reference\.taxonomyVersion/);
+assert.doesNotMatch(caseFile, /vigil-case-file-summary/);
 assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
 assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
@@ -119,7 +130,9 @@ assert.match(taxonomyClassification, /requires-human-review/);
 assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
 assert.match(datasets, /VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference\.pdf/);
 assert.match(datasets, /Download PDF reference/);
-assert.match(datasets, /status="Technical reference"/);
+assert.match(datasets, /const taxonomyStatus = state\.taxonomyVersion/);
+assert.match(datasets, /status=\{taxonomyStatus\}/);
+assert.match(datasets, /: "Technical reference"/);
 assert.match(datasets, /downloadRemoteFile/);
 assert.match(datasets, /response\.blob\(\)/);
 assert.match(datasets, /anchor\.download = filename/);
@@ -133,20 +146,35 @@ assert.match(printableReport, /loadTaxonomyReferenceTargets\(raw\)/);
 assert.match(printableReport, /report-taxonomy-reference/);
 assert.match(printableReport, /document\.title = `VIGIL Observatory Case File — \$\{compactIncidentId\(reportIncident\.id\)\} — \$\{reportIncident\.title\}`/);
 assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
+assert.match(printableReport, /\{ number: "04", label: "Repair" \}/);
+assert.match(printableReport, /\{ number: "05", label: "References" \}/);
 
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
-assert.match(reportCss, /grid-template-columns: 1fr !important/);
-assert.match(reportCss, /\.vigil-taxonomy-record-card \{[\s\S]*break-inside: auto !important/);
-assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
-assert.match(reportCss, /padding-inline: 0\.75cm !important/);
+assert.match(reportCss, /vigil-classification-layout/);
+assert.match(reportCss, /vigil-repair-invariant-card/);
+assert.match(reportCss, /report-hero-meta/);
+assert.match(reportCss, /report-section-header/);
+assert.match(reportCss, /report-analysis-grid/);
+assert.match(reportCss, /report-reference-list/);
+assert.match(reportCss, /font-size: 9\.6pt !important/);
+assert.match(reportCss, /font-size: 7\.2pt !important/);
+assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
+assert.match(reportCss, /break-after: avoid-page/);
 
-assert.match(reportCss, /main\.container > footer \{\s*display: none !important;/s);
+assert.match(reportCss, /main\.container > footer,/);
 assert.doesNotMatch(printableReport, /deterministic print projection of the corresponding VIGIL Case File/);
 
-assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
-assert.match(polishCss, /break-before: auto !important/);
-assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
+assert.match(polishCss, /report print styling now lives exclusively/);
+assert.doesNotMatch(polishCss, /@page \{ margin: 1\.45cm 1\.35cm; \}/);
+assert.doesNotMatch(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
+
+assert.match(deterministicReport, /className="report-hero"/);
+assert.match(deterministicReport, /className="report-section-header"/);
+assert.match(deterministicReport, /className="report-analysis-grid"/);
+assert.match(deterministicReport, /className="report-reference-list"/);
+assert.doesNotMatch(deterministicReport, /const summary =/);
+assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);

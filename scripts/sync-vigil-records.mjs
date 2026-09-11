@@ -47,18 +47,88 @@ function parseIncidentRegistry(sourceText, source) {
   return parsed;
 }
 
+function searchTerms(record) {
+  if (Array.isArray(record.search_terms) && record.search_terms.length) {
+    return record.search_terms.filter((value) => typeof value === "string" && value.trim());
+  }
+
+  const values = [];
+  const add = (value) => {
+    if (typeof value === "string" && value.trim()) values.push(value.trim());
+    else if (Array.isArray(value)) value.forEach(add);
+  };
+
+  const primary = record.primary_classification && typeof record.primary_classification === "object"
+    ? record.primary_classification
+    : {};
+  const secondary = Array.isArray(record.secondary_classifications)
+    ? record.secondary_classifications
+    : [];
+
+  [
+    record.vendor_cluster,
+    record.primary_evidenced_vendors,
+    record.evidenced_vendors,
+    record.evidenced_products_or_services,
+    record.evidenced_models_or_runtimes,
+    record.product_or_service,
+    record.specific_model_or_runtime,
+    record.model_or_product,
+    record.system_type,
+    record.interface_surface,
+    record.primary_jurisdiction,
+    record.regulatory_surface,
+    record.sector,
+    record.primary_source_title,
+    record.primary_source_platform,
+    record.primary_source_type,
+    record.source_platforms,
+    record.source_types,
+    secondary.flatMap((item) => item && typeof item === "object" ? [item.class_id, item.family_id] : []),
+  ].forEach(add);
+
+  const seen = new Map();
+  for (const value of values) {
+    const key = value.toLocaleLowerCase();
+    if (!seen.has(key)) seen.set(key, value);
+  }
+  return [...seen.values()].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+}
+
+function compactIncidentRecord(record) {
+  const primary = record.primary_classification && typeof record.primary_classification === "object"
+    ? record.primary_classification
+    : {};
+  const projected = {
+    id: record.id,
+    record_type: record.record_type,
+    record_state: record.record_state,
+    record_version: record.record_version,
+    record_last_updated: record.record_last_updated,
+    date_recorded: record.date_recorded,
+    title: record.title,
+    summary: record.summary,
+    platform_or_vendor: record.platform_or_vendor,
+    severity: record.severity,
+    classification_status: record.classification_status,
+    primary_class_id: record.primary_class_id ?? primary.class_id,
+    primary_family_id: record.primary_family_id ?? primary.family_id,
+    occurred_from: record.occurred_from,
+    search_terms: searchTerms(record),
+    path: record.path,
+    github_blob_url: record.github_blob_url,
+    raw_url: record.raw_url,
+  };
+
+  return Object.fromEntries(
+    Object.entries(projected).filter(([, value]) => value !== undefined && value !== null && value !== "" && (!Array.isArray(value) || value.length)),
+  );
+}
+
 function publicFallbackRegistry(registry) {
-  const compatibilityOnlyIndexFields = new Set([
-    "severity_assessment_basis",
-    "interpretive_provenance_summary",
-    "diagnostic_provenance_summary",
-    "evidence_access_summary",
-  ]);
   return {
     ...registry,
-    records: registry.records.map((record) => Object.fromEntries(
-      Object.entries(record).filter(([key]) => !compatibilityOnlyIndexFields.has(key)),
-    )),
+    records: registry.records.map(compactIncidentRecord),
   };
 }
 

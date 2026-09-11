@@ -64,6 +64,7 @@
 }
 
 .vigil-case-file-page .vigil-case-stage-tabs {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: end;
   margin-top: 0;
   border: 0;
@@ -345,97 +346,147 @@
   line-height: 1.58;
 }
 
-/* Classification now follows the taxonomy prototype: metadata cards, then soft reading panels. */
-.vigil-case-file-page .vigil-classification-summary-v6 {
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
-.vigil-case-file-page .vigil-classification-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Classification mirrors Diagnosis: interpretation on the left, audit metadata on the right. */
+.vigil-case-file-page .vigil-taxonomy-classification-view {
+  display: grid;
   gap: 1rem;
-  margin-bottom: 1rem;
-  padding: 0;
-  border: 0;
 }
 
-.vigil-case-file-page .vigil-classification-topline > span {
+.vigil-case-file-page .vigil-classification-card {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-classification-card-header {
+  padding: 1.2rem 1.25rem 0;
+}
+
+.vigil-case-file-page .vigil-classification-card-header h3,
+.vigil-case-file-page .vigil-repair-reading h3 {
+  margin: 0.35rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 1.08rem;
+  font-weight: 650;
+  line-height: 1.42;
+  color: hsl(var(--foreground) / 0.92);
+}
+
+.vigil-case-file-page .vigil-classification-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.85fr);
+  gap: 1rem;
+  padding: 1.15rem 1.25rem 1.25rem;
+  align-items: stretch;
+}
+
+.vigil-case-file-page .vigil-classification-reading {
+  display: grid;
+  gap: 1rem;
+}
+
+.vigil-case-file-page .vigil-classification-reading > section,
+.vigil-case-file-page .vigil-classification-metadata,
+.vigil-case-file-page .vigil-repair-reading,
+.vigil-case-file-page .vigil-repair-metadata-panel {
+  min-width: 0;
+  padding: 1.05rem 1.1rem 1.15rem;
+  border: 0;
+  border-radius: 0.78rem;
+  background: hsl(var(--card) / 0.33);
+}
+
+.vigil-case-file-page .vigil-classification-reading > section > .vigil-diagnostic-meta-label,
+.vigil-case-file-page .vigil-classification-metadata > .vigil-diagnostic-meta-label,
+.vigil-case-file-page .vigil-repair-metadata-panel > .vigil-diagnostic-meta-label {
+  margin: 0 0 0.55rem !important;
+}
+
+.vigil-case-file-page .vigil-classification-reading > section > p:last-child,
+.vigil-case-file-page .vigil-repair-invariant {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.66;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-classification-metadata dl,
+.vigil-case-file-page .vigil-repair-metadata-panel dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-classification-source {
+  padding: 0 1.25rem 1.2rem;
+}
+
+.vigil-case-file-page .vigil-classification-source a {
   font-family: var(--app-font-mono);
   font-size: 0.78rem;
   color: hsl(var(--primary));
+  text-decoration: none;
 }
 
-.vigil-case-file-page .vigil-classification-topline > strong {
-  font-family: var(--app-font-sans);
-  font-size: 0.78rem;
-  font-weight: 650;
-  color: var(--vigil-case-label);
+.vigil-case-file-page .vigil-classification-source a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.22rem;
 }
 
-.vigil-case-file-page .vigil-classification-topline > strong b {
-  margin-left: 0.3rem;
-  font-size: 0.9rem;
-  color: hsl(var(--foreground) / 0.88);
-}
-
-.vigil-case-file-page .vigil-classification-identity {
-  padding: 0;
-  background: transparent;
-}
-
-.vigil-case-file-page .vigil-classification-identity dl {
+.vigil-case-file-page .vigil-secondary-classifications {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 0.85rem;
-}
-
-.vigil-case-file-page .vigil-classification-identity .vigil-case-field {
-  padding: 0.9rem 1rem;
-  border: 1px solid hsl(var(--border) / 0.55);
-  border-radius: 0.72rem;
-  background: hsl(var(--card) / 0.42);
-}
-
-.vigil-case-file-page .vigil-classify-definition {
-  margin-top: 1rem;
-  padding: 1.05rem 1.15rem;
-  border: 0;
-  border-radius: 0.78rem;
-  background: hsl(var(--card) / 0.36);
-}
-
-.vigil-case-file-page .vigil-classify-definition > p:last-child {
-  margin-top: 0.55rem;
-  font-size: 0.98rem;
-  line-height: 1.66;
-}
-
-.vigil-case-file-page .vigil-classify-pair {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 1rem;
 }
 
-.vigil-case-file-page .vigil-classify-pair > div {
-  padding: 1.05rem 1.15rem;
-  border: 0;
-  border-radius: 0.78rem;
-  background: hsl(var(--card) / 0.3);
+.vigil-case-file-page .vigil-classification-secondary-list {
+  display: grid;
+  gap: 1rem;
 }
 
-.vigil-case-file-page .vigil-classify-pair > div + div {
-  border: 0;
+/* Repair is a deterministic projection of the governing family invariant, not a new repair record. */
+.vigil-case-file-page .vigil-taxonomy-repair-view {
+  display: grid;
+  gap: 1rem;
 }
 
-.vigil-case-file-page .vigil-classify-pair > div > p:last-child {
-  margin-top: 0.5rem;
-  font-size: 0.96rem;
-  line-height: 1.62;
+.vigil-case-file-page .vigil-repair-invariant-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.85fr);
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-repair-reading .vigil-evidence-kicker {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-repair-invariant {
+  margin-top: 0.75rem;
+}
+
+.vigil-case-file-page .vigil-repair-boundary {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-left: 4px solid hsl(var(--muted-foreground) / 0.42);
+  border-radius: 0.7rem;
+  background: hsl(var(--card) / 0.32);
+  font-size: 0.9rem;
+  line-height: 1.58;
+  color: hsl(var(--foreground) / 0.72);
+}
+
+@media (max-width: 900px) {
+  .vigil-case-file-page .vigil-classification-layout,
+  .vigil-case-file-page .vigil-repair-invariant-card {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* References should read like a bibliography, not navigation cards. */

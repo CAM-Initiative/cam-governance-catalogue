@@ -10,7 +10,8 @@ const REPORT_SECTIONS = [
   { number: "01", label: "Observation" },
   { number: "02", label: "Diagnosis" },
   { number: "03", label: "Classification" },
-  { number: "04", label: "References" },
+  { number: "04", label: "Repair" },
+  { number: "05", label: "References" },
 ] as const;
 
 type IncludedSections = Record<string, boolean>;
@@ -23,11 +24,22 @@ type ReportIncident = {
   taxonomyReferences: TaxonomyReferenceTarget[];
 };
 
+type TaxonomyEvidenceReference = {
+  key: string;
+  title: string;
+  publisher?: string;
+  date?: string;
+  url?: string;
+  role?: string;
+  classIds: string[];
+};
+
 const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
   "02": ["No structured diagnosis is available."],
   "03": ["No current taxonomy classification is linked."],
-  "04": ["No references are currently available."],
+  "04": ["No governing invariant can be resolved from a canonical classification for this Incident."],
+  "05": ["No references are currently available."],
 };
 
 function sectionNumber(section: HTMLElement) {
@@ -56,6 +68,36 @@ function text(value: unknown) {
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function taxonomyEvidenceKey(reference: TaxonomyReferenceTarget["externalReferences"][number]) {
+  const url = text(reference.url)?.replace(/\/$/, "").toLowerCase();
+  if (url) return `url:${url}`;
+  return `meta:${[reference.publisher, reference.title, reference.date].map((value) => text(value)?.toLowerCase() ?? "").join("|")}`;
+}
+
+function collectTaxonomyEvidence(targets: TaxonomyReferenceTarget[]) {
+  const collected = new Map<string, TaxonomyEvidenceReference>();
+  for (const target of targets) {
+    for (const reference of target.externalReferences) {
+      const key = taxonomyEvidenceKey(reference);
+      const existing = collected.get(key);
+      if (existing) {
+        if (!existing.classIds.includes(target.id)) existing.classIds.push(target.id);
+        continue;
+      }
+      collected.set(key, {
+        key,
+        title: text(reference.title) ?? "Taxonomy evidence reference",
+        publisher: text(reference.publisher),
+        date: text(reference.date),
+        url: text(reference.url),
+        role: text(reference.reference_role),
+        classIds: [target.id],
+      });
+    }
+  }
+  return [...collected.values()];
 }
 
 export default function EvidenceChainReportPrintable() {
@@ -116,7 +158,7 @@ export default function EvidenceChainReportPrintable() {
         if (!number) continue;
         next[number] = sectionHasSubstantiveContent(section, number);
 
-        if (number === "04") {
+        if (number === "05") {
           setReferenceSection(section);
           const list = section.querySelector<HTMLOListElement>("ol");
           if (list) {
@@ -152,26 +194,46 @@ export default function EvidenceChainReportPrintable() {
   }, [includedSections, defaultsResolved]);
 
   const includedCount = useMemo(() => REPORT_SECTIONS.filter((section) => includedSections[section.number] !== false).length, [includedSections]);
+  const taxonomyEvidenceReferences = useMemo(
+    () => collectTaxonomyEvidence(reportIncident?.taxonomyReferences ?? []),
+    [reportIncident?.taxonomyReferences],
+  );
 
   const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
-    ? createPortal(<>{reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="flex gap-3 text-base leading-relaxed text-foreground/85 report-taxonomy-reference">
-        <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
-        <span className="min-w-0">
+    ? createPortal(<>
+      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="report-reference-item report-taxonomy-reference">
+        <span className="report-reference-number">[{referenceBaseCountRef.current + index + 1}]</span>
+        <span className="report-reference-copy">
           <strong>{reference.id} — {reference.title}</strong>
-          <span className="text-muted-foreground"> — VIGIL Observatory Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</span>
+          <span className="report-reference-meta"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
           <br />
-          <a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a>
+          <a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a>
         </span>
-      </li>)}</>, referenceList)
+      </li>)}
+      {taxonomyEvidenceReferences.map((reference, index) => {
+        const number = referenceBaseCountRef.current + reportIncident.taxonomyReferences.length + index + 1;
+        const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
+        return <li key={`taxonomy-evidence-${reference.key}`} className="report-reference-item report-taxonomy-evidence-reference">
+          <span className="report-reference-number">[{number}]</span>
+          <span className="report-reference-copy">
+            <strong>{reference.title}</strong>
+            {meta ? <span className="report-reference-meta"> — {meta}</span> : null}
+            <br />
+            <span className="report-reference-meta">Taxonomy evidence supporting {reference.classIds.join(", ")}</span>
+            {reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}
+          </span>
+        </li>;
+      })}
+    </>, referenceList)
     : null;
 
   const reliancePortal = referenceSection ? createPortal(
-    <section className="report-reliance-notice border-t border-border/60 pt-5 text-muted-foreground" aria-labelledby="report-reliance-heading">
+    <section className="report-reliance-notice" aria-labelledby="report-reliance-heading">
       <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
-      <p className="mt-2">
+      <p>
         This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
       </p>
-      <p className="report-copyright mt-3">
+      <p className="report-copyright">
         Copyright © 2026 Dr Michelle O'Rourke.
       </p>
     </section>,

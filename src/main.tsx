@@ -25,6 +25,5 @@ import "./vigil-case-library-simplify.css";
 import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
 import "./vigil-deterministic-report.css";
-import "./vigil-deterministic-report-typography-contract.css";
 
 createRoot(document.getElementById("root")!).render(<App />);

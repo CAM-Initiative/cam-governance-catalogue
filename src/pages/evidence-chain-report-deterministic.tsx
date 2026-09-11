@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -94,8 +94,7 @@ function mergeRecordDetail(indexRecord: VigilIndexRecord, detail: UnknownRecord)
 }
 
 async function detailedRecord(indexRecord: VigilIndexRecord) {
-  try { return mergeRecordDetail(indexRecord, await loadVigilRecordDetail(indexRecord.raw)); }
-  catch { return indexRecord; }
+  return mergeRecordDetail(indexRecord, await loadVigilRecordDetail(indexRecord.raw));
 }
 
 function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
@@ -205,26 +204,26 @@ function severityDisplay(value?: string) {
 
 function Field({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
-  return <div><dt className="report-label">{label}</dt><dd className="mt-1 text-base leading-relaxed text-foreground/85">{value}</dd></div>;
+  return <div className="report-field"><dt className="report-label">{label}</dt><dd className="report-value">{value}</dd></div>;
 }
 
 function TextList({ items }: { items: string[] }) {
   if (!items.length) return null;
-  return <ul className="mt-2 space-y-2 text-base leading-relaxed text-foreground/85">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
+  return <ul className="report-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
 }
 
 function Stage({ number, label, children }: { number: string; label: string; children: ReactNode }) {
-  return <section className="report-section report-break-inside-avoid rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_98%)] p-5 md:p-6">
-    <header className="-mx-1 flex items-start gap-4 border-b border-[hsl(38_25%_80%)] bg-[hsl(38_48%_98%)] px-1 pb-4">
-      <span className="font-mono text-base tracking-[0.12em] text-cam-gold">{number}</span>
-      <h2 className="font-serif text-2xl text-foreground">{label}</h2>
+  return <section className="report-section">
+    <header className="report-section-header">
+      <span className="report-section-number">{number}</span>
+      <h2 className="report-section-title">{label}</h2>
     </header>
-    <div className="mt-4">{children}</div>
+    <div className="report-section-body">{children}</div>
   </section>;
 }
 
 function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-lg border border-dashed border-border/70 p-4 text-base leading-relaxed text-muted-foreground">{children}</p>;
+  return <p className="report-empty">{children}</p>;
 }
 
 export default function EvidenceChainReportDeterministic() {
@@ -273,7 +272,7 @@ export default function EvidenceChainReportDeterministic() {
   const severityAssessedOn = incident ? firstText(incident.raw, ["severity_assessment.assessed_on"]) : undefined;
   const diagnostic = diagnosticProvenance(incident);
   const title = incident?.title ?? "VIGIL Case File";
-  const summary = incident?.summary ?? incident?.publicDisplay.finding;
+  const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -282,28 +281,29 @@ export default function EvidenceChainReportDeterministic() {
 
   return <Shell>
     <VigilObservatoryNav />
-    <main className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 md:px-10 md:py-10">
+    <main className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 md:px-10 md:py-10 report-document">
       <div className="print:hidden mb-6 flex items-center justify-between gap-4">
         <Link href={`/observatory/cases/${encodeURIComponent(incident?.id ?? state.sourceId)}`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
         <button type="button" onClick={() => window.print()} className="rounded-md border border-cam-gold/45 bg-background px-4 py-2 font-mono text-sm uppercase tracking-[0.08em] text-cam-gold">Print / save PDF</button>
       </div>
 
-      <header className="mb-6 rounded-xl border border-[hsl(38_30%_78%)] bg-[hsl(38_48%_94%)] p-6 md:p-8">
-        <p className="font-mono text-sm uppercase tracking-[0.16em] text-cam-gold">VIGIL Case File · deterministic report</p>
-        <h1 className="mt-3 font-serif text-3xl leading-tight text-foreground md:text-4xl">{title}</h1>
-        {summary && <p className="mt-3 max-w-4xl text-base leading-relaxed text-foreground/80">{summary}</p>}
-        <dl className="mt-5 grid gap-3 border-t border-border/60 pt-4 sm:grid-cols-2">
+      <header className="report-hero">
+        <p className="report-kicker">VIGIL Case File · deterministic report</p>
+        <h1 className="report-title">{title}</h1>
+        <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
+          <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
+          <Field label="Updated" value={updated} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
       </header>
 
-      <div className="space-y-5">
+      <div className="report-flow">
         <Stage number="01" label="Observation">
-          {affectedSystems.length > 0 && <section className="mb-5 rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
+          {affectedSystems.length > 0 && <section className="report-panel report-affected-systems">
             <p className="report-substantive-label">Affected systems</p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
-              <dl className="grid gap-3 sm:grid-cols-2">
+            <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
+              <dl className="report-metadata-grid report-metadata-grid--2">
                 <Field label="Provider / platform" value={system.provider} />
                 <Field label="Product / service" value={system.product} />
                 <Field label="Model / runtime" value={system.model} />
@@ -313,28 +313,28 @@ export default function EvidenceChainReportDeterministic() {
               </dl>
             </article>)}</div>
           </section>}
-          {incidentDetail?.evidence.length ? <div className="mt-4 space-y-3">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(incident, index) }} />)}</div> : null}
+          {incidentDetail?.evidence.length ? <div className="report-evidence-list">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(incident, index) }} />)}</div> : null}
           {!incidentDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Diagnosis">
-        {incident ? <article className="space-y-5">
-          <section><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
-          <section className="report-severity-assessment rounded-lg border border-border/70 bg-[hsl(38_48%_97%)] p-4">
+        {incident ? <article className="report-diagnosis">
+          <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
+          <section className="report-panel report-severity-assessment">
             <p className="report-substantive-label">Occurrence-level severity</p>
-            <dl className="mt-3 grid gap-4 sm:grid-cols-3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Materialised consequence</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
-              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Affected scope</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
-              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Seriousness & persistence</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
-              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Quantitative information</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
-              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Evidentiary limits</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
-              <section className="rounded-lg bg-[hsl(38_48%_99%)] p-4"><p className="report-substantive-label">Why this severity band</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
+            <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
+            <div className="report-analysis-grid">
+              <section className="report-subpanel"><p className="report-substantive-label">Materialised consequence</p><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><p className="report-substantive-label">Affected scope</p><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><p className="report-substantive-label">Seriousness & persistence</p><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><p className="report-substantive-label">Quantitative information</p><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><p className="report-substantive-label">Evidentiary limits</p><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><p className="report-substantive-label">Why this severity band</p><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
             </div>
           </section>
-          <div className="grid gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.85fr)]">
-            <div className="grid gap-4"><section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Factual basis</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-substantive-label">Governance significance</p><p className="mt-2 text-base leading-relaxed text-foreground/85">{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
-            <aside className="rounded-lg bg-[hsl(38_48%_97%)] p-4"><p className="report-label">Diagnostic provenance</p><dl className="mt-3 grid gap-4"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Diagnosed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
+          <div className="report-split-layout">
+            <div className="report-stack"><section className="report-subpanel"><p className="report-substantive-label">Factual basis</p><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><p className="report-substantive-label">Governance significance</p><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
+            <aside className="report-metadata-panel"><p className="report-label">Diagnostic provenance</p><dl className="report-metadata-grid"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Diagnosed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
           </div>
           {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the diagnosis</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
         </article> : <Empty>No structured diagnosis is available.</Empty>}
@@ -344,16 +344,20 @@ export default function EvidenceChainReportDeterministic() {
           {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
 
-        <Stage number="04" label="References">
+        <Stage number="04" label="Repair">
+          {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <Empty>No governing invariant can be resolved from a canonical classification for this Incident.</Empty>}
+        </Stage>
+
+        <Stage number="05" label="References">
           {references.length > 0 ? <>
             <p className="vigil-evidence-kicker">Evidence and record references</p>
-            <ol className="mt-3 space-y-3">{references.map((reference, index) => <li key={reference.key} className="flex gap-3 text-base leading-relaxed text-foreground/85"><span className="font-mono text-sm text-cam-gold">[{index + 1}]</span><span className="min-w-0"><strong>{reference.label}</strong>{reference.detail ? <span className="text-muted-foreground"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a></> : null}</span></li>)}</ol>
+            <ol className="report-reference-list">{references.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
           </> : <Empty>No references are currently available.</Empty>}
         </Stage>
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; it does not add speculative mechanisms or separate repair-layer records.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; the Repair section projects the governing invariant from the classified taxonomy family and does not assert implementation or verification.
       </footer>
     </main>
   </Shell>;
