@@ -43,6 +43,16 @@ type AffectedSystem = {
   deploymentContext?: string;
 };
 
+type TaxonomyEvidenceReference = {
+  key: string;
+  title: string;
+  publisher?: string;
+  date?: string;
+  url?: string;
+  role?: string;
+  classIds: string[];
+};
+
 type DiagnosticProvenance = {
   method?: string;
   diagnosticDate?: string;
@@ -253,6 +263,36 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
   return "Family-only taxonomy classification";
 }
 
+function taxonomyEvidenceKey(reference: TaxonomyReferenceTarget["externalReferences"][number]) {
+  const url = text(reference.url)?.replace(/\/$/, "").toLowerCase();
+  if (url) return `url:${url}`;
+  return `meta:${[reference.publisher, reference.title, reference.date].map((value) => text(value)?.toLowerCase() ?? "").join("|")}`;
+}
+
+function collectTaxonomyEvidence(targets: TaxonomyReferenceTarget[]): TaxonomyEvidenceReference[] {
+  const collected = new Map<string, TaxonomyEvidenceReference>();
+  for (const target of targets) {
+    for (const reference of target.externalReferences) {
+      const key = taxonomyEvidenceKey(reference);
+      const existing = collected.get(key);
+      if (existing) {
+        if (!existing.classIds.includes(target.id)) existing.classIds.push(target.id);
+        continue;
+      }
+      collected.set(key, {
+        key,
+        title: text(reference.title) ?? "Taxonomy supporting reference",
+        publisher: text(reference.publisher),
+        date: text(reference.date),
+        url: text(reference.url),
+        role: text(reference.reference_role),
+        classIds: [target.id],
+      });
+    }
+  }
+  return [...collected.values()];
+}
+
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
   const [, incidentParams] = useRoute("/observatory/incidents/:recordId");
@@ -305,12 +345,16 @@ export default function VigilCaseFile() {
     return () => { cancelled = true; };
   }, [incident]);
 
+  const taxonomyEvidenceReferences = useMemo(
+    () => collectTaxonomyEvidence(taxonomyReferences),
+    [taxonomyReferences],
+  );
+
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Case File…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Case File";
-  const summary = sourceRecord?.summary ?? sourceRecord?.publicDisplay.finding;
   const family = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
@@ -328,7 +372,7 @@ export default function VigilCaseFile() {
   const severityEvidentiaryLimits = incident ? firstText(incident.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
   const severityBandRationale = incident ? firstText(incident.raw, ["severity_assessment.band_rationale"]) : undefined;
   const severityAssessedOn = incident ? firstText(incident.raw, ["severity_assessment.assessed_on"]) : undefined;
-  const referenceCount = externalSources.length + taxonomyReferences.length + state.records.length;
+  const referenceCount = externalSources.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -426,8 +470,21 @@ export default function VigilCaseFile() {
             <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
           </div>
         </li>)}
-        {state.records.map((record, index) => <li key={record.id}>
+        {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
           <span>[{externalSources.length + taxonomyReferences.length + index + 1}]</span>
+          <div>
+            <strong>{reference.title}</strong>
+            {(reference.publisher || reference.date || reference.role) && <p>{[
+              reference.publisher,
+              reference.date,
+              reference.role ? titleizeValue(reference.role) : undefined,
+            ].filter(Boolean).join(" · ")}</p>}
+            <p>Taxonomy evidence supporting {reference.classIds.join(", ")}</p>
+            {reference.url && <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>}
+          </div>
+        </li>)}
+        {state.records.map((record, index) => <li key={record.id}>
+          <span>[{externalSources.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
             {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
@@ -449,7 +506,6 @@ export default function VigilCaseFile() {
       <div className="vigil-case-file-title-block">
         <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
         <h1>{title}</h1>
-        {summary && <p className="vigil-case-file-summary">{summary}</p>}
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
