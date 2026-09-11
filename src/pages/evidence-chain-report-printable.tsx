@@ -10,7 +10,8 @@ const REPORT_SECTIONS = [
   { number: "01", label: "Observation" },
   { number: "02", label: "Diagnosis" },
   { number: "03", label: "Classification" },
-  { number: "04", label: "References" },
+  { number: "04", label: "Repair" },
+  { number: "05", label: "References" },
 ] as const;
 
 type IncludedSections = Record<string, boolean>;
@@ -37,7 +38,8 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
   "02": ["No structured diagnosis is available."],
   "03": ["No current taxonomy classification is linked."],
-  "04": ["No references are currently available."],
+  "04": ["No governing invariant can be resolved from a canonical classification for this Incident."],
+  "05": ["No references are currently available."],
 };
 
 function sectionNumber(section: HTMLElement) {
@@ -156,7 +158,7 @@ export default function EvidenceChainReportPrintable() {
         if (!number) continue;
         next[number] = sectionHasSubstantiveContent(section, number);
 
-        if (number === "04") {
+        if (number === "05") {
           setReferenceSection(section);
           const list = section.querySelector<HTMLOListElement>("ol");
           if (list) {
