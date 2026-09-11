@@ -38,7 +38,20 @@ assert(loader.includes("record.raw_url"), "Canonical raw links must prefer regis
 const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
 assert(Array.isArray(fallback.records) && fallback.records.length > 0, "VIGIL fallback must contain Incident records");
 assert(fallback.records.every((record) => record?.record_type === "incident"), "VIGIL fallback must not publish retired record classes");
-assert(fallback.records.every((record) => !("severity_assessment_basis" in record)), "VIGIL fallback must not republish the compatibility-only severity blob");
-assert(fallback.records.some((record) => record.severity_assessment?.materialised_consequence), "VIGIL fallback must retain structured occurrence-level severity analysis");
+assert(fallback.records.every((record) => Array.isArray(record.search_terms) && record.search_terms.length > 0), "VIGIL fallback must retain compact search terms");
+for (const forbidden of [
+  "severity_assessment",
+  "severity_assessment_basis",
+  "primary_classification",
+  "secondary_classifications",
+  "diagnostic_provenance_summary",
+  "interpretive_provenance_summary",
+  "evidence_access_summary",
+  "external_incident_references",
+  "legacy_provenance",
+]) {
+  assert(fallback.records.every((record) => !(forbidden in record)), `VIGIL fallback must not embed canonical detail field ${forbidden}`);
+}
+assert(fallback.records.every((record) => typeof record.path === "string" && typeof record.raw_url === "string"), "VIGIL fallback must retain canonical record routing");
 
-console.log(`VIGIL Incident-only registry validation passed (${fallback.records.length} fallback Incidents).`);
+console.log(`VIGIL lightweight Incident registry validation passed (${fallback.records.length} fallback Incidents).`);
