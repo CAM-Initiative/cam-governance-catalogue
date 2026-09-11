@@ -203,7 +203,7 @@ export default function EvidenceChainReportPrintable() {
         <span className="font-mono text-sm text-cam-gold">[{referenceBaseCountRef.current + index + 1}]</span>
         <span className="min-w-0">
           <strong>{reference.id} — {reference.title}</strong>
-          <span className="text-muted-foreground"> — VIGIL Observatory Failure Taxonomy · {taxonomyRelationshipLabel(reference)}</span>
+          <span className="text-muted-foreground"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
           <br />
           <a href={reference.url} target="_blank" rel="noreferrer" className="break-all text-[hsl(32_62%_25%)] underline decoration-cam-gold/50 underline-offset-4">{reference.url}</a>
         </span>
