@@ -64,6 +64,7 @@
 }
 
 .vigil-case-file-page .vigil-case-stage-tabs {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: end;
   margin-top: 0;
   border: 0;
