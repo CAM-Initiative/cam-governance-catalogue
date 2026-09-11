@@ -38,7 +38,10 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
   "02": ["No structured diagnosis is available."],
   "03": ["No current taxonomy classification is linked."],
-  "04": ["No governing invariant can be resolved from a canonical classification for this Incident."],
+  "04": [
+    "No class invariant can be resolved from a canonical classification for this Incident.",
+    "No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.",
+  ],
   "05": ["No references are currently available."],
 };
 
