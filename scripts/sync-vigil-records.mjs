@@ -66,8 +66,6 @@ function searchTerms(record) {
     : [];
 
   [
-    record.title,
-    record.platform_or_vendor,
     record.vendor_cluster,
     record.primary_evidenced_vendors,
     record.evidenced_vendors,
@@ -81,15 +79,11 @@ function searchTerms(record) {
     record.primary_jurisdiction,
     record.regulatory_surface,
     record.sector,
-    record.classification_status,
-    record.severity,
     record.primary_source_title,
     record.primary_source_platform,
     record.primary_source_type,
     record.source_platforms,
     record.source_types,
-    primary.class_id,
-    primary.family_id,
     secondary.flatMap((item) => item && typeof item === "object" ? [item.class_id, item.family_id] : []),
   ].forEach(add);
 
