@@ -358,6 +358,6 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </dl>
       </aside>
     </article>)}
-    <p className="vigil-repair-boundary">This section projects the governing invariant from the classified VIGIL failure family. It does not assert that a repair has been implemented or verified.</p>
+    <p className="vigil-repair-boundary">This section identifies the governing invariant that must be restored for the classified failure. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which that invariant is instantiated or enforced.</p>
   </div>;
 }
