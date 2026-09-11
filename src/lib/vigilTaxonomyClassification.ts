@@ -18,6 +18,7 @@ export type TaxonomyReferenceTarget = {
   url: string;
   familyId: string;
   relationship: "primary" | "secondary" | "family-only";
+  taxonomyVersion?: string;
   externalReferences: FailureTaxonomyExternalReference[];
 };
 
@@ -109,6 +110,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
   if (!classification) return [];
 
   const references: TaxonomyReferenceTarget[] = [];
+  const taxonomyVersion = text(classification.taxonomy_version);
   const seen = new Set<string>();
   const add = (relationship: TaxonomyReferenceTarget["relationship"], familyValue: unknown, classValue?: unknown) => {
     const targetFamilyId = familyId(familyValue);
@@ -131,6 +133,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
       url: `${dataset.sourceRoot}/${indexEntry.file}`,
       familyId: targetFamilyId,
       relationship,
+      taxonomyVersion,
       externalReferences: resolvedClass?.external_references ?? [],
     });
   };
