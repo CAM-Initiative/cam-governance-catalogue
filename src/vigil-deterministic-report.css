@@ -158,37 +158,92 @@
   width: 100% !important;
 }
 
-/* Taxonomy content is technical and long. It must flow naturally instead of
-   jumping wholesale to the next sheet and leaving a large blank area. */
-.vigil-deterministic-report-host .vigil-taxonomy-record-card {
-  break-inside: auto !important;
-  page-break-inside: auto !important;
+/* Classification mirrors the Case File reading/metadata split without reproducing
+   the full taxonomy manual. */
+.vigil-deterministic-report-host .vigil-taxonomy-classification-view,
+.vigil-deterministic-report-host .vigil-taxonomy-repair-view {
+  display: grid;
+  gap: 0.8rem;
 }
 
-.vigil-deterministic-report-host .vigil-taxonomy-record-card > header,
-.vigil-deterministic-report-host .vigil-taxonomy-record-card .vigil-evidence-column,
-.vigil-deterministic-report-host .vigil-taxonomy-record-card .vigil-evidence-boundary-list > section,
-.vigil-deterministic-report-host .vigil-taxonomy-record-card .vigil-evidence-boundary-list > p {
+.vigil-deterministic-report-host .vigil-classification-card,
+.vigil-deterministic-report-host .vigil-repair-invariant-card {
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: 0.7rem;
+  background: hsl(var(--background));
+  overflow: hidden;
+}
+
+.vigil-deterministic-report-host .vigil-classification-card-header {
+  padding: 0.95rem 1rem 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-card-header h3,
+.vigil-deterministic-report-host .vigil-repair-reading h3 {
+  margin: 0.3rem 0 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-layout,
+.vigil-deterministic-report-host .vigil-repair-invariant-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(15rem, 0.8fr);
+  gap: 0.8rem;
+  padding: 0.95rem 1rem 1rem;
+  align-items: stretch;
+}
+
+.vigil-deterministic-report-host .vigil-classification-reading {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.vigil-deterministic-report-host .vigil-classification-reading > section,
+.vigil-deterministic-report-host .vigil-classification-metadata,
+.vigil-deterministic-report-host .vigil-repair-reading,
+.vigil-deterministic-report-host .vigil-repair-metadata-panel {
+  min-width: 0;
+  padding: 0.85rem 0.95rem 0.95rem;
+  border-radius: 0.6rem;
+  background: hsl(38 48% 97%);
+}
+
+.vigil-deterministic-report-host .vigil-classification-reading > section > p:last-child,
+.vigil-deterministic-report-host .vigil-repair-invariant {
+  margin: 0.45rem 0 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-metadata dl,
+.vigil-deterministic-report-host .vigil-repair-metadata-panel dl {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-source {
+  padding: 0 1rem 0.9rem;
+}
+
+.vigil-deterministic-report-host .vigil-classification-secondary-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.vigil-deterministic-report-host .vigil-repair-boundary {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid hsl(var(--muted-foreground) / 0.42);
+  background: hsl(38 48% 97%);
+}
+
+.vigil-deterministic-report-host .vigil-classification-card,
+.vigil-deterministic-report-host .vigil-repair-invariant-card,
+.vigil-deterministic-report-host .vigil-classification-reading > section,
+.vigil-deterministic-report-host .vigil-classification-metadata,
+.vigil-deterministic-report-host .vigil-repair-reading,
+.vigil-deterministic-report-host .vigil-repair-metadata-panel {
   break-inside: avoid;
   page-break-inside: avoid;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-classification-view {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.vigil-deterministic-report-host .vigil-classification-topline {
-  min-height: 0 !important;
-  padding: 0.65rem 0.85rem !important;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-record-card .vigil-evidence-source-meta {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-record-card details[open] > .vigil-evidence-boundary-list {
-  gap: 0.55rem !important;
 }
 
 /* References should not silently switch to a larger/smaller type scale. */
@@ -227,7 +282,8 @@
   .vigil-deterministic-report-host .vigil-evidence-source-meta,
   .vigil-deterministic-report-host .vigil-evidence-analysis-layout,
   .vigil-deterministic-report-host .vigil-evidence-review-meta,
-  .vigil-deterministic-report-host .vigil-taxonomy-record-card .vigil-evidence-source-meta {
+  .vigil-deterministic-report-host .vigil-classification-layout,
+  .vigil-deterministic-report-host .vigil-repair-invariant-card {
     grid-template-columns: 1fr !important;
   }
 }
