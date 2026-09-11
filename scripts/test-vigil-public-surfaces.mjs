@@ -6,6 +6,23 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
+test("Explore AI governance rail keeps a readable typography floor", async () => {
+  const railCss = await read("src/governance-rail-refinements.css");
+  assert.match(railCss, /font-size: 0\.8rem;/);
+  assert.match(railCss, /\.home-governance-card-title \{[\s\S]*font-size: 0\.95rem !important;/);
+  assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
+});
+
+test("failure taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
+  const [taxonomy, shellCss] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/vigil-page-shell.css"),
+  ]);
+  assert.match(taxonomy, /className="vigil-library-kicker">VIGIL Observatory/);
+  assert.match(shellCss, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-header \.vigil-library-kicker,/);
+  assert.match(shellCss, /font-size: 0\.875rem !important;/);
+});
+
 test("public VIGIL routes expose Incidents, taxonomy, standards and policy only", async () => {
   const [app, shell, hub] = await Promise.all([read("src/App.tsx"), read("src/components/layout/Shell.tsx"), read("src/pages/vigil-knowledge-hub.tsx")]);
   for (const route of ["/observatory/cases", "/observatory/incidents", "/observatory/knowledge-base", "/observatory/knowledge-base/failure-taxonomy", "/observatory/knowledge-base/standards-sources", "/observatory/knowledge-base/policy"]) assert.match(app, new RegExp(route.replaceAll("/", "\\/")));

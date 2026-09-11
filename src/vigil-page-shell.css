@@ -83,6 +83,7 @@
 .vigil-knowledge-hub-page .vigil-library-kicker,
 .vigil-reference-page .vigil-library-kicker,
 .vigil-case-library-page .vigil-library-kicker,
+.vigil-taxonomy-manual-page .vigil-taxonomy-header .vigil-library-kicker,
 .vigil-app-shell + div.container > div:first-child > p:first-child,
 .vigil-app-shell + main.container:not(.report-page) > header .vigil-library-kicker {
   margin: 0 !important;

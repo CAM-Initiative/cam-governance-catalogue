@@ -51,10 +51,14 @@ for (const detail of [
 }
 
 assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
-assert.match(taxonomyPanel, /Governing invariant/);
-assert.match(taxonomyPanel, /Additional governing invariant/);
-assert.match(taxonomyPanel, /family\.invariant/);
+assert.match(taxonomyPanel, /Governing class invariant/);
+assert.match(taxonomyPanel, /Additional class invariant/);
+assert.match(taxonomyPanel, /classificationClass\.invariant/);
+assert.match(taxonomyPanel, /governingClassInvariants/);
+assert.match(taxonomyPanel, /The broader family invariant is not substituted here/);
+assert.match(taxonomyPanel, /does not substitute the broader family invariant/);
 assert.match(taxonomyPanel, /does not currently identify the specific CAELESTIS constitutional or run-time provision/);
+assert.doesNotMatch(taxonomyPanel, /family\.invariant/);
 assert.doesNotMatch(taxonomyPanel, /Technical taxonomy record/);
 assert.doesNotMatch(taxonomyPanel, /Canonical examples/);
 assert.doesNotMatch(taxonomyPanel, /Recognition subtypes and historical folded classes/);
@@ -86,6 +90,7 @@ assert.match(taxonomyLoader, /entry\.file/);
 assert.match(taxonomyLoader, /CAM-Initiative\/Vigil\/main/);
 assert.doesNotMatch(taxonomyLoader, /agent\/bounded-incident-classification-provenance-repair/);
 assert.match(taxonomyLoader, /subtypes\?: FailureTaxonomySubtype\[\]/);
+assert.match(taxonomyLoader, /invariant\?: string/);
 
 // Both local and production rendering consume the canonical VIGIL main branch.
 assert.doesNotMatch(vigilRegistry, /VIGIL_WORKING_BRANCH/);
@@ -157,8 +162,12 @@ assert.match(reportCss, /report-hero-meta/);
 assert.match(reportCss, /report-section-header/);
 assert.match(reportCss, /report-analysis-grid/);
 assert.match(reportCss, /report-reference-list/);
-assert.match(reportCss, /font-size: 9\.6pt !important/);
-assert.match(reportCss, /font-size: 7\.2pt !important/);
+assert.match(reportCss, /font-size: 11pt !important/);
+assert.match(reportCss, /--report-paper: 0 0% 100%/);
+assert.match(reportCss, /--report-panel: 0 0% 100%/);
+assert.match(reportCss, /background: #fff !important/);
+assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
+assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
 assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
 assert.match(reportCss, /break-after: avoid-page/);
 

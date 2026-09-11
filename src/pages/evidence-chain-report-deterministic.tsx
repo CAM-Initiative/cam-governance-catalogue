@@ -345,7 +345,7 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
 
         <Stage number="04" label="Repair">
-          {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <Empty>No governing invariant can be resolved from a canonical classification for this Incident.</Empty>}
+          {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
         </Stage>
 
         <Stage number="05" label="References">
@@ -357,7 +357,7 @@ export default function EvidenceChainReportDeterministic() {
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; the Repair section projects the governing invariant from the classified taxonomy family and does not assert implementation or verification.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; the Repair section projects published failure-class invariants and does not substitute broader family invariants where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;

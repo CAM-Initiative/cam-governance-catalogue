@@ -617,11 +617,38 @@
   }
 
   .vigil-deterministic-report-host {
+    --report-paper: 0 0% 100%;
+    --report-panel: 0 0% 100%;
+    --report-panel-strong: 0 0% 100%;
+    --report-rule: 0 0% 78%;
+    --report-ink: 0 0% 8%;
+    --report-muted: 0 0% 30%;
     padding: 0 !important;
     background: #fff !important;
-    color: #211b17 !important;
+    color: #111 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+  }
+
+  .vigil-deterministic-report-host .report-document,
+  .vigil-deterministic-report-host .report-hero,
+  .vigil-deterministic-report-host .report-section,
+  .vigil-deterministic-report-host .report-panel,
+  .vigil-deterministic-report-host .report-subpanel,
+  .vigil-deterministic-report-host .report-metadata-panel,
+  .vigil-deterministic-report-host .report-empty,
+  .vigil-deterministic-report-host .vigil-evidence-card,
+  .vigil-deterministic-report-host .vigil-evidence-header,
+  .vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column,
+  .vigil-deterministic-report-host .vigil-evidence-metadata-panel,
+  .vigil-deterministic-report-host .vigil-classification-card,
+  .vigil-deterministic-report-host .vigil-classification-reading > section,
+  .vigil-deterministic-report-host .vigil-classification-metadata,
+  .vigil-deterministic-report-host .vigil-repair-invariant-card,
+  .vigil-deterministic-report-host .vigil-repair-reading,
+  .vigil-deterministic-report-host .vigil-repair-metadata-panel,
+  .vigil-deterministic-report-host .vigil-repair-boundary {
+    background: #fff !important;
   }
 
   .vigil-deterministic-report-host header.sticky,
@@ -651,7 +678,8 @@
   }
 
   .vigil-deterministic-report-host .report-kicker {
-    font-size: 7.2pt !important;
+    font-size: 11pt !important;
+    line-height: 1.35 !important;
   }
 
   .vigil-deterministic-report-host .report-title {
@@ -689,7 +717,7 @@
   }
 
   .vigil-deterministic-report-host .report-section-number {
-    font-size: 7.5pt !important;
+    font-size: 11pt !important;
   }
 
   .vigil-deterministic-report-host .report-section-title {
@@ -703,8 +731,8 @@
   .vigil-deterministic-report-host .report-section summary,
   .vigil-deterministic-report-host .report-section a,
   .vigil-deterministic-report-host .report-reliance-notice p {
-    font-size: 9.6pt !important;
-    line-height: 1.46 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
   }
 
   .vigil-deterministic-report-host .report-label,
@@ -713,12 +741,13 @@
   .vigil-deterministic-report-host .vigil-diagnostic-meta-label,
   .vigil-deterministic-report-host .vigil-evidence-meta-field dt,
   .vigil-deterministic-report-host .vigil-case-field dt {
-    font-size: 7.2pt !important;
-    line-height: 1.3 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
   }
 
   .vigil-deterministic-report-host .report-substantive-label {
-    font-size: 7.8pt !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
   }
 
   .vigil-deterministic-report-host .report-value,
@@ -726,8 +755,8 @@
   .vigil-deterministic-report-host .vigil-case-field dd,
   .vigil-deterministic-report-host .vigil-evidence-boundary-list p,
   .vigil-deterministic-report-host .vigil-evidence-boundary-list li {
-    font-size: 8.8pt !important;
-    line-height: 1.42 !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
   }
 
   .vigil-deterministic-report-host .report-panel,
@@ -780,8 +809,8 @@
   .vigil-deterministic-report-host .vigil-classification-card-header h3,
   .vigil-deterministic-report-host .vigil-repair-reading h3,
   .vigil-deterministic-report-host .vigil-case-subheading h3 {
-    font-size: 11.5pt !important;
-    line-height: 1.22 !important;
+    font-size: 13pt !important;
+    line-height: 1.25 !important;
   }
 
   .vigil-deterministic-report-host .vigil-evidence-analysis-layout,
@@ -826,12 +855,13 @@
   }
 
   .vigil-deterministic-report-host .report-section .report-reference-number {
-    font-size: 7.5pt !important;
+    font-size: 11pt !important;
+    line-height: 1.45 !important;
   }
 
   .vigil-deterministic-report-host .report-section .report-reference-url {
-    font-size: 7.8pt !important;
-    line-height: 1.4 !important;
+    font-size: 11pt !important;
+    line-height: 1.45 !important;
   }
 
   .vigil-deterministic-report-host .report-reliance-notice {

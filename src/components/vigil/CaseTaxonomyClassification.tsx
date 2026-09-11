@@ -306,19 +306,24 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 }
 
 type RepairInvariant = {
-  family: FailureTaxonomyFamilyDocument["family"];
+  family?: FailureTaxonomyFamilyDocument["family"];
+  class: FailureTaxonomyClass;
   relationship: "Primary" | "Additional";
 };
 
-function governingInvariants(primary: ResolvedClassification, secondaries: ResolvedClassification[]): RepairInvariant[] {
+function governingClassInvariants(primary: ResolvedClassification, secondaries: ResolvedClassification[]): RepairInvariant[] {
   const result: RepairInvariant[] = [];
   const seen = new Set<string>();
 
   const add = (item: ResolvedClassification, relationship: RepairInvariant["relationship"]) => {
-    const family = item.family?.family;
-    if (!family?.invariant || seen.has(family.family_id)) return;
-    seen.add(family.family_id);
-    result.push({ family, relationship });
+    const classificationClass = item.class;
+    if (!classificationClass || seen.has(classificationClass.class_id)) return;
+    seen.add(classificationClass.class_id);
+    result.push({
+      family: item.family?.family,
+      class: classificationClass,
+      relationship,
+    });
   };
 
   add(primary, "Primary");
@@ -330,34 +335,38 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
-  if (!parsed.status) return <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving governing invariant from the VIGIL Failure Taxonomy…</p>;
-  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL taxonomy source is temporarily unavailable, so the governing invariant cannot be resolved. {taxonomy.message}</p>;
+  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical taxonomy classification.</p>;
+  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Failure Taxonomy…</p>;
+  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL taxonomy source is temporarily unavailable, so the class invariant cannot be resolved. {taxonomy.message}</p>;
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
-  const invariants = governingInvariants(primary, secondaries);
+  const invariants = governingClassInvariants(primary, secondaries);
 
-  if (!invariants.length) return <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>;
+  if (!invariants.length) return <p className="vigil-case-empty">No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
-    {invariants.map(({ family, relationship }) => <article key={family.family_id} className="vigil-repair-invariant-card">
+    {invariants.map(({ family, class: classificationClass, relationship }) => <article key={classificationClass.class_id} className="vigil-repair-invariant-card">
       <div className="vigil-repair-reading">
-        <p className="vigil-evidence-kicker">{relationship === "Primary" ? "Governing invariant" : "Additional governing invariant"}</p>
-        <h3>{family.name}</h3>
-        <p className="vigil-repair-invariant">{family.invariant}</p>
+        <p className="vigil-evidence-kicker">{relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
+        <h3>{classificationClass.name}</h3>
+        {classificationClass.invariant
+          ? <p className="vigil-repair-invariant">{classificationClass.invariant}</p>
+          : <p className="vigil-case-empty">A class-level invariant has not yet been published for this failure class. The broader family invariant is not substituted here.</p>}
       </div>
-      <aside className="vigil-repair-metadata-panel" aria-label={`${family.name} invariant provenance`}>
+      <aside className="vigil-repair-metadata-panel" aria-label={`${classificationClass.name} invariant provenance`}>
         <p className="vigil-diagnostic-meta-label">Derived from</p>
         <dl>
           <Meta label="Relationship" value={relationship} />
-          <Meta label="Failure family" value={family.name} />
-          <Meta label="Family ID" value={family.family_id} mono />
-          <Meta label="Family code" value={family.family_code} mono />
+          <Meta label="Failure class" value={classificationClass.name} />
+          <Meta label="Class ID" value={classificationClass.class_id} mono />
+          <Meta label="Class code" value={classificationClass.class_code} mono />
+          <Meta label="Failure family" value={family?.name} />
+          <Meta label="Family ID" value={family?.family_id} mono />
           <Meta label="Taxonomy version" value={parsed.taxonomyVersion} mono />
         </dl>
       </aside>
     </article>)}
-    <p className="vigil-repair-boundary">This section identifies the governing invariant that must be restored for the classified failure. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which that invariant is instantiated or enforced.</p>
+    <p className="vigil-repair-boundary">This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced.</p>
   </div>;
 }
