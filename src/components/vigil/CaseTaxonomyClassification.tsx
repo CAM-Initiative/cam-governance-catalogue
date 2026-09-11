@@ -335,9 +335,9 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
-  if (!parsed.status) return <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving governing invariant from the VIGIL Failure Taxonomy…</p>;
-  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL taxonomy source is temporarily unavailable, so the governing invariant cannot be resolved. {taxonomy.message}</p>;
+  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical taxonomy classification.</p>;
+  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Failure Taxonomy…</p>;
+  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL taxonomy source is temporarily unavailable, so the class invariant cannot be resolved. {taxonomy.message}</p>;
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
