@@ -41,7 +41,7 @@ test("Incident Case File retains evidence context and VIGIL interpretation", asy
   assert.match(source, /VIGIL governance assessment/);
 });
 
-test("Incident Case File projects only taxonomy-derived invariant repair, not implementation state", async () => {
+test("Incident Case File projects taxonomy-derived class-invariant repair, not implementation state", async () => {
   const source = await caseFileSource();
 
   for (const obsolete of [
@@ -60,7 +60,7 @@ test("Incident Case File projects only taxonomy-derived invariant repair, not im
   assert.match(source, /diagnostic_provenance/);
 });
 
-test("deterministic Incident print and PDF projections include invariant Repair without legacy repair machinery", async () => {
+test("deterministic Incident print and PDF projections include class-invariant Repair without legacy repair machinery", async () => {
   const [report, printable] = await reportSources();
   const combined = `${report}\n${printable}`;
 
