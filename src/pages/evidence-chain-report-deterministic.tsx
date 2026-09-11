@@ -94,8 +94,7 @@ function mergeRecordDetail(indexRecord: VigilIndexRecord, detail: UnknownRecord)
 }
 
 async function detailedRecord(indexRecord: VigilIndexRecord) {
-  try { return mergeRecordDetail(indexRecord, await loadVigilRecordDetail(indexRecord.raw)); }
-  catch { return indexRecord; }
+  return mergeRecordDetail(indexRecord, await loadVigilRecordDetail(indexRecord.raw));
 }
 
 function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
