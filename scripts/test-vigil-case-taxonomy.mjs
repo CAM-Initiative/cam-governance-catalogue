@@ -14,6 +14,8 @@ const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTax
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
 const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
 const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
+const mainTs = await readFile(resolve(repoRoot, "src/main.tsx"), "utf8");
+const deterministicReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification, CaseTaxonomyRepair \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
@@ -149,16 +151,28 @@ assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
 assert.match(reportCss, /vigil-classification-layout/);
 assert.match(reportCss, /vigil-repair-invariant-card/);
-assert.match(reportCss, /grid-template-columns: 1fr !important/);
-assert.match(reportCss, /References should not silently switch to a larger\/smaller type scale/);
-assert.match(reportCss, /padding-inline: 0\.75cm !important/);
+assert.match(reportCss, /report-hero-meta/);
+assert.match(reportCss, /report-section-header/);
+assert.match(reportCss, /report-analysis-grid/);
+assert.match(reportCss, /report-reference-list/);
+assert.match(reportCss, /font-size: 9\.6pt !important/);
+assert.match(reportCss, /font-size: 7\.2pt !important/);
+assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
+assert.match(reportCss, /break-after: avoid-page/);
 
-assert.match(reportCss, /main\.container > footer \{\s*display: none !important;/s);
+assert.match(reportCss, /main\.container > footer,/);
 assert.doesNotMatch(printableReport, /deterministic print projection of the corresponding VIGIL Case File/);
 
-assert.match(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
-assert.match(polishCss, /break-before: auto !important/);
-assert.doesNotMatch(polishCss, /\.report-section \{[^}]*break-before: page;/s);
+assert.match(polishCss, /report print styling now lives exclusively/);
+assert.doesNotMatch(polishCss, /@page \{ margin: 1\.45cm 1\.35cm; \}/);
+assert.doesNotMatch(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
+
+assert.match(deterministicReport, /className="report-hero"/);
+assert.match(deterministicReport, /className="report-section-header"/);
+assert.match(deterministicReport, /className="report-analysis-grid"/);
+assert.match(deterministicReport, /className="report-reference-list"/);
+assert.doesNotMatch(deterministicReport, /const summary =/);
+assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
