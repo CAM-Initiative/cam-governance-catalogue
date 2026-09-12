@@ -398,7 +398,7 @@
   background: hsl(var(--card) / 0.33);
 }
 
-.vigil-case-file-page .vigil-classification-reading > section > .vigil-diagnostic-meta-label,
+.vigil-case-file-page .vigil-classification-reading > section > .vigil-substantive-label,
 .vigil-case-file-page .vigil-classification-metadata > .vigil-diagnostic-meta-label,
 .vigil-case-file-page .vigil-repair-metadata-panel > .vigil-diagnostic-meta-label {
   margin: 0 0 0.55rem !important;
@@ -406,7 +406,8 @@
 
 .vigil-case-file-page .vigil-classification-reading > section > p:last-child,
 .vigil-case-file-page .vigil-repair-invariant {
-  margin: 0;
+  margin: 0.62rem 0 0;
+  font-family: var(--app-font-sans);
   font-size: 0.98rem;
   line-height: 1.66;
   color: hsl(var(--foreground) / 0.9);
