@@ -56,30 +56,14 @@ assert.match(taxonomyPanel, /className="vigil-substantive-label">Why this Case F
 assert.doesNotMatch(taxonomyPanel, /vigil-diagnostic-meta-label">What this failure means/);
 assert.match(taxonomyPanel, /vigil-diagnostic-meta-label">Classification metadata/);
 
-for (const label of [
-  "Materialised consequence",
-  "Affected scope",
-  "Seriousness & persistence",
-  "Quantitative information",
-  "Evidentiary limits",
-  "Why this severity band",
-  "Factual basis",
-  "Governance significance",
-]) {
-  assert.match(caseFile, new RegExp('className="vigil-substantive-label">' + label.replace(/[.*+?^$()|[\]\\]/g, "\\for (const detail of [
-  "What this failure means",
-  "Canonical definition",
-  "Why this Case File maps here",
-  "Classification metadata",
-  "Failure family",
-  "Failure class",
-  "Taxonomy version",
-  "View canonical taxonomy source",
-]) {
-  assert.match(taxonomyPanel, new RegExp(detail), `missing selective taxonomy detail: ${detail}`);
-}
-")));
-}
+assert.match(caseFile, /className="vigil-substantive-label">Materialised consequence/);
+assert.match(caseFile, /className="vigil-substantive-label">Affected scope/);
+assert.match(caseFile, /className="vigil-substantive-label">Seriousness & persistence/);
+assert.match(caseFile, /className="vigil-substantive-label">Quantitative information/);
+assert.match(caseFile, /className="vigil-substantive-label">Evidentiary limits/);
+assert.match(caseFile, /className="vigil-substantive-label">Why this severity band/);
+assert.match(caseFile, /className="vigil-substantive-label">Factual basis/);
+assert.match(caseFile, /className="vigil-substantive-label">Governance significance/);
 assert.match(caseFile, /vigil-diagnostic-meta-label">Diagnostic provenance/);
 
 assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
