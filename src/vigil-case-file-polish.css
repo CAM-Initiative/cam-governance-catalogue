@@ -165,6 +165,17 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   color: hsl(var(--foreground) / 0.82);
 }
 
+.vigil-case-file-page .vigil-substantive-label {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: normal;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.82);
+}
+
 .vigil-case-file-page .vigil-evidence-what-happened p {
   margin: 0.62rem 0 0;
   font-family: var(--app-font-sans);
@@ -202,6 +213,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 .vigil-case-file-page .vigil-evidence-reading-stack > .vigil-evidence-column p {
   margin: 0.62rem 0 0;
+  font-family: var(--app-font-sans);
 }
 
 .vigil-case-file-page .vigil-evidence-metadata-panel > .vigil-diagnostic-meta-label {
@@ -241,13 +253,14 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   background: hsl(var(--card) / 0.33);
 }
 
-.vigil-case-file-page .vigil-diagnosis-reading-stack > section > .vigil-diagnostic-meta-label,
+.vigil-case-file-page .vigil-diagnosis-reading-stack > section > .vigil-substantive-label,
 .vigil-case-file-page .vigil-diagnosis-metadata-panel > .vigil-diagnostic-meta-label {
   margin: 0 0 0.55rem !important;
 }
 
 .vigil-case-file-page .vigil-diagnosis-reading-stack > section > p:last-child {
-  margin: 0;
+  margin: 0.62rem 0 0;
+  font-family: var(--app-font-sans);
   font-size: 0.98rem;
   line-height: 1.66;
   color: hsl(var(--foreground) / 0.9);
