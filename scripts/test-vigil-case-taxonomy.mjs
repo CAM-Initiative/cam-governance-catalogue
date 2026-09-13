@@ -120,17 +120,16 @@ for (const label of ["Source role", "Source residence", "Evidence modality", "Di
   assert.match(evidenceCard, new RegExp(label), `missing source-level evidence metadata: ${label}`);
 }
 
-assert.match(caseLibrary, /taxonomy_classification_summary/);
-assert.match(caseLibrary, /classification_status/);
-assert.match(caseLibrary, /class_id/);
-assert.match(caseLibrary, /return isTaxonomyClassified\(record\) \? "Classified" : "Unclassified"/);
-assert.match(caseLibrary, /failureTypeCounts\(records\)/);
-assert.match(caseLibrary, /canonicalComparisonKey\(failureTypeLabel\(record\)\)/);
-assert.match(caseLibrary, /Failure type/);
-assert.match(caseLibrary, /SortHeading label="Failure type"/);
+assert.match(caseLibrary, /taxonomyFailureTypeLabel/);
+assert.match(caseLibrary, /classificationStatusLabel\(record\)/);
+assert.match(caseLibrary, /classificationStatusCounts\(records\)/);
+assert.match(caseLibrary, /canonicalComparisonKey\(classificationStatusLabel\(record\)\)/);
+assert.match(caseLibrary, /Classification status/);
+assert.match(caseLibrary, /SortHeading label="Classification status" sortKey="classification"/);
+assert.match(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
+assert.doesNotMatch(caseLibrary, /Failure type/);
 assert.doesNotMatch(caseLibrary, /Taxonomy status/);
 assert.doesNotMatch(caseLibrary, /record\.failure_family/);
-assert.doesNotMatch(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 
 assert.match(caseFile, /loadTaxonomyReferenceTargets\(incident\.raw\)/);
 assert.match(caseFile, /taxonomyReferences\.map/);
@@ -183,6 +182,7 @@ assert.match(reportCss, /report-section-header/);
 assert.match(reportCss, /report-analysis-grid/);
 assert.match(reportCss, /report-reference-list/);
 assert.match(reportCss, /font-size: 11pt !important/);
+assert.match(reportCss, /font-size: 12pt !important/);
 assert.match(reportCss, /--report-paper: 0 0% 100%/);
 assert.match(reportCss, /--report-panel: 0 0% 100%/);
 assert.match(reportCss, /background: #fff !important/);

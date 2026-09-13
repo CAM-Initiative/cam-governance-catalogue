@@ -345,7 +345,7 @@ export default function VigilFailureTaxonomy() {
               <h1 id="taxonomy-heading">VIGIL AI Governance Failure Taxonomy</h1>
               <span className="cam-beta-chip">Beta</span>
             </div>
-            <p className="vigil-library-description">A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with explicit recognition criteria and classification boundaries.</p>
+            <p className="vigil-library-description">The maintained VIGIL Observatory reference for recurring AI governance and control-failure mechanisms, organised into versioned failure families and failure classes with explicit recognition criteria, exclusions and classification boundaries.</p>
             {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
               Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} failure classes
             </p> : null}

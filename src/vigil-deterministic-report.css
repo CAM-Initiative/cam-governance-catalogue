@@ -891,4 +891,101 @@
   }
 }
 
+/* Readability correction: keep the browser report legible and export PDFs at a conventional body-text scale. */
+@media screen {
+  .vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label):not(.vigil-evidence-kicker):not(.vigil-library-kicker):not(.vigil-diagnostic-meta-label),
+  .vigil-deterministic-report-host .report-section li,
+  .vigil-deterministic-report-host .report-section dd:not(.is-mono),
+  .vigil-deterministic-report-host .report-section summary,
+  .vigil-deterministic-report-host .report-section a,
+  .vigil-deterministic-report-host .report-reliance-notice p {
+    font-size: 1rem !important;
+    line-height: 1.62 !important;
+  }
+
+  .vigil-deterministic-report-host .report-label,
+  .vigil-deterministic-report-host .vigil-evidence-kicker,
+  .vigil-deterministic-report-host .vigil-library-kicker,
+  .vigil-deterministic-report-host .vigil-diagnostic-meta-label,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dt,
+  .vigil-deterministic-report-host .vigil-case-field dt {
+    font-size: 0.74rem !important;
+  }
+
+  .vigil-deterministic-report-host .report-substantive-label,
+  .vigil-deterministic-report-host .vigil-substantive-label,
+  .vigil-deterministic-report-host .vigil-evidence-what-happened h4,
+  .vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column h4,
+  .vigil-deterministic-report-host .vigil-evidence-limitations summary {
+    font-size: 0.9rem !important;
+  }
+
+  .vigil-deterministic-report-host .report-value,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
+  .vigil-deterministic-report-host .vigil-case-field dd,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list p,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list li {
+    font-size: 0.95rem !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-evidence-header h3,
+  .vigil-deterministic-report-host .vigil-classification-card-header h3,
+  .vigil-deterministic-report-host .vigil-repair-reading h3,
+  .vigil-deterministic-report-host .vigil-case-subheading h3 {
+    font-size: 1.12rem !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-source a {
+    font-size: 0.82rem !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-number {
+    font-size: 0.82rem !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-url {
+    font-size: 0.9rem !important;
+  }
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label):not(.vigil-evidence-kicker):not(.vigil-library-kicker):not(.vigil-diagnostic-meta-label),
+  .vigil-deterministic-report-host .report-section li,
+  .vigil-deterministic-report-host .report-section dd:not(.is-mono),
+  .vigil-deterministic-report-host .report-section summary,
+  .vigil-deterministic-report-host .report-section a,
+  .vigil-deterministic-report-host .report-reliance-notice p {
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .vigil-deterministic-report-host .report-label,
+  .vigil-deterministic-report-host .vigil-evidence-kicker,
+  .vigil-deterministic-report-host .vigil-library-kicker,
+  .vigil-deterministic-report-host .vigil-diagnostic-meta-label,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dt,
+  .vigil-deterministic-report-host .vigil-case-field dt {
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+  }
+
+  .vigil-deterministic-report-host .report-substantive-label,
+  .vigil-deterministic-report-host .vigil-substantive-label {
+    font-size: 11pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-value,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
+  .vigil-deterministic-report-host .vigil-case-field dd,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list p,
+  .vigil-deterministic-report-host .vigil-evidence-boundary-list li {
+    font-size: 11.5pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-number,
+  .vigil-deterministic-report-host .report-section .report-reference-url {
+    font-size: 10.5pt !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */
