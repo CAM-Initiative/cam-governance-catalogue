@@ -18,6 +18,7 @@ const nojekyllPath = join(docsDir, ".nojekyll");
 const vigilFallbackPath = join(docsDir, "data", "vigil-registry-fallback.json");
 const sitemapPath = join(docsDir, "sitemap.xml");
 const siteOrigin = "https://www.cam-initiative.org";
+const vigilTaxonomyRoot = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy";
 
 if (!existsSync(indexPath)) {
   throw new Error("GitHub Pages build did not produce docs/index.html");
@@ -67,24 +68,167 @@ function writeRoute(route, html) {
   writeFileSync(join(routeDir, "index.html"), html);
 }
 
+function conciseDescription(value, fallback) {
+  const text = String(value || fallback || "").replace(/\s+/g, " ").trim();
+  return text.length <= 190 ? text : `${text.slice(0, 187).trimEnd()}…`;
+}
+
+function listHtml(values) {
+  if (!Array.isArray(values) || !values.length) return "<p>None stated.</p>";
+  return `<ul>${values.map((value) => `<li>${escapeHtml(value)}</li>`).join("")}</ul>`;
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: "application/json,text/plain;q=0.9,*/*;q=0.8",
+      "User-Agent": "cam-governance-catalogue-pages-build",
+    },
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+  return response.json();
+}
+
 const staticRoutes = [
   ["/about", "About CAM Initiative", "About CAM Initiative and its open AI governance architecture."],
-  ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL governance datasets and registries."],
+  ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
-  ["/observatory", "VIGIL Observatory", "VIGIL documents AI incidents, governance failures, classifications, evidence and repair learning."],
-  ["/observatory/about", "About VIGIL Observatory", "About the VIGIL AI governance incident observatory."],
-  ["/observatory/cases", "VIGIL Case Files", "Browse documented AI incident investigations with evidence, classification, diagnosis and governance analysis."],
-  ["/observatory/incidents", "VIGIL Incidents", "Browse canonical VIGIL AI incident records."],
-  ["/observatory/knowledge-base", "VIGIL Knowledge Base", "VIGIL governance taxonomy, standards sources, policy and public knowledge resources."],
-  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL AI Governance Failure Taxonomy", "A structured taxonomy for classifying AI governance failure modes."],
-  ["/observatory/knowledge-base/standards-sources", "VIGIL Standards Sources", "External governance standards and source material used by VIGIL."],
-  ["/observatory/knowledge-base/external-requirements", "VIGIL External Requirements", "External governance requirements referenced by VIGIL."],
-  ["/observatory/knowledge-base/policy", "VIGIL Policy", "Policy information for the VIGIL Observatory."],
+  ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, preserving canonical Incident records, diagnosing failures, applying a maintained taxonomy and linking evidence to repair."],
+  ["/observatory/about", "About VIGIL Observatory", "How VIGIL Observatory preserves AI incident evidence, diagnoses governance and control failures, applies its maintained failure taxonomy and links evidence to accountable repair."],
+  ["/observatory/cases", "VIGIL Observatory Case Files", "Browse VIGIL Observatory AI incident investigations with evidence, diagnosis, classification, repair and references."],
+  ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
+  ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
+  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory AI Governance Failure Taxonomy", "The maintained VIGIL Observatory taxonomy for recurring AI governance and control-failure mechanisms, with versioned families, classes, recognition criteria, exclusions and classification boundaries."],
+  ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory Standards Sources", "External governance standards and source material used by VIGIL Observatory."],
+  ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],
+  ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
 ];
 
 for (const [route, title, description] of staticRoutes) {
   writeRoute(route, pageHtml({ route, title, description }));
+}
+
+let taxonomyFamilies = [];
+try {
+  const index = await fetchJson(`${vigilTaxonomyRoot}/VIGIL.FailureTaxonomy.Index.json`);
+  taxonomyFamilies = await Promise.all((index.families || []).map(async (entry) => ({
+    entry,
+    document: await fetchJson(`${vigilTaxonomyRoot}/${entry.file}`),
+  })));
+} catch (error) {
+  console.warn(`Unable to load the VIGIL Observatory Failure Taxonomy for static crawl routes: ${error instanceof Error ? error.message : error}`);
+}
+
+const taxonomyRootDir = join(docsDir, "observatory", "knowledge-base", "failure-taxonomy");
+if (existsSync(taxonomyRootDir)) {
+  for (const entry of readdirSync(taxonomyRootDir, { withFileTypes: true })) {
+    if (entry.isDirectory() && /^VIGIL-(?:FF|FC)-\d+$/.test(entry.name)) {
+      rmSync(join(taxonomyRootDir, entry.name), { recursive: true, force: true });
+    }
+  }
+}
+
+const taxonomyClassById = new Map();
+const taxonomyFamilyById = new Map();
+for (const { document } of taxonomyFamilies) {
+  const family = document?.family;
+  if (family?.family_id) taxonomyFamilyById.set(family.family_id, family);
+  for (const item of Array.isArray(document?.classes) ? document.classes : []) {
+    if (item?.class_id) taxonomyClassById.set(item.class_id, item);
+  }
+}
+
+function classificationDisplay(classId, familyId) {
+  if (!classId) return "not stated";
+  const item = taxonomyClassById.get(classId);
+  const resolvedFamilyId = item?.family_id || familyId;
+  const family = resolvedFamilyId ? taxonomyFamilyById.get(resolvedFamilyId) : undefined;
+  const classText = item?.name ? `${item.name} (${classId})` : classId;
+  return family ? `${classText} — ${family.name} (${resolvedFamilyId})` : classText;
+}
+
+function secondaryClassificationHtml(record) {
+  const ids = Array.isArray(record.secondary_class_ids) ? record.secondary_class_ids : [];
+  if (!ids.length) return "<dd>None recorded</dd>";
+  return `<dd><ul>${ids.map((classId) => `<li>${escapeHtml(classificationDisplay(classId))}</li>`).join("")}</ul></dd>`;
+}
+
+const taxonomyRoutes = [];
+for (const { document } of taxonomyFamilies) {
+  const family = document?.family;
+  if (!family?.family_id) continue;
+
+  const familyRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}`;
+  taxonomyRoutes.push(familyRoute);
+  const familyDescription = conciseDescription(
+    `VIGIL Observatory failure family ${family.family_id}: ${family.plain_english || family.definition || family.name}`,
+    "VIGIL Observatory AI governance failure family.",
+  );
+  const familyClasses = Array.isArray(document.classes) ? document.classes : [];
+  const familyBody = `<main data-static-crawl-fallback="vigil-taxonomy-family" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory · AI Governance Failure Taxonomy</p>
+    <h1>${escapeHtml(family.name || family.family_id)}</h1>
+    <p>${escapeHtml(family.plain_english || "")}</p>
+    <dl>
+      <dt>Immutable family ID</dt><dd>${escapeHtml(family.family_id)}</dd>
+      <dt>Semantic code</dt><dd>${escapeHtml(family.family_code || "not stated")}</dd>
+      <dt>Version</dt><dd>${escapeHtml(family.version || "not stated")}</dd>
+      <dt>Status</dt><dd>${escapeHtml(family.status || "not stated")}</dd>
+    </dl>
+    <h2>Technical definition</h2>
+    <p>${escapeHtml(family.definition || "Not stated.")}</p>
+    <h2>Classification boundary</h2>
+    <p><strong>Include when:</strong> ${escapeHtml(family.inclusion_rule || "Not stated.")}</p>
+    <p><strong>Exclude when:</strong> ${escapeHtml(family.exclusion_rule || "Not stated.")}</p>
+    <h2>Failure classes</h2>
+    <ul>${familyClasses.map((item) => `<li><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}">${escapeHtml(item.name || item.class_id)}</a> <code>${escapeHtml(item.class_id)}</code></li>`).join("")}</ul>
+  </main>`;
+  writeRoute(
+    familyRoute,
+    pageHtml({
+      route: familyRoute,
+      title: `${family.name || family.family_id} | VIGIL Observatory Failure Taxonomy | CAM Initiative`,
+      description: familyDescription,
+      body: familyBody,
+    }),
+  );
+
+  for (const item of familyClasses) {
+    if (!item?.class_id) continue;
+    const classRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}`;
+    taxonomyRoutes.push(classRoute);
+    const classDescription = conciseDescription(
+      `VIGIL Observatory failure class ${item.class_id}: ${item.plain_english || item.definition || item.name}`,
+      "VIGIL Observatory AI governance failure class.",
+    );
+    const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory · AI Governance Failure Taxonomy</p>
+      <h1>${escapeHtml(item.name || item.class_id)}</h1>
+      <p>${escapeHtml(item.plain_english || "")}</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>${escapeHtml(item.class_id)}</dd>
+        <dt>Semantic code</dt><dd>${escapeHtml(item.class_code || "not stated")}</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></dd>
+        <dt>Status</dt><dd>${escapeHtml(item.status || "not stated")}</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>${escapeHtml(item.definition || "Not stated.")}</p>
+      <h2>Recognition criteria</h2>
+      ${listHtml(item.recognition?.required_conditions)}
+      <h2>Exclusions</h2>
+      ${listHtml(item.exclusions)}
+    </main>`;
+    writeRoute(
+      classRoute,
+      pageHtml({
+        route: classRoute,
+        title: `${item.name || item.class_id} | VIGIL Observatory Failure Class | CAM Initiative`,
+        description: classDescription,
+        body: classBody,
+      }),
+    );
+  }
 }
 
 let incidentRecords = [];
@@ -107,13 +251,15 @@ if (existsSync(caseRoot)) {
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
   const title = `${record.id}: ${record.title || "VIGIL Incident"} | VIGIL Observatory`;
-  const description = record.summary || record.severity_assessment?.materialised_consequence || record.title || "VIGIL AI incident case file.";
+  const description = record.summary || record.severity_assessment?.materialised_consequence || record.title || "VIGIL Observatory AI incident case file.";
   const body = `<main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · ${escapeHtml(record.id)}</p>
     <h1>${escapeHtml(record.title || record.id)}</h1>
     <p>${escapeHtml(description)}</p>
     <dl>
-      <dt>Classification status</dt><dd>${escapeHtml(record.classification_status || "not stated")}</dd>
+      <dt>VIGIL classification status</dt><dd>${escapeHtml(record.classification_status || "not stated")}</dd>
+      <dt>VIGIL primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
+      <dt>VIGIL secondary classifications</dt>${secondaryClassificationHtml(record)}
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
@@ -124,6 +270,7 @@ for (const record of incidentRecords) {
 const sitemapRoutes = [
   "/",
   ...staticRoutes.map(([route]) => route),
+  ...taxonomyRoutes,
   ...incidentRecords.map((record) => `/observatory/cases/${encodeURIComponent(record.id)}`),
 ];
 
@@ -139,6 +286,7 @@ writeFileSync(sitemapPath, sitemap);
 
 console.log(`Prepared GitHub Pages SPA fallback: docs/404.html`);
 console.log(`Generated ${staticRoutes.length} crawlable static route entrypoints`);
-console.log(`Generated ${incidentRecords.length} crawlable VIGIL case entrypoints`);
+console.log(`Generated ${taxonomyRoutes.length} crawlable VIGIL Observatory taxonomy entrypoints`);
+console.log(`Generated ${incidentRecords.length} crawlable VIGIL Observatory case entrypoints`);
 console.log(`Generated sitemap with ${sitemapRoutes.length} URLs`);
 console.log("Ensured GitHub Pages bypasses Jekyll: docs/.nojekyll");

@@ -99,6 +99,20 @@ function compactIncidentRecord(record) {
   const primary = record.primary_classification && typeof record.primary_classification === "object"
     ? record.primary_classification
     : {};
+  const terms = searchTerms(record);
+  const primaryClassId = record.primary_class_id ?? primary.class_id;
+  const primaryFamilyId = record.primary_family_id ?? primary.family_id;
+  const directSecondary = Array.isArray(record.secondary_classifications)
+    ? record.secondary_classifications
+        .filter((item) => item && typeof item === "object")
+        .map((item) => item.class_id)
+        .filter((value) => typeof value === "string" && value.trim())
+    : [];
+  const secondaryClassIds = [...new Set(
+    (directSecondary.length ? directSecondary : terms.filter((value) => /^VIGIL-FC-\d+$/i.test(value)))
+      .filter((value) => value !== primaryClassId),
+  )];
+
   const projected = {
     id: record.id,
     record_type: record.record_type,
@@ -111,10 +125,11 @@ function compactIncidentRecord(record) {
     platform_or_vendor: record.platform_or_vendor,
     severity: record.severity,
     classification_status: record.classification_status,
-    primary_class_id: record.primary_class_id ?? primary.class_id,
-    primary_family_id: record.primary_family_id ?? primary.family_id,
+    primary_class_id: primaryClassId,
+    primary_family_id: primaryFamilyId,
+    secondary_class_ids: secondaryClassIds,
     occurred_from: record.occurred_from,
-    search_terms: searchTerms(record),
+    search_terms: terms,
     path: record.path,
     github_blob_url: record.github_blob_url,
     raw_url: record.raw_url,

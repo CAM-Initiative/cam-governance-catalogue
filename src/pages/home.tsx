@@ -94,7 +94,7 @@ function EvidenceRepairLoop() {
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
-          VIGIL is an evidence-to-repair system for AI governance. It captures safety incidents and governance failures, diagnoses the control breakdown, maps the evidence to required safeguards, and supports traceable runtime repair and verification.
+          VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory: a public incident-analysis system that preserves canonical Incident records, diagnoses governance and control failures, applies a maintained failure taxonomy, and links evidence to accountable repair and verification.
         </p>
         <p>
           Cases are grouped through the <strong className="font-semibold text-foreground">VIGIL AI Governance Failure Taxonomy</strong>, which separates broad failure families from specific failure classes so recurring mechanisms can be compared across systems and deployment contexts.
