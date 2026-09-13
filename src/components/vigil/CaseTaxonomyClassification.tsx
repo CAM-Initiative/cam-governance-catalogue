@@ -195,15 +195,15 @@ function ClassificationCard({
     <div className="vigil-classification-layout">
       <div className="vigil-classification-reading">
         {plainEnglish && <section>
-          <p className="vigil-diagnostic-meta-label">What this failure means</p>
+          <h4 className="vigil-substantive-label">What this failure means</h4>
           <p>{plainEnglish}</p>
         </section>}
         {technicalDefinition && <section>
-          <p className="vigil-diagnostic-meta-label">Canonical definition</p>
+          <h4 className="vigil-substantive-label">Canonical definition</h4>
           <p>{technicalDefinition}</p>
         </section>}
         {item.basis && <section>
-          <p className="vigil-diagnostic-meta-label">Why this Case File maps here</p>
+          <h4 className="vigil-substantive-label">Why this Case File maps here</h4>
           <p>{item.basis}</p>
         </section>}
       </div>

@@ -50,6 +50,22 @@ for (const detail of [
   assert.match(taxonomyPanel, new RegExp(detail), `missing selective taxonomy detail: ${detail}`);
 }
 
+assert.match(taxonomyPanel, /className="vigil-substantive-label">What this failure means/);
+assert.match(taxonomyPanel, /className="vigil-substantive-label">Canonical definition/);
+assert.match(taxonomyPanel, /className="vigil-substantive-label">Why this Case File maps here/);
+assert.doesNotMatch(taxonomyPanel, /vigil-diagnostic-meta-label">What this failure means/);
+assert.match(taxonomyPanel, /vigil-diagnostic-meta-label">Classification metadata/);
+
+assert.match(caseFile, /className="vigil-substantive-label">Materialised consequence/);
+assert.match(caseFile, /className="vigil-substantive-label">Affected scope/);
+assert.match(caseFile, /className="vigil-substantive-label">Seriousness & persistence/);
+assert.match(caseFile, /className="vigil-substantive-label">Quantitative information/);
+assert.match(caseFile, /className="vigil-substantive-label">Evidentiary limits/);
+assert.match(caseFile, /className="vigil-substantive-label">Why this severity band/);
+assert.match(caseFile, /className="vigil-substantive-label">Factual basis/);
+assert.match(caseFile, /className="vigil-substantive-label">Governance significance/);
+assert.match(caseFile, /vigil-diagnostic-meta-label">Diagnostic provenance/);
+
 assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
 assert.match(taxonomyPanel, /Governing class invariant/);
 assert.match(taxonomyPanel, /Additional class invariant/);
@@ -158,6 +174,10 @@ assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
 assert.match(reportCss, /vigil-classification-layout/);
 assert.match(reportCss, /vigil-repair-invariant-card/);
+assert.match(reportCss, /\.report-substantive-label,\s*\n\.vigil-deterministic-report-host \.vigil-substantive-label/);
+assert.match(reportCss, /\.vigil-classification-reading > section > p:last-child,[\s\S]*font-family: var\(--app-font-sans\) !important;/);
+assert.match(reportCss, /\.vigil-evidence-reading-stack > \.vigil-evidence-column p,[\s\S]*font-family: var\(--app-font-sans\) !important;/);
+assert.doesNotMatch(reportCss, /\.report-label,\s*\n\.vigil-deterministic-report-host \.report-substantive-label,/);
 assert.match(reportCss, /report-hero-meta/);
 assert.match(reportCss, /report-section-header/);
 assert.match(reportCss, /report-analysis-grid/);
@@ -182,6 +202,9 @@ assert.match(deterministicReport, /className="report-hero"/);
 assert.match(deterministicReport, /className="report-section-header"/);
 assert.match(deterministicReport, /className="report-analysis-grid"/);
 assert.match(deterministicReport, /className="report-reference-list"/);
+assert.match(deterministicReport, /className="report-substantive-label">Materialised consequence/);
+assert.match(deterministicReport, /className="report-substantive-label">Factual basis/);
+assert.match(deterministicReport, /className="report-label">Diagnostic provenance/);
 assert.doesNotMatch(deterministicReport, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
