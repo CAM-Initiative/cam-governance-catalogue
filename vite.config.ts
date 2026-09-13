@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+// Compile Tailwind during the production Vite build instead of loading the CDN runtime.
 import path from "path";
 
 export default defineConfig({
