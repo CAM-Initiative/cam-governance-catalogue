@@ -41,7 +41,6 @@
 .vigil-deterministic-report-host .report-kicker,
 .vigil-deterministic-report-host .report-section-number,
 .vigil-deterministic-report-host .report-label,
-.vigil-deterministic-report-host .report-substantive-label,
 .vigil-deterministic-report-host .vigil-evidence-kicker,
 .vigil-deterministic-report-host .vigil-library-kicker,
 .vigil-deterministic-report-host .vigil-diagnostic-meta-label,
@@ -127,11 +126,13 @@
 
 .vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label):not(.vigil-evidence-kicker):not(.vigil-library-kicker):not(.vigil-diagnostic-meta-label),
 .vigil-deterministic-report-host .report-section li,
-.vigil-deterministic-report-host .report-section dd,
+.vigil-deterministic-report-host .report-section dd:not(.is-mono),
 .vigil-deterministic-report-host .report-section summary,
 .vigil-deterministic-report-host .report-section a,
 .vigil-deterministic-report-host .report-reliance-notice p {
+  font-family: var(--app-font-sans) !important;
   font-size: 0.94rem;
+  font-weight: 400;
   line-height: 1.58;
 }
 
@@ -158,13 +159,16 @@
   color: hsl(var(--report-gold)) !important;
 }
 
-.vigil-deterministic-report-host .report-substantive-label {
+.vigil-deterministic-report-host .report-substantive-label,
+.vigil-deterministic-report-host .vigil-substantive-label {
   margin: 0;
-  color: hsl(var(--report-muted));
-  font-size: 0.72rem !important;
+  color: hsl(var(--report-ink) / 0.84);
+  font-family: var(--app-font-sans) !important;
+  font-size: 0.78rem !important;
   font-weight: 650;
-  letter-spacing: 0.055em;
+  letter-spacing: 0.01em;
   line-height: 1.35;
+  text-transform: none;
 }
 
 .vigil-deterministic-report-host .report-value,
@@ -223,6 +227,18 @@
 .vigil-deterministic-report-host .report-subpanel > p:last-child,
 .vigil-deterministic-report-host .report-intro-copy {
   margin: 0.48rem 0 0;
+}
+
+.vigil-deterministic-report-host .report-intro-copy,
+.vigil-deterministic-report-host .report-subpanel > p:last-child,
+.vigil-deterministic-report-host .vigil-evidence-what-happened p,
+.vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column p,
+.vigil-deterministic-report-host .vigil-classification-reading > section > p:last-child,
+.vigil-deterministic-report-host .vigil-repair-invariant,
+.vigil-deterministic-report-host .vigil-repair-boundary,
+.vigil-deterministic-report-host .report-reference-copy {
+  font-family: var(--app-font-sans) !important;
+  font-weight: 400;
 }
 
 .vigil-deterministic-report-host .report-intro {
@@ -727,7 +743,7 @@
 
   .vigil-deterministic-report-host .report-section p:not(.report-label):not(.report-substantive-label):not(.vigil-evidence-kicker):not(.vigil-library-kicker):not(.vigil-diagnostic-meta-label),
   .vigil-deterministic-report-host .report-section li,
-  .vigil-deterministic-report-host .report-section dd,
+  .vigil-deterministic-report-host .report-section dd:not(.is-mono),
   .vigil-deterministic-report-host .report-section summary,
   .vigil-deterministic-report-host .report-section a,
   .vigil-deterministic-report-host .report-reliance-notice p {
@@ -745,7 +761,8 @@
     line-height: 1.4 !important;
   }
 
-  .vigil-deterministic-report-host .report-substantive-label {
+  .vigil-deterministic-report-host .report-substantive-label,
+  .vigil-deterministic-report-host .vigil-substantive-label {
     font-size: 11pt !important;
     line-height: 1.4 !important;
   }

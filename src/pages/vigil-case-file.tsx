@@ -413,12 +413,12 @@ export default function VigilCaseFile() {
             <Field label="Assessed" value={severityAssessedOn} mono />
           </dl></article></div>
           <div className="vigil-severity-analysis-grid">
-            <section><p className="vigil-diagnostic-meta-label">Materialised consequence</p><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
-            <section><p className="vigil-diagnostic-meta-label">Affected scope</p><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
-            <section><p className="vigil-diagnostic-meta-label">Seriousness & persistence</p><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
-            <section><p className="vigil-diagnostic-meta-label">Quantitative information</p><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
-            <section><p className="vigil-diagnostic-meta-label">Evidentiary limits</p><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
-            <section><p className="vigil-diagnostic-meta-label">Why this severity band</p><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
+            <section><h4 className="vigil-substantive-label">Materialised consequence</h4><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
+            <section><h4 className="vigil-substantive-label">Affected scope</h4><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
+            <section><h4 className="vigil-substantive-label">Seriousness & persistence</h4><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
+            <section><h4 className="vigil-substantive-label">Quantitative information</h4><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
+            <section><h4 className="vigil-substantive-label">Evidentiary limits</h4><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
+            <section><h4 className="vigil-substantive-label">Why this severity band</h4><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
           </div>
         </section>
 
@@ -428,8 +428,8 @@ export default function VigilCaseFile() {
 
           <div className="vigil-diagnosis-analysis-layout">
             <div className="vigil-diagnosis-reading-stack">
-              <section><p className="vigil-diagnostic-meta-label">Factual basis</p><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><p className="vigil-diagnostic-meta-label">Governance significance</p><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+              <section><h4 className="vigil-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section><h4 className="vigil-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
             </div>
             <aside className="vigil-diagnosis-metadata-panel" aria-label="Diagnostic metadata">
               <p className="vigil-diagnostic-meta-label">Diagnostic provenance</p>

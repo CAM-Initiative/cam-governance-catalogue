@@ -301,7 +301,7 @@ export default function EvidenceChainReportDeterministic() {
       <div className="report-flow">
         <Stage number="01" label="Observation">
           {affectedSystems.length > 0 && <section className="report-panel report-affected-systems">
-            <p className="report-substantive-label">Affected systems</p>
+            <h4 className="report-substantive-label">Affected systems</h4>
             <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
               <dl className="report-metadata-grid report-metadata-grid--2">
                 <Field label="Provider / platform" value={system.provider} />
@@ -321,19 +321,19 @@ export default function EvidenceChainReportDeterministic() {
         {incident ? <article className="report-diagnosis">
           <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-panel report-severity-assessment">
-            <p className="report-substantive-label">Occurrence-level severity</p>
+            <h4 className="report-substantive-label">Occurrence-level severity</h4>
             <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
             <div className="report-analysis-grid">
-              <section className="report-subpanel"><p className="report-substantive-label">Materialised consequence</p><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><p className="report-substantive-label">Affected scope</p><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><p className="report-substantive-label">Seriousness & persistence</p><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><p className="report-substantive-label">Quantitative information</p><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><p className="report-substantive-label">Evidentiary limits</p><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><p className="report-substantive-label">Why this severity band</p><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Materialised consequence</h4><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Affected scope</h4><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Seriousness & persistence</h4><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Quantitative information</h4><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Evidentiary limits</h4><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Why this severity band</h4><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
             </div>
           </section>
           <div className="report-split-layout">
-            <div className="report-stack"><section className="report-subpanel"><p className="report-substantive-label">Factual basis</p><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><p className="report-substantive-label">Governance significance</p><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
+            <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
             <aside className="report-metadata-panel"><p className="report-label">Diagnostic provenance</p><dl className="report-metadata-grid"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Diagnosed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
           </div>
           {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the diagnosis</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
