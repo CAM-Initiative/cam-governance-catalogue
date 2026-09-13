@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Synthetic Conversational Turn-State Coordination Failure | VIGIL Observatory Failure Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory failure class VIGIL-FC-000056: Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational fl…" />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000056/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Synthetic Conversational Turn-State Coordination Failure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000056: Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational fl…" />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000056/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Synthetic Conversational Turn-State Coordination Failure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000056: Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational fl…" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-uusHtFHG.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-qyKHFQbi.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory · AI Governance Failure Taxonomy</p>
+      <h1>Synthetic Conversational Turn-State Coordination Failure</h1>
+      <p>Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational floor breaks down.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000056</dd>
+        <dt>Semantic code</dt><dd>SYNTHETIC_CONVERSATIONAL_TURN_STATE_COORDINATION_FAILURE</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0006">Work-State Continuity Integrity Failures</a> <code>VIGIL-FF-0006</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which two or more synthetic agents participating in the same conversational interaction do not maintain or use sufficient shared turn-state, speaker-state, or conversational-floor state to determine when another participant is speaking, has yielded, is awaiting a response, or should receive the next turn, causing materially incoherent turn allocation or continuation.</p>
+      <h2>Recognition criteria</h2>
+      <ul><li>Two or more synthetic participants are participating in the same conversational context.</li><li>Coherent continuation requires coordination of speaker identity, active-turn state, turn completion, yielding, or next-speaker allocation.</li><li>One or more synthetic participants fail to recognise or act on the relevant shared turn state.</li><li>The failure produces repeated answers, simultaneous or colliding responses, inappropriate interruption, inappropriate silence, or another material conversational-floor coordination breakdown.</li></ul>
+      <h2>Exclusions</h2>
+      <ul><li>A single synthetic participant gives an incorrect or irrelevant answer while turn allocation remains coherent.</li><li>Ordinary network or inference latency delays a response without losing or corrupting turn state.</li><li>The primary failure is loss of prior conversational content or persona continuity rather than allocation of the current conversational floor.</li><li>Simultaneous output is intentional and supported by the interaction design.</li><li>An authorised reviewer cannot access audiovisual evidence of an otherwise bounded event; evidence accessibility is classified separately.</li></ul>
+    </main></div>
+  </body>
+</html>
