@@ -170,7 +170,7 @@ export default function VigilCases() {
                 </label>
 
                 <label className="vigil-family-select">
-                  <span>Classification</span>
+                  <span>Classification status</span>
                   <select value={classification} onChange={(event) => setClassification(event.target.value)}>
                     <option value="">All statuses ({records.length})</option>
                     {classificationStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
@@ -190,7 +190,7 @@ export default function VigilCases() {
             <section className="vigil-case-table" aria-label="AI Incident Case Files">
               <div className="vigil-case-table-head">
                 <SortHeading label="Incident" sortKey="id" sort={sort} onSort={updateSort} />
-                <SortHeading label="Classification" sortKey="classification" sort={sort} onSort={updateSort} />
+                <SortHeading label="Classification status" sortKey="classification" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
@@ -207,7 +207,7 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Classification"><VigilStatusChip value={classificationStatusLabel(record)} /></CaseCell>
+                        <CaseCell label="Classification status"><span className="vigil-case-table-text">{classificationStatusLabel(record)}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
