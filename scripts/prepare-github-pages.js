@@ -99,7 +99,7 @@ const staticRoutes = [
   ["/observatory/cases", "VIGIL Observatory Case Files", "Browse VIGIL Observatory AI incident investigations with evidence, diagnosis, classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
-  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory AI Governance Failure Taxonomy", "The maintained VIGIL Observatory taxonomy for recurring AI governance and control-failure mechanisms, with versioned families, classes, recognition criteria, exclusions and classification boundaries."],
+  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Failure Taxonomy", "The maintained VIGIL Failure Taxonomy for recurring AI governance and control-failure mechanisms, with versioned families, classes, recognition criteria, exclusions and classification boundaries."],
   ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory Standards Sources", "External governance standards and source material used by VIGIL Observatory."],
   ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],
   ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
@@ -167,7 +167,7 @@ for (const { document } of taxonomyFamilies) {
   );
   const familyClasses = Array.isArray(document.classes) ? document.classes : [];
   const familyBody = `<main data-static-crawl-fallback="vigil-taxonomy-family" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
-    <p>VIGIL Observatory · AI Governance Failure Taxonomy</p>
+    <p>VIGIL Observatory · VIGIL Failure Taxonomy</p>
     <h1>${escapeHtml(family.name || family.family_id)}</h1>
     <p>${escapeHtml(family.plain_english || "")}</p>
     <dl>
@@ -203,7 +203,7 @@ for (const { document } of taxonomyFamilies) {
       "VIGIL Observatory AI governance failure class.",
     );
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
-      <p>VIGIL Observatory · AI Governance Failure Taxonomy</p>
+      <p>VIGIL Observatory · VIGIL Failure Taxonomy</p>
       <h1>${escapeHtml(item.name || item.class_id)}</h1>
       <p>${escapeHtml(item.plain_english || "")}</p>
       <dl>
