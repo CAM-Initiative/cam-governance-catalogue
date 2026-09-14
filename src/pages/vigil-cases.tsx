@@ -21,7 +21,7 @@ type SortState = { key: SortKey; direction: SortDirection };
 type ClassificationStatusCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
-const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, SU: 5 };
+const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, SU: 6 };
 
 function compactId(id: string) {
   return id.replace(/^VIGIL-(?:\d{4}-)?/i, "");
