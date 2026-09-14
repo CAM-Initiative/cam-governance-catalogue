@@ -1,4 +1,4 @@
-/* Refinements for the VIGIL AI Governance Failure Taxonomy manual navigation. */
+/* Refinements for the VIGIL Failure Taxonomy manual navigation. */
 
 .vigil-taxonomy-manual-layout.is-contents-collapsed {
   grid-template-columns: 3.25rem minmax(0, 1fr);
