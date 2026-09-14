@@ -5,7 +5,6 @@ import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -239,11 +238,6 @@ function formatGeneratedAt(value: string) {
 function Field({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
   if (!value) return null;
   return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
-}
-
-function StatusField({ label, value }: { label: string; value?: string }) {
-  if (!value) return null;
-  return <div className="vigil-case-field"><dt>{label}</dt><dd><VigilStatusChip value={value} /></dd></div>;
 }
 
 function Section({ id, number, title, description, children }: { id: string; number?: string; title: string; description: string; children: ReactNode }) {
@@ -519,7 +513,7 @@ export default function VigilCaseFile() {
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <StatusField label="Classification" value={classification} />
+          <Field label="Failure type" value={classification} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
