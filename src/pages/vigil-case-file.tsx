@@ -5,6 +5,7 @@ import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -223,6 +224,7 @@ function severityDisplay(value?: string) {
     S2: "High",
     S3: "Moderate",
     S4: "Low",
+    S5: "No downstream harm",
     SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
@@ -509,7 +511,9 @@ export default function VigilCaseFile() {
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Failure type" value={family} />
+          {family === "Exemplar"
+            ? <div className="vigil-case-field"><dt>Classification</dt><dd><VigilStatusChip value="Exemplar" /></dd></div>
+            : <Field label="Classification" value={family} />}
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
