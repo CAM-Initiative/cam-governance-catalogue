@@ -363,6 +363,7 @@ export default function VigilCaseFile() {
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const isExemplar = incident ? firstText(incident.raw, ["classification_role", "taxonomy_classification.classification_role"]) === "successful-invariant" : false;
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
@@ -512,6 +513,7 @@ export default function VigilCaseFile() {
     <header className="vigil-case-file-hero vigil-case-file-hero-v4">
       <div className="vigil-case-file-title-block">
         <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
+        {isExemplar && <div className="vigil-exemplar-badge" role="status" aria-label="Successful invariant exemplar">Exemplar</div>}
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
