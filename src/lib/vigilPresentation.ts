@@ -116,6 +116,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     severity: record.severity ?? record.severity_assessment,
     classification: {
       status: record.classification_status,
+      role: record.classification_role,
       classId: record.primary_class_id,
       familyId: record.primary_family_id,
     },
