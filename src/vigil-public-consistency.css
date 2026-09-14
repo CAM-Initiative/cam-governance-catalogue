@@ -49,7 +49,7 @@
   color: hsl(var(--muted-foreground));
 }
 
-/* Three Knowledge Base collections now read as one coherent row. The Datasets
+/* Knowledge Base collections use a balanced three-column grid. The Datasets
  * surface exposes the same external-governance baseline as one wide bundle. */
 .vigil-knowledge-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
