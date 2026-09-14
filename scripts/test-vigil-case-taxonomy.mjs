@@ -50,9 +50,9 @@ for (const detail of [
   assert.match(taxonomyPanel, new RegExp(detail), `missing selective taxonomy detail: ${detail}`);
 }
 
-assert.match(taxonomyPanel, /className="vigil-substantive-label">What this failure means/);
+assert.match(taxonomyPanel, /exemplar \? "Failure boundary this exemplar tests" : "What this failure means"/);
 assert.match(taxonomyPanel, /className="vigil-substantive-label">Canonical definition/);
-assert.match(taxonomyPanel, /className="vigil-substantive-label">Why this Case File maps here/);
+assert.match(taxonomyPanel, /exemplar \? "Why this Case File is an exemplar" : "Why this Case File maps here"/);
 assert.doesNotMatch(taxonomyPanel, /vigil-diagnostic-meta-label">What this failure means/);
 assert.match(taxonomyPanel, /vigil-diagnostic-meta-label">Classification metadata/);
 
@@ -124,8 +124,9 @@ assert.match(caseLibrary, /taxonomyFailureTypeLabel/);
 assert.match(caseLibrary, /classificationStatusLabel\(record\)/);
 assert.match(caseLibrary, /classificationStatusCounts\(records\)/);
 assert.match(caseLibrary, /canonicalComparisonKey\(classificationStatusLabel\(record\)\)/);
-assert.match(caseLibrary, /Classification status/);
-assert.match(caseLibrary, /SortHeading label="Classification status" sortKey="classification"/);
+assert.match(caseLibrary, />Classification<\/span>/);
+assert.match(caseLibrary, /SortHeading label="Classification" sortKey="classification"/);
+assert.match(caseLibrary, /VigilStatusChip value=\{classificationStatusLabel\(record\)\}/);
 assert.match(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 assert.doesNotMatch(caseLibrary, /Failure type/);
 assert.doesNotMatch(caseLibrary, /Taxonomy status/);
@@ -142,7 +143,9 @@ assert.match(caseFile, /reference\.taxonomyVersion/);
 assert.doesNotMatch(caseFile, /vigil-case-file-summary/);
 assert.match(taxonomyClassification, /dataset\.sourceRoot/);
 assert.match(taxonomyClassification, /indexEntry\.file/);
-assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only"/);
+assert.match(taxonomyClassification, /relationship: "primary" \| "secondary" \| "family-only" \| "exemplar"/);
+assert.match(taxonomyClassification, /successful-invariant/);
+assert.match(taxonomyClassification, /return "Exemplar"/);
 assert.match(taxonomyClassification, /classification-disputed/);
 assert.match(taxonomyClassification, /requires-human-review/);
 
@@ -208,7 +211,7 @@ assert.match(deterministicReport, /className="report-hero"/);
 assert.match(deterministicReport, /className="report-section-header"/);
 assert.match(deterministicReport, /className="report-analysis-grid"/);
 assert.match(deterministicReport, /className="report-reference-list"/);
-assert.match(deterministicReport, /className="report-substantive-label">Materialised consequence/);
+assert.match(deterministicReport, /className="report-substantive-label">Observed occurrence \/ downstream consequence/);
 assert.match(deterministicReport, /className="report-substantive-label">Factual basis/);
 assert.match(deterministicReport, /className="report-label">Diagnostic provenance/);
 assert.doesNotMatch(deterministicReport, /const summary =/);
