@@ -9,7 +9,7 @@ import {
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
 
-const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference.pdf";
+const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
@@ -195,8 +195,8 @@ export default function Datasets() {
 
           <DatasetCard
             eyebrow="VIGIL Observatory"
-            title="AI Governance Failure Taxonomy"
-            description="Generated full-reference PDF for the canonical VIGIL Observatory failure taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
+            title="VIGIL Failure Taxonomy"
+            description="Generated full-reference PDF for the canonical VIGIL Failure Taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
             status={taxonomyStatus}
             beta
             onDownload={downloadTaxonomyPublication}
