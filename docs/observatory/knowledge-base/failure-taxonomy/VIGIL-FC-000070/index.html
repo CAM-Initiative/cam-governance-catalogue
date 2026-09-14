@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Safe-Exit Persistence Failure | VIGIL Observatory Failure Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory failure class VIGIL-FC-000070: The system keeps searching and acting after the task no longer has a credible safe completion route, instead of stopping, asking for clari…" />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000070/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Safe-Exit Persistence Failure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000070: The system keeps searching and acting after the task no longer has a credible safe completion route, instead of stopping, asking for clari…" />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000070/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Safe-Exit Persistence Failure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000070: The system keeps searching and acting after the task no longer has a credible safe completion route, instead of stopping, asking for clari…" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-uusHtFHG.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-qyKHFQbi.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory · AI Governance Failure Taxonomy</p>
+      <h1>Safe-Exit Persistence Failure</h1>
+      <p>The system keeps searching and acting after the task no longer has a credible safe completion route, instead of stopping, asking for clarification, escalating, or failing cleanly.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000070</dd>
+        <dt>Semantic code</dt><dd>SAFE_EXIT_PERSISTENCE_FAILURE</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0012">Objective Pursuit Integrity Failures</a> <code>VIGIL-FF-0012</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which an objective-directed system continues material reasoning, tool use, delegation, resource expenditure, or strategy search after available evidence indicates that the task is broken, corrupted, unsatisfiable, or lacks a feasible and admissible completion pathway under the current constraints, without obtaining new information, changed constraints, or another adequate basis that justifies continued pursuit.</p>
+      <h2>Recognition criteria</h2>
+      <ul><li>The system has an operative task or objective and is materially pursuing completion.</li><li>Available evidence indicates that the task is broken, corrupted, unsatisfiable, or lacks a feasible and admissible completion pathway under the current constraints, or that continued pursuit requires a materially changed basis.</li><li>A proportionate next state would be to stop, report failure, request clarification, await changed conditions, escalate, or otherwise enter a bounded safe-exit state unless a fresh basis for continuation is established.</li><li>No adequate fresh basis for continuation is established, yet the system continues material reasoning, tool use, delegation, resource expenditure, or strategy search toward completion.</li><li>The continued pursuit materially increases resource use, search breadth, scope pressure, boundary pressure, or exposure to increasingly risky alternatives relative to a bounded safe exit.</li></ul>
+      <h2>Exclusions</h2>
+      <ul><li>Bounded retry, exploration, or additional reasoning while a feasible and admissible solution remains reasonably available and applicable constraints are preserved.</li><li>Continuation after new information, changed constraints, explicit clarification, or independently valid authority establishes a materially new basis for pursuit.</li><li>Long task duration, persistence, planning, or repeated attempts alone without evidence that a valid safe-exit condition has been reached.</li><li>A defined governance control is available and applicable but simply fails to activate when its trigger occurs; assess Required Control Non-Activation where that mechanism is sufficient.</li><li>The system selects an unauthorised pathway while an otherwise feasible task remains available, without evidence that it should have transitioned to a safe-exit state; assess the applicable authority-boundary class.</li></ul>
+    </main></div>
+  </body>
+</html>
