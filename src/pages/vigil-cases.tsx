@@ -141,7 +141,7 @@ export default function VigilCases() {
           <section className="vigil-library-shell" aria-labelledby="case-files-heading">
             <header className="vigil-library-header">
               <div>
-                <p className="vigil-library-kicker">VIGIL AI Incident investigations</p>
+                <p className="vigil-library-kicker">VIGIL Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
                 <p className="vigil-library-description">Browse documented AI Incidents, newest first, then open an investigation through the five-stage Observation, Diagnosis, Classification, Repair and References model.</p>
               </div>
