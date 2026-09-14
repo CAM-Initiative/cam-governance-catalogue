@@ -9,6 +9,7 @@ import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 type ClassificationStatus =
   | "classified"
+  | "exemplar"
   | "provisionally-classified"
   | "classification-disputed"
   | "requires-human-review"
@@ -133,6 +134,7 @@ function resolveClassification(dataset: FailureTaxonomyDataset, reference: Class
 function statusLabel(status?: ClassificationStatus) {
   switch (status) {
     case "classified": return "Classified";
+    case "exemplar": return "Exemplar";
     case "provisionally-classified": return "Provisionally classified";
     case "classification-disputed": return "Classification disputed";
     case "requires-human-review": return "Requires human review";
@@ -185,8 +187,10 @@ function ClassificationCard({
   const title = classificationClass?.name ?? family?.name ?? "Canonical taxonomy mapping";
   const technicalDefinition = classificationClass?.definition ?? family?.definition;
   const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
+  const isExemplar = status === "exemplar";
 
   return <article className="vigil-classification-card">
+    {isExemplar && <p className="vigil-case-empty">This Case File is attached to the Failure Class as a successful-invariant exemplar. It demonstrates the governing invariant holding under relevant failure pressure and is not failure-occurrence evidence.</p>}
     <header className="vigil-classification-card-header">
       <p className="vigil-evidence-kicker">{label}</p>
       <h3>{title}</h3>
@@ -195,15 +199,15 @@ function ClassificationCard({
     <div className="vigil-classification-layout">
       <div className="vigil-classification-reading">
         {plainEnglish && <section>
-          <h4 className="vigil-substantive-label">What this failure means</h4>
+          <h4 className="vigil-substantive-label">{isExemplar ? "Failure class boundary" : "What this failure means"}</h4>
           <p>{plainEnglish}</p>
         </section>}
         {technicalDefinition && <section>
-          <h4 className="vigil-substantive-label">Canonical definition</h4>
+          <h4 className="vigil-substantive-label">{isExemplar ? "Canonical failure definition" : "Canonical definition"}</h4>
           <p>{technicalDefinition}</p>
         </section>}
         {item.basis && <section>
-          <h4 className="vigil-substantive-label">Why this Case File maps here</h4>
+          <h4 className="vigil-substantive-label">{isExemplar ? "Why this Case File is an exemplar" : "Why this Case File maps here"}</h4>
           <p>{item.basis}</p>
         </section>}
       </div>
@@ -268,7 +272,7 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
-  const renderPrimary = parsed.status === "classified" || parsed.status === "provisionally-classified" || parsed.status === "classification-disputed";
+  const renderPrimary = parsed.status === "classified" || parsed.status === "provisionally-classified" || parsed.status === "classification-disputed" || parsed.status === "exemplar";
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
     <ExplicitClassificationState parsed={parsed} primary={primary} />
@@ -279,10 +283,10 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 
     <ClassificationCard
       item={primary}
-      label={parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+      label={parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : parsed.status === "exemplar" ? "Invariant exemplar" : "Primary structural mechanism"}
       status={parsed.status}
       taxonomyVersion={parsed.taxonomyVersion}
-      relationship="Primary"
+      relationship={parsed.status === "exemplar" ? "Successful invariant" : "Primary"}
     />
 
     {secondaries.length > 0 && <section className="vigil-secondary-classifications">
@@ -342,13 +346,14 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
   const invariants = governingClassInvariants(primary, secondaries);
+  const isExemplar = parsed.status === "exemplar";
 
   if (!invariants.length) return <p className="vigil-case-empty">No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
     {invariants.map(({ family, class: classificationClass, relationship }) => <article key={classificationClass.class_id} className="vigil-repair-invariant-card">
       <div className="vigil-repair-reading">
-        <p className="vigil-evidence-kicker">{relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
+        <p className="vigil-evidence-kicker">{isExemplar && relationship === "Primary" ? "Demonstrated class invariant" : relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
         <h3>{classificationClass.name}</h3>
         {classificationClass.invariant
           ? <p className="vigil-repair-invariant">{classificationClass.invariant}</p>
@@ -367,6 +372,6 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </dl>
       </aside>
     </article>)}
-    <p className="vigil-repair-boundary">This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced.</p>
+    <p className="vigil-repair-boundary">{isExemplar ? "This exemplar demonstrates the class-level governing invariant holding under the evidenced pressure; it is not a repair target or failure occurrence. " : "This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. "}Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced.</p>
   </div>;
 }
