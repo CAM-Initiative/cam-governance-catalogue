@@ -53,6 +53,7 @@
  * surface exposes the same external-governance baseline as one wide bundle. */
 .vigil-knowledge-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
 }
 
 .vigil-knowledge-grid.vigil-dataset-grid {
