@@ -167,7 +167,7 @@ for (const { document } of taxonomyFamilies) {
   );
   const familyClasses = Array.isArray(document.classes) ? document.classes : [];
   const familyBody = `<main data-static-crawl-fallback="vigil-taxonomy-family" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
-    <p>VIGIL Observatory · VIGIL Failure Taxonomy</p>
+    <p>VIGIL Failure Taxonomy</p>
     <h1>${escapeHtml(family.name || family.family_id)}</h1>
     <p>${escapeHtml(family.plain_english || "")}</p>
     <dl>
@@ -203,7 +203,7 @@ for (const { document } of taxonomyFamilies) {
       "VIGIL Observatory AI governance failure class.",
     );
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
-      <p>VIGIL Observatory · VIGIL Failure Taxonomy</p>
+      <p>VIGIL Failure Taxonomy</p>
       <h1>${escapeHtml(item.name || item.class_id)}</h1>
       <p>${escapeHtml(item.plain_english || "")}</p>
       <dl>
