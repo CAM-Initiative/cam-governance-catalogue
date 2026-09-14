@@ -13,6 +13,21 @@ test("Explore AI governance rail keeps a readable typography floor", async () =>
   assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
 });
 
+test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
+  const [entrypoint, pages] = await Promise.all([
+    read("src/index.html"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(entrypoint, /property="og:site_name" content="CAM Initiative"/);
+  assert.match(entrypoint, /"@type": "WebSite"/);
+  assert.match(entrypoint, /"name": "CAM Initiative"/);
+  assert.match(pages, /canonicalRoute = route === "\/observatory\/incidents" \? "\/observatory\/cases" : route/);
+  assert.match(pages, /filter\(\(route\) => route !== "\/observatory\/incidents"\)/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
+  assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
+});
+
 test("Explore AI Governance identifies Case Files as the VIGIL AI incident database", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
   assert.match(rail, /title: "Case Files"/);
