@@ -88,21 +88,47 @@ function ConnectionIcon({ icon }: { icon: string }) {
 function EvidenceRepairLoop() {
   return (
     <section className="home-rail-section" aria-labelledby="evidence-repair-heading">
-      <SectionLabel>VIGIL: Evidence to Repair</SectionLabel>
+      <SectionLabel>VIGIL: Evidence to Invariant</SectionLabel>
       <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        Turn real-world AI failures into evidence for accountable repair.
+        Turn real-world AI failures into durable governance invariants.
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
-          VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory: a public incident-analysis system that preserves canonical Incident records, diagnoses governance and control failures, applies a maintained failure taxonomy, and links evidence to accountable repair and verification.
+          VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair and invariant-definition layer. It preserves incidents and governance-relevant evidence, diagnoses recurring failure mechanisms through the <strong className="font-semibold text-foreground">VIGIL AI Governance Failure Taxonomy</strong>, and translates those mechanisms into evidence-backed invariants for accountable repair and verification.
         </p>
         <p>
-          Cases are grouped through the <strong className="font-semibold text-foreground">VIGIL AI Governance Failure Taxonomy</strong>, which separates broad failure families from specific failure classes so recurring mechanisms can be compared across systems and deployment contexts.
+          VIGIL&apos;s role is not only to document what went wrong, but to identify the constraint that should continue to hold across models, deployments and future system changes.
         </p>
       </div>
       <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
         Explore VIGIL
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+      </a>
+    </section>
+  );
+}
+
+function CaelestisRuntimeLoop() {
+  return (
+    <section className="home-rail-section" aria-labelledby="caelestis-runtime-heading">
+      <SectionLabel>CAELESTIS: Invariant to Runtime</SectionLabel>
+      <h2 id="caelestis-runtime-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+        Place and compose invariants in the AI runtime governance stack.
+      </h2>
+      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+        <p>
+          CAELESTIS is the CAM Initiative&apos;s runtime governance architecture. It places safety, alignment and governance invariants into the operational stack, defining where constraints apply across delegated authority, system behaviour, monitoring, containment, assurance and incident response.
+        </p>
+        <p>
+          Where VIGIL asks <strong className="font-semibold text-foreground">what must remain invariant</strong>, CAELESTIS asks <strong className="font-semibold text-foreground">where that invariant belongs in the runtime and how it composes with other constraints</strong>.
+        </p>
+        <p className="font-mono text-sm uppercase tracking-[0.08em] text-cam-gold">
+          Evidence → Failure mechanism → Invariant → Runtime placement → Verification
+        </p>
+      </div>
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noreferrer">
+        Explore CAELESTIS
+        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
       </a>
     </section>
   );
@@ -211,7 +237,7 @@ export default function Home() {
                 <img src={heroImages.vigil} alt="" className="home-identity-image" />
               </a>
             </div>
-            <p className="home-identity-tagline">Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.</p>
+            <p className="home-identity-tagline">Diagnosing failure. Defining invariants. Governing the runtime. Verifying repair.</p>
           </motion.div>
         </section>
 
@@ -224,18 +250,22 @@ export default function Home() {
             <div className="home-main-copy">
               <section className="home-about-section" aria-labelledby="home-about-heading">
                 <SectionLabel>CAM Initiative</SectionLabel>
-                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Open AI governance infrastructure for understanding systems and making failure visible.</h2>
+                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Open safety and alignment infrastructure for AI runtime governance.</h2>
                 <div className="space-y-5 text-[17px] leading-relaxed text-foreground/80 md:text-lg">
                   <p>
-                    The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
+                    The CAM Initiative develops a runtime governance framework for AI safety and alignment. It connects real-world evidence, failure diagnosis and governance requirements to durable operational constraints.
                   </p>
                   <p>
-                    It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
+                    <strong className="font-semibold text-foreground">VIGIL</strong> identifies recurring failure mechanisms and defines evidence-backed invariants. <strong className="font-semibold text-foreground">CAELESTIS</strong> places those invariants into a layered runtime governance stack so authority, behaviour, monitoring, containment, assurance and repair can be governed during system operation.
+                  </p>
+                  <p>
+                    Together they form an evidence-to-runtime loop: failures reveal what must remain invariant; the runtime architecture determines where and how those constraints are applied; subsequent evidence tests whether the repair holds.
                   </p>
                 </div>
               </section>
 
               <EvidenceRepairLoop />
+              <CaelestisRuntimeLoop />
               <DatasetsPanel />
               <PolicyPapersPanel />
               <ConnectPanel />
