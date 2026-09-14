@@ -148,7 +148,7 @@ assert.match(taxonomyClassification, /requires-human-review/);
 
 // Dataset downloads use canonical VIGIL main only.
 assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
-assert.match(datasets, /VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference\.pdf/);
+assert.match(datasets, /VIGIL-Failure-Taxonomy-Full-Reference\.pdf/);
 assert.match(datasets, /Download PDF reference/);
 assert.match(datasets, /const taxonomyStatus = state\.taxonomyVersion/);
 assert.match(datasets, /status=\{taxonomyStatus\}/);
@@ -156,7 +156,7 @@ assert.match(datasets, /: "Technical reference"/);
 assert.match(datasets, /downloadRemoteFile/);
 assert.match(datasets, /response\.blob\(\)/);
 assert.match(datasets, /anchor\.download = filename/);
-assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);
+assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);\nassert.match(datasets, /title="VIGIL Failure Taxonomy"/);\nassert.doesNotMatch(datasets, /title="AI Governance Failure Taxonomy"/);
 assert.match(datasets, /CAM-Initiative\/Vigil\/main\/vigil\/taxonomy\/generated/);
 assert.doesNotMatch(datasets, /agent\/bounded-incident-classification-provenance-repair/);
 assert.doesNotMatch(datasets, /Download HTML reference/);
