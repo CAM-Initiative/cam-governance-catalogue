@@ -207,7 +207,7 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Classification status"><span className="vigil-case-table-text">{classificationStatusLabel(record)}</span></CaseCell>
+                        <CaseCell label="Classification status">{classificationStatusLabel(record) === "Exemplar" ? <VigilStatusChip value="Exemplar" /> : <span className="vigil-case-table-text">{classificationStatusLabel(record)}</span>}</CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
