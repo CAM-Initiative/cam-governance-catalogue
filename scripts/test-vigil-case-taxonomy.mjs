@@ -178,6 +178,10 @@ assert.match(reportCss, /\.vigil-classification-reading > section > p:last-child
 assert.match(reportCss, /\.vigil-evidence-reading-stack > \.vigil-evidence-column p,[\s\S]*font-family: var\(--app-font-sans\) !important;/);
 assert.doesNotMatch(reportCss, /\.report-label,\s*\n\.vigil-deterministic-report-host \.report-substantive-label,/);
 assert.match(reportCss, /report-hero-meta/);
+assert.match(reportCss, /Publication hierarchy correction: narrative and analytical prose is the paper surface/);
+assert.match(reportCss, /\.report-metadata-panel,[\s\S]*\.vigil-evidence-metadata-panel,[\s\S]*background: hsl\(var\(--report-panel-strong\)\) !important;/);
+assert.match(reportCss, /\.report-subpanel,[\s\S]*\.vigil-evidence-reading-stack > \.vigil-evidence-column,[\s\S]*background: hsl\(var\(--report-paper\)\) !important;/);
+assert.match(reportCss, /@media print \{[\s\S]*background: #f1f1ee !important;/);
 assert.match(reportCss, /report-section-header/);
 assert.match(reportCss, /report-analysis-grid/);
 assert.match(reportCss, /report-reference-list/);
