@@ -279,7 +279,7 @@ for (const record of incidentRecords) {
     <h1>${escapeHtml(record.title || record.id)}</h1>
     <p>${escapeHtml(description)}</p>
     <dl>
-      <dt>VIGIL classification status</dt><dd>${escapeHtml(record.classification_status || "not stated")}</dd>
+      <dt>VIGIL classification status</dt><dd>${escapeHtml(record.classification_role === "successful-invariant" ? "Exemplar" : (record.classification_status || "not stated"))}</dd>
       <dt>VIGIL primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
       <dt>VIGIL secondary classifications</dt>${secondaryClassificationHtml(record)}
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
