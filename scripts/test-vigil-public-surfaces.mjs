@@ -13,6 +13,21 @@ test("Explore AI governance rail keeps a readable typography floor", async () =>
   assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
 });
 
+test("Explore AI Governance identifies Case Files as the VIGIL AI incident database", async () => {
+  const rail = await read("src/components/ExploreGovernanceRail.tsx");
+  assert.match(rail, /title: "Case Files"/);
+  assert.match(rail, /subtitle: "VIGIL AI incident database"/);
+  assert.match(rail, /Canonical VIGIL Incident investigations/);
+});
+
+test("VIGIL Knowledge Base exposes VIGIL Case Files and a Datasets collection", async () => {
+  const hub = await read("src/pages/vigil-knowledge-hub.tsx");
+  assert.match(hub, /title="VIGIL Case Files"/);
+  assert.match(hub, /href="\/datasets"[\s\S]*title="Datasets"/);
+  assert.match(hub, /actionLabel="Open datasets"/);
+  assert.match(hub, /downloadable datasets/);
+});
+
 test("homepage presents the VIGIL Failure Taxonomy as a first-class diagnosis surface", async () => {
   const home = await read("src/pages/home.tsx");
   assert.match(home, /VIGIL Observatory · Evidence/);
