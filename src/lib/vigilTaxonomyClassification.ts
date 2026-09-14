@@ -3,6 +3,7 @@ import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 export type TaxonomyClassificationStatus =
   | "classified"
+  | "exemplar"
   | "provisionally-classified"
   | "classification-disputed"
   | "requires-human-review"
@@ -54,6 +55,8 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
     const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
     if (record.record_type === "incident") {
       if (status === "classified" || status === "provisionally-classified") return "Classified";
+  if (status === "exemplar") return "Exemplar";
+      if (status === "exemplar") return "Exemplar";
       if (status === "classification-disputed") return "Classification disputed";
       if (status === "requires-human-review") return "Requires human review";
       return "Unclassified";
@@ -140,7 +143,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
 
   const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
   const incidentPrimary = isObject(classification.primary_classification) ? classification.primary_classification : undefined;
-  if (["classified", "provisionally-classified", "classification-disputed"].includes(status ?? "") && incidentPrimary) {
+  if (["classified", "provisionally-classified", "classification-disputed", "exemplar"].includes(status ?? "") && incidentPrimary) {
     add("primary", incidentPrimary, incidentPrimary);
   } else if (status === "classified") {
     add("primary", classification.primary_family, classification.primary_class);
