@@ -21,7 +21,7 @@ const taxonomyPrinciples = [
 
 const knowledgeSurfaces = [
   ["Case Files", "Evidence-centred Incident investigations organised through Observation, Diagnosis, Classification, Repair and References."],
-  ["AI Governance Failure Taxonomy", "The technical reference that defines failure families and failure classes used to compare recurring governance mechanisms across systems and incidents."],
+  ["VIGIL Failure Taxonomy", "The technical reference that defines failure families and failure classes used to compare recurring governance mechanisms across systems and incidents."],
   ["AI Governance Standards", "A compliance-oriented reference baseline of laws, standards, frameworks and technical guidance relevant to AI governance obligations and controls."],
   ["Policy", "Public-interest policy papers and submissions that translate evidence and governance analysis into institutional and regulatory proposals."],
 ];
@@ -52,8 +52,8 @@ export default function VigilAbout() {
     </section>
 
     <section className="vigil-about-section" aria-labelledby="vigil-taxonomy-heading">
-      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">AI governance failure taxonomy</p><h2 id="vigil-taxonomy-heading">Failure families organise the landscape. Failure classes identify the mechanism.</h2></div>
-      <p className="vigil-about-record-intro">The <strong>VIGIL AI Governance Failure Taxonomy</strong> is the maintained classification reference used by VIGIL Observatory. It is deliberately hierarchical and evidence-grounded: broad failure families provide stable structural organisation, while individual failure classes describe specific repeatable governance and control-failure mechanisms with explicit recognition criteria, exclusions and classification boundaries.</p>
+      <div className="vigil-about-section-heading"><p className="vigil-library-kicker">VIGIL Failure Taxonomy</p><h2 id="vigil-taxonomy-heading">Failure families organise the landscape. Failure classes identify the mechanism.</h2></div>
+      <p className="vigil-about-record-intro">The <strong>VIGIL Failure Taxonomy</strong> is the maintained classification reference used by VIGIL Observatory. It is deliberately hierarchical and evidence-grounded: broad failure families provide stable structural organisation, while individual failure classes describe specific repeatable governance and control-failure mechanisms with explicit recognition criteria, exclusions and classification boundaries.</p>
       <div className="vigil-about-boundary-grid">
         {taxonomyPrinciples.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
       </div>
