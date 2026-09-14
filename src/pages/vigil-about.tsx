@@ -58,7 +58,7 @@ export default function VigilAbout() {
         {taxonomyPrinciples.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
       </div>
       <p className="vigil-about-note"><strong>Classification boundary:</strong> VIGIL Observatory distinguishes source terminology from VIGIL classification. Terms used by providers, media, researchers or other third parties remain source descriptions unless explicitly identified as a VIGIL Observatory classification.</p>
-      <p className="vigil-about-note">Taxonomy classification is interpretive. It does not by itself establish legal liability, regulatory status, enforcement authority or final incident truth. Those claims require their own evidence and authority.</p>
+      <p className="vigil-about-note"><strong>Use and authority:</strong> VIGIL Observatory classifications are analytical determinations of governance failure mechanisms. They may inform legal, regulatory, contractual, technical or institutional analysis. VIGIL Observatory does not presently exercise recognised adjudicative, judicial or regulatory authority, so a classification does not by itself create binding legal effect. That institutional boundary does not prevent VIGIL Observatory from analysing or classifying mechanisms that bear on disputed legal or governance questions.</p>
       <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy">
         Browse the taxonomy <ArrowRight aria-hidden="true" />
       </Link>
