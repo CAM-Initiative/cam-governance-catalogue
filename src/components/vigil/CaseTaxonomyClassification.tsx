@@ -216,7 +216,7 @@ function ClassificationCard({
         <p className="vigil-diagnostic-meta-label">Classification metadata</p>
         <dl>
           <Meta label="Status" value={statusLabel(status)} />
-          <Meta label="Relationship" value={relationship} />
+          <Meta label="Relationship" value={isExemplar && relationship === "Primary" ? "Successful invariant" : relationship} />
           <Meta label="Confidence" value={item.confidence} />
           <Meta label="Taxonomy version" value={taxonomyVersion} mono />
           <Meta label="Failure family" value={family?.name} />
