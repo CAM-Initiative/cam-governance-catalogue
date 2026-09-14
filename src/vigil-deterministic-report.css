@@ -988,4 +988,106 @@
   }
 }
 
+/* Publication hierarchy correction: narrative and analytical prose is the paper surface.
+   Shading is reserved for concise structured metadata so evidence remains visually primary. */
+.vigil-deterministic-report-host .report-panel,
+.vigil-deterministic-report-host .report-subpanel,
+.vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column,
+.vigil-deterministic-report-host .vigil-classification-reading > section,
+.vigil-deterministic-report-host .vigil-repair-reading,
+.vigil-deterministic-report-host .vigil-evidence-what-happened,
+.vigil-deterministic-report-host .vigil-evidence-limitations,
+.vigil-deterministic-report-host .vigil-repair-boundary {
+  background: hsl(var(--report-paper)) !important;
+}
+
+.vigil-deterministic-report-host .report-subpanel,
+.vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column,
+.vigil-deterministic-report-host .vigil-classification-reading > section,
+.vigil-deterministic-report-host .vigil-repair-reading {
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-metadata-panel,
+.vigil-deterministic-report-host .vigil-evidence-metadata-panel,
+.vigil-deterministic-report-host .vigil-classification-metadata,
+.vigil-deterministic-report-host .vigil-repair-metadata-panel,
+.vigil-deterministic-report-host .report-affected-systems,
+.vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
+  background: hsl(var(--report-panel-strong)) !important;
+  border: 1px solid hsl(var(--report-rule) / 0.72) !important;
+  border-radius: 0.45rem !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment {
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
+  margin-top: 0.7rem;
+  padding: 0.8rem 0.9rem;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-analysis-grid {
+  margin-top: 0.95rem;
+}
+
+.vigil-deterministic-report-host .report-affected-systems {
+  padding: 0.9rem 1rem !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-analysis-layout,
+.vigil-deterministic-report-host .vigil-classification-layout,
+.vigil-deterministic-report-host .vigil-repair-invariant-card {
+  align-items: start;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-reading-stack,
+.vigil-deterministic-report-host .vigil-classification-reading {
+  gap: 0.9rem !important;
+}
+
+.vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column + .vigil-evidence-column,
+.vigil-deterministic-report-host .vigil-classification-reading > section + section {
+  padding-top: 0.85rem !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.62) !important;
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-metadata-panel,
+  .vigil-deterministic-report-host .vigil-evidence-metadata-panel,
+  .vigil-deterministic-report-host .vigil-classification-metadata,
+  .vigil-deterministic-report-host .vigil-repair-metadata-panel,
+  .vigil-deterministic-report-host .report-affected-systems,
+  .vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
+    background: #f1f1ee !important;
+    border-color: #c9c9c3 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .vigil-deterministic-report-host .report-subpanel,
+  .vigil-deterministic-report-host .vigil-evidence-reading-stack > .vigil-evidence-column,
+  .vigil-deterministic-report-host .vigil-classification-reading > section,
+  .vigil-deterministic-report-host .vigil-repair-reading {
+    padding-top: 2.8mm !important;
+    padding-bottom: 2.8mm !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid,
+  .vigil-deterministic-report-host .report-affected-systems,
+  .vigil-deterministic-report-host .report-metadata-panel,
+  .vigil-deterministic-report-host .vigil-evidence-metadata-panel,
+  .vigil-deterministic-report-host .vigil-classification-metadata,
+  .vigil-deterministic-report-host .vigil-repair-metadata-panel {
+    padding: 3mm 3.4mm !important;
+    border-radius: 1.6mm !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */

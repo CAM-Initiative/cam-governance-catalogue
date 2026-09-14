@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowRight, BookOpen, Coffee, Download, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
 const HERO_IMAGES = {
@@ -88,22 +88,59 @@ function ConnectionIcon({ icon }: { icon: string }) {
 function EvidenceRepairLoop() {
   return (
     <section className="home-rail-section" aria-labelledby="evidence-repair-heading">
-      <SectionLabel>VIGIL: Evidence to Repair</SectionLabel>
+      <SectionLabel>VIGIL Observatory · Evidence</SectionLabel>
       <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        Turn real-world AI failures into evidence for accountable repair.
+        Preserve what happened and make the evidence inspectable.
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
-          VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory: a public incident-analysis system that preserves canonical Incident records, diagnoses governance and control failures, applies a maintained failure taxonomy, and links evidence to accountable repair and verification.
+          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It preserves canonical VIGIL Incidents, source-level evidence, occurrence-level diagnosis and traceable repair history.
         </p>
         <p>
-          Cases are grouped through the <strong className="font-semibold text-foreground">VIGIL AI Governance Failure Taxonomy</strong>, which separates broad failure families from specific failure classes so recurring mechanisms can be compared across systems and deployment contexts.
+          It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Diagnosis → Runtime Governance</strong>.
         </p>
       </div>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/about">
-        Explore VIGIL
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/cases">
+        Explore the Observatory
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </a>
+    </section>
+  );
+}
+
+function FailureTaxonomyPanel() {
+  return (
+    <section className="home-rail-section" aria-labelledby="failure-taxonomy-home-heading">
+      <SectionLabel>VIGIL Failure Taxonomy · Diagnosis</SectionLabel>
+      <h2 id="failure-taxonomy-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
+        VIGIL Failure Taxonomy
+      </h2>
+      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
+        <p>
+          A structured taxonomy of recurring AI governance failure mechanisms.
+        </p>
+        <p>
+          The VIGIL Failure Taxonomy groups evidence into Failure Families and selectable Failure Classes so recurring mechanisms can be diagnosed, compared across systems, mapped to standards and controls, and carried forward into repair design.
+        </p>
+        <p>
+          Together, <strong className="font-semibold text-foreground">VIGIL Observatory → VIGIL Failure Taxonomy → CAELESTIS</strong> connects real-world evidence to diagnosis and runtime governance constraints.
+        </p>
+      </div>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <a className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/failure-taxonomy">
+          Explore the Taxonomy
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
+        <a
+          className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground"
+          href="https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Download the PDF
+          <Download className="h-3.5 w-3.5" aria-hidden="true" />
+        </a>
+      </div>
     </section>
   );
 }
@@ -236,6 +273,7 @@ export default function Home() {
               </section>
 
               <EvidenceRepairLoop />
+              <FailureTaxonomyPanel />
               <DatasetsPanel />
               <PolicyPapersPanel />
               <ConnectPanel />

@@ -25,7 +25,7 @@ const maintainedLayers = [
     body: "Public Case Files, evidence-to-repair records, review provenance and traceable governance learning.",
   },
   {
-    label: "VIGIL AI Governance Failure Taxonomy",
+    label: "VIGIL Failure Taxonomy",
     eyebrow: "Failure classification",
     body: "A structured classification reference for recurring AI governance failure mechanisms, organised into broad failure families and more precise failure classes with recognition criteria and exclusion boundaries.",
   },

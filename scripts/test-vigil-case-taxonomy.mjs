@@ -148,7 +148,7 @@ assert.match(taxonomyClassification, /requires-human-review/);
 
 // Dataset downloads use canonical VIGIL main only.
 assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
-assert.match(datasets, /VIGIL-Observatory-AI-Governance-Failure-Taxonomy-Full-Reference\.pdf/);
+assert.match(datasets, /VIGIL-Failure-Taxonomy-Full-Reference\.pdf/);
 assert.match(datasets, /Download PDF reference/);
 assert.match(datasets, /const taxonomyStatus = state\.taxonomyVersion/);
 assert.match(datasets, /status=\{taxonomyStatus\}/);
@@ -157,6 +157,8 @@ assert.match(datasets, /downloadRemoteFile/);
 assert.match(datasets, /response\.blob\(\)/);
 assert.match(datasets, /anchor\.download = filename/);
 assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);
+assert.match(datasets, /title="VIGIL Failure Taxonomy"/);
+assert.doesNotMatch(datasets, /title="AI Governance Failure Taxonomy"/);
 assert.match(datasets, /CAM-Initiative\/Vigil\/main\/vigil\/taxonomy\/generated/);
 assert.doesNotMatch(datasets, /agent\/bounded-incident-classification-provenance-repair/);
 assert.doesNotMatch(datasets, /Download HTML reference/);
@@ -178,6 +180,10 @@ assert.match(reportCss, /\.vigil-classification-reading > section > p:last-child
 assert.match(reportCss, /\.vigil-evidence-reading-stack > \.vigil-evidence-column p,[\s\S]*font-family: var\(--app-font-sans\) !important;/);
 assert.doesNotMatch(reportCss, /\.report-label,\s*\n\.vigil-deterministic-report-host \.report-substantive-label,/);
 assert.match(reportCss, /report-hero-meta/);
+assert.match(reportCss, /Publication hierarchy correction: narrative and analytical prose is the paper surface/);
+assert.match(reportCss, /\.report-metadata-panel,[\s\S]*\.vigil-evidence-metadata-panel,[\s\S]*background: hsl\(var\(--report-panel-strong\)\) !important;/);
+assert.match(reportCss, /\.report-subpanel,[\s\S]*\.vigil-evidence-reading-stack > \.vigil-evidence-column,[\s\S]*background: hsl\(var\(--report-paper\)\) !important;/);
+assert.match(reportCss, /@media print \{[\s\S]*background: #f1f1ee !important;/);
 assert.match(reportCss, /report-section-header/);
 assert.match(reportCss, /report-analysis-grid/);
 assert.match(reportCss, /report-reference-list/);
