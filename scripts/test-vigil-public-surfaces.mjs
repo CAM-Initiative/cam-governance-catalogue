@@ -111,6 +111,36 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
+test("Case Files render successful-invariant relationships as Exemplar without failure semantics", async () => {
+  const [cases, caseFile, classification, taxonomyHelpers, report, pages] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/lib/vigilTaxonomyClassification.ts"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(cases, /VigilStatusChip value=\{classificationStatusLabel\(record\)\}/);
+  assert.match(caseFile, /StatusField label="Classification" value=\{classification\}/);
+  assert.match(taxonomyHelpers, /successful-invariant/);
+  assert.match(taxonomyHelpers, /return "Exemplar"/);
+  assert.match(classification, /successful invariant exemplar/i);
+  assert.match(classification, /not failure evidence/i);
+  assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
+  assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
+});
+
+test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
+  const [cases, caseFile, report] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+  ]);
+  assert.match(cases, /S5: 5/);
+  assert.match(caseFile, /S5: "No materialised harm"/);
+  assert.match(report, /S5: "No materialised harm"/);
+});
+
 test("historical identifiers do not become live retired-record links", async () => {
   const [caseFile, registry, presentation] = await Promise.all([read("src/pages/vigil-case-file.tsx"), read("src/lib/vigilRegistry.ts"), read("src/lib/vigilPresentation.ts")]);
   const combined = `${caseFile}\n${registry}\n${presentation}`;
