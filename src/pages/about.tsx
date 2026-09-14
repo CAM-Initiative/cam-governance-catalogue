@@ -22,7 +22,7 @@ const maintainedLayers = [
   {
     label: "VIGIL Observatory",
     eyebrow: "Evidence and diagnosis",
-    body: "Public Case Files, evidence-to-repair records, review provenance and traceable governance learning.",
+    body: "Evidence, diagnosis, failure classification, invariant definition, repair tracking, verification and traceable governance learning.",
   },
   {
     label: "VIGIL AI Governance Failure Taxonomy",
@@ -47,7 +47,7 @@ const maintainedLayers = [
   {
     label: "CAELESTIS Architecture Model",
     eyebrow: "Governance architecture · refactoring",
-    body: "The underlying governance architecture remains in active refactoring. The current public archival release is preserved through Zenodo while the website reference surface is being rebuilt.",
+    body: "Runtime governance architecture for placing and composing safety, alignment and governance invariants across delegated authority, system behaviour, monitoring, containment, assurance and incident response. The current public archival release is preserved through Zenodo while the website reference surface is being rebuilt.",
   },
 ];
 
@@ -92,7 +92,7 @@ export default function About() {
           <header className="public-reference-hero">
             <p className="public-reference-kicker">CAM Initiative</p>
             <h1>About the CAM Initiative</h1>
-            <p>The CAM Initiative is a registered business and Australian AI governance initiative operated by The Phoenix Covenant Pty Ltd. It develops and publishes open governance infrastructure for understanding AI systems, diagnosing governance failures, supporting compliance and translating evidence into accountable repair.</p>
+            <p>The CAM Initiative is a registered business and Australian AI governance initiative operated by The Phoenix Covenant Pty Ltd. It develops and publishes open safety and alignment infrastructure for AI runtime governance, connecting observed system failures, external governance requirements and operational architecture so that evidence can produce durable constraints rather than isolated lessons.</p>
           </header>
 
           <ReferenceSection number="01" eyebrow="Institutional context" title="Australian public-interest governance work">
@@ -102,10 +102,11 @@ export default function About() {
             </div>
           </ReferenceSection>
 
-          <ReferenceSection number="02" eyebrow="Purpose" title="Make governance obligations and system failure easier to see">
+          <ReferenceSection number="02" eyebrow="Purpose" title="Connect evidence to durable runtime constraints">
             <div className="public-reference-reading">
-              <p>The Initiative connects AI governance architecture, external governance requirements, evidence-to-repair methods, machine-readable reference data and public policy analysis.</p>
-              <p>VIGIL provides the empirical feedback layer: observed failures can be preserved as evidence, classified by mechanism, traced through governance response and revisited as systems and external requirements change.</p>
+              <p>The Initiative develops a safety and alignment runtime governance framework that connects AI governance architecture, external governance requirements, evidence-to-repair methods, machine-readable reference data and public policy analysis.</p>
+              <p>VIGIL provides the evidence, diagnosis, taxonomy and invariant-definition layer. CAELESTIS provides the runtime-placement and composition layer. Together they create a continuous evidence-to-runtime governance loop.</p>
+              <p>Evidence → Failure mechanism → Invariant → Runtime placement → Verification.</p>
             </div>
           </ReferenceSection>
 
