@@ -12,6 +12,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
+import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type ReportState =
   | { status: "loading" }
@@ -197,6 +198,7 @@ function severityDisplay(value?: string) {
     S2: "High",
     S3: "Moderate",
     S4: "Low",
+    S5: "No materialised harm",
     SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
@@ -273,6 +275,7 @@ export default function EvidenceChainReportDeterministic() {
   const diagnostic = diagnosticProvenance(incident);
   const title = incident?.title ?? "VIGIL Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
+  const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -292,6 +295,7 @@ export default function EvidenceChainReportDeterministic() {
         <h1 className="report-title">{title}</h1>
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
+          <Field label="Classification" value={classification} />
           <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
           <Field label="Updated" value={updated} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
@@ -324,7 +328,7 @@ export default function EvidenceChainReportDeterministic() {
             <h4 className="report-substantive-label">Occurrence-level severity</h4>
             <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
             <div className="report-analysis-grid">
-              <section className="report-subpanel"><h4 className="report-substantive-label">Materialised consequence</h4><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
+              <section className="report-subpanel"><h4 className="report-substantive-label">Observed occurrence / downstream consequence</h4><p>{severityMaterialisedConsequence ?? "A structured occurrence-consequence statement is not yet published for this Incident."}</p></section>
               <section className="report-subpanel"><h4 className="report-substantive-label">Affected scope</h4><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
               <section className="report-subpanel"><h4 className="report-substantive-label">Seriousness & persistence</h4><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
               <section className="report-subpanel"><h4 className="report-substantive-label">Quantitative information</h4><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
@@ -357,7 +361,7 @@ export default function EvidenceChainReportDeterministic() {
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy classification as the interactive Case File; the Repair section projects published failure-class invariants and does not substitute broader family invariants where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants and does not substitute broader family invariants where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;
