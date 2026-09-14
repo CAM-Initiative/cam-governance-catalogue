@@ -197,6 +197,7 @@ function severityDisplay(value?: string) {
     S2: "High",
     S3: "Moderate",
     S4: "Low",
+    S5: "No downstream harm",
     SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
