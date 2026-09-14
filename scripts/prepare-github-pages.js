@@ -308,7 +308,7 @@ if (incidentRecords.length) {
 }
 
 // Only publish change dates when a trustworthy page-level modification timestamp is available.
-// A build date is not a content modification date, so this sitemap intentionally omits <lastmod>.
+// A build date is not a content modification date, so this sitemap intentionally omits modification-date elements.
 const sitemapRoutes = [
   "/",
   ...staticRoutes.map(([route]) => route).filter((route) => route !== "/observatory/incidents"),
