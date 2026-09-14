@@ -97,7 +97,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse AI governance standards, documented VIGIL Case Files, the VIGIL Failure Taxonomy, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
+            <p>Browse AI governance standards, VIGIL Case Files, the VIGIL Failure Taxonomy, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -111,7 +111,7 @@ export default function VigilKnowledgeHub() {
             />
             <CollectionCard
               href="/observatory/cases"
-              title="Case Files"
+              title="VIGIL Case Files"
               description="Documented AI Incident investigations organised through Observation, Diagnosis, Classification, Repair and References, with record-local evidence and occurrence-level governance analysis."
               meta={caseFilesMeta}
               actionLabel="Browse case files"
@@ -123,6 +123,13 @@ export default function VigilKnowledgeHub() {
               meta={taxonomyMeta}
               chip="Beta"
               actionLabel="Browse taxonomy"
+            />
+            <CollectionCard
+              href="/datasets"
+              title="Datasets"
+              description="Downloadable VIGIL and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Failure Taxonomy publication."
+              meta="Machine-readable data and publication downloads"
+              actionLabel="Open datasets"
             />
             <CollectionCard
               href="/observatory/knowledge-base/policy"
