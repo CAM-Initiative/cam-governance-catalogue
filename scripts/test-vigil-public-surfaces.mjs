@@ -13,6 +13,31 @@ test("Explore AI governance rail keeps a readable typography floor", async () =>
   assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
 });
 
+test("homepage presents the VIGIL Failure Taxonomy as a first-class diagnosis surface", async () => {
+  const home = await read("src/pages/home.tsx");
+  assert.match(home, /VIGIL Observatory · Evidence/);
+  assert.match(home, /VIGIL Failure Taxonomy · Diagnosis/);
+  assert.match(home, /Evidence → Diagnosis → Runtime Governance/);
+  assert.match(home, /Explore the Taxonomy/);
+  assert.match(home, /Download the PDF/);
+  assert.match(home, /VIGIL Observatory → VIGIL Failure Taxonomy → CAELESTIS/);
+  assert.doesNotMatch(home, /VIGIL AI Governance Failure Taxonomy/);
+});
+
+test("public taxonomy naming uses VIGIL Failure Taxonomy", async () => {
+  const [taxonomy, aboutVigil, shell, hub, datasets] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/pages/vigil-about.tsx"),
+    read("src/components/layout/Shell.tsx"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/datasets.tsx"),
+  ]);
+  const publicSources = [taxonomy, aboutVigil, shell, hub, datasets].join("\n");
+  assert.match(taxonomy, /<h1 id="taxonomy-heading">VIGIL Failure Taxonomy<\/h1>/);
+  assert.match(shell, /label: "VIGIL Failure Taxonomy"/);
+  assert.doesNotMatch(publicSources, /VIGIL AI Governance Failure Taxonomy/);
+});
+
 test("failure taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
   const [taxonomy, shellCss] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
