@@ -103,6 +103,7 @@ function ManualContents({
   query,
   setQuery,
   activeFamilyId,
+  activeClassId,
   collapsed,
   setCollapsed,
 }: {
@@ -110,10 +111,22 @@ function ManualContents({
   query: string;
   setQuery: (value: string) => void;
   activeFamilyId?: string;
+  activeClassId?: string;
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
 }) {
   const [expandedFamilies, setExpandedFamilies] = useState<Set<string>>(() => new Set());
+
+  useEffect(() => {
+    if (!activeFamilyId || !activeClassId) return;
+    setExpandedFamilies((current) => {
+      if (current.has(activeFamilyId)) return current;
+      const next = new Set(current);
+      next.add(activeFamilyId);
+      return next;
+    });
+  }, [activeClassId, activeFamilyId]);
+
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const visible = families.map((document) => {
     if (!terms.length) return { document, classes: document.classes };
@@ -173,7 +186,7 @@ function ManualContents({
               </Link>
             </div>
             {expanded ? <ul id={`${familyId}-contents-classes`}>
-              {classes.map((item) => <li key={item.class_id}>
+              {classes.map((item) => <li key={item.class_id} className={item.class_id === activeClassId ? "is-active-class" : undefined}>
                 <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`} onClick={() => setQuery("")}>
                   {item.name}
                 </Link>
@@ -275,6 +288,29 @@ function ClassManualCard({
   </article>;
 }
 
+function ClassManualSection({
+  item,
+  parent,
+  classById,
+  caseFileExamples,
+}: {
+  item: FailureTaxonomyClass;
+  parent: FailureTaxonomyFamilyDocument;
+  classById: Map<string, FailureTaxonomyClass>;
+  caseFileExamples: CaseFileExampleMap;
+}) {
+  return <section className="vigil-taxonomy-single-class-view" aria-labelledby={`${item.class_id.toLowerCase()}-view-heading`}>
+    <div className="vigil-taxonomy-single-class-context">
+      <p>Failure class</p>
+      <Link href={`/observatory/knowledge-base/failure-taxonomy/${parent.family.family_id}`}>
+        View whole family · {parent.family.name}
+      </Link>
+    </div>
+    <h2 id={`${item.class_id.toLowerCase()}-view-heading`} className="sr-only">{item.name}</h2>
+    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} />
+  </section>;
+}
+
 function FamilyManualSection({
   document,
   classById,
@@ -372,6 +408,11 @@ export default function VigilFailureTaxonomy() {
     for (const document of families) for (const item of document.classes) map.set(item.class_id.toUpperCase(), document);
     return map;
   }, [families]);
+  const selectedClass = useMemo(() => {
+    if (!requestedId.toUpperCase().startsWith("VIGIL-FC-")) return undefined;
+    return classById.get(requestedId.toUpperCase());
+  }, [classById, requestedId]);
+
   const selectedFamily = useMemo(() => {
     if (!families.length) return undefined;
     if (requestedId) {
@@ -421,15 +462,21 @@ export default function VigilFailureTaxonomy() {
             query={query}
             setQuery={setQuery}
             activeFamilyId={selectedFamily.family.family_id}
+            activeClassId={selectedClass?.class_id}
             collapsed={contentsCollapsed}
             setCollapsed={setContentsCollapsed}
           />
           <div className="vigil-taxonomy-manual-document" aria-live="polite">
-            <FamilyManualSection
+            {selectedClass ? <ClassManualSection
+              item={selectedClass}
+              parent={selectedFamily}
+              classById={classById}
+              caseFileExamples={state.data.caseFileExamples.classes}
+            /> : <FamilyManualSection
               document={selectedFamily}
               classById={classById}
               caseFileExamples={state.data.caseFileExamples.classes}
-            />
+            />}
           </div>
         </div> : null}
       </section>
