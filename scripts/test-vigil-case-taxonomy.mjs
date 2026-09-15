@@ -16,6 +16,8 @@ const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts
 const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
 const mainTs = await readFile(resolve(repoRoot, "src/main.tsx"), "utf8");
 const deterministicReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8");
+const darkAppearanceCss = await readFile(resolve(repoRoot, "src/dark-appearance.css"), "utf8");
+const shell = await readFile(resolve(repoRoot, "src/components/layout/Shell.tsx"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification, CaseTaxonomyRepair \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
@@ -197,6 +199,11 @@ assert.match(reportCss, /font-size: 12pt !important/);
 assert.match(reportCss, /--report-paper: 0 0% 100%/);
 assert.match(reportCss, /--report-panel: 0 0% 100%/);
 assert.match(reportCss, /background: #fff !important/);
+assert.match(reportCss, /\.report-document \{[\s\S]*color-scheme: light;[\s\S]*background: hsl\(var\(--report-paper\)\)/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.site-header,[\s\S]*display: none !important;/);
+assert.match(shell, /className="site-header sticky/);
+assert.match(darkAppearanceCss, /\.site-header \{[\s\S]*background-color: hsl\(var\(--background\)\) !important;/);
+assert.doesNotMatch(darkAppearanceCss, /(?:^|\n)header \{/);
 assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
 assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
 assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
