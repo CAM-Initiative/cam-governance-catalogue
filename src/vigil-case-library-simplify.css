@@ -130,6 +130,69 @@
   background: hsl(var(--card) / 0.38);
 }
 
+.vigil-case-library-page .vigil-pagination {
+  gap: 0.4rem;
+  min-height: 58px;
+  padding: 0.7rem 0.9rem;
+  background: hsl(var(--card) / 0.28);
+}
+
+.vigil-case-library-page .vigil-pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.vigil-case-library-page .vigil-pagination button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0.32rem 0.5rem;
+  border-radius: 0.45rem;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.vigil-case-library-page .vigil-pagination-arrow {
+  padding-inline: 0.38rem;
+}
+
+.vigil-case-library-page .vigil-pagination-arrow svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 1.8;
+}
+
+.vigil-case-library-page .vigil-pagination-page.is-current {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  font-weight: 700;
+}
+
+.vigil-case-library-page .vigil-pagination button:not(:disabled):hover {
+  border-color: hsl(var(--primary) / 0.62);
+  background: hsl(var(--vigil-nav-active) / 0.42);
+}
+
+.vigil-case-library-page .vigil-pagination-page.is-current:hover {
+  background: hsl(var(--primary));
+}
+
+.vigil-case-library-page .vigil-pagination button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+.vigil-case-library-page .vigil-pagination-ellipsis {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 2rem;
+  color: hsl(var(--muted-foreground));
+}
+
 /* The Case File hero deliberately carries a restrained old-ticket cue: the metadata
    stub is separated by a perforation-style rule rather than a solid divider. */
 .vigil-case-file-page .vigil-case-meta-panel {
@@ -247,6 +310,27 @@
 .vigil-baseline-page .vigil-baseline-source-about {
   border-radius: 0.2rem;
   box-shadow: none;
+}
+
+@media (max-width: 540px) {
+  .vigil-case-library-page .vigil-pagination {
+    gap: 0.28rem;
+    padding-inline: 0.45rem;
+  }
+
+  .vigil-case-library-page .vigil-pagination-pages {
+    gap: 0.18rem;
+  }
+
+  .vigil-case-library-page .vigil-pagination button {
+    min-width: 1.85rem;
+    min-height: 1.85rem;
+    padding: 0.25rem 0.38rem;
+  }
+
+  .vigil-case-library-page .vigil-pagination-arrow.is-boundary {
+    display: none;
+  }
 }
 
 @media (max-width: 760px) {
