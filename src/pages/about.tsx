@@ -1,7 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Check, Copy } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
-import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 
 const citations = [
   {
@@ -83,11 +82,7 @@ function ReferenceSection({ number, eyebrow, title, children }: { number: string
 export default function About() {
   return <Shell>
     <main className="public-reference-page">
-      <div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-12">
-        <div className="home-sticky-governance public-reference-governance-rail">
-          <ExploreGovernanceRail />
-        </div>
-
+      <div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-11">
         <article className="public-reference-document">
           <header className="public-reference-hero">
             <p className="public-reference-kicker">CAM Initiative</p>
