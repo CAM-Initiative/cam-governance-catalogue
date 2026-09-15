@@ -22,7 +22,7 @@
 .vigil-case-table-head,
 .vigil-case-table-row-link {
   display: grid;
-  grid-template-columns: minmax(520px, 1fr) minmax(120px, 150px) 28px;
+  grid-template-columns: minmax(520px, 1fr) minmax(130px, 170px) minmax(72px, 96px) 28px;
   gap: 0.8rem;
   align-items: center;
 }
