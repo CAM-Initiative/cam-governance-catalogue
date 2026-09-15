@@ -401,3 +401,12 @@
     flex-direction: column;
   }
 }
+
+/* Standard-source detail refinements consolidated into the standards layer. */
+.vigil-standard-file-page .vigil-standard-section-heading {
+  display: none;
+}
+
+.vigil-standard-file-page .vigil-standard-section-body {
+  padding-top: 0.9rem;
+}
