@@ -41,7 +41,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20">
-      <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/90 backdrop-blur-sm">
+      <header className="site-header sticky top-0 z-50 w-full border-b border-border/60 bg-background/90 backdrop-blur-sm">
         <div className="container mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <img

@@ -112,18 +112,22 @@ test("Case Files use one canonical Incident and retain the five substantive stag
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
-  const [cases, caseFile, classification, report, pages, sync] = await Promise.all([
+  const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("scripts/prepare-github-pages.js"),
     read("scripts/sync-vigil-records.mjs"),
+    read("src/vigil-ux-v4.css"),
+    read("src/vigil-case-file-polish.css"),
+    read("src/vigil-ux-v5.css"),
   ]);
-  assert.match(cases, /Successful invariant · system worked/);
-  assert.match(cases, /VigilStatusChip value="Exemplar"/);
   assert.match(cases, /is-exemplar/);
-  assert.match(caseFile, /const isExemplar =/);
+  assert.match(cases, /vigil-case-table-text/);
+  assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
+  assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
+  assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
   assert.match(caseFile, /The system worked as intended\./);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /Exemplar · successful invariant/);
@@ -132,6 +136,26 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
+  assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
+  assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
+  assert.match(casePolishCss, /display: grid !important/);
+  assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
+});
+
+test("CAM About and Privacy share the current readable public-page grammar", async () => {
+  const [about, privacy, referenceCss] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/pages/privacy.tsx"),
+    read("src/public-reference-pages.css"),
+  ]);
+  assert.doesNotMatch(about, /ExploreGovernanceRail|public-reference-governance-rail/);
+  assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
+  assert.match(referenceCss, /max-width: 1220px/);
+  assert.match(referenceCss, /\.public-reference-hero[\s\S]*border: 1px solid hsl\(var\(--border\)\)[\s\S]*border-radius: 0\.75rem/);
+  assert.match(referenceCss, /\.public-reference-hero > p:not\([\s\S]*font-size: 1\.125rem/);
+  assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
+  assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
+  assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
 });
 
 test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
@@ -150,6 +174,39 @@ test("historical identifiers do not become live retired-record links", async () 
   const combined = `${caseFile}\n${registry}\n${presentation}`;
   assert.doesNotMatch(combined, /failure-modes\/:recordId|observations\/:recordId|research\/:recordId/);
   assert.doesNotMatch(combined, /VIGIL-(?:\d{4}-)?(?:FM|OBS|RESEARCH)-/);
+});
+
+test("Failure Taxonomy pages project canonical linked Case Files without conflating successful exemplars", async () => {
+  const [taxonomyPage, taxonomyLoader, taxonomyCss, pages] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/lib/vigilFailureTaxonomy.ts"),
+    read("src/vigil-failure-taxonomy-refinements.css"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
+  assert.match(taxonomyLoader, /caseFileExamples: FailureTaxonomyCaseFileExamples/);
+  assert.match(taxonomyPage, /Linked Case Files/);
+  assert.match(taxonomyPage, /No classified failure Case Files are currently linked to this class/);
+  assert.match(taxonomyPage, /Successful invariant exemplars/);
+  assert.match(taxonomyPage, /item\.invariant_exemplars/);
+  assert.match(taxonomyPage, /\/observatory\/cases\/\$\{example\.incident_id\}/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-linked-cases/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-invariant-exemplars/);
+  assert.match(pages, /generated\/VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
+  assert.match(pages, /taxonomyCaseExamplesForClass/);
+  assert.match(pages, /Successful invariant exemplars/);
+  assert.doesNotMatch(taxonomyPage, /No classified failure Case Files are currently linked to this family/);
+  assert.doesNotMatch(pages, /No classified failure Case Files are currently linked to this family/);
+  assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
+  assert.match(taxonomyPage, /const selectedClass = useMemo/);
+  assert.match(taxonomyPage, /selectedClass \? <ClassManualSection/);
+  assert.match(taxonomyPage, /: <FamilyManualSection/);
+  assert.match(taxonomyPage, /View whole family/);
+  assert.match(taxonomyPage, /activeClassId=\{selectedClass\?\.class_id\}/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-manual-contents ul li\.is-active-class > a/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-single-class-view/);
+  assert.doesNotMatch(taxonomyPage, /Prior codes and aliases|Prior codes \/ aliases/);
+  assert.match(taxonomyLoader, /aliases\?: string\[\]/);
 });
 
 test("taxonomy and external-governance public systems remain intact", async () => {

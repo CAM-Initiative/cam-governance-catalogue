@@ -16,6 +16,8 @@ const vigilRegistry = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts
 const evidenceCard = await readFile(resolve(repoRoot, "src/components/vigil/EvidenceCard.tsx"), "utf8");
 const mainTs = await readFile(resolve(repoRoot, "src/main.tsx"), "utf8");
 const deterministicReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8");
+const darkAppearanceCss = await readFile(resolve(repoRoot, "src/dark-appearance.css"), "utf8");
+const shell = await readFile(resolve(repoRoot, "src/components/layout/Shell.tsx"), "utf8");
 
 assert.match(caseFile, /import \{ CaseTaxonomyClassification, CaseTaxonomyRepair \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
@@ -197,6 +199,14 @@ assert.match(reportCss, /font-size: 12pt !important/);
 assert.match(reportCss, /--report-paper: 0 0% 100%/);
 assert.match(reportCss, /--report-panel: 0 0% 100%/);
 assert.match(reportCss, /background: #fff !important/);
+assert.match(reportCss, /\.report-document \{[\s\S]*color-scheme: light;[\s\S]*--foreground: var\(--report-ink\);[\s\S]*--muted-foreground: var\(--report-muted\);[\s\S]*background: hsl\(var\(--report-paper\)\)/);
+assert.match(reportCss, /\.report-section p:not\([\s\S]*color: hsl\(var\(--report-ink\) \/ 0\.9\) !important;/);
+assert.match(reportCss, /\.report-exemplar-callout \{[\s\S]*background: hsl\(var\(--report-success-panel\)\)/);
+assert.match(reportCss, /@media print \{[\s\S]*\.report-exemplar-callout \{[\s\S]*background: #edf6ef !important;/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.site-header,[\s\S]*display: none !important;/);
+assert.match(shell, /className="site-header sticky/);
+assert.match(darkAppearanceCss, /\.site-header \{[\s\S]*background-color: hsl\(var\(--background\)\) !important;/);
+assert.doesNotMatch(darkAppearanceCss, /(?:^|\n)header \{/);
 assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
 assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
 assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
@@ -210,6 +220,10 @@ assert.doesNotMatch(polishCss, /@page \{ margin: 1\.45cm 1\.35cm; \}/);
 assert.doesNotMatch(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 
 assert.match(deterministicReport, /className="report-hero"/);
+assert.match(deterministicReport, /const isExemplar = classification === "Exemplar"/);
+assert.match(deterministicReport, /className="report-exemplar-callout"/);
+assert.match(deterministicReport, /The system worked as intended\./);
+assert.match(deterministicReport, /successful governance outcome, not a failure occurrence/);
 assert.match(deterministicReport, /className="report-section-header"/);
 assert.match(deterministicReport, /className="report-analysis-grid"/);
 assert.match(deterministicReport, /className="report-reference-list"/);

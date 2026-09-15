@@ -276,6 +276,7 @@ export default function EvidenceChainReportDeterministic() {
   const title = incident?.title ?? "VIGIL Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const isExemplar = classification === "Exemplar";
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -301,6 +302,13 @@ export default function EvidenceChainReportDeterministic() {
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
       </header>
+
+      {isExemplar && <section className="report-exemplar-callout" aria-labelledby="report-exemplar-heading">
+        <p className="report-exemplar-kicker">Successful invariant exemplar</p>
+        <h2 id="report-exemplar-heading">The system worked as intended.</h2>
+        <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
+        <p className="report-exemplar-boundary">This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure.</p>
+      </section>}
 
       <div className="report-flow">
         <Stage number="01" label="Observation">

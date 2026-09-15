@@ -109,8 +109,13 @@ for (const [route, title, description] of staticRoutes) {
 }
 
 let taxonomyFamilies = [];
+let taxonomyCaseFileExamples = { classes: {} };
 try {
-  const index = await fetchJson(`${vigilTaxonomyRoot}/VIGIL.FailureTaxonomy.Index.json`);
+  const [index, caseFileExamples] = await Promise.all([
+    fetchJson(`${vigilTaxonomyRoot}/VIGIL.FailureTaxonomy.Index.json`),
+    fetchJson(`${vigilTaxonomyRoot}/generated/VIGIL.FailureTaxonomy.CaseFileExamples.json`),
+  ]);
+  taxonomyCaseFileExamples = caseFileExamples && typeof caseFileExamples === "object" ? caseFileExamples : { classes: {} };
   taxonomyFamilies = await Promise.all((index.families || []).map(async (entry) => ({
     entry,
     document: await fetchJson(`${vigilTaxonomyRoot}/${entry.file}`),
@@ -176,6 +181,23 @@ function secondaryClassificationHtml(record) {
   return `<dd><ul>${ids.map((classId) => `<li>${escapeHtml(classificationDisplay(classId))}</li>`).join("")}</ul></dd>`;
 }
 
+function taxonomyCaseExamplesForClass(classId) {
+  const classes = taxonomyCaseFileExamples?.classes;
+  if (!classes || typeof classes !== "object") return [];
+  return Array.isArray(classes[classId]) ? classes[classId] : [];
+}
+
+function taxonomyCaseLinkHtml(example) {
+  const meta = [example.classification_role, example.classification_confidence ? `${example.classification_confidence} confidence` : ""]
+    .filter(Boolean)
+    .join(" · ");
+  return `<li><a href="/observatory/cases/${encodeURIComponent(example.incident_id)}"><code>${escapeHtml(example.incident_id)}</code> — ${escapeHtml(example.incident_title || example.incident_id)}</a>${meta ? ` <span>${escapeHtml(meta)}</span>` : ""}</li>`;
+}
+
+function taxonomyInvariantExemplarHtml(exemplar, classId) {
+  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Successful invariant · <a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
+}
+
 const taxonomyRoutes = [];
 for (const { document } of taxonomyFamilies) {
   const family = document?.family;
@@ -224,6 +246,8 @@ for (const { document } of taxonomyFamilies) {
       `VIGIL Observatory failure class ${item.class_id}: ${item.plain_english || item.definition || item.name}`,
       "VIGIL Observatory AI governance failure class.",
     );
+    const classCaseExamples = taxonomyCaseExamplesForClass(item.class_id);
+    const classInvariantExemplars = Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : [];
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Failure Taxonomy</p>
       <h1>${escapeHtml(item.name || item.class_id)}</h1>
@@ -240,6 +264,9 @@ for (const { document } of taxonomyFamilies) {
       ${listHtml(item.recognition?.required_conditions)}
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
+      <h2>Linked Case Files</h2>
+      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified failure Case Files are currently linked to this class.</p>"}
+      ${classInvariantExemplars.length ? `<h2>Successful invariant exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,

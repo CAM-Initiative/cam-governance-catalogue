@@ -39,6 +39,32 @@ export type FailureTaxonomyExternalReference = {
   evidence_note?: string;
 };
 
+export type FailureTaxonomyInvariantExemplar = {
+  exemplar_type: string;
+  exemplar_status?: string;
+  linked_incident_id: string;
+  title: string;
+  evidence_basis?: string;
+  invariant_demonstrated?: string;
+  success_basis?: string;
+  boundary_conditions?: string[];
+  provenance_note?: string;
+};
+
+export type FailureTaxonomyCaseFileExample = {
+  classification_basis?: string;
+  classification_confidence?: string;
+  classification_role?: string;
+  incident_id: string;
+  incident_title: string;
+};
+
+export type FailureTaxonomyCaseFileExamples = {
+  classes: Record<string, FailureTaxonomyCaseFileExample[]>;
+  generated_from?: string;
+  generated_notice?: string;
+};
+
 export type FailureTaxonomySubtype = {
   name: string;
   plain_english?: string;
@@ -68,6 +94,7 @@ export type FailureTaxonomyClass = {
   aliases?: string[];
   subtypes?: FailureTaxonomySubtype[];
   external_references?: FailureTaxonomyExternalReference[];
+  invariant_exemplars?: FailureTaxonomyInvariantExemplar[];
 };
 
 export type FailureTaxonomyFamily = {
@@ -103,6 +130,7 @@ export type FailureTaxonomyFamilyDocument = {
 export type FailureTaxonomyDataset = {
   index: FailureTaxonomyIndex;
   families: FailureTaxonomyFamilyDocument[];
+  caseFileExamples: FailureTaxonomyCaseFileExamples;
   sourceRoot: string;
   previewSource: boolean;
 };
@@ -117,6 +145,7 @@ const TAXONOMY_PATH = "vigil/taxonomy";
 const VIGIL_MAIN_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/${TAXONOMY_PATH}`;
 
 export const VIGIL_FAILURE_TAXONOMY_INDEX_URL = `${VIGIL_MAIN_TAXONOMY_ROOT}/VIGIL.FailureTaxonomy.Index.json`;
+export const VIGIL_FAILURE_TAXONOMY_CASE_FILE_EXAMPLES_URL = `${VIGIL_MAIN_TAXONOMY_ROOT}/generated/VIGIL.FailureTaxonomy.CaseFileExamples.json`;
 
 async function fetchJson<T>(url: string, fetcher: FetchLike) {
   const response = await fetcher(`${url}?v=${Date.now()}`, { cache: "no-store" });
@@ -141,7 +170,10 @@ export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Prom
 export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<FailureTaxonomyLoadResult<FailureTaxonomyDataset>> {
   const indexUrl = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
   try {
-    const index = await fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher);
+    const [index, caseFileExamples] = await Promise.all([
+      fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher),
+      fetchJson<FailureTaxonomyCaseFileExamples>(VIGIL_FAILURE_TAXONOMY_CASE_FILE_EXAMPLES_URL, fetcher),
+    ]);
     const families = await Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${VIGIL_MAIN_TAXONOMY_ROOT}/${entry.file}`, fetcher)));
     return {
       status: "ready",
@@ -149,6 +181,7 @@ export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<F
       data: {
         index,
         families,
+        caseFileExamples,
         sourceRoot: VIGIL_MAIN_TAXONOMY_ROOT,
         previewSource: false,
       },

@@ -357,7 +357,7 @@ export default function VigilCaseFile() {
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
-  const isExemplar = incident ? firstText(incident.raw, ["classification_role", "taxonomy_classification.classification_role"]) === "successful-invariant" : false;
+  const isExemplar = classification === "Exemplar";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
@@ -521,15 +521,15 @@ export default function VigilCaseFile() {
       </aside>
     </header>
 
-    {isExemplar && <aside className="vigil-exemplar-callout" role="note" aria-label="Successful invariant exemplar">
+    {isExemplar && <section className="vigil-exemplar-callout" aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleCheckBig /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Successful invariant exemplar</p>
-        <h2>The system worked as intended.</h2>
+        <h2 id="vigil-exemplar-heading">The system worked as intended.</h2>
         <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
         <p className="vigil-exemplar-callout-boundary">This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure.</p>
       </div>
-    </aside>}
+    </section>}
 
     <nav className="vigil-case-stage-nav" aria-label="Incident Case File sections">
       <div className="vigil-case-stage-tabs" role="tablist">
