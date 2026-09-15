@@ -198,6 +198,13 @@ test("Failure Taxonomy pages project canonical linked Case Files without conflat
   assert.doesNotMatch(taxonomyPage, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(pages, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
+  assert.match(taxonomyPage, /const selectedClass = useMemo/);
+  assert.match(taxonomyPage, /selectedClass \? <ClassManualSection/);
+  assert.match(taxonomyPage, /: <FamilyManualSection/);
+  assert.match(taxonomyPage, /View whole family/);
+  assert.match(taxonomyPage, /activeClassId=\{selectedClass\?\.class_id\}/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-manual-contents ul li\.is-active-class > a/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-single-class-view/);
 });
 
 test("taxonomy and external-governance public systems remain intact", async () => {
