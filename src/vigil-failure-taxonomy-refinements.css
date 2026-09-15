@@ -210,6 +210,199 @@
   color: hsl(var(--foreground) / 0.82) !important;
 }
 
+
+/* Class-level evidence belongs to the class, not the parent family. The full
+   cards appear on the singular class route; family/chapter views get only a
+   compact link so external evidence does not turn the family view into a
+   second bibliography. */
+.vigil-taxonomy-supporting-evidence {
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-taxonomy-supporting-evidence-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vigil-taxonomy-supporting-evidence h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.vigil-taxonomy-supporting-evidence h4 > span {
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-supporting-evidence-head > div > p {
+  max-width: 52rem;
+  margin: 0.34rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-supporting-evidence ul {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vigil-taxonomy-supporting-evidence li {
+  padding: 0.9rem 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.55rem;
+  background: hsl(var(--muted) / 0.16);
+}
+
+.vigil-taxonomy-supporting-evidence-source > p {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-supporting-evidence-source > a {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.42rem;
+  margin-top: 0.28rem;
+  color: hsl(var(--foreground));
+  text-decoration: none;
+}
+
+.vigil-taxonomy-supporting-evidence-source > a:hover strong {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+}
+
+.vigil-taxonomy-supporting-evidence-source > a svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
+  margin-top: 0.18rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-supporting-evidence-source > a strong,
+.vigil-taxonomy-supporting-evidence-source > strong {
+  display: block;
+  margin-top: 0.28rem;
+  font-size: 1rem;
+  line-height: 1.42;
+}
+
+.vigil-taxonomy-supporting-evidence-note {
+  margin: 0.6rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid hsl(var(--border) / 0.68);
+  font-size: 0.98rem !important;
+  line-height: 1.62 !important;
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.vigil-taxonomy-supporting-evidence-link {
+  margin: 0.85rem 0 0 !important;
+  font-size: 0.9rem !important;
+}
+
+.vigil-taxonomy-supporting-evidence-link a {
+  font-weight: 650;
+  color: hsl(var(--primary));
+}
+
+/* Web legibility lift. Taxonomy metadata stays compact, while substantive
+   definitions, criteria and evidence should read like a reference work rather
+   than UI microcopy. */
+.vigil-taxonomy-header .vigil-library-description {
+  font-size: 1.02rem;
+}
+
+.vigil-taxonomy-header-meta {
+  font-size: 0.8rem;
+}
+
+.vigil-taxonomy-manual-family-link-row > a {
+  font-size: 0.92rem;
+}
+
+.vigil-taxonomy-manual-contents ul a {
+  font-size: 0.84rem;
+}
+
+.vigil-taxonomy-manual-meta {
+  font-size: 0.88rem;
+}
+
+.vigil-taxonomy-manual-family-hero > p:not(.vigil-taxonomy-manual-plain):not(.vigil-taxonomy-manual-meta),
+.vigil-taxonomy-manual-class > p:not(.vigil-taxonomy-manual-plain),
+.vigil-taxonomy-manual-grid p,
+.vigil-taxonomy-manual-family-hero li,
+.vigil-taxonomy-manual-class li {
+  font-size: 1.02rem;
+  line-height: 1.68;
+}
+
+.vigil-taxonomy-manual-plain {
+  font-size: 1.08rem;
+  line-height: 1.62;
+}
+
+.vigil-taxonomy-manual-family-hero blockquote {
+  font-size: 1.08rem;
+  line-height: 1.62;
+}
+
+.vigil-taxonomy-manual-grid h4,
+.vigil-taxonomy-manual-class > h4 {
+  font-size: 1.02rem;
+}
+
+.vigil-taxonomy-manual-class-top h3 {
+  font-size: 1.5rem;
+}
+
+.vigil-taxonomy-manual-class-top p {
+  font-size: 0.84rem;
+}
+
+.vigil-taxonomy-manual-pill {
+  font-size: 0.74rem;
+}
+
+.vigil-taxonomy-linked-cases strong,
+.vigil-taxonomy-invariant-exemplars strong {
+  font-size: 1rem;
+}
+
+.vigil-taxonomy-linked-cases li > p,
+.vigil-taxonomy-invariant-exemplars li > p {
+  font-size: 0.86rem;
+}
+
+.vigil-taxonomy-linked-cases-empty {
+  font-size: 0.96rem;
+}
+
+.vigil-taxonomy-single-class-context p,
+.vigil-taxonomy-single-class-context a {
+  font-size: 0.8rem;
+}
+
 @media (max-width: 700px) {
   .vigil-taxonomy-single-class-context {
     align-items: flex-start;
