@@ -238,6 +238,39 @@ test("Failure Taxonomy pages project canonical linked Case Files without conflat
   assert.match(taxonomyLoader, /aliases\?: string\[\]/);
 });
 
+test("Failure Class views surface external supporting evidence without bloating family chapters", async () => {
+  const [taxonomyPage, taxonomyLoader, taxonomyCss, pages] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/lib/vigilFailureTaxonomy.ts"),
+    read("src/vigil-failure-taxonomy-refinements.css"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+
+  assert.match(taxonomyLoader, /external_references\?: FailureTaxonomyExternalReference\[\]/);
+  assert.match(taxonomyPage, /function SupportingEvidence/);
+  assert.match(taxonomyPage, /Supporting evidence/);
+  assert.match(taxonomyPage, /Evidence note\./);
+  assert.match(taxonomyPage, /reference\.evidence_note/);
+  assert.match(taxonomyPage, /reference\.reference_role/);
+  assert.match(taxonomyPage, /showSupportingEvidence/);
+  assert.match(taxonomyPage, /Supporting evidence · \{item\.external_references\.length\}/);
+  assert.match(taxonomyPage, /showSupportingEvidence \/>/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence-note/);
+  assert.match(pages, /function taxonomyExternalReferenceHtml/);
+  assert.match(pages, /<h2>Supporting evidence<\/h2>/);
+  assert.match(pages, /reference\.evidence_note/);
+});
+
+test("Failure Taxonomy substantive web copy keeps a readable typography floor", async () => {
+  const css = await read("src/vigil-failure-taxonomy-refinements.css");
+  assert.match(css, /\.vigil-taxonomy-header \.vigil-library-description \{[\s\S]*font-size: 1\.02rem/);
+  assert.match(css, /\.vigil-taxonomy-manual-plain \{[\s\S]*font-size: 1\.08rem/);
+  assert.match(css, /\.vigil-taxonomy-manual-class > p:not\(\.vigil-taxonomy-manual-plain\)[\s\S]*font-size: 1\.02rem/);
+  assert.match(css, /\.vigil-taxonomy-supporting-evidence-note \{[\s\S]*font-size: 0\.98rem !important/);
+  assert.match(css, /\.vigil-taxonomy-linked-cases li > p,[\s\S]*font-size: 0\.86rem/);
+});
+
 test("taxonomy and external-governance public systems remain intact", async () => {
   const [taxonomyPage, taxonomyLoader, datasets, standards, externalKnowledge] = await Promise.all([read("src/pages/vigil-failure-taxonomy.tsx"), read("src/lib/vigilFailureTaxonomy.ts"), read("src/pages/datasets.tsx"), read("src/pages/vigil-standards-baseline.tsx"), read("src/lib/vigilExternalKnowledge.ts")]);
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
