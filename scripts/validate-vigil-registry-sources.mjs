@@ -54,4 +54,10 @@ for (const forbidden of [
 }
 assert(fallback.records.every((record) => typeof record.path === "string" && typeof record.raw_url === "string"), "VIGIL fallback must retain canonical record routing");
 
+const syncMeta = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-sync-meta.json"), "utf8"));
+assert(syncMeta.status === "fetched", "Published VIGIL fallback must come from a successful live fetch");
+assert(syncMeta.record_count === fallback.records.length, "VIGIL sync metadata record count must match fallback");
+assert(syncMeta.upstream_state && typeof syncMeta.upstream_state === "object", "VIGIL sync metadata must record upstream state");
+assert(typeof syncMeta.upstream_state.fingerprint === "string" && syncMeta.upstream_state.fingerprint.length > 0, "VIGIL sync metadata must include an upstream fingerprint");
+
 console.log(`VIGIL lightweight Incident registry validation passed (${fallback.records.length} fallback Incidents).`);

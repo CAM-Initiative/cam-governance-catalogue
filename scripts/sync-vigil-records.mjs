@@ -125,6 +125,7 @@ function compactIncidentRecord(record) {
     platform_or_vendor: record.platform_or_vendor,
     severity: record.severity,
     classification_status: record.classification_status,
+    classification_role: record.classification_role,
     primary_class_id: primaryClassId,
     primary_family_id: primaryFamilyId,
     secondary_class_ids: secondaryClassIds,
@@ -169,6 +170,19 @@ try {
   const registry = parseIncidentRegistry(sourceText, registrySource);
   const fallbackRegistry = publicFallbackRegistry(registry);
   await writeFile(fallbackPath, `${JSON.stringify(fallbackRegistry)}\n`);
+  const upstreamFingerprint = registry.records
+    .map((record) => [
+      record.id,
+      record.record_version,
+      record.record_last_updated,
+      record.severity,
+      record.classification_status,
+      record.classification_role,
+      record.primary_class_id,
+      record.primary_family_id,
+    ].map((value) => value ?? "").join("|"))
+    .join("\n");
+
   await writeFile(syncMetaPath, `${JSON.stringify({
     synced_at_utc: new Date().toISOString(),
     source_url: configuredRegistryUrl,
@@ -176,6 +190,15 @@ try {
     record_count: registry.records.length,
     record_type: "incident",
     status: syncStatus,
+    upstream_state: {
+      latest_record_id: registry.records.at(-1)?.id ?? null,
+      latest_record_updated: registry.records
+        .map((record) => record.record_last_updated)
+        .filter((value) => typeof value === "string")
+        .sort()
+        .at(-1) ?? null,
+      fingerprint: Buffer.from(upstreamFingerprint).toString("base64"),
+    },
   }, null, 2)}\n`);
 
   console.log(`${syncStatus === "fetched" ? "Synced" : "Retained"} VIGIL Incident fallback from ${registrySource}`);

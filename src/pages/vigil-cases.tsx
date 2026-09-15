@@ -21,7 +21,7 @@ type SortState = { key: SortKey; direction: SortDirection };
 type ClassificationStatusCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
-const SEVERITY_ORDER: Record<string, number> = { S0: 0, S1: 1, S2: 2, S3: 3, S4: 4, SU: 5 };
+const SEVERITY_ORDER: Record<string, number> = { S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, SU: 6 };
 
 function compactId(id: string) {
   return id.replace(/^VIGIL-(?:\d{4}-)?/i, "");
@@ -143,7 +143,7 @@ export default function VigilCases() {
               <div>
                 <p className="vigil-library-kicker">VIGIL Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
-                <p className="vigil-library-description">Browse documented AI Incidents, newest first, then open an investigation through the five-stage Observation, Diagnosis, Classification, Repair and References model.</p>
+                <p className="vigil-library-description">VIGIL Observatory provides a public AI incident database through its Case File registry. Browse documented incidents, newest first, then open an investigation through the five-stage Observation, Diagnosis, Classification, Repair and References model.</p>
               </div>
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">
@@ -170,9 +170,9 @@ export default function VigilCases() {
                 </label>
 
                 <label className="vigil-family-select">
-                  <span>Classification status</span>
+                  <span>Classification</span>
                   <select value={classification} onChange={(event) => setClassification(event.target.value)}>
-                    <option value="">All statuses ({records.length})</option>
+                    <option value="">All classifications ({records.length})</option>
                     {classificationStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
                   </select>
                 </label>
@@ -190,31 +190,34 @@ export default function VigilCases() {
             <section className="vigil-case-table" aria-label="AI Incident Case Files">
               <div className="vigil-case-table-head">
                 <SortHeading label="Incident" sortKey="id" sort={sort} onSort={updateSort} />
-                <SortHeading label="Classification status" sortKey="classification" sort={sort} onSort={updateSort} />
+                <SortHeading label="Classification" sortKey="classification" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
               <div className="vigil-case-table-body">
                 {pageRecords.map((record) => {
                   const href = `/observatory/cases/${encodeURIComponent(record.id)}`;
+                  const classificationLabel = classificationStatusLabel(record);
+                  const exemplar = classificationLabel === "Exemplar";
                   return (
-                    <article key={record.id} className="vigil-case-table-row">
+                    <article key={record.id} className={`vigil-case-table-row${exemplar ? " is-exemplar" : ""}`}>
                       <Link href={href} className="vigil-case-table-row-link" aria-label={`Open case file ${record.title}`}>
                         <div className="vigil-case-table-primary">
                           <span className="vigil-case-table-id" title={record.id}>{compactId(record.id)}</span>
                           <div className="vigil-case-table-copy">
+                            {exemplar && <span className="vigil-case-exemplar-marker">Successful invariant · system worked</span>}
                             <h2>{record.title}</h2>
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Classification status"><span className="vigil-case-table-text">{classificationStatusLabel(record)}</span></CaseCell>
+                        <CaseCell label="Classification">{exemplar ? <VigilStatusChip value="Exemplar" /> : <span className="vigil-case-table-text">{classificationLabel}</span>}</CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
                   );
                 })}
-                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another classification status.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another classification.</div>}
               </div>
             </section>
 

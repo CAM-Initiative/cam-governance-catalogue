@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, CircleCheckBig, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -223,6 +223,7 @@ function severityDisplay(value?: string) {
     S2: "High",
     S3: "Moderate",
     S4: "Low",
+    S5: "No materialised harm",
     SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
@@ -257,6 +258,7 @@ function recordLink(record: VigilIndexRecord) {
 }
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
+  if (reference.relationship === "exemplar") return "Successful-invariant exemplar relationship";
   if (reference.relationship === "primary") return "Primary taxonomy classification";
   if (reference.relationship === "secondary") return "Secondary taxonomy classification";
   return "Family-only taxonomy classification";
@@ -354,7 +356,8 @@ export default function VigilCaseFile() {
 
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Case File";
-  const family = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const isExemplar = incident ? firstText(incident.raw, ["classification_role", "taxonomy_classification.classification_role"]) === "successful-invariant" : false;
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
@@ -406,7 +409,7 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Materialised consequence and supported harm in this Incident</h3></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Observed occurrence and supported downstream consequence</h3></div>
           <div className="vigil-severity-summary-grid"><article><dl>
             <Field label="Severity" value={severityDisplay(incident.severity)} />
             <Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} />
@@ -501,15 +504,15 @@ export default function VigilCaseFile() {
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
     <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
 
-    <header className="vigil-case-file-hero vigil-case-file-hero-v4">
+    <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Case File · Successful invariant exemplar" : "VIGIL Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Failure type" value={family} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
@@ -517,6 +520,16 @@ export default function VigilCaseFile() {
         <Link href={`/observatory/reports/${encodeURIComponent(reportId)}`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </aside>
     </header>
+
+    {isExemplar && <aside className="vigil-exemplar-callout" role="note" aria-label="Successful invariant exemplar">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleCheckBig /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Successful invariant exemplar</p>
+        <h2>The system worked as intended.</h2>
+        <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
+        <p className="vigil-exemplar-callout-boundary">This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure.</p>
+      </div>
+    </aside>}
 
     <nav className="vigil-case-stage-nav" aria-label="Incident Case File sections">
       <div className="vigil-case-stage-tabs" role="tablist">

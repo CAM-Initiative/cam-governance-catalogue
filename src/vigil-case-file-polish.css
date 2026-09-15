@@ -307,3 +307,22 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
     padding-bottom: 0.2rem;
   }
 }
+
+
+/* Successful-invariant exemplars receive a distinct award-style marker without changing the normal classification treatment. */
+.vigil-case-file-page .vigil-exemplar-badge {
+  align-self: flex-start;
+  margin-top: 0.85rem;
+  padding: 0.38rem 0.72rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--app-font-sans);
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.08);
+  box-shadow: var(--shadow-sm);
+}

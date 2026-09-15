@@ -4,7 +4,7 @@
 /* Case Files landing page: restore the readable catalogue/table grammar. */
 .vigil-case-table-search {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(220px, 290px);
+  grid-template-columns: minmax(320px, 1fr);
   gap: 0.75rem;
   align-items: stretch;
 }
@@ -22,7 +22,7 @@
 .vigil-case-table-head,
 .vigil-case-table-row-link {
   display: grid;
-  grid-template-columns: minmax(520px, 1fr) minmax(150px, 190px) minmax(120px, 150px) 28px;
+  grid-template-columns: minmax(520px, 1fr) minmax(120px, 150px) 28px;
   gap: 0.8rem;
   align-items: center;
 }
@@ -397,7 +397,7 @@
 @media (max-width: 1000px) {
   .vigil-case-table-head,
   .vigil-case-table-row-link {
-    grid-template-columns: minmax(420px, 1fr) minmax(135px, 170px) minmax(115px, 145px) 24px;
+    grid-template-columns: minmax(420px, 1fr) minmax(115px, 145px) 24px;
   }
 
   .vigil-case-file-hero-v4 {

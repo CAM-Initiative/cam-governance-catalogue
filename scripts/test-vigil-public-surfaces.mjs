@@ -111,6 +111,40 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
+test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
+  const [cases, caseFile, classification, report, pages, sync] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+    read("scripts/prepare-github-pages.js"),
+    read("scripts/sync-vigil-records.mjs"),
+  ]);
+  assert.match(cases, /Successful invariant · system worked/);
+  assert.match(cases, /VigilStatusChip value="Exemplar"/);
+  assert.match(cases, /is-exemplar/);
+  assert.match(caseFile, /const isExemplar =/);
+  assert.match(caseFile, /The system worked as intended\./);
+  assert.match(caseFile, /vigil-exemplar-callout-boundary/);
+  assert.match(caseFile, /Exemplar · successful invariant/);
+  assert.match(classification, /successful invariant exemplar/i);
+  assert.match(classification, /not failure evidence/i);
+  assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
+  assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
+  assert.match(sync, /classification_role: record\.classification_role/);
+});
+
+test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
+  const [cases, caseFile, report] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+  ]);
+  assert.match(cases, /S5: 5/);
+  assert.match(caseFile, /S5: "No materialised harm"/);
+  assert.match(report, /S5: "No materialised harm"/);
+});
+
 test("historical identifiers do not become live retired-record links", async () => {
   const [caseFile, registry, presentation] = await Promise.all([read("src/pages/vigil-case-file.tsx"), read("src/lib/vigilRegistry.ts"), read("src/lib/vigilPresentation.ts")]);
   const combined = `${caseFile}\n${registry}\n${presentation}`;

@@ -31,7 +31,7 @@ export default function VigilAbout() {
     <header className="vigil-about-hero">
       <p className="vigil-library-kicker">VIGIL Observatory</p>
       <h1>About VIGIL Observatory</h1>
-      <p>VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory: a public incident-analysis system that preserves canonical Incident records, diagnoses governance and control failures, applies a maintained failure taxonomy, and links evidence to accountable repair and verification.</p>
+      <p>VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory. It provides a public AI incident database through its canonical Case File registry, preserving Incident records, diagnosing governance and control failures, applying a maintained failure taxonomy, and linking evidence to accountable repair and verification.</p>
     </header>
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
@@ -58,7 +58,7 @@ export default function VigilAbout() {
         {taxonomyPrinciples.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
       </div>
       <p className="vigil-about-note"><strong>Classification boundary:</strong> VIGIL Observatory distinguishes source terminology from VIGIL classification. Terms used by providers, media, researchers or other third parties remain source descriptions unless explicitly identified as a VIGIL Observatory classification.</p>
-      <p className="vigil-about-note"><strong>Use and authority:</strong> VIGIL Observatory classifications are analytical determinations of governance failure mechanisms. They may inform legal, regulatory, contractual, technical or institutional analysis. VIGIL Observatory does not presently exercise recognised adjudicative, judicial or regulatory authority, so a classification does not by itself create binding legal effect. That institutional boundary does not prevent VIGIL Observatory from analysing or classifying mechanisms that bear on disputed legal or governance questions.</p>
+      <p className="vigil-about-note"><strong>Use of VIGIL findings:</strong> VIGIL Observatory documents, diagnoses and classifies AI governance failure mechanisms from available evidence using explicit classification criteria and a maintained taxonomy. Its findings are designed to support technical, governance, regulatory, contractual and legal analysis, with the underlying evidence and reasoning available for independent review.</p>
       <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy">
         Browse the taxonomy <ArrowRight aria-hidden="true" />
       </Link>

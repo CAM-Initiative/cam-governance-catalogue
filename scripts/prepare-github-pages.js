@@ -92,9 +92,9 @@ const staticRoutes = [
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
-  ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, preserving canonical Incident records, diagnosing failures, applying a maintained taxonomy and linking evidence to repair."],
-  ["/observatory/about", "About VIGIL Observatory", "How VIGIL Observatory preserves AI incident evidence, diagnoses governance and control failures, applies its maintained failure taxonomy and links evidence to accountable repair."],
-  ["/observatory/cases", "VIGIL Observatory Case Files", "Browse VIGIL Observatory AI incident investigations with evidence, diagnosis, classification, repair and references."],
+  ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
+  ["/observatory/about", "About VIGIL Observatory", "VIGIL Observatory provides a public AI incident database through its Case File registry, combining incident evidence, governance diagnosis, failure classification and accountable repair."],
+  ["/observatory/cases", "VIGIL Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, diagnosis, failure classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
   ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Failure Taxonomy", "The maintained VIGIL Failure Taxonomy for recurring AI governance and control-failure mechanisms, with versioned families, classes, recognition criteria, exclusions and classification boundaries."],
@@ -279,7 +279,7 @@ for (const record of incidentRecords) {
     <h1>${escapeHtml(record.title || record.id)}</h1>
     <p>${escapeHtml(description)}</p>
     <dl>
-      <dt>VIGIL classification status</dt><dd>${escapeHtml(record.classification_status || "not stated")}</dd>
+      <dt>VIGIL classification status</dt><dd>${escapeHtml(record.classification_role === "successful-invariant" ? "Exemplar" : (record.classification_status || "not stated"))}</dd>
       <dt>VIGIL primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
       <dt>VIGIL secondary classifications</dt>${secondaryClassificationHtml(record)}
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>

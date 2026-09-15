@@ -25,8 +25,11 @@ type ClassificationRef = {
   confidence?: string;
 };
 
+type ClassificationRole = "failure-occurrence" | "successful-invariant";
+
 type ParsedClassification = {
   status?: ClassificationStatus;
+  role?: ClassificationRole;
   taxonomyVersion?: string;
   primary: ClassificationRef;
   secondary: ClassificationRef[];
@@ -73,6 +76,7 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   const primaryFamily = isObject(value.primary_family) ? value.primary_family : undefined;
   const primaryClass = isObject(value.primary_class) ? value.primary_class : undefined;
   const status = text(value.classification_status) as ClassificationStatus | undefined;
+  const role = text(value.classification_role) as ClassificationRole | undefined;
   const secondary = Array.isArray(value.secondary_classifications)
     ? value.secondary_classifications.flatMap((item) => {
         if (!isObject(item)) return [];
@@ -87,6 +91,7 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
 
   return {
     status,
+    role,
     taxonomyVersion: text(value.taxonomy_version),
     primary: {
       familyId: text(primaryClassification?.family_id ?? primaryFamily?.family_id),
@@ -172,12 +177,14 @@ function ClassificationCard({
   status,
   taxonomyVersion,
   relationship,
+  exemplar = false,
 }: {
   item: ResolvedClassification;
   label: string;
   status?: ClassificationStatus;
   taxonomyVersion?: string;
   relationship: string;
+  exemplar?: boolean;
 }) {
   const family = item.family?.family;
   const classificationClass = item.class;
@@ -195,7 +202,7 @@ function ClassificationCard({
     <div className="vigil-classification-layout">
       <div className="vigil-classification-reading">
         {plainEnglish && <section>
-          <h4 className="vigil-substantive-label">What this failure means</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Failure boundary this exemplar tests" : "What this failure means"}</h4>
           <p>{plainEnglish}</p>
         </section>}
         {technicalDefinition && <section>
@@ -203,7 +210,7 @@ function ClassificationCard({
           <p>{technicalDefinition}</p>
         </section>}
         {item.basis && <section>
-          <h4 className="vigil-substantive-label">Why this Case File maps here</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Why this Case File is an exemplar" : "Why this Case File maps here"}</h4>
           <p>{item.basis}</p>
         </section>}
       </div>
@@ -211,8 +218,8 @@ function ClassificationCard({
       <aside className="vigil-classification-metadata" aria-label={`${label} classification metadata`}>
         <p className="vigil-diagnostic-meta-label">Classification metadata</p>
         <dl>
-          <Meta label="Status" value={statusLabel(status)} />
-          <Meta label="Relationship" value={relationship} />
+          <Meta label="Status" value={exemplar ? "Exemplar" : statusLabel(status)} />
+          <Meta label="Relationship" value={exemplar ? "Successful invariant exemplar" : relationship} />
           <Meta label="Confidence" value={item.confidence} />
           <Meta label="Taxonomy version" value={taxonomyVersion} mono />
           <Meta label="Failure family" value={family?.name} />
@@ -268,6 +275,7 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
+  const exemplar = parsed.role === "successful-invariant";
   const renderPrimary = parsed.status === "classified" || parsed.status === "provisionally-classified" || parsed.status === "classification-disputed";
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
@@ -276,13 +284,15 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 
   return <div className="vigil-taxonomy-classification-view">
     {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
+    {exemplar && <p className="vigil-case-empty">This Case File is attached to the Failure Class as a successful invariant exemplar. It demonstrates the governing invariant holding under relevant failure pressure and is not failure evidence.</p>}
 
     <ClassificationCard
       item={primary}
-      label={parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+      label={exemplar ? "Successful invariant exemplar" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
       status={parsed.status}
       taxonomyVersion={parsed.taxonomyVersion}
-      relationship="Primary"
+      relationship={exemplar ? "Successful invariant" : "Primary"}
+      exemplar={exemplar}
     />
 
     {secondaries.length > 0 && <section className="vigil-secondary-classifications">
@@ -342,13 +352,14 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
   const invariants = governingClassInvariants(primary, secondaries);
+  const exemplar = parsed.role === "successful-invariant";
 
   if (!invariants.length) return <p className="vigil-case-empty">No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
     {invariants.map(({ family, class: classificationClass, relationship }) => <article key={classificationClass.class_id} className="vigil-repair-invariant-card">
       <div className="vigil-repair-reading">
-        <p className="vigil-evidence-kicker">{relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
+        <p className="vigil-evidence-kicker">{exemplar ? "Invariant demonstrated" : relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
         <h3>{classificationClass.name}</h3>
         {classificationClass.invariant
           ? <p className="vigil-repair-invariant">{classificationClass.invariant}</p>
@@ -367,6 +378,8 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </dl>
       </aside>
     </article>)}
-    <p className="vigil-repair-boundary">This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced.</p>
+    <p className="vigil-repair-boundary">{exemplar
+      ? "This Case File demonstrates the class-level governing invariant holding under the evidenced pressure. No repair is inferred from the exemplar relationship. The class remains the relevant failure boundary, while this occurrence sits on the successful side of that boundary."
+      : "This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced."}</p>
   </div>;
 }
