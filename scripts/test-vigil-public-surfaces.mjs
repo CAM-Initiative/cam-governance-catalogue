@@ -120,11 +120,14 @@ test("Case Files keep Exemplar semantics inside the opened Case File, not the la
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("scripts/prepare-github-pages.js"),
   ]);
-  assert.doesNotMatch(cases, /Classification status|classificationStatusLabel|taxonomyFailureTypeLabel|VigilStatusChip/);
+  assert.match(cases, /Classification status/);
+  assert.match(cases, /taxonomyFailureTypeLabel/);
+  assert.match(cases, /<CaseCell label="Classification status"><span className="vigil-case-table-text">\{classificationStatusLabel\(record\)\}<\/span><\/CaseCell>/);
+  assert.match(cases, /<CaseCell label="Severity"><VigilStatusChip value=\{record\.severity\} \/><\/CaseCell>/);
+  assert.doesNotMatch(cases, /vigil-exemplar-badge|Successful invariant exemplar/);
   assert.match(caseFile, /const isExemplar =/);
-  assert.match(caseFile, /vigil-exemplar-badge/);
-  assert.match(caseFile, />Exemplar<\/div>/);
-  assert.match(caseFile, /<Field label="Failure type" value=\{classification\} \/>/);
+  assert.match(caseFile, /<h1>\{title\}<\/h1>[\s\S]*vigil-exemplar-badge[\s\S]*Successful invariant exemplar/);
+  assert.match(caseFile, /<Field label="Classification status" value=\{classification\} \/>/);
   assert.match(taxonomyHelpers, /successful-invariant/);
   assert.match(taxonomyHelpers, /return "Exemplar"/);
   assert.match(classification, /successful invariant exemplar/i);
