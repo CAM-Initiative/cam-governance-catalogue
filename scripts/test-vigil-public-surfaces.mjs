@@ -111,7 +111,7 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
-test("Case Files render successful-invariant relationships as Exemplar without failure semantics", async () => {
+test("Case Files keep Exemplar semantics inside the opened Case File, not the landing table", async () => {
   const [cases, caseFile, classification, taxonomyHelpers, report, pages] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
@@ -120,7 +120,7 @@ test("Case Files render successful-invariant relationships as Exemplar without f
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("scripts/prepare-github-pages.js"),
   ]);
-  assert.match(cases, /VigilStatusChip value=\{classificationStatusLabel\(record\)\}/);
+  assert.doesNotMatch(cases, /Classification status|classificationStatusLabel|taxonomyFailureTypeLabel/);
   assert.match(caseFile, /StatusField label="Classification" value=\{classification\}/);
   assert.match(taxonomyHelpers, /successful-invariant/);
   assert.match(taxonomyHelpers, /return "Exemplar"/);
