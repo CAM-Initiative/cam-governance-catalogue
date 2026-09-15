@@ -120,8 +120,11 @@ test("Case Files keep Exemplar semantics inside the opened Case File, not the la
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("scripts/prepare-github-pages.js"),
   ]);
-  assert.doesNotMatch(cases, /Classification status|classificationStatusLabel|taxonomyFailureTypeLabel/);
-  assert.match(caseFile, /StatusField label="Classification" value=\{classification\}/);
+  assert.doesNotMatch(cases, /Classification status|classificationStatusLabel|taxonomyFailureTypeLabel|VigilStatusChip/);
+  assert.match(caseFile, /const isExemplar =/);
+  assert.match(caseFile, /vigil-exemplar-badge/);
+  assert.match(caseFile, />Exemplar<\/div>/);
+  assert.match(caseFile, /<Field label="Failure type" value=\{classification\} \/>/);
   assert.match(taxonomyHelpers, /successful-invariant/);
   assert.match(taxonomyHelpers, /return "Exemplar"/);
   assert.match(classification, /successful invariant exemplar/i);
