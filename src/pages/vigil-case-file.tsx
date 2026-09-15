@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft, CircleCheckBig, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -504,16 +504,15 @@ export default function VigilCaseFile() {
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
     <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
 
-    <header className="vigil-case-file-hero vigil-case-file-hero-v4">
+    <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Case File · Successful invariant exemplar" : "VIGIL Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
-        {isExemplar && <div className="vigil-exemplar-badge" role="status">Successful invariant exemplar</div>}
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Classification status" value={classification} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
@@ -521,6 +520,16 @@ export default function VigilCaseFile() {
         <Link href={`/observatory/reports/${encodeURIComponent(reportId)}`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </aside>
     </header>
+
+    {isExemplar && <aside className="vigil-exemplar-callout" role="note" aria-label="Successful invariant exemplar">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleCheckBig /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Successful invariant exemplar</p>
+        <h2>The system worked as intended.</h2>
+        <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
+        <p className="vigil-exemplar-callout-boundary">INC-126 is mapped to FC-000073 to show the <strong>successful side of the failure boundary</strong>. The Failure Class remains the reference point; this occurrence demonstrates what correct behaviour looks like when that boundary holds.</p>
+      </div>
+    </aside>}
 
     <nav className="vigil-case-stage-nav" aria-label="Incident Case File sections">
       <div className="vigil-case-stage-tabs" role="tablist">
