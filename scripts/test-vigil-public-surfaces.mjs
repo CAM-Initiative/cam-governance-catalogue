@@ -205,6 +205,8 @@ test("Failure Taxonomy pages project canonical linked Case Files without conflat
   assert.match(taxonomyPage, /activeClassId=\{selectedClass\?\.class_id\}/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-manual-contents ul li\.is-active-class > a/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-single-class-view/);
+  assert.doesNotMatch(taxonomyPage, /Prior codes and aliases|Prior codes \/ aliases/);
+  assert.match(taxonomyLoader, /aliases\?: string\[\]/);
 });
 
 test("taxonomy and external-governance public systems remain intact", async () => {
