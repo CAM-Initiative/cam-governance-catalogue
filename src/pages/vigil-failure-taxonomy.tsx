@@ -5,6 +5,7 @@ import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import {
   loadFailureTaxonomy,
+  type FailureTaxonomyCaseFileExample,
   type FailureTaxonomyClass,
   type FailureTaxonomyDataset,
   type FailureTaxonomyFamilyDocument,
@@ -63,6 +64,24 @@ function relationshipTarget(
   classById: Map<string, FailureTaxonomyClass>,
 ) {
   return classById.get(relationship.target_id.toUpperCase())?.name ?? relationship.target_id;
+}
+
+type CaseFileExampleMap = Record<string, FailureTaxonomyCaseFileExample[]>;
+
+function classificationRoleLabel(value?: string) {
+  if (value === "primary") return "Primary classification";
+  if (value === "secondary") return "Secondary classification";
+  return clean(value) ?? "Classification";
+}
+
+function confidenceLabel(value?: string) {
+  return value ? `${clean(value)} confidence` : undefined;
+}
+
+function caseMeta(example: FailureTaxonomyCaseFileExample) {
+  return [classificationRoleLabel(example.classification_role), confidenceLabel(example.classification_confidence)]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -168,7 +187,18 @@ function ManualContents({
   </nav>;
 }
 
-function ClassManualCard({ item, classById }: { item: FailureTaxonomyClass; classById: Map<string, FailureTaxonomyClass> }) {
+function ClassManualCard({
+  item,
+  classById,
+  caseFileExamples,
+}: {
+  item: FailureTaxonomyClass;
+  classById: Map<string, FailureTaxonomyClass>;
+  caseFileExamples: CaseFileExampleMap;
+}) {
+  const linkedCases = caseFileExamples[item.class_id] ?? [];
+  const invariantExemplars = item.invariant_exemplars ?? [];
+
   return <article className="vigil-taxonomy-manual-class" id={item.class_id.toLowerCase()}>
     <div className="vigil-taxonomy-manual-class-top">
       <div>
@@ -194,6 +224,33 @@ function ClassManualCard({ item, classById }: { item: FailureTaxonomyClass; clas
         <ul>{(item.exclusions ?? []).map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
       </section>
     </div>
+
+    <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
+      <h4>Linked Case Files <span>{linkedCases.length}</span></h4>
+      {linkedCases.length ? <ul>
+        {linkedCases.map((example) => <li key={example.incident_id}>
+          <Link href={`/observatory/cases/${example.incident_id}`}>
+            <code>{example.incident_id}</code>
+            <strong>{example.incident_title}</strong>
+          </Link>
+          <p>{caseMeta(example)}</p>
+        </li>)}
+      </ul> : <p className="vigil-taxonomy-linked-cases-empty">No classified failure Case Files are currently linked to this class.</p>}
+    </section>
+
+    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Successful invariant exemplars for ${item.name}`}>
+      <h4>Successful invariant exemplars <span>{invariantExemplars.length}</span></h4>
+      <ul>
+        {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
+          <Link href={`/observatory/cases/${exemplar.linked_incident_id}`}>
+            <code>{exemplar.linked_incident_id}</code>
+            <strong>{exemplar.title}</strong>
+          </Link>
+          <p>Successful invariant{exemplar.exemplar_status ? ` · ${clean(exemplar.exemplar_status)}` : ""}</p>
+          {exemplar.invariant_demonstrated ? <p className="vigil-taxonomy-exemplar-basis">{exemplar.invariant_demonstrated}</p> : null}
+        </li>)}
+      </ul>
+    </section> : null}
 
     {item.examples?.length ? <>
       <h4>Illustrative examples</h4>
