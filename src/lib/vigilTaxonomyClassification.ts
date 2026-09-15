@@ -54,7 +54,9 @@ function familyLabel(value: unknown) {
 
 export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const directStatus = text(record.classification_status) as TaxonomyClassificationStatus | undefined;
+  const directRole = text(record.classification_role) as TaxonomyClassificationRole | undefined;
   if (record.record_type === "incident" && directStatus) {
+    if (directRole === "successful-invariant") return "Exemplar";
     if (directStatus === "classified" || directStatus === "provisionally-classified") return "Classified";
     if (directStatus === "classification-disputed") return "Classification disputed";
     if (directStatus === "requires-human-review") return "Requires human review";
@@ -64,7 +66,9 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const classification = taxonomyClassification(record);
   if (classification) {
     const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
+    const role = text(classification.classification_role) as TaxonomyClassificationRole | undefined;
     if (record.record_type === "incident") {
+      if (role === "successful-invariant") return "Exemplar";
       if (status === "classified" || status === "provisionally-classified") return "Classified";
       if (status === "classification-disputed") return "Classification disputed";
       if (status === "requires-human-review") return "Requires human review";
@@ -86,6 +90,8 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
 
   const summary = taxonomyClassificationSummary(record);
   const status = text(summary?.classification_status) as TaxonomyClassificationStatus | undefined;
+  const role = text(summary?.classification_role) as TaxonomyClassificationRole | undefined;
+  if (role === "successful-invariant") return "Exemplar";
   if (status === "classified" || status === "provisionally-classified") return "Classified";
   if (status === "classification-disputed") return "Classification disputed";
   if (status === "requires-human-review") return "Requires human review";
