@@ -111,29 +111,30 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
-test("Case Files keep Exemplar semantics inside the opened Case File, not the landing table", async () => {
-  const [cases, caseFile, classification, taxonomyHelpers, report, pages] = await Promise.all([
+test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
+  const [cases, caseFile, classification, taxonomyHelpers, report, pages, sync] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/lib/vigilTaxonomyClassification.ts"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("scripts/prepare-github-pages.js"),
+    read("scripts/sync-vigil-records.mjs"),
   ]);
-  assert.match(cases, /Classification status/);
-  assert.match(cases, /taxonomyFailureTypeLabel/);
-  assert.match(cases, /<CaseCell label="Classification status"><span className="vigil-case-table-text">\{classificationStatusLabel\(record\)\}<\/span><\/CaseCell>/);
-  assert.match(cases, /<CaseCell label="Severity"><VigilStatusChip value=\{record\.severity\} \/><\/CaseCell>/);
-  assert.doesNotMatch(cases, /vigil-exemplar-badge|Successful invariant exemplar/);
+  assert.match(cases, /Successful invariant · system worked/);
+  assert.match(cases, /VigilStatusChip value="Exemplar"/);
+  assert.match(cases, /is-exemplar/);
   assert.match(caseFile, /const isExemplar =/);
-  assert.match(caseFile, /<h1>\{title\}<\/h1>[\s\S]*vigil-exemplar-badge[\s\S]*Successful invariant exemplar/);
-  assert.match(caseFile, /<Field label="Classification status" value=\{classification\} \/>/);
+  assert.match(caseFile, /The system worked as intended\./);
+  assert.match(caseFile, /successful side of the failure boundary/);
+  assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(taxonomyHelpers, /successful-invariant/);
   assert.match(taxonomyHelpers, /return "Exemplar"/);
   assert.match(classification, /successful invariant exemplar/i);
   assert.match(classification, /not failure evidence/i);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
+  assert.match(sync, /classification_role: record\.classification_role/);
 });
 
 test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
