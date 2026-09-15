@@ -25,7 +25,10 @@
 }
 
 .vigil-deterministic-report-host .report-document {
+  color-scheme: light;
   font-family: var(--app-font-sans);
+  color: hsl(var(--report-ink));
+  background: hsl(var(--report-paper));
 }
 
 .vigil-deterministic-report-host .report-hero {
@@ -667,7 +670,7 @@
     background: #fff !important;
   }
 
-  .vigil-deterministic-report-host header.sticky,
+  .vigil-deterministic-report-host .site-header,
   .vigil-deterministic-report-host > div > main > nav,
   .vigil-deterministic-report-host footer.mt-auto,
   .vigil-deterministic-report-host aside.print\:hidden,
