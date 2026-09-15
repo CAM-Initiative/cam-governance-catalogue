@@ -92,7 +92,7 @@ const staticRoutes = [
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
-  ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, preserving canonical Incident records, diagnosing failures, applying a maintained taxonomy and linking evidence to repair."],
+  ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
   ["/observatory/about", "About VIGIL Observatory", "VIGIL Observatory provides a public AI incident database through its Case File registry, combining incident evidence, governance diagnosis, failure classification and accountable repair."],
   ["/observatory/cases", "VIGIL Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, diagnosis, failure classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
