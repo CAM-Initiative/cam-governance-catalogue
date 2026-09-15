@@ -527,7 +527,7 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Successful invariant exemplar</p>
         <h2>The system worked as intended.</h2>
         <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
-        <p className="vigil-exemplar-callout-boundary">INC-126 is mapped to FC-000073 to show the <strong>successful side of the failure boundary</strong>. The Failure Class remains the reference point; this occurrence demonstrates what correct behaviour looks like when that boundary holds.</p>
+        <p className="vigil-exemplar-callout-boundary">This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure.</p>
       </div>
     </aside>}
 
