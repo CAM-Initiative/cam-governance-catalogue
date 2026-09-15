@@ -142,6 +142,22 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
+test("CAM About and Privacy share the current readable public-page grammar", async () => {
+  const [about, privacy, referenceCss] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/pages/privacy.tsx"),
+    read("src/public-reference-pages.css"),
+  ]);
+  assert.doesNotMatch(about, /ExploreGovernanceRail|public-reference-governance-rail/);
+  assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
+  assert.match(referenceCss, /max-width: 1220px/);
+  assert.match(referenceCss, /\.public-reference-hero[\s\S]*border: 1px solid hsl\(var\(--border\)\)[\s\S]*border-radius: 0\.75rem/);
+  assert.match(referenceCss, /\.public-reference-hero > p:not\([\s\S]*font-size: 1\.125rem/);
+  assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
+  assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
+  assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
+});
+
 test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
   const [cases, caseFile, report] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
