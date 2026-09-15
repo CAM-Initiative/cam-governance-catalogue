@@ -195,7 +195,9 @@ test("Failure Taxonomy pages project canonical linked Case Files without conflat
   assert.match(pages, /generated\/VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(pages, /taxonomyCaseExamplesForClass/);
   assert.match(pages, /Successful invariant exemplars/);
-  assert.match(pages, /No classified failure Case Files are currently linked to this family/);
+  assert.doesNotMatch(taxonomyPage, /No classified failure Case Files are currently linked to this family/);
+  assert.doesNotMatch(pages, /No classified failure Case Files are currently linked to this family/);
+  assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
 });
 
 test("taxonomy and external-governance public systems remain intact", async () => {
