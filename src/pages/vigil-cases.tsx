@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ChevronRight, Search, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -71,6 +71,25 @@ function values(records: VigilIndexRecord[], getter: (record: VigilIndexRecord) 
   return [...new Set(records.map(getter).filter((value): value is string => Boolean(value)))].sort((a, b) => a.localeCompare(b));
 }
 
+type PaginationToken = number | "start-ellipsis" | "end-ellipsis";
+
+function paginationTokens(currentPage: number, pageCount: number): PaginationToken[] {
+  if (pageCount <= 7) return Array.from({ length: pageCount }, (_, index) => index + 1);
+
+  const pages = new Set([1, pageCount, currentPage - 1, currentPage, currentPage + 1]);
+  if (currentPage <= 4) [2, 3, 4, 5].forEach((pageNumber) => pages.add(pageNumber));
+  if (currentPage >= pageCount - 3) [pageCount - 4, pageCount - 3, pageCount - 2, pageCount - 1].forEach((pageNumber) => pages.add(pageNumber));
+
+  const visible = [...pages].filter((pageNumber) => pageNumber >= 1 && pageNumber <= pageCount).sort((a, b) => a - b);
+  const tokens: PaginationToken[] = [];
+  visible.forEach((pageNumber, index) => {
+    const previous = visible[index - 1];
+    if (previous && pageNumber - previous > 1) tokens.push(previous === 1 ? "start-ellipsis" : "end-ellipsis");
+    tokens.push(pageNumber);
+  });
+  return tokens;
+}
+
 function CaseCell({ label, children }: { label: string; children: ReactNode }) {
   return <div className="vigil-case-table-cell"><span className="vigil-case-mobile-label">{label}</span>{children}</div>;
 }
@@ -125,6 +144,16 @@ export default function VigilCases() {
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pagination = useMemo(() => paginationTokens(currentPage, pageCount), [currentPage, pageCount]);
+
+  function goToPage(targetPage: number) {
+    const boundedPage = Math.max(1, Math.min(pageCount, targetPage));
+    if (boundedPage === currentPage) return;
+    setPage(boundedPage);
+    window.requestAnimationFrame(() => {
+      document.querySelector(".vigil-case-table")?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  }
 
   function updateSort(key: SortKey) {
     setSort((current) => ({
@@ -222,9 +251,51 @@ export default function VigilCases() {
 
             {sorted.length > PAGE_SIZE && (
               <nav className="vigil-pagination" aria-label="Case File result pages">
-                <button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))}>Previous</button>
-                <span>Page {currentPage} of {pageCount}</span>
-                <button type="button" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}>Next</button>
+                <span className="sr-only">Page {currentPage} of {pageCount}</span>
+                <button
+                  type="button"
+                  className="vigil-pagination-arrow"
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(1)}
+                  aria-label="First page"
+                  title="First page"
+                ><ChevronsLeft aria-hidden="true" /></button>
+                <button
+                  type="button"
+                  className="vigil-pagination-arrow"
+                  disabled={currentPage === 1}
+                  onClick={() => goToPage(currentPage - 1)}
+                  aria-label="Previous page"
+                  title="Previous page"
+                ><ChevronLeft aria-hidden="true" /></button>
+                <div className="vigil-pagination-pages">
+                  {pagination.map((token) => typeof token === "number"
+                    ? <button
+                        key={token}
+                        type="button"
+                        className={token === currentPage ? "vigil-pagination-page is-current" : "vigil-pagination-page"}
+                        onClick={() => goToPage(token)}
+                        aria-current={token === currentPage ? "page" : undefined}
+                        aria-label={token === currentPage ? `Page ${token}, current page` : `Go to page ${token}`}
+                      >{token}</button>
+                    : <span key={token} className="vigil-pagination-ellipsis" aria-hidden="true">…</span>)}
+                </div>
+                <button
+                  type="button"
+                  className="vigil-pagination-arrow"
+                  disabled={currentPage === pageCount}
+                  onClick={() => goToPage(currentPage + 1)}
+                  aria-label="Next page"
+                  title="Next page"
+                ><ChevronRight aria-hidden="true" /></button>
+                <button
+                  type="button"
+                  className="vigil-pagination-arrow"
+                  disabled={currentPage === pageCount}
+                  onClick={() => goToPage(pageCount)}
+                  aria-label="Last page"
+                  title="Last page"
+                ><ChevronsRight aria-hidden="true" /></button>
               </nav>
             )}
           </section>
