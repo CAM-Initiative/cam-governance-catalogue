@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
+import { ChevronsLeft, ChevronsRight, ExternalLink, Search, X } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -8,6 +8,7 @@ import {
   type FailureTaxonomyCaseFileExample,
   type FailureTaxonomyClass,
   type FailureTaxonomyDataset,
+  type FailureTaxonomyExternalReference,
   type FailureTaxonomyFamilyDocument,
   type FailureTaxonomyRelationship,
 } from "@/lib/vigilFailureTaxonomy";
@@ -45,6 +46,12 @@ function familyHaystack(document: FailureTaxonomyFamilyDocument) {
 }
 
 function classHaystack(item: FailureTaxonomyClass) {
+  const referenceText = (item.external_references ?? []).flatMap((reference) => [
+    reference.title,
+    reference.publisher,
+    reference.reference_role,
+    reference.evidence_note,
+  ]).filter(Boolean);
   return [
     item.class_id,
     item.class_code,
@@ -56,6 +63,7 @@ function classHaystack(item: FailureTaxonomyClass) {
     ...(item.exclusions ?? []),
     ...(item.examples ?? []),
     ...(item.aliases ?? []),
+    ...referenceText,
   ].join(" ").toLowerCase();
 }
 
@@ -82,6 +90,44 @@ function caseMeta(example: FailureTaxonomyCaseFileExample) {
   return [classificationRoleLabel(example.classification_role), confidenceLabel(example.classification_confidence)]
     .filter(Boolean)
     .join(" · ");
+}
+
+function evidenceRoleLabel(value?: string) {
+  return value ? clean(value) : undefined;
+}
+
+function evidenceMeta(reference: FailureTaxonomyExternalReference) {
+  return [reference.publisher, reference.date, evidenceRoleLabel(reference.reference_role)]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
+  const references = item.external_references ?? [];
+  if (!references.length) return null;
+
+  return <section className="vigil-taxonomy-supporting-evidence" aria-label={`Supporting evidence for ${item.name}`}>
+    <div className="vigil-taxonomy-supporting-evidence-head">
+      <div>
+        <h4>Supporting evidence <span>{references.length}</span></h4>
+        <p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p>
+      </div>
+    </div>
+    <ul>
+      {references.map((reference, index) => <li key={`${reference.url ?? reference.title}-${index}`}>
+        <div className="vigil-taxonomy-supporting-evidence-source">
+          <p>{evidenceMeta(reference)}</p>
+          {reference.url
+            ? <a href={reference.url} target="_blank" rel="noreferrer">
+              <strong>{reference.title}</strong>
+              <ExternalLink aria-hidden="true" />
+            </a>
+            : <strong>{reference.title}</strong>}
+        </div>
+        {reference.evidence_note ? <p className="vigil-taxonomy-supporting-evidence-note"><strong>Evidence note.</strong> {reference.evidence_note}</p> : null}
+      </li>)}
+    </ul>
+  </section>;
 }
 
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -205,11 +251,13 @@ function ClassManualCard({
   classById,
   caseFileExamples,
   caseFileExamplesAvailable,
+  showSupportingEvidence = false,
 }: {
   item: FailureTaxonomyClass;
   classById: Map<string, FailureTaxonomyClass>;
   caseFileExamples: CaseFileExampleMap;
   caseFileExamplesAvailable: boolean;
+  showSupportingEvidence?: boolean;
 }) {
   const linkedCases = caseFileExamples[item.class_id] ?? [];
   const invariantExemplars = item.invariant_exemplars ?? [];
@@ -239,6 +287,14 @@ function ClassManualCard({
         <ul>{(item.exclusions ?? []).map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
       </section>
     </div>
+
+    {showSupportingEvidence
+      ? <SupportingEvidence item={item} />
+      : item.external_references?.length ? <p className="vigil-taxonomy-supporting-evidence-link">
+        <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`}>
+          Supporting evidence · {item.external_references.length} {item.external_references.length === 1 ? "source" : "sources"}
+        </Link>
+      </p> : null}
 
     <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
       <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
@@ -308,7 +364,7 @@ function ClassManualSection({
       </Link>
     </div>
     <h2 id={`${item.class_id.toLowerCase()}-view-heading`} className="sr-only">{item.name}</h2>
-    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} caseFileExamplesAvailable={caseFileExamplesAvailable} />
+    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} caseFileExamplesAvailable={caseFileExamplesAvailable} showSupportingEvidence />
   </section>;
 }
 
