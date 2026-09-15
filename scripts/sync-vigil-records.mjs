@@ -125,6 +125,7 @@ function compactIncidentRecord(record) {
     platform_or_vendor: record.platform_or_vendor,
     severity: record.severity,
     classification_status: record.classification_status,
+    classification_role: record.classification_role,
     primary_class_id: primaryClassId,
     primary_family_id: primaryFamilyId,
     secondary_class_ids: secondaryClassIds,
