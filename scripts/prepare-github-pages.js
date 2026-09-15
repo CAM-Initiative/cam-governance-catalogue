@@ -198,6 +198,20 @@ function taxonomyInvariantExemplarHtml(exemplar, classId) {
   return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Successful invariant · <a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
 }
 
+function taxonomyExternalReferenceHtml(reference) {
+  const meta = [reference.publisher, reference.date, reference.reference_role ? String(reference.reference_role).replaceAll("-", " ") : ""]
+    .filter(Boolean)
+    .join(" · ");
+  const title = escapeHtml(reference.title || "External source");
+  const titleHtml = reference.url
+    ? `<a href="${escapeHtml(reference.url)}" rel="noreferrer">${title}</a>`
+    : title;
+  const note = reference.evidence_note
+    ? `<p><strong>Evidence note.</strong> ${escapeHtml(reference.evidence_note)}</p>`
+    : "";
+  return `<li>${meta ? `<p>${escapeHtml(meta)}</p>` : ""}<p><strong>${titleHtml}</strong></p>${note}</li>`;
+}
+
 const taxonomyRoutes = [];
 for (const { document } of taxonomyFamilies) {
   const family = document?.family;
@@ -248,6 +262,7 @@ for (const { document } of taxonomyFamilies) {
     );
     const classCaseExamples = taxonomyCaseExamplesForClass(item.class_id);
     const classInvariantExemplars = Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : [];
+    const classExternalReferences = Array.isArray(item.external_references) ? item.external_references : [];
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Failure Taxonomy</p>
       <h1>${escapeHtml(item.name || item.class_id)}</h1>
@@ -264,6 +279,7 @@ for (const { document } of taxonomyFamilies) {
       ${listHtml(item.recognition?.required_conditions)}
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
       <h2>Linked Case Files</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified failure Case Files are currently linked to this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Successful invariant exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
