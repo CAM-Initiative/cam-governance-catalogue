@@ -23,7 +23,7 @@ assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification
 assert.match(caseFile, /stageId === "repair"[\s\S]*<CaseTaxonomyRepair raw=\{incident\.raw\}/);
 assert.match(caseFile, /vigil-exemplar-callout/);
 assert.match(caseFile, /The system worked as intended\./);
-assert.match(caseFile, /successful side of the failure boundary/);
+assert.match(caseFile, /what correct governance behaviour looks like when the invariant holds under pressure/);
 assert.match(caseFile, /Exemplar · successful invariant/);
 
 assert.match(taxonomyPanel, /raw\.taxonomy_classification/);
