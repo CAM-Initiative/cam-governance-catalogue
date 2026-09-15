@@ -3,7 +3,6 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
@@ -172,7 +171,7 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
+                        <CaseCell label="Severity"><span className="vigil-case-table-text">{record.severity ?? "SU"}</span></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
