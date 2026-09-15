@@ -205,12 +205,11 @@ export default function VigilCases() {
                         <div className="vigil-case-table-primary">
                           <span className="vigil-case-table-id" title={record.id}>{compactId(record.id)}</span>
                           <div className="vigil-case-table-copy">
-                            {exemplar && <span className="vigil-case-exemplar-marker">Successful invariant · system worked</span>}
                             <h2>{record.title}</h2>
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Classification">{exemplar ? <VigilStatusChip value="Exemplar" /> : <span className="vigil-case-table-text">{classificationLabel}</span>}</CaseCell>
+                        <CaseCell label="Classification"><span className="vigil-case-table-text">{classificationLabel}</span></CaseCell>
                         <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
