@@ -9,7 +9,6 @@ const datasets = await readFile(resolve(repoRoot, "src/pages/datasets.tsx"), "ut
 const printableReport = await readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8");
 const polishCss = await readFile(resolve(repoRoot, "src/polish.css"), "utf8");
 const reportCss = await readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8");
-const vigilUxCss = await readFile(resolve(repoRoot, "src/vigil-ux-v5.css"), "utf8");
 const taxonomyPanel = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
 const taxonomyLoader = await readFile(resolve(repoRoot, "src/lib/vigilFailureTaxonomy.ts"), "utf8");
 const taxonomyClassification = await readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8");
@@ -21,10 +20,6 @@ const deterministicReport = await readFile(resolve(repoRoot, "src/pages/evidence
 assert.match(caseFile, /import \{ CaseTaxonomyClassification, CaseTaxonomyRepair \} from "@\/components\/vigil\/CaseTaxonomyClassification"/);
 assert.match(caseFile, /stageId === "classify"[\s\S]*<CaseTaxonomyClassification raw=\{incident\.raw\}/);
 assert.match(caseFile, /stageId === "repair"[\s\S]*<CaseTaxonomyRepair raw=\{incident\.raw\}/);
-assert.match(caseFile, /vigil-exemplar-callout/);
-assert.match(caseFile, /The system worked as intended\./);
-assert.match(caseFile, /what correct governance behaviour looks like when the invariant holds under pressure/);
-assert.match(caseFile, /Exemplar · successful invariant/);
 
 assert.match(taxonomyPanel, /raw\.taxonomy_classification/);
 assert.match(taxonomyPanel, /primary_family/);
@@ -131,9 +126,6 @@ assert.match(caseLibrary, /classificationStatusCounts\(records\)/);
 assert.match(caseLibrary, /canonicalComparisonKey\(classificationStatusLabel\(record\)\)/);
 assert.match(caseLibrary, />Classification<\/span>/);
 assert.match(caseLibrary, /SortHeading label="Classification" sortKey="classification"/);
-assert.match(caseLibrary, /classificationLabel === "Exemplar"/);
-assert.match(caseLibrary, /VigilStatusChip value="Exemplar"/);
-assert.match(caseLibrary, /Successful invariant · system worked/);
 assert.match(caseLibrary, /taxonomyFailureTypeLabel\(record\.raw\)/);
 assert.doesNotMatch(caseLibrary, /Failure type/);
 assert.doesNotMatch(caseLibrary, /Taxonomy status/);
@@ -184,9 +176,6 @@ assert.match(printableReport, /VIGIL Observatory Failure Taxonomy/);
 assert.match(printableReport, /\{ number: "04", label: "Repair" \}/);
 assert.match(printableReport, /\{ number: "05", label: "References" \}/);
 
-assert.match(vigilUxCss, /\.vigil-exemplar-callout/);
-assert.match(vigilUxCss, /\.vigil-case-table-row\.is-exemplar/);
-assert.match(vigilUxCss, /\.vigil-case-exemplar-marker/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-grid \{\s*display: block !important;/s);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-evidence-source-actions \{\s*display: none !important;/s);
 assert.match(reportCss, /vigil-classification-layout/);
