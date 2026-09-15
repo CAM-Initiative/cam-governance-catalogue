@@ -176,6 +176,28 @@ test("historical identifiers do not become live retired-record links", async () 
   assert.doesNotMatch(combined, /VIGIL-(?:\d{4}-)?(?:FM|OBS|RESEARCH)-/);
 });
 
+test("Failure Taxonomy pages project canonical linked Case Files without conflating successful exemplars", async () => {
+  const [taxonomyPage, taxonomyLoader, taxonomyCss, pages] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/lib/vigilFailureTaxonomy.ts"),
+    read("src/vigil-failure-taxonomy-refinements.css"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
+  assert.match(taxonomyLoader, /caseFileExamples: FailureTaxonomyCaseFileExamples/);
+  assert.match(taxonomyPage, /Linked Case Files/);
+  assert.match(taxonomyPage, /No classified failure Case Files are currently linked to this class/);
+  assert.match(taxonomyPage, /Successful invariant exemplars/);
+  assert.match(taxonomyPage, /item\.invariant_exemplars/);
+  assert.match(taxonomyPage, /\/observatory\/cases\/\$\{example\.incident_id\}/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-linked-cases/);
+  assert.match(taxonomyCss, /\.vigil-taxonomy-invariant-exemplars/);
+  assert.match(pages, /generated\/VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
+  assert.match(pages, /taxonomyCaseExamplesForClass/);
+  assert.match(pages, /Successful invariant exemplars/);
+  assert.match(pages, /No classified failure Case Files are currently linked to this family/);
+});
+
 test("taxonomy and external-governance public systems remain intact", async () => {
   const [taxonomyPage, taxonomyLoader, datasets, standards, externalKnowledge] = await Promise.all([read("src/pages/vigil-failure-taxonomy.tsx"), read("src/lib/vigilFailureTaxonomy.ts"), read("src/pages/datasets.tsx"), read("src/pages/vigil-standards-baseline.tsx"), read("src/lib/vigilExternalKnowledge.ts")]);
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
