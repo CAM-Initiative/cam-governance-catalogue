@@ -68,6 +68,18 @@ test("public taxonomy naming uses VIGIL Failure Taxonomy", async () => {
   assert.doesNotMatch(publicSources, /VIGIL AI Governance Failure Taxonomy/);
 });
 
+test("Failure Taxonomy remains available if the linked Case File projection cannot be fetched", async () => {
+  const [loader, taxonomy] = await Promise.all([
+    read("src/lib/vigilFailureTaxonomy.ts"),
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+  ]);
+  assert.match(loader, /caseFileExamplesAvailable: boolean/);
+  assert.match(loader, /\.catch\(\(\) => \(\{ data: \{ classes: \{\} \}, available: false \}\)\)/);
+  assert.match(loader, /caseFileExamplesAvailable: caseFileProjection\.available/);
+  assert.match(taxonomy, /Case File links are temporarily unavailable\. The Failure Class definition remains current\./);
+  assert.match(taxonomy, /caseFileExamplesAvailable=\{state\.data\.caseFileExamplesAvailable\}/);
+});
+
 test("failure taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
   const [taxonomy, shellCss] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
@@ -109,6 +121,23 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
   assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
+});
+
+test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
+  const [cases, caseLibraryCss] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
+    read("src/vigil-case-library-simplify.css"),
+  ]);
+  assert.match(cases, /function paginationTokens\(currentPage: number, pageCount: number\)/);
+  assert.match(cases, /pageCount <= 7/);
+  assert.match(cases, /ChevronsLeft/);
+  assert.match(cases, /ChevronsRight/);
+  assert.match(cases, /aria-current=\{token === currentPage \? "page" : undefined\}/);
+  assert.match(cases, /aria-label="First page"/);
+  assert.match(cases, /aria-label="Last page"/);
+  assert.match(cases, /className="vigil-pagination-ellipsis"/);
+  assert.match(caseLibraryCss, /\.vigil-pagination-page\.is-current/);
+  assert.match(caseLibraryCss, /\.vigil-pagination-arrow\.is-boundary/);
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {

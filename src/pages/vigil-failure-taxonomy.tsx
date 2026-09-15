@@ -204,10 +204,12 @@ function ClassManualCard({
   item,
   classById,
   caseFileExamples,
+  caseFileExamplesAvailable,
 }: {
   item: FailureTaxonomyClass;
   classById: Map<string, FailureTaxonomyClass>;
   caseFileExamples: CaseFileExampleMap;
+  caseFileExamplesAvailable: boolean;
 }) {
   const linkedCases = caseFileExamples[item.class_id] ?? [];
   const invariantExemplars = item.invariant_exemplars ?? [];
@@ -239,16 +241,18 @@ function ClassManualCard({
     </div>
 
     <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
-      <h4>Linked Case Files <span>{linkedCases.length}</span></h4>
-      {linkedCases.length ? <ul>
-        {linkedCases.map((example) => <li key={example.incident_id}>
-          <Link href={`/observatory/cases/${example.incident_id}`}>
-            <code>{example.incident_id}</code>
-            <strong>{example.incident_title}</strong>
-          </Link>
-          <p>{caseMeta(example)}</p>
-        </li>)}
-      </ul> : <p className="vigil-taxonomy-linked-cases-empty">No classified failure Case Files are currently linked to this class.</p>}
+      <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
+      {!caseFileExamplesAvailable
+        ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Failure Class definition remains current.</p>
+        : linkedCases.length ? <ul>
+          {linkedCases.map((example) => <li key={example.incident_id}>
+            <Link href={`/observatory/cases/${example.incident_id}`}>
+              <code>{example.incident_id}</code>
+              <strong>{example.incident_title}</strong>
+            </Link>
+            <p>{caseMeta(example)}</p>
+          </li>)}
+        </ul> : <p className="vigil-taxonomy-linked-cases-empty">No classified failure Case Files are currently linked to this class.</p>}
     </section>
 
     {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Successful invariant exemplars for ${item.name}`}>
@@ -288,11 +292,13 @@ function ClassManualSection({
   parent,
   classById,
   caseFileExamples,
+  caseFileExamplesAvailable,
 }: {
   item: FailureTaxonomyClass;
   parent: FailureTaxonomyFamilyDocument;
   classById: Map<string, FailureTaxonomyClass>;
   caseFileExamples: CaseFileExampleMap;
+  caseFileExamplesAvailable: boolean;
 }) {
   return <section className="vigil-taxonomy-single-class-view" aria-labelledby={`${item.class_id.toLowerCase()}-view-heading`}>
     <div className="vigil-taxonomy-single-class-context">
@@ -302,7 +308,7 @@ function ClassManualSection({
       </Link>
     </div>
     <h2 id={`${item.class_id.toLowerCase()}-view-heading`} className="sr-only">{item.name}</h2>
-    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} />
+    <ClassManualCard item={item} classById={classById} caseFileExamples={caseFileExamples} caseFileExamplesAvailable={caseFileExamplesAvailable} />
   </section>;
 }
 
@@ -310,10 +316,12 @@ function FamilyManualSection({
   document,
   classById,
   caseFileExamples,
+  caseFileExamplesAvailable,
 }: {
   document: FailureTaxonomyFamilyDocument;
   classById: Map<string, FailureTaxonomyClass>;
   caseFileExamples: CaseFileExampleMap;
+  caseFileExamplesAvailable: boolean;
 }) {
   const family = document.family;
 
@@ -364,6 +372,7 @@ function FamilyManualSection({
         item={item}
         classById={classById}
         caseFileExamples={caseFileExamples}
+        caseFileExamplesAvailable={caseFileExamplesAvailable}
       />)}
     </div>
   </section>;
@@ -463,10 +472,12 @@ export default function VigilFailureTaxonomy() {
               parent={selectedFamily}
               classById={classById}
               caseFileExamples={state.data.caseFileExamples.classes}
+              caseFileExamplesAvailable={state.data.caseFileExamplesAvailable}
             /> : <FamilyManualSection
               document={selectedFamily}
               classById={classById}
               caseFileExamples={state.data.caseFileExamples.classes}
+              caseFileExamplesAvailable={state.data.caseFileExamplesAvailable}
             />}
           </div>
         </div> : null}
