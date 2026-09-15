@@ -210,16 +210,6 @@ for (const { document } of taxonomyFamilies) {
     "VIGIL Observatory AI governance failure family.",
   );
   const familyClasses = Array.isArray(document.classes) ? document.classes : [];
-  const familyCaseMap = new Map();
-  for (const item of familyClasses) {
-    for (const example of taxonomyCaseExamplesForClass(item.class_id)) {
-      if (!familyCaseMap.has(example.incident_id)) familyCaseMap.set(example.incident_id, example);
-    }
-  }
-  const familyCaseExamples = [...familyCaseMap.values()];
-  const familyInvariantExemplars = familyClasses.flatMap((item) =>
-    (Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : []).map((exemplar) => ({ exemplar, classId: item.class_id })),
-  );
   const familyBody = `<main data-static-crawl-fallback="vigil-taxonomy-family" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Failure Taxonomy</p>
     <h1>${escapeHtml(family.name || family.family_id)}</h1>
@@ -235,9 +225,6 @@ for (const { document } of taxonomyFamilies) {
     <h2>Classification boundary</h2>
     <p><strong>Include when:</strong> ${escapeHtml(family.inclusion_rule || "Not stated.")}</p>
     <p><strong>Exclude when:</strong> ${escapeHtml(family.exclusion_rule || "Not stated.")}</p>
-    <h2>Linked Case Files</h2>
-    ${familyCaseExamples.length ? `<ul>${familyCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified failure Case Files are currently linked to this family.</p>"}
-    ${familyInvariantExemplars.length ? `<h2>Successful invariant exemplars</h2><ul>${familyInvariantExemplars.map(({ exemplar, classId }) => taxonomyInvariantExemplarHtml(exemplar, classId)).join("")}</ul>` : ""}
     <h2>Failure classes</h2>
     <ul>${familyClasses.map((item) => `<li><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}">${escapeHtml(item.name || item.class_id)}</a> <code>${escapeHtml(item.class_id)}</code></li>`).join("")}</ul>
   </main>`;
