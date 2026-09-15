@@ -112,18 +112,22 @@ test("Case Files use one canonical Incident and retain the five substantive stag
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
-  const [cases, caseFile, classification, report, pages, sync] = await Promise.all([
+  const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("scripts/prepare-github-pages.js"),
     read("scripts/sync-vigil-records.mjs"),
+    read("src/vigil-ux-v4.css"),
+    read("src/vigil-case-file-polish.css"),
+    read("src/vigil-ux-v5.css"),
   ]);
-  assert.match(cases, /Successful invariant · system worked/);
-  assert.match(cases, /VigilStatusChip value="Exemplar"/);
   assert.match(cases, /is-exemplar/);
-  assert.match(caseFile, /const isExemplar =/);
+  assert.match(cases, /vigil-case-table-text/);
+  assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
+  assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
+  assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
   assert.match(caseFile, /The system worked as intended\./);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /Exemplar · successful invariant/);
@@ -132,6 +136,10 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
+  assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
+  assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
+  assert.match(casePolishCss, /display: grid !important/);
+  assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
 test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
