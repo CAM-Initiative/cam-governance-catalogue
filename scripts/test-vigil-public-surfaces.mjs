@@ -126,7 +126,7 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(cases, /is-exemplar/);
   assert.match(caseFile, /const isExemplar =/);
   assert.match(caseFile, /The system worked as intended\./);
-  assert.match(caseFile, /successful side of the failure boundary/);
+  assert.match(caseFile, /what correct governance behaviour looks like when the invariant holds under pressure/);
   assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(taxonomyHelpers, /successful-invariant/);
   assert.match(taxonomyHelpers, /return "Exemplar"/);
