@@ -414,16 +414,6 @@
 }
 
 @media (max-width: 620px) {
-  .vigil-exemplar-callout {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
-
-  .vigil-exemplar-callout-icon {
-    width: 2.6rem;
-    height: 2.6rem;
-  }
-
   .vigil-affected-system-grid dl,
   .vigil-classification-identity dl {
     grid-template-columns: 1fr;
