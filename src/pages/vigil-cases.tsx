@@ -3,18 +3,22 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
-import { normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
+import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
+import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
   | { status: "loading" }
   | { status: "ready"; records: VigilIndexRecord[]; notice?: string }
   | { status: "error"; message: string };
 
-type SortKey = "id" | "severity";
+type SortKey = "id" | "classification" | "severity";
 type SortDirection = "asc" | "desc";
 type SortState = { key: SortKey; direction: SortDirection };
+
+type ClassificationStatusCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, SU: 6 };
@@ -29,6 +33,21 @@ function caseSummary(record: VigilIndexRecord) {
     ?? "No public Incident summary is currently available.";
 }
 
+function classificationStatusLabel(record: VigilIndexRecord) {
+  return taxonomyFailureTypeLabel(record.raw);
+}
+
+function classificationStatusCounts(records: VigilIndexRecord[]): ClassificationStatusCount[] {
+  const counts = new Map<string, ClassificationStatusCount>();
+  for (const record of records) {
+    const label = classificationStatusLabel(record);
+    const key = canonicalComparisonKey(label);
+    const existing = counts.get(key);
+    if (existing) existing.count += 1;
+    else counts.set(key, { key, label, count: 1 });
+  }
+  return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
+}
 
 function severityRank(record: VigilIndexRecord) {
   return SEVERITY_ORDER[String(record.severity ?? "SU").trim().toUpperCase()] ?? 6;
@@ -41,6 +60,7 @@ function incidentCases(records: VigilIndexRecord[]) {
 function compareCases(a: VigilIndexRecord, b: VigilIndexRecord, sort: SortState) {
   let comparison = 0;
   if (sort.key === "severity") comparison = severityRank(a) - severityRank(b);
+  else if (sort.key === "classification") comparison = classificationStatusLabel(a).localeCompare(classificationStatusLabel(b), undefined, { sensitivity: "base" });
   else comparison = a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
 
   if (comparison === 0) comparison = a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
@@ -71,6 +91,7 @@ function SortHeading({ label, sortKey, sort, onSort }: { label: string; sortKey:
 export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
+  const [classification, setClassification] = useState("");
   const [sort, setSort] = useState<SortState>({ key: "id", direction: "desc" });
   const [page, setPage] = useState(1);
 
@@ -86,16 +107,21 @@ export default function VigilCases() {
   }, []);
 
   const records = state.status === "ready" ? state.records : [];
+  const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
   const updated = useMemo(() => {
     const dates = values(records, (record) => record.record_last_updated ?? record.publicDisplay.dates.lastUpdated ?? record.date_recorded).sort();
     return dates.length ? dates[dates.length - 1] : undefined;
   }, [records]);
 
-  const filtered = useMemo(() => records.filter((record) => matchesVigilSearch(record.searchText, search)), [records, search]);
+  const filtered = useMemo(() => records.filter((record) => {
+    if (!matchesVigilSearch(record.searchText, search)) return false;
+    if (classification && canonicalComparisonKey(classificationStatusLabel(record)) !== classification) return false;
+    return true;
+  }), [classification, records, search]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, sort]);
+  useEffect(() => setPage(1), [search, classification, sort]);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -122,6 +148,7 @@ export default function VigilCases() {
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">
                   <span><strong>{records.length}</strong> case files</span>
+                  <span><strong>{classificationStates.length}</strong> classification states</span>
                   {updated && <span>Updated <strong>{updated}</strong></span>}
                 </div>
               )}
@@ -141,10 +168,18 @@ export default function VigilCases() {
                   />
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
+
+                <label className="vigil-family-select">
+                  <span>Classification status</span>
+                  <select value={classification} onChange={(event) => setClassification(event.target.value)}>
+                    <option value="">All statuses ({records.length})</option>
+                    {classificationStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
+                  </select>
+                </label>
               </div>
               <div className="vigil-result-summary">
                 <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
-                {search && <button type="button" onClick={() => setSearch("")}>Clear filters</button>}
+                {(search || classification) && <button type="button" onClick={() => { setSearch(""); setClassification(""); }}>Clear filters</button>}
               </div>
             </section>
 
@@ -155,6 +190,7 @@ export default function VigilCases() {
             <section className="vigil-case-table" aria-label="AI Incident Case Files">
               <div className="vigil-case-table-head">
                 <SortHeading label="Incident" sortKey="id" sort={sort} onSort={updateSort} />
+                <SortHeading label="Classification status" sortKey="classification" sort={sort} onSort={updateSort} />
                 <SortHeading label="Severity" sortKey="severity" sort={sort} onSort={updateSort} />
                 <span></span>
               </div>
@@ -171,13 +207,14 @@ export default function VigilCases() {
                             <p>{caseSummary(record)}</p>
                           </div>
                         </div>
-                        <CaseCell label="Severity"><span className="vigil-case-table-text">{record.severity ?? "SU"}</span></CaseCell>
+                        <CaseCell label="Classification status"><span className="vigil-case-table-text">{classificationStatusLabel(record)}</span></CaseCell>
+                        <CaseCell label="Severity"><VigilStatusChip value={record.severity} /></CaseCell>
                         <span className="vigil-case-table-open" aria-hidden="true"><ChevronRight /></span>
                       </Link>
                     </article>
                   );
                 })}
-                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description.</div>}
+                {state.status === "ready" && sorted.length === 0 && <div className="vigil-empty-panel">No Case Files match those terms. Try a broader description or another classification status.</div>}
               </div>
             </section>
 
