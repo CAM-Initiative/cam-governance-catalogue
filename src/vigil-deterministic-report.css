@@ -28,6 +28,20 @@
 
 .vigil-deterministic-report-host .report-document {
   color-scheme: light;
+  --background: var(--report-paper);
+  --foreground: var(--report-ink);
+  --card: var(--report-panel);
+  --card-foreground: var(--report-ink);
+  --popover: var(--report-paper);
+  --popover-foreground: var(--report-ink);
+  --secondary: var(--report-panel-strong);
+  --secondary-foreground: var(--report-ink);
+  --muted: var(--report-panel);
+  --muted-foreground: var(--report-muted);
+  --accent: var(--report-panel-strong);
+  --accent-foreground: var(--report-ink);
+  --border: var(--report-rule);
+  --input: var(--report-rule);
   font-family: var(--app-font-sans);
   color: hsl(var(--report-ink));
   background: hsl(var(--report-paper));
@@ -186,6 +200,7 @@
   font-size: 0.94rem;
   font-weight: 400;
   line-height: 1.58;
+  color: hsl(var(--report-ink) / 0.9) !important;
 }
 
 .vigil-deterministic-report-host .report-field {
