@@ -254,7 +254,7 @@ export default function VigilCases() {
                 <span className="sr-only">Page {currentPage} of {pageCount}</span>
                 <button
                   type="button"
-                  className="vigil-pagination-arrow"
+                  className="vigil-pagination-arrow is-boundary"
                   disabled={currentPage === 1}
                   onClick={() => goToPage(1)}
                   aria-label="First page"
@@ -290,7 +290,7 @@ export default function VigilCases() {
                 ><ChevronRight aria-hidden="true" /></button>
                 <button
                   type="button"
-                  className="vigil-pagination-arrow"
+                  className="vigil-pagination-arrow is-boundary"
                   disabled={currentPage === pageCount}
                   onClick={() => goToPage(pageCount)}
                   aria-label="Last page"
