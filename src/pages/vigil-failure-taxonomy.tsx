@@ -278,11 +278,29 @@ function ClassManualCard({
 function FamilyManualSection({
   document,
   classById,
+  caseFileExamples,
 }: {
   document: FailureTaxonomyFamilyDocument;
   classById: Map<string, FailureTaxonomyClass>;
+  caseFileExamples: CaseFileExampleMap;
 }) {
   const family = document.family;
+  const familyCases = new Map<string, { example: FailureTaxonomyCaseFileExample; classIds: string[] }>();
+  for (const item of document.classes) {
+    for (const example of caseFileExamples[item.class_id] ?? []) {
+      const existing = familyCases.get(example.incident_id);
+      if (existing) {
+        if (!existing.classIds.includes(item.class_id)) existing.classIds.push(item.class_id);
+      } else {
+        familyCases.set(example.incident_id, { example, classIds: [item.class_id] });
+      }
+    }
+  }
+  const linkedFamilyCases = [...familyCases.values()].sort((a, b) => a.example.incident_id.localeCompare(b.example.incident_id));
+  const familyExemplars = document.classes.flatMap((item) =>
+    (item.invariant_exemplars ?? []).map((exemplar) => ({ exemplar, classId: item.class_id })),
+  );
+
   return <section className="vigil-taxonomy-manual-family" id={family.family_id.toLowerCase()}>
     <header className="vigil-taxonomy-manual-family-hero">
       <h2>{family.name}</h2>
@@ -314,10 +332,39 @@ function FamilyManualSection({
         <ul>{family.scope.map((scope) => <li key={scope}>{scope}</li>)}</ul>
       </> : null}
 
-      <section className="vigil-taxonomy-manual-examples" aria-label={`Examples for ${family.name}`}>
-        <h3>Examples</h3>
-        <p>No Case File examples are linked to this failure family yet.</p>
+      <section className="vigil-taxonomy-manual-examples" aria-label={`Linked Case Files for ${family.name}`}>
+        <h3>Linked Case Files <span>{linkedFamilyCases.length}</span></h3>
+        {linkedFamilyCases.length ? <ul className="vigil-taxonomy-family-case-list">
+          {linkedFamilyCases.map(({ example, classIds }) => <li key={example.incident_id}>
+            <Link href={`/observatory/cases/${example.incident_id}`}>
+              <code>{example.incident_id}</code>
+              <strong>{example.incident_title}</strong>
+            </Link>
+            <p>
+              {classIds.map((classId, index) => <span key={classId}>
+                {index ? " · " : ""}
+                <Link href={`/observatory/knowledge-base/failure-taxonomy/${classId}`}><code>{classId}</code></Link>
+              </span>)}
+            </p>
+          </li>)}
+        </ul> : <p>No classified failure Case Files are currently linked to this family.</p>}
       </section>
+
+      {familyExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars vigil-taxonomy-family-exemplars" aria-label={`Successful invariant exemplars for ${family.name}`}>
+        <h3>Successful invariant exemplars <span>{familyExemplars.length}</span></h3>
+        <ul>
+          {familyExemplars.map(({ exemplar, classId }) => <li key={`${classId}-${exemplar.linked_incident_id}`}>
+            <Link href={`/observatory/cases/${exemplar.linked_incident_id}`}>
+              <code>{exemplar.linked_incident_id}</code>
+              <strong>{exemplar.title}</strong>
+            </Link>
+            <p>
+              <Link href={`/observatory/knowledge-base/failure-taxonomy/${classId}`}><code>{classId}</code></Link>
+              {" · "}Successful invariant{exemplar.exemplar_status ? ` · ${clean(exemplar.exemplar_status)}` : ""}
+            </p>
+          </li>)}
+        </ul>
+      </section> : null}
 
       {family.allowed_class_ids?.length ? <details>
         <summary><strong>Allowed identifiers</strong></summary>
@@ -334,7 +381,12 @@ function FamilyManualSection({
 
     <h2 className="vigil-taxonomy-manual-classes-heading">Failure classes</h2>
     <div className="vigil-taxonomy-manual-class-list">
-      {document.classes.map((item) => <ClassManualCard key={item.class_id} item={item} classById={classById} />)}
+      {document.classes.map((item) => <ClassManualCard
+        key={item.class_id}
+        item={item}
+        classById={classById}
+        caseFileExamples={caseFileExamples}
+      />)}
     </div>
   </section>;
 }
@@ -422,7 +474,11 @@ export default function VigilFailureTaxonomy() {
             setCollapsed={setContentsCollapsed}
           />
           <div className="vigil-taxonomy-manual-document" aria-live="polite">
-            <FamilyManualSection document={selectedFamily} classById={classById} />
+            <FamilyManualSection
+              document={selectedFamily}
+              classById={classById}
+              caseFileExamples={state.data.caseFileExamples.classes}
+            />
           </div>
         </div> : null}
       </section>
