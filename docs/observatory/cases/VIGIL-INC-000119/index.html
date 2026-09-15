@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>VIGIL-INC-000119: Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack | VIGIL Observatory</title>
+    <meta name="description" content="Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000119/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="VIGIL-INC-000119: Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack | VIGIL Observatory" />
+    <meta property="og:description" content="Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000119/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VIGIL-INC-000119: Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack | VIGIL Observatory" />
+    <meta name="twitter:description" content="Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-Dw5PgMW3.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D3MXhcaK.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory · VIGIL-INC-000119</p>
+    <h1>Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack</h1>
+    <p>Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools.</p>
+    <dl>
+      <dt>VIGIL classification status</dt><dd>unclassified</dd>
+      <dt>VIGIL primary classification</dt><dd>not stated</dd>
+      <dt>VIGIL secondary classifications</dt><dd>None recorded</dd>
+      <dt>Severity</dt><dd>S2</dd>
+      <dt>Vendor / platform</dt><dd>Multi Vendor</dd>
+    </dl>
+  </main></div>
+  </body>
+</html>
