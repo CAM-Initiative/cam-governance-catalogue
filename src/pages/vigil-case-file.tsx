@@ -507,13 +507,13 @@ export default function VigilCaseFile() {
     <header className="vigil-case-file-hero vigil-case-file-hero-v4">
       <div className="vigil-case-file-title-block">
         <p className="vigil-library-kicker">VIGIL Case File · AI Incident investigation</p>
-        {isExemplar && <div className="vigil-exemplar-badge" role="status" aria-label="Successful invariant exemplar">Exemplar</div>}
         <h1>{title}</h1>
+        {isExemplar && <div className="vigil-exemplar-badge" role="status">Successful invariant exemplar</div>}
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Failure type" value={classification} />
+          <Field label="Classification status" value={classification} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
