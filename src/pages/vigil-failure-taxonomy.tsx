@@ -270,11 +270,6 @@ function ClassManualCard({
       <ul>{item.examples.map((example) => <li key={example}>{example}</li>)}</ul>
     </> : null}
 
-    {item.aliases?.length ? <>
-      <h4>Prior codes and aliases</h4>
-      <ul>{item.aliases.map((alias) => <li key={alias}><code>{alias}</code></li>)}</ul>
-    </> : null}
-
     {item.relationships?.length ? <>
       <h4>Relationships</h4>
       <ul>{item.relationships.map((relationship, index) => <li key={`${relationship.type}-${relationship.target_id}-${index}`}>
@@ -360,10 +355,6 @@ function FamilyManualSection({
         </li>)}</ul>
       </details> : null}
 
-      {family.aliases?.length ? <details>
-        <summary><strong>Prior codes and aliases</strong></summary>
-        <ul>{family.aliases.map((alias) => <li key={alias}><code>{alias}</code></li>)}</ul>
-      </details> : null}
     </header>
 
     <h2 className="vigil-taxonomy-manual-classes-heading">Failure classes</h2>
