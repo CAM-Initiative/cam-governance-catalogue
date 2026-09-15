@@ -6,6 +6,7 @@ function toneFor(value: string) {
   if (/\bs1\b|\bhigh\b|severe/.test(key)) return "high";
   if (/\bs2\b|moderate|medium/.test(key)) return "moderate";
   if (/\bs3\b|\bs4\b|low|negligible/.test(key)) return "low";
+  if (/exemplar|successful invariant|system worked/.test(key)) return "success";
   return "neutral";
 }
 
