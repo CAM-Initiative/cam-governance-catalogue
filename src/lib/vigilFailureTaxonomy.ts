@@ -170,11 +170,12 @@ export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Prom
 export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<FailureTaxonomyLoadResult<FailureTaxonomyDataset>> {
   const indexUrl = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
   try {
-    const [index, caseFileExamples] = await Promise.all([
-      fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher),
-      fetchJson<FailureTaxonomyCaseFileExamples>(VIGIL_FAILURE_TAXONOMY_CASE_FILE_EXAMPLES_URL, fetcher),
+    const index = await fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher);
+    const [families, caseFileExamples] = await Promise.all([
+      Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${VIGIL_MAIN_TAXONOMY_ROOT}/${entry.file}`, fetcher))),
+      fetchJson<FailureTaxonomyCaseFileExamples>(VIGIL_FAILURE_TAXONOMY_CASE_FILE_EXAMPLES_URL, fetcher)
+        .catch(() => ({ classes: {} })),
     ]);
-    const families = await Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${VIGIL_MAIN_TAXONOMY_ROOT}/${entry.file}`, fetcher)));
     return {
       status: "ready",
       attemptedUrl: indexUrl,
