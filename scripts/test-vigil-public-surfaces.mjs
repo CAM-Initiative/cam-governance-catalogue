@@ -68,6 +68,18 @@ test("public taxonomy naming uses VIGIL Failure Taxonomy", async () => {
   assert.doesNotMatch(publicSources, /VIGIL AI Governance Failure Taxonomy/);
 });
 
+test("Failure Taxonomy remains available if the linked Case File projection cannot be fetched", async () => {
+  const [loader, taxonomy] = await Promise.all([
+    read("src/lib/vigilFailureTaxonomy.ts"),
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+  ]);
+  assert.match(loader, /caseFileExamplesAvailable: boolean/);
+  assert.match(loader, /\.catch\(\(\) => \(\{ data: \{ classes: \{\} \}, available: false \}\)\)/);
+  assert.match(loader, /caseFileExamplesAvailable: caseFileProjection\.available/);
+  assert.match(taxonomy, /Case File links are temporarily unavailable\. The Failure Class definition remains current\./);
+  assert.match(taxonomy, /caseFileExamplesAvailable=\{state\.data\.caseFileExamplesAvailable\}/);
+});
+
 test("failure taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
   const [taxonomy, shellCss] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
