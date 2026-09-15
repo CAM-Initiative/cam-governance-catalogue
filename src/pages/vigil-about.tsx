@@ -31,7 +31,7 @@ export default function VigilAbout() {
     <header className="vigil-about-hero">
       <p className="vigil-library-kicker">VIGIL Observatory</p>
       <h1>About VIGIL Observatory</h1>
-      <p>VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory: a public incident-analysis system that preserves canonical Incident records, diagnoses governance and control failures, applies a maintained failure taxonomy, and links evidence to accountable repair and verification.</p>
+      <p>VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair AI governance observatory. It provides a public AI incident database through its canonical Case File registry, preserving Incident records, diagnosing governance and control failures, applying a maintained failure taxonomy, and linking evidence to accountable repair and verification.</p>
     </header>
 
     <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
