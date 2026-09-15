@@ -58,6 +58,48 @@
   justify-content: center;
 }
 
+.vigil-taxonomy-manual-contents ul li.is-active-class > a {
+  background: hsl(var(--vigil-nav-active) / 0.34);
+  color: hsl(var(--foreground));
+  font-weight: 650;
+}
+
+.vigil-taxonomy-single-class-view {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.vigil-taxonomy-single-class-context {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.15rem 0.15rem 0.1rem;
+}
+
+.vigil-taxonomy-single-class-context p {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-single-class-context a {
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-taxonomy-single-class-context a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+}
+
 .vigil-taxonomy-invariant-exemplars h3 {
   display: flex;
   align-items: baseline;
@@ -166,6 +208,14 @@
 
 .vigil-taxonomy-exemplar-basis {
   color: hsl(var(--foreground) / 0.82) !important;
+}
+
+@media (max-width: 700px) {
+  .vigil-taxonomy-single-class-context {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
 }
 
 @media (max-width: 1050px) {
