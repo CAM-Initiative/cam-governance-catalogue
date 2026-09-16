@@ -584,3 +584,34 @@ test("About section rules are attached only to section boundaries", async () => 
   assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
 });
+
+
+test("About disambiguates VIGIL Observatory from unrelated VIGIL projects", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /VIGIL Observatory is also a distinct project/);
+  assert.match(about, /https:\/\/vigil\.agency\//);
+  assert.match(about, /https:\/\/vigilsoc\.org\//);
+  assert.match(about, /open-source AI-powered security operations platform/);
+  assert.match(about, /open-source AI security operations project/);
+});
+
+test("About citation uses a single Suggested general citation heading", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /<h2 id="vigil-citation-heading">Suggested general citation<\/h2>/);
+  assert.equal((about.match(/Suggested general citation/g) || []).length, 1);
+  assert.doesNotMatch(about, /Cite the work while preserving the relevant record or version/);
+});
+
+test("Publication copy names CAM Initiative without repeating the maintainer", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /VIGIL Observatory is published by <strong>CAM Initiative<\/strong>\. Case Files are designed/);
+  assert.doesNotMatch(about, /published by <strong>CAM Initiative<\/strong> and maintained by/);
+});
+
+test("External governance tools use subtle source-type icons", async () => {
+  const rail = await read("src/components/ExploreGovernanceRail.tsx");
+  assert.match(rail, /title: "AI Regulations Tracker"[\s\S]*icon: Scale/);
+  assert.match(rail, /title: "AI Incident Database"[\s\S]*icon: Database/);
+  assert.match(rail, /title: "OECD AI Incidents Monitor"[\s\S]*icon: Database/);
+  assert.match(rail, /title: "NIST AI Resource Center"[\s\S]*icon: BookOpen/);
+});
