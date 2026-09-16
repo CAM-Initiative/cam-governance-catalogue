@@ -507,3 +507,11 @@ test("footer avoids repeating the header brand lockup", async () => {
   assert.doesNotMatch(footer, /cam-triskelion\.svg/);
   assert.doesNotMatch(footer, />CAM Initiative<\/span>/);
 });
+
+
+test("Case Files landing page stays deliberately terse", async () => {
+  const cases = await read("src/pages/vigil-cases.tsx");
+  assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
+  assert.doesNotMatch(cases, /VIGIL Observatory provides a public AI incident database through its Case File registry/);
+  assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
+});
