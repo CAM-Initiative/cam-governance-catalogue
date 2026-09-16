@@ -97,7 +97,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse AI governance standards, VIGIL Case Files, the VIGIL Failure Taxonomy, the Harm & Severity Methodology, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
+            <p>Browse AI governance standards, VIGIL Observatory Case Files, the VIGIL Observatory Failure Taxonomy, the Harm & Severity Methodology, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -111,7 +111,7 @@ export default function VigilKnowledgeHub() {
             />
             <CollectionCard
               href="/observatory/cases"
-              title="VIGIL Case Files"
+              title="VIGIL Observatory Case Files"
               description="Documented AI Incident investigations organised through Observation, Assessment, Classification, Repair and References, with record-local evidence and occurrence-level governance analysis."
               meta={caseFilesMeta}
               actionLabel="Browse case files"
@@ -125,7 +125,7 @@ export default function VigilKnowledgeHub() {
             />
             <CollectionCard
               href="/observatory/knowledge-base/failure-taxonomy"
-              title="VIGIL Failure Taxonomy"
+              title="VIGIL Observatory Failure Taxonomy"
               description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with recognition criteria, exclusions, examples and relationships."
               meta={taxonomyMeta}
               chip="Beta"
@@ -134,7 +134,7 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/datasets"
               title="Datasets"
-              description="Downloadable VIGIL and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Failure Taxonomy publication."
+              description="Downloadable VIGIL Observatory and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Observatory Failure Taxonomy publication."
               meta="Machine-readable data and publication downloads"
               actionLabel="Open datasets"
             />

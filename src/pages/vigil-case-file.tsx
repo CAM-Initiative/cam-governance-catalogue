@@ -313,7 +313,7 @@ export default function VigilCaseFile() {
         const normalized = normalizeRecords(registry.records);
         const indexById = new Map(normalized.map((record) => [record.id, record]));
         const sourceIndex = indexById.get(sourceId);
-        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
+        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Observatory Incident registry does not contain ${sourceId}.`);
 
         const incident = await detailedRecord(sourceIndex);
         if (!cancelled) setState({
@@ -352,11 +352,11 @@ export default function VigilCaseFile() {
     [taxonomyReferences],
   );
 
-  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Case File…</main></Shell>;
+  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Observatory Case File…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = state.records[0];
-  const title = sourceRecord?.title ?? "VIGIL Case File";
+  const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
@@ -396,7 +396,7 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL taxonomy classification can be rendered.</p>}
+      {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "repair") return <>
@@ -417,7 +417,7 @@ export default function VigilCaseFile() {
         </section>
 
         <section className="vigil-diagnosis-definition">
-          <p className="vigil-library-kicker">VIGIL governance assessment</p>
+          <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
           <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
 
           <div className="vigil-diagnosis-analysis-layout">
@@ -459,7 +459,7 @@ export default function VigilCaseFile() {
           <span>[{externalSources.length + index + 1}]</span>
           <div>
             <strong>{reference.id} — {reference.title}</strong>
-            <p>VIGIL Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</p>
+            <p>VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</p>
             <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
           </div>
         </li>)}
@@ -497,7 +497,7 @@ export default function VigilCaseFile() {
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Case File · Successful invariant exemplar" : "VIGIL Case File · AI Incident investigation"}</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">

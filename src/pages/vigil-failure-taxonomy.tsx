@@ -133,7 +133,7 @@ function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return <label className="vigil-search-control vigil-taxonomy-manual-search">
     <Search aria-hidden="true" />
-    <span className="sr-only">Search the VIGIL Failure Taxonomy contents</span>
+    <span className="sr-only">Search the VIGIL Observatory Failure Taxonomy contents</span>
     <input
       type="search"
       value={value}
@@ -193,7 +193,7 @@ function ManualContents({
   return <nav
     id="taxonomy-contents"
     className={`vigil-taxonomy-manual-contents${collapsed ? " is-collapsed" : ""}`}
-    aria-label="VIGIL Failure Taxonomy contents"
+    aria-label="VIGIL Observatory Failure Taxonomy contents"
   >
     <div className="vigil-taxonomy-manual-contents-head">
       {!collapsed ? <h2>Contents</h2> : null}
@@ -499,18 +499,18 @@ export default function VigilFailureTaxonomy() {
           <div>
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <div className="vigil-taxonomy-header-title-row">
-              <h1 id="taxonomy-heading">VIGIL Failure Taxonomy</h1>
+              <h1 id="taxonomy-heading">VIGIL Observatory Failure Taxonomy</h1>
               <span className="cam-beta-chip">Beta</span>
             </div>
-            <p className="vigil-library-description">The maintained VIGIL Failure Taxonomy for recurring AI governance and control-failure mechanisms, organised into versioned failure families and failure classes with explicit recognition criteria, exclusions and classification boundaries.</p>
+            <p className="vigil-library-description">The maintained VIGIL Observatory Failure Taxonomy for recurring AI governance and control-failure mechanisms, organised into versioned failure families and failure classes with explicit recognition criteria, exclusions and classification boundaries.</p>
             {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
               Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} failure classes
             </p> : null}
           </div>
         </header>
 
-        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Failure Taxonomy…</div> : null}
-        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
+        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Observatory Failure Taxonomy…</div> : null}
+        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Observatory Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
 
         {state.status === "ready" && selectedFamily ? <div className={`vigil-taxonomy-manual-layout${contentsCollapsed ? " is-contents-collapsed" : ""}`}>
           <ManualContents

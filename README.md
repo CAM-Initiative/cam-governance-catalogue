@@ -2,7 +2,7 @@
 
 The **CAM Governance Interface** is the public Web UX layer for the CAM Initiative. It provides navigable access to the CAELESTIS constitutional AI governance corpus, the VIGIL Observatory, public datasets, technical references, and related governance materials.
 
-The interface is a presentation layer. Canonical governance instruments, VIGIL records, taxonomies, schemas and generated registries remain authoritative in their source repositories.
+The interface is a presentation layer. Canonical governance instruments, VIGIL Observatory records, taxonomies, schemas and generated registries remain authoritative in their source repositories.
 
 ## Public surfaces
 
@@ -11,7 +11,7 @@ The site currently provides:
 - the CAM constitutional and runtime governance interface;
 - searchable CAM governance instruments;
 - VIGIL Observatory Case Files based on canonical Incident records;
-- VIGIL Failure Taxonomy family and class references;
+- VIGIL Observatory Failure Taxonomy family and class references;
 - deterministic Case File reports suitable for printing or PDF export;
 - source-level evidence and assessment provenance displays;
 - downloadable AI-governance standards data; and
@@ -19,22 +19,22 @@ The site currently provides:
 
 ## Repository role
 
-This repository owns the public interface, static-site build, registry-loading logic, display projections and interface-specific cached fallbacks. It does **not** own the canonical CAM or VIGIL datasets.
+This repository owns the public interface, static-site build, registry-loading logic, display projections and interface-specific cached fallbacks. It does **not** own the canonical CAM or VIGIL Observatory datasets.
 
 Canonical sources include:
 
 - **CAELESTIS governance corpus:** `CAM-Initiative/Caelestis`
-- **VIGIL Incident registry and Failure Taxonomy:** `CAM-Initiative/Vigil`
+- **VIGIL Observatory Incident registry and Failure Taxonomy:** `CAM-Initiative/Vigil`
 
 The public site consumes the canonical `main` branch of those repositories.
 
 ## VIGIL Observatory
 
-VIGIL Case Files are occurrence-centred public records. The interface keeps the layers distinct:
+VIGIL Observatory Case Files are occurrence-centred public records. The interface keeps the layers distinct:
 
 - **Observation / evidence:** what the sources establish;
-- **Assessment:** VIGIL's bounded governance assessment, severity and evidentiary limitations;
-- **Classification:** mapping of the occurrence to the reusable VIGIL Failure Taxonomy where supported; and
+- **Assessment:** VIGIL Observatory's bounded governance assessment, severity and evidentiary limitations;
+- **Classification:** mapping of the occurrence to the reusable VIGIL Observatory Failure Taxonomy where supported; and
 - **References:** evidence, canonical record and taxonomy references.
 
 The interface does not treat CAM repair state as part of the historical Incident itself.
@@ -51,7 +51,7 @@ https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incident
 https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/VIGIL.FailureTaxonomy.Index.json
 ```
 
-The generated VIGIL taxonomy technical reference is also loaded from the VIGIL `main` branch.
+The generated VIGIL Observatory taxonomy technical reference is also loaded from the VIGIL `main` branch.
 
 ## CAELESTIS governance data
 
@@ -103,7 +103,7 @@ pnpm run validate:catalogue
 pnpm run build
 ```
 
-VIGIL and CAM source configuration is maintained in:
+VIGIL Observatory and CAM source configuration is maintained in:
 
 ```text
 src/config/registrySources.json
@@ -117,7 +117,7 @@ The site is built as a static GitHub Pages application. Public pages and generat
 
 ## Licence
 
-The CAM Governance Interface source and interface materials are governed by the repository licence. Underlying CAM instruments, VIGIL records, schemas, taxonomies, external source materials and generated datasets may have separate reuse terms.
+The CAM Governance Interface source and interface materials are governed by the repository licence. Underlying CAM instruments, VIGIL Observatory records, schemas, taxonomies, external source materials and generated datasets may have separate reuse terms.
 
 See `LICENSE.md` for the interface licence.
 

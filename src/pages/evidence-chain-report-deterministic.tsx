@@ -242,7 +242,7 @@ export default function EvidenceChainReportDeterministic() {
         const normalized = normalizeRecords(registry.records);
         const indexById = new Map(normalized.map((record) => [record.id, record]));
         const sourceIndex = indexById.get(sourceId);
-        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Incident registry does not contain ${sourceId}.`);
+        if (!sourceIndex || sourceIndex.record_type !== "incident") throw new Error(`The canonical VIGIL Observatory Incident registry does not contain ${sourceId}.`);
         const incident = await detailedRecord(sourceIndex);
         if (!cancelled) setState({ status: "ready", sourceId, records: [incident], generatedAt: new Date().toISOString() });
       } catch (error) {
@@ -271,7 +271,7 @@ export default function EvidenceChainReportDeterministic() {
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
   const diagnostic = diagnosticProvenance(incident);
-  const title = incident?.title ?? "VIGIL Case File";
+  const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
@@ -290,7 +290,7 @@ export default function EvidenceChainReportDeterministic() {
       </div>
 
       <header className="report-hero">
-        <p className="report-kicker">VIGIL Case File · deterministic report</p>
+        <p className="report-kicker">VIGIL Observatory Case File · deterministic report</p>
         <h1 className="report-title">{title}</h1>
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
@@ -329,7 +329,7 @@ export default function EvidenceChainReportDeterministic() {
 
         <Stage number="02" label="Assessment">
         {incident ? <article className="report-diagnosis">
-          <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
+          <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-panel report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Matrix</h4>
             <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
@@ -360,7 +360,7 @@ export default function EvidenceChainReportDeterministic() {
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants and does not substitute broader family invariants where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants and does not substitute broader family invariants where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;

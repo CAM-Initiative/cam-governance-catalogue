@@ -184,7 +184,7 @@ export default function Datasets() {
           <DatasetCard
             eyebrow="VIGIL Observatory"
             title="Case Files"
-            description="The canonical machine-readable Incident index behind the public VIGIL Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL."
+            description="The canonical machine-readable Incident index behind the public VIGIL Observatory Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL Observatory."
             status={caseFilesStatus}
             downloadHref={VIGIL_INCIDENT_REGISTRY_URL}
             downloadLabel="Open JSON index"
@@ -194,7 +194,7 @@ export default function Datasets() {
           <DatasetCard
             eyebrow="VIGIL Observatory"
             title="Observatory Reference Registry"
-            description="The generic registry of methodologies, research, taxonomies, datasets, regulations and government guidance used by VIGIL. Stable VIGIL-REF identifiers centralise bibliography without duplicating it into every Incident. This is separate from the AI Governance Standards dataset."
+            description="The generic registry of methodologies, research, taxonomies, datasets, regulations and government guidance used by VIGIL Observatory. Stable VIGIL-REF identifiers centralise bibliography without duplicating it into every Incident. This is separate from the AI Governance Standards dataset."
             status="Version 1.0.0 · 10 references"
             beta
             downloadHref={VIGIL_REFERENCE_REGISTRY_JSON}
@@ -217,8 +217,8 @@ export default function Datasets() {
 
           <DatasetCard
             eyebrow="VIGIL Observatory"
-            title="VIGIL Failure Taxonomy"
-            description="Generated full-reference PDF for the canonical VIGIL Failure Taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL."
+            title="VIGIL Observatory Failure Taxonomy"
+            description="Generated full-reference PDF for the canonical VIGIL Observatory Failure Taxonomy, including current failure families, failure classes, recognition criteria, exclusions, relationships and linked Case File classifications. The canonical machine-readable taxonomy remains maintained in VIGIL Observatory."
             status={taxonomyStatus}
             beta
             onDownload={downloadTaxonomyPublication}

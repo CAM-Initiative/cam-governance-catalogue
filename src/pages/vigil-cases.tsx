@@ -170,7 +170,7 @@ export default function VigilCases() {
           <section className="vigil-library-shell" aria-labelledby="case-files-heading">
             <header className="vigil-library-header">
               <div>
-                <p className="vigil-library-kicker">VIGIL Incident investigations</p>
+                <p className="vigil-library-kicker">VIGIL Observatory Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
                 <p className="vigil-library-description">VIGIL Observatory provides a public AI incident database through its Case File registry. Browse documented incidents, newest first, then open an investigation through the five-stage Observation, Assessment, Classification, Repair and References model.</p>
               </div>
