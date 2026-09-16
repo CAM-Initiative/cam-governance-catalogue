@@ -496,3 +496,14 @@ test("About identifies CAM Initiative and founder without repeating the legal en
   assert.doesNotMatch(printable, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
   assert.equal((licensing.match(new RegExp(legalName, "g")) || []).length, 1);
 });
+
+
+test("footer avoids repeating the header brand lockup", async () => {
+  const shell = await read("src/components/layout/Shell.tsx");
+  const footerStart = shell.indexOf("<footer");
+  assert.notEqual(footerStart, -1);
+  const footer = shell.slice(footerStart);
+  assert.match(footer, /© 2026 CAM Initiative\. All rights reserved\./);
+  assert.doesNotMatch(footer, /cam-triskelion\.svg/);
+  assert.doesNotMatch(footer, />CAM Initiative<\/span>/);
+});
