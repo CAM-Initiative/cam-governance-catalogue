@@ -112,7 +112,7 @@ assert.doesNotMatch(vigilRegistry, /vigilPreviewUrl/);
 assert.match(vigilRegistry, /VITE_VIGIL_REGISTRY_URL/);
 assert.match(vigilRegistry, /VITE_VIGIL_RECORD_BRANCH/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
-assert.match(vigilRegistry, /if \(record\.raw_url\) return record\.raw_url/);
+assert.match(vigilRegistry, /if \(record\.path\)/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.branch/);
 
 assert.doesNotMatch(evidenceCard, /Evidence confidence/);
