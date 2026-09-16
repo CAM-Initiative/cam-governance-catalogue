@@ -72,7 +72,7 @@ export default function About() {
             <article><h3>Separate authority layers</h3><p>VIGIL Observatory assesses observed governance failures. CAELESTIS governance instruments become authoritative only through their own amendment, validation and adoption processes.</p></article>
           </div>
           <div className="vigil-about-link-row" aria-label="Institutional and legal information">
-            <Link href="/licensing">Copyright & Licensing <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/licensing">Copyright & Licence <ArrowRight aria-hidden="true" /></Link>
             <Link href="/privacy">Privacy <ArrowRight aria-hidden="true" /></Link>
             <a href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer" >VIGIL Observatory repository <ArrowRight aria-hidden="true" /></a>
           </div>

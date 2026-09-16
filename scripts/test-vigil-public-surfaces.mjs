@@ -183,7 +183,7 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
   ]);
   assert.match(about, /About VIGIL Observatory/);
   assert.doesNotMatch(about, /Public access without pretending everything is finished|How the public VIGIL surfaces fit together/);
-  assert.match(licensing, /Copyright & Licensing/);
+  assert.match(licensing, /Copyright & Licence/);
   assert.match(licensing, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
   assert.match(licensing, /Citation, reference and linking are permitted and encouraged/);
   assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
@@ -320,7 +320,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.match(app, /path="\/observatory\/severity-methodology" component=\{VigilSeverityMethodology\}/);
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
-  assert.match(shell, /Copyright & Licensing/);
+  assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm & Severity Methodology/);
   assert.match(about, /Publication & provenance/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
@@ -451,4 +451,23 @@ test("public-facing institutional copy treats the repository name as implementat
   assert.match(licensing, /CAM Initiative website materials/);
   assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
   assert.doesNotMatch(licensing, />Read the CAM Governance Interface licence/);
+});
+
+
+test("website repository LICENSE is a pointer, not a second licence instrument", async () => {
+  const [license, citation, readme, licensing] = await Promise.all([
+    read("LICENSE.md"),
+    read("CITATION.cff"),
+    read("README.md"),
+    read("src/pages/licensing.tsx"),
+  ]);
+  assert.match(license, /^# Licence pointer/m);
+  assert.match(license, /does \*\*not\*\* publish a separate CAM Initiative website or interface licence/);
+  assert.match(license, /CAM-Initiative\/Vigil\/blob\/main\/LICENSE\.md/);
+  assert.match(license, /pointer only/);
+  assert.doesNotMatch(license, /Grant of Permission|Non-Commercial Restriction|CAM Governance Interface Licence/);
+  assert.doesNotMatch(citation, /LicenseRef-CAM-Governance-Interface|license:/);
+  assert.match(citation, /title: "CAM Initiative Website"/);
+  assert.match(readme, /does not publish a separate website or interface licence/);
+  assert.match(licensing, /controlling licence instrument for VIGIL Observatory Materials/);
 });

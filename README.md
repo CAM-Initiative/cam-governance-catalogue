@@ -117,9 +117,9 @@ The site is built as a static GitHub Pages application. Public pages and generat
 
 ## Licence
 
-The CAM Governance Interface source and interface materials are governed by the repository licence. Underlying CAM instruments, VIGIL Observatory records, schemas, taxonomies, external source materials and generated datasets may have separate reuse terms.
+This repository does not publish a separate website or interface licence. Its `LICENSE.md` is a pointer to the controlling **VIGIL Observatory Proprietary Licence** for VIGIL Observatory Materials.
 
-See `LICENSE.md` for the interface licence.
+Website source code, interface assets and other CAM Initiative materials outside that licence's scope remain **all rights reserved** unless a specific notice expressly states otherwise.
 
 **Copyright:** © 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.
 
@@ -127,6 +127,6 @@ See `LICENSE.md` for the interface licence.
 
 Suggested short-form citation:
 
-> Dr Michelle O'Rourke. *CAM Governance Interface*. 2026.
+> Dr Michelle O'Rourke. *CAM Initiative Website*. 2026.
 
 Repository citation metadata is provided in `CITATION.cff`.
