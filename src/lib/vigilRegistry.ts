@@ -79,18 +79,25 @@ export function githubBlobUrlForRecord(record: { github_blob_url?: string; path?
   if (VIGIL_PREVIEW_BRANCH && record.path) {
     return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
   }
-  if (record.github_blob_url) return record.github_blob_url;
-  if (!record.path) return undefined;
-  return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+  // A canonical path is more durable than an embedded branch URL. Cached registries can
+  // outlive short-lived working branches, so production always resolves paths against the
+  // configured canonical branch.
+  if (record.path) {
+    return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+  }
+  return record.github_blob_url;
 }
 
 export function rawUrlForRecord(record: { raw_url?: string; path?: string }) {
   if (VIGIL_PREVIEW_BRANCH && record.path) {
     return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
   }
-  if (record.raw_url) return record.raw_url;
-  if (!record.path) return undefined;
-  return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+  // Never let a stale fallback pin a Case File to a deleted feature branch when the
+  // canonical record path is available.
+  if (record.path) {
+    return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+  }
+  return record.raw_url;
 }
 
 export async function loadVigilRecordDetail(
