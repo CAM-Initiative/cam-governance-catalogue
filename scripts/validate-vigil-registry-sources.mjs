@@ -32,8 +32,8 @@ for (const file of activeFiles) {
 const loader = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
 assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Incident registry fetch must use cache busting");
 assert(loader.includes('record.record_type !== "incident"'), "Registry loader must exclude non-Incident records");
-assert(loader.includes("record.github_blob_url"), "Canonical record links must prefer registry github_blob_url");
-assert(loader.includes("record.raw_url"), "Canonical raw links must prefer registry raw_url");
+assert(loader.includes("if (record.path)"), "Canonical record links must prefer durable record paths");
+assert(loader.includes("VIGIL_REGISTRY_SOURCE.branch"), "Canonical record paths must resolve against the configured canonical branch");
 
 const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
 assert(Array.isArray(fallback.records) && fallback.records.length > 0, "VIGIL fallback must contain Incident records");
@@ -54,6 +54,8 @@ for (const forbidden of [
   assert(fallback.records.every((record) => !(forbidden in record)), `VIGIL fallback must not embed canonical detail field ${forbidden}`);
 }
 assert(fallback.records.every((record) => typeof record.path === "string" && typeof record.raw_url === "string"), "VIGIL fallback must retain canonical record routing");
+assert(fallback.records.every((record) => record.raw_url.includes("/CAM-Initiative/Vigil/main/")), "Published VIGIL fallback raw URLs must target canonical main, never a retired working branch");
+assert(fallback.records.every((record) => record.github_blob_url.includes("/CAM-Initiative/Vigil/blob/main/")), "Published VIGIL fallback GitHub URLs must target canonical main, never a retired working branch");
 
 const syncMeta = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-sync-meta.json"), "utf8"));
 assert(syncMeta.status === "fetched", "Published VIGIL fallback must come from a successful live fetch");
