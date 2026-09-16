@@ -667,3 +667,110 @@
   text-decoration-color: hsl(var(--primary) / 0.45);
   text-underline-offset: 0.18rem;
 }
+
+
+/* About final polish: one calm document with whitespace, not nested boxes and rules. */
+.vigil-about-document .vigil-about-section {
+  padding: 1.35rem 1.4rem 1.55rem;
+  overflow: visible;
+}
+.vigil-about-document .vigil-about-section + .vigil-about-section {
+  border-top: 0;
+  padding-top: 1.75rem;
+}
+.vigil-about-document .vigil-about-section-heading {
+  margin: 0 0 0.72rem;
+  padding: 0;
+  border: 0;
+}
+.vigil-about-document .vigil-about-record-intro {
+  max-width: 76rem;
+  margin: 0.72rem 0 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.84);
+}
+.vigil-about-document .vigil-about-flow-scroll {
+  margin-top: 1rem;
+}
+.vigil-about-document .vigil-about-flow {
+  gap: 0.75rem 1rem;
+}
+.vigil-about-document .vigil-about-flow article,
+.vigil-about-document .vigil-about-flow article + article {
+  padding: 0.25rem 0;
+  border: 0;
+}
+.vigil-about-document .vigil-about-boundary-grid {
+  gap: 0.9rem 1.5rem;
+  margin-top: 1rem;
+}
+.vigil-about-document .vigil-about-boundary-grid article,
+.vigil-about-document .vigil-about-boundary-grid article:nth-child(odd),
+.vigil-about-document .vigil-about-boundary-grid article:nth-child(even) {
+  padding: 0.25rem 0;
+  border: 0;
+  background: transparent;
+}
+.vigil-about-grid-action {
+  display: flex;
+  min-height: 4.75rem;
+  align-items: center;
+}
+.vigil-about-grid-action > a,
+.vigil-about-resource-links > a {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  color: hsl(var(--primary));
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.045em;
+  text-decoration: none;
+}
+.vigil-about-grid-action > a {
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid hsl(var(--primary) / 0.38);
+}
+.vigil-about-grid-action > a:hover,
+.vigil-about-grid-action > a:focus-visible,
+.vigil-about-resource-links > a:hover,
+.vigil-about-resource-links > a:focus-visible {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--foreground) / 0.55);
+  outline: none;
+}
+.vigil-about-grid-action svg,
+.vigil-about-resource-links svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+.vigil-about-resource-links {
+  display: grid;
+  align-content: center;
+  gap: 0.62rem;
+}
+.vigil-about-resource-links > a {
+  padding: 0;
+  border: 0;
+}
+.vigil-about-document .vigil-about-citation-card {
+  margin-top: 0.9rem;
+  padding: 0;
+}
+.vigil-about-affiliation-note {
+  margin-top: 1rem !important;
+}
+@media (max-width: 900px) {
+  .vigil-about-document .vigil-about-flow {
+    gap: 0.85rem;
+  }
+  .vigil-about-document .vigil-about-grid-action {
+    min-height: 0;
+    padding-top: 0.25rem;
+  }
+}
