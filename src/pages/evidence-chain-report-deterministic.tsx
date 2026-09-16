@@ -194,11 +194,11 @@ function severityDisplay(value?: string) {
   if (!raw) return "Not assessed";
   const code = raw.toUpperCase();
   const labels: Record<string, string> = {
-    S1: "Critical",
-    S2: "High",
+    S1: "Minimal / no downstream harm",
+    S2: "Low",
     S3: "Moderate",
-    S4: "Low",
-    S5: "No materialised harm",
+    S4: "High",
+    S5: "Catastrophic / critical",
     SU: "Unassessed",
   };
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);

@@ -187,15 +187,23 @@ test("CAM About and Privacy share the current readable public-page grammar", asy
   assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
 });
 
-test("Case File severity presentation supports S5 no-materialised-harm records", async () => {
-  const [cases, caseFile, report] = await Promise.all([
+test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
+  const [cases, caseFile, report, about, chip] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
+    read("src/pages/vigil-about.tsx"),
+    read("src/components/vigil/VigilStatusChip.tsx"),
   ]);
-  assert.match(cases, /S5: 5/);
-  assert.match(caseFile, /S5: "No materialised harm"/);
-  assert.match(report, /S5: "No materialised harm"/);
+  assert.match(cases, /S1: 1[\s\S]*S5: 5[\s\S]*SU: 6/);
+  assert.match(caseFile, /S1: "Minimal \/ no downstream harm"/);
+  assert.match(caseFile, /S5: "Catastrophic \/ critical"/);
+  assert.match(report, /S1: "Minimal \/ no downstream harm"/);
+  assert.match(report, /S5: "Catastrophic \/ critical"/);
+  assert.match(about, /harm or consequence[\s\S]*severity[\s\S]*failure mechanism[\s\S]*invariant or repair/);
+  assert.match(about, /MIT AI Incident Tracker harm-severity scale/);
+  assert.match(about, /CSET AI Harm Framework/);
+  assert.match(chip, /\\bs5\\b\|critical\|catastrophic/);
 });
 
 test("historical identifiers do not become live retired-record links", async () => {
