@@ -539,3 +539,30 @@ test("About final polish keeps content continuous and places actions inside open
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
   assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid article,[\s\S]*border: 0/);
 });
+
+
+test("Explore AI governance prioritises Case Files, Knowledge Base and Datasets with icon affordances", async () => {
+  const [rail, css] = await Promise.all([
+    read("src/components/ExploreGovernanceRail.tsx"),
+    read("src/governance-rail-refinements.css"),
+  ]);
+  const caseFiles = rail.indexOf('title: "Case Files"');
+  const knowledgeBase = rail.indexOf('title: "Knowledge Base"');
+  const datasets = rail.indexOf('title: "Datasets"');
+  assert.ok(caseFiles >= 0 && knowledgeBase > caseFiles && datasets > knowledgeBase);
+  assert.match(rail, /icon: FileText/);
+  assert.match(rail, /icon: Library/);
+  assert.match(rail, /icon: Database/);
+  assert.doesNotMatch(rail, /title: "VIGIL Observatory"/);
+  assert.match(rail, /home-governance-heading-panel/);
+  assert.match(css, /home-governance-heading-panel[\s\S]*status-success-surface/);
+  assert.match(css, /home-governance-card-label[\s\S]*display: inline-flex/);
+});
+
+test("dark appearance keeps native Case File classification menus legible", async () => {
+  const dark = await read("src/dark-appearance.css");
+  assert.match(dark, /html\[data-theme="dark"\] \.vigil-family-select select \{/);
+  assert.match(dark, /color-scheme: dark/);
+  assert.match(dark, /\.vigil-family-select select option,[\s\S]*background-color: hsl\(var\(--popover\)\)/);
+  assert.match(dark, /color: hsl\(var\(--popover-foreground\)\)/);
+});
