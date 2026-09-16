@@ -53,7 +53,7 @@ const externalResources = [
 export function ExploreGovernanceRail() {
   return (
     <aside aria-label="Explore AI governance" className="home-governance-panel">
-      <div className="home-governance-heading home-governance-heading-panel">
+      <div className="home-governance-heading home-governance-heading-rule">
         <p className="home-governance-section-label">Explore AI Governance</p>
       </div>
 
@@ -74,7 +74,7 @@ export function ExploreGovernanceRail() {
       </div>
 
       <div className="home-governance-external">
-        <div className="home-governance-heading home-governance-heading-panel home-governance-external-heading">
+        <div className="home-governance-heading home-governance-heading-rule home-governance-external-heading">
           <p className="home-governance-section-label">External Tools</p>
         </div>
         <div className="home-governance-links">
