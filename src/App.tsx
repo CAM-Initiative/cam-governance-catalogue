@@ -38,7 +38,7 @@ function Router() {
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
 
-      {/* Legacy About URL retained for inbound links; /about is canonical. */}
+      {/* Legacy About URL retained for inbound links and canonicalized to /about in static publication metadata. */}
       <Route path="/observatory/about" component={About} />
       <Route path="/observatory/severity-methodology" component={VigilSeverityMethodology} />
 
