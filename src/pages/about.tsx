@@ -65,7 +65,7 @@ export default function About() {
 
         <section className="vigil-about-section" aria-labelledby="vigil-publication-heading">
           <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Publication & provenance</p><h2 id="vigil-publication-heading">Independent, inspectable and explicit about its boundaries</h2></div>
-          <p className="vigil-about-record-intro">VIGIL Observatory is published by <strong>Phoenix Covenant Pty Ltd trading as CAM Initiative</strong>, an Australian AI governance initiative. The CAM Initiative was founded and is led by <strong>Dr Michelle Vivian O&apos;Rourke</strong>, who is identified as VIGIL Observatory&apos;s author and maintainer.</p>
+          <p className="vigil-about-record-intro">VIGIL Observatory is published by <strong>CAM Initiative</strong> and maintained by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Case Files are designed to preserve evidence, provenance, uncertainty and the basis for assessment so that published conclusions remain independently inspectable.</p>
           <div className="vigil-about-boundary-grid vigil-about-publication-grid">
             <article><h3>Evidence-bounded findings</h3><p>Case Files preserve source provenance, evidentiary limitations, uncertainty and the basis for assessment rather than presenting repository inclusion as final factual truth.</p></article>
             <article><h3>Publicly inspectable</h3><p>VIGIL Observatory is deliberately available for scrutiny, citation, policy discussion and research reference. Public availability does not constitute an open licence.</p></article>
@@ -77,6 +77,12 @@ export default function About() {
             <a href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer" >VIGIL Observatory repository <ArrowRight aria-hidden="true" /></a>
           </div>
           <p className="vigil-about-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+        </section>
+
+        <section className="vigil-about-section" aria-labelledby="vigil-organisation-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Organisation & founder</p><h2 id="vigil-organisation-heading">About CAM Initiative</h2></div>
+          <p className="vigil-about-record-intro"><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
+          <p className="vigil-about-record-intro">The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
         </section>
 
         <section className="vigil-about-section" aria-labelledby="vigil-citation-heading">
