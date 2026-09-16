@@ -133,11 +133,11 @@ function compactIncidentRecord(record) {
     occurred_from: record.occurred_from,
     search_terms: terms,
     path: record.path,
-    github_blob_url: recordBranch && record.path
-      ? `https://github.com/${registrySources.vigil.repo}/blob/${recordBranch}/${record.path}`
+    github_blob_url: record.path
+      ? `https://github.com/${registrySources.vigil.repo}/blob/${recordBranch || registrySources.vigil.branch}/${record.path}`
       : record.github_blob_url,
-    raw_url: recordBranch && record.path
-      ? `https://raw.githubusercontent.com/${registrySources.vigil.repo}/${recordBranch}/${record.path}`
+    raw_url: record.path
+      ? `https://raw.githubusercontent.com/${registrySources.vigil.repo}/${recordBranch || registrySources.vigil.branch}/${record.path}`
       : record.raw_url,
   };
 
