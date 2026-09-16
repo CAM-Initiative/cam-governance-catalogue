@@ -13,7 +13,7 @@ The site currently provides:
 - VIGIL Observatory Case Files based on canonical Incident records;
 - VIGIL Failure Taxonomy family and class references;
 - deterministic Case File reports suitable for printing or PDF export;
-- source-level evidence and diagnostic provenance displays;
+- source-level evidence and assessment provenance displays;
 - downloadable AI-governance standards data; and
 - archived CAELESTIS releases and public reference material.
 

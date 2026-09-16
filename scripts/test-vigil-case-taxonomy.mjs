@@ -61,7 +61,7 @@ assert.match(taxonomyPanel, /vigil-diagnostic-meta-label">Classification metadat
 assert.match(caseFile, /<HarmImpactMatrix assessment=/);
 assert.match(caseFile, /className="vigil-substantive-label">Factual basis/);
 assert.match(caseFile, /className="vigil-substantive-label">Governance significance/);
-assert.match(caseFile, /vigil-diagnostic-meta-label">Diagnostic provenance/);
+assert.match(caseFile, /vigil-diagnostic-meta-label">Assessment provenance/);
 
 assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
 assert.match(taxonomyPanel, /Governing class invariant/);
@@ -226,7 +226,7 @@ assert.match(deterministicReport, /className="report-section-header"/);
 assert.match(deterministicReport, /<HarmImpactMatrix assessment=/);
 assert.match(deterministicReport, /className="report-reference-list"/);
 assert.match(deterministicReport, /className="report-substantive-label">Factual basis/);
-assert.match(deterministicReport, /className="report-label">Diagnostic provenance/);
+assert.match(deterministicReport, /className="report-label">Assessment provenance/);
 assert.doesNotMatch(deterministicReport, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 

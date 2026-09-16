@@ -97,7 +97,7 @@ test("detail loader accepts Incident JSON and rejects retired record payloads", 
   } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("Case File keeps structured occurrence severity in Diagnosis", async () => {
+test("Case File keeps structured occurrence severity in Assessment", async () => {
   const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
   const matrix = await readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8");
   const taxonomy = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
