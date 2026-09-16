@@ -8,7 +8,7 @@ import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/li
 
 const REPORT_SECTIONS = [
   { number: "01", label: "Observation" },
-  { number: "02", label: "Diagnosis" },
+  { number: "02", label: "Assessment" },
   { number: "03", label: "Classification" },
   { number: "04", label: "Repair" },
   { number: "05", label: "References" },

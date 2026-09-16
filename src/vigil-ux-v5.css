@@ -506,3 +506,92 @@
     width: fit-content;
   }
 }
+
+
+/* Harm & Severity Methodology: one continuous document, not a stack of cards. */
+.vigil-severity-methodology-page .vigil-about-hero {
+  max-width: 1100px;
+}
+.vigil-severity-methodology-document {
+  margin-top: 1rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  background: hsl(var(--background));
+}
+.vigil-severity-methodology-section {
+  padding: 1.35rem 1.4rem 1.5rem;
+}
+.vigil-severity-methodology-section + .vigil-severity-methodology-section {
+  border-top: 1px solid hsl(var(--border));
+}
+.vigil-severity-methodology-section > header {
+  margin: 0 0 0.8rem;
+}
+.vigil-severity-methodology-section > header h2 {
+  margin-top: 0.2rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.65rem;
+  line-height: 1.25;
+}
+.vigil-severity-methodology-section > p {
+  max-width: 76rem;
+  margin: 0.72rem 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.84);
+}
+.vigil-severity-methodology-section > p a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+.vigil-severity-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 0.35rem;
+}
+.vigil-severity-principles > div {
+  padding: 0.35rem 1.1rem 0.15rem 0;
+}
+.vigil-severity-principles > div + div {
+  padding-left: 1.1rem;
+  border-left: 1px solid hsl(var(--border));
+}
+.vigil-severity-principles h3 {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.vigil-severity-principles p {
+  margin: 0.4rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-severity-alignment {
+  margin-bottom: 1rem !important;
+}
+.vigil-severity-methodology-section .vigil-harm-matrix {
+  margin-top: 1rem;
+}
+.vigil-severity-methodology-section > .vigil-about-action {
+  margin-left: 0;
+  margin-right: 0;
+}
+@media (max-width: 900px) {
+  .vigil-severity-principles {
+    grid-template-columns: 1fr;
+  }
+  .vigil-severity-principles > div {
+    padding: 0.75rem 0;
+  }
+  .vigil-severity-principles > div + div {
+    padding-left: 0;
+    border-top: 1px solid hsl(var(--border));
+    border-left: 0;
+  }
+}

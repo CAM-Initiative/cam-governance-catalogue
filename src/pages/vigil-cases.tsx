@@ -172,7 +172,7 @@ export default function VigilCases() {
               <div>
                 <p className="vigil-library-kicker">VIGIL Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
-                <p className="vigil-library-description">VIGIL Observatory provides a public AI incident database through its Case File registry. Browse documented incidents, newest first, then open an investigation through the five-stage Observation, Diagnosis, Classification, Repair and References model.</p>
+                <p className="vigil-library-description">VIGIL Observatory provides a public AI incident database through its Case File registry. Browse documented incidents, newest first, then open an investigation through the five-stage Observation, Assessment, Classification, Repair and References model.</p>
               </div>
               {state.status === "ready" && (
                 <div className="vigil-library-stats" aria-live="polite">

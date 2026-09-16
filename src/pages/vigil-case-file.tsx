@@ -425,12 +425,12 @@ export default function VigilCaseFile() {
               <section><h4 className="vigil-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
               <section><h4 className="vigil-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
             </div>
-            <aside className="vigil-diagnosis-metadata-panel" aria-label="Diagnostic metadata">
-              <p className="vigil-diagnostic-meta-label">Diagnostic provenance</p>
+            <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
+              <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
               <dl className="vigil-evidence-review-meta">
                 {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
                 {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
-                <Field label="Diagnosed" value={diagnostic?.diagnosticDate} />
+                <Field label="Assessed" value={diagnostic?.diagnosticDate} />
                 <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
                 <Field label="Human contribution" value={diagnostic?.humanRole} />
                 <Field label="AI contribution" value={diagnostic?.aiRole} />
@@ -439,10 +439,10 @@ export default function VigilCaseFile() {
               </dl>
             </aside>
           </div>
-          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations"><summary>Limits of the diagnosis</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
+          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations"><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
         </section>
       </div>}
-    </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or diagnosis.</p>}
+    </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
 
     if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">

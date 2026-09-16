@@ -327,7 +327,7 @@ export default function EvidenceChainReportDeterministic() {
           {!incidentDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
         </Stage>
 
-        <Stage number="02" label="Diagnosis">
+        <Stage number="02" label="Assessment">
         {incident ? <article className="report-diagnosis">
           <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-panel report-severity-assessment">
@@ -337,10 +337,10 @@ export default function EvidenceChainReportDeterministic() {
           </section>
           <div className="report-split-layout">
             <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
-            <aside className="report-metadata-panel"><p className="report-label">Diagnostic provenance</p><dl className="report-metadata-grid"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Diagnosed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
+            <aside className="report-metadata-panel"><p className="report-label">Assessment provenance</p><dl className="report-metadata-grid"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Assessed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
           </div>
-          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the diagnosis</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
-        </article> : <Empty>No structured diagnosis is available.</Empty>}
+          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
+        </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
         <Stage number="03" label="Classification">

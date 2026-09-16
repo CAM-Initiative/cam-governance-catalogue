@@ -8,14 +8,14 @@ export const VIGIL_INCIDENT_CASE_SECTIONS = [
   {
     id: "diagnose",
     number: "02",
-    label: "Diagnosis",
-    description: "The occurrence-level governance analysis, including materialised severity and evidentiary limits.",
+    label: "Assessment",
+    description: "The occurrence-level governance assessment, including materialised severity and evidentiary limits.",
   },
   {
     id: "classify",
     number: "03",
     label: "Classification",
-    description: "The canonical structural mechanism that best explains the diagnosed governance failure.",
+    description: "The canonical structural mechanism supported by the assessment and evidence.",
   },
   {
     id: "repair",

@@ -32,7 +32,7 @@ The public view MUST display:
 
 - the factual Incident `summary` as **What happened**;
 - `vigil_assessment.factual_basis` as the evidence-supported factual account;
-- occurrence-level severity as substantive diagnosis, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
+- occurrence-level severity as substantive assessment, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
 - each source's claim-relative `evidence_status` and `evidence_status_basis` alongside its evidence metadata;
 - each source's publication genre from `source_type`;
 - the taxonomy classification basis only within the classification section; severity MUST NOT be presented as taxonomy classification.

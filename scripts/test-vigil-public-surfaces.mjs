@@ -36,9 +36,11 @@ test("Explore AI Governance identifies Case Files as the VIGIL AI incident datab
   assert.match(rail, /Canonical VIGIL Incident investigations/);
 });
 
-test("VIGIL Knowledge Base exposes VIGIL Case Files and a Datasets collection", async () => {
+test("VIGIL Knowledge Base exposes Case Files, Harm & Severity Methodology and Datasets", async () => {
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
   assert.match(hub, /title="VIGIL Case Files"/);
+  assert.match(hub, /href="\/observatory\/severity-methodology"[\s\S]*title="Harm & Severity Methodology"/);
+  assert.match(hub, /VIGIL-HIM 1\.0\.0/);
   assert.match(hub, /href="\/datasets"[\s\S]*title="Datasets"/);
   assert.match(hub, /actionLabel="Open datasets"/);
   assert.match(hub, /downloadable datasets/);
@@ -48,7 +50,7 @@ test("homepage presents the VIGIL Failure Taxonomy as a first-class diagnosis su
   const home = await read("src/pages/home.tsx");
   assert.match(home, /VIGIL Observatory · Evidence/);
   assert.match(home, /VIGIL Failure Taxonomy · Diagnosis/);
-  assert.match(home, /Evidence → Diagnosis → Runtime Governance/);
+  assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(home, /Explore the Taxonomy/);
   assert.match(home, /Download the PDF/);
   assert.match(home, /VIGIL Observatory → VIGIL Failure Taxonomy → CAELESTIS/);
@@ -117,7 +119,7 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.match(caseFile, /loadVigilIncidentRecords/);
   assert.match(caseFile, /records: \[incident\]/);
   assert.doesNotMatch(caseFile, /const observations|deriveFailureModePublicDetail|failureId=/);
-  for (const label of ["Observation", "Diagnosis", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  for (const label of ["Observation", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
   assert.doesNotMatch(sections, /label: "Learn"/);
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
   assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
@@ -207,8 +209,8 @@ test("Case File severity presentation uses ascending S1-to-S5 semantics", async 
   assert.match(caseFile, /S5: "Catastrophic \/ critical"/);
   assert.match(report, /S1: "Minimal \/ no downstream harm"/);
   assert.match(report, /S5: "Catastrophic \/ critical"/);
-  assert.match(about, /what harm or consequence materialised[\s\S]*how severe that consequence was[\s\S]*which failure mechanism occurred[\s\S]*which invariant or repair should hold/);
-  assert.match(about, /\/observatory\/severity-methodology/);
+  assert.doesNotMatch(about, /Severity measures supported consequence|Harm & severity/);
+  assert.match(severity, /highest defensible materialised-harm threshold/);
   assert.match(severity, /MIT AI Incident Tracker harm-severity scale/);
   assert.match(severity, /CSET AI Harm Framework/);
   assert.match(chip, /\\bs5\\b\|critical\|catastrophic/);
@@ -315,14 +317,18 @@ test("site has one canonical About surface plus visible licensing and severity m
   ]);
   assert.match(app, /path="\/about" component=\{About\}/);
   assert.match(app, /path="\/observatory\/about" component=\{About\}/);
+  assert.match(app, /path="\/observatory\/severity-methodology" component=\{VigilSeverityMethodology\}/);
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licensing/);
   assert.match(shell, /Harm & Severity Methodology/);
   assert.match(about, /Publication & provenance/);
+  assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
   assert.match(severity, /VIGIL-HIM 1\.0\.0/);
+  assert.match(severity, /vigil-severity-methodology-document/);
+  assert.doesNotMatch(severity, /severity-alignment-heading/);
   assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
 });
 
@@ -339,4 +345,33 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype", as
   assert.match(css, /font-size: 9\.5pt/);
   assert.doesNotMatch(css, /font-size: (?:6\.6|7|7\.2|8)pt/);
   assert.doesNotMatch(css, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
+});
+
+
+test("Stage 02 is presented publicly as Assessment", async () => {
+  const [sections, cases, hub, report, printable, home, rail, pages, readme, contract] = await Promise.all([
+    read("src/lib/vigilCaseSections.ts"),
+    read("src/pages/vigil-cases.tsx"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+    read("src/pages/evidence-chain-report-printable.tsx"),
+    read("src/pages/home.tsx"),
+    read("src/components/ExploreGovernanceRail.tsx"),
+    read("scripts/prepare-github-pages.js"),
+    read("README.md"),
+    read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
+  ]);
+  assert.match(sections, /number: "02"[\s\S]*label: "Assessment"/);
+  assert.match(report, /<Stage number="02" label="Assessment">/);
+  assert.match(printable, /number: "02", label: "Assessment"/);
+  assert.match(cases, /Observation, Assessment, Classification, Repair and References/);
+  assert.match(hub, /Observation, Assessment, Classification, Repair and References/);
+  assert.match(home, /Evidence → Assessment → Runtime Governance/);
+  assert.match(rail, /evidence, assessment, failure classification/);
+  assert.match(pages, /evidence, assessment, failure classification/);
+  assert.match(readme, /\*\*Assessment:\*\*/);
+  assert.match(contract, /severity as substantive assessment/);
+  for (const publicText of [sections, cases, hub, report, printable]) {
+    assert.doesNotMatch(publicText, /label[:=] "?Diagnosis"?|Observation, Diagnosis, Classification|<Stage number="02" label="Diagnosis">/);
+  }
 });

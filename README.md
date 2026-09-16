@@ -33,7 +33,7 @@ The public site consumes the canonical `main` branch of those repositories.
 VIGIL Case Files are occurrence-centred public records. The interface keeps the layers distinct:
 
 - **Observation / evidence:** what the sources establish;
-- **Diagnosis:** VIGIL's bounded governance interpretation, severity and diagnostic limitations;
+- **Assessment:** VIGIL's bounded governance assessment, severity and evidentiary limitations;
 - **Classification:** mapping of the occurrence to the reusable VIGIL Failure Taxonomy where supported; and
 - **References:** evidence, canonical record and taxonomy references.
 

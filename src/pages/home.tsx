@@ -94,10 +94,10 @@ function EvidenceRepairLoop() {
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
-          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Incidents, source-level evidence, occurrence-level diagnosis and traceable repair history.
+          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Incidents, source-level evidence, occurrence-level assessment and traceable repair history.
         </p>
         <p>
-          It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Diagnosis → Runtime Governance</strong>.
+          It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Assessment → Runtime Governance</strong>.
         </p>
       </div>
       <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/cases">

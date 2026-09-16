@@ -12,7 +12,7 @@ const initiativeResources = [
     id: "case-files",
     title: "Case Files",
     subtitle: "VIGIL AI incident database",
-    purpose: "Canonical VIGIL Incident investigations with evidence, diagnosis, failure classification and repair analysis.",
+    purpose: "Canonical VIGIL Incident investigations with evidence, assessment, failure classification and repair analysis.",
     href: "/observatory/cases",
   },
   {

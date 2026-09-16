@@ -96,7 +96,7 @@ const staticRoutes = [
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
   ["/observatory/about", "About VIGIL Observatory", "Legacy VIGIL About URL. The canonical About page is /about."],
   ["/observatory/severity-methodology", "VIGIL Harm & Severity Methodology", "VIGIL-HIM 1.0.0 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Case Files."],
-  ["/observatory/cases", "VIGIL Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, diagnosis, failure classification, repair and references."],
+  ["/observatory/cases", "VIGIL Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, failure classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
   ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Failure Taxonomy", "The maintained VIGIL Failure Taxonomy for recurring AI governance and control-failure mechanisms, with versioned families, classes, recognition criteria, exclusions and classification boundaries."],
@@ -343,7 +343,7 @@ if (incidentRecords.length) {
   const caseIndexBody = `<main data-static-crawl-fallback="vigil-case-index" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory</p>
     <h1>VIGIL Case Files</h1>
-    <p>AI incident database of documented VIGIL Incident investigations with evidence, diagnosis, classification and repair analysis.</p>
+    <p>AI incident database of documented VIGIL Incident investigations with evidence, assessment, classification and repair analysis.</p>
     <ul>${incidentRecords.map((record) => `<li><a href="/observatory/cases/${encodeURIComponent(record.id)}">${escapeHtml(record.title || record.id)}</a> <code>${escapeHtml(record.id)}</code></li>`).join("")}</ul>
   </main>`;
   writeRoute(

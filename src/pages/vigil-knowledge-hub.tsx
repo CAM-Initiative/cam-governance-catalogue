@@ -97,7 +97,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse AI governance standards, VIGIL Case Files, the VIGIL Failure Taxonomy, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
+            <p>Browse AI governance standards, VIGIL Case Files, the VIGIL Failure Taxonomy, the Harm & Severity Methodology, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -112,9 +112,16 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/observatory/cases"
               title="VIGIL Case Files"
-              description="Documented AI Incident investigations organised through Observation, Diagnosis, Classification, Repair and References, with record-local evidence and occurrence-level governance analysis."
+              description="Documented AI Incident investigations organised through Observation, Assessment, Classification, Repair and References, with record-local evidence and occurrence-level governance analysis."
               meta={caseFilesMeta}
               actionLabel="Browse case files"
+            />
+            <CollectionCard
+              href="/observatory/severity-methodology"
+              title="Harm & Severity Methodology"
+              description="The VIGIL-HIM 1.0.0 reference for harm dimensions, evidence states and S1–S5 severity thresholds used to assess materialised consequence in Case Files."
+              meta="VIGIL-HIM 1.0.0 · methodology reference"
+              actionLabel="Open methodology"
             />
             <CollectionCard
               href="/observatory/knowledge-base/failure-taxonomy"
