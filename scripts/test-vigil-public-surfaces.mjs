@@ -610,8 +610,8 @@ test("Publication copy names CAM Initiative without repeating the maintainer", a
 
 test("External governance tools use subtle source-type icons", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /title: "AI Regulations Tracker"[\s\S]*icon: Scale/);
-  assert.match(rail, /title: "AI Incident Database"[\s\S]*icon: Database/);
-  assert.match(rail, /title: "OECD AI Incidents Monitor"[\s\S]*icon: Database/);
-  assert.match(rail, /title: "NIST AI Resource Center"[\s\S]*icon: BookOpen/);
+  assert.match(rail, /label: "AI Regulations Tracker"[\s\S]*icon: Scale/);
+  assert.match(rail, /label: "AI Incident Database"[\s\S]*icon: Database/);
+  assert.match(rail, /label: "OECD AI Incidents Monitor"[\s\S]*icon: Database/);
+  assert.match(rail, /label: "NIST AI Resource Center"[\s\S]*icon: BookOpen/);
 });
