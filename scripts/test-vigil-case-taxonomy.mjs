@@ -243,3 +243,12 @@ assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
 console.log("VIGIL Observatory Case File taxonomy, canonical-main sources, richer source metadata and deterministic report contract passed");
+
+
+test("Deterministic report harm matrix must fit the printable width", async () => {
+  const reportCss = await read("src/vigil-deterministic-report.css");
+  assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-harm-assessment-table \{[\s\S]*width: 100%;[\s\S]*min-width: 0;[\s\S]*table-layout: fixed;/);
+  assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-harm-matrix-scroll \{[\s\S]*max-width: 100%;[\s\S]*overflow: visible;/);
+  assert.match(reportCss, /overflow-wrap: anywhere/);
+  assert.match(reportCss, /white-space: normal/);
+});
