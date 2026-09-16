@@ -1192,8 +1192,8 @@
   }
 }
 
-/* Deterministic report harm matrix must fit the report page rather than preserve the
-   interactive Case File table's 1040px scrolling width. */
+/* Deterministic report harm matrix is page-width constrained so long assessment prose
+   wraps inside the printable report instead of preserving the interactive table's 1040px scroll width. */
 .vigil-deterministic-report-host .vigil-harm-matrix {
   min-width: 0;
   padding-left: 0;
