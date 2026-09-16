@@ -89,7 +89,7 @@ async function fetchJson(url) {
 
 const staticRoutes = [
   ["/about", "About VIGIL Observatory | CAM Initiative", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, combining Incident evidence, consequence assessment, failure classification and accountable repair."],
-  ["/licensing", "Copyright & Licensing | CAM Initiative", "Copyright, citation, reuse and licensing information for VIGIL Observatory and the CAM Governance Interface."],
+  ["/licensing", "Copyright & Licence | CAM Initiative", "Copyright, citation, reuse and licence information for VIGIL Observatory and CAM Initiative materials."],
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],

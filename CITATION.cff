@@ -1,9 +1,9 @@
 cff-version: 1.3.0
-message: "If you use or cite the CAM Governance Interface, please cite Dr Michelle O'Rourke and, where applicable, the specific interface repository metadata below."
+message: "If you use or cite the CAM Initiative website, please cite Dr Michelle O'Rourke and, where applicable, the repository metadata below."
 
-title: "CAM Governance Interface"
+title: "CAM Initiative Website"
 type: software
-abstract: "The CAM Governance Interface is the public Web UX layer for navigating the Caelestis Architecture Model governance corpus, runtime governance materials, relational governance explainers, instrument catalogue, and VIGIL Observatory for AI governance records and digital ecosystem health signals."
+abstract: "The CAM Initiative website is the public Web UX layer for navigating CAM Initiative materials, the CAELESTIS Architecture Model, and VIGIL Observatory resources."
 
 authors:
   - family-names: "O'Rourke"
@@ -11,14 +11,12 @@ authors:
     name-particle: "Dr"
 
 repository-code: "https://github.com/CAM-Initiative/cam-governance-catalogue"
-url: "https://cam-initiative.github.io/cam-governance-catalogue/"
-license: "LicenseRef-CAM-Governance-Interface"
+url: "https://cam-initiative.org"
 version: "1.0.0"
 date-released: "2026-06-01"
 
 keywords:
   - "AI governance"
-  - "governance interface"
   - "Caelestis Architecture Model"
   - "CAM"
   - "VIGIL Observatory"
@@ -26,16 +24,15 @@ keywords:
   - "public observatory"
   - "digital ecosystem health"
   - "runtime governance"
-  - "registry interface"
   - "governance UX"
 
 preferred-citation:
   type: generic
-  title: "CAM Governance Interface"
+  title: "CAM Initiative Website"
   authors:
     - family-names: "O'Rourke"
       given-names: "Michelle"
       name-particle: "Dr"
   year: 2026
-  url: "https://www.cam-initiative.org"
-  notes: "The CAM Governance Interface is authored and maintained by Dr Michelle O'Rourke and published by Phoenix Covenant Pty Ltd trading as CAM Initiative."
+  url: "https://cam-initiative.org"
+  notes: "The CAM Initiative website is authored and maintained by Dr Michelle O'Rourke and published by Phoenix Covenant Pty Ltd trading as CAM Initiative. VIGIL Observatory Materials are subject to the VIGIL Observatory Proprietary Licence."

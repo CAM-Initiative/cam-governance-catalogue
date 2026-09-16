@@ -13,8 +13,8 @@ const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
-const VIGIL_REFERENCE_REGISTRY_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/references/VIGIL.ObservatoryReferenceRegistry.json";
-const VIGIL_REFERENCE_REGISTRY_CSV = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/references/VIGIL.ObservatoryReferenceRegistry.csv";
+// Public dataset card: expose the substantive severity methodology rather than the internal bibliography registry.
+const VIGIL_HARM_IMPACT_MATRIX_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v1.0.0.json";
 
 type DatasetState = {
   caseFilesCount?: number;
@@ -177,7 +177,7 @@ export default function Datasets() {
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
-          <p>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing">Copyright & Licensing</a> for the applicable terms.</p>
+          <p>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing">Copyright & Licence</a> for the applicable terms.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
@@ -193,14 +193,11 @@ export default function Datasets() {
 
           <DatasetCard
             eyebrow="VIGIL Observatory"
-            title="Observatory Reference Registry"
-            description="The generic registry of methodologies, research, taxonomies, datasets, regulations and government guidance used by VIGIL Observatory. Stable VIGIL-REF identifiers centralise bibliography without duplicating it into every Incident. This is separate from the AI Governance Standards dataset."
-            status="Version 1.0.0 · 10 references"
-            beta
-            downloadHref={VIGIL_REFERENCE_REGISTRY_JSON}
-            downloadLabel="Open JSON"
-            secondaryHref={VIGIL_REFERENCE_REGISTRY_CSV}
-            secondaryLabel="Download CSV"
+            title="Harm & Severity Matrix"
+            description="The machine-readable VIGIL-HIM 1.0.0 methodology used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm & Severity Methodology page."
+            status="VIGIL-HIM 1.0.0 · 11 harm dimensions"
+            downloadHref={VIGIL_HARM_IMPACT_MATRIX_JSON}
+            downloadLabel="Open JSON matrix"
             icon={<Library />}
           />
 

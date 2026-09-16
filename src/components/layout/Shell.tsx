@@ -11,7 +11,7 @@ const mobileLinks = [
   { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy", internal: true },
   { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
-  { href: "/licensing", label: "Copyright & Licensing", internal: true },
+  { href: "/licensing", label: "Copyright & Licence", internal: true },
   { href: "/privacy", label: "Privacy", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
@@ -19,7 +19,7 @@ const mobileLinks = [
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about", label: "About" },
-  { href: "/licensing", label: "Copyright & Licensing" },
+  { href: "/licensing", label: "Copyright & Licence" },
   { href: "/privacy", label: "Privacy" },
 ];
 
@@ -180,12 +180,9 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="container mx-auto min-w-0 px-4 sm:px-6 md:px-10">
           <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center md:justify-start md:text-left">
-              <img src="/cam-triskelion.svg" alt="" className="h-5 w-5 object-contain opacity-75" aria-hidden="true" />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/75">CAM Initiative</span>
+              <span className="text-sm text-muted-foreground">© 2026 CAM Initiative. All rights reserved.</span>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <span className="text-sm text-muted-foreground">© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.</span>
-              <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <Link href="/licensing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licensing</Link>
+              <Link href="/licensing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licence</Link>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
               <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>

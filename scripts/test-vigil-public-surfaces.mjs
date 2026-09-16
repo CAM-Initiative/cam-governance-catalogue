@@ -183,7 +183,7 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
   ]);
   assert.match(about, /About VIGIL Observatory/);
   assert.doesNotMatch(about, /Public access without pretending everything is finished|How the public VIGIL surfaces fit together/);
-  assert.match(licensing, /Copyright & Licensing/);
+  assert.match(licensing, /Copyright & Licence/);
   assert.match(licensing, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
   assert.match(licensing, /Citation, reference and linking are permitted and encouraged/);
   assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
@@ -320,12 +320,12 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.match(app, /path="\/observatory\/severity-methodology" component=\{VigilSeverityMethodology\}/);
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
-  assert.match(shell, /Copyright & Licensing/);
+  assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm & Severity Methodology/);
   assert.match(about, /Publication & provenance/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
-  assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
+  assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
   assert.match(severity, /VIGIL-HIM 1\.0\.0/);
   assert.match(severity, /vigil-severity-methodology-document/);
   assert.doesNotMatch(severity, /severity-alignment-heading/);
@@ -364,7 +364,7 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(sections, /number: "02"[\s\S]*label: "Assessment"/);
   assert.match(report, /<Stage number="02" label="Assessment">/);
   assert.match(printable, /number: "02", label: "Assessment"/);
-  assert.match(cases, /Observation, Assessment, Classification, Repair and References/);
+  assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
   assert.match(hub, /Observation, Assessment, Classification, Repair and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(rail, /evidence, assessment, failure classification/);
@@ -421,4 +421,197 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
   assert.match(datasets, /title="VIGIL Observatory Failure Taxonomy"/);
   assert.match(home, /VIGIL Observatory Failure Taxonomy · Classification/);
   assert.match(rail, /VIGIL Observatory AI incident database/);
+});
+
+
+test("Datasets prioritise the public Harm & Severity Matrix over the internal reference registry", async () => {
+  const datasets = await read("src/pages/datasets.tsx");
+  assert.match(datasets, /title="Harm & Severity Matrix"/);
+  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.0\.json/);
+  assert.match(datasets, /11 harm dimensions/);
+  assert.match(datasets, /Open JSON matrix/);
+  assert.doesNotMatch(datasets, /title="Observatory Reference Registry"/);
+  assert.doesNotMatch(datasets, /VIGIL\.ObservatoryReferenceRegistry\.(?:json|csv)/);
+});
+
+test("About uses the CAM Initiative root as the general VIGIL Observatory citation URL", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /O’Rourke, M\. V\. \(2026\)\. VIGIL Observatory\. CAM Initiative\. https:\/\/cam-initiative\.org/);
+  assert.doesNotMatch(about, /cam-initiative\.org\/(?:about|vigil)/);
+});
+
+
+test("public-facing institutional copy treats the repository name as implementation detail", async () => {
+  const [about, licensing] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/pages/licensing.tsx"),
+  ]);
+  assert.doesNotMatch(about, /CAM Governance Catalogue|cam-governance-catalogue/i);
+  assert.match(licensing, /other CAM Initiative materials/);
+  assert.match(licensing, /other CAM Initiative materials/);
+  assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
+  assert.match(licensing, /does not maintain a separate website or interface licence/);
+  assert.doesNotMatch(licensing, /CAM Governance Interface Licence/);
+});
+
+
+test("website repository LICENSE is a pointer, not a second licence instrument", async () => {
+  const [license, citation, readme, licensing] = await Promise.all([
+    read("LICENSE.md"),
+    read("CITATION.cff"),
+    read("README.md"),
+    read("src/pages/licensing.tsx"),
+  ]);
+  assert.match(license, /^# Licence pointer/m);
+  assert.match(license, /does \*\*not\*\* publish a separate CAM Initiative website or interface licence/);
+  assert.match(license, /CAM-Initiative\/Vigil\/blob\/main\/LICENSE\.md/);
+  assert.match(license, /pointer only/);
+  assert.doesNotMatch(license, /Grant of Permission|Non-Commercial Restriction|CAM Governance Interface Licence/);
+  assert.doesNotMatch(citation, /LicenseRef-CAM-Governance-Interface|license:/);
+  assert.match(citation, /title: "CAM Initiative Website"/);
+  assert.match(readme, /does not publish a separate website or interface licence/);
+  assert.match(licensing, /controlling licence instrument for VIGIL Observatory Materials/);
+});
+
+
+test("About identifies CAM Initiative and founder without repeating the legal entity name", async () => {
+  const [about, shell, licensing, printable] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/components/layout/Shell.tsx"),
+    read("src/pages/licensing.tsx"),
+    read("src/pages/evidence-chain-report-printable.tsx"),
+  ]);
+  const legalName = "Phoenix Covenant Pty Ltd trading as CAM Initiative";
+  assert.equal((about.match(new RegExp(legalName, "g")) || []).length, 1);
+  assert.match(about, /ABN 14 692 195 529/);
+  assert.match(about, /27 October 2025/);
+  assert.match(about, /Western Australia/);
+  assert.match(about, /Dr Michelle Vivian O&apos;Rourke/);
+  assert.match(about, /PhD in analytical chemistry at La Trobe University in Melbourne, Victoria/);
+  assert.match(about, /mother of two/);
+  assert.match(about, /environmental health and contaminated-land practice/);
+  assert.match(shell, /© 2026 CAM Initiative\. All rights reserved\./);
+  assert.doesNotMatch(shell, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
+  assert.match(printable, /© 2026 CAM Initiative\. All rights reserved\./);
+  assert.doesNotMatch(printable, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
+  assert.equal((licensing.match(new RegExp(legalName, "g")) || []).length, 1);
+});
+
+
+test("footer avoids repeating the header brand lockup", async () => {
+  const shell = await read("src/components/layout/Shell.tsx");
+  const footerStart = shell.indexOf("<footer");
+  assert.notEqual(footerStart, -1);
+  const footer = shell.slice(footerStart);
+  assert.match(footer, /© 2026 CAM Initiative\. All rights reserved\./);
+  assert.doesNotMatch(footer, /cam-triskelion\.svg/);
+  assert.doesNotMatch(footer, />CAM Initiative<\/span>/);
+});
+
+
+test("Case Files landing page stays deliberately terse", async () => {
+  const cases = await read("src/pages/vigil-cases.tsx");
+  assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
+  assert.doesNotMatch(cases, /VIGIL Observatory provides a public AI incident database through its Case File registry/);
+  assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
+});
+
+
+test("About final polish keeps content continuous and places actions inside open grid space", async () => {
+  const [about, css] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/vigil-ux-v5.css"),
+  ]);
+  const firstMethodSentence = about.indexOf("The Case File structure keeps evidence of what happened separate");
+  const incidentBoundarySentence = about.indexOf("A reported incident is not automatically a new failure class");
+  const flow = about.indexOf("vigil-about-flow-scroll");
+  assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
+  assert.doesNotMatch(about, /Classification boundary:/);
+  assert.match(about, /Case File classification[\s\S]*vigil-about-grid-action[\s\S]*Browse the taxonomy/);
+  assert.match(about, /Separate authority layers[\s\S]*vigil-about-resource-links[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  const organisationStart = about.indexOf('id="vigil-organisation-heading"');
+  const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
+  const citationStart = about.indexOf('id="vigil-citation-heading"');
+  assert.ok(organisationStart >= 0 && affiliation > organisationStart && affiliation < citationStart);
+  assert.doesNotMatch(about, /vigil-about-link-row/);
+  assert.match(css, /About final polish: one calm document/);
+  assert.match(css, /About final polish: one calm document/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid article,[\s\S]*border: 0/);
+});
+
+
+test("Explore AI governance prioritises Case Files, Knowledge Base and Datasets with icon affordances", async () => {
+  const [rail, css] = await Promise.all([
+    read("src/components/ExploreGovernanceRail.tsx"),
+    read("src/governance-rail-refinements.css"),
+  ]);
+  const caseFiles = rail.indexOf('title: "Case Files"');
+  const knowledgeBase = rail.indexOf('title: "Knowledge Base"');
+  const datasets = rail.indexOf('title: "Datasets"');
+  assert.ok(caseFiles >= 0 && knowledgeBase > caseFiles && datasets > knowledgeBase);
+  assert.match(rail, /icon: FileText/);
+  assert.match(rail, /icon: Library/);
+  assert.match(rail, /icon: Database/);
+  assert.doesNotMatch(rail, /title: "VIGIL Observatory"/);
+  assert.match(rail, /home-governance-heading-rule/);
+  assert.doesNotMatch(rail, /home-governance-heading-panel/);
+  assert.match(css, /home-governance-heading-rule[\s\S]*background: transparent/);
+  assert.match(css, /home-governance-heading-rule::after[\s\S]*background: hsl\(var\(--primary\) \/ 0\.26\)/);
+  assert.doesNotMatch(css, /home-governance-heading-panel[\s\S]*status-success-surface/);
+  assert.match(css, /home-governance-card-title[\s\S]*font-weight: 540[\s\S]*text-transform: none/);
+  assert.match(css, /home-governance-card-label[\s\S]*display: inline-flex/);
+});
+
+test("dark appearance keeps native Case File classification menus legible", async () => {
+  const dark = await read("src/dark-appearance.css");
+  assert.match(dark, /html\[data-theme="dark"\] \.vigil-family-select select \{/);
+  assert.match(dark, /color-scheme: dark/);
+  assert.match(dark, /\.vigil-family-select select option,[\s\S]*background-color: hsl\(var\(--popover\)\)/);
+  assert.match(dark, /color: hsl\(var\(--popover-foreground\)\)/);
+});
+
+
+test("About section rules are attached only to section boundaries", async () => {
+  const [main, css] = await Promise.all([
+    read("src/main.tsx"),
+    read("src/about-page-polish.css"),
+  ]);
+  assert.match(main, /import "\.\/about-page-polish\.css";/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-record-intro,[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
+});
+
+
+test("About disambiguates VIGIL Observatory from unrelated VIGIL projects", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /VIGIL Observatory is also a distinct project/);
+  assert.match(about, /https:\/\/vigil\.agency\//);
+  assert.match(about, /https:\/\/vigilsoc\.org\//);
+  assert.match(about, /open-source AI-powered security operations platform/);
+  assert.match(about, /open-source AI security operations project/);
+});
+
+test("About citation uses a single Suggested general citation heading", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /<h2 id="vigil-citation-heading">Suggested general citation<\/h2>/);
+  assert.equal((about.match(/Suggested general citation/g) || []).length, 1);
+  assert.doesNotMatch(about, /Cite the work while preserving the relevant record or version/);
+});
+
+test("Publication copy names CAM Initiative without repeating the maintainer", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /VIGIL Observatory is published by <strong>CAM Initiative<\/strong>\. Case Files are designed/);
+  assert.doesNotMatch(about, /published by <strong>CAM Initiative<\/strong> and maintained by/);
+});
+
+test("External governance tools use subtle source-type icons", async () => {
+  const rail = await read("src/components/ExploreGovernanceRail.tsx");
+  assert.match(rail, /label: "AI Regulations Tracker"[\s\S]*icon: Scale/);
+  assert.match(rail, /label: "AI Incident Database"[\s\S]*icon: Database/);
+  assert.match(rail, /label: "OECD AI Incidents Monitor"[\s\S]*icon: Database/);
+  assert.match(rail, /label: "NIST AI Resource Center"[\s\S]*icon: BookOpen/);
 });

@@ -153,7 +153,7 @@ function DatasetsPanel() {
         Use the underlying governance data directly.
       </h2>
       <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licensing</a> for the applicable terms. The datasets surface brings together VIGIL Observatory standards and source records, structured governance requirements, and the current CAELESTIS archival release.
+        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licence</a> for the applicable terms. The datasets surface brings together VIGIL Observatory standards and source records, structured governance requirements, and the current CAELESTIS archival release.
       </p>
       <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets">
         Explore Datasets

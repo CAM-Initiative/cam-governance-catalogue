@@ -112,7 +112,7 @@ assert.doesNotMatch(vigilRegistry, /vigilPreviewUrl/);
 assert.match(vigilRegistry, /VITE_VIGIL_REGISTRY_URL/);
 assert.match(vigilRegistry, /VITE_VIGIL_RECORD_BRANCH/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
-assert.match(vigilRegistry, /if \(record\.raw_url\) return record\.raw_url/);
+assert.match(vigilRegistry, /if \(record\.path\)/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.branch/);
 
 assert.doesNotMatch(evidenceCard, /Evidence confidence/);
@@ -233,7 +233,7 @@ assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
-assert.match(printableReport, /© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative\. All rights reserved\./);
+assert.match(printableReport, /© 2026 CAM Initiative\. All rights reserved\./);
 assert.doesNotMatch(printableReport, /© 2026 Dr Michelle O'Rourke/);
 assert.match(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
@@ -243,3 +243,8 @@ assert.match(reportCss, /\.report-reliance-notice/);
 assert.match(reportCss, /\.report-copyright/);
 
 console.log("VIGIL Observatory Case File taxonomy, canonical-main sources, richer source metadata and deterministic report contract passed");
+
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-harm-assessment-table \{[\s\S]*width: 100%;[\s\S]*min-width: 0;[\s\S]*table-layout: fixed;/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-harm-matrix-scroll \{[\s\S]*max-width: 100%;[\s\S]*overflow: visible;/);
+assert.match(reportCss, /overflow-wrap: anywhere/);
+assert.match(reportCss, /white-space: normal/);

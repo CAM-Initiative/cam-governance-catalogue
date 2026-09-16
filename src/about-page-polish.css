@@ -1,0 +1,53 @@
+/*
+ * Final About-page cascade.
+ *
+ * The About page intentionally follows the Harm & Severity Methodology grammar:
+ * one outer document container, one divider at the start of each subsequent
+ * section, and no rules attached to paragraphs or content-grid cells.
+ */
+.vigil-about-document .vigil-about-section {
+  margin: 0 !important;
+  padding: 1.45rem 1.4rem 1.6rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.vigil-about-document .vigil-about-section + .vigil-about-section {
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.vigil-about-document .vigil-about-section-heading {
+  margin: 0 0 0.75rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-record-intro,
+.vigil-about-document .vigil-about-affiliation-note {
+  margin: 0.72rem 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-about-document .vigil-about-flow-scroll {
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-boundary-grid {
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-boundary-grid > article,
+.vigil-about-document .vigil-about-boundary-grid > article:nth-child(odd),
+.vigil-about-document .vigil-about-boundary-grid > article:nth-child(even) {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-about-document .vigil-about-citation-card {
+  border: 0 !important;
+  background: transparent !important;
+}
