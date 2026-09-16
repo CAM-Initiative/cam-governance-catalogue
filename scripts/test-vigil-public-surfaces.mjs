@@ -554,8 +554,12 @@ test("Explore AI governance prioritises Case Files, Knowledge Base and Datasets 
   assert.match(rail, /icon: Library/);
   assert.match(rail, /icon: Database/);
   assert.doesNotMatch(rail, /title: "VIGIL Observatory"/);
-  assert.match(rail, /home-governance-heading-panel/);
-  assert.match(css, /home-governance-heading-panel[\s\S]*status-success-surface/);
+  assert.match(rail, /home-governance-heading-rule/);
+  assert.doesNotMatch(rail, /home-governance-heading-panel/);
+  assert.match(css, /home-governance-heading-rule[\s\S]*background: transparent/);
+  assert.match(css, /home-governance-heading-rule::after[\s\S]*background: hsl\(var\(--primary\) \/ 0\.26\)/);
+  assert.doesNotMatch(css, /home-governance-heading-panel[\s\S]*status-success-surface/);
+  assert.match(css, /home-governance-card-title[\s\S]*font-weight: 540[\s\S]*text-transform: none/);
   assert.match(css, /home-governance-card-label[\s\S]*display: inline-flex/);
 });
 
