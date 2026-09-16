@@ -58,15 +58,10 @@ assert.match(taxonomyPanel, /exemplar \? "Why this Case File is an exemplar" : "
 assert.doesNotMatch(taxonomyPanel, /vigil-diagnostic-meta-label">What this failure means/);
 assert.match(taxonomyPanel, /vigil-diagnostic-meta-label">Classification metadata/);
 
-assert.match(caseFile, /className="vigil-substantive-label">Materialised consequence/);
-assert.match(caseFile, /className="vigil-substantive-label">Affected scope/);
-assert.match(caseFile, /className="vigil-substantive-label">Seriousness & persistence/);
-assert.match(caseFile, /className="vigil-substantive-label">Quantitative information/);
-assert.match(caseFile, /className="vigil-substantive-label">Evidentiary limits/);
-assert.match(caseFile, /className="vigil-substantive-label">Why this severity band/);
+assert.match(caseFile, /<HarmImpactMatrix assessment=/);
 assert.match(caseFile, /className="vigil-substantive-label">Factual basis/);
 assert.match(caseFile, /className="vigil-substantive-label">Governance significance/);
-assert.match(caseFile, /vigil-diagnostic-meta-label">Diagnostic provenance/);
+assert.match(caseFile, /vigil-diagnostic-meta-label">Assessment provenance/);
 
 assert.match(taxonomyPanel, /export function CaseTaxonomyRepair/);
 assert.match(taxonomyPanel, /Governing class invariant/);
@@ -110,10 +105,13 @@ assert.doesNotMatch(taxonomyLoader, /agent\/bounded-incident-classification-prov
 assert.match(taxonomyLoader, /subtypes\?: FailureTaxonomySubtype\[\]/);
 assert.match(taxonomyLoader, /invariant\?: string/);
 
-// Both local and production rendering consume the canonical VIGIL main branch.
+// Main builds consume the canonical branch; an explicit build-time override keeps
+// the paired website feature branch consistent with the VIGIL feature branch.
 assert.doesNotMatch(vigilRegistry, /VIGIL_WORKING_BRANCH/);
 assert.doesNotMatch(vigilRegistry, /vigilPreviewUrl/);
-assert.match(vigilRegistry, /VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
+assert.match(vigilRegistry, /VITE_VIGIL_REGISTRY_URL/);
+assert.match(vigilRegistry, /VITE_VIGIL_RECORD_BRANCH/);
+assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
 assert.match(vigilRegistry, /if \(record\.raw_url\) return record\.raw_url/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.branch/);
 
@@ -135,7 +133,7 @@ assert.doesNotMatch(caseLibrary, /record\.failure_family/);
 
 assert.match(caseFile, /loadTaxonomyReferenceTargets\(incident\.raw\)/);
 assert.match(caseFile, /taxonomyReferences\.map/);
-assert.match(caseFile, /VIGIL Failure Taxonomy/);
+assert.match(caseFile, /VIGIL Observatory Failure Taxonomy/);
 assert.match(caseFile, /reference\.id} — \{reference\.title/);
 assert.match(caseFile, /collectTaxonomyEvidence\(taxonomyReferences\)/);
 assert.match(caseFile, /taxonomyEvidenceReferences\.map/);
@@ -163,8 +161,8 @@ assert.match(datasets, /: "Technical reference"/);
 assert.match(datasets, /downloadRemoteFile/);
 assert.match(datasets, /response\.blob\(\)/);
 assert.match(datasets, /anchor\.download = filename/);
-assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL/);
-assert.match(datasets, /title="VIGIL Failure Taxonomy"/);
+assert.match(datasets, /canonical machine-readable taxonomy remains maintained in VIGIL Observatory/);
+assert.match(datasets, /title="VIGIL Observatory Failure Taxonomy"/);
 assert.doesNotMatch(datasets, /title="AI Governance Failure Taxonomy"/);
 assert.match(datasets, /CAM-Initiative\/Vigil\/main\/vigil\/taxonomy\/generated/);
 assert.doesNotMatch(datasets, /agent\/bounded-incident-classification-provenance-repair/);
@@ -225,19 +223,19 @@ assert.match(deterministicReport, /className="report-exemplar-callout"/);
 assert.match(deterministicReport, /The system worked as intended\./);
 assert.match(deterministicReport, /successful governance outcome, not a failure occurrence/);
 assert.match(deterministicReport, /className="report-section-header"/);
-assert.match(deterministicReport, /className="report-analysis-grid"/);
+assert.match(deterministicReport, /<HarmImpactMatrix assessment=/);
 assert.match(deterministicReport, /className="report-reference-list"/);
-assert.match(deterministicReport, /className="report-substantive-label">Observed occurrence \/ downstream consequence/);
 assert.match(deterministicReport, /className="report-substantive-label">Factual basis/);
-assert.match(deterministicReport, /className="report-label">Diagnostic provenance/);
+assert.match(deterministicReport, /className="report-label">Assessment provenance/);
 assert.doesNotMatch(deterministicReport, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
-assert.match(printableReport, /Copyright © 2026 Dr Michelle O'Rourke\./);
-assert.doesNotMatch(printableReport, /All rights reserved/);
+assert.match(printableReport, /© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative\. All rights reserved\./);
+assert.doesNotMatch(printableReport, /© 2026 Dr Michelle O'Rourke/);
+assert.match(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
 assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);

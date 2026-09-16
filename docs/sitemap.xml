@@ -7,6 +7,9 @@
     <loc>https://www.cam-initiative.org/about/</loc>
   </url>
   <url>
+    <loc>https://www.cam-initiative.org/licensing/</loc>
+  </url>
+  <url>
     <loc>https://www.cam-initiative.org/datasets/</loc>
   </url>
   <url>
@@ -19,7 +22,7 @@
     <loc>https://www.cam-initiative.org/observatory/</loc>
   </url>
   <url>
-    <loc>https://www.cam-initiative.org/observatory/about/</loc>
+    <loc>https://www.cam-initiative.org/observatory/severity-methodology/</loc>
   </url>
   <url>
     <loc>https://www.cam-initiative.org/observatory/cases/</loc>

@@ -6,32 +6,34 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
-  { href: "/privacy", label: "Privacy", internal: true },
-  { href: "/observatory/about", label: "About VIGIL", internal: true },
-  { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Failure Taxonomy", internal: true },
+  { href: "/observatory/knowledge-base", label: "VIGIL Observatory Knowledge Base", internal: true },
+  { href: "/observatory/cases", label: "VIGIL Observatory Case Files", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy", internal: true },
+  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
+  { href: "/licensing", label: "Copyright & Licensing", internal: true },
+  { href: "/privacy", label: "Privacy", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about", label: "About" },
+  { href: "/licensing", label: "Copyright & Licensing" },
   { href: "/privacy", label: "Privacy" },
 ];
 
 const vigilLinks = [
-  { href: "/observatory/about", label: "About VIGIL" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/cases", label: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Failure Taxonomy" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy" },
+  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about" || location === "/privacy";
+  const isHomeActive = location === "/" || location === "/about" || location === "/licensing" || location === "/privacy";
   const isVigilActive = location === "/observatory" || location.startsWith("/observatory/");
   const isDatasetsActive = location === "/datasets" || location.startsWith("/datasets/");
 
@@ -101,7 +103,7 @@ export function Shell({ children }: { children: ReactNode }) {
                   isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                VIGIL
+                VIGIL Observatory
               </Link>
               <div className="invisible absolute left-0 top-full min-w-64 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                 <div className="rounded-xl border border-primary/35 bg-background p-2 shadow-2xl ring-1 ring-primary/15">
@@ -181,7 +183,9 @@ export function Shell({ children }: { children: ReactNode }) {
               <img src="/cam-triskelion.svg" alt="" className="h-5 w-5 object-contain opacity-75" aria-hidden="true" />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/75">CAM Initiative</span>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <span className="text-sm text-muted-foreground">© 2026. All Rights Reserved.</span>
+              <span className="text-sm text-muted-foreground">© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.</span>
+              <span className="text-muted-foreground" aria-hidden="true">·</span>
+              <Link href="/licensing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licensing</Link>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
               <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>
@@ -196,7 +200,7 @@ export function Shell({ children }: { children: ReactNode }) {
               <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Newspaper className="h-4 w-4" aria-hidden="true" />
               </a>
-              <a href="https://github.com/CAM-Initiative/Vigil" aria-label="VIGIL repository on GitHub" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+              <a href="https://github.com/CAM-Initiative/Vigil" aria-label="VIGIL Observatory repository on GitHub" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 <Github className="h-4 w-4" aria-hidden="true" />
               </a>
               <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">

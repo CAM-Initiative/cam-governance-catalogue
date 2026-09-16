@@ -30,7 +30,7 @@ async function loadModules() {
 test("normalization accepts canonical Incidents and rejects retired record classes", async () => {
   const modules = await loadModules();
   try {
-    const raw = { id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident", system_context: { platform_or_vendor: "OpenAI", product_or_service: "ChatGPT" }, severity_assessment: { severity: "S3" } };
+    const raw = { id: "VIGIL-INC-000001", record_type: "incident", title: "Canonical Incident", system_context: { platform_or_vendor: "OpenAI", product_or_service: "ChatGPT" }, harm_impact_assessment: { overall_severity: "S3" } };
     const incident = modules.presentation.normalizeVigilRecord(raw);
     assert.equal(incident.record_type, "incident");
     assert.equal(incident.platform_label, "OpenAI");
@@ -97,11 +97,13 @@ test("detail loader accepts Incident JSON and rejects retired record payloads", 
   } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
-test("Case File keeps structured occurrence severity in Diagnosis", async () => {
+test("Case File keeps structured occurrence severity in Assessment", async () => {
   const caseFile = await readFile(resolve(repoRoot, "src/pages/vigil-case-file.tsx"), "utf8");
+  const matrix = await readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8");
   const taxonomy = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
-  for (const field of ["materialised_consequence", "affected_scope", "seriousness_and_persistence", "quantitative_information", "evidentiary_limits", "band_rationale"]) assert.match(caseFile, new RegExp(`severity_assessment\\.${field}`));
-  assert.match(caseFile, /stageId === "diagnose"[\s\S]*Occurrence-level severity/);
+  assert.match(caseFile, /harm_impact_assessment/);
+  for (const field of ["assessment_status", "threshold_id", "assessment_basis", "controlling_dimensions"]) assert.match(matrix, new RegExp(field));
+  assert.match(caseFile, /stageId === "diagnose"[\s\S]*Harm Impact Matrix/);
   assert.doesNotMatch(taxonomy, /severity_assessment|severityLabel/);
 });
 

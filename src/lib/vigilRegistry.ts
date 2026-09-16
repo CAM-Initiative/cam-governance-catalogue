@@ -13,7 +13,10 @@ export type RegistryLoadResult = {
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 export const VIGIL_REGISTRY_SOURCE = registrySources.vigil;
-export const VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE.incident_registry_index_url;
+const VIGIL_BUILD_ENV = (import.meta as ImportMeta & { readonly env?: ImportMetaEnv }).env;
+const VIGIL_PREVIEW_BRANCH = VIGIL_BUILD_ENV?.VITE_VIGIL_RECORD_BRANCH?.trim();
+export const VIGIL_INCIDENT_REGISTRY_URL =
+  VIGIL_BUILD_ENV?.VITE_VIGIL_REGISTRY_URL?.trim() || VIGIL_REGISTRY_SOURCE.incident_registry_index_url;
 export const VIGIL_FALLBACK_URL = `${import.meta.env.BASE_URL}data/vigil-registry-fallback.json`;
 
 export function cacheBustUrl(url: string, version = Date.now()) {
@@ -73,12 +76,18 @@ export async function loadVigilIncidentRecords(
 }
 
 export function githubBlobUrlForRecord(record: { github_blob_url?: string; path?: string }) {
+  if (VIGIL_PREVIEW_BRANCH && record.path) {
+    return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
+  }
   if (record.github_blob_url) return record.github_blob_url;
   if (!record.path) return undefined;
   return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
 }
 
 export function rawUrlForRecord(record: { raw_url?: string; path?: string }) {
+  if (VIGIL_PREVIEW_BRANCH && record.path) {
+    return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
+  }
   if (record.raw_url) return record.raw_url;
   if (!record.path) return undefined;
   return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;

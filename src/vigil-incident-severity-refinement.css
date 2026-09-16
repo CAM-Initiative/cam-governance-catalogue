@@ -14,3 +14,328 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 .vigil-case-file-page .vigil-severity-analysis-grid > section > p:last-child, .vigil-case-file-page .vigil-diagnosis-reading-stack > section > p:last-child { margin-top: 0.52rem; font-size: 0.94rem; line-height: 1.58; color: hsl(var(--foreground) / 0.86); }
 .vigil-case-file-page .vigil-diagnosis-metadata-panel > .vigil-diagnostic-meta-label { margin: 0 0 0.8rem !important; }
 @media (max-width: 760px) { .vigil-case-file-page .vigil-severity-summary-grid dl, .vigil-case-file-page .vigil-severity-analysis-grid { grid-template-columns: 1fr; } }
+
+/* VIGIL Harm Impact Matrix.
+   The About page is the methodology reference: every S1-S5 cell contains its
+   canonical criterion. Case Files use a separate occurrence-specific table so
+   evidence state, selected threshold and rationale remain legible. */
+.vigil-harm-matrix {
+  --him-s1: 142 55% 42%;
+  --him-s2: 82 58% 45%;
+  --him-s3: 36 88% 49%;
+  --him-s4: 4 73% 52%;
+  --him-s5: 350 69% 34%;
+  margin: 0;
+  padding: 0 var(--vigil-case-card-pad, 1.25rem) 1.25rem;
+}
+.vigil-about-section .vigil-harm-matrix {
+  padding: 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.6rem;
+  background: hsl(var(--card) / 0.45);
+}
+.vigil-harm-matrix-scroll {
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.58rem;
+  background: hsl(var(--background));
+}
+.vigil-harm-matrix table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.vigil-harm-matrix th,
+.vigil-harm-matrix td {
+  border: 1px solid hsl(var(--border) / 0.74);
+}
+.vigil-harm-matrix thead th {
+  background: hsl(var(--muted) / 0.35);
+}
+.vigil-harm-matrix thead strong,
+.vigil-harm-matrix thead span {
+  display: block;
+}
+.vigil-harm-matrix thead strong {
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+}
+.vigil-harm-matrix thead span {
+  margin-top: 0.12rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-harm-matrix .band-s1 { background: hsl(var(--him-s1) / 0.11); }
+.vigil-harm-matrix .band-s2 { background: hsl(var(--him-s2) / 0.12); }
+.vigil-harm-matrix .band-s3 { background: hsl(var(--him-s3) / 0.13); }
+.vigil-harm-matrix .band-s4 { background: hsl(var(--him-s4) / 0.12); }
+.vigil-harm-matrix .band-s5 { background: hsl(var(--him-s5) / 0.13); }
+
+/* Methodology reference used on About VIGIL. */
+.vigil-harm-methodology-table {
+  min-width: 1680px;
+  table-layout: fixed;
+}
+.vigil-harm-methodology-table thead th {
+  padding: 0.72rem 0.62rem;
+  text-align: left;
+  vertical-align: bottom;
+}
+.vigil-harm-methodology-table thead th:first-child {
+  width: 18%;
+  padding-left: 0.82rem;
+}
+.vigil-harm-methodology-table tbody th {
+  padding: 0.78rem 0.82rem;
+  background: hsl(var(--card));
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.88rem;
+  line-height: 1.42;
+}
+.vigil-harm-methodology-table tbody td {
+  padding: 0.72rem 0.76rem;
+  text-align: left;
+  vertical-align: top;
+}
+.vigil-harm-methodology-table tbody td p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.88);
+}
+.vigil-harm-threshold-emphasis {
+  font-weight: 760;
+  color: hsl(var(--foreground));
+}
+.vigil-harm-evidence-key {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 0.8rem;
+}
+.vigil-harm-evidence-key > div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.72rem 0.8rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: 0.5rem;
+  background: hsl(var(--card) / 0.4);
+}
+.vigil-harm-evidence-key strong {
+  font-size: 0.85rem;
+}
+.vigil-harm-evidence-key span {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: hsl(var(--foreground) / 0.78);
+}
+.vigil-harm-method-note {
+  margin: 0.78rem 0 0;
+  padding: 0.72rem 0.82rem;
+  border-left: 3px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.18);
+  font-size: 0.82rem;
+  line-height: 1.52;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+/* Incident-specific assessment used inside Case Files. */
+.vigil-harm-matrix-overview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1.2rem;
+  margin-bottom: 0.82rem;
+}
+.vigil-harm-overall-result {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.vigil-harm-overall-result > span {
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-harm-overall-result > strong {
+  padding: 0.16rem 0.42rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.34rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.92rem;
+  line-height: 1.2;
+  background: hsl(var(--card));
+}
+.vigil-harm-overall-result > small {
+  font-size: 0.82rem;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-harm-matrix-overview > p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.48;
+  color: hsl(var(--foreground) / 0.8);
+}
+.vigil-harm-no-harm-basis {
+  margin: 0 0 0.82rem;
+  padding: 0.72rem 0.82rem;
+  border-left: 3px solid hsl(var(--primary) / 0.7);
+  background: hsl(var(--muted) / 0.16);
+  font-size: 0.84rem;
+  line-height: 1.52;
+  color: hsl(var(--foreground) / 0.84);
+}
+.vigil-harm-assessment-table {
+  min-width: 1040px;
+  table-layout: fixed;
+}
+.vigil-harm-assessment-table thead th {
+  padding: 0.66rem 0.68rem;
+  text-align: left;
+  font-size: 0.84rem;
+  letter-spacing: 0.025em;
+}
+.vigil-harm-assessment-table thead th:nth-child(1) { width: 20%; }
+.vigil-harm-assessment-table thead th:nth-child(2) { width: 14%; }
+.vigil-harm-assessment-table thead th:nth-child(3) { width: 14%; }
+.vigil-harm-assessment-table thead th:nth-child(4) { width: 52%; }
+.vigil-harm-assessment-table tbody th,
+.vigil-harm-assessment-table tbody td {
+  padding: 0.72rem 0.76rem;
+  text-align: left;
+  vertical-align: top;
+}
+.vigil-harm-assessment-table tbody th {
+  background: hsl(var(--card));
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+.vigil-harm-assessment-table tbody th > span,
+.vigil-harm-controlling-badge {
+  display: block;
+}
+.vigil-harm-controlling-badge {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+.vigil-harm-assessment-table tbody tr.is-controlling th {
+  box-shadow: inset 4px 0 0 hsl(var(--primary));
+}
+.vigil-harm-assessment-table td[class*="status-"] {
+  background: hsl(var(--muted) / 0.18);
+  font-size: 0.84rem;
+  line-height: 1.35;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-harm-assessment-table td.status-assessed strong {
+  color: hsl(var(--foreground));
+}
+.vigil-harm-assessment-table td.is-result {
+  font-family: var(--app-font-mono);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+.vigil-harm-assessment-basis {
+  background: hsl(var(--background));
+}
+.vigil-harm-assessment-basis > p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.52;
+  color: hsl(var(--foreground) / 0.84);
+}
+.vigil-harm-assessment-basis > p + p {
+  margin-top: 0.42rem;
+}
+.vigil-harm-threshold {
+  margin-bottom: 0.42rem !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+.vigil-harm-threshold code {
+  overflow-wrap: anywhere;
+  font-size: 0.84rem;
+}
+.vigil-harm-observed-values {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid hsl(var(--border) / 0.65);
+}
+.vigil-harm-observed-values > strong {
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-harm-observed-values ul {
+  margin: 0.28rem 0 0 1rem;
+  padding: 0;
+}
+.vigil-harm-observed-values li {
+  margin: 0.22rem 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: hsl(var(--foreground) / 0.8);
+}
+.vigil-harm-coverage {
+  margin: 0.72rem 0 0;
+  padding: 0.72rem 0.82rem;
+  border-left: 3px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.18);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: hsl(var(--foreground) / 0.82);
+}
+.vigil-dataset-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+@media (max-width: 760px) {
+  .vigil-harm-evidence-key { grid-template-columns: 1fr; }
+  .vigil-harm-matrix-scroll { margin-inline: -0.35rem; }
+  .vigil-harm-matrix-overview { align-items: flex-start; }
+  .vigil-harm-overall-result { flex-wrap: wrap; }
+  .vigil-dataset-actions { justify-content: flex-start; }
+}
+
+@media print {
+  .vigil-harm-matrix {
+    padding-inline: 0;
+    break-inside: avoid;
+  }
+  .vigil-harm-matrix-scroll {
+    overflow: visible;
+  }
+  .vigil-harm-methodology-table {
+    min-width: 0;
+    font-size: 9.5pt;
+  }
+  .vigil-harm-methodology-table tbody td p {
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+  .vigil-harm-assessment-table {
+    min-width: 0;
+    font-size: 9.5pt;
+  }
+  .vigil-harm-assessment-table tbody th,
+  .vigil-harm-assessment-table tbody td {
+    padding: 0.35rem;
+  }
+  .vigil-harm-assessment-basis > p,
+  .vigil-harm-observed-values li {
+    font-size: 9.5pt;
+  }
+}

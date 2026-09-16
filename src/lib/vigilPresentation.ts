@@ -113,7 +113,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     title,
     summary,
     platform,
-    severity: record.severity ?? record.severity_assessment,
+    severity: record.severity ?? record.harm_impact_assessment,
     classification: {
       status: record.classification_status,
       role: record.classification_role,
@@ -153,7 +153,7 @@ export function normalizeVigilRecord(record: UnknownRecord, index = 0): VigilInd
     summary,
     platform_label: platform,
     affected_platform_label: platform,
-    severity: firstText(record, ["severity_assessment.severity", "severity"]),
+    severity: firstText(record, ["harm_impact_assessment.overall_severity", "severity"]),
     path,
     github_blob_url: githubBlobUrlForRecord({ github_blob_url: firstText(record, ["github_blob_url"]), path }),
     raw_url: rawUrlForRecord({ raw_url: firstText(record, ["raw_url"]), path }),

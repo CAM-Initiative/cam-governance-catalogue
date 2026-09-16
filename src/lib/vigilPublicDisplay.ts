@@ -105,7 +105,7 @@ export function deriveIncidentPublicDisplay(record: UnknownRecord): IncidentPubl
             system: record.system_context,
             jurisdiction: record.jurisdictional_context,
             taxonomy: record.taxonomy_classification_summary ?? record.taxonomy_classification,
-            severity: record.severity_assessment,
+            severity: record.harm_impact_assessment,
             sources: record.source_records,
           },
     ),

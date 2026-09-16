@@ -31,14 +31,14 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(referencesRenderer, /source\.description/);
 });
 
-test("Incident Case File retains evidence context and VIGIL interpretation", async () => {
+test("Incident Case File retains evidence context and VIGIL Observatory interpretation", async () => {
   const source = await caseFileSource();
   const observationRenderer = source.match(/if \(stageId === "observe"\)[\s\S]*?if \(stageId === "classify"\)/)?.[0] ?? "";
 
   assert.ok(observationRenderer, "Observation renderer must remain present");
   assert.match(source, /vigil_assessment\.factual_basis/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
-  assert.match(source, /VIGIL governance assessment/);
+  assert.match(source, /VIGIL Observatory governance assessment/);
 });
 
 test("Incident Case File projects taxonomy-derived class-invariant repair, not implementation state", async () => {

@@ -1,10 +1,10 @@
-# VIGIL Public-Display Contract
+# VIGIL Observatory Public-Display Contract
 
 Status: interface contract
 
 Applies to: CAM Governance Interface / VIGIL Observatory
 
-Authority boundary: CAELESTIS remains the authoritative governance corpus. VIGIL records evidence, findings, proposed changes, implemented repairs, and their verification; it does not create independent constitutional authority.
+Authority boundary: CAELESTIS remains the authoritative governance corpus. VIGIL Observatory records evidence, findings, proposed changes, implemented repairs, and their verification; it does not create independent constitutional authority.
 
 ## Public reading path
 
@@ -17,7 +17,7 @@ Every public record MUST make the following information readily visible:
 5. lifecycle status;
 6. first-observed, published, and last-updated dates where applicable;
 7. relevant domains and systems;
-8. a link to the complete canonical VIGIL JSON record.
+8. a link to the complete canonical VIGIL Observatory JSON record.
 
 The record chain MUST appear immediately after the public finding. Dates, domains, and system fields SHOULD use a compact metadata treatment rather than a dominant content panel. Relationship fields already represented by the record chain SHOULD NOT be repeated as a separate `Linked records` section.
 
@@ -32,7 +32,7 @@ The public view MUST display:
 
 - the factual Incident `summary` as **What happened**;
 - `vigil_assessment.factual_basis` as the evidence-supported factual account;
-- occurrence-level severity as substantive diagnosis, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
+- occurrence-level severity as substantive assessment, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
 - each source's claim-relative `evidence_status` and `evidence_status_basis` alongside its evidence metadata;
 - each source's publication genre from `source_type`;
 - the taxonomy classification basis only within the classification section; severity MUST NOT be presented as taxonomy classification.
@@ -124,7 +124,7 @@ It MUST then identify what was repaired and, for reliance on pre-existing covera
 
 ## Lifecycle fidelity and implementation-detail guard
 
-The interface MUST reproduce the lifecycle state recorded in VIGIL faithfully. `Closed—actioned` means the record is completed or implemented and no longer sits in the active work queue. It MUST NOT be reinterpreted as secret, withheld, suppressed, or hidden.
+The interface MUST reproduce the lifecycle state recorded in VIGIL Observatory faithfully. `Closed—actioned` means the record is completed or implemented and no longer sits in the active work queue. It MUST NOT be reinterpreted as secret, withheld, suppressed, or hidden.
 
 Lifecycle state and public implementation completeness are separate claims. Where a closed—actioned PATCH does not yet expose complete structured implementation detail, the interface MUST:
 
@@ -181,7 +181,7 @@ Permitted `implementation_outcome` values are:
 
 ## Registry search projection
 
-Lean VIGIL registry entries SHOULD project the following public fields so the Observatory can search without downloading every complete record:
+Lean VIGIL Observatory registry entries SHOULD project the following public fields so the Observatory can search without downloading every complete record:
 
 - `public_finding`;
 - `relevant_domains`;

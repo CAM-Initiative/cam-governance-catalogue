@@ -45,7 +45,7 @@ const connectionLinks = [
     external: true,
   },
   {
-    label: "VIGIL repository",
+    label: "VIGIL Observatory repository",
     description: "Evidence ledger, records, schemas, and repair history",
     href: "https://github.com/CAM-Initiative/Vigil",
     icon: "github",
@@ -94,10 +94,10 @@ function EvidenceRepairLoop() {
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
-          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Incidents, source-level evidence, occurrence-level diagnosis and traceable repair history.
+          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Observatory Incidents, source-level evidence, occurrence-level assessment and traceable repair history.
         </p>
         <p>
-          It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Diagnosis → Runtime Governance</strong>.
+          It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Assessment → Runtime Governance</strong>.
         </p>
       </div>
       <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/cases">
@@ -111,19 +111,19 @@ function EvidenceRepairLoop() {
 function FailureTaxonomyPanel() {
   return (
     <section className="home-rail-section" aria-labelledby="failure-taxonomy-home-heading">
-      <SectionLabel>VIGIL Failure Taxonomy · Diagnosis</SectionLabel>
+      <SectionLabel>VIGIL Observatory Failure Taxonomy · Classification</SectionLabel>
       <h2 id="failure-taxonomy-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        VIGIL Failure Taxonomy
+        VIGIL Observatory Failure Taxonomy
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
           A structured taxonomy of recurring AI governance failure mechanisms.
         </p>
         <p>
-          The VIGIL Failure Taxonomy groups evidence into Failure Families and selectable Failure Classes so recurring mechanisms can be diagnosed, compared across systems, mapped to standards and controls, and carried forward into repair design.
+          The VIGIL Observatory Failure Taxonomy groups evidence into Failure Families and selectable Failure Classes so recurring mechanisms can be classified, compared across systems, mapped to standards and controls, and carried forward into repair design.
         </p>
         <p>
-          Together, <strong className="font-semibold text-foreground">VIGIL Observatory → VIGIL Failure Taxonomy → CAELESTIS</strong> connects real-world evidence to diagnosis and runtime governance constraints.
+          Together, <strong className="font-semibold text-foreground">VIGIL Observatory → VIGIL Observatory Failure Taxonomy → CAELESTIS</strong> connects real-world evidence to diagnosis and runtime governance constraints.
         </p>
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
@@ -153,7 +153,7 @@ function DatasetsPanel() {
         Use the underlying governance data directly.
       </h2>
       <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        The CAM Initiative publishes machine-readable governance reference data and archival releases for independent research, comparison and reuse. The datasets surface brings together VIGIL standards and source records, structured governance requirements, and the current CAELESTIS archival release, with additional public datasets added as they mature.
+        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licensing</a> for the applicable terms. The datasets surface brings together VIGIL Observatory standards and source records, structured governance requirements, and the current CAELESTIS archival release.
       </p>
       <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets">
         Explore Datasets
@@ -188,7 +188,7 @@ function ConnectPanel() {
       <div className="home-connect-intro">
         <h2 id="connect-heading" className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
         <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-          Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL accessible.
+          Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL Observatory accessible.
         </p>
       </div>
 
@@ -239,7 +239,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 14 }}
             transition={{ duration: 0.7 }}
           >
-            <p className="home-identity-kicker">CAM Initiative · Open AI Governance</p>
+            <p className="home-identity-kicker">CAM Initiative · Public-interest AI governance</p>
             <h1 id="home-identity-heading" className="sr-only">CAELESTIS Architecture Model and VIGIL Observatory</h1>
             <div className="home-identity-artwork">
               <img src={heroImages.cam} alt="" className="home-identity-image" />
@@ -261,7 +261,7 @@ export default function Home() {
             <div className="home-main-copy">
               <section className="home-about-section" aria-labelledby="home-about-heading">
                 <SectionLabel>CAM Initiative</SectionLabel>
-                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Open AI governance infrastructure for understanding systems and making failure visible.</h2>
+                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Publicly accessible AI governance infrastructure for understanding systems and making failure visible.</h2>
                 <div className="space-y-5 text-[17px] leading-relaxed text-foreground/80 md:text-lg">
                   <p>
                     The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.

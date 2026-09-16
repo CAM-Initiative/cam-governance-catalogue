@@ -50,14 +50,26 @@ jobs:
         run: pnpm run validate:palette
 
       - name: Refresh public governance registries
+        env:
+          VIGIL_FEATURE_REGISTRY: https://raw.githubusercontent.com/CAM-Initiative/Vigil/chore/remove-aeon-governance-lab-public-references/vigil/VIGIL.Incidents.Index.json
         run: |
           pnpm run sync:cam
-          pnpm run sync:vigil
+          if [ "$GITHUB_REF_NAME" = "ux/taxonomy-evidence-legibility" ]; then
+            VIGIL_REGISTRY_SOURCE="$VIGIL_FEATURE_REGISTRY" VIGIL_RECORD_BRANCH="chore/remove-aeon-governance-lab-public-references" pnpm run sync:vigil
+          else
+            pnpm run sync:vigil
+          fi
 
       - name: Rebuild published site
+        env:
+          VIGIL_FEATURE_REGISTRY: https://raw.githubusercontent.com/CAM-Initiative/Vigil/chore/remove-aeon-governance-lab-public-references/vigil/VIGIL.Incidents.Index.json
         run: |
           rm -rf docs/assets
-          pnpm exec vite build
+          if [ "$GITHUB_REF_NAME" = "ux/taxonomy-evidence-legibility" ]; then
+            VITE_VIGIL_REGISTRY_URL="$VIGIL_FEATURE_REGISTRY" VITE_VIGIL_RECORD_BRANCH="chore/remove-aeon-governance-lab-public-references" pnpm exec vite build
+          else
+            pnpm exec vite build
+          fi
           node scripts/prepare-github-pages.js
 
       - name: Validate generated Pages output

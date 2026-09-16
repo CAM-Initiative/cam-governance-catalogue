@@ -273,3 +273,26 @@
     padding-inline: 1rem;
   }
 }
+
+
+/* Copyright & Licensing: one continuous institutional document. */
+.public-reference-page--single-document .public-reference-document--single {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  background: hsl(var(--background));
+}
+.public-reference-page--single-document .public-reference-hero {
+  border: 0;
+  border-radius: 0;
+}
+.public-reference-page--single-document .public-reference-section {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid hsl(var(--border));
+  border-radius: 0;
+  background: transparent;
+}
+.public-reference-page--single-document .public-reference-section-heading {
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}

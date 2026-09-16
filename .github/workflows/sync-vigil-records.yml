@@ -2,11 +2,8 @@ name: Sync VIGIL records
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "17 3 * * *"
-  # Future cross-repository automation: configure a VIGIL-side token/webhook to
-  # send repository_dispatch type "vigil-records-updated" after generated
-  # registers are rebuilt. This receiver is intentionally secret-free here.
+  # VIGIL dispatches this event after its generated registers are rebuilt.
+  # The cross-repository token trigger is the canonical automatic sync path.
   repository_dispatch:
     types: [vigil-records-updated]
 
