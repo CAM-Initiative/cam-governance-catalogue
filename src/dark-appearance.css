@@ -102,3 +102,20 @@ html[data-theme="dark"] [class~="hover:bg-[hsl(36_52%_93%)]"]:hover {
 .site-header .group > div > div {
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
 }
+
+
+/* Native VIGIL selects must keep dark popup menus legible as well as the closed control. */
+html[data-theme="dark"] .vigil-family-select select {
+  color-scheme: dark;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+html[data-theme="dark"] .vigil-family-select select option,
+html[data-theme="dark"] .vigil-family-select select optgroup {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+html[data-theme="dark"] .vigil-family-select select option:checked {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+}
