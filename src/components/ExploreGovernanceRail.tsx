@@ -1,4 +1,4 @@
-import { ArrowRight, Database, ExternalLink, FileText, Library } from "lucide-react";
+import { ArrowRight, BookOpen, Database, ExternalLink, FileText, Library, Scale } from "lucide-react";
 
 const initiativeResources = [
   {
@@ -37,11 +37,13 @@ const externalResources = [
     label: "AI Incident Database",
     description: "Search reported AI incidents and harms documented across systems, sectors and jurisdictions.",
     href: "https://incidentdatabase.ai/",
+    icon: Database,
   },
   {
     label: "OECD AI Incidents Monitor",
     description: "Review internationally monitored AI incidents, hazards and emerging risk patterns.",
     href: "https://oecd.ai/en/incidents",
+    icon: Database,
   },
   {
     label: "NIST AI Resource Center",
