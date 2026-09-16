@@ -325,7 +325,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.match(about, /Publication & provenance/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
-  assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
+  assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
   assert.match(severity, /VIGIL-HIM 1\.0\.0/);
   assert.match(severity, /vigil-severity-methodology-document/);
   assert.doesNotMatch(severity, /severity-alignment-heading/);
@@ -448,9 +448,10 @@ test("public-facing institutional copy treats the repository name as implementat
   ]);
   assert.doesNotMatch(about, /CAM Governance Catalogue|cam-governance-catalogue/i);
   assert.match(licensing, /other CAM Initiative materials/);
-  assert.match(licensing, /CAM Initiative website materials/);
-  assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
-  assert.doesNotMatch(licensing, />Read the CAM Governance Interface licence/);
+  assert.match(licensing, /other CAM Initiative materials/);
+  assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
+  assert.match(licensing, /does not maintain a separate website or interface licence/);
+  assert.doesNotMatch(licensing, /CAM Governance Interface Licence/);
 });
 
 
