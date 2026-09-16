@@ -92,8 +92,8 @@ export function rawUrlForRecord(record: { raw_url?: string; path?: string }) {
   if (VIGIL_PREVIEW_BRANCH && record.path) {
     return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
   }
-  // Never let a stale fallback pin a Case File to a deleted feature branch when the
-  // canonical record path is available.
+  // Never let a stale fallback pin a production Case File to a deleted feature branch when
+  // the canonical record path is available; production routing follows the configured branch.
   if (record.path) {
     return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
   }
