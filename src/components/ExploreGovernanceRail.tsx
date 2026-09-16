@@ -32,6 +32,7 @@ const externalResources = [
     label: "AI Regulations Tracker",
     description: "Compare AI laws, regulatory proposals and policy developments across jurisdictions.",
     href: "https://regulations.ai/",
+    icon: Scale,
   },
   {
     label: "AI Incident Database",
@@ -49,6 +50,7 @@ const externalResources = [
     label: "NIST AI Resource Center",
     description: "Access NIST AI risk-management frameworks, profiles, guidance and supporting resources.",
     href: "https://airc.nist.gov/",
+    icon: BookOpen,
   },
 ];
 
@@ -80,15 +82,16 @@ export function ExploreGovernanceRail() {
           <p className="home-governance-section-label">External Tools</p>
         </div>
         <div className="home-governance-links">
-          {externalResources.map((resource) => (
-            <a className="home-governance-card group" href={resource.href} key={resource.label} rel="noreferrer" target="_blank">
+          {externalResources.map((resource) => {
+            const Icon = resource.icon;
+            return <a className="home-governance-card group" href={resource.href} key={resource.label} rel="noreferrer" target="_blank">
               <span className="home-governance-card-title">
-                <span>{resource.label}</span>
-                <ExternalLink className="h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                <span className="home-governance-card-label"><Icon aria-hidden="true" /><span>{resource.label}</span></span>
+                <ExternalLink className="home-governance-card-arrow h-3.5 w-3.5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
               </span>
               <span className="home-governance-detail block">{resource.description}</span>
-            </a>
-          ))}
+            </a>;
+          })}
         </div>
       </div>
     </aside>
