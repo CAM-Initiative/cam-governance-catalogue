@@ -426,3 +426,83 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Mature single-About surface: orient readers quickly, then expose detail progressively. */
+.vigil-about-hero-actions,
+.vigil-about-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+.vigil-about-hero-actions a,
+.vigil-about-link-row a,
+.vigil-about-copy {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid hsl(var(--primary) / 0.35);
+  border-radius: 0.58rem;
+  padding: 0.62rem 0.82rem;
+  background: hsl(var(--background));
+  font-family: var(--app-font-mono);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.035em;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+.vigil-about-hero-actions a:hover,
+.vigil-about-link-row a:hover,
+.vigil-about-copy:hover {
+  border-color: hsl(var(--primary) / 0.62);
+  background: hsl(var(--card) / 0.55);
+  color: hsl(var(--foreground));
+}
+.vigil-about-hero-actions svg,
+.vigil-about-link-row svg,
+.vigil-about-copy svg {
+  width: 1rem;
+  height: 1rem;
+}
+.vigil-about-purpose-grid article > span {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+.vigil-about-publication-grid article {
+  background: hsl(var(--background));
+}
+.vigil-about-citation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+.vigil-about-citation-card > div > p:last-child {
+  margin: 0.35rem 0 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground) / 0.88);
+}
+.vigil-about-copy {
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+@media (max-width: 760px) {
+  .vigil-about-citation-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .vigil-about-copy {
+    width: fit-content;
+  }
+}

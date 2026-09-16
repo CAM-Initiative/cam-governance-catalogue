@@ -211,6 +211,34 @@ function observedValueLines(values?: unknown[]) {
   });
 }
 
+const HIGHLIGHT_TERMS = new Set([
+  "usd 10,000",
+  "usd 1 million",
+  "usd 100 million",
+  "usd 100 billion",
+  "death",
+  "multiple grave casualties",
+  "life-threatening",
+  "permanently disabling",
+  "materialised suicide",
+  "catastrophic self-harm",
+  "15 minutes",
+  "two hours",
+  "30 minutes",
+  "one hour",
+  "24 hours",
+]);
+
+const HIGHLIGHT_PATTERN = /(USD 10,000|USD 1 million|USD 100 million|USD 100 billion|Death|multiple grave casualties|Life-threatening|permanently disabling|Materialised suicide|catastrophic self-harm|15 minutes|two hours|30 minutes|one hour|24 hours)/gi;
+
+function highlightedThreshold(text: string) {
+  return text.split(HIGHLIGHT_PATTERN).map((part, index) =>
+    HIGHLIGHT_TERMS.has(part.toLowerCase())
+      ? <strong className="vigil-harm-threshold-emphasis" key={index}>{part}</strong>
+      : part
+  );
+}
+
 function MethodologyMatrix({ compact }: { compact: boolean }) {
   return <div className={"vigil-harm-matrix is-methodology" + (compact ? " is-compact" : "")}>
     <div className="vigil-harm-matrix-scroll" role="region" aria-label="VIGIL Harm Impact Matrix severity threshold reference" tabIndex={0}>
@@ -228,7 +256,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
           {DIMENSIONS.map((dimension) => <tr key={dimension.dimension_id}>
             <th scope="row">{dimension.label}</th>
             {BANDS.map((band) => <td key={band} className={"band-" + band.toLowerCase()}>
-              <p>{dimension.thresholds[band]}</p>
+              <p>{highlightedThreshold(dimension.thresholds[band])}</p>
             </td>)}
           </tr>)}
         </tbody>

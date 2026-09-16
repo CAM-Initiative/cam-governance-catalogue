@@ -6,32 +6,34 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
-  { href: "/privacy", label: "Privacy", internal: true },
-  { href: "/observatory/about", label: "About VIGIL", internal: true },
   { href: "/observatory/knowledge-base", label: "VIGIL Knowledge Base", internal: true },
   { href: "/observatory/cases", label: "VIGIL Case Files", internal: true },
   { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Failure Taxonomy", internal: true },
+  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
+  { href: "/licensing", label: "Copyright & Licensing", internal: true },
+  { href: "/privacy", label: "Privacy", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about", label: "About" },
+  { href: "/licensing", label: "Copyright & Licensing" },
   { href: "/privacy", label: "Privacy" },
 ];
 
 const vigilLinks = [
-  { href: "/observatory/about", label: "About VIGIL" },
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/cases", label: "Case Files" },
   { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Failure Taxonomy" },
+  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about" || location === "/privacy";
+  const isHomeActive = location === "/" || location === "/about" || location === "/licensing" || location === "/privacy";
   const isVigilActive = location === "/observatory" || location.startsWith("/observatory/");
   const isDatasetsActive = location === "/datasets" || location.startsWith("/datasets/");
 
@@ -182,6 +184,8 @@ export function Shell({ children }: { children: ReactNode }) {
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/75">CAM Initiative</span>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
               <span className="text-sm text-muted-foreground">© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.</span>
+              <span className="text-muted-foreground" aria-hidden="true">·</span>
+              <Link href="/licensing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licensing</Link>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
               <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>

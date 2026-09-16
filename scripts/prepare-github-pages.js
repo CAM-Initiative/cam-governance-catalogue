@@ -88,12 +88,14 @@ async function fetchJson(url) {
 }
 
 const staticRoutes = [
-  ["/about", "About CAM Initiative", "About CAM Initiative and its open AI governance architecture."],
+  ["/about", "About VIGIL Observatory | CAM Initiative", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, combining Incident evidence, consequence assessment, failure classification and accountable repair."],
+  ["/licensing", "Copyright & Licensing | CAM Initiative", "Copyright, citation, reuse and licensing information for VIGIL Observatory and the CAM Governance Interface."],
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
-  ["/observatory/about", "About VIGIL Observatory", "VIGIL Observatory provides a public AI incident database through its Case File registry, combining incident evidence, governance diagnosis, failure classification and accountable repair."],
+  ["/observatory/about", "About VIGIL Observatory", "Legacy VIGIL About URL. The canonical About page is /about."],
+  ["/observatory/severity-methodology", "VIGIL Harm & Severity Methodology", "VIGIL-HIM 1.0.0 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Case Files."],
   ["/observatory/cases", "VIGIL Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, diagnosis, failure classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
@@ -103,8 +105,13 @@ const staticRoutes = [
   ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
 ];
 
+const canonicalAliases = new Map([
+  ["/observatory/incidents", "/observatory/cases"],
+  ["/observatory/about", "/about"],
+]);
+
 for (const [route, title, description] of staticRoutes) {
-  const canonicalRoute = route === "/observatory/incidents" ? "/observatory/cases" : route;
+  const canonicalRoute = canonicalAliases.get(route) ?? route;
   writeRoute(route, pageHtml({ route, title, description, canonicalRoute }));
 }
 
@@ -354,7 +361,7 @@ if (incidentRecords.length) {
 // A build date is not a content modification date, so this sitemap intentionally omits modification-date elements.
 const sitemapRoutes = [
   "/",
-  ...staticRoutes.map(([route]) => route).filter((route) => route !== "/observatory/incidents"),
+  ...staticRoutes.map(([route]) => route).filter((route) => !canonicalAliases.has(route)),
   ...taxonomyRoutes,
   ...incidentRecords.map((record) => `/observatory/cases/${encodeURIComponent(record.id)}`),
 ];

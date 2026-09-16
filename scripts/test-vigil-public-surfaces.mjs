@@ -21,8 +21,9 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(entrypoint, /property="og:site_name" content="CAM Initiative"/);
   assert.match(entrypoint, /"@type": "WebSite"/);
   assert.match(entrypoint, /"name": "CAM Initiative"/);
-  assert.match(pages, /canonicalRoute = route === "\/observatory\/incidents" \? "\/observatory\/cases" : route/);
-  assert.match(pages, /filter\(\(route\) => route !== "\/observatory\/incidents"\)/);
+  assert.match(pages, /\["\/observatory\/incidents", "\/observatory\/cases"\]/);
+  assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
+  assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
@@ -57,7 +58,7 @@ test("homepage presents the VIGIL Failure Taxonomy as a first-class diagnosis su
 test("public taxonomy naming uses VIGIL Failure Taxonomy", async () => {
   const [taxonomy, aboutVigil, shell, hub, datasets] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
-    read("src/pages/vigil-about.tsx"),
+    read("src/pages/about.tsx"),
     read("src/components/layout/Shell.tsx"),
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/datasets.tsx"),
@@ -171,13 +172,18 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
-test("CAM About and Privacy share the current readable public-page grammar", async () => {
-  const [about, privacy, referenceCss] = await Promise.all([
+test("canonical About, licensing and Privacy keep readable public-page grammar", async () => {
+  const [about, licensing, privacy, referenceCss] = await Promise.all([
     read("src/pages/about.tsx"),
+    read("src/pages/licensing.tsx"),
     read("src/pages/privacy.tsx"),
     read("src/public-reference-pages.css"),
   ]);
-  assert.doesNotMatch(about, /ExploreGovernanceRail|public-reference-governance-rail/);
+  assert.match(about, /About VIGIL Observatory/);
+  assert.doesNotMatch(about, /Public access without pretending everything is finished|How the public VIGIL surfaces fit together/);
+  assert.match(licensing, /Copyright & Licensing/);
+  assert.match(licensing, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
+  assert.match(licensing, /Citation, reference and linking are permitted and encouraged/);
   assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
   assert.match(referenceCss, /max-width: 1220px/);
   assert.match(referenceCss, /\.public-reference-hero[\s\S]*border: 1px solid hsl\(var\(--border\)\)[\s\S]*border-radius: 0\.75rem/);
@@ -192,7 +198,7 @@ test("Case File severity presentation uses ascending S1-to-S5 semantics", async 
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
-    read("src/pages/vigil-about.tsx"),
+    read("src/pages/about.tsx"),
     read("src/components/vigil/VigilStatusChip.tsx"),
   ]);
   assert.match(cases, /S1: 1[\s\S]*S5: 5[\s\S]*SU: 6/);
@@ -292,4 +298,43 @@ test("taxonomy and external-governance public systems remain intact", async () =
 test("public enhancement script does not recreate retired record surfaces", async () => {
   const enhancements = await read("src/public/vigil-ux-enhancements.js");
   for (const token of ["VIGIL.Learn.Index", "failure_mode", "related_observations", "patch_notes", "proposals"]) assert.doesNotMatch(enhancements, new RegExp(token, "i"));
+});
+
+
+test("site has one canonical About surface plus visible licensing and severity methodology", async () => {
+  const [app, shell, about, licensing, severity, home, pages] = await Promise.all([
+    read("src/App.tsx"),
+    read("src/components/layout/Shell.tsx"),
+    read("src/pages/about.tsx"),
+    read("src/pages/licensing.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/home.tsx"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(app, /path="\/about" component=\{About\}/);
+  assert.match(app, /path="\/observatory\/about" component=\{About\}/);
+  assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
+  assert.doesNotMatch(shell, /label: "About VIGIL"/);
+  assert.match(shell, /Copyright & Licensing/);
+  assert.match(shell, /Harm & Severity Methodology/);
+  assert.match(about, /Publication & provenance/);
+  assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
+  assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
+  assert.match(severity, /VIGIL-HIM 1\.0\.0/);
+  assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
+});
+
+test("harm methodology emphasizes scan targets and rejects legacy microtype", async () => {
+  const [matrix, css] = await Promise.all([
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
+    read("src/vigil-incident-severity-refinement.css"),
+  ]);
+  assert.match(matrix, /vigil-harm-threshold-emphasis/);
+  assert.match(matrix, /USD 100 billion/);
+  assert.match(matrix, /multiple grave casualties/);
+  assert.match(matrix, /Materialised suicide/);
+  assert.match(css, /vigil-harm-threshold-emphasis/);
+  assert.match(css, /font-size: 9\.5pt/);
+  assert.doesNotMatch(css, /font-size: (?:6\.6|7|7\.2|8)pt/);
+  assert.doesNotMatch(css, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
 });

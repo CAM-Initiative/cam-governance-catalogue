@@ -153,7 +153,7 @@ function DatasetsPanel() {
         Use the underlying governance data directly.
       </h2>
       <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        The CAM Initiative publishes machine-readable governance reference data and archival releases for independent research, comparison and reuse. The datasets surface brings together VIGIL standards and source records, structured governance requirements, and the current CAELESTIS archival release, with additional public datasets added as they mature.
+        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; the applicable terms are set out on the Copyright & Licensing page. The datasets surface brings together VIGIL standards and source records, structured governance requirements, and the current CAELESTIS archival release.
       </p>
       <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets">
         Explore Datasets
@@ -239,7 +239,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 14 }}
             transition={{ duration: 0.7 }}
           >
-            <p className="home-identity-kicker">CAM Initiative · Open AI Governance</p>
+            <p className="home-identity-kicker">CAM Initiative · Public-interest AI governance</p>
             <h1 id="home-identity-heading" className="sr-only">CAELESTIS Architecture Model and VIGIL Observatory</h1>
             <div className="home-identity-artwork">
               <img src={heroImages.cam} alt="" className="home-identity-image" />
@@ -261,7 +261,7 @@ export default function Home() {
             <div className="home-main-copy">
               <section className="home-about-section" aria-labelledby="home-about-heading">
                 <SectionLabel>CAM Initiative</SectionLabel>
-                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Open AI governance infrastructure for understanding systems and making failure visible.</h2>
+                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Publicly accessible AI governance infrastructure for understanding systems and making failure visible.</h2>
                 <div className="space-y-5 text-[17px] leading-relaxed text-foreground/80 md:text-lg">
                   <p>
                     The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.

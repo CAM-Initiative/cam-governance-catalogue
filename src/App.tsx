@@ -16,7 +16,6 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import VigilCases from "@/pages/vigil-cases";
 import VigilCaseFile from "@/pages/vigil-case-file";
-import VigilAbout from "@/pages/vigil-about";
 import EvidenceChainReport from "@/pages/evidence-chain-report-printable";
 import VigilKnowledgeHub from "@/pages/vigil-knowledge-hub";
 import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
@@ -24,6 +23,8 @@ import VigilStandardSource from "@/pages/vigil-standard-source";
 import VigilFailureTaxonomy from "@/pages/vigil-failure-taxonomy";
 import Datasets from "@/pages/datasets";
 import About from "@/pages/about";
+import Licensing from "@/pages/licensing";
+import VigilSeverityMethodology from "@/pages/vigil-severity-methodology";
 import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
 
@@ -32,11 +33,14 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
+      <Route path="/licensing" component={Licensing} />
       <Route path="/datasets" component={Datasets} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
 
-      <Route path="/observatory/about" component={VigilAbout} />
+      {/* Legacy About URL retained for inbound links; /about is canonical. */}
+      <Route path="/observatory/about" component={About} />
+      <Route path="/observatory/severity-methodology" component={VigilSeverityMethodology} />
 
       {/* VIGIL public investigations. Case Files are anchored to canonical Incident records. */}
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />

@@ -1,135 +1,113 @@
-import { useState, type ReactNode } from "react";
-import { Check, Copy } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, Check, Copy } from "lucide-react";
+import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
+import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 
-const citations = [
-  {
-    label: "CAM Initiative",
-    citation: "CAM Initiative. CAM Initiative public governance infrastructure. 2026. https://www.cam-initiative.org",
-  },
-  {
-    label: "VIGIL",
-    citation: "CAM Initiative. VIGIL Observatory. 2026. https://www.cam-initiative.org/observatory/cases",
-  },
-  {
-    label: "CAELESTIS Architecture Model",
-    citation: "O’Rourke, M. V. (2026). Caelestis Architecture Model / CAM governance corpus. Zenodo. https://zenodo.org/records/20686316",
-  },
+const pillars = [
+  ["Evidence", "Preserve the occurrence, source material and evidentiary limits so the factual basis remains inspectable."],
+  ["Diagnosis", "Separate materialised consequence, severity and the repeatable governance or control-failure mechanism."],
+  ["Repair", "Translate diagnosis into the invariant or governance constraint that must hold, with evidence available for later review."],
 ];
 
-const maintainedLayers = [
-  {
-    label: "VIGIL Observatory",
-    eyebrow: "Evidence and diagnosis",
-    body: "Public Case Files, evidence-to-repair records, review provenance and traceable governance learning.",
-  },
-  {
-    label: "VIGIL Failure Taxonomy",
-    eyebrow: "Failure classification",
-    body: "A structured classification reference for recurring AI governance failure mechanisms, organised into broad failure families and more precise failure classes with recognition criteria and exclusion boundaries.",
-  },
-  {
-    label: "AI Governance Standards",
-    eyebrow: "Governance requirements",
-    body: "A curated source and requirement reference for laws, standards, frameworks and technical guidance relevant to AI governance.",
-  },
-  {
-    label: "Public datasets",
-    eyebrow: "Machine-readable reference data",
-    body: "Downloadable standards, source, requirement and emerging failure-taxonomy datasets for research, comparison and independent analysis.",
-  },
-  {
-    label: "Policy",
-    eyebrow: "Public-interest governance",
-    body: "Policy papers and submissions that translate governance analysis, evidence and emerging technology risks into practical institutional proposals.",
-  },
-  {
-    label: "CAELESTIS Architecture Model",
-    eyebrow: "Governance architecture · refactoring",
-    body: "The underlying governance architecture remains in active refactoring. The current public archival release is preserved through Zenodo while the website reference surface is being rebuilt.",
-  },
+const taxonomyPrinciples = [
+  ["Failure family", "The broad structural grouping: the governance boundary or system function involved."],
+  ["Failure class", "The repeatable mechanism within a family, with its own definition, recognition criteria, exclusions and relationships."],
+  ["Case File classification", "The evidence-bounded application of that shared classification language to a particular occurrence."],
 ];
 
-function CopyButton({ text }: { text: string }) {
+const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://www.cam-initiative.org/about";
+
+function CopyCitation() {
   const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
+  async function copy() {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(citation);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
     }
-  };
-
-  return <button className="public-reference-copy" type="button" onClick={handleCopy} aria-label="Copy citation">
+  }
+  return <button className="vigil-about-copy" type="button" onClick={copy} aria-label="Copy VIGIL citation">
     {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
-    {copied ? "Copied" : "Copy"}
+    {copied ? "Copied" : "Copy citation"}
   </button>;
-}
-
-function ReferenceSection({ number, eyebrow, title, children }: { number: string; eyebrow: string; title: string; children: ReactNode }) {
-  return <section className="public-reference-section">
-    <header className="public-reference-section-heading">
-      <span>{number}</span>
-      <div><p>{eyebrow}</p><h2>{title}</h2></div>
-    </header>
-    <div className="public-reference-section-body">{children}</div>
-  </section>;
 }
 
 export default function About() {
   return <Shell>
-    <main className="public-reference-page">
-      <div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-11">
-        <article className="public-reference-document">
-          <header className="public-reference-hero">
-            <p className="public-reference-kicker">CAM Initiative</p>
-            <h1>About the CAM Initiative</h1>
-            <p>The CAM Initiative is an Australian AI governance initiative operated by Phoenix Covenant Pty Ltd trading as CAM Initiative. It develops and publishes publicly accessible governance infrastructure for understanding AI systems, diagnosing governance failures, supporting compliance and translating evidence into accountable repair.</p>
-          </header>
+    <main className="vigil-about-page">
+      <div className="container mx-auto max-w-[1220px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
+        <header className="vigil-about-hero">
+          <p className="vigil-library-kicker">CAM Initiative · VIGIL Observatory</p>
+          <h1>About VIGIL Observatory</h1>
+          <p>VIGIL is the CAM Initiative&apos;s evidence-to-repair observatory for AI governance failures. It preserves public Incident evidence, separates consequence from diagnosis, classifies recurring failure mechanisms through a maintained taxonomy, and connects findings to accountable repair.</p>
+          <div className="vigil-about-hero-actions" aria-label="Explore VIGIL">
+            <Link href="/observatory/cases">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/observatory/knowledge-base/failure-taxonomy">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
+          </div>
+        </header>
 
-          <ReferenceSection number="01" eyebrow="Institutional context" title="Australian public-interest governance work">
-            <div className="public-reference-reading">
-              <p>The CAM Initiative was founded and is led by Dr Michelle Vivian O’Rourke. Through the Initiative, VIGIL, the CAELESTIS Architecture Model, governance datasets and policy materials are developed, maintained and published.</p>
-              <p>The current public website deliberately concentrates on the surfaces that are mature enough to support public use. VIGIL, datasets and policy remain public; the CAELESTIS reference surface is being refactored rather than presented as settled architecture.</p>
-            </div>
-          </ReferenceSection>
+        <section className="vigil-about-section" aria-labelledby="vigil-purpose-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Purpose</p><h2 id="vigil-purpose-heading">From evidence to an accountable governance response</h2></div>
+          <p className="vigil-about-record-intro">VIGIL is designed to make the reasoning between an observed AI-system occurrence and a governance response visible. It does not treat a reported incident, a severity rating and a failure classification as the same thing.</p>
+          <div className="vigil-about-boundary-grid vigil-about-purpose-grid">
+            {pillars.map(([title, text], index) => <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{title}</h3><p>{text}</p></article>)}
+          </div>
+        </section>
 
-          <ReferenceSection number="02" eyebrow="Purpose" title="Make governance obligations and system failure easier to see">
-            <div className="public-reference-reading">
-              <p>The Initiative connects AI governance architecture, external governance requirements, evidence-to-repair methods, machine-readable reference data and public policy analysis.</p>
-              <p>VIGIL provides the empirical feedback layer: observed failures can be preserved as evidence, classified by mechanism, traced through governance response and revisited as systems and external requirements change.</p>
+        <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Case File method</p><h2 id="vigil-method-heading">Every Incident follows the same five-stage structure</h2></div>
+          <p className="vigil-about-record-intro">The Case File structure keeps evidence of what happened separate from occurrence-level diagnosis and severity, taxonomy classification, the governing invariant a repair must restore, and the material used to support those conclusions.</p>
+          <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory five-stage Incident Case File model" tabIndex={0}>
+            <div className="vigil-about-flow">
+              {VIGIL_INCIDENT_CASE_SECTIONS.map((section) => <article key={section.number}><span>Stage {section.number}</span><h3>{section.label}</h3><p>{section.description}</p></article>)}
             </div>
-          </ReferenceSection>
+          </div>
+          <p className="vigil-about-note">A reported incident is not automatically a new failure class. VIGIL asks what mechanism failed, whether that mechanism is already represented in the taxonomy, and what the available evidence actually supports.</p>
+        </section>
 
-          <ReferenceSection number="03" eyebrow="Public work" title="What the CAM Initiative maintains">
-            <div className="public-reference-list">
-              {maintainedLayers.map((layer) => <article key={layer.label}>
-                <div><p>{layer.eyebrow}</p><h3>{layer.label}</h3></div>
-                <p>{layer.body}</p>
-              </article>)}
-            </div>
-          </ReferenceSection>
+        <section className="vigil-about-section" aria-labelledby="vigil-severity-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Harm & severity</p><h2 id="vigil-severity-heading">Severity measures supported consequence, not taxonomy importance</h2></div>
+          <p className="vigil-about-record-intro">VIGIL keeps four questions separate: <strong>what harm or consequence materialised</strong>, <strong>how severe that consequence was</strong>, <strong>which failure mechanism occurred</strong>, and <strong>which invariant or repair should hold</strong>. Multiple failure classifications do not increase an Incident&apos;s severity.</p>
+          <div className="vigil-about-boundary-grid">
+            <article><h3>Evidence first</h3><p>Each harm dimension records an evidence state before a band is selected. Unreported does not mean S1.</p></article>
+            <article><h3>Highest supported harm</h3><p>The overall band is controlled by the highest defensible materialised-harm threshold; dimensions are not averaged or summed.</p></article>
+            <article><h3>Inspectable thresholds</h3><p>The full VIGIL-HIM 1.0.0 matrix publishes the criteria used for physical, psychological, rights, privacy, economic, operational and other harms.</p></article>
+          </div>
+          <Link className="vigil-about-action" href="/observatory/severity-methodology">Read the Harm & Severity Methodology <ArrowRight aria-hidden="true" /></Link>
+        </section>
 
-          <ReferenceSection number="04" eyebrow="Access and independence" title="Public access without pretending everything is finished">
-            <div className="public-reference-reading">
-              <p>The public site does not provide user accounts or a private upload portal. Public materials are made available for reference, governance development, research and public-interest use, subject to the applicable citation, copyright, trademark and licence conditions.</p>
-              <p>The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
-              <p><a href="/privacy">Read the privacy policy →</a></p>
-            </div>
-          </ReferenceSection>
+        <section className="vigil-about-section" aria-labelledby="vigil-taxonomy-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">VIGIL Failure Taxonomy</p><h2 id="vigil-taxonomy-heading">Failure families organise the landscape. Failure classes identify the mechanism.</h2></div>
+          <p className="vigil-about-record-intro">The maintained VIGIL Failure Taxonomy provides shared classification language for recurring AI governance and control-failure mechanisms. Broad families provide stable structure; individual classes define the mechanism precisely enough to support comparison without collapsing unlike events together.</p>
+          <div className="vigil-about-boundary-grid">{taxonomyPrinciples.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}</div>
+          <p className="vigil-about-note"><strong>Classification boundary:</strong> source terminology remains source terminology unless it is explicitly identified as a VIGIL classification. The Case File preserves the evidence and reasoning used to make that distinction independently reviewable.</p>
+          <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy">Browse the taxonomy <ArrowRight aria-hidden="true" /></Link>
+        </section>
 
-          <ReferenceSection number="05" eyebrow="Citation" title="How to cite the public work">
-            <div className="public-reference-citations">
-              {citations.map((item) => <article key={item.label}>
-                <div className="public-reference-citation-heading"><h3>{item.label}</h3><CopyButton text={item.citation} /></div>
-                <p>{item.citation}</p>
-              </article>)}
-            </div>
-          </ReferenceSection>
-        </article>
+        <section className="vigil-about-section" aria-labelledby="vigil-publication-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Publication & provenance</p><h2 id="vigil-publication-heading">Independent, inspectable and explicit about its boundaries</h2></div>
+          <p className="vigil-about-record-intro">VIGIL is published by <strong>Phoenix Covenant Pty Ltd trading as CAM Initiative</strong>, an Australian AI governance initiative. The CAM Initiative was founded and is led by <strong>Dr Michelle Vivian O&apos;Rourke</strong>, who is identified as VIGIL&apos;s author and maintainer.</p>
+          <div className="vigil-about-boundary-grid vigil-about-publication-grid">
+            <article><h3>Evidence-bounded findings</h3><p>Case Files preserve source provenance, evidentiary limitations, uncertainty and the basis for diagnosis rather than presenting repository inclusion as final factual truth.</p></article>
+            <article><h3>Publicly inspectable</h3><p>VIGIL is deliberately available for scrutiny, citation, policy discussion and research reference. Public availability does not constitute an open licence.</p></article>
+            <article><h3>Separate authority layers</h3><p>VIGIL diagnoses observed governance failures. CAELESTIS governance instruments become authoritative only through their own amendment, validation and adoption processes.</p></article>
+          </div>
+          <div className="vigil-about-link-row" aria-label="Institutional and legal information">
+            <Link href="/licensing">Copyright & Licensing <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/privacy">Privacy <ArrowRight aria-hidden="true" /></Link>
+            <a href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer">VIGIL repository <ArrowRight aria-hidden="true" /></a>
+          </div>
+          <p className="vigil-about-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+        </section>
+
+        <section className="vigil-about-section" aria-labelledby="vigil-citation-heading">
+          <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Citation</p><h2 id="vigil-citation-heading">Cite the work while preserving the relevant record or version</h2></div>
+          <div className="vigil-about-citation-card"><div><p className="vigil-library-kicker">Suggested general citation</p><p>{citation}</p></div><CopyCitation /></div>
+          <p className="vigil-about-note">For a specific Incident or taxonomy entry, identify the relevant VIGIL record ID or taxonomy version and use the canonical URL. Citation, reference and linking are permitted; substantive reuse is governed by the applicable licence.</p>
+        </section>
       </div>
     </main>
   </Shell>;

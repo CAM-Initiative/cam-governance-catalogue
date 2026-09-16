@@ -61,7 +61,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-matrix thead span {
   margin-top: 0.12rem;
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 500;
   line-height: 1.25;
   color: hsl(var(--muted-foreground));
@@ -74,7 +74,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 
 /* Methodology reference used on About VIGIL. */
 .vigil-harm-methodology-table {
-  min-width: 1540px;
+  min-width: 1680px;
   table-layout: fixed;
 }
 .vigil-harm-methodology-table thead th {
@@ -91,7 +91,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   background: hsl(var(--card));
   text-align: left;
   vertical-align: top;
-  font-size: 0.79rem;
+  font-size: 0.88rem;
   line-height: 1.42;
 }
 .vigil-harm-methodology-table tbody td {
@@ -101,9 +101,13 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-methodology-table tbody td p {
   margin: 0;
-  font-size: 0.72rem;
-  line-height: 1.48;
-  color: hsl(var(--foreground) / 0.84);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.88);
+}
+.vigil-harm-threshold-emphasis {
+  font-weight: 760;
+  color: hsl(var(--foreground));
 }
 .vigil-harm-evidence-key {
   display: grid;
@@ -120,10 +124,10 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   background: hsl(var(--card) / 0.4);
 }
 .vigil-harm-evidence-key strong {
-  font-size: 0.76rem;
+  font-size: 0.85rem;
 }
 .vigil-harm-evidence-key span {
-  font-size: 0.76rem;
+  font-size: 0.85rem;
   line-height: 1.45;
   color: hsl(var(--foreground) / 0.78);
 }
@@ -153,7 +157,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-overall-result > span {
   font-family: var(--app-font-mono);
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -194,7 +198,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 .vigil-harm-assessment-table thead th {
   padding: 0.66rem 0.68rem;
   text-align: left;
-  font-size: 0.72rem;
+  font-size: 0.84rem;
   letter-spacing: 0.025em;
 }
 .vigil-harm-assessment-table thead th:nth-child(1) { width: 20%; }
@@ -209,7 +213,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-assessment-table tbody th {
   background: hsl(var(--card));
-  font-size: 0.78rem;
+  font-size: 0.86rem;
   line-height: 1.4;
 }
 .vigil-harm-assessment-table tbody th > span,
@@ -218,7 +222,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-controlling-badge {
   margin-top: 0.3rem;
-  font-size: 0.62rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.055em;
   text-transform: uppercase;
@@ -229,7 +233,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-assessment-table td[class*="status-"] {
   background: hsl(var(--muted) / 0.18);
-  font-size: 0.72rem;
+  font-size: 0.84rem;
   line-height: 1.35;
   color: hsl(var(--muted-foreground));
 }
@@ -238,7 +242,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-assessment-table td.is-result {
   font-family: var(--app-font-mono);
-  font-size: 0.74rem;
+  font-size: 0.84rem;
   line-height: 1.4;
 }
 .vigil-harm-assessment-basis {
@@ -259,7 +263,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-threshold code {
   overflow-wrap: anywhere;
-  font-size: 0.72rem;
+  font-size: 0.84rem;
 }
 .vigil-harm-observed-values {
   margin-top: 0.55rem;
@@ -267,7 +271,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   border-top: 1px solid hsl(var(--border) / 0.65);
 }
 .vigil-harm-observed-values > strong {
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: hsl(var(--muted-foreground));
@@ -278,7 +282,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-observed-values li {
   margin: 0.22rem 0;
-  font-size: 0.76rem;
+  font-size: 0.85rem;
   line-height: 1.45;
   color: hsl(var(--foreground) / 0.8);
 }
@@ -316,15 +320,15 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   }
   .vigil-harm-methodology-table {
     min-width: 0;
-    font-size: 7pt;
+    font-size: 9.5pt;
   }
   .vigil-harm-methodology-table tbody td p {
-    font-size: 6.6pt;
-    line-height: 1.3;
+    font-size: 9.5pt;
+    line-height: 1.35;
   }
   .vigil-harm-assessment-table {
     min-width: 0;
-    font-size: 8pt;
+    font-size: 9.5pt;
   }
   .vigil-harm-assessment-table tbody th,
   .vigil-harm-assessment-table tbody td {
@@ -332,6 +336,6 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   }
   .vigil-harm-assessment-basis > p,
   .vigil-harm-observed-values li {
-    font-size: 7.2pt;
+    font-size: 9.5pt;
   }
 }
