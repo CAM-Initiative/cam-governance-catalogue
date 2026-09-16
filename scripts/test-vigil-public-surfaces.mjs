@@ -471,3 +471,27 @@ test("website repository LICENSE is a pointer, not a second licence instrument",
   assert.match(readme, /does not publish a separate website or interface licence/);
   assert.match(licensing, /controlling licence instrument for VIGIL Observatory Materials/);
 });
+
+
+test("About identifies CAM Initiative and founder without repeating the legal entity name", async () => {
+  const [about, shell, licensing, printable] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/components/layout/Shell.tsx"),
+    read("src/pages/licensing.tsx"),
+    read("src/pages/evidence-chain-report-printable.tsx"),
+  ]);
+  const legalName = "Phoenix Covenant Pty Ltd trading as CAM Initiative";
+  assert.equal((about.match(new RegExp(legalName, "g")) || []).length, 1);
+  assert.match(about, /ABN 14 692 195 529/);
+  assert.match(about, /27 October 2025/);
+  assert.match(about, /Western Australia/);
+  assert.match(about, /Dr Michelle Vivian O&apos;Rourke/);
+  assert.match(about, /PhD in analytical chemistry at La Trobe University in Melbourne, Victoria/);
+  assert.match(about, /mother of two/);
+  assert.match(about, /environmental health and contaminated-land practice/);
+  assert.match(shell, /© 2026 CAM Initiative\. All rights reserved\./);
+  assert.doesNotMatch(shell, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
+  assert.match(printable, /© 2026 CAM Initiative\. All rights reserved\./);
+  assert.doesNotMatch(printable, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
+  assert.equal((licensing.match(new RegExp(legalName, "g")) || []).length, 1);
+});
