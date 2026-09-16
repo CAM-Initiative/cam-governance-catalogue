@@ -515,3 +515,27 @@ test("Case Files landing page stays deliberately terse", async () => {
   assert.doesNotMatch(cases, /VIGIL Observatory provides a public AI incident database through its Case File registry/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
 });
+
+
+test("About final polish keeps content continuous and places actions inside open grid space", async () => {
+  const [about, css] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/vigil-ux-v5.css"),
+  ]);
+  const firstMethodSentence = about.indexOf("The Case File structure keeps evidence of what happened separate");
+  const incidentBoundarySentence = about.indexOf("A reported incident is not automatically a new failure class");
+  const flow = about.indexOf("vigil-about-flow-scroll");
+  assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
+  assert.doesNotMatch(about, /Classification boundary:/);
+  assert.match(about, /Case File classification[\s\S]*vigil-about-grid-action[\s\S]*Browse the taxonomy/);
+  assert.match(about, /Separate authority layers[\s\S]*vigil-about-resource-links[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  const organisationStart = about.indexOf('id="vigil-organisation-heading"');
+  const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
+  const citationStart = about.indexOf('id="vigil-citation-heading"');
+  assert.ok(organisationStart >= 0 && affiliation > organisationStart && affiliation < citationStart);
+  assert.doesNotMatch(about, /vigil-about-link-row/);
+  assert.match(css, /About final polish: one calm document/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 0/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid article,[\s\S]*border: 0/);
+});
