@@ -439,3 +439,16 @@ test("About uses the CAM Initiative root as the general VIGIL Observatory citati
   assert.match(about, /O’Rourke, M\. V\. \(2026\)\. VIGIL Observatory\. CAM Initiative\. https:\/\/cam-initiative\.org/);
   assert.doesNotMatch(about, /cam-initiative\.org\/(?:about|vigil)/);
 });
+
+
+test("public-facing institutional copy treats the repository name as implementation detail", async () => {
+  const [about, licensing] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/pages/licensing.tsx"),
+  ]);
+  assert.doesNotMatch(about, /CAM Governance Catalogue|cam-governance-catalogue/i);
+  assert.match(licensing, /other CAM Initiative materials/);
+  assert.match(licensing, /CAM Initiative website materials/);
+  assert.match(licensing, /CAM Governance Interface Licence v1\.0/);
+  assert.doesNotMatch(licensing, />Read the CAM Governance Interface licence/);
+});
