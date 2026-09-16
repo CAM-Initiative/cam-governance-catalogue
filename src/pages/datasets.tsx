@@ -13,6 +13,7 @@ const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
+// Public dataset card: expose the substantive severity methodology rather than the internal bibliography registry.
 const VIGIL_HARM_IMPACT_MATRIX_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v1.0.0.json";
 
 type DatasetState = {
