@@ -7,10 +7,10 @@ function ReferenceSection({ number, eyebrow, title, children }: { number: string
 
 export default function Licensing() {
   return <Shell><main className="public-reference-page public-reference-page--single-document"><div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-11"><article className="public-reference-document public-reference-document--single">
-    <header className="public-reference-hero"><p className="public-reference-kicker">CAM Initiative</p><h1>Copyright & Licensing</h1><p>Public access is intended to support inspection, citation, research reference and public-interest discussion. It does not make VIGIL Observatory or the CAM Governance Interface open-licensed material. The applicable rights depend on which layer you are using.</p><p className="public-reference-meta">© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.</p></header>
+    <header className="public-reference-hero"><p className="public-reference-kicker">CAM Initiative</p><h1>Copyright & Licensing</h1><p>Public access is intended to support inspection, citation, research reference and public-interest discussion. It does not make VIGIL Observatory or other CAM Initiative materials open-licensed. The applicable rights depend on which material you are using.</p><p className="public-reference-meta">© 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.</p></header>
 
     <ReferenceSection number="01" eyebrow="Ownership" title="Publisher, author and licensor"><div className="public-reference-list">
-      <article><div><p>Publisher / licensor</p><h3>Phoenix Covenant Pty Ltd trading as CAM Initiative</h3></div><p>Copyright ownership and licensing authority for VIGIL Observatory and the CAM Governance Interface sit with the company to the extent those rights subsist.</p></article>
+      <article><div><p>Publisher / licensor</p><h3>Phoenix Covenant Pty Ltd trading as CAM Initiative</h3></div><p>Copyright ownership and licensing authority for VIGIL Observatory and other CAM Initiative materials sit with the company to the extent those rights subsist.</p></article>
       <article><div><p>Author / maintainer</p><h3>Dr Michelle O&apos;Rourke</h3></div><p>Authorship and scholarly citation remain attributed to Dr Michelle O&apos;Rourke where appropriate. Corporate copyright ownership does not replace author attribution.</p></article>
     </div></ReferenceSection>
 
@@ -22,11 +22,11 @@ export default function Licensing() {
       <p>No licence is granted by implication, estoppel, public availability, website access or repository access. These restrictions apply only to rights owned or controlled by CAM Initiative and do not limit fair dealing, fair use or other non-waivable legal exceptions.</p>
     </div></ReferenceSection>
 
-    <ReferenceSection number="03" eyebrow="Website interface" title="CAM Governance Interface Licence v1.0"><div className="public-reference-reading">
-      <p>The website&apos;s source code, page structure, styling, routing, registry-loading logic, design components and associated interface documentation are governed separately by the <strong>CAM Governance Interface Licence v1.0</strong>.</p>
+    <ReferenceSection number="03" eyebrow="Website & interface" title="CAM Initiative website materials"><div className="public-reference-reading">
+      <p>The CAM Initiative website&apos;s source code, page structure, styling, routing, registry-loading logic, design components and associated interface documentation are governed separately by the <strong>CAM Governance Interface Licence v1.0</strong>.</p>
       <p>That licence permits public-interest, research, educational, journalistic, policy, civic, archival, governance and other non-commercial use of the Interface, including non-commercial copying, adaptation and derivative interface work subject to attribution and the licence conditions. Commercial use, model training, dataset reconstruction and paid product integration require prior written permission.</p>
-      <p>Using the Interface does not grant broader rights in VIGIL Observatory, CAM, CAELESTIS or third-party materials displayed through it. Where a more specific notice applies to an underlying governance material, that specific notice controls.</p>
-      <p><a href="https://github.com/CAM-Initiative/cam-governance-catalogue/blob/main/LICENSE.md" target="_blank" rel="noreferrer">Read the CAM Governance Interface licence →</a></p>
+      <p>Using the website or interface does not grant broader rights in VIGIL Observatory, CAELESTIS or other CAM Initiative materials displayed through it. Where a more specific notice applies to an underlying governance material, that specific notice controls.</p>
+      <p><a href="https://github.com/CAM-Initiative/cam-governance-catalogue/blob/main/LICENSE.md" target="_blank" rel="noreferrer">Read the website/interface licence →</a></p>
     </div></ReferenceSection>
 
     <ReferenceSection number="04" eyebrow="Third-party sources" title="Source material keeps its own rights"><div className="public-reference-reading">
