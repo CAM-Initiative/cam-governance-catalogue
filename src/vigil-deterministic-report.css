@@ -1192,4 +1192,49 @@
   }
 }
 
+/* Deterministic report harm matrix must fit the report page rather than preserve the
+   interactive Case File table's 1040px scrolling width. */
+.vigil-deterministic-report-host .vigil-harm-matrix {
+  min-width: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+.vigil-deterministic-report-host .vigil-harm-matrix-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+.vigil-deterministic-report-host .vigil-harm-assessment-table {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+.vigil-deterministic-report-host .vigil-harm-assessment-table th,
+.vigil-deterministic-report-host .vigil-harm-assessment-table td,
+.vigil-deterministic-report-host .vigil-harm-assessment-basis,
+.vigil-deterministic-report-host .vigil-harm-assessment-basis p,
+.vigil-deterministic-report-host .vigil-harm-observed-values,
+.vigil-deterministic-report-host .vigil-harm-observed-values li {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(1) { width: 21%; }
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(2) { width: 14%; }
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(3) { width: 15%; }
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(4) { width: 50%; }
+
+@media print {
+  .vigil-deterministic-report-host .vigil-harm-matrix-scroll,
+  .vigil-deterministic-report-host .vigil-harm-assessment-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */
