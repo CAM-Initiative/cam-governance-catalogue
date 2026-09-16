@@ -364,7 +364,7 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(sections, /number: "02"[\s\S]*label: "Assessment"/);
   assert.match(report, /<Stage number="02" label="Assessment">/);
   assert.match(printable, /number: "02", label: "Assessment"/);
-  assert.match(cases, /Observation, Assessment, Classification, Repair and References/);
+  assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
   assert.match(hub, /Observation, Assessment, Classification, Repair and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(rail, /evidence, assessment, failure classification/);
