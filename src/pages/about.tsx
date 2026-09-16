@@ -79,6 +79,7 @@ export default function About() {
           <p className="vigil-about-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
         </section>
 
+        {/* Institutional identity is stated once here; compact copyright marks elsewhere use CAM Initiative. */}
         <section className="vigil-about-section" aria-labelledby="vigil-organisation-heading">
           <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Organisation & founder</p><h2 id="vigil-organisation-heading">About CAM Initiative</h2></div>
           <p className="vigil-about-record-intro"><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
