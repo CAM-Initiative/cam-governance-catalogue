@@ -422,3 +422,20 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
   assert.match(home, /VIGIL Observatory Failure Taxonomy · Classification/);
   assert.match(rail, /VIGIL Observatory AI incident database/);
 });
+
+
+test("Datasets prioritise the public Harm & Severity Matrix over the internal reference registry", async () => {
+  const datasets = await read("src/pages/datasets.tsx");
+  assert.match(datasets, /title="Harm & Severity Matrix"/);
+  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.0\.json/);
+  assert.match(datasets, /11 harm dimensions/);
+  assert.match(datasets, /Open JSON matrix/);
+  assert.doesNotMatch(datasets, /title="Observatory Reference Registry"/);
+  assert.doesNotMatch(datasets, /VIGIL\.ObservatoryReferenceRegistry\.(?:json|csv)/);
+});
+
+test("About uses the CAM Initiative root as the general VIGIL Observatory citation URL", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /O’Rourke, M\. V\. \(2026\)\. VIGIL Observatory\. CAM Initiative\. https:\/\/cam-initiative\.org/);
+  assert.doesNotMatch(about, /cam-initiative\.org\/(?:about|vigil)/);
+});
