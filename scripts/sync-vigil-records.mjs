@@ -8,6 +8,7 @@ const outputDir = resolve(repoRoot, "docs", "data");
 const fallbackPath = resolve(outputDir, "vigil-registry-fallback.json");
 const syncMetaPath = resolve(outputDir, "vigil-registry-sync-meta.json");
 const strictSync = process.env.VIGIL_SYNC_STRICT === "1";
+const recordBranch = process.env.VIGIL_RECORD_BRANCH;
 
 const registrySources = JSON.parse(await readFile(sourceConfigPath, "utf8"));
 const configuredRegistryUrl = registrySources.vigil.incident_registry_index_url;
@@ -132,8 +133,12 @@ function compactIncidentRecord(record) {
     occurred_from: record.occurred_from,
     search_terms: terms,
     path: record.path,
-    github_blob_url: record.github_blob_url,
-    raw_url: record.raw_url,
+    github_blob_url: recordBranch && record.path
+      ? `https://github.com/${registrySources.vigil.repo}/blob/${recordBranch}/${record.path}`
+      : record.github_blob_url,
+    raw_url: recordBranch && record.path
+      ? `https://raw.githubusercontent.com/${registrySources.vigil.repo}/${recordBranch}/${record.path}`
+      : record.raw_url,
   };
 
   return Object.fromEntries(

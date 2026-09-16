@@ -4,6 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -366,14 +367,11 @@ export default function VigilCaseFile() {
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
-  const severityStatus = incident ? firstText(incident.raw, ["severity_assessment.assessment_status"]) : undefined;
-  const severityMaterialisedConsequence = incident ? firstText(incident.raw, ["severity_assessment.materialised_consequence"]) : undefined;
-  const severityAffectedScope = incident ? firstText(incident.raw, ["severity_assessment.affected_scope"]) : undefined;
-  const severitySeriousnessPersistence = incident ? firstText(incident.raw, ["severity_assessment.seriousness_and_persistence"]) : undefined;
-  const severityQuantitativeInformation = incident ? firstText(incident.raw, ["severity_assessment.quantitative_information"]) : undefined;
-  const severityEvidentiaryLimits = incident ? firstText(incident.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
-  const severityBandRationale = incident ? firstText(incident.raw, ["severity_assessment.band_rationale"]) : undefined;
-  const severityAssessedOn = incident ? firstText(incident.raw, ["severity_assessment.assessed_on"]) : undefined;
+  const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
+  const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
+  const severityMethodology = harmImpactAssessment
+    ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
+    : undefined;
   const referenceCount = externalSources.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
@@ -409,20 +407,13 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Observed occurrence and supported downstream consequence</h3></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>Each row records a materialised harm dimension. The highest supported assessed cell controls overall severity; unreported dimensions remain unscored.</p></div>
           <div className="vigil-severity-summary-grid"><article><dl>
             <Field label="Severity" value={severityDisplay(incident.severity)} />
-            <Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} />
+            <Field label="Methodology" value={severityMethodology} mono />
             <Field label="Assessed" value={severityAssessedOn} mono />
           </dl></article></div>
-          <div className="vigil-severity-analysis-grid">
-            <section><h4 className="vigil-substantive-label">Materialised consequence</h4><p>{severityMaterialisedConsequence ?? "A structured materialised-consequence statement is not yet published for this Incident."}</p></section>
-            <section><h4 className="vigil-substantive-label">Affected scope</h4><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
-            <section><h4 className="vigil-substantive-label">Seriousness & persistence</h4><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
-            <section><h4 className="vigil-substantive-label">Quantitative information</h4><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
-            <section><h4 className="vigil-substantive-label">Evidentiary limits</h4><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
-            <section><h4 className="vigil-substantive-label">Why this severity band</h4><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
-          </div>
+          <HarmImpactMatrix assessment={harmImpactAssessment} />
         </section>
 
         <section className="vigil-diagnosis-definition">

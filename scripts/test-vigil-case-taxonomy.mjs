@@ -58,12 +58,7 @@ assert.match(taxonomyPanel, /exemplar \? "Why this Case File is an exemplar" : "
 assert.doesNotMatch(taxonomyPanel, /vigil-diagnostic-meta-label">What this failure means/);
 assert.match(taxonomyPanel, /vigil-diagnostic-meta-label">Classification metadata/);
 
-assert.match(caseFile, /className="vigil-substantive-label">Materialised consequence/);
-assert.match(caseFile, /className="vigil-substantive-label">Affected scope/);
-assert.match(caseFile, /className="vigil-substantive-label">Seriousness & persistence/);
-assert.match(caseFile, /className="vigil-substantive-label">Quantitative information/);
-assert.match(caseFile, /className="vigil-substantive-label">Evidentiary limits/);
-assert.match(caseFile, /className="vigil-substantive-label">Why this severity band/);
+assert.match(caseFile, /<HarmImpactMatrix assessment=/);
 assert.match(caseFile, /className="vigil-substantive-label">Factual basis/);
 assert.match(caseFile, /className="vigil-substantive-label">Governance significance/);
 assert.match(caseFile, /vigil-diagnostic-meta-label">Diagnostic provenance/);
@@ -110,10 +105,13 @@ assert.doesNotMatch(taxonomyLoader, /agent\/bounded-incident-classification-prov
 assert.match(taxonomyLoader, /subtypes\?: FailureTaxonomySubtype\[\]/);
 assert.match(taxonomyLoader, /invariant\?: string/);
 
-// Both local and production rendering consume the canonical VIGIL main branch.
+// Main builds consume the canonical branch; an explicit build-time override keeps
+// the paired website feature branch consistent with the VIGIL feature branch.
 assert.doesNotMatch(vigilRegistry, /VIGIL_WORKING_BRANCH/);
 assert.doesNotMatch(vigilRegistry, /vigilPreviewUrl/);
-assert.match(vigilRegistry, /VIGIL_INCIDENT_REGISTRY_URL = VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
+assert.match(vigilRegistry, /VITE_VIGIL_REGISTRY_URL/);
+assert.match(vigilRegistry, /VITE_VIGIL_RECORD_BRANCH/);
+assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.incident_registry_index_url/);
 assert.match(vigilRegistry, /if \(record\.raw_url\) return record\.raw_url/);
 assert.match(vigilRegistry, /VIGIL_REGISTRY_SOURCE\.branch/);
 
@@ -225,9 +223,8 @@ assert.match(deterministicReport, /className="report-exemplar-callout"/);
 assert.match(deterministicReport, /The system worked as intended\./);
 assert.match(deterministicReport, /successful governance outcome, not a failure occurrence/);
 assert.match(deterministicReport, /className="report-section-header"/);
-assert.match(deterministicReport, /className="report-analysis-grid"/);
+assert.match(deterministicReport, /<HarmImpactMatrix assessment=/);
 assert.match(deterministicReport, /className="report-reference-list"/);
-assert.match(deterministicReport, /className="report-substantive-label">Observed occurrence \/ downstream consequence/);
 assert.match(deterministicReport, /className="report-substantive-label">Factual basis/);
 assert.match(deterministicReport, /className="report-label">Diagnostic provenance/);
 assert.doesNotMatch(deterministicReport, /const summary =/);

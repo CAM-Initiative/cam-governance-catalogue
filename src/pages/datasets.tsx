@@ -13,6 +13,8 @@ const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
+const VIGIL_REFERENCE_REGISTRY_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/references/VIGIL.ObservatoryReferenceRegistry.json";
+const VIGIL_REFERENCE_REGISTRY_CSV = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/references/VIGIL.ObservatoryReferenceRegistry.csv";
 
 type DatasetState = {
   caseFilesCount?: number;
@@ -32,6 +34,8 @@ function DatasetCard({
   onDownload,
   downloadHref,
   downloadLabel = "Download dataset",
+  secondaryHref,
+  secondaryLabel,
   downloading,
   icon,
 }: {
@@ -43,6 +47,8 @@ function DatasetCard({
   onDownload?: () => void;
   downloadHref?: string;
   downloadLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
   downloading?: boolean;
   icon: React.ReactNode;
 }) {
@@ -58,12 +64,15 @@ function DatasetCard({
           </div>
           <h2>{title}</h2>
         </div>
-        {onDownload ? <button type="button" className="vigil-baseline-download shrink-0" onClick={onDownload} disabled={downloading}>
+        <div className="vigil-dataset-actions">{onDownload ? <button type="button" className="vigil-baseline-download shrink-0" onClick={onDownload} disabled={downloading}>
           {downloading ? "Preparing download…" : downloadLabel}<Download aria-hidden="true" />
         </button> : null}
         {!onDownload && downloadHref ? <a className="vigil-baseline-download shrink-0" href={downloadHref} target="_blank" rel="noreferrer">
           {downloadLabel}<Download aria-hidden="true" />
         </a> : null}
+        {secondaryHref ? <a className="vigil-baseline-download shrink-0" href={secondaryHref} target="_blank" rel="noreferrer">
+          {secondaryLabel ?? "Alternative format"}<Download aria-hidden="true" />
+        </a> : null}</div>
       </div>
       <p>{description}</p>
     </div>
@@ -179,6 +188,19 @@ export default function Datasets() {
             status={caseFilesStatus}
             downloadHref={VIGIL_INCIDENT_REGISTRY_URL}
             downloadLabel="Open JSON index"
+            icon={<Library />}
+          />
+
+          <DatasetCard
+            eyebrow="VIGIL Observatory"
+            title="Observatory Reference Registry"
+            description="The generic registry of methodologies, research, taxonomies, datasets, regulations and government guidance used by VIGIL. Stable VIGIL-REF identifiers centralise bibliography without duplicating it into every Incident. This is separate from the AI Governance Standards dataset."
+            status="Version 1.0.0 · 10 references"
+            beta
+            downloadHref={VIGIL_REFERENCE_REGISTRY_JSON}
+            downloadLabel="Open JSON"
+            secondaryHref={VIGIL_REFERENCE_REGISTRY_CSV}
+            secondaryLabel="Download CSV"
             icon={<Library />}
           />
 

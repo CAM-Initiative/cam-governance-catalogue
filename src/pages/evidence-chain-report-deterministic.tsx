@@ -3,6 +3,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -264,14 +265,11 @@ export default function EvidenceChainReportDeterministic() {
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
-  const severityStatus = incident ? firstText(incident.raw, ["severity_assessment.assessment_status"]) : undefined;
-  const severityMaterialisedConsequence = incident ? firstText(incident.raw, ["severity_assessment.materialised_consequence"]) : undefined;
-  const severityAffectedScope = incident ? firstText(incident.raw, ["severity_assessment.affected_scope"]) : undefined;
-  const severitySeriousnessPersistence = incident ? firstText(incident.raw, ["severity_assessment.seriousness_and_persistence"]) : undefined;
-  const severityQuantitativeInformation = incident ? firstText(incident.raw, ["severity_assessment.quantitative_information"]) : undefined;
-  const severityEvidentiaryLimits = incident ? firstText(incident.raw, ["severity_assessment.evidentiary_limits"]) : undefined;
-  const severityBandRationale = incident ? firstText(incident.raw, ["severity_assessment.band_rationale"]) : undefined;
-  const severityAssessedOn = incident ? firstText(incident.raw, ["severity_assessment.assessed_on"]) : undefined;
+  const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
+  const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
+  const severityMethodology = harmImpactAssessment
+    ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
+    : undefined;
   const diagnostic = diagnosticProvenance(incident);
   const title = incident?.title ?? "VIGIL Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
@@ -333,16 +331,9 @@ export default function EvidenceChainReportDeterministic() {
         {incident ? <article className="report-diagnosis">
           <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-panel report-severity-assessment">
-            <h4 className="report-substantive-label">Occurrence-level severity</h4>
-            <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Assessment status" value={severityStatus ? titleizeValue(severityStatus) : undefined} /><Field label="Assessed" value={severityAssessedOn} /></dl>
-            <div className="report-analysis-grid">
-              <section className="report-subpanel"><h4 className="report-substantive-label">Observed occurrence / downstream consequence</h4><p>{severityMaterialisedConsequence ?? "A structured occurrence-consequence statement is not yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><h4 className="report-substantive-label">Affected scope</h4><p>{severityAffectedScope ?? "A structured affected-scope statement is not yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><h4 className="report-substantive-label">Seriousness & persistence</h4><p>{severitySeriousnessPersistence ?? "A structured seriousness-and-persistence statement is not yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><h4 className="report-substantive-label">Quantitative information</h4><p>{severityQuantitativeInformation ?? "No structured quantitative-information statement is yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><h4 className="report-substantive-label">Evidentiary limits</h4><p>{severityEvidentiaryLimits ?? "No severity-specific evidentiary-limits statement is yet published for this Incident."}</p></section>
-              <section className="report-subpanel"><h4 className="report-substantive-label">Why this severity band</h4><p>{severityBandRationale ?? "A structured band-rationale statement is not yet published for this Incident."}</p></section>
-            </div>
+            <h4 className="report-substantive-label">Harm Impact Matrix</h4>
+            <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
+            <HarmImpactMatrix assessment={harmImpactAssessment} compact />
           </section>
           <div className="report-split-layout">
             <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>

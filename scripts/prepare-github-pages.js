@@ -316,7 +316,7 @@ if (existsSync(caseRoot)) {
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
   const title = `${record.id}: ${record.title || "VIGIL Incident"} | VIGIL Observatory`;
-  const description = record.summary || record.severity_assessment?.materialised_consequence || record.title || "VIGIL Observatory AI incident case file.";
+  const description = record.summary || record.title || "VIGIL Observatory AI incident case file.";
   const body = `<main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · ${escapeHtml(record.id)}</p>
     <h1>${escapeHtml(record.title || record.id)}</h1>

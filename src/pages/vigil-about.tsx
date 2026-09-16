@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
+import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 
 const taxonomyPrinciples = [
   [
@@ -55,41 +56,10 @@ export default function VigilAbout() {
       <div className="vigil-about-section-heading"><p className="vigil-library-kicker">Severity methodology</p><h2 id="vigil-severity-heading">AI incident severity measures consequence, not the failure mechanism</h2></div>
       <p className="vigil-about-record-intro">VIGIL keeps four questions separate: <strong>harm or consequence</strong> records what adverse effect occurred; <strong>severity</strong> assesses the supported magnitude of that occurrence; the <strong>failure mechanism</strong> identifies the repeatable governance or control failure; and the <strong>invariant or repair</strong> states the corrective constraint that must hold. Severity does not determine classification, and multiple failure classifications do not increase an Incident&apos;s severity.</p>
 
-      <div className="vigil-severity-method" role="figure" aria-labelledby="vigil-severity-heading" aria-describedby="vigil-severity-caption">
-        <div className="vigil-severity-method-step">
-          <span>Inputs</span>
-          <h3>Observed consequences + available evidence</h3>
-          <p>Only effects supported by the preserved Incident evidence are assessed. Unreported or hypothetical worst-case harm is not inferred.</p>
-        </div>
-        <div className="vigil-severity-method-arrow" aria-hidden="true">↓</div>
-        <div className="vigil-severity-method-step">
-          <span>Assessment dimensions</span>
-          <ul>
-            <li>Materialised consequence</li>
-            <li>Affected scope</li>
-            <li>Seriousness and persistence or reversibility</li>
-            <li>Available quantitative information</li>
-            <li>Evidentiary limits</li>
-          </ul>
-        </div>
-        <div className="vigil-severity-method-arrow" aria-hidden="true">↓</div>
-        <div className="vigil-severity-method-step">
-          <span>Deterministic decision</span>
-          <h3>Assign the highest band whose criteria are supported</h3>
-          <p>Use S1 when a governance-relevant occurrence is established but no adverse downstream consequence materialised. Use SU when the evidence cannot support a defensible band.</p>
-        </div>
-        <div className="vigil-severity-method-arrow" aria-hidden="true">↓</div>
-        <div className="vigil-severity-scale" aria-label="VIGIL severity scale from S1 lowest to S5 highest; SU means unassessed">
-          <div><strong>S1</strong><span>Minimal / no downstream harm</span></div>
-          <div><strong>S2</strong><span>Low</span></div>
-          <div><strong>S3</strong><span>Moderate</span></div>
-          <div><strong>S4</strong><span>High</span></div>
-          <div><strong>S5</strong><span>Catastrophic / critical</span></div>
-        </div>
-        <p className="vigil-severity-unassessed"><strong>SU</strong> — unassessed because available evidence is insufficient to assign severity reliably.</p>
-      </div>
+      <p className="vigil-about-record-intro"><strong>Incident evidence → harm impact threshold(s) → highest supported harm → overall severity.</strong> Every applicable harm dimension is recorded as assessed, unreported, insufficient evidence or not applicable. Absence of published evidence is not evidence of no harm: unreported dimensions receive no severity selection, and S1 requires positive evidence of minimal or no materialised downstream harm.</p>
+      <HarmImpactMatrix />
       <p id="vigil-severity-caption" className="vigil-about-note"><strong>Evidence-to-repair sequence:</strong> observed incident → incident evidence → observed consequences or harms → VIGIL severity assessment → AI failure mechanism classification → invariant or governance repair.</p>
-      <p className="vigil-about-record-intro">VIGIL aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL retains its own deterministic severity criteria because its Case Files support evidence-to-repair governance analysis rather than harm classification alone. The scales are directionally aligned, not equivalent.</p>
+      <p className="vigil-about-record-intro">VIGIL aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. VIGIL retains its own deterministic thresholds because its Case Files support evidence-to-repair governance analysis rather than harm classification alone. These frameworks inform VIGIL; their scales are not interchangeable.</p>
     </section>
 
     <section className="vigil-about-section" aria-labelledby="vigil-taxonomy-heading">

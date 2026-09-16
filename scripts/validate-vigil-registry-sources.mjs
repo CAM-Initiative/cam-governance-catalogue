@@ -42,6 +42,7 @@ assert(fallback.records.every((record) => Array.isArray(record.search_terms) && 
 for (const forbidden of [
   "severity_assessment",
   "severity_assessment_basis",
+  "harm_impact_assessment",
   "primary_classification",
   "secondary_classifications",
   "diagnostic_provenance_summary",
