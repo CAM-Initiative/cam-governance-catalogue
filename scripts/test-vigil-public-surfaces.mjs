@@ -535,7 +535,7 @@ test("About final polish keeps content continuous and places actions inside open
   assert.ok(organisationStart >= 0 && affiliation > organisationStart && affiliation < citationStart);
   assert.doesNotMatch(about, /vigil-about-link-row/);
   assert.match(css, /About final polish: one calm document/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 0/);
+  assert.match(css, /About final polish: one calm document/);
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
   assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid article,[\s\S]*border: 0/);
 });
@@ -569,4 +569,18 @@ test("dark appearance keeps native Case File classification menus legible", asyn
   assert.match(dark, /color-scheme: dark/);
   assert.match(dark, /\.vigil-family-select select option,[\s\S]*background-color: hsl\(var\(--popover\)\)/);
   assert.match(dark, /color: hsl\(var\(--popover-foreground\)\)/);
+});
+
+
+test("About section rules are attached only to section boundaries", async () => {
+  const [main, css] = await Promise.all([
+    read("src/main.tsx"),
+    read("src/about-page-polish.css"),
+  ]);
+  assert.match(main, /import "\.\/about-page-polish\.css";/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-record-intro,[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
 });
