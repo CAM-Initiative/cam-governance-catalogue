@@ -10,7 +10,7 @@ const taxonomyPrinciples = [
   ["Case File classification", "The evidence-bounded application of that shared classification language to a particular occurrence."],
 ];
 
-const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://www.cam-initiative.org/about";
+const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://cam-initiative.org";
 
 function CopyCitation() {
   const [copied, setCopied] = useState(false);
