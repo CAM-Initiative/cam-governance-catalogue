@@ -88,6 +88,29 @@ test("registry loading uses only the canonical Incident index and Incident fallb
   } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
 });
 
+test("stale embedded branch URLs cannot override canonical record paths", async () => {
+  const modules = await loadModules();
+  try {
+    const record = {
+      path: "vigil/records/incidents/VIGIL-INC-000127.json",
+      raw_url: "https://raw.githubusercontent.com/CAM-Initiative/Vigil/chore/remove-aeon-governance-lab-public-references/vigil/records/incidents/VIGIL-INC-000127.json",
+      github_blob_url: "https://github.com/CAM-Initiative/Vigil/blob/chore/remove-aeon-governance-lab-public-references/vigil/records/incidents/VIGIL-INC-000127.json",
+    };
+    assert.equal(
+      modules.registry.rawUrlForRecord(record),
+      "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/incidents/VIGIL-INC-000127.json",
+    );
+    assert.equal(
+      modules.registry.githubBlobUrlForRecord(record),
+      "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/incidents/VIGIL-INC-000127.json",
+    );
+    assert.equal(
+      modules.registry.rawUrlForRecord({ raw_url: "https://example.test/no-path.json" }),
+      "https://example.test/no-path.json",
+    );
+  } finally { await rm(modules.tempDir, { recursive: true, force: true }); }
+});
+
 test("detail loader accepts Incident JSON and rejects retired record payloads", async () => {
   const modules = await loadModules();
   try {
