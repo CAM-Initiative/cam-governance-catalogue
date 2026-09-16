@@ -77,7 +77,7 @@ export default function About() {
               <p className="vigil-library-kicker">Publication & provenance</p>
               <h2 id="vigil-publication-heading">Independent, inspectable and explicit about its boundaries</h2>
             </div>
-            <p className="vigil-about-record-intro">VIGIL Observatory is published by <strong>CAM Initiative</strong> and maintained by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Case Files are designed to preserve evidence, provenance, uncertainty and the basis for assessment so that published conclusions remain independently inspectable.</p>
+            <p className="vigil-about-record-intro">VIGIL Observatory is published by <strong>CAM Initiative</strong>. Case Files are designed to preserve evidence, provenance, uncertainty and the basis for assessment so that published conclusions remain independently inspectable.</p>
             <div className="vigil-about-boundary-grid vigil-about-publication-grid">
               <article><h3>Evidence-bounded findings</h3><p>Case Files preserve source provenance, evidentiary limitations, uncertainty and the basis for assessment rather than presenting repository inclusion as final factual truth.</p></article>
               <article><h3>Publicly inspectable</h3><p>VIGIL Observatory is deliberately available for scrutiny, citation, policy discussion and research reference. Public availability does not constitute an open licence.</p></article>
@@ -99,15 +99,16 @@ export default function About() {
             <p className="vigil-about-record-intro"><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
             <p className="vigil-about-record-intro">The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
             <p className="vigil-about-record-intro vigil-about-affiliation-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+            <p className="vigil-about-record-intro vigil-about-affiliation-note"><strong>VIGIL Observatory is also a distinct project.</strong> It is not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
           </section>
 
           <section className="vigil-about-section" aria-labelledby="vigil-citation-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">Citation</p>
-              <h2 id="vigil-citation-heading">Cite the work while preserving the relevant record or version</h2>
+              <h2 id="vigil-citation-heading">Suggested general citation</h2>
             </div>
             <div className="vigil-about-citation-card">
-              <div><p className="vigil-library-kicker">Suggested general citation</p><p>{citation}</p></div>
+              <div><p>{citation}</p></div>
               <CopyCitation />
             </div>
             <p className="vigil-about-record-intro">For a specific Incident or taxonomy entry, identify the relevant VIGIL Observatory record ID or taxonomy version and use the canonical URL. Citation, reference and linking are permitted; substantive reuse is governed by the applicable licence.</p>
