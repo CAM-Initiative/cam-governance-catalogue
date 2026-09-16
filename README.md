@@ -121,6 +121,8 @@ The CAM Governance Interface source and interface materials are governed by the 
 
 See `LICENSE.md` for the interface licence.
 
+**Copyright:** © 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.
+
 ## Citation
 
 Suggested short-form citation:

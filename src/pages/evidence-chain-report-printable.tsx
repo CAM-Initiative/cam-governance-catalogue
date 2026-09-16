@@ -237,7 +237,7 @@ export default function EvidenceChainReportPrintable() {
         This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
       </p>
       <p className="report-copyright">
-        Copyright © 2026 Dr Michelle O'Rourke.
+        © 2026 Phoenix Covenant Pty Ltd trading as CAM Initiative. All rights reserved.
       </p>
     </section>,
     referenceSection,

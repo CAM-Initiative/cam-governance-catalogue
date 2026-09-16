@@ -87,7 +87,7 @@ export default function About() {
           <header className="public-reference-hero">
             <p className="public-reference-kicker">CAM Initiative</p>
             <h1>About the CAM Initiative</h1>
-            <p>The CAM Initiative is a registered business and Australian AI governance initiative operated by The Phoenix Covenant Pty Ltd. It develops and publishes open governance infrastructure for understanding AI systems, diagnosing governance failures, supporting compliance and translating evidence into accountable repair.</p>
+            <p>The CAM Initiative is an Australian AI governance initiative operated by Phoenix Covenant Pty Ltd trading as CAM Initiative. It develops and publishes open governance infrastructure for understanding AI systems, diagnosing governance failures, supporting compliance and translating evidence into accountable repair.</p>
           </header>
 
           <ReferenceSection number="01" eyebrow="Institutional context" title="Australian public-interest governance work">

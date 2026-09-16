@@ -234,7 +234,7 @@ assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
 assert.match(printableReport, /Copyright © 2026 Dr Michelle O'Rourke\./);
-assert.doesNotMatch(printableReport, /All rights reserved/);
+assert.match(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
 assert.doesNotMatch(printableReport, /CC BY-NC-SA 4\.0/);
