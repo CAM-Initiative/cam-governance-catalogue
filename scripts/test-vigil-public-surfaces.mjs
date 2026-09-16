@@ -194,11 +194,12 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
 });
 
 test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
-  const [cases, caseFile, report, about, chip] = await Promise.all([
+  const [cases, caseFile, report, about, severity, chip] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("src/pages/about.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
     read("src/components/vigil/VigilStatusChip.tsx"),
   ]);
   assert.match(cases, /S1: 1[\s\S]*S5: 5[\s\S]*SU: 6/);
@@ -206,9 +207,10 @@ test("Case File severity presentation uses ascending S1-to-S5 semantics", async 
   assert.match(caseFile, /S5: "Catastrophic \/ critical"/);
   assert.match(report, /S1: "Minimal \/ no downstream harm"/);
   assert.match(report, /S5: "Catastrophic \/ critical"/);
-  assert.match(about, /harm or consequence[\s\S]*severity[\s\S]*failure mechanism[\s\S]*invariant or repair/);
-  assert.match(about, /MIT AI Incident Tracker harm-severity scale/);
-  assert.match(about, /CSET AI Harm Framework/);
+  assert.match(about, /what harm or consequence materialised[\s\S]*how severe that consequence was[\s\S]*which failure mechanism occurred[\s\S]*which invariant or repair should hold/);
+  assert.match(about, /\/observatory\/severity-methodology/);
+  assert.match(severity, /MIT AI Incident Tracker harm-severity scale/);
+  assert.match(severity, /CSET AI Harm Framework/);
   assert.match(chip, /\\bs5\\b\|critical\|catastrophic/);
 });
 
