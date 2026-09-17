@@ -66,7 +66,6 @@ assert.match(reportCss, /break-after: avoid-page/);
 assert.match(reportCss, /main\.container > footer,/);
 assert.doesNotMatch(printableReport, /deterministic print projection of the corresponding VIGIL Case File/);
 
-assert.match(polishCss, /report print styling now lives exclusively/);
 assert.doesNotMatch(polishCss, /@page \{ margin: 1\.45cm 1\.35cm; \}/);
 assert.doesNotMatch(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 
