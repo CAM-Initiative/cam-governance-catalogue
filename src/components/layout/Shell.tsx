@@ -6,9 +6,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about", label: "About", internal: true },
-  { href: "/observatory/knowledge-base", label: "VIGIL Observatory Knowledge Base", internal: true },
-  { href: "/observatory/cases", label: "VIGIL Observatory Case Files", internal: true },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy", internal: true },
+  { href: "/observatory/knowledge-base", label: "Knowledge Base", internal: true },
+  { href: "/observatory/cases", label: "Case Files", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy", internal: true },
   { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", internal: true },
   { href: "/datasets", label: "Datasets", internal: true },
   { href: "/licensing", label: "Copyright & Licence", internal: true },
@@ -26,7 +26,7 @@ const homeLinks = [
 const vigilLinks = [
   { href: "/observatory/knowledge-base", label: "Knowledge Base" },
   { href: "/observatory/cases", label: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy" },
   { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology" },
 ];
 
