@@ -1,0 +1,109 @@
+/* Interactive Case File repair presentation.
+   The web view answers: which class invariant governs each classified mechanism?
+   Rich repair provenance remains available in the deterministic report/PDF. */
+
+.vigil-case-file-page .vigil-taxonomy-repair-view {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.vigil-case-file-page .vigil-repair-metadata-panel {
+  display: none;
+}
+
+.vigil-case-file-page .vigil-repair-invariant-card {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / 0.74);
+  border-radius: var(--vigil-case-card-radius, 1rem);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-repair-reading {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 0.46fr) minmax(16rem, 0.8fr) minmax(0, 1.9fr);
+  gap: 1rem 1.25rem;
+  align-items: start;
+  min-width: 0;
+  padding: 0.95rem 1rem 1rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vigil-case-file-page .vigil-repair-reading > .vigil-evidence-kicker {
+  margin: 0;
+  padding-top: 0.08rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-file-page .vigil-repair-reading > h3 {
+  margin: 0;
+  font-size: 0.94rem;
+  font-weight: 670;
+  line-height: 1.45;
+  color: hsl(var(--foreground) / 0.94);
+}
+
+.vigil-case-file-page .vigil-repair-reading > h3::before,
+.vigil-case-file-page .vigil-repair-reading > .vigil-repair-invariant::before,
+.vigil-case-file-page .vigil-repair-reading > .vigil-case-empty::before {
+  display: block;
+  margin-bottom: 0.28rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.vigil-case-file-page .vigil-repair-reading > h3::before {
+  content: "Failure class";
+}
+
+.vigil-case-file-page .vigil-repair-reading > .vigil-repair-invariant::before,
+.vigil-case-file-page .vigil-repair-reading > .vigil-case-empty::before {
+  content: "Governing invariant";
+}
+
+.vigil-case-file-page .vigil-repair-reading > .vigil-repair-invariant,
+.vigil-case-file-page .vigil-repair-reading > .vigil-case-empty {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-case-file-page .vigil-repair-boundary {
+  margin: 0.05rem 0 0;
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid hsl(var(--border));
+  background: hsl(var(--card) / 0.24);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground) / 0.92);
+}
+
+@media (max-width: 760px) {
+  .vigil-case-file-page .vigil-repair-reading {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding: 0.88rem 0.9rem 0.95rem;
+  }
+
+  .vigil-case-file-page .vigil-repair-reading > .vigil-evidence-kicker {
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .vigil-case-file-page .vigil-repair-boundary {
+    font-size: 0.8rem;
+  }
+}
