@@ -24,9 +24,9 @@ const homeLinks = [
 ];
 
 const vigilLinks = [
-  { href: "/observatory/knowledge-base", label: "Knowledge Base" },
-  { href: "/observatory/cases", label: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy" },
+  { href: "/observatory/knowledge-base", label: "VIGIL Observatory Knowledge Base" },
+  { href: "/observatory/cases", label: "VIGIL Observatory Case Files" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy" },
   { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology" },
 ];
 
