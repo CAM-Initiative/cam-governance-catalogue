@@ -310,6 +310,10 @@ export default function EvidenceChainReportDeterministic() {
 
       <div className="report-flow">
         <Stage number="01" label="Observation">
+          {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-panel report-observation-summary">
+            <h4 className="report-substantive-label">What happened</h4>
+            <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+          </section>}
           {affectedSystems.length > 0 && <section className="report-panel report-affected-systems">
             <h4 className="report-substantive-label">Affected systems</h4>
             <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
@@ -332,7 +336,7 @@ export default function EvidenceChainReportDeterministic() {
           <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-panel report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Matrix</h4>
-            <dl className="report-metadata-grid report-metadata-grid--3"><Field label="Severity" value={severityDisplay(incident.severity)} /><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
+            <dl className="report-metadata-grid report-metadata-grid--2"><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
             <HarmImpactMatrix assessment={harmImpactAssessment} compact />
           </section>
           <div className="report-split-layout">
