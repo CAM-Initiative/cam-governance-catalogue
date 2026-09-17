@@ -49,6 +49,16 @@ jobs:
       - name: Prepare GitHub Pages routes
         run: node scripts/prepare-github-pages.js
 
+      - name: Require committed Pages output to match current source
+        run: |
+          if ! git diff --quiet -- docs pnpm-lock.yaml; then
+            echo "::error::Committed GitHub Pages output is stale relative to the current source."
+            echo "The site rebuilt successfully, but the rebuild changed committed publication files."
+            echo "Wait for the Rebuild GitHub Pages output workflow (or run the build locally) and commit the regenerated output before merge."
+            git diff --stat -- docs pnpm-lock.yaml
+            exit 1
+          fi
+
       - name: Validate /docs publication output
         run: python scripts/validate-docs-published-output.py
         env:
