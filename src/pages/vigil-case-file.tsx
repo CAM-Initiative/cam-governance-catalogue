@@ -376,6 +376,10 @@ export default function VigilCaseFile() {
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
+      {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-labelledby="what-happened-heading">
+        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence summary</p><h3 id="what-happened-heading">What happened</h3></div>
+        <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+      </section>}
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
         <div className="vigil-case-subheading"><p className="vigil-library-kicker">Affected systems</p><h3 id="affected-systems-heading">Platforms, products and runtimes named in the evidence</h3></div>
         <div className="vigil-affected-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
@@ -407,9 +411,8 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the occurrence-specific assessment rather than the full methodology reference table. Each dimension records its evidence state, any supported band and threshold, and the evidence-backed basis. Controlling dimensions are identified explicitly.</p></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the occurrence-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
           <div className="vigil-severity-summary-grid"><article><dl>
-            <Field label="Severity" value={severityDisplay(incident.severity)} />
             <Field label="Methodology" value={severityMethodology} mono />
             <Field label="Assessed" value={severityAssessedOn} mono />
           </dl></article></div>
