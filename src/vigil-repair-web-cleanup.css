@@ -12,6 +12,10 @@
 }
 
 .vigil-case-file-page .vigil-repair-invariant-card {
+  display: block;
+  grid-template-columns: none;
+  gap: 0;
+  padding: 0;
   overflow: hidden;
   border: 1px solid hsl(var(--border) / 0.74);
   border-radius: var(--vigil-case-card-radius, 1rem);
