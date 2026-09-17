@@ -26,6 +26,7 @@ import "./vigil-case-library-simplify.css";
 import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
 import "./vigil-deterministic-report.css";
+import "./vigil-case-file-narrative-cards.css";
 import "./about-page-polish.css";
 import "./public-surface-responsive-cleanup.css";
 
