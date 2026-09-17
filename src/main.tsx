@@ -22,6 +22,7 @@ import "./vigil-case-file-dossier.css";
 import "./vigil-case-file-polish.css";
 import "./vigil-exemplar-mixed-execution.css";
 import "./vigil-incident-severity-refinement.css";
+import "./vigil-harm-assessment-cleanup.css";
 import "./vigil-case-library-simplify.css";
 import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
