@@ -29,8 +29,9 @@
 /* Section 01 deliberately does not repeat evidence-source cards or source-count
    notices. The complete source trail remains available in Section 05 References.
    This is a browser-only Case File simplification; deterministic report/PDF
-   evidence presentation is unchanged. */
-.vigil-case-file-page #case-observe .vigil-evidence-list,
-.vigil-case-file-page #case-observe .vigil-case-empty {
+   evidence presentation is unchanged. Scope the suppression to direct stage
+   children so future nested notices are not hidden accidentally. */
+.vigil-case-file-page #case-observe > .vigil-case-section-body > .vigil-evidence-list,
+.vigil-case-file-page #case-observe > .vigil-case-section-body > .vigil-case-empty {
   display: none !important;
 }
