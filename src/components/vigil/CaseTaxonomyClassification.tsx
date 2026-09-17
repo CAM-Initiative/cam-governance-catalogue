@@ -41,6 +41,11 @@ type ResolvedClassification = ClassificationRef & {
   sourceUrl?: string;
 };
 
+type ClassificationTableRow = {
+  item: ResolvedClassification;
+  relationship: "Primary" | "Secondary" | "Exemplar" | "Family only";
+};
+
 type Props = {
   raw: UnknownRecord;
 };
@@ -171,6 +176,53 @@ function useTaxonomy(): TaxonomyState {
   return taxonomy;
 }
 
+function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
+  const hasUnresolved = rows.some(({ item }) =>
+    (item.classId && !item.class) || (item.familyId && !item.family)
+  );
+
+  return <>
+    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory taxonomy classifications" tabIndex={0}>
+      <table className="vigil-classification-table">
+        <thead>
+          <tr>
+            <th scope="col">Relationship</th>
+            <th scope="col">Failure family</th>
+            <th scope="col">Failure class</th>
+            <th scope="col">Classification basis</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(({ item, relationship }, index) => {
+            const family = item.family?.family;
+            const classificationClass = item.class;
+            const familyId = family?.family_id ?? item.familyId;
+            const classId = classificationClass?.class_id ?? item.classId;
+            return <tr key={`${relationship}-${classId ?? familyId ?? index}`}>
+              <td data-label="Relationship" className="vigil-classification-relationship"><strong>{relationship}</strong></td>
+              <td data-label="Failure family">
+                <strong>{family?.name ?? (familyId ? "Unresolved failure family" : "Not assigned")}</strong>
+                {familyId && <span className="vigil-classification-id">{familyId}</span>}
+              </td>
+              <td data-label="Failure class">
+                <strong>{classificationClass?.name ?? (classId ? "Unresolved failure class" : "No canonical class assigned")}</strong>
+                {classId && <span className="vigil-classification-id">{classId}</span>}
+                {item.sourceUrl && <a className="vigil-classification-source-link" href={item.sourceUrl} target="_blank" rel="noreferrer">View taxonomy source →</a>}
+              </td>
+              <td data-label="Classification basis" className="vigil-classification-basis">
+                {item.basis ?? "No separate classification basis is published for this mapping."}
+              </td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </div>
+    {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
+  </>;
+}
+
+/* Rich card projection retained for the deterministic report/PDF. The ordinary
+   Case File WebUX uses the compact classification table above. */
 function ClassificationCard({
   item,
   label,
@@ -249,13 +301,16 @@ function ExplicitClassificationState({
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationCard
-      item={primary}
-      label="Primary failure family"
-      status={parsed.status}
-      taxonomyVersion={parsed.taxonomyVersion}
-      relationship="Family only"
-    />
+    <ClassificationTable rows={[{ item: primary, relationship: "Family only" }]} />
+    <div className="vigil-classification-report-cards">
+      <ClassificationCard
+        item={primary}
+        label="Primary failure family"
+        status={parsed.status}
+        taxonomyVersion={parsed.taxonomyVersion}
+        relationship="Family only"
+      />
+    </div>
     <p className="vigil-case-empty">This Incident is classified to a canonical VIGIL Observatory failure family, but no canonical failure class has been assigned.</p>
   </>;
   if (parsed.status === "candidate-new-class") return <p className="vigil-case-empty">A new failure class has been identified as a candidate, but no immutable VIGIL Observatory class ID has been allocated. The Case File therefore does not present a provisional class as canonical.{familyDefinition ? ` The current family context is: ${familyDefinition}` : ""}</p>;
@@ -282,36 +337,45 @@ export function CaseTaxonomyClassification({ raw }: Props) {
     <ExplicitClassificationState parsed={parsed} primary={primary} />
   </div>;
 
+  const tableRows: ClassificationTableRow[] = [
+    { item: primary, relationship: exemplar ? "Exemplar" : "Primary" },
+    ...secondaries.map((item) => ({ item, relationship: "Secondary" as const })),
+  ];
+
   return <div className="vigil-taxonomy-classification-view">
     {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
-    {exemplar && <p className="vigil-case-empty">This Case File is attached to the Failure Class as a successful invariant exemplar. It demonstrates the governing invariant holding under relevant failure pressure and is not failure evidence.</p>}
+    {parsed.status === "provisionally-classified" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationCard
-      item={primary}
-      label={exemplar ? "Successful invariant exemplar" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
-      status={parsed.status}
-      taxonomyVersion={parsed.taxonomyVersion}
-      relationship={exemplar ? "Successful invariant" : "Primary"}
-      exemplar={exemplar}
-    />
+    <ClassificationTable rows={tableRows} />
 
-    {secondaries.length > 0 && <section className="vigil-secondary-classifications">
-      <div className="vigil-case-subheading">
-        <p className="vigil-library-kicker">Secondary classifications</p>
-        <h3>Additional independently evidenced structural mechanisms</h3>
-        <p>These are separate structural mechanisms evidenced in the same Case File. They do not replace or dilute the primary mechanism.</p>
-      </div>
-      <div className="vigil-classification-secondary-list">
-        {secondaries.map((item, index) => <ClassificationCard
-          key={`${item.classId ?? item.familyId ?? index}`}
-          item={item}
-          label={`Secondary mechanism ${index + 1}`}
-          status={parsed.status}
-          taxonomyVersion={parsed.taxonomyVersion}
-          relationship="Secondary"
-        />)}
-      </div>
-    </section>}
+    <div className="vigil-classification-report-cards">
+      <ClassificationCard
+        item={primary}
+        label={exemplar ? "Successful invariant exemplar" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+        status={parsed.status}
+        taxonomyVersion={parsed.taxonomyVersion}
+        relationship={exemplar ? "Successful invariant" : "Primary"}
+        exemplar={exemplar}
+      />
+
+      {secondaries.length > 0 && <section className="vigil-secondary-classifications">
+        <div className="vigil-case-subheading">
+          <p className="vigil-library-kicker">Secondary classifications</p>
+          <h3>Additional independently evidenced structural mechanisms</h3>
+          <p>These are separate structural mechanisms evidenced in the same Case File. They do not replace or dilute the primary mechanism.</p>
+        </div>
+        <div className="vigil-classification-secondary-list">
+          {secondaries.map((item, index) => <ClassificationCard
+            key={`${item.classId ?? item.familyId ?? index}`}
+            item={item}
+            label={`Secondary mechanism ${index + 1}`}
+            status={parsed.status}
+            taxonomyVersion={parsed.taxonomyVersion}
+            relationship="Secondary"
+          />)}
+        </div>
+      </section>}
+    </div>
   </div>;
 }
 
