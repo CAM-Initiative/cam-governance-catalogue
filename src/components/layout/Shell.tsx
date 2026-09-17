@@ -24,10 +24,10 @@ const homeLinks = [
 ];
 
 const vigilLinks = [
-  { href: "/observatory/knowledge-base", label: "Knowledge Base" },
-  { href: "/observatory/cases", label: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy" },
-  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology" },
+  { href: "/observatory/knowledge-base", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
+  { href: "/observatory/cases", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
+  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy", navLabel: "Failure Taxonomy" },
+  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", navLabel: "Harm & Severity Methodology" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -111,13 +111,14 @@ export function Shell({ children }: { children: ReactNode }) {
                     <Link
                       key={link.href}
                       href={link.href}
+                      aria-label={link.label}
                       className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
                         location === link.href || location.startsWith(`${link.href}/`)
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-card hover:text-foreground"
                       }`}
                     >
-                      {link.label}
+                      {link.navLabel}
                     </Link>
                   ))}
                 </div>
