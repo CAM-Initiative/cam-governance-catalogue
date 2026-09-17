@@ -20,6 +20,7 @@
   width: fit-content !important;
   max-width: 100%;
   align-items: center !important;
+  flex-wrap: nowrap !important;
   gap: 0.42rem !important;
 }
 
