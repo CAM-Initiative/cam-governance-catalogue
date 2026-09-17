@@ -184,6 +184,7 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
   return <>
     <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory taxonomy classifications" tabIndex={0}>
       <table className="vigil-classification-table">
+        <caption className="sr-only">Canonical taxonomy mappings for this Case File. A successful invariant exemplar is not failure evidence.</caption>
         <thead>
           <tr>
             <th scope="col">Relationship</th>
