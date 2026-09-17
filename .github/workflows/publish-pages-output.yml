@@ -83,6 +83,8 @@ jobs:
           if git diff --cached --quiet; then
             echo "Published /docs output is already current."
           else
-            git commit -m "chore: rebuild GitHub Pages output [skip ci]"
+            # Do not skip CI here: the generated-output commit must trigger the
+            # PR validator so the latest branch head is verified as source/docs clean.
+            git commit -m "chore: rebuild GitHub Pages output"
             git push
           fi
