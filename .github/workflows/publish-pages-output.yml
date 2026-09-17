@@ -18,6 +18,7 @@ on:
 
 permissions:
   contents: write
+  statuses: write
 
 concurrency:
   group: pages-output-${{ github.ref }}
@@ -49,6 +50,9 @@ jobs:
       - name: Validate CAM website palette
         run: pnpm run validate:palette
 
+      - name: Test public VIGIL surface contract
+        run: node --test scripts/test-vigil-public-surfaces.mjs
+
       - name: Refresh public governance registries
         env:
           VIGIL_FEATURE_REGISTRY: https://raw.githubusercontent.com/CAM-Initiative/Vigil/chore/remove-aeon-governance-lab-public-references/vigil/VIGIL.Incidents.Index.json
@@ -75,16 +79,38 @@ jobs:
       - name: Validate generated Pages output
         run: python scripts/validate-docs-published-output.py --base HEAD~1
 
+      - name: Test VIGIL Observatory
+        run: pnpm run test:vigil
+
       - name: Commit rebuilt docs output
+        id: publish
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs pnpm-lock.yaml
           if git diff --cached --quiet; then
             echo "Published /docs output is already current."
+            echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            # Do not skip CI here: the generated-output commit must trigger the
-            # PR validator so the latest branch head is verified as source/docs clean.
-            git commit -m "chore: rebuild GitHub Pages output"
+            # The complete validation suite above has already run against the
+            # exact generated output being committed. Skip automatic CI on the
+            # bot commit to avoid an un-runnable pull_request check owned by the bot.
+            git commit -m "chore: rebuild GitHub Pages output [skip ci]"
             git push
+            echo "published=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Mark generated head as validated
+        if: steps.publish.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          GENERATED_SHA="$(git rev-parse HEAD)"
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/statuses/${GENERATED_SHA}" \
+            -f state=success \
+            -f context='pages-output/validated' \
+            -f description='Generated Pages output passed publication and VIGIL validation'
