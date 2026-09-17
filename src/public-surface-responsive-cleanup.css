@@ -3,16 +3,6 @@
    Explore rail, keeps About utility-link arrows attached to their labels, and
    turns the Case File harm assessment into readable stacked records on phones. */
 
-/* The Explore rail remains text-led. The component keeps source-type icon
-   metadata available, but the public panel does not render those glyphs. */
-.home-governance-panel .home-governance-card-label > svg {
-  display: none !important;
-}
-
-.home-governance-panel .home-governance-card-label {
-  gap: 0 !important;
-}
-
 /* About-page utility arrows belong to the link rather than becoming their own
    visual line when space is constrained. */
 .vigil-about-resource-links > a {
@@ -32,6 +22,17 @@
 }
 
 @media (max-width: 767px) {
+  /* On phone-sized viewports, preserve the compact text-led Explore AI
+     Governance presentation. Desktop/browser views retain the source-type
+     Lucide icons introduced in the refined rail. */
+  .home-governance-panel .home-governance-card-label > svg {
+    display: none !important;
+  }
+
+  .home-governance-panel .home-governance-card-label {
+    gap: 0 !important;
+  }
+
   /* Keep the existing compact mobile Explore AI Governance grammar rather than
      applying the newer editorial desktop heading treatment to the phone view. */
   .home-governance-panel .home-governance-heading-rule {
