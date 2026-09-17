@@ -1,0 +1,59 @@
+/* Case File Harm Impact Matrix cleanup.
+   Keep occurrence-level assessment readable without turning every evidence-state
+   note into a competing callout. The underlying assessment data is unchanged. */
+
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
+  gap: 0.65rem 1.35rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.58);
+}
+
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
+  margin: 0 0 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid hsl(var(--primary) / 0.2);
+  border-left: 3px solid hsl(var(--primary) / 0.7);
+  border-radius: 0.58rem;
+  background: hsl(var(--card) / 0.34);
+  font-size: 0.9rem;
+  line-height: 1.58;
+}
+
+/* If positive evidence establishes bounded no-materialised-harm and there are
+   no scored dimensions, the generic "no defensible scored band" notice adds
+   noise and reads like a contradiction. The positive basis already explains
+   why an overall S1 can be derived without artificially scoring dimensions. */
+.vigil-case-file-page .vigil-harm-no-harm-basis + .vigil-harm-method-note {
+  display: none;
+}
+
+/* Coverage is supporting context, not a stack of alert cards. */
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-coverage {
+  margin: 0.55rem 0 0;
+  padding: 0.18rem 0 0.18rem 0.8rem;
+  border-left: 2px solid hsl(var(--border) / 0.72);
+  background: transparent;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.76);
+}
+
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-coverage strong {
+  color: hsl(var(--foreground) / 0.9);
+}
+
+@media (max-width: 760px) {
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
+    gap: 0.42rem;
+  }
+
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
+    padding: 0.8rem 0.85rem;
+  }
+}
