@@ -51,10 +51,6 @@
   grid-column: 1;
 }
 
-.vigil-case-file-page .vigil-evidence-analysis-layout > .vigil-evidence-metadata-panel {
-  grid-column: 2;
-}
-
 @media (max-width: 900px) {
   .vigil-case-file-page .vigil-evidence-analysis-layout {
     grid-template-columns: 1fr;
@@ -64,13 +60,5 @@
   .vigil-case-file-page .vigil-evidence-analysis-layout .vigil-evidence-interpretation,
   .vigil-case-file-page .vigil-evidence-analysis-layout > .vigil-evidence-metadata-panel {
     grid-column: 1;
-  }
-}
-
-@media print {
-  /* The deterministic report has its own publication stylesheet and should not
-     inherit this browser-only dossier rearrangement. */
-  .vigil-deterministic-report-host .vigil-evidence-analysis-layout > .vigil-evidence-reading-stack {
-    display: grid;
   }
 }
