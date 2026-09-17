@@ -26,5 +26,6 @@ import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
 import "./vigil-deterministic-report.css";
 import "./about-page-polish.css";
+import "./public-surface-responsive-cleanup.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
