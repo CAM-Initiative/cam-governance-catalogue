@@ -1,0 +1,186 @@
+/* Interactive Case File classification presentation.
+   The web view answers: what did VIGIL classify this occurrence as, and why?
+   Rich taxonomy definitions and provenance remain available in the deterministic report. */
+
+.vigil-case-file-page .vigil-classification-report-cards {
+  display: none;
+}
+
+.vigil-deterministic-report-host .vigil-classification-web-table {
+  display: none;
+}
+
+.vigil-case-file-page .vigil-classification-web-table {
+  overflow-x: auto;
+  border: 1px solid hsl(var(--border) / 0.74);
+  border-radius: var(--vigil-case-card-radius, 1rem);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-classification-table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.vigil-case-file-page .vigil-classification-table th,
+.vigil-case-file-page .vigil-classification-table td {
+  border: 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.58);
+  text-align: left;
+  vertical-align: top;
+}
+
+.vigil-case-file-page .vigil-classification-table thead th {
+  padding: 0.72rem 0.85rem;
+  background: hsl(var(--muted) / 0.28);
+  font-family: var(--app-font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.86);
+}
+
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 13%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 24%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 25%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+
+.vigil-case-file-page .vigil-classification-table tbody td {
+  padding: 0.9rem 0.9rem 0.95rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.84);
+}
+
+.vigil-case-file-page .vigil-classification-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-classification-table tbody tr:hover td {
+  background: hsl(var(--card) / 0.22);
+}
+
+.vigil-case-file-page .vigil-classification-table td > strong {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 670;
+  line-height: 1.4;
+  color: hsl(var(--foreground) / 0.94);
+}
+
+.vigil-case-file-page .vigil-classification-relationship > strong {
+  color: hsl(var(--primary));
+}
+
+.vigil-case-file-page .vigil-classification-id {
+  display: block;
+  margin-top: 0.28rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  line-height: 1.35;
+  color: hsl(var(--muted-foreground) / 0.82);
+}
+
+.vigil-case-file-page .vigil-classification-source-link {
+  display: inline-block;
+  margin-top: 0.48rem;
+  font-size: 0.8rem;
+  font-weight: 620;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-case-file-page .vigil-classification-source-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.vigil-case-file-page .vigil-classification-basis {
+  color: hsl(var(--foreground) / 0.88) !important;
+}
+
+@media (max-width: 760px) {
+  .vigil-case-file-page .vigil-classification-web-table {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .vigil-case-file-page .vigil-classification-table,
+  .vigil-case-file-page .vigil-classification-table tbody,
+  .vigil-case-file-page .vigil-classification-table tr,
+  .vigil-case-file-page .vigil-classification-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .vigil-case-file-page .vigil-classification-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .vigil-case-file-page .vigil-classification-table tbody {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .vigil-case-file-page .vigil-classification-table tbody tr {
+    overflow: hidden;
+    border: 1px solid hsl(var(--border) / 0.72);
+    border-radius: 0.82rem;
+    background: hsl(var(--background));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .vigil-case-file-page .vigil-classification-table tbody td {
+    display: grid;
+    grid-template-columns: minmax(7.2rem, 0.38fr) minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.78rem 0.82rem;
+    border-bottom: 1px solid hsl(var(--border) / 0.52);
+  }
+
+  .vigil-case-file-page .vigil-classification-table tbody td::before {
+    content: attr(data-label);
+    font-family: var(--app-font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground) / 0.78);
+  }
+
+  .vigil-case-file-page .vigil-classification-table tbody td:last-child {
+    border-bottom: 0;
+  }
+
+  .vigil-case-file-page .vigil-classification-table tbody tr:hover td {
+    background: transparent;
+  }
+
+  .vigil-case-file-page .vigil-classification-table td > strong,
+  .vigil-case-file-page .vigil-classification-table td > span,
+  .vigil-case-file-page .vigil-classification-table td > a {
+    grid-column: 2;
+  }
+
+  .vigil-case-file-page .vigil-classification-basis {
+    display: grid !important;
+  }
+}

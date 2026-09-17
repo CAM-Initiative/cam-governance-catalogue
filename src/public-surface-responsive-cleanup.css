@@ -1,0 +1,180 @@
+/* Post-publication responsive cleanup.
+   This layer is intentionally narrow: it preserves the current compact mobile
+   Explore rail, keeps About utility-link arrows attached to their labels, and
+   turns the Case File harm assessment into readable stacked records on phones. */
+
+/* About-page utility arrows belong to the link rather than becoming their own
+   visual line when space is constrained. */
+.vigil-about-resource-links > a {
+  display: inline-flex !important;
+  width: fit-content !important;
+  max-width: 100%;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 0.42rem !important;
+}
+
+.vigil-about-resource-links > a > svg {
+  display: inline-block !important;
+  width: 0.95rem !important;
+  height: 0.95rem !important;
+  flex: 0 0 auto !important;
+}
+
+@media (max-width: 767px) {
+  /* On phone-sized viewports, preserve the compact text-led Explore AI
+     Governance presentation. Desktop/browser views retain the source-type
+     Lucide icons introduced in the refined rail. */
+  .home-governance-panel .home-governance-card-label > svg {
+    display: none !important;
+  }
+
+  .home-governance-panel .home-governance-card-label {
+    gap: 0 !important;
+  }
+
+  /* Keep the existing compact mobile Explore AI Governance grammar rather than
+     applying the newer editorial desktop heading treatment to the phone view. */
+  .home-governance-panel .home-governance-heading-rule {
+    display: block;
+    padding: 0.2rem 0.2rem 0.8rem;
+    border-bottom: 1px solid hsl(var(--border) / 0.72);
+  }
+
+  .home-governance-panel .home-governance-heading-rule::after {
+    display: none;
+  }
+
+  .home-governance-panel .home-governance-heading-rule .home-governance-section-label {
+    padding-inline: 0.2rem;
+    font-family: var(--app-font-mono);
+    font-size: 0.71rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .home-governance-panel .home-governance-card-title {
+    font-size: 0.9rem !important;
+    font-weight: 650 !important;
+    line-height: 1.35 !important;
+  }
+
+  .home-governance-panel .home-governance-detail {
+    font-size: 0.8rem !important;
+    line-height: 1.52 !important;
+  }
+
+  .home-governance-panel .home-governance-detail > span:first-child:not(:last-child) {
+    font-size: 0.78rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .home-governance-panel .home-governance-external {
+    margin-top: 0;
+    padding-top: 1.2rem;
+  }
+}
+
+@media (max-width: 760px) {
+  /* Section 02 Assessment: replace the 1040px horizontal table experience with
+     one vertically readable card per harm dimension. Desktop and print remain
+     tabular. */
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment {
+    padding-inline: 0;
+  }
+
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-scroll {
+    margin-inline: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: auto;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table,
+  .vigil-case-file-page .vigil-harm-assessment-table tbody,
+  .vigil-case-file-page .vigil-harm-assessment-table tr,
+  .vigil-case-file-page .vigil-harm-assessment-table th,
+  .vigil-case-file-page .vigil-harm-assessment-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody tr {
+    margin: 0 0 0.85rem;
+    overflow: hidden;
+    border: 1px solid hsl(var(--border) / 0.78);
+    border-radius: 0.62rem;
+    background: hsl(var(--background));
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody th,
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td {
+    box-sizing: border-box;
+    padding: 0.72rem 0.8rem;
+    border: 0;
+    border-top: 1px solid hsl(var(--border) / 0.62);
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody th {
+    border-top: 0;
+    box-shadow: none;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody tr.is-controlling th {
+    box-shadow: inset 4px 0 0 hsl(var(--primary));
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td::before {
+    display: block;
+    margin: 0 0 0.28rem;
+    font-family: var(--app-font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td:nth-of-type(1)::before {
+    content: "Evidence state";
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td:nth-of-type(2)::before {
+    content: "Result";
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td:nth-of-type(3)::before {
+    content: "Evidence-backed assessment";
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-basis > p,
+  .vigil-case-file-page .vigil-harm-observed-values li {
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+}

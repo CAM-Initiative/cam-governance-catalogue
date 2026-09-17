@@ -174,12 +174,6 @@ function rowsFor(assessment?: UnknownRecord): MatrixRow[] {
   }).sort((a, b) => (order.get(a.dimension_id) ?? 999) - (order.get(b.dimension_id) ?? 999));
 }
 
-function displayStatus(status: string) {
-  if (status === "insufficient-evidence") return "Insufficient evidence";
-  if (status === "not-applicable") return "Not applicable";
-  return status.charAt(0).toUpperCase() + status.slice(1);
-}
-
 function dimensionLabel(id: string) {
   return DIMENSIONS.find((dimension) => dimension.dimension_id === id)?.label ?? id.split("-").join(" ");
 }
@@ -188,10 +182,7 @@ function resultLabel(row: MatrixRow) {
   if (row.assessment_status === "assessed" && row.severity) {
     return row.severity + " · " + (BAND_LABELS[row.severity] ?? row.severity);
   }
-  if (row.assessment_status === "unreported") return "Not scored";
-  if (row.assessment_status === "insufficient-evidence") return "Unbanded";
-  if (row.assessment_status === "not-applicable") return "N/A";
-  return "Not assessed";
+  return "Not scored";
 }
 
 function observedValueLines(values?: unknown[]) {
@@ -209,6 +200,19 @@ function observedValueLines(values?: unknown[]) {
     if (!detail) return [];
     return [metric ? metric + ": " + detail : detail];
   });
+}
+
+function assessmentSummary(row: MatrixRow) {
+  if (row.assessment_basis) return row.assessment_basis;
+  const observed = observedValueLines(row.observed_values);
+  return observed.length ? observed.join("; ") : undefined;
+}
+
+function rollupLabel(status: string) {
+  if (status === "unreported") return "Not scored";
+  if (status === "insufficient-evidence") return "Unbanded — insufficient evidence";
+  if (status === "not-applicable") return "Not applicable";
+  return "Not assessed";
 }
 
 const HIGHLIGHT_TERMS = new Set([
@@ -276,6 +280,12 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
 
 function AssessmentMatrix({ assessment, compact }: { assessment: UnknownRecord; compact: boolean }) {
   const rows = rowsFor(assessment);
+  const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
+  const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
+  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))].map((status) => ({
+    status,
+    rows: otherRows.filter((row) => row.assessment_status === status),
+  }));
   const overall = string(assessment.overall_severity) ?? "SU";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
@@ -296,7 +306,7 @@ function AssessmentMatrix({ assessment, compact }: { assessment: UnknownRecord; 
 
     {noMaterialisedHarmBasis ? <p className="vigil-harm-no-harm-basis"><strong>Positive no-materialised-harm basis:</strong> {noMaterialisedHarmBasis}</p> : null}
 
-    {rows.length ? <div className="vigil-harm-matrix-scroll" role="region" aria-label="Incident-specific VIGIL Harm Impact assessment" tabIndex={0}>
+    {assessedRows.length ? <div className="vigil-harm-matrix-scroll" role="region" aria-label="Incident-specific VIGIL Harm Impact assessment" tabIndex={0}>
       <table className="vigil-harm-assessment-table">
         <thead>
           <tr>
@@ -307,26 +317,26 @@ function AssessmentMatrix({ assessment, compact }: { assessment: UnknownRecord; 
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => {
+          {assessedRows.map((row) => {
             const isControlling = controlling.has(row.dimension_id);
-            const observations = observedValueLines(row.observed_values);
+            const summary = assessmentSummary(row);
             return <tr key={row.dimension_id} className={isControlling ? "is-controlling" : undefined}>
               <th scope="row">
                 <span>{dimensionLabel(row.dimension_id)}</span>
                 {isControlling ? <strong className="vigil-harm-controlling-badge">Controls overall severity</strong> : null}
               </th>
-              <td className={"status-" + row.assessment_status}><strong>{displayStatus(row.assessment_status)}</strong></td>
+              <td className="status-assessed"><strong>Assessed</strong></td>
               <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
-              <td className="vigil-harm-assessment-basis">
-                {row.threshold_id ? <p className="vigil-harm-threshold"><strong>Threshold:</strong> <code>{row.threshold_id}</code></p> : null}
-                {row.assessment_basis ? <p>{row.assessment_basis}</p> : <p>No separate public assessment basis is recorded.</p>}
-                {observations.length ? <div className="vigil-harm-observed-values"><strong>Observed values</strong><ul>{observations.map((value, index) => <li key={index}>{value}</li>)}</ul></div> : null}
-              </td>
+              <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}</p> : null}</td>
             </tr>;
           })}
         </tbody>
       </table>
-    </div> : <p className="vigil-harm-method-note">No structured harm-dimension assessment is available in the current public Incident record.</p>}
+    </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
+
+    {rollups.map(({ status, rows: statusRows }) => <p className="vigil-harm-coverage" key={status}>
+      <strong>{rollupLabel(status)} ({statusRows.length}):</strong> {statusRows.map((row) => dimensionLabel(row.dimension_id)).join("; ")}.
+    </p>)}
 
     {coverageNote ? <p className="vigil-harm-coverage"><strong>Assessment coverage:</strong> {coverageNote}</p> : null}
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence needed:</strong> {assessmentGap}</p> : null}

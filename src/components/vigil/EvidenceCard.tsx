@@ -65,11 +65,6 @@ export function EvidenceCard({ evidence }: { evidence: EvidenceCardInput }) {
         </div>
       </header>
 
-      {evidence.whatHappened && <section className="vigil-evidence-column vigil-evidence-what-happened">
-        <h4>What happened</h4>
-        <p>{evidence.whatHappened}</p>
-      </section>}
-
       <div className="vigil-evidence-analysis-layout">
         <div className="vigil-evidence-reading-stack">
           {evidence.confirmedEvidence && <section className="vigil-evidence-column">

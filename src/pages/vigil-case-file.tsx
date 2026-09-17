@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, CircleCheckBig, FileText } from "lucide-react";
+import { ArrowLeft, CircleCheckBig, CircleHelp, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -258,6 +258,17 @@ function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
 
+function exemplarExecutionStatus(record?: VigilIndexRecord) {
+  if (!record) return undefined;
+  return firstText(record.raw, [
+    "vigil_assessment.exemplar_execution.status",
+    "vigil_assessment.exemplar_execution",
+    "vigil_assessment.exemplar_execution_status",
+    "exemplar_execution.status",
+    "exemplar_execution",
+  ])?.trim().toLowerCase().replace(/[_\s]+/g, "-");
+}
+
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
   if (reference.relationship === "exemplar") return "Successful-invariant exemplar relationship";
   if (reference.relationship === "primary") return "Primary taxonomy classification";
@@ -359,6 +370,8 @@ export default function VigilCaseFile() {
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const exemplarExecution = exemplarExecutionStatus(incident);
+  const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
@@ -376,6 +389,10 @@ export default function VigilCaseFile() {
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
+      {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-labelledby="what-happened-heading">
+        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence summary</p><h3 id="what-happened-heading">What happened</h3></div>
+        <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+      </section>}
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
         <div className="vigil-case-subheading"><p className="vigil-library-kicker">Affected systems</p><h3 id="affected-systems-heading">Platforms, products and runtimes named in the evidence</h3></div>
         <div className="vigil-affected-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
@@ -407,9 +424,8 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the occurrence-specific assessment rather than the full methodology reference table. Each dimension records its evidence state, any supported band and threshold, and the evidence-backed basis. Controlling dimensions are identified explicitly.</p></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the occurrence-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
           <div className="vigil-severity-summary-grid"><article><dl>
-            <Field label="Severity" value={severityDisplay(incident.severity)} />
             <Field label="Methodology" value={severityMethodology} mono />
             <Field label="Assessed" value={severityAssessedOn} mono />
           </dl></article></div>
@@ -495,7 +511,7 @@ export default function VigilCaseFile() {
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
     <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
 
-    <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}`}>
+    <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
         <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
@@ -504,6 +520,7 @@ export default function VigilCaseFile() {
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
           <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
+          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
@@ -512,13 +529,17 @@ export default function VigilCaseFile() {
       </aside>
     </header>
 
-    {isExemplar && <section className="vigil-exemplar-callout" aria-labelledby="vigil-exemplar-heading">
-      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleCheckBig /></div>
+    {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <CircleHelp /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">Successful invariant exemplar</p>
-        <h2 id="vigil-exemplar-heading">The system worked as intended.</h2>
-        <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
-        <p className="vigil-exemplar-callout-boundary">This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure.</p>
+        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
+        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
+        {hasMixedExecution
+          ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
+          : <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+        <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the occurrence into a failure classification."
+          : "This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </div>
     </section>}
 
