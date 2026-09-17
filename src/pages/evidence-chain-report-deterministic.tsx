@@ -205,6 +205,17 @@ function severityDisplay(value?: string) {
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
 
+function exemplarExecutionStatus(record?: VigilIndexRecord) {
+  if (!record) return undefined;
+  return firstText(record.raw, [
+    "vigil_assessment.exemplar_execution.status",
+    "vigil_assessment.exemplar_execution",
+    "vigil_assessment.exemplar_execution_status",
+    "exemplar_execution.status",
+    "exemplar_execution",
+  ])?.trim().toLowerCase().replace(/[_\s]+/g, "-");
+}
+
 function Field({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return <div className="report-field"><dt className="report-label">{label}</dt><dd className="report-value">{value}</dd></div>;
@@ -275,6 +286,8 @@ export default function EvidenceChainReportDeterministic() {
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const exemplarExecution = exemplarExecutionStatus(incident);
+  const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
   const references = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
@@ -294,18 +307,23 @@ export default function EvidenceChainReportDeterministic() {
         <h1 className="report-title">{title}</h1>
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
-          <Field label="Classification" value={classification} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
+          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
           <Field label="Updated" value={updated} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>
       </header>
 
-      {isExemplar && <section className="report-exemplar-callout" aria-labelledby="report-exemplar-heading">
-        <p className="report-exemplar-kicker">Successful invariant exemplar</p>
-        <h2 id="report-exemplar-heading">The system worked as intended.</h2>
-        <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>
-        <p className="report-exemplar-boundary">This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure.</p>
+      {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
+        <p className="report-exemplar-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
+        <h2 id="report-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
+        {hasMixedExecution
+          ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
+          : <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+        <p className="report-exemplar-boundary">{hasMixedExecution
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the occurrence into a failure classification."
+          : "This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </section>}
 
       <div className="report-flow">
