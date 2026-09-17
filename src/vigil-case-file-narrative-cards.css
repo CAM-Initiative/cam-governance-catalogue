@@ -1,0 +1,76 @@
+/* Case File narrative-card alignment.
+   Keep the substantive reading blocks visually anchored to the same rounded
+   dossier-card grammar as the structured content that follows them. */
+
+/* Observation: "What happened" should read as a first-class dossier card,
+   matching the Affected systems card immediately below it. */
+.vigil-case-file-page .vigil-observation-summary {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-observation-summary .vigil-case-subheading {
+  padding: 1.15rem var(--vigil-case-card-pad) 0.85rem;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-case-file-page .vigil-observation-summary > p {
+  margin: 0;
+  padding: 0.55rem var(--vigil-case-card-pad) 1.4rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.98rem;
+  line-height: 1.66;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+/* Evidence: promote "What the source establishes" out of the split reading
+   column and give it the full card width. Evidence relevance and metadata then
+   sit together beneath it as the secondary analytical layer. */
+.vigil-case-file-page .vigil-evidence-analysis-layout {
+  grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.85fr);
+  gap: 1rem;
+}
+
+.vigil-case-file-page .vigil-evidence-analysis-layout > .vigil-evidence-reading-stack {
+  display: contents;
+}
+
+.vigil-case-file-page .vigil-evidence-analysis-layout .vigil-evidence-column:not(.vigil-evidence-interpretation) {
+  grid-column: 1 / -1;
+  padding: 1.15rem var(--vigil-case-card-pad) 1.25rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--card) / 0.34);
+}
+
+.vigil-case-file-page .vigil-evidence-analysis-layout .vigil-evidence-interpretation {
+  grid-column: 1;
+}
+
+.vigil-case-file-page .vigil-evidence-analysis-layout > .vigil-evidence-metadata-panel {
+  grid-column: 2;
+}
+
+@media (max-width: 900px) {
+  .vigil-case-file-page .vigil-evidence-analysis-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-case-file-page .vigil-evidence-analysis-layout .vigil-evidence-column:not(.vigil-evidence-interpretation),
+  .vigil-case-file-page .vigil-evidence-analysis-layout .vigil-evidence-interpretation,
+  .vigil-case-file-page .vigil-evidence-analysis-layout > .vigil-evidence-metadata-panel {
+    grid-column: 1;
+  }
+}
+
+@media print {
+  /* The deterministic report has its own publication stylesheet and should not
+     inherit this browser-only dossier rearrangement. */
+  .vigil-deterministic-report-host .vigil-evidence-analysis-layout > .vigil-evidence-reading-stack {
+    display: grid;
+  }
+}
