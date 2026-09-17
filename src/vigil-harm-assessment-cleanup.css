@@ -9,6 +9,13 @@
   border-bottom: 1px solid hsl(var(--border) / 0.58);
 }
 
+/* A positive no-materialised-harm basis is itself the derivation for a bounded
+   S1 presentation. The surrounding Case File already explains the general
+   highest-supported-harm rule, so repeating it here competes with the result. */
+.vigil-case-file-page .vigil-harm-matrix.is-assessment:has(.vigil-harm-no-harm-basis) .vigil-harm-matrix-overview > p {
+  display: none;
+}
+
 .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
   margin: 0 0 0.9rem;
   padding: 0.9rem 1rem;
@@ -22,9 +29,16 @@
 
 /* If positive evidence establishes bounded no-materialised-harm and there are
    no scored dimensions, the generic "no defensible scored band" notice adds
-   noise and reads like a contradiction. The positive basis already explains
-   why an overall S1 can be derived without artificially scoring dimensions. */
+   noise and reads like a contradiction. */
 .vigil-case-file-page .vigil-harm-no-harm-basis + .vigil-harm-method-note {
+  display: none;
+}
+
+/* In that same bounded no-harm state the immediately following roll-up merely
+   enumerates every out-of-scope dimension. The assessment-coverage statement
+   retains the substantive conclusion without dumping bookkeeping into the main
+   reading flow. The canonical record continues to retain every dimension. */
+.vigil-case-file-page .vigil-harm-no-harm-basis + .vigil-harm-method-note + .vigil-harm-coverage {
   display: none;
 }
 
