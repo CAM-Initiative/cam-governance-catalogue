@@ -14,7 +14,7 @@ const [
   readFile(new URL("../src/pages/vigil-case-file.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/pages/evidence-chain-report-deterministic.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/vigil-deterministic-report.css", import.meta.url), "utf8"),
-  readFile(new URL("../src/pages/printable-evidence-chain-report.tsx", import.meta.url), "utf8"),
+  readFile(new URL("../src/pages/evidence-chain-report-printable.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/vigil-case-file-polish.css", import.meta.url), "utf8"),
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/layout/Shell.tsx", import.meta.url), "utf8"),
