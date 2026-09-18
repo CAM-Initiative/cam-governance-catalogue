@@ -23,6 +23,7 @@ type ClassificationRef = {
   classId?: string;
   basis?: string;
   confidence?: string;
+  role?: ClassificationRole;
 };
 
 type ClassificationRole = "failure-occurrence" | "successful-invariant";
@@ -43,7 +44,7 @@ type ResolvedClassification = ClassificationRef & {
 
 type ClassificationTableRow = {
   item: ResolvedClassification;
-  relationship: "Primary" | "Secondary" | "Exemplar" | "Family only";
+  relationship: "Primary" | "Secondary" | "Primary exemplar" | "Secondary exemplar" | "Family only";
 };
 
 type Props = {
@@ -82,6 +83,9 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   const primaryClass = isObject(value.primary_class) ? value.primary_class : undefined;
   const status = text(value.classification_status) as ClassificationStatus | undefined;
   const role = text(value.classification_role) as ClassificationRole | undefined;
+  const primaryRole = (text(primaryClassification?.classification_role) as ClassificationRole | undefined)
+    ?? role
+    ?? "failure-occurrence";
   const secondary = Array.isArray(value.secondary_classifications)
     ? value.secondary_classifications.flatMap((item) => {
         if (!isObject(item)) return [];
@@ -90,6 +94,9 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
           ...pair,
           basis: text(item.classification_basis),
           confidence: text(item.classification_confidence),
+          role: (text(item.classification_role) as ClassificationRole | undefined)
+            ?? role
+            ?? "failure-occurrence",
         }];
       })
     : [];
@@ -103,6 +110,7 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
       classId: text(primaryClassification?.class_id ?? primaryClass?.class_id),
       basis: text(primaryClassification?.classification_basis ?? value.classification_basis),
       confidence: text(primaryClassification?.classification_confidence ?? value.classification_confidence),
+      role: primaryRole,
     },
     secondary,
   };
@@ -331,7 +339,6 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
-  const exemplar = parsed.role === "successful-invariant";
   const renderPrimary = parsed.status === "classified" || parsed.status === "provisionally-classified" || parsed.status === "classification-disputed";
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
@@ -339,8 +346,14 @@ export function CaseTaxonomyClassification({ raw }: Props) {
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
-    { item: primary, relationship: exemplar ? "Exemplar" : "Primary" },
-    ...secondaries.map((item) => ({ item, relationship: "Secondary" as const })),
+    {
+      item: primary,
+      relationship: primary.role === "successful-invariant" ? "Primary exemplar" : "Primary",
+    },
+    ...secondaries.map((item) => ({
+      item,
+      relationship: item.role === "successful-invariant" ? "Secondary exemplar" as const : "Secondary" as const,
+    })),
   ];
 
   return <div className="vigil-taxonomy-classification-view">
@@ -352,11 +365,11 @@ export function CaseTaxonomyClassification({ raw }: Props) {
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
-        label={exemplar ? "Successful invariant exemplar" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+        label={primary.role === "successful-invariant" ? "Primary successful invariant exemplar" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
         status={parsed.status}
         taxonomyVersion={parsed.taxonomyVersion}
-        relationship={exemplar ? "Successful invariant" : "Primary"}
-        exemplar={exemplar}
+        relationship={primary.role === "successful-invariant" ? "Primary · successful invariant" : "Primary"}
+        exemplar={primary.role === "successful-invariant"}
       />
 
       {secondaries.length > 0 && <section className="vigil-secondary-classifications">
@@ -369,10 +382,11 @@ export function CaseTaxonomyClassification({ raw }: Props) {
           {secondaries.map((item, index) => <ClassificationCard
             key={`${item.classId ?? item.familyId ?? index}`}
             item={item}
-            label={`Secondary mechanism ${index + 1}`}
+            label={item.role === "successful-invariant" ? `Secondary successful invariant exemplar ${index + 1}` : `Secondary mechanism ${index + 1}`}
             status={parsed.status}
             taxonomyVersion={parsed.taxonomyVersion}
-            relationship="Secondary"
+            relationship={item.role === "successful-invariant" ? "Secondary · successful invariant" : "Secondary"}
+            exemplar={item.role === "successful-invariant"}
           />)}
         </div>
       </section>}
@@ -391,6 +405,7 @@ function governingClassInvariants(primary: ResolvedClassification, secondaries: 
   const seen = new Set<string>();
 
   const add = (item: ResolvedClassification, relationship: RepairInvariant["relationship"]) => {
+    if (item.role === "successful-invariant") return;
     const classificationClass = item.class;
     if (!classificationClass || seen.has(classificationClass.class_id)) return;
     seen.add(classificationClass.class_id);
@@ -417,14 +432,15 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
   const invariants = governingClassInvariants(primary, secondaries);
-  const exemplar = parsed.role === "successful-invariant";
+  const resolvedMappings = [primary, ...secondaries];
+  const hasExemplarMappings = resolvedMappings.some((item) => item.role === "successful-invariant");
 
-  if (!invariants.length) return <p className="vigil-case-empty">No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.</p>;
+  if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is shown because this Case File has no resolved failure-occurrence class mapping. Successful-invariant exemplar mappings remain visible in Classification and are not treated as failures requiring repair.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
     {invariants.map(({ family, class: classificationClass, relationship }) => <article key={classificationClass.class_id} className="vigil-repair-invariant-card">
       <div className="vigil-repair-reading">
-        <p className="vigil-evidence-kicker">{exemplar ? "Invariant demonstrated" : relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
+        <p className="vigil-evidence-kicker">{relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
         <h3>{classificationClass.name}</h3>
         {classificationClass.invariant
           ? <p className="vigil-repair-invariant">{classificationClass.invariant}</p>
@@ -443,8 +459,8 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </dl>
       </aside>
     </article>)}
-    <p className="vigil-repair-boundary">{exemplar
-      ? "This Case File demonstrates the class-level governing invariant holding under the evidenced pressure. No repair is inferred from the exemplar relationship. The class remains the relevant failure boundary, while this occurrence sits on the successful side of that boundary."
+    <p className="vigil-repair-boundary">{hasExemplarMappings
+      ? "Repair is shown only for failure-occurrence mappings. Successful-invariant exemplar mappings remain in Classification because they demonstrate the successful side of a failure boundary rather than a condition requiring repair. Where a class invariant has not yet been published, the broader family invariant is not substituted."
       : "This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced."}</p>
   </div>;
 }
