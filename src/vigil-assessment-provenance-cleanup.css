@@ -1,7 +1,7 @@
-/* Interactive Case File assessment cleanup.
-   Diagnostic provenance remains part of the canonical record and deterministic
-   report, but it is intentionally omitted from the public interactive
-   Assessment section so substantive assessment reasoning remains primary. */
+/* Case File assessment cleanup.
+   Diagnostic provenance remains part of the canonical record, but it is
+   intentionally omitted from the public Case File and deterministic report so
+   substantive assessment reasoning remains primary. */
 
 .vigil-case-file-page .vigil-diagnosis-metadata-panel {
   display: none !important;
