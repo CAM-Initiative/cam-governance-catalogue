@@ -4,7 +4,7 @@
 /* Case Files landing page: restore the readable catalogue/table grammar. */
 .vigil-case-table-search {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr);
+  grid-template-columns: minmax(320px, 1fr) minmax(250px, 340px);
   gap: 0.75rem;
   align-items: stretch;
 }
