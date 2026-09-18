@@ -270,10 +270,14 @@ function exemplarExecutionStatus(record?: VigilIndexRecord) {
 }
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
-  if (reference.relationship === "exemplar") return "Successful-invariant exemplar relationship";
-  if (reference.relationship === "primary") return "Primary taxonomy classification";
-  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
-  return "Family-only taxonomy classification";
+  const relationship = reference.relationship === "primary"
+    ? "Primary taxonomy classification"
+    : reference.relationship === "secondary"
+      ? "Secondary taxonomy classification"
+      : "Family-only taxonomy classification";
+  return reference.role === "successful-invariant"
+    ? `${relationship} · successful-invariant exemplar`
+    : relationship;
 }
 
 function taxonomyEvidenceKey(reference: TaxonomyReferenceTarget["externalReferences"][number]) {
