@@ -434,19 +434,8 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
   const invariants = governingClassInvariants(primary, secondaries);
-  const resolvedMappings = [primary, ...secondaries];
-  const hasExemplarMappings = resolvedMappings.some((item) => item.role === "successful-invariant");
-  const hasUnpublishedInvariant = invariants.some((item) => !item.class.invariant);
-  const repairBoundaryNote = [
-    hasExemplarMappings
-      ? "Successful-invariant exemplar mappings remain in Classification and are not treated as conditions requiring repair."
-      : undefined,
-    hasUnpublishedInvariant
-      ? "A class-level invariant has not yet been published for one or more failure mappings; the broader family invariant is not substituted."
-      : undefined,
-  ].filter((note): note is string => Boolean(note)).join(" ");
 
-  if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is shown because this Case File has no resolved failure-classified mapping. Successful-invariant exemplar mappings remain visible in Classification and are not treated as failures requiring repair.</p>;
+  if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is available for this Case File.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
     <div className="vigil-classification-web-table vigil-repair-web-table">
@@ -473,6 +462,5 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </tbody>
       </table>
     </div>
-    {repairBoundaryNote && <p className="vigil-repair-boundary">{repairBoundaryNote}</p>}
   </div>;
 }
