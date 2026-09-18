@@ -180,6 +180,24 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
 });
 
+test("mixed Case Files expose ambiguous-boundary mappings with the question-mark affordance", async () => {
+  const [taxonomy, classification, caseFile, contract] = await Promise.all([
+    read("src/lib/vigilTaxonomyClassification.ts"),
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
+  ]);
+  assert.match(taxonomy, /"ambiguous-boundary"/);
+  assert.match(taxonomy, /hasAmbiguousBoundary/);
+  assert.match(classification, /Secondary ambiguous boundary/);
+  assert.match(classification, /item\.role !== "failure-occurrence"/);
+  assert.match(caseFile, /const isCombination = classification === "Combination"/);
+  assert.match(caseFile, /<CircleHelp \/>/);
+  assert.match(caseFile, /This Case File contains mixed taxonomy relationships/);
+  assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
+  assert.match(contract, /question-mark mixed-record affordance/);
+});
+
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
   const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
