@@ -41,6 +41,7 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "04": [
     "No class invariant can be resolved from a canonical classification for this Incident.",
     "No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.",
+    "No repair invariant is shown because this Case File has no resolved failure-occurrence class mapping.",
   ],
   "05": ["No references are currently available."],
 };
@@ -60,9 +61,14 @@ function compactIncidentId(id: string) {
 }
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
-  if (reference.relationship === "primary") return "Primary taxonomy classification";
-  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
-  return "Family-only taxonomy classification";
+  const relationship = reference.relationship === "primary"
+    ? "Primary taxonomy classification"
+    : reference.relationship === "secondary"
+      ? "Secondary taxonomy classification"
+      : "Family-only taxonomy classification";
+  return reference.role === "successful-invariant"
+    ? `${relationship} · successful-invariant exemplar`
+    : relationship;
 }
 
 function text(value: unknown) {
