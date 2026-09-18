@@ -14,7 +14,8 @@ export type TaxonomyClassificationStatus =
 
 export type TaxonomyClassificationRole =
   | "failure-occurrence"
-  | "successful-invariant";
+  | "successful-invariant"
+  | "ambiguous-boundary";
 
 export type TaxonomyReferenceTarget = {
   id: string;
@@ -92,7 +93,8 @@ function incidentClassificationLabel(
 
   const hasFailure = roles.includes("failure-occurrence");
   const hasExemplar = roles.includes("successful-invariant");
-  if (hasFailure && hasExemplar) return "Combination";
+  const hasAmbiguousBoundary = roles.includes("ambiguous-boundary");
+  if (hasAmbiguousBoundary || (hasFailure && hasExemplar)) return "Combination";
   if (hasExemplar && !hasFailure) return "Exemplar";
   if (hasFailure && !hasExemplar) return "Classified";
 
