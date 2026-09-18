@@ -147,7 +147,7 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /<th scope="col">Failure class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 57%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 61%; \}/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
