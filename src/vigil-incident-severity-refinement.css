@@ -161,7 +161,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 .vigil-harm-summary-item > span {
   font-family: var(--app-font-mono);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
