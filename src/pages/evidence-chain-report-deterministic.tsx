@@ -274,24 +274,26 @@ export default function EvidenceChainReportDeterministic() {
 
       <div className="report-flow">
         <Stage number="01" label="Occurrence">
-          {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-panel report-observation-summary">
-            <h4 className="report-substantive-label">What happened</h4>
-            <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
-          </section>}
-          {affectedSystems.length > 0 && <section className="report-panel report-affected-systems">
-            <h4 className="report-substantive-label">Affected systems</h4>
-            <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
-              <dl className="report-metadata-grid report-metadata-grid--2">
-                <Field label="Provider / platform" value={system.provider} />
-                <Field label="Product / service" value={system.product} />
-                <Field label="Model / runtime" value={system.model} />
-                <Field label="System type" value={system.systemType} />
-                <Field label="Interface" value={system.interfaceSurface} />
-                <Field label="Deployment context" value={system.deploymentContext} />
-              </dl>
-            </article>)}</div>
-          </section>}
-          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured observation summary is available in the current public projection.</Empty>}
+          {((incident?.summary ?? incident?.publicDisplay.finding) || affectedSystems.length > 0) && <div className="report-occurrence-card">
+            {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
+              <h4 className="report-substantive-label">What happened</h4>
+              <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+            </section>}
+            {affectedSystems.length > 0 && <section className="report-affected-systems">
+              <h4 className="report-substantive-label">Affected systems</h4>
+              <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
+                <dl className="report-metadata-grid report-metadata-grid--2">
+                  <Field label="Provider / platform" value={system.provider} />
+                  <Field label="Product / service" value={system.product} />
+                  <Field label="Model / runtime" value={system.model} />
+                  <Field label="System type" value={system.systemType} />
+                  <Field label="Interface" value={system.interfaceSurface} />
+                  <Field label="Deployment context" value={system.deploymentContext} />
+                </dl>
+              </article>)}</div>
+            </section>}
+          </div>}
+          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured occurrence summary is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Assessment">
@@ -324,7 +326,7 @@ export default function EvidenceChainReportDeterministic() {
       </div>
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants and does not substitute broader family invariants where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants only for failure-occurrence mappings; successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;
