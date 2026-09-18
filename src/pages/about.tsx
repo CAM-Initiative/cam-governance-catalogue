@@ -77,7 +77,7 @@ export default function About() {
               <p className="vigil-library-kicker">Publication model</p>
               <h2 id="vigil-publication-heading">Traceable findings, visible judgment and clear boundaries</h2>
             </div>
-            <p className="vigil-about-record-intro">A VIGIL Observatory Case File is a published chain of reasoning, not a claim that inclusion in a database makes an allegation true. Readers should be able to move from the cited source material to the occurrence assessment, taxonomy classification and, where a failure is evidenced, the governing invariant relevant to repair.</p>
+            <p className="vigil-about-record-intro">Published by <strong>CAM Initiative</strong>, a VIGIL Observatory Case File is a published chain of reasoning, not a claim that inclusion in a database makes an allegation true. Readers should be able to move from the cited source material to the occurrence assessment, taxonomy classification and, where a failure is evidenced, the governing invariant relevant to repair.</p>
             <div className="vigil-about-boundary-grid vigil-about-publication-grid">
               <article><h3>Trace the conclusion</h3><p>Sources remain identifiable and the basis for assessment stays attached to the Case File, so a reader can inspect what supports a conclusion rather than relying on the conclusion alone.</p></article>
               <article><h3>Keep evidence and judgment separate</h3><p>What happened, what the evidence supports, how VIGIL assesses the occurrence and how it is classified are presented as distinct steps. Interpretation is not disguised as raw evidence.</p></article>
