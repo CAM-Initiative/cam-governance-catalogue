@@ -186,11 +186,30 @@
 }
 
 
-/* Repair uses the same table grammar as Classification, with three columns. */
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 13%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 30%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 57%; }
+/* Repair uses the same table grammar as Classification, with three columns.
+   Give the invariant the reading width it needs and keep the single-row view compact. */
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 12%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 27%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 61%; }
+
+.vigil-case-file-page .vigil-repair-table tbody td {
+  padding: 0.78rem 0.85rem 0.82rem;
+  font-size: 0.97rem;
+  line-height: 1.58;
+}
+
+.vigil-case-file-page .vigil-repair-table td > strong {
+  font-size: 0.97rem;
+}
+
+.vigil-case-file-page .vigil-repair-table .vigil-classification-id {
+  font-size: 0.78rem;
+}
+
+.vigil-case-file-page .vigil-repair-table .vigil-classification-source-link {
+  font-size: 0.84rem;
+}
 
 .vigil-case-file-page .vigil-repair-invariant-cell {
-  color: hsl(var(--foreground) / 0.88) !important;
+  color: hsl(var(--foreground) / 0.9) !important;
 }
