@@ -85,7 +85,7 @@ export default function About() {
               <article><h3>Open to scrutiny, not openly licensed</h3><p>VIGIL Observatory is publicly available for reading, citation, research and policy scrutiny. Public availability does not place the work under an open licence.</p></article>
             </div>
             <p className="vigil-about-record-intro">VIGIL Observatory publishes evidence-bounded assessments and taxonomy relationships. CAELESTIS governance instruments are a separate authority layer and become authoritative only through their own amendment, validation and adoption processes.</p>
-            <div className="vigil-about-link-row" aria-label="Institutional and legal information">
+            <div className="vigil-about-link-row" aria-label="VIGIL Observatory publication and legal information">
               <Link href="/licensing">Copyright & Licence <ArrowRight aria-hidden="true" /></Link>
               <Link href="/privacy">Privacy <ArrowRight aria-hidden="true" /></Link>
               <a href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer">VIGIL Observatory repository <ArrowRight aria-hidden="true" /></a>
