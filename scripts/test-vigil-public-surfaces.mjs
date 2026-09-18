@@ -337,7 +337,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm & Severity Methodology/);
-  assert.match(about, /Publication & provenance/);
+  assert.match(about, /Publication model/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
@@ -540,18 +540,18 @@ test("About final polish keeps content continuous and places actions inside open
     read("src/pages/about.tsx"),
     read("src/vigil-ux-v5.css"),
   ]);
-  const firstMethodSentence = about.indexOf("The Case File structure keeps evidence of what happened separate");
-  const incidentBoundarySentence = about.indexOf("A reported incident is not automatically a new failure class");
+  const firstMethodSentence = about.indexOf("The Case File structure keeps what happened separate");
+  const incidentBoundarySentence = about.indexOf("A reported occurrence is not automatically a failure");
   const flow = about.indexOf("vigil-about-flow-scroll");
   assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
   assert.doesNotMatch(about, /Classification boundary:/);
-  assert.match(about, /Case File classification[\s\S]*vigil-about-grid-action[\s\S]*Browse the taxonomy/);
-  assert.match(about, /Separate authority layers[\s\S]*vigil-about-resource-links[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.match(about, /Failure occurrence[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
+  assert.match(about, /CAELESTIS governance instruments are a separate authority layer[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   const organisationStart = about.indexOf('id="vigil-organisation-heading"');
   const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
   const citationStart = about.indexOf('id="vigil-citation-heading"');
   assert.ok(organisationStart >= 0 && affiliation > organisationStart && affiliation < citationStart);
-  assert.doesNotMatch(about, /vigil-about-link-row/);
+  assert.match(about, /vigil-about-link-row/);
   assert.match(css, /About final polish: one calm document/);
   assert.match(css, /About final polish: one calm document/);
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
@@ -622,7 +622,7 @@ test("About citation uses a single Suggested general citation heading", async ()
 
 test("Publication copy names CAM Initiative without repeating the maintainer", async () => {
   const about = await read("src/pages/about.tsx");
-  assert.match(about, /VIGIL Observatory is published by <strong>CAM Initiative<\/strong>\. Case Files are designed/);
+  assert.match(about, /Published by <strong>CAM Initiative<\/strong>, a VIGIL Observatory Case File/);
   assert.doesNotMatch(about, /published by <strong>CAM Initiative<\/strong> and maintained by/);
 });
 
