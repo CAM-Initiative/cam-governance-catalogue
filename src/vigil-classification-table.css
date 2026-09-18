@@ -184,3 +184,13 @@
     display: grid !important;
   }
 }
+
+
+/* Repair uses the same table grammar as Classification, with three columns. */
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 13%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 30%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 57%; }
+
+.vigil-case-file-page .vigil-repair-invariant-cell {
+  color: hsl(var(--foreground) / 0.88) !important;
+}

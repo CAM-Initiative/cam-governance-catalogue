@@ -115,12 +115,6 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   text-transform: inherit !important;
 }
 
-/* Stage descriptions are secondary editorial copy attached to the active file tab. */
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
-  font-style: italic;
-  color: hsl(var(--muted-foreground)) !important;
-}
-
 /* The Incident identifier is already present in the Case File metadata panel. */
 .vigil-case-file-page .vigil-affected-system-grid > article > span {
   display: none !important;

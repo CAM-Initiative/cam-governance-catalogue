@@ -241,9 +241,9 @@ function Field({ label, value, mono = false }: { label: string; value?: string; 
   return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
 }
 
-function Section({ id, number, title, description, children }: { id: string; number?: string; title: string; description: string; children: ReactNode }) {
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return <section id={id} className="vigil-case-section" aria-labelledby={`${id}-heading`}>
-    <header>{number ? <span>{number}</span> : null}<div><h2 id={`${id}-heading`}>{title}</h2><p>{description}</p></div></header>
+    <h2 id={`${id}-heading`} className="sr-only">{title}</h2>
     <div className="vigil-case-section-body">{children}</div>
   </section>;
 }
@@ -562,7 +562,7 @@ export default function VigilCaseFile() {
     </nav>
 
     <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel}>
-      <Section id={`case-${activeStage}`} number={activeDefinition.number} title={activeDefinition.label} description={activeDefinition.description}>
+      <Section id={`case-${activeStage}`} title={activeDefinition.label}>
         {renderStageContent(activeStage)}
       </Section>
     </div>

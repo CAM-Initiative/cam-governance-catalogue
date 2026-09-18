@@ -397,7 +397,8 @@ export function CaseTaxonomyClassification({ raw }: Props) {
 type RepairInvariant = {
   family?: FailureTaxonomyFamilyDocument["family"];
   class: FailureTaxonomyClass;
-  relationship: "Primary" | "Additional";
+  relationship: "Primary" | "Secondary";
+  sourceUrl?: string;
 };
 
 function governingClassInvariants(primary: ResolvedClassification, secondaries: ResolvedClassification[]): RepairInvariant[] {
@@ -413,11 +414,12 @@ function governingClassInvariants(primary: ResolvedClassification, secondaries: 
       family: item.family?.family,
       class: classificationClass,
       relationship,
+      sourceUrl: item.sourceUrl,
     });
   };
 
   add(primary, "Primary");
-  for (const secondary of secondaries) add(secondary, "Additional");
+  for (const secondary of secondaries) add(secondary, "Secondary");
   return result;
 }
 
@@ -438,27 +440,30 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is shown because this Case File has no resolved failure-classified mapping. Successful-invariant exemplar mappings remain visible in Classification and are not treated as failures requiring repair.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
-    {invariants.map(({ family, class: classificationClass, relationship }) => <article key={classificationClass.class_id} className="vigil-repair-invariant-card">
-      <div className="vigil-repair-reading">
-        <p className="vigil-evidence-kicker">{relationship === "Primary" ? "Governing class invariant" : "Additional class invariant"}</p>
-        <h3>{classificationClass.name}</h3>
-        {classificationClass.invariant
-          ? <p className="vigil-repair-invariant">{classificationClass.invariant}</p>
-          : <p className="vigil-case-empty">A class-level invariant has not yet been published for this failure class. The broader family invariant is not substituted here.</p>}
-      </div>
-      <aside className="vigil-repair-metadata-panel" aria-label={`${classificationClass.name} invariant provenance`}>
-        <p className="vigil-diagnostic-meta-label">Derived from</p>
-        <dl>
-          <Meta label="Relationship" value={relationship} />
-          <Meta label="Failure class" value={classificationClass.name} />
-          <Meta label="Class ID" value={classificationClass.class_id} mono />
-          <Meta label="Class code" value={classificationClass.class_code} mono />
-          <Meta label="Failure family" value={family?.name} />
-          <Meta label="Family ID" value={family?.family_id} mono />
-          <Meta label="Taxonomy version" value={parsed.taxonomyVersion} mono />
-        </dl>
-      </aside>
-    </article>)}
+    <div className="vigil-classification-web-table vigil-repair-web-table">
+      <table className="vigil-classification-table vigil-repair-table">
+        <thead>
+          <tr>
+            <th scope="col">Relationship</th>
+            <th scope="col">Failure class</th>
+            <th scope="col">Governing invariant</th>
+          </tr>
+        </thead>
+        <tbody>
+          {invariants.map(({ class: classificationClass, relationship, sourceUrl }) => <tr key={classificationClass.class_id}>
+            <td data-label="Relationship" className="vigil-classification-relationship"><strong>{relationship}</strong></td>
+            <td data-label="Failure class">
+              <strong>{classificationClass.name}</strong>
+              <span className="vigil-classification-id">{classificationClass.class_id}</span>
+              {sourceUrl && <a className="vigil-classification-source-link" href={sourceUrl} target="_blank" rel="noreferrer">View taxonomy source →</a>}
+            </td>
+            <td data-label="Governing invariant" className="vigil-repair-invariant-cell">
+              {classificationClass.invariant ?? "A class-level invariant has not yet been published for this failure class. The broader family invariant is not substituted here."}
+            </td>
+          </tr>)}
+        </tbody>
+      </table>
+    </div>
     <p className="vigil-repair-boundary">{hasExemplarMappings
       ? "Repair is shown only for mappings classified as failures. Successful-invariant exemplar mappings remain in Classification because they demonstrate the successful side of a failure boundary rather than a condition requiring repair. Where a class invariant has not yet been published, the broader family invariant is not substituted."
       : "This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced."}</p>

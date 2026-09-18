@@ -126,6 +126,30 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
+test("Case File tabs do not repeat editorial stage descriptions inside the active panel", async () => {
+  const [sections, caseFile] = await Promise.all([
+    read("src/lib/vigilCaseSections.ts"),
+    read("src/pages/vigil-case-file.tsx"),
+  ]);
+  assert.doesNotMatch(sections, /description:/);
+  assert.doesNotMatch(caseFile, /<p>\{description\}<\/p>/);
+  assert.match(caseFile, /className="sr-only">\{title\}<\/h2>/);
+});
+
+test("Repair uses the same public table grammar as Classification", async () => {
+  const [classification, css] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/vigil-classification-table.css"),
+  ]);
+  assert.match(classification, /vigil-classification-web-table vigil-repair-web-table/);
+  assert.match(classification, /vigil-classification-table vigil-repair-table/);
+  assert.match(classification, /<th scope="col">Relationship<\/th>/);
+  assert.match(classification, /<th scope="col">Failure class<\/th>/);
+  assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
+  assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 57%; \}/);
+});
+
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
   const [cases, caseLibraryCss] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
