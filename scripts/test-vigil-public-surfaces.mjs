@@ -119,7 +119,7 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.match(caseFile, /loadVigilIncidentRecords/);
   assert.match(caseFile, /records: \[incident\]/);
   assert.doesNotMatch(caseFile, /const observations|deriveFailureModePublicDetail|failureId=/);
-  for (const label of ["Observation", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  for (const label of ["Occurrence", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
   assert.doesNotMatch(sections, /label: "Learn"/);
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
   assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
