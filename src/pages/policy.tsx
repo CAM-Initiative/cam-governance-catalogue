@@ -5,12 +5,16 @@ import { Check, Copy, Download, ExternalLink } from "lucide-react";
 
 const trainingPolicyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf`;
 const sociSubmissionPdfHref = `${import.meta.env.BASE_URL}publications/CAM_SOCI_Targeted_Submission_FINAL.pdf`;
+const aiProsperityParliamentHref = "https://www.aph.gov.au/DocumentStore.ashx?id=40eca803-9218-4238-93e6-6798859ef784&subId=802190";
 
 const trainingSuggestedCitation =
   "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Dr Michelle Vivian O’Rourke; AI Agent: ChatGPT, Sol 5.6";
 
 const sociSuggestedCitation =
   "CAM Initiative. (2026). Targeted submission on proposed amendments to the Security of Critical Infrastructure Act 2018 (Consultation Submission 01/2026). Submitted to the Australian Department of Home Affairs. Dr Michelle Vivian O’Rourke; AI Agent: ChatGPT, Sol 5.6.";
+
+const aiProsperitySuggestedCitation =
+  "CAM Initiative. (2026). Artificial Intelligence and Australian Prosperity. Submission to the Joint Select Committee on Artificial Intelligence. Dr Michelle O’Rourke.";
 
 const trainingSubmissionRecipients = [
   {
@@ -100,6 +104,13 @@ export default function Policy() {
                 <div className="space-y-2.5">
                   <a
                     className="block rounded-xl border border-cam-gold/45 bg-[rgba(184,147,90,0.10)] px-3 py-3 transition hover:border-cam-gold/65 hover:bg-[rgba(184,147,90,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    href="#parliamentary-submission-ai-prosperity-2026"
+                  >
+                    <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">Parliamentary Submission</span>
+                    <span className="mt-1.5 block font-serif text-base leading-snug text-foreground">Artificial Intelligence and Australian Prosperity</span>
+                  </a>
+                  <a
+                    className="block rounded-xl border border-cam-gold/30 bg-card/70 px-3 py-3 transition hover:border-cam-gold/55 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     href="#consultation-submission-01-2026"
                   >
                     <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">CS 01/2026</span>
@@ -118,6 +129,95 @@ export default function Policy() {
           </aside>
 
           <section className="min-w-0 space-y-8" aria-label="Policy publications">
+            <motion.article
+              className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/35 shadow-xl"
+              id="parliamentary-submission-ai-prosperity-2026"
+              initial={{ opacity: 0, y: 14 }}
+              transition={{ duration: 0.65 }}
+              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
+            >
+              <div className="border-b border-cam-gold/30 bg-[hsl(36_48%_96%)] px-6 py-5 md:px-8">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Parliamentary Submission · 2026</p>
+                  <span className="rounded-full border border-primary/20 bg-card/70 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-foreground/65">
+                    Published by the Parliament of Australia
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-6 md:p-8">
+                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">13 September 2026</p>
+                <h2 className="font-serif text-3xl leading-tight text-foreground md:text-4xl">
+                  Artificial Intelligence and Australian Prosperity
+                </h2>
+                <p className="mt-3 text-base font-medium leading-relaxed text-foreground/75">
+                  Submission to the Joint Select Committee on Artificial Intelligence
+                </p>
+
+                <div className="mt-6 space-y-4 text-base leading-relaxed text-foreground/78">
+                  <p>
+                    This submission proposes a national prosperity framework for retaining Australian productive capacity, knowledge, value and capability through the AI transition.
+                  </p>
+                  <p>
+                    It treats sovereign AI as an economic lifecycle: Discover → Fund → Build → Scale → Retain → Reinvest, connecting emerging capability, strategic capital, domestic industry, scale-up pathways, Australian ownership and long-term reinvestment.
+                  </p>
+                  <p>
+                    The submission also addresses copyright and creator value, robotics and automation, strategic digital infrastructure, workforce transition and mechanisms for retaining a greater share of AI-era economic value in Australia.
+                  </p>
+                </div>
+
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <a className={primaryButtonClass} href={aiProsperityParliamentHref} rel="noreferrer" target="_blank">
+                    View official parliamentary submission
+                    <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+
+              <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Parliamentary submission details">
+                <div className="mb-5">
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Submission details</p>
+                </div>
+
+                <dl className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
+                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Submitted</dt>
+                    <dd className="mt-1 text-sm leading-relaxed text-foreground">13 September 2026</dd>
+                  </div>
+                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
+                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Status</dt>
+                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Public · published by the Parliament of Australia</dd>
+                  </div>
+                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
+                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Inquiry</dt>
+                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Joint Select Committee on Artificial Intelligence</dd>
+                  </div>
+                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
+                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Themes</dt>
+                    <dd className="mt-2 flex flex-wrap gap-2">
+                      {[
+                        ["Sovereign capability", "border-amber-300 bg-amber-50 text-amber-950"],
+                        ["Strategic capital", "border-blue-300 bg-blue-50 text-blue-950"],
+                        ["Australian ownership", "border-emerald-300 bg-emerald-50 text-emerald-950"],
+                        ["Automation & labour", "border-violet-300 bg-violet-50 text-violet-950"],
+                        ["Copyright & creator value", "border-rose-300 bg-rose-50 text-rose-950"],
+                      ].map(([theme, tone]) => (
+                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${tone}`} key={theme}>{theme}</span>
+                      ))}
+                    </dd>
+                  </div>
+                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
+                    <dt className="flex flex-wrap items-start justify-between gap-3">
+                      <span className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</span>
+                      <CitationCopyButton citation={aiProsperitySuggestedCitation} label="AI prosperity parliamentary submission" />
+                    </dt>
+                    <dd className="mt-2 font-mono text-sm leading-relaxed text-foreground/80">{aiProsperitySuggestedCitation}</dd>
+                  </div>
+                </dl>
+              </aside>
+            </motion.article>
+
             <motion.article
               className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/35 shadow-xl"
               id="consultation-submission-01-2026"
