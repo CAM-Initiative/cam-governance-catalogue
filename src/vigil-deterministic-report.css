@@ -1546,3 +1546,125 @@
 }
 
 /* End of deterministic Case File report contract. */
+
+
+/* Final print-flow refinement: open numbered sections, stable subcomponents and
+   postscript placement. The paper is the section surface; bordered components
+   are reserved for genuinely structured units. */
+
+.vigil-deterministic-report-host .report-observation-summary > .vigil-evidence-kicker {
+  margin-bottom: 0.35rem;
+}
+
+.vigil-deterministic-report-host .report-postscript {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--report-rule));
+}
+
+.vigil-deterministic-report-host .report-reliance-notice,
+.vigil-deterministic-report-host .report-assessment-limits {
+  margin: 0;
+}
+
+.vigil-deterministic-report-host .report-assessment-limits {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-assessment-limits .report-list {
+  margin-top: 0.55rem;
+}
+
+.vigil-deterministic-report-host .report-copyright {
+  margin: 1rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+@media print {
+  /* The numbered report is a document, not five nested cards. Removing the
+     section border prevents page-spanning boxes and recovers useful A4 width. */
+  .vigil-deterministic-report-host .report-section {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+  }
+
+  .vigil-deterministic-report-host .report-section-header {
+    margin-bottom: 3.5mm !important;
+    padding-bottom: 2.8mm !important;
+  }
+
+  /* Section 01 mirrors Assessment's hierarchy without introducing another box. */
+  .vigil-deterministic-report-host .report-occurrence-card {
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+  }
+
+  .vigil-deterministic-report-host .report-occurrence-card .report-observation-summary,
+  .vigil-deterministic-report-host .report-occurrence-card .report-affected-systems {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background: #fff !important;
+  }
+
+  .vigil-deterministic-report-host .report-observation-summary {
+    padding-top: 0 !important;
+  }
+
+  .vigil-deterministic-report-host .report-affected-systems {
+    margin-top: 4mm !important;
+    padding-top: 3.5mm !important;
+    padding-bottom: 0 !important;
+    border: 0 !important;
+    border-top: 0.55pt solid #c9c9c3 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  /* Keep structured units together when they fit. Long tables may still flow,
+     but individual rows are never intentionally cut across pages. */
+  .vigil-deterministic-report-host .report-severity-assessment,
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table,
+  .vigil-deterministic-report-host .report-empty,
+  .vigil-deterministic-report-host .report-reliance-notice,
+  .vigil-deterministic-report-host .report-assessment-limits {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-table thead {
+    display: table-header-group;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-table tr,
+  .vigil-deterministic-report-host .report-reference-item,
+  .vigil-deterministic-report-host .report-system-record {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .report-postscript {
+    margin-top: 5mm !important;
+    padding-top: 4mm !important;
+    border-top-width: 0.55pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-assessment-limits {
+    margin-top: 4mm !important;
+    padding-top: 3.5mm !important;
+  }
+
+  .vigil-deterministic-report-host .report-copyright {
+    margin-top: 4mm !important;
+    padding-top: 3mm !important;
+  }
+}

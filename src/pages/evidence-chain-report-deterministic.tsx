@@ -169,13 +169,8 @@ function Field({ label, value }: { label: string; value?: string }) {
   return <div className="report-field"><dt className="report-label">{label}</dt><dd className="report-value">{value}</dd></div>;
 }
 
-function TextList({ items }: { items: string[] }) {
-  if (!items.length) return null;
-  return <ul className="report-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
-}
-
 function Stage({ number, label, children }: { number: string; label: string; children: ReactNode }) {
-  return <section className="report-section">
+  return <section className="report-section" data-report-stage={number}>
     <header className="report-section-header">
       <span className="report-section-number">{number}</span>
       <h2 className="report-section-title">{label}</h2>
@@ -222,7 +217,6 @@ export default function EvidenceChainReportDeterministic() {
   const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
-  const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
   const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
   const severityMethodology = harmImpactAssessment
@@ -276,6 +270,7 @@ export default function EvidenceChainReportDeterministic() {
         <Stage number="01" label="Incident">
           {((incident?.summary ?? incident?.publicDisplay.finding) || affectedSystems.length > 0) && <div className="report-occurrence-card">
             {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
+              <p className="vigil-evidence-kicker">Incident summary</p>
               <h4 className="report-substantive-label">What happened</h4>
               <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
             </section>}
@@ -305,7 +300,6 @@ export default function EvidenceChainReportDeterministic() {
             <HarmImpactMatrix assessment={harmImpactAssessment} compact />
           </section>
           <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
-          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
@@ -324,6 +318,8 @@ export default function EvidenceChainReportDeterministic() {
           </> : <Empty>No references are currently available.</Empty>}
         </Stage>
       </div>
+
+      <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
         This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants only for failure-occurrence mappings; successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.

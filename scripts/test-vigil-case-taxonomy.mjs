@@ -77,6 +77,9 @@ assert.match(report, /successful governance outcome, not a failure-classified In
 assert.match(report, /className="report-section-header"/);
 assert.match(report, /<Stage number="01" label="Incident">/);
 assert.match(report, /className="report-occurrence-card"/);
+assert.match(report, /className="vigil-evidence-kicker">Incident summary/);
+assert.match(report, /data-report-postscript/);
+assert.doesNotMatch(report, /<details className="vigil-evidence-limitations"/);
 assert.match(report, /<HarmImpactMatrix assessment=/);
 assert.match(report, /className="report-reference-list"/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
@@ -87,11 +90,18 @@ assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classificatio
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-repair-metadata-panel \{[\s\S]*display: none !important;/);
 assert.match(reportCss, /\.report-observation-summary > \.report-substantive-label[\s\S]*font-size: 1\.08rem !important;/);
 assert.match(reportCss, /\.report-occurrence-card[\s\S]*border: 1px solid/);
+assert.match(reportCss, /Final print-flow refinement: open numbered sections/);
+assert.match(reportCss, /@media print \{[\s\S]*\.report-section \{[\s\S]*border: 0 !important;/);
+assert.match(reportCss, /\.report-affected-systems \{[\s\S]*break-inside: avoid-page/);
+assert.match(reportCss, /\.vigil-repair-web-table,[\s\S]*break-inside: avoid-page/);
 assert.match(reportCss, /\.report-severity-assessment > \.report-metadata-grid[\s\S]*background: transparent !important;/);
 assert.doesNotMatch(report, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
 assert.match(printableReport, /Use and reliance notice/);
+assert.match(printableReport, /Limits of the assessment/);
+assert.match(printableReport, /report-postscript/);
+assert.match(printableReport, /no resolved failure-classified mapping/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
 assert.match(printableReport, /© 2026 CAM Initiative\. All rights reserved\./);
