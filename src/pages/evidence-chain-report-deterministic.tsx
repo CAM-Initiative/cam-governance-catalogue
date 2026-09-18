@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -12,7 +11,6 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type ReportState =
@@ -36,18 +34,6 @@ type AffectedSystem = {
   systemType?: string;
   interfaceSurface?: string;
   deploymentContext?: string;
-};
-
-type DiagnosticProvenance = {
-  method?: string;
-  diagnosticDate?: string;
-  humanRole?: string;
-  aiRole?: string;
-  aiPlatform?: string;
-  aiModel?: string;
-  attributionBasis?: string;
-  reviewStatus?: string;
-  authorityBoundary?: string;
 };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -119,16 +105,6 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
   });
 }
 
-function sourceEvidenceStatus(record: VigilIndexRecord | undefined, index: number) {
-  if (!record || !Array.isArray(record.raw.source_records)) return {};
-  const source = record.raw.source_records[index];
-  if (!isObject(source)) return {};
-  return {
-    evidenceStatus: text(source.evidence_status),
-    evidenceStatusBasis: text(source.evidence_status_basis),
-  };
-}
-
 function dedupeEvidence(evidence: ExternalEvidence[]) {
   const seen = new Set<string>();
   return evidence.filter((source) => {
@@ -160,34 +136,6 @@ function dedupeSystems(records: VigilIndexRecord[]) {
     seen.add(key);
     return true;
   });
-}
-
-function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
-  if (!record || !isObject(record.raw.diagnostic_provenance)) return undefined;
-  const provenance = record.raw.diagnostic_provenance;
-  return {
-    method: text(provenance.method),
-    diagnosticDate: text(provenance.diagnostic_date),
-    humanRole: text(provenance.human_role),
-    aiRole: text(provenance.ai_role),
-    aiPlatform: text(provenance.ai_platform),
-    aiModel: text(provenance.ai_model),
-    attributionBasis: text(provenance.model_attribution_basis),
-    reviewStatus: text(provenance.review_status),
-    authorityBoundary: text(provenance.authority_boundary),
-  };
-}
-
-function diagnosticMethodLabel(value?: string) {
-  if (!value) return undefined;
-  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
-  if (
-    normalized.includes("incident-02-record-split")
-    || normalized.includes("occurrence-reconciliation")
-    || normalized.includes("incident-02")
-  ) return undefined;
-  if (value === "human-ai-collaborative-analysis") return "Human–AI collaborative analysis";
-  return titleizeValue(value);
 }
 
 function severityDisplay(value?: string) {
@@ -265,7 +213,6 @@ export default function EvidenceChainReportDeterministic() {
   }, [sourceId]);
 
   const incident = state.status === "ready" ? state.records[0] : undefined;
-  const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
@@ -281,7 +228,6 @@ export default function EvidenceChainReportDeterministic() {
   const severityMethodology = harmImpactAssessment
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
-  const diagnostic = diagnosticProvenance(incident);
   const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
@@ -345,8 +291,7 @@ export default function EvidenceChainReportDeterministic() {
               </dl>
             </article>)}</div>
           </section>}
-          {incidentDetail?.evidence.length ? <div className="report-evidence-list">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(incident, index) }} />)}</div> : null}
-          {!incidentDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
+          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured observation summary is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Assessment">
@@ -357,10 +302,7 @@ export default function EvidenceChainReportDeterministic() {
             <dl className="report-metadata-grid report-metadata-grid--2"><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
             <HarmImpactMatrix assessment={harmImpactAssessment} compact />
           </section>
-          <div className="report-split-layout">
-            <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
-            <aside className="report-metadata-panel"><p className="report-label">Assessment provenance</p><dl className="report-metadata-grid"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Assessed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
-          </div>
+          <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
           {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
