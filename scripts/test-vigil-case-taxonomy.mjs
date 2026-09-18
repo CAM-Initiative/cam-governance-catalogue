@@ -78,7 +78,11 @@ assert.match(report, /className="report-section-header"/);
 assert.match(report, /<HarmImpactMatrix assessment=/);
 assert.match(report, /className="report-reference-list"/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
-assert.match(report, /className="report-label">Assessment provenance/);
+assert.doesNotMatch(report, /Assessment provenance/);
+assert.doesNotMatch(report, /<EvidenceCard/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-report-cards \{[\s\S]*display: none !important;/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-web-table \{[\s\S]*display: block !important;/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-repair-metadata-panel \{[\s\S]*display: none !important;/);
 assert.doesNotMatch(report, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
