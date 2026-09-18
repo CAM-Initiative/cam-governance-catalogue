@@ -205,7 +205,8 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(classification, /Primary exemplar/);
   assert.match(classification, /Secondary exemplar/);
   assert.match(classification, /if \(item\.role === "successful-invariant"\) return;/);
-  assert.match(classification, /no resolved failure-classified mapping/);
+  assert.match(classification, /No repair invariant is available for this Case File\./);
+  assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
