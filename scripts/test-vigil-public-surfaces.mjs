@@ -325,10 +325,18 @@ test("Failure Class views surface external supporting evidence without bloating 
   assert.match(taxonomyPage, /showSupportingEvidence/);
   assert.match(taxonomyPage, /Supporting evidence · \{item\.external_references\.length\}/);
   assert.match(taxonomyPage, /showSupportingEvidence \/>/);
+  assert.ok(
+    taxonomyPage.indexOf("{showSupportingEvidence") > taxonomyPage.indexOf("{item.relationships?.length ?"),
+    "Supporting evidence should render after Relationships at the end of a Failure Class record",
+  );
   assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence-note/);
   assert.match(pages, /function taxonomyExternalReferenceHtml/);
   assert.match(pages, /<h2>Supporting evidence<\/h2>/);
+  assert.ok(
+    pages.indexOf("<h2>Supporting evidence</h2>") > pages.indexOf("<h2>Linked Case Files</h2>"),
+    "Static Failure Class crawl output should keep supporting evidence last",
+  );
   assert.match(pages, /reference\.evidence_note/);
 });
 
