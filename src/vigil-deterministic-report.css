@@ -1417,8 +1417,9 @@
 
 
 /* Occurrence + assessment continuity.
-   Keep each report stage reading as one coherent surface rather than a stack of
-   unrelated cards and metadata widgets. */
+   Stage 01 is intentionally named Occurrence so the same report grammar works
+   for failure-only, mixed, and successful-invariant Case Files. Keep each stage
+   reading as one coherent surface rather than a stack of unrelated widgets. */
 
 .vigil-deterministic-report-host .report-occurrence-card {
   overflow: hidden;
