@@ -273,7 +273,7 @@ export default function EvidenceChainReportDeterministic() {
       </section>}
 
       <div className="report-flow">
-        <Stage number="01" label="Observation">
+        <Stage number="01" label="Occurrence">
           {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-panel report-observation-summary">
             <h4 className="report-substantive-label">What happened</h4>
             <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
