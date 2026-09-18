@@ -374,6 +374,7 @@ export default function VigilCaseFile() {
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isCombination = classification === "Combination";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
@@ -519,7 +520,7 @@ export default function VigilCaseFile() {
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Combination · mixed taxonomy relationships" : classification} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
@@ -529,7 +530,7 @@ export default function VigilCaseFile() {
       </aside>
     </header>
 
-    {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
+    {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">\n      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleHelp /></div>\n      <div className="vigil-exemplar-callout-copy">\n        <p className="vigil-exemplar-callout-kicker">Mixed Case File</p>\n        <h2 id="vigil-combination-heading">This Case File contains mixed taxonomy relationships.</h2>\n        <p>Its mappings do not all have the same evidential role. Open Classification to see which relationships are failure occurrences, successful invariants, or ambiguous boundaries.</p>\n        <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>\n      </div>\n    </section>}\n\n    {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <CircleHelp /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
