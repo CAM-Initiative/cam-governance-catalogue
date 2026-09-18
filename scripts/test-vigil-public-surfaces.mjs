@@ -143,6 +143,19 @@ test("Case Files expose scalable numbered pagination with first and last navigat
   assert.match(caseLibraryCss, /\.vigil-pagination-arrow\.is-boundary/);
 });
 
+test("Case File classification labels derive public state from mapping-local roles", async () => {
+  const taxonomy = await read("src/lib/vigilTaxonomyClassification.ts");
+  assert.match(taxonomy, /hasDirectPrimary \|\| hasDirectSecondary/);
+  assert.match(taxonomy, /return mappingRoles\(record, directFallback \?\? "failure-occurrence"\)/);
+  assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
+  assert.match(taxonomy, /hasFailure && hasExemplar\) return "Combination"/);
+  assert.match(taxonomy, /hasExemplar && !hasFailure\) return "Exemplar"/);
+  assert.match(taxonomy, /hasFailure && !hasExemplar\) return "Classified"/);
+  assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
+  assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
+  assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
+});
+
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
   const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
