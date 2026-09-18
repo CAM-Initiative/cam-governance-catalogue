@@ -2,8 +2,8 @@ export const VIGIL_INCIDENT_CASE_SECTIONS = [
   {
     id: "observe",
     number: "01",
-    label: "Observation",
-    description: "What happened, which systems were affected, and what the evidence establishes.",
+    label: "Occurrence",
+    description: "What happened and which systems were affected in the bounded occurrence.",
   },
   {
     id: "diagnose",
