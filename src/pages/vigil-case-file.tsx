@@ -394,7 +394,7 @@ export default function VigilCaseFile() {
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
       {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-labelledby="what-happened-heading">
-        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence summary</p><h3 id="what-happened-heading">What happened</h3></div>
+        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident summary</p><h3 id="what-happened-heading">What happened</h3></div>
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
       </section>}
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
@@ -428,7 +428,7 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the occurrence-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the incident-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
           <div className="vigil-severity-summary-grid"><article><dl>
             <Field label="Methodology" value={severityMethodology} mono />
             <Field label="Assessed" value={severityAssessedOn} mono />
@@ -540,10 +540,10 @@ export default function VigilCaseFile() {
         <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
           ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the occurrence into a failure classification."
-          : "This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </div>
     </section>}
 

@@ -94,7 +94,7 @@ function EvidenceRepairLoop() {
       </h2>
       <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         <p>
-          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Observatory Incidents, source-level evidence, occurrence-level assessment and traceable repair history.
+          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Observatory Incidents, source-level evidence, incident-level assessment and traceable repair history.
         </p>
         <p>
           It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Assessment → Runtime Governance</strong>.

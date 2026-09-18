@@ -119,7 +119,7 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.match(caseFile, /loadVigilIncidentRecords/);
   assert.match(caseFile, /records: \[incident\]/);
   assert.doesNotMatch(caseFile, /const observations|deriveFailureModePublicDetail|failureId=/);
-  for (const label of ["Occurrence", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  for (const label of ["Incident", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
   assert.doesNotMatch(sections, /label: "Learn"/);
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
   assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
@@ -168,7 +168,7 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(classification, /Primary exemplar/);
   assert.match(classification, /Secondary exemplar/);
   assert.match(classification, /if \(item\.role === "successful-invariant"\) return;/);
-  assert.match(classification, /no resolved failure-occurrence class mapping/);
+  assert.match(classification, /no resolved failure-classified mapping/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
@@ -376,14 +376,14 @@ test("Stage 02 is presented publicly as Assessment", async () => {
     read("README.md"),
     read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
   ]);
-  assert.match(sections, /number: "01"[\s\S]*label: "Occurrence"/);
+  assert.match(sections, /number: "01"[\s\S]*label: "Incident"/);
   assert.match(sections, /number: "02"[\s\S]*label: "Assessment"/);
-  assert.match(report, /<Stage number="01" label="Occurrence">/);
+  assert.match(report, /<Stage number="01" label="Incident">/);
   assert.match(report, /<Stage number="02" label="Assessment">/);
-  assert.match(printable, /number: "01", label: "Occurrence"/);
+  assert.match(printable, /number: "01", label: "Incident"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /Occurrence, Assessment, Classification, Repair and References/);
+  assert.match(hub, /Incident, Assessment, Classification, Repair and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(rail, /evidence, assessment, failure classification/);
   assert.match(pages, /evidence, assessment, failure classification/);
@@ -541,11 +541,11 @@ test("About final polish keeps content continuous and places actions inside open
     read("src/vigil-ux-v5.css"),
   ]);
   const firstMethodSentence = about.indexOf("The Case File structure keeps what happened separate");
-  const incidentBoundarySentence = about.indexOf("A reported occurrence is not automatically a failure");
+  const incidentBoundarySentence = about.indexOf("A reported Incident is not automatically evidence of a failure");
   const flow = about.indexOf("vigil-about-flow-scroll");
   assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
   assert.doesNotMatch(about, /Classification boundary:/);
-  assert.match(about, /Failure occurrence[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
+  assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
   assert.match(about, /CAELESTIS governance instruments are a separate authority layer[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   const organisationStart = about.indexOf('id="vigil-organisation-heading"');
   const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");

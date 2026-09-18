@@ -266,14 +266,14 @@ export default function EvidenceChainReportDeterministic() {
         <h2 id="report-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
           ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="report-exemplar-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the occurrence into a failure classification."
-          : "This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </section>}
 
       <div className="report-flow">
-        <Stage number="01" label="Occurrence">
+        <Stage number="01" label="Incident">
           {((incident?.summary ?? incident?.publicDisplay.finding) || affectedSystems.length > 0) && <div className="report-occurrence-card">
             {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
               <h4 className="report-substantive-label">What happened</h4>
@@ -293,7 +293,7 @@ export default function EvidenceChainReportDeterministic() {
               </article>)}</div>
             </section>}
           </div>}
-          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured occurrence summary is available in the current public projection.</Empty>}
+          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Assessment">

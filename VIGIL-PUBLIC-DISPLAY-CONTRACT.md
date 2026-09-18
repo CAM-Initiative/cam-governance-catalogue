@@ -32,7 +32,7 @@ The public view MUST display:
 
 - the factual Incident `summary` as **What happened**;
 - `vigil_assessment.factual_basis` as the evidence-supported factual account;
-- occurrence-level severity as substantive assessment, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
+- Incident-level severity as substantive assessment, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
 - each source's claim-relative `evidence_status` and `evidence_status_basis` alongside its evidence metadata;
 - each source's publication genre from `source_type`;
 - the taxonomy classification basis only within the classification section; severity MUST NOT be presented as taxonomy classification.
@@ -42,7 +42,7 @@ Migration notes, hand-off commentary, taxonomy workflow state and `taxonomy_clas
 
 `source_type` describes the publication or artefact genre, such as news article, technical report, incident-database entry, status report, investigation report, legal filing, social-media post, repository record or standards document. Publisher authority, hosting platform, evidence role, source residence, evidence modality and primary-artefact access are separate metadata and MUST NOT be collapsed into `source_type`.
 
-### Observation
+### Incident
 
 The public view MUST distinguish direct observation from interpretation and display:
 

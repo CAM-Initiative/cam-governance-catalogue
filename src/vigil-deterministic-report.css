@@ -1416,8 +1416,8 @@
 }
 
 
-/* Occurrence + assessment continuity.
-   Stage 01 is intentionally named Occurrence so the same report grammar works
+/* Incident + assessment continuity.
+   Stage 01 is intentionally named Incident so the same report grammar works
    for failure-only, mixed, and successful-invariant Case Files. Keep each stage
    reading as one coherent surface rather than a stack of unrelated widgets. */
 

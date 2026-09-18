@@ -435,7 +435,7 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const resolvedMappings = [primary, ...secondaries];
   const hasExemplarMappings = resolvedMappings.some((item) => item.role === "successful-invariant");
 
-  if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is shown because this Case File has no resolved failure-occurrence class mapping. Successful-invariant exemplar mappings remain visible in Classification and are not treated as failures requiring repair.</p>;
+  if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is shown because this Case File has no resolved failure-classified mapping. Successful-invariant exemplar mappings remain visible in Classification and are not treated as failures requiring repair.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
     {invariants.map(({ family, class: classificationClass, relationship }) => <article key={classificationClass.class_id} className="vigil-repair-invariant-card">
@@ -460,7 +460,7 @@ export function CaseTaxonomyRepair({ raw }: Props) {
       </aside>
     </article>)}
     <p className="vigil-repair-boundary">{hasExemplarMappings
-      ? "Repair is shown only for failure-occurrence mappings. Successful-invariant exemplar mappings remain in Classification because they demonstrate the successful side of a failure boundary rather than a condition requiring repair. Where a class invariant has not yet been published, the broader family invariant is not substituted."
+      ? "Repair is shown only for mappings classified as failures. Successful-invariant exemplar mappings remain in Classification because they demonstrate the successful side of a failure boundary rather than a condition requiring repair. Where a class invariant has not yet been published, the broader family invariant is not substituted."
       : "This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced."}</p>
   </div>;
 }

@@ -2,14 +2,14 @@ export const VIGIL_INCIDENT_CASE_SECTIONS = [
   {
     id: "observe",
     number: "01",
-    label: "Occurrence",
-    description: "What happened and which systems were affected in the bounded occurrence.",
+    label: "Incident",
+    description: "What happened and which systems were affected in the Incident.",
   },
   {
     id: "diagnose",
     number: "02",
     label: "Assessment",
-    description: "The occurrence-level governance assessment, including materialised severity and evidentiary limits.",
+    description: "The incident-level governance assessment, including materialised severity and evidentiary limits.",
   },
   {
     id: "classify",

@@ -121,7 +121,7 @@ function polishIncidentDiagnosisSeverity() {
       kicker.className = "vigil-library-kicker";
       kicker.textContent = "Severity assessment";
       const title = document.createElement("h3");
-      title.textContent = "Occurrence-level impact assessment";
+      title.textContent = "Incident-level impact assessment";
       heading.append(kicker, title);
 
       const grid = document.createElement("div");

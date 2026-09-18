@@ -79,7 +79,7 @@ export default function VigilSeverityMethodology() {
         <header className="vigil-about-hero">
           <p className="vigil-library-kicker">VIGIL Observatory · VIGIL-HIM 1.0.0</p>
           <h1>Harm & Severity Methodology</h1>
-          <p>VIGIL Observatory severity is an occurrence-level assessment of supported materialised consequence. It is deliberately separate from taxonomy classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
+          <p>VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from taxonomy classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
         </header>
 
         <article className="vigil-severity-methodology-document">
@@ -110,7 +110,7 @@ export default function VigilSeverityMethodology() {
               <p className="vigil-library-kicker">Case Files</p>
               <h2 id="severity-case-files-heading">The Incident view shows only the assessment that was actually made</h2>
             </header>
-            <p>Individual Case Files do not repeat this entire reference matrix. They show the occurrence-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
+            <p>Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
             <Link className="vigil-about-action" href="/observatory/cases">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
           </section>
 
