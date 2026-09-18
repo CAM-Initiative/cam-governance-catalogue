@@ -286,10 +286,10 @@ for (const { document } of taxonomyFamilies) {
       ${listHtml(item.recognition?.required_conditions)}
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
-      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
       <h2>Linked Case Files</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified failure Case Files are currently linked to this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Successful invariant exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,
