@@ -178,6 +178,17 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
+test("About explains successful-invariant exemplars and the publication model", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /successful-invariant exemplar/i);
+  assert.match(about, /not counted as failure evidence/i);
+  assert.match(about, /do not create a Repair requirement/i);
+  assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
+  assert.match(about, /Keep evidence and judgment separate/);
+  assert.match(about, /Open to scrutiny, not openly licensed/);
+  assert.match(about, /CAELESTIS governance instruments are a separate authority layer/);
+});
+
 test("canonical About, licensing and Privacy keep readable public-page grammar", async () => {
   const [about, licensing, privacy, referenceCss] = await Promise.all([
     read("src/pages/about.tsx"),
