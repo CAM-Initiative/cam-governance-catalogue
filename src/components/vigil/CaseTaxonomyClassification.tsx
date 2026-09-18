@@ -436,6 +436,15 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   const invariants = governingClassInvariants(primary, secondaries);
   const resolvedMappings = [primary, ...secondaries];
   const hasExemplarMappings = resolvedMappings.some((item) => item.role === "successful-invariant");
+  const hasUnpublishedInvariant = invariants.some((item) => !item.class.invariant);
+  const repairBoundaryNote = [
+    hasExemplarMappings
+      ? "Successful-invariant exemplar mappings remain in Classification and are not treated as conditions requiring repair."
+      : undefined,
+    hasUnpublishedInvariant
+      ? "A class-level invariant has not yet been published for one or more failure mappings; the broader family invariant is not substituted."
+      : undefined,
+  ].filter((note): note is string => Boolean(note)).join(" ");
 
   if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is shown because this Case File has no resolved failure-classified mapping. Successful-invariant exemplar mappings remain visible in Classification and are not treated as failures requiring repair.</p>;
 
@@ -464,8 +473,6 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </tbody>
       </table>
     </div>
-    <p className="vigil-repair-boundary">{hasExemplarMappings
-      ? "Repair is shown only for mappings classified as failures. Successful-invariant exemplar mappings remain in Classification because they demonstrate the successful side of a failure boundary rather than a condition requiring repair. Where a class invariant has not yet been published, the broader family invariant is not substituted."
-      : "This section identifies the class-level governing invariant that must be restored for each classified failure mechanism. Where a class invariant has not yet been published, this Case File does not substitute the broader family invariant. This Case File does not currently identify the specific CAELESTIS constitutional or run-time provision(s) through which a class invariant is instantiated or enforced."}</p>
+    {repairBoundaryNote && <p className="vigil-repair-boundary">{repairBoundaryNote}</p>}
   </div>;
 }
