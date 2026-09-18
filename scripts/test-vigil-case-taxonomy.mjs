@@ -75,6 +75,8 @@ assert.match(report, /className=\{`report-exemplar-callout\$\{hasMixedExecution 
 assert.match(report, /The system worked as intended\./);
 assert.match(report, /successful governance outcome, not a failure occurrence/);
 assert.match(report, /className="report-section-header"/);
+assert.match(report, /<Stage number="01" label="Occurrence">/);
+assert.match(report, /className="report-occurrence-card"/);
 assert.match(report, /<HarmImpactMatrix assessment=/);
 assert.match(report, /className="report-reference-list"/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
@@ -83,6 +85,9 @@ assert.doesNotMatch(report, /<EvidenceCard/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-report-cards \{[\s\S]*display: none !important;/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-web-table \{[\s\S]*display: block !important;/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-repair-metadata-panel \{[\s\S]*display: none !important;/);
+assert.match(reportCss, /\.report-observation-summary > \.report-substantive-label[\s\S]*font-size: 1\.08rem !important;/);
+assert.match(reportCss, /\.report-occurrence-card[\s\S]*border: 1px solid/);
+assert.match(reportCss, /\.report-severity-assessment > \.report-metadata-grid[\s\S]*background: transparent !important;/);
 assert.doesNotMatch(report, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
 
