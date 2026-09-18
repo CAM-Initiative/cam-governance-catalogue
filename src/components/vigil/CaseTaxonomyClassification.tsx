@@ -26,7 +26,7 @@ type ClassificationRef = {
   role?: ClassificationRole;
 };
 
-type ClassificationRole = "failure-occurrence" | "successful-invariant";
+type ClassificationRole = "failure-occurrence" | "successful-invariant" | "ambiguous-boundary";
 
 type ParsedClassification = {
   status?: ClassificationStatus;
@@ -44,7 +44,7 @@ type ResolvedClassification = ClassificationRef & {
 
 type ClassificationTableRow = {
   item: ResolvedClassification;
-  relationship: "Primary" | "Secondary" | "Primary exemplar" | "Secondary exemplar" | "Family only";
+  relationship: "Primary" | "Secondary" | "Primary exemplar" | "Secondary exemplar" | "Primary ambiguous boundary" | "Secondary ambiguous boundary" | "Family only";
 };
 
 type Props = {
@@ -192,7 +192,7 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
   return <>
     <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory taxonomy classifications" tabIndex={0}>
       <table className="vigil-classification-table">
-        <caption className="sr-only">Canonical taxonomy mappings for this Case File. A successful invariant exemplar is not failure evidence.</caption>
+        <caption className="sr-only">Canonical taxonomy mappings for this Case File. Successful-invariant and ambiguous-boundary mappings are not failure evidence.</caption>
         <thead>
           <tr>
             <th scope="col">Relationship</th>
@@ -352,7 +352,7 @@ export function CaseTaxonomyClassification({ raw }: Props) {
     },
     ...secondaries.map((item) => ({
       item,
-      relationship: item.role === "successful-invariant" ? "Secondary exemplar" as const : "Secondary" as const,
+      relationship: item.role === "successful-invariant" ? "Secondary exemplar" as const : item.role === "ambiguous-boundary" ? "Secondary ambiguous boundary" as const : "Secondary" as const,
     })),
   ];
 
@@ -382,10 +382,10 @@ export function CaseTaxonomyClassification({ raw }: Props) {
           {secondaries.map((item, index) => <ClassificationCard
             key={`${item.classId ?? item.familyId ?? index}`}
             item={item}
-            label={item.role === "successful-invariant" ? `Secondary successful invariant exemplar ${index + 1}` : `Secondary mechanism ${index + 1}`}
+            label={item.role === "successful-invariant" ? `Secondary successful invariant exemplar ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary ambiguous boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
             status={parsed.status}
             taxonomyVersion={parsed.taxonomyVersion}
-            relationship={item.role === "successful-invariant" ? "Secondary · successful invariant" : "Secondary"}
+            relationship={item.role === "successful-invariant" ? "Secondary · successful invariant" : item.role === "ambiguous-boundary" ? "Secondary · ambiguous boundary" : "Secondary"}
             exemplar={item.role === "successful-invariant"}
           />)}
         </div>
@@ -406,7 +406,7 @@ function governingClassInvariants(primary: ResolvedClassification, secondaries: 
   const seen = new Set<string>();
 
   const add = (item: ResolvedClassification, relationship: RepairInvariant["relationship"]) => {
-    if (item.role === "successful-invariant") return;
+    if (item.role !== "failure-occurrence") return;
     const classificationClass = item.class;
     if (!classificationClass || seen.has(classificationClass.class_id)) return;
     seen.add(classificationClass.class_id);
