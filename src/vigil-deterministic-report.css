@@ -1,7 +1,8 @@
 /* VIGIL deterministic Case File report.
    This stylesheet is the single visual contract for the printable report.
-   Interactive Case File styles may provide component structure, but report typography,
-   spacing, surfaces and pagination are normalised here. */
+   Interactive Case File styles may provide component structure; the public report now
+   mirrors the simplified Case File information hierarchy while normalising typography,
+   spacing, surfaces and pagination for print. */
 
 .vigil-deterministic-report-host {
   --report-paper: 40 36% 99%;
