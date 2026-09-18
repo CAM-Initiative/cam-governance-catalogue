@@ -1,10 +1,11 @@
 /* VIGIL UX v4 — restore the strong table/hero composition, keep FM-centred Case Files,
    and make the investigation stages interactive rather than infinitely stacked. */
 
-/* Case Files landing page: restore the readable catalogue/table grammar. */
+/* Case Files landing page: restore the readable catalogue/table grammar.
+   Search and classification share one desktop row; mobile retains the stacked controls. */
 .vigil-case-table-search {
   display: grid;
-  grid-template-columns: minmax(320px, 1fr);
+  grid-template-columns: minmax(320px, 1fr) minmax(250px, 340px);
   gap: 0.75rem;
   align-items: stretch;
 }

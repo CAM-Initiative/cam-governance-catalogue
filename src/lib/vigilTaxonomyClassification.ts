@@ -21,7 +21,8 @@ export type TaxonomyReferenceTarget = {
   title: string;
   url: string;
   familyId: string;
-  relationship: "primary" | "secondary" | "family-only" | "exemplar";
+  relationship: "primary" | "secondary" | "family-only";
+  role?: TaxonomyClassificationRole;
   taxonomyVersion?: string;
   externalReferences: FailureTaxonomyExternalReference[];
 };
@@ -42,6 +43,64 @@ function taxonomyClassificationSummary(record: UnknownRecord) {
   return isObject(record.taxonomy_classification_summary) ? record.taxonomy_classification_summary : undefined;
 }
 
+
+function mappingRole(value: unknown, fallback?: TaxonomyClassificationRole) {
+  if (!isObject(value)) return fallback;
+  return (text(value.classification_role) as TaxonomyClassificationRole | undefined) ?? fallback;
+}
+
+function mappingRoles(container: UnknownRecord, fallback?: TaxonomyClassificationRole) {
+  const roles: TaxonomyClassificationRole[] = [];
+  const primary = isObject(container.primary_classification) ? container.primary_classification : undefined;
+  if (primary) roles.push(mappingRole(primary, fallback ?? "failure-occurrence") ?? "failure-occurrence");
+  if (Array.isArray(container.secondary_classifications)) {
+    for (const item of container.secondary_classifications) {
+      if (!isObject(item)) continue;
+      roles.push(mappingRole(item, fallback ?? "failure-occurrence") ?? "failure-occurrence");
+    }
+  }
+  return roles;
+}
+
+function incidentMappingRoles(record: UnknownRecord) {
+  const directFallback = text(record.classification_role) as TaxonomyClassificationRole | undefined;
+  const hasDirectPrimary = isObject(record.primary_classification);
+  const hasDirectSecondary = Array.isArray(record.secondary_classifications)
+    && record.secondary_classifications.some((item) => isObject(item));
+
+  if (hasDirectPrimary || hasDirectSecondary) {
+    return mappingRoles(record, directFallback ?? "failure-occurrence");
+  }
+
+  const classification = taxonomyClassification(record);
+  if (classification) {
+    const fallback = text(classification.classification_role) as TaxonomyClassificationRole | undefined;
+    return mappingRoles(classification, fallback ?? "failure-occurrence");
+  }
+
+  return directFallback ? [directFallback] : [];
+}
+
+function incidentClassificationLabel(
+  status: TaxonomyClassificationStatus | undefined,
+  roles: TaxonomyClassificationRole[],
+  fallbackRole?: TaxonomyClassificationRole,
+) {
+  if (status === "classification-disputed") return "Disputed";
+  if (status === "requires-human-review") return "Under review";
+  if (status === "unclassified") return "Unclassified";
+
+  const hasFailure = roles.includes("failure-occurrence");
+  const hasExemplar = roles.includes("successful-invariant");
+  if (hasFailure && hasExemplar) return "Combination";
+  if (hasExemplar && !hasFailure) return "Exemplar";
+  if (hasFailure && !hasExemplar) return "Classified";
+
+  if (fallbackRole === "successful-invariant") return "Exemplar";
+  if (status === "classified" || status === "provisionally-classified") return "Classified";
+  return "Unclassified";
+}
+
 function classLabel(value: unknown) {
   if (!isObject(value)) return undefined;
   return text(value.class_name) ?? text(value.name) ?? text(value.class_code) ?? text(value.class_id);
@@ -56,11 +115,7 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const directStatus = text(record.classification_status) as TaxonomyClassificationStatus | undefined;
   const directRole = text(record.classification_role) as TaxonomyClassificationRole | undefined;
   if (record.record_type === "incident" && directStatus) {
-    if (directRole === "successful-invariant") return "Exemplar";
-    if (directStatus === "classified" || directStatus === "provisionally-classified") return "Classified";
-    if (directStatus === "classification-disputed") return "Classification disputed";
-    if (directStatus === "requires-human-review") return "Requires human review";
-    return "Unclassified";
+    return incidentClassificationLabel(directStatus, incidentMappingRoles(record), directRole);
   }
 
   const classification = taxonomyClassification(record);
@@ -68,11 +123,7 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
     const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
     const role = text(classification.classification_role) as TaxonomyClassificationRole | undefined;
     if (record.record_type === "incident") {
-      if (role === "successful-invariant") return "Exemplar";
-      if (status === "classified" || status === "provisionally-classified") return "Classified";
-      if (status === "classification-disputed") return "Classification disputed";
-      if (status === "requires-human-review") return "Requires human review";
-      return "Unclassified";
+      return incidentClassificationLabel(status, incidentMappingRoles(record), role);
     }
     const primaryClass = classLabel(classification.primary_class);
     if (primaryClass) return primaryClass;
@@ -91,6 +142,9 @@ export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const summary = taxonomyClassificationSummary(record);
   const status = text(summary?.classification_status) as TaxonomyClassificationStatus | undefined;
   const role = text(summary?.classification_role) as TaxonomyClassificationRole | undefined;
+  if (record.record_type === "incident") {
+    return incidentClassificationLabel(status, [], role);
+  }
   if (role === "successful-invariant") return "Exemplar";
   if (status === "classified" || status === "provisionally-classified") return "Classified";
   if (status === "classification-disputed") return "Classification disputed";
@@ -130,7 +184,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
   const references: TaxonomyReferenceTarget[] = [];
   const taxonomyVersion = text(classification.taxonomy_version);
   const seen = new Set<string>();
-  const add = (relationship: TaxonomyReferenceTarget["relationship"], familyValue: unknown, classValue?: unknown) => {
+  const add = (relationship: TaxonomyReferenceTarget["relationship"], familyValue: unknown, classValue?: unknown, role?: TaxonomyClassificationRole) => {
     const targetFamilyId = familyId(familyValue);
     const targetClassId = classId(classValue);
     const indexEntry = resolveFamilyFile(dataset, targetFamilyId);
@@ -151,6 +205,7 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
       url: `${dataset.sourceRoot}/${indexEntry.file}`,
       familyId: targetFamilyId,
       relationship,
+      role,
       taxonomyVersion,
       externalReferences: resolvedClass?.external_references ?? [],
     });
@@ -159,21 +214,21 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
   const status = text(classification.classification_status) as TaxonomyClassificationStatus | undefined;
   const role = text(classification.classification_role) as TaxonomyClassificationRole | undefined;
   const incidentPrimary = isObject(classification.primary_classification) ? classification.primary_classification : undefined;
-  if (role === "successful-invariant" && status === "classified" && incidentPrimary) {
-    add("exemplar", incidentPrimary, incidentPrimary);
-  } else if (["classified", "provisionally-classified", "classification-disputed"].includes(status ?? "") && incidentPrimary) {
-    add("primary", incidentPrimary, incidentPrimary);
+  const primaryRole = mappingRole(incidentPrimary, role ?? "failure-occurrence") ?? "failure-occurrence";
+  if (["classified", "provisionally-classified", "classification-disputed"].includes(status ?? "") && incidentPrimary) {
+    add("primary", incidentPrimary, incidentPrimary, primaryRole);
   } else if (status === "classified") {
-    add("primary", classification.primary_family, classification.primary_class);
+    add("primary", classification.primary_family, classification.primary_class, role ?? "failure-occurrence");
   } else if (status === "family-only") {
-    add("family-only", classification.primary_family);
+    add("family-only", classification.primary_family, undefined, role);
   }
 
   if (Array.isArray(classification.secondary_classifications)) {
     for (const item of classification.secondary_classifications) {
       if (!isObject(item)) continue;
-      if (item.family_id || item.class_id) add("secondary", item, item);
-      else add("secondary", item.family, item.class);
+      const secondaryRole = mappingRole(item, role ?? "failure-occurrence") ?? "failure-occurrence";
+      if (item.family_id || item.class_id) add("secondary", item, item, secondaryRole);
+      else add("secondary", item.family, item.class, secondaryRole);
     }
   }
   return references;

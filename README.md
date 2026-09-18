@@ -30,11 +30,11 @@ The public site consumes the canonical `main` branch of those repositories.
 
 ## VIGIL Observatory
 
-VIGIL Observatory Case Files are occurrence-centred public records. The interface keeps the layers distinct:
+VIGIL Observatory Case Files are Incident-centred public records. The interface keeps the layers distinct:
 
-- **Observation / evidence:** what the sources establish;
+- **Incident / evidence:** what the sources establish;
 - **Assessment:** VIGIL Observatory's bounded governance assessment, severity and evidentiary limitations;
-- **Classification:** mapping of the occurrence to the reusable VIGIL Observatory Failure Taxonomy where supported; and
+- **Classification:** mapping of the Incident to the reusable VIGIL Observatory Failure Taxonomy where supported; and
 - **References:** evidence, canonical record and taxonomy references.
 
 The interface does not treat CAM repair state as part of the historical Incident itself.

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -12,7 +11,6 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type ReportState =
@@ -36,18 +34,6 @@ type AffectedSystem = {
   systemType?: string;
   interfaceSurface?: string;
   deploymentContext?: string;
-};
-
-type DiagnosticProvenance = {
-  method?: string;
-  diagnosticDate?: string;
-  humanRole?: string;
-  aiRole?: string;
-  aiPlatform?: string;
-  aiModel?: string;
-  attributionBasis?: string;
-  reviewStatus?: string;
-  authorityBoundary?: string;
 };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -119,16 +105,6 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
   });
 }
 
-function sourceEvidenceStatus(record: VigilIndexRecord | undefined, index: number) {
-  if (!record || !Array.isArray(record.raw.source_records)) return {};
-  const source = record.raw.source_records[index];
-  if (!isObject(source)) return {};
-  return {
-    evidenceStatus: text(source.evidence_status),
-    evidenceStatusBasis: text(source.evidence_status_basis),
-  };
-}
-
 function dedupeEvidence(evidence: ExternalEvidence[]) {
   const seen = new Set<string>();
   return evidence.filter((source) => {
@@ -162,34 +138,6 @@ function dedupeSystems(records: VigilIndexRecord[]) {
   });
 }
 
-function diagnosticProvenance(record?: VigilIndexRecord): DiagnosticProvenance | undefined {
-  if (!record || !isObject(record.raw.diagnostic_provenance)) return undefined;
-  const provenance = record.raw.diagnostic_provenance;
-  return {
-    method: text(provenance.method),
-    diagnosticDate: text(provenance.diagnostic_date),
-    humanRole: text(provenance.human_role),
-    aiRole: text(provenance.ai_role),
-    aiPlatform: text(provenance.ai_platform),
-    aiModel: text(provenance.ai_model),
-    attributionBasis: text(provenance.model_attribution_basis),
-    reviewStatus: text(provenance.review_status),
-    authorityBoundary: text(provenance.authority_boundary),
-  };
-}
-
-function diagnosticMethodLabel(value?: string) {
-  if (!value) return undefined;
-  const normalized = value.trim().toLowerCase().replace(/[_\s]+/g, "-");
-  if (
-    normalized.includes("incident-02-record-split")
-    || normalized.includes("occurrence-reconciliation")
-    || normalized.includes("incident-02")
-  ) return undefined;
-  if (value === "human-ai-collaborative-analysis") return "Human–AI collaborative analysis";
-  return titleizeValue(value);
-}
-
 function severityDisplay(value?: string) {
   const raw = value?.trim();
   if (!raw) return "Not assessed";
@@ -221,13 +169,8 @@ function Field({ label, value }: { label: string; value?: string }) {
   return <div className="report-field"><dt className="report-label">{label}</dt><dd className="report-value">{value}</dd></div>;
 }
 
-function TextList({ items }: { items: string[] }) {
-  if (!items.length) return null;
-  return <ul className="report-list">{items.map((item) => <li key={item}>{item}</li>)}</ul>;
-}
-
 function Stage({ number, label, children }: { number: string; label: string; children: ReactNode }) {
-  return <section className="report-section">
+  return <section className="report-section" data-report-stage={number}>
     <header className="report-section-header">
       <span className="report-section-number">{number}</span>
       <h2 className="report-section-title">{label}</h2>
@@ -265,7 +208,6 @@ export default function EvidenceChainReportDeterministic() {
   }, [sourceId]);
 
   const incident = state.status === "ready" ? state.records[0] : undefined;
-  const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
@@ -275,13 +217,11 @@ export default function EvidenceChainReportDeterministic() {
   const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
-  const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
   const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
   const severityMethodology = harmImpactAssessment
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
-  const diagnostic = diagnosticProvenance(incident);
   const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
@@ -320,33 +260,35 @@ export default function EvidenceChainReportDeterministic() {
         <h2 id="report-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
           ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="report-exemplar-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the occurrence into a failure classification."
-          : "This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </section>}
 
       <div className="report-flow">
-        <Stage number="01" label="Observation">
-          {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-panel report-observation-summary">
-            <h4 className="report-substantive-label">What happened</h4>
-            <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
-          </section>}
-          {affectedSystems.length > 0 && <section className="report-panel report-affected-systems">
-            <h4 className="report-substantive-label">Affected systems</h4>
-            <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
-              <dl className="report-metadata-grid report-metadata-grid--2">
-                <Field label="Provider / platform" value={system.provider} />
-                <Field label="Product / service" value={system.product} />
-                <Field label="Model / runtime" value={system.model} />
-                <Field label="System type" value={system.systemType} />
-                <Field label="Interface" value={system.interfaceSurface} />
-                <Field label="Deployment context" value={system.deploymentContext} />
-              </dl>
-            </article>)}</div>
-          </section>}
-          {incidentDetail?.evidence.length ? <div className="report-evidence-list">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={{ ...evidence, ...sourceEvidenceStatus(incident, index) }} />)}</div> : null}
-          {!incidentDetail?.evidence.length && !affectedSystems.length && <Empty>No structured evidence is available in the current public projection.</Empty>}
+        <Stage number="01" label="Incident">
+          {((incident?.summary ?? incident?.publicDisplay.finding) || affectedSystems.length > 0) && <div className="report-occurrence-card">
+            {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
+              <p className="vigil-evidence-kicker">Incident summary</p>
+              <h4 className="report-substantive-label">What happened</h4>
+              <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+            </section>}
+            {affectedSystems.length > 0 && <section className="report-affected-systems">
+              <h4 className="report-substantive-label">Affected systems</h4>
+              <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
+                <dl className="report-metadata-grid report-metadata-grid--2">
+                  <Field label="Provider / platform" value={system.provider} />
+                  <Field label="Product / service" value={system.product} />
+                  <Field label="Model / runtime" value={system.model} />
+                  <Field label="System type" value={system.systemType} />
+                  <Field label="Interface" value={system.interfaceSurface} />
+                  <Field label="Deployment context" value={system.deploymentContext} />
+                </dl>
+              </article>)}</div>
+            </section>}
+          </div>}
+          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Assessment">
@@ -357,11 +299,7 @@ export default function EvidenceChainReportDeterministic() {
             <dl className="report-metadata-grid report-metadata-grid--2"><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
             <HarmImpactMatrix assessment={harmImpactAssessment} compact />
           </section>
-          <div className="report-split-layout">
-            <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
-            <aside className="report-metadata-panel"><p className="report-label">Assessment provenance</p><dl className="report-metadata-grid"><Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} /><Field label="Assessed" value={diagnostic?.diagnosticDate} /><Field label="AI collaborator" value={[diagnostic?.aiPlatform, diagnostic?.aiModel].filter(Boolean).join(" ") || undefined} /><Field label="Review status" value={diagnostic?.reviewStatus ? titleizeValue(diagnostic.reviewStatus) : undefined} /><Field label="Human contribution" value={diagnostic?.humanRole} /><Field label="AI contribution" value={diagnostic?.aiRole} /><Field label="Authority boundary" value={diagnostic?.authorityBoundary} /><Field label="Model attribution" value={diagnostic?.attributionBasis} /></dl></aside>
-          </div>
-          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations" open><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
+          <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
@@ -381,8 +319,10 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
       </div>
 
+      <div className="report-postscript-slot" data-report-postscript />
+
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants and does not substitute broader family invariants where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants only for failure-occurrence mappings; successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;

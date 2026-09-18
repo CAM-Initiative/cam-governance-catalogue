@@ -152,7 +152,7 @@
 
 .vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
   gap: 1.45rem;
-  padding: 0.35rem var(--vigil-case-card-pad) 1.6rem;
+  padding: 1.25rem var(--vigil-case-card-pad) 1.6rem;
 }
 
 /* One metadata grammar everywhere. */

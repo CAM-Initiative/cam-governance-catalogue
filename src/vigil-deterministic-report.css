@@ -1,7 +1,8 @@
 /* VIGIL deterministic Case File report.
    This stylesheet is the single visual contract for the printable report.
-   Interactive Case File styles may provide component structure, but report typography,
-   spacing, surfaces and pagination are normalised here. */
+   Interactive Case File styles may provide component structure; the public report now
+   mirrors the simplified Case File information hierarchy while normalising typography,
+   spacing, surfaces and pagination for print. */
 
 .vigil-deterministic-report-host {
   --report-paper: 40 36% 99%;
@@ -1237,4 +1238,433 @@
   }
 }
 
+
+/* Match the deterministic/print report to the simplified interactive Case File.
+   The canonical record retains full provenance; the public report prioritises
+   substantive assessment, classification and repair results. */
+
+.vigil-deterministic-report-host .vigil-classification-report-cards {
+  display: none !important;
+}
+
+.vigil-deterministic-report-host .vigil-classification-web-table {
+  display: block !important;
+  overflow: visible !important;
+  border: 1px solid hsl(var(--report-rule) / 0.82);
+  border-radius: 0.45rem;
+  background: hsl(var(--report-paper));
+}
+
+.vigil-deterministic-report-host .vigil-classification-table {
+  width: 100%;
+  min-width: 0 !important;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.vigil-deterministic-report-host .vigil-classification-table th,
+.vigil-deterministic-report-host .vigil-classification-table td {
+  border: 0;
+  border-bottom: 1px solid hsl(var(--report-rule) / 0.72);
+  text-align: left;
+  vertical-align: top;
+}
+
+.vigil-deterministic-report-host .vigil-classification-table thead th {
+  padding: 0.62rem 0.7rem;
+  background: hsl(var(--report-panel-strong));
+  font-family: var(--app-font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--report-muted));
+}
+
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 13%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 24%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 25%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+
+.vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(1) { width: 15%; }
+.vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(2) { width: 30%; }
+.vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(3) { width: 55%; }
+
+.vigil-deterministic-report-host .vigil-classification-table tbody td {
+  padding: 0.72rem 0.72rem 0.78rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: hsl(var(--report-ink) / 0.9);
+}
+
+.vigil-deterministic-report-host .vigil-classification-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-table td > strong {
+  display: block;
+  font-weight: 670;
+  line-height: 1.38;
+  color: hsl(var(--report-ink));
+}
+
+.vigil-deterministic-report-host .vigil-classification-id {
+  display: block;
+  margin-top: 0.22rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: hsl(var(--report-muted));
+}
+
+.vigil-deterministic-report-host .vigil-classification-source-link {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  color: hsl(var(--report-gold));
+  text-decoration: none;
+}
+
+.vigil-deterministic-report-host .vigil-repair-metadata-panel {
+  display: none !important;
+}
+
+.vigil-deterministic-report-host .vigil-repair-invariant-card {
+  display: block !important;
+  overflow: hidden;
+  padding: 0 !important;
+  border: 1px solid hsl(var(--report-rule) / 0.82);
+  border-radius: 0.45rem;
+  background: hsl(var(--report-paper));
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading {
+  display: grid !important;
+  grid-template-columns: minmax(7.5rem, 0.52fr) minmax(10rem, 0.82fr) minmax(0, 2.2fr) !important;
+  gap: 0.75rem 1rem !important;
+  align-items: start;
+  padding: 0.78rem 0.85rem !important;
+  background: transparent !important;
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-evidence-kicker {
+  margin: 0;
+  padding-top: 0.05rem;
+  color: hsl(var(--report-gold));
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading > h3 {
+  margin: 0 !important;
+  font-family: var(--app-font-sans);
+  font-size: 0.92rem !important;
+  font-weight: 670;
+  line-height: 1.42;
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading > h3::before,
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-repair-invariant::before,
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-case-empty::before {
+  display: block;
+  margin-bottom: 0.22rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--report-muted));
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading > h3::before {
+  content: "Failure class";
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-repair-invariant::before,
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-case-empty::before {
+  content: "Governing invariant";
+}
+
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-repair-invariant,
+.vigil-deterministic-report-host .vigil-repair-reading > .vigil-case-empty {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-size: 0.9rem !important;
+  line-height: 1.52 !important;
+  color: hsl(var(--report-ink) / 0.9) !important;
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-classification-table thead th {
+    font-size: 9.5pt !important;
+    background: #f1f1ee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-table tbody td,
+  .vigil-deterministic-report-host .vigil-repair-reading > .vigil-repair-invariant,
+  .vigil-deterministic-report-host .vigil-repair-reading > .vigil-case-empty {
+    font-size: 10.5pt !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-id,
+  .vigil-deterministic-report-host .vigil-classification-source-link,
+  .vigil-deterministic-report-host .vigil-repair-reading > h3::before,
+  .vigil-deterministic-report-host .vigil-repair-reading > .vigil-repair-invariant::before,
+  .vigil-deterministic-report-host .vigil-repair-reading > .vigil-case-empty::before {
+    font-size: 9pt !important;
+  }
+}
+
+
+/* Incident + assessment continuity.
+   Stage 01 is intentionally named Incident so the same report grammar works
+   for failure-only, mixed, and successful-invariant Case Files. Keep each stage
+   reading as one coherent surface rather than a stack of unrelated widgets. */
+
+.vigil-deterministic-report-host .report-occurrence-card {
+  overflow: hidden;
+  border: 1px solid hsl(var(--report-rule) / 0.86);
+  border-radius: 0.5rem;
+  background: hsl(var(--report-paper));
+}
+
+.vigil-deterministic-report-host .report-occurrence-card .report-observation-summary,
+.vigil-deterministic-report-host .report-occurrence-card .report-affected-systems {
+  margin: 0;
+  padding: 1rem 1.05rem;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: hsl(var(--report-paper)) !important;
+}
+
+.vigil-deterministic-report-host .report-occurrence-card .report-affected-systems {
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+}
+
+.vigil-deterministic-report-host .report-observation-summary > .report-substantive-label {
+  font-size: 1.08rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: hsl(var(--report-ink)) !important;
+}
+
+.vigil-deterministic-report-host .report-observation-summary > p {
+  margin: 0.55rem 0 0 !important;
+}
+
+.vigil-deterministic-report-host .report-affected-systems > .report-substantive-label {
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: hsl(var(--report-ink) / 0.9) !important;
+}
+
+.vigil-deterministic-report-host .report-affected-systems .report-system-grid {
+  margin-top: 0.6rem;
+}
+
+.vigil-deterministic-report-host .report-affected-systems .report-metadata-grid {
+  margin-top: 0;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment {
+  overflow: hidden;
+  padding: 0 !important;
+  border: 1px solid hsl(var(--report-rule) / 0.86) !important;
+  border-radius: 0.5rem !important;
+  background: hsl(var(--report-paper)) !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-substantive-label {
+  display: block;
+  padding: 0.95rem 1rem 0;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: hsl(var(--report-ink)) !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 2rem;
+  margin: 0.45rem 0 0 !important;
+  padding: 0 1rem 0.85rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid .report-field {
+  min-width: 8rem;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin: 0;
+  padding: 0.9rem 1rem 1rem !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+  background: hsl(var(--report-paper));
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-matrix-overview {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.7rem;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-no-harm-basis {
+  margin: 0.7rem 0 0 !important;
+  padding: 0.5rem 0 0.5rem 0.85rem !important;
+  border: 0 !important;
+  border-left: 3px solid hsl(var(--report-gold) / 0.72) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-coverage {
+  margin-top: 0.65rem !important;
+  padding: 0.25rem 0 0.25rem 0.85rem !important;
+  background: transparent !important;
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-observation-summary > .report-substantive-label {
+    font-size: 13pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-affected-systems > .report-substantive-label,
+  .vigil-deterministic-report-host .report-severity-assessment > .report-substantive-label {
+    font-size: 11.5pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-occurrence-card,
+  .vigil-deterministic-report-host .report-severity-assessment {
+    border-radius: 2.3mm !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */
+
+
+/* Final print-flow refinement: open numbered sections, stable subcomponents and
+   postscript placement. The paper is the section surface; bordered components
+   are reserved for genuinely structured units. */
+
+.vigil-deterministic-report-host .report-observation-summary > .vigil-evidence-kicker {
+  margin-bottom: 0.35rem;
+}
+
+.vigil-deterministic-report-host .report-postscript {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--report-rule));
+}
+
+.vigil-deterministic-report-host .report-reliance-notice,
+.vigil-deterministic-report-host .report-assessment-limits {
+  margin: 0;
+}
+
+.vigil-deterministic-report-host .report-assessment-limits {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-assessment-limits .report-list {
+  margin-top: 0.55rem;
+}
+
+.vigil-deterministic-report-host .report-copyright {
+  margin: 1rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+@media print {
+  /* The numbered report is a document, not five nested cards. Removing the
+     section border prevents page-spanning boxes and recovers useful A4 width. */
+  .vigil-deterministic-report-host .report-section {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+  }
+
+  .vigil-deterministic-report-host .report-section-header {
+    margin-bottom: 3.5mm !important;
+    padding-bottom: 2.8mm !important;
+  }
+
+  /* Section 01 mirrors Assessment's hierarchy without introducing another box. */
+  .vigil-deterministic-report-host .report-occurrence-card {
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+  }
+
+  .vigil-deterministic-report-host .report-occurrence-card .report-observation-summary,
+  .vigil-deterministic-report-host .report-occurrence-card .report-affected-systems {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    background: #fff !important;
+  }
+
+  .vigil-deterministic-report-host .report-observation-summary {
+    padding-top: 0 !important;
+  }
+
+  .vigil-deterministic-report-host .report-affected-systems {
+    margin-top: 4mm !important;
+    padding-top: 3.5mm !important;
+    padding-bottom: 0 !important;
+    border: 0 !important;
+    border-top: 0.55pt solid #c9c9c3 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  /* Keep structured units together when they fit. Long tables may still flow,
+     but individual rows are never intentionally cut across pages. */
+  .vigil-deterministic-report-host .report-severity-assessment,
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table,
+  .vigil-deterministic-report-host .report-empty,
+  .vigil-deterministic-report-host .report-reliance-notice,
+  .vigil-deterministic-report-host .report-assessment-limits {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-table thead {
+    display: table-header-group;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-table tr,
+  .vigil-deterministic-report-host .report-reference-item,
+  .vigil-deterministic-report-host .report-system-record {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .report-postscript {
+    margin-top: 5mm !important;
+    padding-top: 4mm !important;
+    border-top-width: 0.55pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-assessment-limits {
+    margin-top: 4mm !important;
+    padding-top: 3.5mm !important;
+  }
+
+  .vigil-deterministic-report-host .report-copyright {
+    margin-top: 4mm !important;
+    padding-top: 3mm !important;
+  }
+}

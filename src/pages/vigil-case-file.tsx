@@ -241,9 +241,9 @@ function Field({ label, value, mono = false }: { label: string; value?: string; 
   return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
 }
 
-function Section({ id, number, title, description, children }: { id: string; number?: string; title: string; description: string; children: ReactNode }) {
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return <section id={id} className="vigil-case-section" aria-labelledby={`${id}-heading`}>
-    <header>{number ? <span>{number}</span> : null}<div><h2 id={`${id}-heading`}>{title}</h2><p>{description}</p></div></header>
+    <h2 id={`${id}-heading`} className="sr-only">{title}</h2>
     <div className="vigil-case-section-body">{children}</div>
   </section>;
 }
@@ -270,10 +270,14 @@ function exemplarExecutionStatus(record?: VigilIndexRecord) {
 }
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
-  if (reference.relationship === "exemplar") return "Successful-invariant exemplar relationship";
-  if (reference.relationship === "primary") return "Primary taxonomy classification";
-  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
-  return "Family-only taxonomy classification";
+  const relationship = reference.relationship === "primary"
+    ? "Primary taxonomy classification"
+    : reference.relationship === "secondary"
+      ? "Secondary taxonomy classification"
+      : "Family-only taxonomy classification";
+  return reference.role === "successful-invariant"
+    ? `${relationship} · successful-invariant exemplar`
+    : relationship;
 }
 
 function taxonomyEvidenceKey(reference: TaxonomyReferenceTarget["externalReferences"][number]) {
@@ -390,7 +394,7 @@ export default function VigilCaseFile() {
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
       {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-labelledby="what-happened-heading">
-        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence summary</p><h3 id="what-happened-heading">What happened</h3></div>
+        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident summary</p><h3 id="what-happened-heading">What happened</h3></div>
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
       </section>}
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
@@ -424,7 +428,7 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Occurrence-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the occurrence-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the incident-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
           <div className="vigil-severity-summary-grid"><article><dl>
             <Field label="Methodology" value={severityMethodology} mono />
             <Field label="Assessed" value={severityAssessedOn} mono />
@@ -536,10 +540,10 @@ export default function VigilCaseFile() {
         <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
           ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure occurrence. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the occurrence into a failure classification."
-          : "This occurrence shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </div>
     </section>}
 
@@ -558,7 +562,7 @@ export default function VigilCaseFile() {
     </nav>
 
     <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel}>
-      <Section id={`case-${activeStage}`} number={activeDefinition.number} title={activeDefinition.label} description={activeDefinition.description}>
+      <Section id={`case-${activeStage}`} title={activeDefinition.label}>
         {renderStageContent(activeStage)}
       </Section>
     </div>

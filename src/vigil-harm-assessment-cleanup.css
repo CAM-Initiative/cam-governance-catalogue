@@ -1,8 +1,8 @@
-/* Case File Harm Impact Matrix cleanup.
+/* Case File and deterministic-report Harm Impact Matrix cleanup.
    Keep occurrence-level assessment readable without turning every evidence-state
    note into a competing callout. The underlying assessment data is unchanged. */
 
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
   gap: 0.65rem 1.35rem;
   margin-bottom: 0.9rem;
   padding-bottom: 0.85rem;
@@ -12,11 +12,11 @@
 /* A positive no-materialised-harm basis is itself the derivation for a bounded
    S1 presentation. The surrounding Case File already explains the general
    highest-supported-harm rule, so repeating it here competes with the result. */
-.vigil-case-file-page .vigil-harm-matrix.is-assessment:has(.vigil-harm-no-harm-basis) .vigil-harm-matrix-overview > p {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment:has(.vigil-harm-no-harm-basis) .vigil-harm-matrix-overview > p {
   display: none;
 }
 
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
   margin: 0 0 0.9rem;
   padding: 0.9rem 1rem;
   border: 1px solid hsl(var(--primary) / 0.2);
@@ -30,7 +30,7 @@
 /* If positive evidence establishes bounded no-materialised-harm and there are
    no scored dimensions, the generic "no defensible scored band" notice adds
    noise and reads like a contradiction. */
-.vigil-case-file-page .vigil-harm-no-harm-basis + .vigil-harm-method-note {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-no-harm-basis + .vigil-harm-method-note {
   display: none;
 }
 
@@ -38,12 +38,12 @@
    enumerates every out-of-scope dimension. The assessment-coverage statement
    retains the substantive conclusion without dumping bookkeeping into the main
    reading flow. The canonical record continues to retain every dimension. */
-.vigil-case-file-page .vigil-harm-no-harm-basis + .vigil-harm-method-note + .vigil-harm-coverage {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-no-harm-basis + .vigil-harm-method-note + .vigil-harm-coverage {
   display: none;
 }
 
 /* Coverage is supporting context, not a stack of alert cards. */
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-coverage {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-coverage {
   margin: 0.55rem 0 0;
   padding: 0.18rem 0 0.18rem 0.8rem;
   border-left: 2px solid hsl(var(--border) / 0.72);
@@ -53,21 +53,21 @@
   color: hsl(var(--foreground) / 0.76);
 }
 
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-coverage strong {
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-coverage strong {
   color: hsl(var(--foreground) / 0.9);
 }
 
 @media (max-width: 760px) {
-  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
+  :is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
     display: grid;
     gap: 0.55rem;
   }
 
-  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
+  :is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
     gap: 0.42rem;
   }
 
-  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
+  :is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
     padding: 0.8rem 0.85rem;
   }
 }

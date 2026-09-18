@@ -7,7 +7,7 @@ import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
 
 const REPORT_SECTIONS = [
-  { number: "01", label: "Observation" },
+  { number: "01", label: "Incident" },
   { number: "02", label: "Assessment" },
   { number: "03", label: "Classification" },
   { number: "04", label: "Repair" },
@@ -41,6 +41,8 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "04": [
     "No class invariant can be resolved from a canonical classification for this Incident.",
     "No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.",
+    "No repair invariant is shown because this Case File has no resolved failure-occurrence class mapping.",
+    "No repair invariant is shown because this Case File has no resolved failure-classified mapping.",
   ],
   "05": ["No references are currently available."],
 };
@@ -60,13 +62,23 @@ function compactIncidentId(id: string) {
 }
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
-  if (reference.relationship === "primary") return "Primary taxonomy classification";
-  if (reference.relationship === "secondary") return "Secondary taxonomy classification";
-  return "Family-only taxonomy classification";
+  const relationship = reference.relationship === "primary"
+    ? "Primary taxonomy classification"
+    : reference.relationship === "secondary"
+      ? "Secondary taxonomy classification"
+      : "Family-only taxonomy classification";
+  return reference.role === "successful-invariant"
+    ? `${relationship} · successful-invariant exemplar`
+    : relationship;
 }
 
 function text(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function textList(value: unknown) {
+  const values = Array.isArray(value) ? value : value === undefined || value === null ? [] : [value];
+  return values.flatMap((item) => text(item) ? [text(item)!] : []);
 }
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -112,7 +124,7 @@ export default function EvidenceChainReportPrintable() {
   const [defaultsResolved, setDefaultsResolved] = useState(false);
   const [reportIncident, setReportIncident] = useState<ReportIncident>();
   const [referenceList, setReferenceList] = useState<HTMLOListElement | null>(null);
-  const [referenceSection, setReferenceSection] = useState<HTMLElement | null>(null);
+  const [postscriptHost, setPostscriptHost] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -162,7 +174,6 @@ export default function EvidenceChainReportPrintable() {
         next[number] = sectionHasSubstantiveContent(section, number);
 
         if (number === "05") {
-          setReferenceSection(section);
           const list = section.querySelector<HTMLOListElement>("ol");
           if (list) {
             referenceBaseCountRef.current = list.children.length;
@@ -171,6 +182,8 @@ export default function EvidenceChainReportPrintable() {
         }
       }
       for (const item of REPORT_SECTIONS) if (next[item.number] === undefined) next[item.number] = true;
+      const postscript = host.querySelector<HTMLElement>("[data-report-postscript]");
+      if (postscript) setPostscriptHost(postscript);
       setIncludedSections(next);
       setDefaultsResolved(true);
       return true;
@@ -201,6 +214,12 @@ export default function EvidenceChainReportPrintable() {
     () => collectTaxonomyEvidence(reportIncident?.taxonomyReferences ?? []),
     [reportIncident?.taxonomyReferences],
   );
+  const assessmentBoundaries = useMemo(() => {
+    const assessment = reportIncident && isObject(reportIncident.raw.vigil_assessment)
+      ? reportIncident.raw.vigil_assessment
+      : undefined;
+    return textList(assessment?.assessment_boundaries);
+  }, [reportIncident]);
 
   const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
     ? createPortal(<>
@@ -230,17 +249,23 @@ export default function EvidenceChainReportPrintable() {
     </>, referenceList)
     : null;
 
-  const reliancePortal = referenceSection ? createPortal(
-    <section className="report-reliance-notice" aria-labelledby="report-reliance-heading">
-      <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
-      <p>
-        This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
-      </p>
+  const postscriptPortal = postscriptHost ? createPortal(
+    <section className="report-postscript" aria-label="Report reliance and assessment boundaries">
+      <section className="report-reliance-notice" aria-labelledby="report-reliance-heading">
+        <h2 id="report-reliance-heading" className="report-label">Use and reliance notice</h2>
+        <p>
+          This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
+        </p>
+      </section>
+      {assessmentBoundaries.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
+        <h2 id="report-assessment-limits-heading" className="report-label">Limits of the assessment</h2>
+        <ul className="report-list">{assessmentBoundaries.map((item) => <li key={item}>{item}</li>)}</ul>
+      </section>}
       <p className="report-copyright">
         © 2026 CAM Initiative. All rights reserved.
       </p>
     </section>,
-    referenceSection,
+    postscriptHost,
   ) : null;
 
   return <div ref={hostRef} className="vigil-deterministic-report-host">
@@ -267,6 +292,6 @@ export default function EvidenceChainReportPrintable() {
     </aside>
     <EvidenceChainReportDeterministic />
     {taxonomyReferencePortal}
-    {reliancePortal}
+    {postscriptPortal}
   </div>;
 }

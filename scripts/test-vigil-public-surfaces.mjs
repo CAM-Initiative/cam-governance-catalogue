@@ -119,11 +119,35 @@ test("Case Files use one canonical Incident and retain the five substantive stag
   assert.match(caseFile, /loadVigilIncidentRecords/);
   assert.match(caseFile, /records: \[incident\]/);
   assert.doesNotMatch(caseFile, /const observations|deriveFailureModePublicDetail|failureId=/);
-  for (const label of ["Observation", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  for (const label of ["Incident", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
   assert.doesNotMatch(sections, /label: "Learn"/);
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
   assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
+});
+
+test("Case File tabs do not repeat editorial stage descriptions inside the active panel", async () => {
+  const [sections, caseFile] = await Promise.all([
+    read("src/lib/vigilCaseSections.ts"),
+    read("src/pages/vigil-case-file.tsx"),
+  ]);
+  assert.doesNotMatch(sections, /description:/);
+  assert.doesNotMatch(caseFile, /<p>\{description\}<\/p>/);
+  assert.match(caseFile, /className="sr-only">\{title\}<\/h2>/);
+});
+
+test("Repair uses the same public table grammar as Classification", async () => {
+  const [classification, css] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/vigil-classification-table.css"),
+  ]);
+  assert.match(classification, /vigil-classification-web-table vigil-repair-web-table/);
+  assert.match(classification, /vigil-classification-table vigil-repair-table/);
+  assert.match(classification, /<th scope="col">Relationship<\/th>/);
+  assert.match(classification, /<th scope="col">Failure class<\/th>/);
+  assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
+  assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 57%; \}/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -141,6 +165,19 @@ test("Case Files expose scalable numbered pagination with first and last navigat
   assert.match(cases, /className="vigil-pagination-ellipsis"/);
   assert.match(caseLibraryCss, /\.vigil-pagination-page\.is-current/);
   assert.match(caseLibraryCss, /\.vigil-pagination-arrow\.is-boundary/);
+});
+
+test("Case File classification labels derive public state from mapping-local roles", async () => {
+  const taxonomy = await read("src/lib/vigilTaxonomyClassification.ts");
+  assert.match(taxonomy, /hasDirectPrimary \|\| hasDirectSecondary/);
+  assert.match(taxonomy, /return mappingRoles\(record, directFallback \?\? "failure-occurrence"\)/);
+  assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
+  assert.match(taxonomy, /hasFailure && hasExemplar\) return "Combination"/);
+  assert.match(taxonomy, /hasExemplar && !hasFailure\) return "Exemplar"/);
+  assert.match(taxonomy, /hasFailure && !hasExemplar\) return "Classified"/);
+  assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
+  assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
+  assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
@@ -165,6 +202,10 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(classification, /successful invariant exemplar/i);
   assert.match(classification, /not failure evidence/i);
+  assert.match(classification, /Primary exemplar/);
+  assert.match(classification, /Secondary exemplar/);
+  assert.match(classification, /if \(item\.role === "successful-invariant"\) return;/);
+  assert.match(classification, /no resolved failure-classified mapping/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
@@ -172,6 +213,17 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
   assert.match(casePolishCss, /display: grid !important/);
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
+});
+
+test("About explains successful-invariant exemplars and the publication model", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /successful-invariant exemplar/i);
+  assert.match(about, /not counted as failure evidence/i);
+  assert.match(about, /do not create a Repair requirement/i);
+  assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
+  assert.match(about, /Keep evidence and judgment separate/);
+  assert.match(about, /Open to scrutiny, not openly licensed/);
+  assert.match(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
 test("canonical About, licensing and Privacy keep readable public-page grammar", async () => {
@@ -322,7 +374,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm & Severity Methodology/);
-  assert.match(about, /Publication & provenance/);
+  assert.match(about, /Publication model/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
@@ -361,11 +413,14 @@ test("Stage 02 is presented publicly as Assessment", async () => {
     read("README.md"),
     read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
   ]);
+  assert.match(sections, /number: "01"[\s\S]*label: "Incident"/);
   assert.match(sections, /number: "02"[\s\S]*label: "Assessment"/);
+  assert.match(report, /<Stage number="01" label="Incident">/);
   assert.match(report, /<Stage number="02" label="Assessment">/);
+  assert.match(printable, /number: "01", label: "Incident"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /Observation, Assessment, Classification, Repair and References/);
+  assert.match(hub, /Incident, Assessment, Classification, Repair and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(rail, /evidence, assessment, failure classification/);
   assert.match(pages, /evidence, assessment, failure classification/);
@@ -509,6 +564,12 @@ test("footer avoids repeating the header brand lockup", async () => {
 });
 
 
+test("Case File search and classification filter share one desktop row", async () => {
+  const css = await read("src/vigil-ux-v4.css");
+  assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(250px, 340px\)/);
+  assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
+});
+
 test("Case Files landing page stays deliberately terse", async () => {
   const cases = await read("src/pages/vigil-cases.tsx");
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
@@ -522,18 +583,18 @@ test("About final polish keeps content continuous and places actions inside open
     read("src/pages/about.tsx"),
     read("src/vigil-ux-v5.css"),
   ]);
-  const firstMethodSentence = about.indexOf("The Case File structure keeps evidence of what happened separate");
-  const incidentBoundarySentence = about.indexOf("A reported incident is not automatically a new failure class");
+  const firstMethodSentence = about.indexOf("The Case File structure keeps what happened separate");
+  const incidentBoundarySentence = about.indexOf("A reported Incident is not automatically evidence of a failure");
   const flow = about.indexOf("vigil-about-flow-scroll");
   assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
   assert.doesNotMatch(about, /Classification boundary:/);
-  assert.match(about, /Case File classification[\s\S]*vigil-about-grid-action[\s\S]*Browse the taxonomy/);
-  assert.match(about, /Separate authority layers[\s\S]*vigil-about-resource-links[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
+  assert.match(about, /CAELESTIS governance instruments are a separate authority layer[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   const organisationStart = about.indexOf('id="vigil-organisation-heading"');
   const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
   const citationStart = about.indexOf('id="vigil-citation-heading"');
   assert.ok(organisationStart >= 0 && affiliation > organisationStart && affiliation < citationStart);
-  assert.doesNotMatch(about, /vigil-about-link-row/);
+  assert.match(about, /vigil-about-link-row/);
   assert.match(css, /About final polish: one calm document/);
   assert.match(css, /About final polish: one calm document/);
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
@@ -604,7 +665,7 @@ test("About citation uses a single Suggested general citation heading", async ()
 
 test("Publication copy names CAM Initiative without repeating the maintainer", async () => {
   const about = await read("src/pages/about.tsx");
-  assert.match(about, /VIGIL Observatory is published by <strong>CAM Initiative<\/strong>\. Case Files are designed/);
+  assert.match(about, /Published by <strong>CAM Initiative<\/strong>, a VIGIL Observatory Case File/);
   assert.doesNotMatch(about, /published by <strong>CAM Initiative<\/strong> and maintained by/);
 });
 

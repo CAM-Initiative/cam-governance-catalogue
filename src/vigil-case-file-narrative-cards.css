@@ -35,3 +35,13 @@
 .vigil-case-file-page #case-observe > .vigil-case-section-body > .vigil-case-empty {
   display: none !important;
 }
+
+
+/* Make the occurrence heading carry enough visual weight to separate the
+   narrative label from the body copy. */
+.vigil-case-file-page .vigil-observation-summary .vigil-case-subheading h3 {
+  margin-top: 0.18rem;
+  font-size: 1.18rem;
+  font-weight: 700;
+  line-height: 1.32;
+}
