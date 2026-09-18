@@ -428,12 +428,8 @@ export default function VigilCaseFile() {
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3><p>This Case File shows the incident-specific assessment rather than the full methodology reference table. Scored dimensions show the supported band and evidence-backed basis; dimensions without a defensible score are rolled up below.</p></div>
-          <div className="vigil-severity-summary-grid"><article><dl>
-            <Field label="Methodology" value={severityMethodology} mono />
-            <Field label="Assessed" value={severityAssessedOn} mono />
-          </dl></article></div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} />
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3></div>
+          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
         </section>
 
         <section className="vigil-diagnosis-definition">
