@@ -7,7 +7,7 @@ import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
 
 const REPORT_SECTIONS = [
-  { number: "01", label: "Observation" },
+  { number: "01", label: "Occurrence" },
   { number: "02", label: "Assessment" },
   { number: "03", label: "Classification" },
   { number: "04", label: "Repair" },
