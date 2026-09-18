@@ -564,6 +564,12 @@ test("footer avoids repeating the header brand lockup", async () => {
 });
 
 
+test("Case File search and classification filter share one desktop row", async () => {
+  const css = await read("src/vigil-ux-v4.css");
+  assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(250px, 340px\)/);
+  assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
+});
+
 test("Case Files landing page stays deliberately terse", async () => {
   const cases = await read("src/pages/vigil-cases.tsx");
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
