@@ -514,7 +514,7 @@ export default function VigilCaseFile() {
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
