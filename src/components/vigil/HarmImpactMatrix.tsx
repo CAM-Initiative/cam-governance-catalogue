@@ -278,7 +278,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
   </div>;
 }
 
-function AssessmentMatrix({ assessment, compact }: { assessment: UnknownRecord; compact: boolean }) {
+function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { assessment: UnknownRecord; compact: boolean; methodology?: string; assessedOn?: string }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
@@ -296,10 +296,14 @@ function AssessmentMatrix({ assessment, compact }: { assessment: UnknownRecord; 
 
   return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")}>
     <div className="vigil-harm-matrix-overview">
-      <div className="vigil-harm-overall-result">
-        <span>Overall severity</span>
-        <strong className={"severity-" + overall.toLowerCase()}>{overall}</strong>
-        <small>{BAND_LABELS[overall] ?? "Not assessed"}</small>
+      <div className="vigil-harm-summary-row">
+        {methodology ? <div className="vigil-harm-summary-item"><span>Methodology</span><strong>{methodology}</strong></div> : null}
+        {assessedOn ? <div className="vigil-harm-summary-item"><span>Assessed</span><strong>{assessedOn}</strong></div> : null}
+        <div className="vigil-harm-overall-result">
+          <span>Overall severity</span>
+          <strong className={"severity-" + overall.toLowerCase()}>{overall}</strong>
+          <small>{BAND_LABELS[overall] ?? "Not assessed"}</small>
+        </div>
       </div>
       <p><strong>Derivation:</strong> highest supported materialised harm. Dimensions are not averaged or summed.</p>
     </div>
@@ -343,8 +347,8 @@ function AssessmentMatrix({ assessment, compact }: { assessment: UnknownRecord; 
   </div>;
 }
 
-export function HarmImpactMatrix({ assessment, compact = false }: { assessment?: UnknownRecord; compact?: boolean }) {
+export function HarmImpactMatrix({ assessment, compact = false, methodology, assessedOn }: { assessment?: UnknownRecord; compact?: boolean; methodology?: string; assessedOn?: string }) {
   return assessment
-    ? <AssessmentMatrix assessment={assessment} compact={compact} />
+    ? <AssessmentMatrix assessment={assessment} compact={compact} methodology={methodology} assessedOn={assessedOn} />
     : <MethodologyMatrix compact={compact} />;
 }
