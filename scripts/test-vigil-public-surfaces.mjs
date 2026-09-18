@@ -165,6 +165,10 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(classification, /successful invariant exemplar/i);
   assert.match(classification, /not failure evidence/i);
+  assert.match(classification, /Primary exemplar/);
+  assert.match(classification, /Secondary exemplar/);
+  assert.match(classification, /if \(item\.role === "successful-invariant"\) return;/);
+  assert.match(classification, /no resolved failure-occurrence class mapping/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
@@ -361,11 +365,14 @@ test("Stage 02 is presented publicly as Assessment", async () => {
     read("README.md"),
     read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
   ]);
+  assert.match(sections, /number: "01"[\s\S]*label: "Occurrence"/);
   assert.match(sections, /number: "02"[\s\S]*label: "Assessment"/);
+  assert.match(report, /<Stage number="01" label="Occurrence">/);
   assert.match(report, /<Stage number="02" label="Assessment">/);
+  assert.match(printable, /number: "01", label: "Occurrence"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /Observation, Assessment, Classification, Repair and References/);
+  assert.match(hub, /Occurrence, Assessment, Classification, Repair and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(rail, /evidence, assessment, failure classification/);
   assert.match(pages, /evidence, assessment, failure classification/);
