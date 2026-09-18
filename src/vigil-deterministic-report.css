@@ -1415,4 +1415,129 @@
   }
 }
 
+
+/* Occurrence + assessment continuity.
+   Keep each report stage reading as one coherent surface rather than a stack of
+   unrelated cards and metadata widgets. */
+
+.vigil-deterministic-report-host .report-occurrence-card {
+  overflow: hidden;
+  border: 1px solid hsl(var(--report-rule) / 0.86);
+  border-radius: 0.5rem;
+  background: hsl(var(--report-paper));
+}
+
+.vigil-deterministic-report-host .report-occurrence-card .report-observation-summary,
+.vigil-deterministic-report-host .report-occurrence-card .report-affected-systems {
+  margin: 0;
+  padding: 1rem 1.05rem;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: hsl(var(--report-paper)) !important;
+}
+
+.vigil-deterministic-report-host .report-occurrence-card .report-affected-systems {
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+}
+
+.vigil-deterministic-report-host .report-observation-summary > .report-substantive-label {
+  font-size: 1.08rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: hsl(var(--report-ink)) !important;
+}
+
+.vigil-deterministic-report-host .report-observation-summary > p {
+  margin: 0.55rem 0 0 !important;
+}
+
+.vigil-deterministic-report-host .report-affected-systems > .report-substantive-label {
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: hsl(var(--report-ink) / 0.9) !important;
+}
+
+.vigil-deterministic-report-host .report-affected-systems .report-system-grid {
+  margin-top: 0.6rem;
+}
+
+.vigil-deterministic-report-host .report-affected-systems .report-metadata-grid {
+  margin-top: 0;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment {
+  overflow: hidden;
+  padding: 0 !important;
+  border: 1px solid hsl(var(--report-rule) / 0.86) !important;
+  border-radius: 0.5rem !important;
+  background: hsl(var(--report-paper)) !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-substantive-label {
+  display: block;
+  padding: 0.95rem 1rem 0;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: hsl(var(--report-ink)) !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 2rem;
+  margin: 0.45rem 0 0 !important;
+  padding: 0 1rem 0.85rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid .report-field {
+  min-width: 8rem;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin: 0;
+  padding: 0.9rem 1rem 1rem !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+  background: hsl(var(--report-paper));
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-matrix-overview {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.7rem;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-no-harm-basis {
+  margin: 0.7rem 0 0 !important;
+  padding: 0.5rem 0 0.5rem 0.85rem !important;
+  border: 0 !important;
+  border-left: 3px solid hsl(var(--report-gold) / 0.72) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-coverage {
+  margin-top: 0.65rem !important;
+  padding: 0.25rem 0 0.25rem 0.85rem !important;
+  background: transparent !important;
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-observation-summary > .report-substantive-label {
+    font-size: 13pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-affected-systems > .report-substantive-label,
+  .vigil-deterministic-report-host .report-severity-assessment > .report-substantive-label {
+    font-size: 11.5pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-occurrence-card,
+  .vigil-deterministic-report-host .report-severity-assessment {
+    border-radius: 2.3mm !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */
