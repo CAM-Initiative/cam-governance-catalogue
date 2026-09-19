@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, CircleCheckBig, FileText, GitMerge } from "lucide-react";
+import { ArrowLeft, Blend, CircleCheckBig, FileText } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -571,17 +571,17 @@ export default function VigilCaseFile() {
     </header>
 
     {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">
-      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><GitMerge /></div>
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Blend /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
-        <h2 id="vigil-combination-heading">Neither “aligned” nor “misaligned” describes the whole occurrence.</h2>
+        <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
         <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>
       </div>
     </section>}
 
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
-      <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <GitMerge /> : <CircleCheckBig />}</div>
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <Blend /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
         <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
