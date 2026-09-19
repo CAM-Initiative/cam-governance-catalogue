@@ -397,3 +397,56 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   }
 }
 
+
+
+/* Incident source artefacts sit inside the What happened container so readers
+   can inspect occurrence-defining source material without leaving Stage 01. */
+.vigil-case-file-page .vigil-incident-artefacts {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1.15rem;
+}
+
+.vigil-case-file-page .vigil-incident-artefact {
+  margin: 0;
+  text-align: center;
+}
+
+.vigil-case-file-page .vigil-incident-artefact-link {
+  display: inline-block;
+  max-width: min(100%, 58rem);
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: 0.65rem;
+  overflow: hidden;
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-incident-artefact img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.vigil-case-file-page .vigil-incident-artefact figcaption {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 48rem;
+  margin: 0.7rem auto 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}
+
+.vigil-case-file-page .vigil-incident-artefact figcaption strong {
+  color: hsl(var(--foreground) / 0.86);
+}
+
+.vigil-case-file-page .vigil-incident-artefact figcaption a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
