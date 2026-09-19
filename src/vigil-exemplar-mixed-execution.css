@@ -1,7 +1,6 @@
-/* Successful exemplar — mixed execution.
-   The exemplar classification remains primary, but this treatment deliberately
-   steps back from the full green "system worked as intended" presentation when
-   execution or human-facing expression was imperfect. */
+/* Mixed alignment / successful-exemplar treatment.
+   Green remains the living governance signal; the softer secondary glow marks
+   that different alignment boundaries can have different outcomes in one Case File. */
 
 .vigil-case-file-page .vigil-case-file-hero-v4.is-exemplar.is-mixed-execution {
   border-color: hsl(var(--cam-gold) / 0.62);
