@@ -199,7 +199,7 @@ test("mixed Case Files explain alignment outcomes with the blended-state afforda
   assert.match(classification, /Secondary ambiguous boundary/);
   assert.match(classification, /item\.role !== "failure-occurrence"/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
-  assert.match(caseFile, /<Blend \/>/);
+  assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
   assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
   assert.match(contract, /blended-state mixed-record affordance/);
