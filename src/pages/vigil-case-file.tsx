@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, Blend, CircleCheckBig, FileText } from "lucide-react";
+import { ArrowLeft, Blend, CircleCheckBig, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -570,8 +570,8 @@ export default function VigilCaseFile() {
       </aside>
     </header>
 
-    {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">
-      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Blend /></div>
+    {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
