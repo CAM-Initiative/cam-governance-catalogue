@@ -77,7 +77,7 @@ test("Incident detail derives source evidence without mixing in taxonomy reasoni
 test("registry loading uses only the canonical Incident index and Incident fallback", async () => {
   const modules = await loadModules();
   try {
-    assert.equal(modules.registry.VIGIL_INCIDENT_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json");
+    assert.equal(modules.registry.VIGIL_INCIDENT_REGISTRY_URL, "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/incident-ecosystem-ingestion/vigil/VIGIL.Incidents.Index.json");
     const incident = { id: "VIGIL-INC-000001", record_type: "incident", title: "Incident" };
     const live = await modules.registry.loadVigilIncidentRecords(async () => new Response(JSON.stringify({ records: [incident, { id: "VIGIL-2026-FM-0001", record_type: "failure_mode" }] })), "https://example.test/incidents.json", "");
     assert.deepEqual(live.records, [incident]);
@@ -98,11 +98,11 @@ test("stale embedded branch URLs cannot override canonical record paths", async 
     };
     assert.equal(
       modules.registry.rawUrlForRecord(record),
-      "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/incidents/VIGIL-INC-000127.json",
+      "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/incident-ecosystem-ingestion/vigil/records/incidents/VIGIL-INC-000127.json",
     );
     assert.equal(
       modules.registry.githubBlobUrlForRecord(record),
-      "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/records/incidents/VIGIL-INC-000127.json",
+      "https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/records/incidents/VIGIL-INC-000127.json",
     );
     assert.equal(
       modules.registry.rawUrlForRecord({ raw_url: "https://example.test/no-path.json" }),
