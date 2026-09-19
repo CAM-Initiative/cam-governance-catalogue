@@ -147,7 +147,7 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /vigil-classification-web-table vigil-repair-web-table/);
   assert.match(classification, /vigil-classification-table vigil-repair-table/);
   assert.doesNotMatch(classification, /<th scope="col">Relationship<\/th>/);
-  assert.match(classification, /<th scope="col">Outcome<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>/);
   assert.match(classification, /Invariant held/);
   assert.match(classification, /Failure occurred/);
   assert.match(classification, /Boundary unresolved/);
