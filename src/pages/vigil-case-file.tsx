@@ -560,7 +560,7 @@ export default function VigilCaseFile() {
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
         <dl>
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Combination · mixed taxonomy relationships" : classification} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Updated" value={updated} mono />
@@ -573,9 +573,9 @@ export default function VigilCaseFile() {
     {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><GitMerge /></div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">Mixed Case File</p>
-        <h2 id="vigil-combination-heading">This Case File contains mixed taxonomy relationships.</h2>
-        <p>Its mappings do not all have the same evidential role. Open Classification to see which relationships are failure occurrences, successful invariants, or ambiguous boundaries.</p>
+        <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
+        <h2 id="vigil-combination-heading">Neither “aligned” nor “misaligned” describes the whole occurrence.</h2>
+        <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
         <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>
       </div>
     </section>}
