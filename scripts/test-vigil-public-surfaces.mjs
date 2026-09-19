@@ -26,6 +26,9 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
+  assert.match(pages, /function externalAssessmentsHtml\(record\)/);
+  assert.match(pages, /External classification \/ rating/);
+  assert.match(pages, /VIGIL relationship/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
@@ -143,11 +146,15 @@ test("Repair uses the same public table grammar as Classification", async () => 
   ]);
   assert.match(classification, /vigil-classification-web-table vigil-repair-web-table/);
   assert.match(classification, /vigil-classification-table vigil-repair-table/);
-  assert.match(classification, /<th scope="col">Relationship<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Relationship<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>/);
+  assert.match(classification, /Invariant held/);
+  assert.match(classification, /Failure occurred/);
+  assert.match(classification, /Boundary unresolved/);
   assert.match(classification, /<th scope="col">Failure class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 57%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(2\) \{ width: 69%; \}/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -172,12 +179,33 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.match(taxonomy, /hasDirectPrimary \|\| hasDirectSecondary/);
   assert.match(taxonomy, /return mappingRoles\(record, directFallback \?\? "failure-occurrence"\)/);
   assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
-  assert.match(taxonomy, /hasFailure && hasExemplar\) return "Combination"/);
+  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasExemplar\)\) return "Combination"/);
   assert.match(taxonomy, /hasExemplar && !hasFailure\) return "Exemplar"/);
   assert.match(taxonomy, /hasFailure && !hasExemplar\) return "Classified"/);
   assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
   assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
   assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
+});
+
+test("mixed Case Files explain alignment outcomes with the informational affordance", async () => {
+  const [taxonomy, classification, caseFile, contract] = await Promise.all([
+    read("src/lib/vigilTaxonomyClassification.ts"),
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
+  ]);
+  assert.match(taxonomy, /"ambiguous-boundary"/);
+  assert.match(taxonomy, /hasAmbiguousBoundary/);
+  assert.match(classification, /Secondary ambiguous boundary/);
+  assert.match(classification, /item\.role !== "failure-occurrence"/);
+  assert.match(caseFile, /const isCombination = classification === "Combination"/);
+  assert.match(caseFile, /<Info \/>/);
+  assert.match(caseFile, /The system is neither aligned nor misaligned/);
+  assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
+  assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
+  assert.match(caseFile, /The evidence is disputed\./);
+  assert.match(caseFile, /does not convert disputed claims into established fact/);
+  assert.match(contract, /informational mixed-record affordance/);
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
@@ -202,10 +230,11 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(classification, /successful invariant exemplar/i);
   assert.match(classification, /not failure evidence/i);
-  assert.match(classification, /Primary exemplar/);
-  assert.match(classification, /Secondary exemplar/);
-  assert.match(classification, /if \(item\.role === "successful-invariant"\) return;/);
-  assert.match(classification, /no resolved failure-classified mapping/);
+  assert.match(classification, /Primary successful invariant exemplar/);
+  assert.match(classification, /Secondary successful invariant exemplar/);
+  assert.match(classification, /if \(item\.role !== "failure-occurrence"\) return;/);
+  assert.match(classification, /No repair invariant is available for this Case File\./);
+  assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
@@ -325,10 +354,18 @@ test("Failure Class views surface external supporting evidence without bloating 
   assert.match(taxonomyPage, /showSupportingEvidence/);
   assert.match(taxonomyPage, /Supporting evidence · \{item\.external_references\.length\}/);
   assert.match(taxonomyPage, /showSupportingEvidence \/>/);
+  assert.ok(
+    taxonomyPage.indexOf("{showSupportingEvidence") > taxonomyPage.indexOf("{item.relationships?.length ?"),
+    "Supporting evidence should render after Relationships at the end of a Failure Class record",
+  );
   assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-supporting-evidence-note/);
   assert.match(pages, /function taxonomyExternalReferenceHtml/);
   assert.match(pages, /<h2>Supporting evidence<\/h2>/);
+  assert.ok(
+    pages.indexOf("<h2>Supporting evidence</h2>") > pages.indexOf("<h2>Linked Case Files</h2>"),
+    "Static Failure Class crawl output should keep supporting evidence last",
+  );
   assert.match(pages, /reference\.evidence_note/);
 });
 
@@ -564,9 +601,13 @@ test("footer avoids repeating the header brand lockup", async () => {
 });
 
 
-test("Case File search and classification filter share one desktop row", async () => {
-  const css = await read("src/vigil-ux-v4.css");
-  assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(250px, 340px\)/);
+test("Case File search, classification and severity filters share one desktop row", async () => {
+  const [cases, css] = await Promise.all([read("src/pages/vigil-cases.tsx"), read("src/vigil-ux-v4.css")]);
+  assert.match(cases, /<span>Classification<\/span>[\s\S]*<span>Severity<\/span>/);
+  assert.match(cases, /All severities/);
+  assert.match(cases, /severityCode\(record\) !== severity/);
+  assert.match(cases, /setSeverity\(""\)/);
+  assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
 });
 

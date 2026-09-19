@@ -119,7 +119,6 @@ export default function EvidenceChainReportPrintable() {
   const [, params] = useRoute("/observatory/reports/:recordId");
   const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const hostRef = useRef<HTMLDivElement>(null);
-  const referenceBaseCountRef = useRef(0);
   const [includedSections, setIncludedSections] = useState<IncludedSections>(() => Object.fromEntries(REPORT_SECTIONS.map((section) => [section.number, true])));
   const [defaultsResolved, setDefaultsResolved] = useState(false);
   const [reportIncident, setReportIncident] = useState<ReportIncident>();
@@ -174,9 +173,8 @@ export default function EvidenceChainReportPrintable() {
         next[number] = sectionHasSubstantiveContent(section, number);
 
         if (number === "05") {
-          const list = section.querySelector<HTMLOListElement>("ol");
+          const list = section.querySelector<HTMLOListElement>("ol[data-report-taxonomy-reference-list]");
           if (list) {
-            referenceBaseCountRef.current = list.children.length;
             setReferenceList(list);
           }
         }
@@ -224,7 +222,7 @@ export default function EvidenceChainReportPrintable() {
   const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
     ? createPortal(<>
       {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="report-reference-item report-taxonomy-reference">
-        <span className="report-reference-number">[{referenceBaseCountRef.current + index + 1}]</span>
+        <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>{reference.id} — {reference.title}</strong>
           <span className="report-reference-meta"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
@@ -233,10 +231,9 @@ export default function EvidenceChainReportPrintable() {
         </span>
       </li>)}
       {taxonomyEvidenceReferences.map((reference, index) => {
-        const number = referenceBaseCountRef.current + reportIncident.taxonomyReferences.length + index + 1;
         const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
         return <li key={`taxonomy-evidence-${reference.key}`} className="report-reference-item report-taxonomy-evidence-reference">
-          <span className="report-reference-number">[{number}]</span>
+          <span className="report-reference-number" aria-hidden="true" />
           <span className="report-reference-copy">
             <strong>{reference.title}</strong>
             {meta ? <span className="report-reference-meta"> — {meta}</span> : null}

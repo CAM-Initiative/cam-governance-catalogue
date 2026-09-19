@@ -63,7 +63,7 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
 function writeRoute(route, html) {
   const routeDir = join(docsDir, route.replace(/^\//, ""));
   mkdirSync(routeDir, { recursive: true });
-  writeFileSync(join(routeDir, "index.html"), html);
+  writeFileSync(join(routeDir, "index.html"), html.replace(/[ \t]+$/gm, ""));
 }
 
 function conciseDescription(value, fallback) {
@@ -188,6 +188,28 @@ function secondaryClassificationHtml(record) {
   return `<dd><ul>${ids.map((classId) => `<li>${escapeHtml(classificationDisplay(classId))}</li>`).join("")}</ul></dd>`;
 }
 
+function externalAssessmentsHtml(record) {
+  const assessments = Array.isArray(record.external_assessments) ? record.external_assessments : [];
+  if (!assessments.length) return "";
+  return `<section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    ${assessments.map((assessment) => {
+      const rating = assessment?.classification_or_rating;
+      return `<article>
+        <p><strong>External assessment</strong></p>
+        <h3>${assessment?.assessment_url ? `<a href="${escapeHtml(assessment.assessment_url)}" rel="noreferrer">${escapeHtml(assessment.assessment_title || "External assessment")}</a>` : escapeHtml(assessment?.assessment_title || "External assessment")}</h3>
+        <p><strong>${escapeHtml(assessment?.assessor || "External assessor")}</strong>${assessment?.assessment_date ? ` · ${escapeHtml(assessment.assessment_date)}` : ""}</p>
+        <p>${escapeHtml(assessment?.assessment_summary || "")}</p>
+        ${rating?.value ? `<p><strong>External classification / rating:</strong> ${escapeHtml(rating.verbatim_label || rating.value)}${rating.scheme ? ` · ${escapeHtml(rating.scheme)}` : ""}</p>` : ""}
+        ${assessment?.scope_note ? `<p><strong>Scope:</strong> ${escapeHtml(assessment.scope_note)}</p>` : ""}
+        ${assessment?.vigil_comparison_note ? `<p><strong>VIGIL relationship:</strong> ${escapeHtml(assessment.vigil_comparison_note)}</p>` : ""}
+        ${assessment?.assessment_url ? `<p><a href="${escapeHtml(assessment.assessment_url)}" rel="noreferrer">View assessment</a></p>` : ""}
+      </article>`;
+    }).join("")}
+  </section>`;
+}
+
 function taxonomyCaseExamplesForClass(classId) {
   const classes = taxonomyCaseFileExamples?.classes;
   if (!classes || typeof classes !== "object") return [];
@@ -286,10 +308,10 @@ for (const { document } of taxonomyFamilies) {
       ${listHtml(item.recognition?.required_conditions)}
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
-      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
       <h2>Linked Case Files</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified failure Case Files are currently linked to this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Successful invariant exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,
@@ -329,12 +351,13 @@ for (const record of incidentRecords) {
     <h1>${escapeHtml(record.title || record.id)}</h1>
     <p>${escapeHtml(description)}</p>
     <dl>
-      <dt>VIGIL Observatory classification status</dt><dd>${escapeHtml(record.classification_role === "successful-invariant" ? "Exemplar" : (record.classification_status || "not stated"))}</dd>
+      <dt>VIGIL Observatory classification status</dt><dd>${escapeHtml(record.classification_role === "successful-invariant" ? "Exemplar" : record.classification_role === "ambiguous-boundary" ? "Combination" : (record.classification_status || "not stated"))}</dd>
       <dt>VIGIL Observatory primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
       <dt>VIGIL Observatory secondary classifications</dt>${secondaryClassificationHtml(record)}
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
+    ${externalAssessmentsHtml(record)}
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body }));
 }

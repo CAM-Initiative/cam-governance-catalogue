@@ -131,6 +131,7 @@ function compactIncidentRecord(record) {
     primary_family_id: primaryFamilyId,
     secondary_class_ids: secondaryClassIds,
     occurred_from: record.occurred_from,
+    external_assessments: Array.isArray(record.external_assessments) ? record.external_assessments : [],
     search_terms: terms,
     path: record.path,
     github_blob_url: record.path
