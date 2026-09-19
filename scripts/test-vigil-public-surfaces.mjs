@@ -195,10 +195,10 @@ test("mixed Case Files expose ambiguous-boundary mappings with the question-mark
   assert.match(classification, /Secondary ambiguous boundary/);
   assert.match(classification, /item\.role !== "failure-occurrence"/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
-  assert.match(caseFile, /<CircleHelp \/>/);
-  assert.match(caseFile, /This Case File contains mixed taxonomy relationships/);
+  assert.match(caseFile, /<GitMerge \/>/);
+  assert.match(caseFile, /Neither “aligned” nor “misaligned” describes the whole occurrence/);
   assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
-  assert.match(contract, /question-mark mixed-record affordance/);
+  assert.match(contract, /merge-path mixed-record affordance/);
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
