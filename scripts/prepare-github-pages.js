@@ -18,7 +18,7 @@ const nojekyllPath = join(docsDir, ".nojekyll");
 const vigilFallbackPath = join(docsDir, "data", "vigil-registry-fallback.json");
 const sitemapPath = join(docsDir, "sitemap.xml");
 const siteOrigin = "https://www.cam-initiative.org";
-const vigilTaxonomyRoot = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy";
+const vigilTaxonomyRoot = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/recent-incident-ingestion-2025-2026/vigil/taxonomy";
 
 if (!existsSync(indexPath)) {
   throw new Error("GitHub Pages build did not produce docs/index.html");
