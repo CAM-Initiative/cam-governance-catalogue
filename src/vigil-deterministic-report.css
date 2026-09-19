@@ -593,6 +593,18 @@
 }
 
 /* References */
+.vigil-deterministic-report-host .report-section[data-report-stage="05"] {
+  counter-reset: report-reference;
+}
+
+.vigil-deterministic-report-host .report-reference-item {
+  counter-increment: report-reference;
+}
+
+.vigil-deterministic-report-host .report-reference-number::before {
+  content: "[" counter(report-reference) "]";
+}
+
 .vigil-deterministic-report-host .report-reference-list {
   display: grid;
   gap: 0;
