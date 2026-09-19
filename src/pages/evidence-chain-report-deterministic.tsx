@@ -320,7 +320,7 @@ export default function EvidenceChainReportDeterministic() {
           {(evidenceReferences.length > 0 || externalAssessments.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>
-              <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+              <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>}
             {externalAssessments.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External assessments</h3>
@@ -329,7 +329,7 @@ export default function EvidenceChainReportDeterministic() {
             </section>}
             {externalIncidentReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External incident records</h3>
-              <ol className="report-reference-list">{externalIncidentReferences.map((reference, index) => <li key={`${reference.registry}-${reference.externalId ?? index}`} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.registry}{reference.externalId ? ` — ${reference.externalId}` : ""}</strong>{reference.relationship ? <span className="report-reference-meta"> — {titleizeValue(reference.relationship)}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+              <ol className="report-reference-list">{externalIncidentReferences.map((reference, index) => <li key={`${reference.registry}-${reference.externalId ?? index}`} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.registry}{reference.externalId ? ` — ${reference.externalId}` : ""}</strong>{reference.relationship ? <span className="report-reference-meta"> — {titleizeValue(reference.relationship)}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>}
             <section className="report-reference-group">
               <h3 className="report-substantive-label">Taxonomy and methodology references</h3>
@@ -337,7 +337,7 @@ export default function EvidenceChainReportDeterministic() {
             </section>
             <section className="report-reference-group">
               <h3 className="report-substantive-label">Canonical VIGIL record</h3>
-              <ol className="report-reference-list">{canonicalReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+              <ol className="report-reference-list">{canonicalReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>
           </> : <Empty>No references are currently available.</Empty>}
         </Stage>
