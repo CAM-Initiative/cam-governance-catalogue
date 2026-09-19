@@ -603,7 +603,7 @@ test("Case File search, classification and severity filters share one desktop ro
   assert.match(cases, /<span>Classification<\/span>[\s\S]*<span>Severity<\/span>/);
   assert.match(cases, /All severities/);
   assert.match(cases, /severityCode\(record\) !== severity/);
-  assert.match(cases, /setSeverity\(" "\.trim\(\)\)|setSeverity\(""\)/);
+  assert.match(cases, /setSeverity\(""\)/);
   assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
 });
