@@ -209,7 +209,7 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
         <caption className="sr-only">Canonical taxonomy mappings for this Case File. Successful-invariant and ambiguous-boundary mappings are not failure evidence.</caption>
         <thead>
           <tr>
-            <th scope="col">Outcome</th>
+            <th scope="col">Alignment</th>
             <th scope="col">Failure family</th>
             <th scope="col">Failure class</th>
             <th scope="col">Classification basis</th>
