@@ -187,7 +187,7 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
 });
 
-test("mixed Case Files explain alignment outcomes with the blended-state affordance", async () => {
+test("mixed Case Files explain alignment outcomes with the informational affordance", async () => {
   const [taxonomy, classification, caseFile, contract] = await Promise.all([
     read("src/lib/vigilTaxonomyClassification.ts"),
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
@@ -202,7 +202,7 @@ test("mixed Case Files explain alignment outcomes with the blended-state afforda
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
   assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
-  assert.match(contract, /blended-state mixed-record affordance/);
+  assert.match(contract, /informational mixed-record affordance/);
 });
 
 test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
