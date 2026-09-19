@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, CircleCheckBig, CircleHelp, FileText } from "lucide-react";
+import { ArrowLeft, CircleCheckBig, FileText, GitMerge } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -571,7 +571,7 @@ export default function VigilCaseFile() {
     </header>
 
     {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">
-      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleHelp /></div>
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><GitMerge /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Mixed Case File</p>
         <h2 id="vigil-combination-heading">This Case File contains mixed taxonomy relationships.</h2>
@@ -581,7 +581,7 @@ export default function VigilCaseFile() {
     </section>}
 
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
-      <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <CircleHelp /> : <CircleCheckBig />}</div>
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <GitMerge /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
         <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
