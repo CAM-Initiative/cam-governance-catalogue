@@ -143,7 +143,7 @@ export type FailureTaxonomyLoadResult<T> = Ready<T> | Unavailable;
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
 const TAXONOMY_PATH = "vigil/taxonomy";
-const VIGIL_MAIN_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/${TAXONOMY_PATH}`;
+const VIGIL_MAIN_TAXONOMY_ROOT = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/recent-incident-ingestion-2025-2026/${TAXONOMY_PATH}`;
 
 export const VIGIL_FAILURE_TAXONOMY_INDEX_URL = `${VIGIL_MAIN_TAXONOMY_ROOT}/VIGIL.FailureTaxonomy.Index.json`;
 export const VIGIL_FAILURE_TAXONOMY_CASE_FILE_EXAMPLES_URL = `${VIGIL_MAIN_TAXONOMY_ROOT}/generated/VIGIL.FailureTaxonomy.CaseFileExamples.json`;
