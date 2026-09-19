@@ -146,11 +146,15 @@ test("Repair uses the same public table grammar as Classification", async () => 
   ]);
   assert.match(classification, /vigil-classification-web-table vigil-repair-web-table/);
   assert.match(classification, /vigil-classification-table vigil-repair-table/);
-  assert.match(classification, /<th scope="col">Relationship<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Relationship<\/th>/);
+  assert.match(classification, /<th scope="col">Outcome<\/th>/);
+  assert.match(classification, /Invariant held/);
+  assert.match(classification, /Failure occurred/);
+  assert.match(classification, /Boundary unresolved/);
   assert.match(classification, /<th scope="col">Failure class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 61%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(2\) \{ width: 69%; \}/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
