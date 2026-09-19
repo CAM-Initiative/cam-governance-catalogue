@@ -183,7 +183,7 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
 });
 
-test("mixed Case Files expose ambiguous-boundary mappings with the question-mark affordance", async () => {
+test("mixed Case Files explain alignment outcomes with the merge-path affordance", async () => {
   const [taxonomy, classification, caseFile, contract] = await Promise.all([
     read("src/lib/vigilTaxonomyClassification.ts"),
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
