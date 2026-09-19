@@ -717,3 +717,17 @@ test("External governance tools use subtle source-type icons", async () => {
   assert.match(rail, /label: "OECD AI Incidents Monitor"[\s\S]*icon: Database/);
   assert.match(rail, /label: "NIST AI Resource Center"[\s\S]*icon: BookOpen/);
 });
+
+
+test("Case File Incident stage renders optional source artefact images inside What happened", async () => {
+  const [caseFile, css] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/vigil-case-file-polish.css"),
+  ]);
+  assert.match(caseFile, /incident_artefacts/);
+  assert.match(caseFile, /vigil-incident-artefacts/);
+  assert.match(caseFile, /<img src=\{artefact\.renderUrl\}/);
+  assert.match(caseFile, /View originating source/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact \{[\s\S]*text-align: center/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact img \{[\s\S]*margin: 0 auto/);
+});
