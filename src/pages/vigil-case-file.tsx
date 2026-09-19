@@ -46,6 +46,18 @@ type AffectedSystem = {
   deploymentContext?: string;
 };
 
+type IncidentArtefact = {
+  id: string;
+  type?: string;
+  title?: string;
+  mediaType?: string;
+  permalink?: string;
+  renderUrl?: string;
+  sourceUrl?: string;
+  altText?: string;
+  caption?: string;
+};
+
 type TaxonomyEvidenceReference = {
   key: string;
   title: string;
@@ -153,6 +165,26 @@ function dedupeEvidence(evidence: ExternalEvidence[]) {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
+  });
+}
+
+function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
+  const artefacts = Array.isArray(record.raw.incident_artefacts) ? record.raw.incident_artefacts : [];
+  return artefacts.flatMap((artefact, index) => {
+    if (!isObject(artefact)) return [];
+    const renderUrl = text(artefact.render_url ?? artefact.image_url ?? artefact.url);
+    if (!renderUrl) return [];
+    return [{
+      id: text(artefact.artefact_id) ?? `${record.id}-artefact-${index + 1}`,
+      type: text(artefact.artefact_type),
+      title: text(artefact.title),
+      mediaType: text(artefact.media_type),
+      permalink: text(artefact.permalink),
+      renderUrl,
+      sourceUrl: text(artefact.source_url),
+      altText: text(artefact.alt_text),
+      caption: text(artefact.caption),
+    }];
   });
 }
 
@@ -353,6 +385,7 @@ export default function VigilCaseFile() {
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
+  const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
 
   useEffect(() => {
     let cancelled = false;
@@ -402,6 +435,18 @@ export default function VigilCaseFile() {
       {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-labelledby="what-happened-heading">
         <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident summary</p><h3 id="what-happened-heading">What happened</h3></div>
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+        {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
+          {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
+            <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
+              <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
+            </a>
+            {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+              {artefact.title && <strong>{artefact.title}</strong>}
+              {artefact.caption && <span>{artefact.caption}</span>}
+              {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+            </figcaption>}
+          </figure>)}
+        </div>}
       </section>}
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
         <div className="vigil-case-subheading"><p className="vigil-library-kicker">Affected systems</p><h3 id="affected-systems-heading">Platforms, products and runtimes named in the evidence</h3></div>
