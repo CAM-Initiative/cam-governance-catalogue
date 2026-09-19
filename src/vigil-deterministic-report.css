@@ -1058,8 +1058,8 @@
   .vigil-deterministic-report-host .report-section summary,
   .vigil-deterministic-report-host .report-section a,
   .vigil-deterministic-report-host .report-reliance-notice p {
-    font-size: 12pt !important;
-    line-height: 1.5 !important;
+    font-size: 11pt !important;
+    line-height: 1.48 !important;
   }
 
   .vigil-deterministic-report-host .report-label,
@@ -1539,6 +1539,22 @@
     font-size: 11.5pt !important;
   }
 
+  .vigil-deterministic-report-host .report-severity-assessment .vigil-harm-summary-row {
+    flex-wrap: nowrap !important;
+    gap: 2.5mm 7mm !important;
+  }
+
+  .vigil-deterministic-report-host .report-severity-assessment .vigil-harm-summary-item > span,
+  .vigil-deterministic-report-host .report-severity-assessment .vigil-harm-overall-result > span {
+    font-size: 9pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-severity-assessment .vigil-harm-summary-item > strong,
+  .vigil-deterministic-report-host .report-severity-assessment .vigil-harm-overall-result > strong,
+  .vigil-deterministic-report-host .report-severity-assessment .vigil-harm-overall-result > small {
+    font-size: 10pt !important;
+  }
+
   .vigil-deterministic-report-host .report-occurrence-card,
   .vigil-deterministic-report-host .report-severity-assessment {
     border-radius: 2.3mm !important;
@@ -1584,6 +1600,23 @@
 }
 
 @media print {
+  /* Use ordinary block flow for print. CSS grid fragmentation was causing
+     orphaned section headings and unnecessary page jumps in Chromium PDF output. */
+  .vigil-deterministic-report-host .report-flow,
+  .vigil-deterministic-report-host .report-diagnosis,
+  .vigil-deterministic-report-host .report-stack {
+    display: block !important;
+  }
+
+  .vigil-deterministic-report-host .report-section + .report-section {
+    margin-top: 4.5mm !important;
+  }
+
+  .vigil-deterministic-report-host .report-diagnosis > * + *,
+  .vigil-deterministic-report-host .report-stack > * + * {
+    margin-top: 3.5mm !important;
+  }
+
   /* The numbered report is a document, not five nested cards. Removing the
      section border prevents page-spanning boxes and recovers useful A4 width. */
   .vigil-deterministic-report-host .report-section {
@@ -1596,6 +1629,18 @@
   .vigil-deterministic-report-host .report-section-header {
     margin-bottom: 3.5mm !important;
     padding-bottom: 2.8mm !important;
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+
+  .vigil-deterministic-report-host .report-intro {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .report-section-body > :first-child {
+    break-before: avoid-page;
+    page-break-before: avoid;
   }
 
   /* Section 01 mirrors Assessment's hierarchy without introducing another box. */
@@ -1635,8 +1680,22 @@
   .vigil-deterministic-report-host .vigil-classification-web-table,
   .vigil-deterministic-report-host .vigil-repair-web-table,
   .vigil-deterministic-report-host .report-empty,
-  .vigil-deterministic-report-host .report-reliance-notice,
+  .vigil-deterministic-report-host .report-reliance-notice {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
   .vigil-deterministic-report-host .report-assessment-limits {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  .vigil-deterministic-report-host .report-assessment-limits > .report-label {
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+
+  .vigil-deterministic-report-host .report-assessment-limits .report-list li {
     break-inside: avoid-page;
     page-break-inside: avoid;
   }
@@ -1661,6 +1720,13 @@
   .vigil-deterministic-report-host .report-assessment-limits {
     margin-top: 4mm !important;
     padding-top: 3.5mm !important;
+  }
+
+  .vigil-deterministic-report-host .report-empty {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
   }
 
   .vigil-deterministic-report-host .report-copyright {

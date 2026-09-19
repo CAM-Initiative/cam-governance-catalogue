@@ -288,14 +288,6 @@ function ClassManualCard({
       </section>
     </div>
 
-    {showSupportingEvidence
-      ? <SupportingEvidence item={item} />
-      : item.external_references?.length ? <p className="vigil-taxonomy-supporting-evidence-link">
-        <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`}>
-          Supporting evidence · {item.external_references.length} {item.external_references.length === 1 ? "source" : "sources"}
-        </Link>
-      </p> : null}
-
     <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
       <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
       {!caseFileExamplesAvailable
@@ -340,6 +332,14 @@ function ClassManualCard({
         {relationship.note ? <span> — {relationship.note}</span> : null}
       </li>)}</ul>
     </> : null}
+
+    {showSupportingEvidence
+      ? <SupportingEvidence item={item} />
+      : item.external_references?.length ? <p className="vigil-taxonomy-supporting-evidence-link">
+        <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}`}>
+          Supporting evidence · {item.external_references.length} {item.external_references.length === 1 ? "source" : "sources"}
+        </Link>
+      </p> : null}
   </article>;
 }
 

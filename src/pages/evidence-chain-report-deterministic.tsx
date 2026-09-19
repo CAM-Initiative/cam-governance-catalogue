@@ -3,6 +3,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { ExternalAssessmentList } from "@/components/vigil/ExternalAssessmentList";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -12,6 +13,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 
 type ReportState =
   | { status: "loading" }
@@ -209,6 +211,8 @@ export default function EvidenceChainReportDeterministic() {
 
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
+  const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
@@ -229,8 +233,10 @@ export default function EvidenceChainReportDeterministic() {
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
-  const references = [
+  const evidenceReferences = [
     ...externalSources.map((source) => ({ key: `ext-${source.title}-${source.url ?? ""}`, label: source.title, detail: [source.publisher, source.date].filter(Boolean).join(" · "), url: source.url })),
+  ];
+  const canonicalReferences = [
     ...state.records.map((record) => ({ key: record.id, label: `${record.id} — ${record.title}`, detail: [record.record_last_updated, record.record_version ? `Version ${record.record_version}` : undefined].filter(Boolean).join(" · "), url: record.github_blob_url ?? record.raw_url })),
   ];
 
@@ -296,8 +302,7 @@ export default function EvidenceChainReportDeterministic() {
           <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
           <section className="report-panel report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Matrix</h4>
-            <dl className="report-metadata-grid report-metadata-grid--2"><Field label="Methodology" value={severityMethodology} /><Field label="Assessed" value={severityAssessedOn} /></dl>
-            <HarmImpactMatrix assessment={harmImpactAssessment} compact />
+            <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} />
           </section>
           <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
         </article> : <Empty>No structured assessment is available.</Empty>}
@@ -312,9 +317,28 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
 
         <Stage number="05" label="References">
-          {references.length > 0 ? <>
-            <p className="vigil-evidence-kicker">Evidence and record references</p>
-            <ol className="report-reference-list">{references.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+          {(evidenceReferences.length > 0 || externalAssessments.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
+            {evidenceReferences.length > 0 && <section className="report-reference-group">
+              <h3 className="report-substantive-label">Evidence sources</h3>
+              <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+            </section>}
+            {externalAssessments.length > 0 && <section className="report-reference-group">
+              <h3 className="report-substantive-label">External assessments</h3>
+              <p className="report-reference-intro">Attributable third-party analyses. Inclusion does not imply endorsement by VIGIL.</p>
+              <ExternalAssessmentList assessments={externalAssessments} compact />
+            </section>}
+            {externalIncidentReferences.length > 0 && <section className="report-reference-group">
+              <h3 className="report-substantive-label">External incident records</h3>
+              <ol className="report-reference-list">{externalIncidentReferences.map((reference, index) => <li key={`${reference.registry}-${reference.externalId ?? index}`} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.registry}{reference.externalId ? ` — ${reference.externalId}` : ""}</strong>{reference.relationship ? <span className="report-reference-meta"> — {titleizeValue(reference.relationship)}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+            </section>}
+            <section className="report-reference-group">
+              <h3 className="report-substantive-label">Taxonomy and methodology references</h3>
+              <ol className="report-reference-list" data-report-taxonomy-reference-list />
+            </section>
+            <section className="report-reference-group">
+              <h3 className="report-substantive-label">Canonical VIGIL record</h3>
+              <ol className="report-reference-list">{canonicalReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number">[{index + 1}]</span><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+            </section>
           </> : <Empty>No references are currently available.</Empty>}
         </Stage>
       </div>

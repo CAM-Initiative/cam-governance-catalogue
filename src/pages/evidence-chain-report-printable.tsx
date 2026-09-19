@@ -174,7 +174,7 @@ export default function EvidenceChainReportPrintable() {
         next[number] = sectionHasSubstantiveContent(section, number);
 
         if (number === "05") {
-          const list = section.querySelector<HTMLOListElement>("ol");
+          const list = section.querySelector<HTMLOListElement>("ol[data-report-taxonomy-reference-list]");
           if (list) {
             referenceBaseCountRef.current = list.children.length;
             setReferenceList(list);

@@ -1,0 +1,152 @@
+.vigil-reference-subsection {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.vigil-reference-subsection + .vigil-reference-subsection {
+  margin-top: 1.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-reference-subsection > h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.vigil-reference-subsection > p {
+  margin: -0.45rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.84rem;
+}
+
+.vigil-external-assessments {
+  display: grid;
+  gap: 1rem;
+}
+
+.vigil-external-assessment {
+  padding: 1.05rem 1.1rem;
+  border: 1px solid hsl(var(--border));
+  border-left: 3px solid hsl(var(--primary) / 0.66);
+  border-radius: 0.45rem;
+  background: hsl(var(--card) / 0.28);
+  break-inside: auto;
+}
+
+.vigil-external-assessment header,
+.vigil-external-assessment section {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.vigil-external-assessment-kicker,
+.vigil-external-assessment h5 {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.vigil-external-assessment h4 {
+  margin: 0;
+  font-size: 1.03rem;
+  line-height: 1.4;
+}
+
+.vigil-external-assessment h4 a,
+.vigil-external-assessment footer a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.vigil-external-assessment svg {
+  width: 0.8em;
+  height: 0.8em;
+  flex: none;
+}
+
+.vigil-external-assessment-byline,
+.vigil-external-assessment-summary,
+.vigil-external-assessment section p {
+  margin: 0;
+  line-height: 1.58;
+}
+
+.vigil-external-assessment-byline {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.84rem;
+}
+
+.vigil-external-assessment-summary {
+  margin-top: 0.8rem;
+  font-size: 0.94rem;
+}
+
+.vigil-external-assessment-rating {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1.2rem;
+  margin: 0.9rem 0;
+  padding: 0.75rem 0;
+  border-block: 1px solid hsl(var(--border) / 0.62);
+}
+
+.vigil-external-assessment-rating dt {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.69rem;
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
+.vigil-external-assessment-rating dd {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.vigil-external-assessment section + section {
+  margin-top: 0.75rem;
+}
+
+.vigil-external-assessment footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 1rem;
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid hsl(var(--border) / 0.52);
+  color: hsl(var(--muted-foreground));
+  font-size: 0.75rem;
+}
+
+.vigil-external-assessment footer a {
+  margin-left: auto;
+}
+
+.vigil-external-assessments.is-compact .vigil-external-assessment {
+  padding: 0.8rem 0;
+  border-width: 1px 0 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vigil-external-assessments.is-compact .vigil-external-assessment:first-child {
+  border-top: 0;
+}
+
+@media (max-width: 620px) {
+  .vigil-external-assessment-rating { grid-template-columns: 1fr; }
+  .vigil-external-assessment footer a { width: 100%; margin-left: 0; }
+}
+
+@media print {
+  .vigil-external-assessment { break-inside: auto; }
+  .vigil-external-assessment h4 { break-after: avoid; }
+  .vigil-external-assessment footer { display: block; }
+  .vigil-external-assessment footer > * { margin-right: 0.75rem; }
+}

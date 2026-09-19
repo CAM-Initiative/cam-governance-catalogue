@@ -16,6 +16,31 @@ async function reportSources() {
   ]);
 }
 
+test("External Assessments remain a typed, optional layer distinct from evidence and registry links", async () => {
+  const [caseFile, parser, component, sync] = await Promise.all([
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/lib/vigilExternalAssessments.ts"), "utf8"),
+    readFile(resolve(repoRoot, "src/components/vigil/ExternalAssessmentList.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "scripts/sync-vigil-records.mjs"), "utf8"),
+  ]);
+
+  assert.match(parser, /raw\.external_assessments/);
+  assert.match(parser, /raw\.external_incident_references/);
+  assert.doesNotMatch(parser, /source_records/);
+  assert.match(caseFile, /externalAssessments\.length > 0/);
+  assert.match(caseFile, /External incident records/);
+  assert.match(caseFile, /Taxonomy and methodology references/);
+  assert.match(component, /External classification \/ rating/);
+  assert.match(component, /VIGIL relationship/);
+  assert.match(caseFile, /Inclusion does not imply endorsement/);
+  assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
+});
+
+test("Case File source contains no escaped newline text between hero cards", async () => {
+  const source = await caseFileSource();
+  assert.doesNotMatch(source, /<\/section>}\\n\\n/);
+});
+
 test("Case File References remain bibliographic and do not republish evidence commentary", async () => {
   const source = await caseFileSource();
   const evidenceMapper = source.match(/function externalEvidenceFor[\s\S]*?function dedupeEvidence/)?.[0] ?? "";
@@ -78,5 +103,7 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /label="Repair"/);
   assert.match(report, /label="References"/);
   assert.match(printable, /label: "Repair"/);
+  assert.match(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
+  assert.match(report, /data-report-taxonomy-reference-list/);
+  assert.match(printable, /data-report-taxonomy-reference-list/);
 });
-

@@ -31,6 +31,7 @@ import "./vigil-observatory-surface-cleanup.css";
 import "./governance-rail-refinements.css";
 import "./vigil-deterministic-report.css";
 import "./vigil-case-file-narrative-cards.css";
+import "./vigil-external-assessments.css";
 import "./about-page-polish.css";
 import "./public-surface-responsive-cleanup.css";
 
