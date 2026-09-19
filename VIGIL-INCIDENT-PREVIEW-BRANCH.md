@@ -6,7 +6,7 @@ This branch is a permanent review surface for pre-publication VIGIL Incident ing
 - **Do not use this branch for normal CAM Governance Interface development.**
 - Canonical web production continues to use VIGIL `main`.
 - This preview reads Incident records and taxonomy data from:
-  `agent/recent-incident-ingestion-2025-2026` in `CAM-Initiative/Vigil`.
+  `agent/incident-ecosystem-ingestion` in `CAM-Initiative/Vigil`.
 - Re-run the branch workflow whenever the upstream ingestion branch changes to refresh generated preview data.
 
 The purpose is human review of candidate Incident records before those records are merged into VIGIL `main`.
