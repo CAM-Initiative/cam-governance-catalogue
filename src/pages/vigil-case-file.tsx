@@ -5,6 +5,7 @@ import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { ExternalAssessmentList } from "@/components/vigil/ExternalAssessmentList";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -15,6 +16,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
+import { externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyFailureTypeLabel,
@@ -348,6 +350,8 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
+  const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   useEffect(() => {
@@ -390,7 +394,7 @@ export default function VigilCaseFile() {
   const severityMethodology = harmImpactAssessment
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
-  const referenceCount = externalSources.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
+  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -463,7 +467,10 @@ export default function VigilCaseFile() {
   </>;
 
     if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">
-      <ol>
+      {externalSources.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="evidence-sources-heading">
+        <h3 id="evidence-sources-heading">Evidence sources</h3>
+        <p>Sources supporting what happened and any materialised harm.</p>
+        <ol>
         {externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}>
           <span>[{index + 1}]</span>
           <div>
@@ -472,8 +479,35 @@ export default function VigilCaseFile() {
             {source.url && <a href={source.url} target="_blank" rel="noreferrer">{source.url}</a>}
           </div>
         </li>)}
+        </ol>
+      </section>}
+      {externalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
+        <h3 id="external-assessments-heading">External assessments</h3>
+        <p>Attributable third-party analyses. Inclusion does not imply endorsement by VIGIL; frameworks, scope and assessment dates may differ.</p>
+        <ExternalAssessmentList assessments={externalAssessments} />
+      </section>}
+      {externalIncidentReferences.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-incident-records-heading">
+        <h3 id="external-incident-records-heading">External incident records</h3>
+        <p>Cross-registry records identifying the same or a related occurrence.</p>
+        <ol>
+          {externalIncidentReferences.map((reference, index) => <li key={`${reference.registry}-${reference.externalId ?? index}`}>
+            <span>[{index + 1}]</span>
+            <div>
+              <strong>{reference.registry}{reference.externalId ? ` — ${reference.externalId}` : ""}</strong>
+              {(reference.relationship || reference.reviewedOn) && <p>{[
+                reference.relationship ? titleizeValue(reference.relationship) : undefined,
+                reference.reviewedOn ? `Reviewed ${reference.reviewedOn}` : undefined,
+              ].filter(Boolean).join(" · ")}</p>}
+              {reference.url && <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>}
+            </div>
+          </li>)}
+        </ol>
+      </section>}
+      {(taxonomyReferences.length > 0 || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
+        <h3 id="taxonomy-methodology-references-heading">Taxonomy and methodology references</h3>
+        <ol>
         {taxonomyReferences.map((reference, index) => <li key={`${reference.relationship}-${reference.id}`}>
-          <span>[{externalSources.length + index + 1}]</span>
+          <span>[{index + 1}]</span>
           <div>
             <strong>{reference.id} — {reference.title}</strong>
             <p>VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</p>
@@ -481,7 +515,7 @@ export default function VigilCaseFile() {
           </div>
         </li>)}
         {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
-          <span>[{externalSources.length + taxonomyReferences.length + index + 1}]</span>
+          <span>[{taxonomyReferences.length + index + 1}]</span>
           <div>
             <strong>{reference.title}</strong>
             {(reference.publisher || reference.date || reference.role) && <p>{[
@@ -493,14 +527,20 @@ export default function VigilCaseFile() {
             {reference.url && <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>}
           </div>
         </li>)}
+        </ol>
+      </section>}
+      <section className="vigil-reference-subsection" aria-labelledby="canonical-vigil-record-heading">
+        <h3 id="canonical-vigil-record-heading">Canonical VIGIL record</h3>
+        <ol>
         {state.records.map((record, index) => <li key={record.id}>
-          <span>[{externalSources.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + index + 1}]</span>
+          <span>[{index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
             {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
           </div>
         </li>)}
-      </ol>
+        </ol>
+      </section>
     </div> : <p className="vigil-case-empty">No references are currently available for this Case File.</p>;
 
     return null;
@@ -530,7 +570,17 @@ export default function VigilCaseFile() {
       </aside>
     </header>
 
-    {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">\n      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleHelp /></div>\n      <div className="vigil-exemplar-callout-copy">\n        <p className="vigil-exemplar-callout-kicker">Mixed Case File</p>\n        <h2 id="vigil-combination-heading">This Case File contains mixed taxonomy relationships.</h2>\n        <p>Its mappings do not all have the same evidential role. Open Classification to see which relationships are failure occurrences, successful invariants, or ambiguous boundaries.</p>\n        <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>\n      </div>\n    </section>}\n\n    {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
+    {isCombination && <section className="vigil-exemplar-callout is-mixed-execution" aria-labelledby="vigil-combination-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleHelp /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Mixed Case File</p>
+        <h2 id="vigil-combination-heading">This Case File contains mixed taxonomy relationships.</h2>
+        <p>Its mappings do not all have the same evidential role. Open Classification to see which relationships are failure occurrences, successful invariants, or ambiguous boundaries.</p>
+        <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>
+      </div>
+    </section>}
+
+    {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <CircleHelp /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>

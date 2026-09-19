@@ -26,6 +26,9 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
+  assert.match(pages, /function externalAssessmentsHtml\(record\)/);
+  assert.match(pages, /External classification \/ rating/);
+  assert.match(pages, /VIGIL relationship/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
@@ -172,7 +175,7 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.match(taxonomy, /hasDirectPrimary \|\| hasDirectSecondary/);
   assert.match(taxonomy, /return mappingRoles\(record, directFallback \?\? "failure-occurrence"\)/);
   assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
-  assert.match(taxonomy, /hasFailure && hasExemplar\) return "Combination"/);
+  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasExemplar\)\) return "Combination"/);
   assert.match(taxonomy, /hasExemplar && !hasFailure\) return "Exemplar"/);
   assert.match(taxonomy, /hasFailure && !hasExemplar\) return "Classified"/);
   assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
@@ -222,7 +225,7 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(classification, /not failure evidence/i);
   assert.match(classification, /Primary exemplar/);
   assert.match(classification, /Secondary exemplar/);
-  assert.match(classification, /if \(item\.role === "successful-invariant"\) return;/);
+  assert.match(classification, /if \(item\.role !== "failure-occurrence"\) return;/);
   assert.match(classification, /No repair invariant is available for this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
