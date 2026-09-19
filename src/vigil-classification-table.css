@@ -45,10 +45,10 @@
   color: hsl(var(--muted-foreground) / 0.86);
 }
 
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 13%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 24%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 25%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 7%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 25%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 27%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 41%; }
 
 .vigil-case-file-page .vigil-classification-table tbody td {
   padding: 0.9rem 0.9rem 0.95rem;
@@ -73,8 +73,41 @@
   color: hsl(var(--foreground) / 0.94);
 }
 
-.vigil-case-file-page .vigil-classification-relationship > strong {
-  color: hsl(var(--primary));
+.vigil-case-file-page .vigil-classification-outcome-cell {
+  text-align: center;
+}
+
+.vigil-case-file-page .vigil-classification-outcome {
+  display: inline-flex;
+  width: 1.85rem;
+  height: 1.85rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+}
+
+.vigil-case-file-page .vigil-classification-outcome svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke-width: 2.35;
+}
+
+.vigil-case-file-page .vigil-classification-outcome.is-held {
+  color: hsl(var(--status-success));
+  background: hsl(var(--status-success) / 0.09);
+  box-shadow: 0 0 0 1px hsl(var(--status-success) / 0.18);
+}
+
+.vigil-case-file-page .vigil-classification-outcome.is-failed {
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.08);
+  box-shadow: 0 0 0 1px hsl(var(--destructive) / 0.16);
+}
+
+.vigil-case-file-page .vigil-classification-outcome.is-ambiguous {
+  color: hsl(var(--muted-foreground));
+  background: hsl(var(--muted) / 0.45);
+  box-shadow: 0 0 0 1px hsl(var(--border) / 0.65);
 }
 
 .vigil-case-file-page .vigil-classification-id {
@@ -186,11 +219,10 @@
 }
 
 
-/* Repair uses the same table grammar as Classification, with three columns.
-   Give the invariant the reading width it needs and keep the single-row view compact. */
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 12%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 27%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 61%; }
+/* Repair keeps only the public decision-useful fields.
+   Primary/secondary ordering remains in canonical data and the deterministic report. */
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 31%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 69%; }
 
 .vigil-case-file-page .vigil-repair-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
