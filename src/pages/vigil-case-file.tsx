@@ -379,6 +379,7 @@ export default function VigilCaseFile() {
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const isCombination = classification === "Combination";
+  const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
@@ -577,6 +578,18 @@ export default function VigilCaseFile() {
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
         <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>
+      </div>
+    </section>}
+
+
+
+    {isDisputed && <section className="vigil-exemplar-callout is-disputed" aria-labelledby="vigil-disputed-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Disputed evidence</p>
+        <h2 id="vigil-disputed-heading">The evidence is disputed.</h2>
+        <p>Material claims about this occurrence are contested, denied, or have not been independently adjudicated. VIGIL preserves the available evidence and its current classification without presenting disputed claims as settled fact.</p>
+        <p className="vigil-exemplar-callout-boundary">The taxonomy mapping describes the governance mechanism evidenced if the reported occurrence is supported; it does not convert disputed claims into established fact.</p>
       </div>
     </section>}
 
