@@ -106,4 +106,7 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
   assert.match(report, /data-report-taxonomy-reference-list/);
   assert.match(printable, /data-report-taxonomy-reference-list/);
+  assert.doesNotMatch(report, /report-reference-number">\[\{index \+ 1\}\]/);
+  assert.doesNotMatch(printable, /referenceBaseCountRef/);
+  assert.match(report, /report-reference-number" aria-hidden="true"/);
 });
