@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Check, CircleMinus, X } from "lucide-react";
 import {
   loadFailureTaxonomy,
   type FailureTaxonomyClass,
@@ -44,7 +45,6 @@ type ResolvedClassification = ClassificationRef & {
 
 type ClassificationTableRow = {
   item: ResolvedClassification;
-  relationship: "Primary" | "Secondary" | "Primary exemplar" | "Secondary exemplar" | "Primary ambiguous boundary" | "Secondary ambiguous boundary" | "Family only";
 };
 
 type Props = {
@@ -184,6 +184,20 @@ function useTaxonomy(): TaxonomyState {
   return taxonomy;
 }
 
+function mappingOutcome(role?: ClassificationRole) {
+  if (role === "successful-invariant") return { label: "Invariant held", kind: "held" as const };
+  if (role === "ambiguous-boundary") return { label: "Boundary unresolved", kind: "ambiguous" as const };
+  return { label: "Failure occurred", kind: "failed" as const };
+}
+
+function MappingOutcome({ role }: { role?: ClassificationRole }) {
+  const outcome = mappingOutcome(role);
+  return <span className={`vigil-classification-outcome is-${outcome.kind}`} aria-label={outcome.label} title={outcome.label}>
+    {outcome.kind === "held" ? <Check aria-hidden="true" /> : outcome.kind === "failed" ? <X aria-hidden="true" /> : <CircleMinus aria-hidden="true" />}
+    <span className="sr-only">{outcome.label}</span>
+  </span>;
+}
+
 function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
   const hasUnresolved = rows.some(({ item }) =>
     (item.classId && !item.class) || (item.familyId && !item.family)
@@ -195,20 +209,20 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
         <caption className="sr-only">Canonical taxonomy mappings for this Case File. Successful-invariant and ambiguous-boundary mappings are not failure evidence.</caption>
         <thead>
           <tr>
-            <th scope="col">Relationship</th>
+            <th scope="col">Outcome</th>
             <th scope="col">Failure family</th>
             <th scope="col">Failure class</th>
             <th scope="col">Classification basis</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ item, relationship }, index) => {
+          {rows.map(({ item }, index) => {
             const family = item.family?.family;
             const classificationClass = item.class;
             const familyId = family?.family_id ?? item.familyId;
             const classId = classificationClass?.class_id ?? item.classId;
-            return <tr key={`${relationship}-${classId ?? familyId ?? index}`}>
-              <td data-label="Relationship" className="vigil-classification-relationship"><strong>{relationship}</strong></td>
+            return <tr key={`${classId ?? familyId ?? index}-${item.role ?? "failure-occurrence"}`}>
+              <td data-label="Outcome" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
               <td data-label="Failure family">
                 <strong>{family?.name ?? (familyId ? "Unresolved failure family" : "Not assigned")}</strong>
                 {familyId && <span className="vigil-classification-id">{familyId}</span>}
@@ -310,7 +324,7 @@ function ExplicitClassificationState({
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationTable rows={[{ item: primary, relationship: "Family only" }]} />
+    <ClassificationTable rows={[{ item: primary }]} />
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
@@ -346,14 +360,8 @@ export function CaseTaxonomyClassification({ raw }: Props) {
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
-    {
-      item: primary,
-      relationship: primary.role === "successful-invariant" ? "Primary exemplar" : "Primary",
-    },
-    ...secondaries.map((item) => ({
-      item,
-      relationship: item.role === "successful-invariant" ? "Secondary exemplar" as const : item.role === "ambiguous-boundary" ? "Secondary ambiguous boundary" as const : "Secondary" as const,
-    })),
+    { item: primary },
+    ...secondaries.map((item) => ({ item })),
   ];
 
   return <div className="vigil-taxonomy-classification-view">
@@ -442,14 +450,12 @@ export function CaseTaxonomyRepair({ raw }: Props) {
       <table className="vigil-classification-table vigil-repair-table">
         <thead>
           <tr>
-            <th scope="col">Relationship</th>
             <th scope="col">Failure class</th>
             <th scope="col">Governing invariant</th>
           </tr>
         </thead>
         <tbody>
-          {invariants.map(({ class: classificationClass, relationship, sourceUrl }) => <tr key={classificationClass.class_id}>
-            <td data-label="Relationship" className="vigil-classification-relationship"><strong>{relationship}</strong></td>
+          {invariants.map(({ class: classificationClass, sourceUrl }) => <tr key={classificationClass.class_id}>
             <td data-label="Failure class">
               <strong>{classificationClass.name}</strong>
               <span className="vigil-classification-id">{classificationClass.class_id}</span>
