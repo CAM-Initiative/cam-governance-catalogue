@@ -1,4 +1,38 @@
 /* Mixed alignment / successful-exemplar treatment.
+   Combination Case Files use a high-energy amber signal distinct from the
+   successful-invariant green. Mixed-execution exemplars retain green as their
+   primary governance signal with gold as secondary context. */
+
+.vigil-case-file-page .vigil-exemplar-callout.is-combination {
+  border-color: hsl(var(--status-mixed) / 0.88);
+  background:
+    radial-gradient(circle at 10% 18%, hsl(var(--status-mixed) / 0.24) 0%, transparent 34%),
+    linear-gradient(135deg, hsl(var(--status-mixed-surface)) 0%, hsl(var(--background)) 74%);
+  box-shadow:
+    0 0 0 1px hsl(var(--status-mixed) / 0.18),
+    0 0 26px hsl(var(--status-mixed) / 0.15),
+    0 12px 34px hsl(var(--status-mixed) / 0.10);
+}
+
+.vigil-case-file-page .vigil-exemplar-callout.is-combination .vigil-exemplar-callout-icon {
+  border-color: hsl(var(--status-mixed) / 0.82);
+  background: linear-gradient(145deg, hsl(var(--status-mixed) / 0.18), hsl(var(--background) / 0.90));
+  color: hsl(var(--status-mixed));
+  box-shadow:
+    0 0 0 5px hsl(var(--status-mixed) / 0.12),
+    0 0 28px hsl(var(--status-mixed) / 0.30);
+}
+
+.vigil-case-file-page .vigil-exemplar-callout.is-combination .vigil-exemplar-callout-kicker {
+  color: hsl(var(--status-mixed));
+}
+
+.vigil-case-file-page .vigil-exemplar-callout.is-combination .vigil-exemplar-callout-boundary {
+  color: hsl(var(--foreground) / 0.84);
+  border-top-color: hsl(var(--status-mixed) / 0.42);
+}
+
+/* Mixed alignment / successful-exemplar treatment.
    Green remains the living governance signal; the softer secondary glow marks
    that different alignment boundaries can have different outcomes in one Case File. */
 
