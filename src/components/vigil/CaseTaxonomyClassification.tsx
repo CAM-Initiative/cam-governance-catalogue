@@ -198,6 +198,7 @@ function MappingOutcome({ role }: { role?: ClassificationRole }) {
   </span>;
 }
 
+// Web UX shows alignment state directly; primary/secondary ordering remains in canonical data and report metadata.
 function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
   const hasUnresolved = rows.some(({ item }) =>
     (item.classId && !item.class) || (item.familyId && !item.family)
