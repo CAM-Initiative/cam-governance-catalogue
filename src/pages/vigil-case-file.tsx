@@ -85,7 +85,7 @@ const CASE_VIEWS = VIGIL_INCIDENT_CASE_SECTIONS;
 
 type StageId = typeof CASE_VIEWS[number]["id"];
 
-const CASE_REFERENCE_HASH_PATTERN = /^#(vigil-evidence-reference-\\d+|vigil-failure-taxonomy-reference|vigil-harm-methodology-reference)$/;
+const CASE_REFERENCE_HASH_PATTERN = /^#(vigil-evidence-reference-\d+|vigil-failure-taxonomy-reference|vigil-harm-methodology-reference)$/;
 
 function caseReferenceTargetFromHash(hash: string) {
   return hash.match(CASE_REFERENCE_HASH_PATTERN)?.[1];
