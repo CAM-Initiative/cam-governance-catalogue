@@ -78,6 +78,7 @@ const DIMENSIONS = [
       S4: "USD 100 million to below USD 100 billion, or independently evidenced substantial solvency, organisational-viability or widespread economic impact where no defensible USD conversion is available.",
       S5: "At least USD 100 billion, catastrophic insolvency or systemic economic loss.",
     },
+    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold.",
   },
   {
     dimension_id: "property-asset-damage",
@@ -89,6 +90,7 @@ const DIMENSIONS = [
       S4: "Substantial destruction or impairment of important or critical assets requiring major recovery, while remaining below catastrophic loss.",
       S5: "Catastrophic or effectively irreversible destruction of critical physical or digital assets.",
     },
+    adaptation_note: "Asset damage is assessed independently from realised financial loss. Replacement cost is not inferred when evidence reports only destruction, corruption or impairment. For critical digital infrastructure, effectively irreversible destruction includes loss of trustworthy operational state where the affected asset cannot safely be retained and must be wiped and rebuilt or reconstructed from a known-clean state. Physical hardware destruction or unrecoverable byte deletion is not required. Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5; the evidence must support loss of trusted state in the critical asset itself.",
   },
   {
     dimension_id: "service-operational-infrastructure",
@@ -100,6 +102,7 @@ const DIMENSIONS = [
       S4: "Essential or critical operation disrupted over 24 hours, material multi-organisation or multi-jurisdiction impact, exceeded evidenced tolerable downtime, or substantial external recovery.",
       S5: "Catastrophic or prolonged loss of essential service or operational collapse producing comparably grave materialised consequences.",
     },
+    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope.",
   },
   {
     dimension_id: "reputation-dignity",
@@ -277,6 +280,13 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
           </tr>)}
         </tbody>
       </table>
+    </div>
+
+    <div className="vigil-harm-interpretive-notes" aria-label="Harm matrix interpretive notes">
+      <h3>Interpretive notes</h3>
+      {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
+        ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
+        : [])}
     </div>
 
     <div className="vigil-harm-evidence-key" aria-label="Harm assessment evidence states">
