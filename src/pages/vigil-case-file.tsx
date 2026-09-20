@@ -393,6 +393,7 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  // Resolve canonical row-local source_records[N] provenance against the final numbered, deduplicated Evidence sources list.
   const harmEvidenceReferenceNumbers = useMemo(() => Object.fromEntries(
     externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
   ), [externalSources]);
