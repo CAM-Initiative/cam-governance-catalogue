@@ -435,7 +435,7 @@ export default function VigilCaseFile() {
   const assessmentLimitItems = harmClassificationLimit
     ? [...assessmentBoundaries, harmClassificationLimit]
     : assessmentBoundaries;
-  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
+  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -596,7 +596,7 @@ export default function VigilCaseFile() {
           </li>)}
         </ol>
       </section>}
-      {(taxonomyReferences.length > 0 || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
+      {(taxonomyReferences.length > 0 || harmImpactAssessment || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
         <h3 id="taxonomy-methodology-references-heading">Taxonomy and methodology references</h3>
         <ol>
         {taxonomyReferences.length > 0 && <li key="vigil-failure-taxonomy">
@@ -607,8 +607,16 @@ export default function VigilCaseFile() {
             <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
         </li>}
+        {harmImpactAssessment && <li key="vigil-harm-impact-methodology">
+          <span>[{taxonomyReferences.length ? 2 : 1}]</span>
+          <div>
+            <strong>VIGIL Harm Impact Methodology</strong>
+            <p>CAM Initiative · Harm severity methodology</p>
+            <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/severity-methodology</a>
+          </div>
+        </li>}
         {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
-          <span>[{(taxonomyReferences.length ? 1 : 0) + index + 1}]</span>
+          <span>[{(taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + index + 1}]</span>
           <div>
             <strong>{reference.title}</strong>
             {(reference.publisher || reference.date || reference.role) && <p>{[

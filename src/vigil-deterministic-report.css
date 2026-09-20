@@ -730,7 +730,7 @@
 @media print {
   @page {
     size: A4;
-    margin: 14mm 0 16mm;
+    margin: 20mm 0 18mm;
   }
 
   .vigil-deterministic-report-host {
@@ -2112,4 +2112,41 @@
   .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 13% !important; }
   .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 30% !important; }
   .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 57% !important; }
+}
+
+
+/* Deterministic vertical pagination.
+   Major report stages after Incident start on a fresh page; table rows, family
+   headings and reference subsection headings remain attached to the content
+   they introduce. */
+@media print {
+  .vigil-deterministic-report-host .report-section[data-report-stage="02"],
+  .vigil-deterministic-report-host .report-section[data-report-stage="03"],
+  .vigil-deterministic-report-host .report-section[data-report-stage="04"],
+  .vigil-deterministic-report-host .report-section[data-report-stage="05"] {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  .vigil-deterministic-report-host .report-section-header,
+  .vigil-deterministic-report-host .vigil-classification-family-row,
+  .vigil-deterministic-report-host .report-reference-group > h3,
+  .vigil-deterministic-report-host .report-external-assessments > h4 {
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-family-row + tr,
+  .vigil-deterministic-report-host .vigil-classification-table tbody tr,
+  .vigil-deterministic-report-host .report-external-assessment-table tbody tr,
+  .vigil-deterministic-report-host .report-reference-item {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
+  }
+
+  .vigil-deterministic-report-host .report-document p,
+  .vigil-deterministic-report-host .report-document li {
+    orphans: 3;
+    widows: 3;
+  }
 }

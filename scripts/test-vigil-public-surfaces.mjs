@@ -162,6 +162,7 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.doesNotMatch(classification, /vigil-repair-role-key/);
   assert.match(classification, /VigilAlignmentLegend/);
   assert.match(css, /\.vigil-alignment-legend/);
+  assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -272,6 +273,7 @@ test("About keeps dedicated five-stage explanatory copy and aligned stage-card c
   assert.doesNotMatch(sections, /description:/);
   assert.match(aboutCss, /grid-template-rows: auto minmax\(3rem, auto\) 1fr/);
   assert.match(aboutCss, /min-height: 3rem/);
+  assert.match(aboutCss, /padding: 0\.4rem 0\.95rem 0\.95rem !important/);
 });
 
 test("About explains successful-invariant exemplars and the publication model", async () => {

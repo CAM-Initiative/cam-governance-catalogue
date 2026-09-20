@@ -518,5 +518,6 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </tbody>
       </table>
     </div>
+    <VigilAlignmentLegend />
   </div>;
 }

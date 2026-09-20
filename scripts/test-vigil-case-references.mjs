@@ -31,6 +31,8 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /External incident records/);
   assert.match(caseFile, /Taxonomy and methodology references/);
   assert.match(caseFile, /VIGIL Observatory Failure Taxonomy/);
+  assert.match(caseFile, /VIGIL Harm Impact Methodology/);
+  assert.match(caseFile, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
   assert.match(caseFile, /Internal records/);
   assert.doesNotMatch(caseFile, /taxonomyReferences\.map\(\(reference/);
   assert.match(component, /External classification \/ rating/);
@@ -168,6 +170,8 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /data-report-taxonomy-reference-list/);
   assert.match(printable, /data-report-taxonomy-reference-list/);
   assert.match(printable, /VIGIL Observatory Failure Taxonomy/);
+  assert.match(printable, /VIGIL Harm Impact Methodology/);
+  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
   assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/knowledge-base\/failure-taxonomy/);
   assert.doesNotMatch(printable, /reportIncident\.taxonomyReferences\.map/);
   assert.match(report, /Internal records/);

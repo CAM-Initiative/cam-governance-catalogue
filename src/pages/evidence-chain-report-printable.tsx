@@ -213,6 +213,7 @@ export default function EvidenceChainReportPrintable() {
     () => collectTaxonomyEvidence(reportIncident?.taxonomyReferences ?? []),
     [reportIncident?.taxonomyReferences],
   );
+  const hasHarmMethodologyReference = Boolean(reportIncident && isObject(reportIncident.raw.harm_impact_assessment));
   const assessmentBoundaries = useMemo(() => {
     const assessment = reportIncident && isObject(reportIncident.raw.vigil_assessment)
       ? reportIncident.raw.vigil_assessment
@@ -230,7 +231,7 @@ export default function EvidenceChainReportPrintable() {
     return harmLimit ? [...assessmentBoundaries, harmLimit] : assessmentBoundaries;
   }, [assessmentBoundaries, reportIncident]);
 
-  const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || taxonomyEvidenceReferences.length > 0)
+  const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
     ? createPortal(<>
       {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
@@ -239,6 +240,15 @@ export default function EvidenceChainReportPrintable() {
           <span className="report-reference-meta"> — CAM Initiative · Public taxonomy reference</span>
           <br />
           <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
+        </span>
+      </li>}
+      {hasHarmMethodologyReference && <li key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
+        <span className="report-reference-number" aria-hidden="true" />
+        <span className="report-reference-copy">
+          <strong>VIGIL Harm Impact Methodology</strong>
+          <span className="report-reference-meta"> — CAM Initiative · Harm severity methodology</span>
+          <br />
+          <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/severity-methodology</a>
         </span>
       </li>}
       {taxonomyEvidenceReferences.map((reference) => {
