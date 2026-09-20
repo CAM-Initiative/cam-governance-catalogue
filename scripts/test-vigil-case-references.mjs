@@ -215,4 +215,5 @@ test("harm rows resolve source_records evidence to the numbered Evidence sources
   assert.match(matrix, /row\.evidence_refs/);
   assert.match(matrix, /evidenceReferenceNumbers\?\.\[ref\]/);
   assert.match(matrix, /href=\{\`#vigil-evidence-reference-/);
+  assert.match(report, /id=\{\`vigil-evidence-reference-\$\{index \+ 1\}\`\}/);
 });
