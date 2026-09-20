@@ -28,7 +28,7 @@ assert.match(caseFile, /CaseTaxonomyRepair/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
 assert.doesNotMatch(caseFile, /incident-specific assessment rather than the full methodology reference table/);
-assert.match(caseFile, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\} \/>/);
+assert.match(caseFile, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\} \/>/);
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
