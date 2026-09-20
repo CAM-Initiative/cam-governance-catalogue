@@ -230,8 +230,28 @@ test("Incident artefact captions use one label plus numbered evidence reference"
   assert.match(css, /\.vigil-incident-artefact-reference/);
 });
 
-test("Governance assessment separates Factual basis and Governance significance with peer dividers", async () => {
+test("Governance assessment uses one divider before each peer subsection", async () => {
   const css = await readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8");
-  assert.match(css, /\.vigil-diagnosis-assessment-details > section \{[\s\S]*border-top: 1px solid/);
-  assert.match(css, /\.vigil-diagnosis-assessment-details > section \+ section \{[\s\S]*margin-top: 1rem/);
+  const container = css.match(/\.vigil-case-file-page \.vigil-diagnosis-assessment-details \{[\s\S]*?\}/)?.[0] ?? "";
+  assert.doesNotMatch(container, /border-top/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-diagnosis-assessment-details > section \{[\s\S]*border-top: 1px solid/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-diagnosis-assessment-details > section \+ section \{[\s\S]*margin-top: 1rem/);
+});
+
+
+test("Harm Impact assessment metadata is presented as a legible summary strip", async () => {
+  const [matrix, css] = await Promise.all([
+    readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+  ]);
+  assert.match(matrix, /Assessment date/);
+  assert.match(matrix, /Harm assessment summary:/);
+  assert.doesNotMatch(matrix, /<strong>Assessment coverage:<\/strong>/);
+  assert.match(css, /vigil-harm-summary-row[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(0, 0\.8fr\) minmax\(0, 1fr\)/);
+});
+
+test("Classification table body typography matches Repair", async () => {
+  const css = await readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8");
+  assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 0\.97rem[\s\S]*line-height: 1\.58/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-repair-table tbody td \{[\s\S]*font-size: 0\.97rem[\s\S]*line-height: 1\.58/);
 });
