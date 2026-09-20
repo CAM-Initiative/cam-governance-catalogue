@@ -255,6 +255,25 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
+test("About keeps dedicated five-stage explanatory copy and aligned stage-card contract", async () => {
+  const [about, aboutCss, sections] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/about-page-polish.css"),
+    read("src/lib/vigilCaseSections.ts"),
+  ]);
+  assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
+  assert.match(about, /What happened, which systems were affected, and what the evidence establishes\./);
+  assert.match(about, /occurrence-level governance assessment, including materialised severity and evidentiary limits/);
+  assert.match(about, /canonical structural mechanism supported by the assessment and evidence/);
+  assert.match(about, /governing invariant condition that a repair must restore and preserve/);
+  assert.match(about, /Sources, taxonomy records and the canonical Incident cited in this Case File\./);
+  assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
+  assert.doesNotMatch(about, /VIGIL_INCIDENT_CASE_SECTIONS\.map/);
+  assert.doesNotMatch(sections, /description:/);
+  assert.match(aboutCss, /grid-template-rows: auto minmax\(3rem, auto\) 1fr/);
+  assert.match(aboutCss, /min-height: 3rem/);
+});
+
 test("About explains successful-invariant exemplars and the publication model", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /successful-invariant exemplar/i);

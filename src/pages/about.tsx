@@ -2,10 +2,38 @@ import { useState } from "react";
 import { ArrowRight, Check, Copy } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassification";
 
 const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://cam-initiative.org";
+
+const ABOUT_CASE_FILE_STAGES = [
+  {
+    number: "01",
+    label: "Incident",
+    description: "What happened, which systems were affected, and what the evidence establishes.",
+  },
+  {
+    number: "02",
+    label: "Assessment",
+    description: "The occurrence-level governance assessment, including materialised severity and evidentiary limits.",
+  },
+  {
+    number: "03",
+    label: "Classification",
+    description: "The canonical structural mechanism supported by the assessment and evidence.",
+  },
+  {
+    number: "04",
+    label: "Repair",
+    description: "The governing invariant condition that a repair must restore and preserve.",
+  },
+  {
+    number: "05",
+    label: "References",
+    description: "Sources, taxonomy records and the canonical Incident cited in this Case File.",
+  },
+] as const;
+
 
 function CopyCitation() {
   const [copied, setCopied] = useState(false);
@@ -48,7 +76,7 @@ export default function About() {
             <p className="vigil-about-record-intro">A reported Incident is not automatically evidence of a failure, and a failure is not automatically a new class. VIGIL Observatory asks what the evidence establishes, which taxonomy boundary is relevant, and whether that relationship represents a failure-classified Incident or an example of the governing invariant holding successfully.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory five-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
-                {VIGIL_INCIDENT_CASE_SECTIONS.map((section) => <article key={section.number}>
+                {ABOUT_CASE_FILE_STAGES.map((section) => <article key={section.number}>
                   <span>Stage {section.number}</span>
                   <h3>{section.label}</h3>
                   <p>{section.description}</p>
