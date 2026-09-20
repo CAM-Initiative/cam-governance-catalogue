@@ -276,7 +276,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
-  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
+  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
 
   const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
@@ -307,7 +307,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
     <VigilObservatoryNav />
     <main className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 md:px-10 md:py-10 report-document">
       <div className="print:hidden mb-6 flex items-center justify-between gap-4">
-        <Link href={`/observatory/cases/${encodeURIComponent(incident?.id ?? state.sourceId)}`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
+        <Link href={`/observatory/cases/${encodeURIComponent(incident?.id ?? state.sourceId)}/`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
         <button type="button" onClick={() => window.print()} className="rounded-md border border-cam-gold/45 bg-background px-4 py-2 font-mono text-sm uppercase tracking-[0.08em] text-cam-gold">Print / save PDF</button>
       </div>
 
