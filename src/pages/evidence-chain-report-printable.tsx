@@ -224,6 +224,7 @@ export default function EvidenceChainReportPrintable() {
     const harmAssessment = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
       ? reportIncident.raw.harm_impact_assessment
       : undefined;
+    // Keep non-assessed harm dimensions in the closing assessment limits rather than the scored Harm Impact table.
     const harmDimensionLimits = nonAssessedHarmDimensionLimitItems(harmAssessment);
     return [...assessmentBoundaries, ...harmDimensionLimits];
   }, [assessmentBoundaries, reportIncident]);
