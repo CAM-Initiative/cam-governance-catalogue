@@ -2217,6 +2217,13 @@
   color: hsl(var(--report-muted)) !important;
 }
 
+.vigil-deterministic-report-host .vigil-harm-methodology-reference {
+  color: hsl(var(--report-gold)) !important;
+  font-size: inherit !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 @media print {
   .vigil-deterministic-report-host .vigil-harm-summary {
     margin-bottom: 3.5mm !important;
