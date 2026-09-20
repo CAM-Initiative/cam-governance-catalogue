@@ -476,6 +476,9 @@ export default function VigilCaseFile() {
   const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
   const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
+  const taxonomyReferenceNumber = taxonomyReferences.length
+    ? externalSources.length + externalIncidentReferences.length + 1
+    : undefined;
   const harmMethodologyReferenceNumber = harmImpactAssessment
     ? externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + 1
     : undefined;
@@ -525,11 +528,11 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
+      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "repair") return <>
-      {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
+      {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
@@ -644,7 +647,7 @@ export default function VigilCaseFile() {
       {(taxonomyReferences.length > 0 || harmImpactAssessment || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
         <h3 id="taxonomy-methodology-references-heading">Taxonomy and methodology references</h3>
         <ol>
-        {taxonomyReferences.length > 0 && <li key="vigil-failure-taxonomy">
+        {taxonomyReferences.length > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy">
           <span>[1]</span>
           <div>
             <strong>VIGIL Observatory Failure Taxonomy</strong>
