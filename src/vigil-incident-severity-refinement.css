@@ -421,7 +421,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 
 .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-item > span,
 .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result > span {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   line-height: 1.3;
 }
 
