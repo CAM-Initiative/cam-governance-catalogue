@@ -476,6 +476,9 @@ export default function VigilCaseFile() {
   const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
   const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
+  const harmMethodologyReferenceNumber = harmImpactAssessment
+    ? externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + 1
+    : undefined;
   const referenceCount = externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
@@ -565,7 +568,12 @@ export default function VigilCaseFile() {
             <p className="vigil-library-kicker">Harm classification</p>
             <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
           </div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
+          <HarmImpactMatrix
+            assessment={harmImpactAssessment}
+            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+            methodologyReferenceNumber={harmMethodologyReferenceNumber}
+            methodologyReferenceHref="#vigil-harm-methodology-reference"
+          />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
@@ -644,7 +652,7 @@ export default function VigilCaseFile() {
             <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
         </li>}
-        {harmImpactAssessment && <li key="vigil-harm-impact-methodology">
+        {harmImpactAssessment && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology">
           <span>[{taxonomyReferences.length ? 2 : 1}]</span>
           <div>
             <strong>VIGIL Harm Impact Methodology</strong>
