@@ -506,7 +506,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
           </tr>
         </thead>
         <tbody>
-          {invariants.map(({ class: classificationClass, sourceUrl, role }) => <tr key={classificationClass.class_id}>
+          {invariants.map(({ class: classificationClass, role }) => <tr key={classificationClass.class_id}>
             <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
             <td data-label="Failure class">
               <strong>{classificationClass.name}</strong>
