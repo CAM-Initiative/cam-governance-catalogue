@@ -180,11 +180,14 @@ function dimensionLabel(id: string) {
   return DIMENSIONS.find((dimension) => dimension.dimension_id === id)?.label ?? id.split("-").join(" ");
 }
 
-export function notApplicableHarmDimensionLabels(assessment?: UnknownRecord): string[] {
+export function nonAssessedHarmDimensionLimitItems(assessment?: UnknownRecord): string[] {
   if (!assessment) return [];
-  return rowsFor(assessment)
-    .filter((row) => row.assessment_status === "not-applicable")
-    .map((row) => dimensionLabel(row.dimension_id));
+  const rows = rowsFor(assessment).filter((row) => row.assessment_status !== "assessed");
+  const statuses = [...new Set(rows.map((row) => row.assessment_status))];
+  return statuses.map((status) => {
+    const matching = rows.filter((row) => row.assessment_status === status);
+    return `${rollupLabel(status)} (${matching.length}): ${matching.map((row) => dimensionLabel(row.dimension_id)).join("; ")}.`;
+  });
 }
 
 function resultLabel(row: MatrixRow) {
@@ -291,12 +294,6 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
-  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))]
-    .filter((status) => status !== "not-applicable")
-    .map((status) => ({
-      status,
-      rows: otherRows.filter((row) => row.assessment_status === status),
-    }));
   const overall = string(assessment.overall_severity) ?? "SU";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
@@ -349,9 +346,6 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
       </table>
     </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
 
-    {rollups.map(({ status, rows: statusRows }) => <p className="vigil-harm-coverage" key={status}>
-      <strong>{rollupLabel(status)} ({statusRows.length}):</strong> {statusRows.map((row) => dimensionLabel(row.dimension_id)).join("; ")}.
-    </p>)}
 
     {coverageNote ? <p className="vigil-harm-coverage"><strong>Assessment coverage:</strong> {coverageNote}</p> : null}
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence needed:</strong> {assessmentGap}</p> : null}
