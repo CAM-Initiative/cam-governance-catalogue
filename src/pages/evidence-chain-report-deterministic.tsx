@@ -241,7 +241,7 @@ function Empty({ children }: { children: ReactNode }) {
   return <p className="report-empty">{children}</p>;
 }
 
-export default function EvidenceChainReportDeterministic() {
+export default function EvidenceChainReportDeterministic({ hasTaxonomyReference = false }: { hasTaxonomyReference?: boolean }) {
   const [, params] = useRoute("/observatory/reports/:recordId");
   const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<ReportState>({ status: "loading" });
@@ -296,6 +296,9 @@ export default function EvidenceChainReportDeterministic() {
   const canonicalReferences = [
     ...state.records.map((record) => ({ key: record.id, label: `${record.id} — ${record.title}`, detail: [record.record_last_updated, record.record_version ? `Version ${record.record_version}` : undefined].filter(Boolean).join(" · "), url: record.github_blob_url ?? record.raw_url })),
   ];
+  const harmMethodologyReferenceNumber = harmImpactAssessment
+    ? evidenceReferences.length + externalIncidentReferences.length + (hasTaxonomyReference ? 1 : 0) + 1
+    : undefined;
 
   return <Shell>
     <VigilObservatoryNav />
@@ -391,7 +394,13 @@ export default function EvidenceChainReportDeterministic() {
           </section>
           <section className="report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Assessment</h4>
-            <HarmImpactMatrix assessment={harmImpactAssessment} compact evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            <HarmImpactMatrix
+              assessment={harmImpactAssessment}
+              compact
+              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+              methodologyReferenceNumber={harmMethodologyReferenceNumber}
+              methodologyReferenceHref="#vigil-harm-methodology-reference"
+            />
           </section>
           {externalAssessments.length > 0 && <section className="report-external-assessments">
             <h4 className="report-substantive-label">External assessments</h4>
