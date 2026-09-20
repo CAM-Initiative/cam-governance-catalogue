@@ -404,7 +404,7 @@ export default function EvidenceChainReportDeterministic() {
           {(evidenceReferences.length > 0 || externalAssessments.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>
-              <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
+              <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li id={`vigil-evidence-reference-${index + 1}`} key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>}
             {externalAssessments.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External assessments</h3>
