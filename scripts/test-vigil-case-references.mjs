@@ -112,9 +112,8 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(evidenceMapper, /source_context|relevance_note|source\.description/);
   assert.doesNotMatch(referencesRenderer, /source\.description/);
   assert.doesNotMatch(referencesRenderer, /<ExternalAssessmentList assessments=\{externalAssessments\}/);
-  assert.match(referencesRenderer, /unmatchedExternalAssessments\.map/);
-  assert.match(referencesRenderer, /assessment\.assessor/);
-  assert.match(referencesRenderer, /externalAssessmentDate\(assessment\.date\)/);
+  assert.doesNotMatch(referencesRenderer, /External assessments/);
+  assert.doesNotMatch(referencesRenderer, /externalAssessments\.map|unmatchedExternalAssessments\.map/);
 });
 
 test("Incident Case File retains evidence context and VIGIL Observatory interpretation", async () => {
@@ -257,18 +256,20 @@ test("Classification table body typography matches Repair", async () => {
 });
 
 
-test("External assessments reuse Evidence source citations instead of duplicating bibliography entries", async () => {
+test("External assessments cite Evidence sources without creating a second References subsection", async () => {
   const [caseFile, report] = await Promise.all([
     caseFileSource(),
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
   ]);
   for (const source of [caseFile, report]) {
     assert.match(source, /externalAssessmentEvidenceReferenceNumber/);
-    assert.match(source, /unmatchedExternalAssessments/);
-    assert.match(source, /sourceRecordRefs/);
+    assert.match(source, /#vigil-evidence-reference-/);
+    assert.doesNotMatch(source, /unmatchedExternalAssessments/);
   }
-  assert.match(caseFile, /unmatchedExternalAssessments\.map/);
-  assert.match(report, /unmatchedExternalAssessments\.map/);
+  const caseReferences = caseFile.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
+  const reportReferences = report.match(/<Stage number="05" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
+  assert.doesNotMatch(caseReferences, /External assessments/);
+  assert.doesNotMatch(reportReferences, /External assessments/);
 });
 
 test("Taxonomy and methodology references expose version and revision metadata in web and PDF", async () => {
