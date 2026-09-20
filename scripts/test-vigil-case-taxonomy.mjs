@@ -119,7 +119,7 @@ assert.match(reportCss, /data-report-stage="05"[\s\S]*page-break-before: always 
 assert.match(reportCss, /vigil-classification-family-row[\s\S]*break-after: avoid-page !important/);
 assert.match(reportCss, /grid-template-columns: 9mm minmax\(0, 1fr\) !important/);
 assert.match(reportCss, /overflow-wrap: break-word !important/);
-assert.match(printableReport, /Harm classification not applicable/);
+assert.match(printableReport, /Limits of the assessment/);
 assert.doesNotMatch(report, /Assessment provenance/);
 assert.doesNotMatch(report, /<EvidenceCard/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-report-cards \{[\s\S]*display: none !important;/);
