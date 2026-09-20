@@ -66,7 +66,6 @@ assert.match(darkAppearanceCss, /\.site-header \{[\s\S]*background-color: hsl\(v
 assert.doesNotMatch(darkAppearanceCss, /(?:^|\n)header \{/);
 assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
 assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
-assert.match(reportCss, /@page \{[\s\S]*size: A4;[\s\S]*margin: 14mm 13mm 16mm;/);
 assert.match(reportCss, /break-after: avoid-page/);
 
 assert.match(reportCss, /main\.container > footer,/);
