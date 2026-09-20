@@ -112,7 +112,7 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(evidenceMapper, /source_context|relevance_note|source\.description/);
   assert.doesNotMatch(referencesRenderer, /source\.description/);
   assert.doesNotMatch(referencesRenderer, /<ExternalAssessmentList assessments=\{externalAssessments\}/);
-  assert.match(referencesRenderer, /externalAssessments\.map/);
+  assert.match(referencesRenderer, /unmatchedExternalAssessments\.map/);
   assert.match(referencesRenderer, /assessment\.assessor/);
   assert.match(referencesRenderer, /externalAssessmentDate\(assessment\.date\)/);
 });
