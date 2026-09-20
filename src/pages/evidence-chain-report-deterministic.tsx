@@ -296,6 +296,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const canonicalReferences = [
     ...state.records.map((record) => ({ key: record.id, label: `${record.id} — ${record.title}`, detail: [record.record_last_updated, record.record_version ? `Version ${record.record_version}` : undefined].filter(Boolean).join(" · "), url: record.github_blob_url ?? record.raw_url })),
   ];
+  const taxonomyReferenceNumber = hasTaxonomyReference
+    ? evidenceReferences.length + externalIncidentReferences.length + 1
+    : undefined;
   const harmMethodologyReferenceNumber = harmImpactAssessment
     ? evidenceReferences.length + externalIncidentReferences.length + (hasTaxonomyReference ? 1 : 0) + 1
     : undefined;
@@ -423,11 +426,11 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       </Stage>
 
         <Stage number="03" label="Classification">
-          {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <Empty>No current taxonomy classification is linked.</Empty>}
+          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
 
         <Stage number="04" label="Repair">
-          {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
+          {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
         </Stage>
 
         <Stage number="05" label="References">
