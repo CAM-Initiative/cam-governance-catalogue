@@ -76,3 +76,26 @@
   margin: 0.45rem 0 0 !important;
   align-self: start;
 }
+
+
+/* Stage-card inset: keep stage labels, headings and descriptions clear of
+   the card boundaries while preserving row alignment across the flow. */
+.vigil-about-document .vigil-about-flow > article {
+  padding: 0.4rem 0.95rem 0.95rem !important;
+  box-sizing: border-box;
+}
+
+.vigil-about-document .vigil-about-flow > article > span,
+.vigil-about-document .vigil-about-flow > article > h3,
+.vigil-about-document .vigil-about-flow > article > p {
+  width: 100%;
+  min-width: 0;
+}
+
+.vigil-about-document .vigil-about-flow > article > h3 {
+  padding-right: 0.2rem;
+}
+
+.vigil-about-document .vigil-about-flow > article > p {
+  padding-right: 0.2rem;
+}

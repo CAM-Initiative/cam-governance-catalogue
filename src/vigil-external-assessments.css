@@ -150,3 +150,86 @@
   .vigil-external-assessment footer { display: block; }
   .vigil-external-assessment footer > * { margin-right: 0.75rem; }
 }
+
+
+.vigil-reference-disclaimer {
+  margin-top: 1.8rem;
+  padding: 1.1rem 1.2rem 1.15rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius, 1rem);
+  background: hsl(var(--card) / 0.24);
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-reference-disclaimer h3,
+.vigil-reference-disclaimer h4 {
+  margin: 0;
+  color: hsl(var(--foreground) / 0.92);
+}
+
+.vigil-reference-disclaimer h3 {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.vigil-reference-disclaimer h4 {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+}
+
+.vigil-reference-disclaimer .vigil-reference-limits-label {
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-disclaimer p,
+.vigil-reference-disclaimer li {
+  font-size: 0.86rem;
+  line-height: 1.58;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-disclaimer > p {
+  margin: 0.65rem 0 0;
+}
+
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits ul {
+  display: block;
+  margin: 0.42rem 0 0;
+  padding-left: 1.05rem;
+  list-style: disc outside;
+}
+
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits li {
+  display: list-item;
+  grid-template-columns: none;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 0 !important;
+  background: transparent;
+  font-size: 0.84rem;
+  line-height: 1.46;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits li::before {
+  content: none;
+}
+
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits li + li {
+  margin-top: 0.28rem;
+}
+
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits p {
+  margin: 0.42rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.46;
+}

@@ -153,8 +153,16 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /Boundary unresolved/);
   assert.match(classification, /<th scope="col">Failure class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
+  assert.match(classification, /vigil-classification-family-row/);
+  assert.match(classification, /colSpan=\{3\} scope="rowgroup"/);
+  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(2\) \{ width: 69%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(1\) \{ width: 8%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 62%; \}/);
+  assert.doesNotMatch(classification, /vigil-repair-role-key/);
+  assert.match(classification, /VigilAlignmentLegend/);
+  assert.match(css, /\.vigil-alignment-legend/);
+  assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -197,11 +205,11 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(taxonomy, /"ambiguous-boundary"/);
   assert.match(taxonomy, /hasAmbiguousBoundary/);
   assert.match(classification, /Secondary ambiguous boundary/);
-  assert.match(classification, /item\.role !== "failure-occurrence"/);
+  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
-  assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
+  assert.match(caseFile, /Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /The evidence is disputed\./);
   assert.match(caseFile, /does not convert disputed claims into established fact/);
@@ -226,13 +234,17 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
   assert.match(caseFile, /The system worked as intended\./);
+  assert.match(caseFile, /const isFailure = classification === "Classified"/);
+  assert.match(caseFile, /Failure-classified Incident/);
+  assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
+  assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(classification, /successful invariant exemplar/i);
   assert.match(classification, /not failure evidence/i);
   assert.match(classification, /Primary successful invariant exemplar/);
   assert.match(classification, /Secondary successful invariant exemplar/);
-  assert.match(classification, /if \(item\.role !== "failure-occurrence"\) return;/);
+  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(classification, /No repair invariant is available for this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
   assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
@@ -261,11 +273,13 @@ test("About keeps dedicated five-stage explanatory copy and aligned stage-card c
   assert.doesNotMatch(sections, /description:/);
   assert.match(aboutCss, /grid-template-rows: auto minmax\(3rem, auto\) 1fr/);
   assert.match(aboutCss, /min-height: 3rem/);
+  assert.match(aboutCss, /padding: 0\.4rem 0\.95rem 0\.95rem !important/);
 });
 
 test("About explains successful-invariant exemplars and the publication model", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /successful-invariant exemplar/i);
+  assert.match(about, /VigilAlignmentLegend detailed/);
   assert.match(about, /not counted as failure evidence/i);
   assert.match(about, /do not create a Repair requirement/i);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
@@ -293,6 +307,12 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
   assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
   assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
   assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
+});
+
+test("Case File harm assessment moves not-applicable dimensions to assessment limits", async () => {
+  const him = await read("src/components/vigil/HarmImpactMatrix.tsx");
+  assert.match(him, /filter\(\(status\) => status !== "not-applicable"\)/);
+  assert.match(him, /notApplicableHarmDimensionLabels/);
 });
 
 test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
@@ -748,5 +768,6 @@ test("Case File Incident stage renders optional source artefact images inside Wh
   assert.match(caseFile, /<img src=\{artefact\.renderUrl\}/);
   assert.match(caseFile, /View originating source/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact \{[\s\S]*text-align: center/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact-link \{[\s\S]*max-width: min\(100%, 54rem\)/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact img \{[\s\S]*margin: 0 auto/);
 });

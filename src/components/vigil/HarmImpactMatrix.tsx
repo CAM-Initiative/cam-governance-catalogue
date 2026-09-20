@@ -178,6 +178,13 @@ function dimensionLabel(id: string) {
   return DIMENSIONS.find((dimension) => dimension.dimension_id === id)?.label ?? id.split("-").join(" ");
 }
 
+export function notApplicableHarmDimensionLabels(assessment?: UnknownRecord): string[] {
+  if (!assessment) return [];
+  return rowsFor(assessment)
+    .filter((row) => row.assessment_status === "not-applicable")
+    .map((row) => dimensionLabel(row.dimension_id));
+}
+
 function resultLabel(row: MatrixRow) {
   if (row.assessment_status === "assessed" && row.severity) {
     return row.severity + " · " + (BAND_LABELS[row.severity] ?? row.severity);
@@ -282,10 +289,12 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { as
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
-  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))].map((status) => ({
-    status,
-    rows: otherRows.filter((row) => row.assessment_status === status),
-  }));
+  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))]
+    .filter((status) => status !== "not-applicable")
+    .map((status) => ({
+      status,
+      rows: otherRows.filter((row) => row.assessment_status === status),
+    }));
   const overall = string(assessment.overall_severity) ?? "SU";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])

@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, Blend, CircleCheckBig, FileText, Info } from "lucide-react";
+import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
-import { ExternalAssessmentList } from "@/components/vigil/ExternalAssessmentList";
+import { HarmImpactMatrix, notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -16,7 +15,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
-import { externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyFailureTypeLabel,
@@ -411,6 +410,7 @@ export default function VigilCaseFile() {
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
   const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
@@ -428,7 +428,14 @@ export default function VigilCaseFile() {
   const severityMethodology = harmImpactAssessment
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
-  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
+  const notApplicableHarmDimensions = notApplicableHarmDimensionLabels(harmImpactAssessment);
+  const harmClassificationLimit = notApplicableHarmDimensions.length
+    ? `Harm classification not applicable (${notApplicableHarmDimensions.length}): ${notApplicableHarmDimensions.join("; ")}.`
+    : undefined;
+  const assessmentLimitItems = harmClassificationLimit
+    ? [...assessmentBoundaries, harmClassificationLimit]
+    : assessmentBoundaries;
+  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -478,36 +485,68 @@ export default function VigilCaseFile() {
     if (stageId === "diagnose") return <>
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
-        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3></div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
-        </section>
-
         <section className="vigil-diagnosis-definition">
           <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
           <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
-
-          <div className="vigil-diagnosis-analysis-layout">
-            <div className="vigil-diagnosis-reading-stack">
-              <section><h4 className="vigil-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><h4 className="vigil-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
-            </div>
-            <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
-              <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
-              <dl className="vigil-evidence-review-meta">
-                {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
-                {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
-                <Field label="Assessed" value={diagnostic?.diagnosticDate} />
-                <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
-                <Field label="Human contribution" value={diagnostic?.humanRole} />
-                <Field label="AI contribution" value={diagnostic?.aiRole} />
-                <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
-                <Field label="Model attribution" value={diagnostic?.attributionBasis} />
-              </dl>
-            </aside>
+          <div className="vigil-diagnosis-assessment-details">
+            <section>
+              <h4 className="vigil-substantive-label">Factual basis</h4>
+              <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
+            </section>
+            <section>
+              <h4 className="vigil-substantive-label">Governance significance</h4>
+              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+            </section>
           </div>
-          {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations"><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
+          <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
+            <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
+            <dl className="vigil-evidence-review-meta">
+              {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
+              {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
+              <Field label="Assessed" value={diagnostic?.diagnosticDate} />
+              <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
+              <Field label="Human contribution" value={diagnostic?.humanRole} />
+              <Field label="AI contribution" value={diagnostic?.aiRole} />
+              <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+              <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+            </dl>
+          </aside>
         </section>
+
+        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
+          <div className="vigil-case-subheading">
+            <p className="vigil-library-kicker">Harm classification</p>
+            <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
+            <p className="vigil-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
+          </div>
+          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
+        </section>
+
+        {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
+          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">External assessments</p>
+          <div className="vigil-external-assessment-table-wrap">
+            <table className="vigil-external-assessment-table">
+              <thead>
+                <tr>
+                  <th scope="col">Assessor</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Conclusion</th>
+                  <th scope="col">Classification / scheme</th>
+                </tr>
+              </thead>
+              <tbody>
+                {externalAssessments.map((assessment) => <tr key={assessment.id}>
+                  <td><strong>{assessment.assessor}</strong></td>
+                  <td>{externalAssessmentDate(assessment.date)}</td>
+                  <td>{assessment.summary}</td>
+                  <td>{assessment.classificationOrRating
+                    ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
+                    : "—"}</td>
+                </tr>)}
+              </tbody>
+            </table>
+          </div>
+        </section>}
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
@@ -529,8 +568,16 @@ export default function VigilCaseFile() {
       </section>}
       {externalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
         <h3 id="external-assessments-heading">External assessments</h3>
-        <p>Attributable third-party analyses. Inclusion does not imply endorsement by VIGIL; frameworks, scope and assessment dates may differ.</p>
-        <ExternalAssessmentList assessments={externalAssessments} />
+        <ol>
+          {externalAssessments.map((assessment, index) => <li key={assessment.id}>
+            <span>[{index + 1}]</span>
+            <div>
+              <strong>{assessment.title}</strong>
+              <p>{[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</p>
+              <a href={assessment.url} target="_blank" rel="noreferrer">{assessment.url}</a>
+            </div>
+          </li>)}
+        </ol>
       </section>}
       {externalIncidentReferences.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-incident-records-heading">
         <h3 id="external-incident-records-heading">External incident records</h3>
@@ -549,19 +596,27 @@ export default function VigilCaseFile() {
           </li>)}
         </ol>
       </section>}
-      {(taxonomyReferences.length > 0 || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
+      {(taxonomyReferences.length > 0 || harmImpactAssessment || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
         <h3 id="taxonomy-methodology-references-heading">Taxonomy and methodology references</h3>
         <ol>
-        {taxonomyReferences.map((reference, index) => <li key={`${reference.relationship}-${reference.id}`}>
-          <span>[{index + 1}]</span>
+        {taxonomyReferences.length > 0 && <li key="vigil-failure-taxonomy">
+          <span>[1]</span>
           <div>
-            <strong>{reference.id} — {reference.title}</strong>
-            <p>VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</p>
-            <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
+            <strong>VIGIL Observatory Failure Taxonomy</strong>
+            <p>CAM Initiative · Public taxonomy reference</p>
+            <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
-        </li>)}
+        </li>}
+        {harmImpactAssessment && <li key="vigil-harm-impact-methodology">
+          <span>[{taxonomyReferences.length ? 2 : 1}]</span>
+          <div>
+            <strong>VIGIL Harm Impact Methodology</strong>
+            <p>CAM Initiative · Harm severity methodology</p>
+            <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/severity-methodology</a>
+          </div>
+        </li>}
         {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
-          <span>[{taxonomyReferences.length + index + 1}]</span>
+          <span>[{(taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + index + 1}]</span>
           <div>
             <strong>{reference.title}</strong>
             {(reference.publisher || reference.date || reference.role) && <p>{[
@@ -575,8 +630,8 @@ export default function VigilCaseFile() {
         </li>)}
         </ol>
       </section>}
-      <section className="vigil-reference-subsection" aria-labelledby="canonical-vigil-record-heading">
-        <h3 id="canonical-vigil-record-heading">Canonical VIGIL record</h3>
+      <section className="vigil-reference-subsection" aria-labelledby="internal-vigil-records-heading">
+        <h3 id="internal-vigil-records-heading">Internal records</h3>
         <ol>
         {state.records.map((record, index) => <li key={record.id}>
           <span>[{index + 1}]</span>
@@ -586,6 +641,15 @@ export default function VigilCaseFile() {
           </div>
         </li>)}
         </ol>
+      </section>
+
+      <section className="vigil-reference-disclaimer" aria-labelledby="vigil-reference-reliance-heading">
+        <h3 id="vigil-reference-reliance-heading">Use and reliance notice</h3>
+        <p>This Case File is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this Case File.</p>
+        {assessmentLimitItems.length > 0 && <div className="vigil-reference-assessment-limits">
+          <h4 className="vigil-reference-limits-label">Limits of the assessment</h4>
+          <TextList items={assessmentLimitItems} />
+        </div>}
       </section>
     </div> : <p className="vigil-case-empty">No references are currently available for this Case File.</p>;
 
@@ -600,7 +664,7 @@ export default function VigilCaseFile() {
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
@@ -622,11 +686,21 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>
+        <p className="vigil-exemplar-callout-boundary">Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair. Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain in Classification as evidence of boundaries that held.</p>
       </div>
     </section>}
 
 
+
+    {isFailure && <section className="vigil-exemplar-callout is-failure" aria-labelledby="vigil-failure-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleX /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Failure-classified Incident</p>
+        <h2 id="vigil-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
+        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="vigil-exemplar-callout-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+      </div>
+    </section>}
 
     {isDisputed && <section className="vigil-exemplar-callout is-disputed" aria-labelledby="vigil-disputed-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>

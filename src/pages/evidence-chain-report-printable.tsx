@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
+import { notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
@@ -212,25 +213,45 @@ export default function EvidenceChainReportPrintable() {
     () => collectTaxonomyEvidence(reportIncident?.taxonomyReferences ?? []),
     [reportIncident?.taxonomyReferences],
   );
+  const hasHarmMethodologyReference = Boolean(reportIncident && isObject(reportIncident.raw.harm_impact_assessment));
   const assessmentBoundaries = useMemo(() => {
     const assessment = reportIncident && isObject(reportIncident.raw.vigil_assessment)
       ? reportIncident.raw.vigil_assessment
       : undefined;
     return textList(assessment?.assessment_boundaries);
   }, [reportIncident]);
+  const assessmentLimitItems = useMemo(() => {
+    const harmAssessment = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
+      ? reportIncident.raw.harm_impact_assessment
+      : undefined;
+    const notApplicableDimensions = notApplicableHarmDimensionLabels(harmAssessment);
+    const harmLimit = notApplicableDimensions.length
+      ? `Harm classification not applicable (${notApplicableDimensions.length}): ${notApplicableDimensions.join("; ")}.`
+      : undefined;
+    return harmLimit ? [...assessmentBoundaries, harmLimit] : assessmentBoundaries;
+  }, [assessmentBoundaries, reportIncident]);
 
-  const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
+  const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
     ? createPortal(<>
-      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="report-reference-item report-taxonomy-reference">
+      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
-          <strong>{reference.id} — {reference.title}</strong>
-          <span className="report-reference-meta"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
+          <strong>VIGIL Observatory Failure Taxonomy</strong>
+          <span className="report-reference-meta"> — CAM Initiative · Public taxonomy reference</span>
           <br />
-          <a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a>
+          <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
         </span>
-      </li>)}
-      {taxonomyEvidenceReferences.map((reference, index) => {
+      </li>}
+      {hasHarmMethodologyReference && <li key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
+        <span className="report-reference-number" aria-hidden="true" />
+        <span className="report-reference-copy">
+          <strong>VIGIL Harm Impact Methodology</strong>
+          <span className="report-reference-meta"> — CAM Initiative · Harm severity methodology</span>
+          <br />
+          <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/severity-methodology</a>
+        </span>
+      </li>}
+      {taxonomyEvidenceReferences.map((reference) => {
         const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
         return <li key={`taxonomy-evidence-${reference.key}`} className="report-reference-item report-taxonomy-evidence-reference">
           <span className="report-reference-number" aria-hidden="true" />
@@ -254,9 +275,9 @@ export default function EvidenceChainReportPrintable() {
           This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
         </p>
       </section>
-      {assessmentBoundaries.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
+      {assessmentLimitItems.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
         <h2 id="report-assessment-limits-heading" className="report-label">Limits of the assessment</h2>
-        <ul className="report-list">{assessmentBoundaries.map((item) => <li key={item}>{item}</li>)}</ul>
+        <ul className="report-list">{assessmentLimitItems.map((item) => <li key={item}>{item}</li>)}</ul>
       </section>}
       <p className="report-copyright">
         © 2026 CAM Initiative. All rights reserved.

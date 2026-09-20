@@ -319,6 +319,27 @@
   color: hsl(var(--report-ink) / 0.9);
 }
 
+.vigil-deterministic-report-host .report-assessment-details {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-assessment-details > section {
+  margin: 0;
+  padding: 0;
+}
+
+.vigil-deterministic-report-host .report-assessment-details > section > p {
+  margin: 0.4rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: hsl(var(--report-ink) / 0.88);
+}
+
 .vigil-deterministic-report-host .report-diagnosis,
 .vigil-deterministic-report-host .report-stack {
   display: grid;
@@ -709,7 +730,7 @@
 @media print {
   @page {
     size: A4;
-    margin: 14mm 13mm 16mm;
+    margin: 20mm 0 18mm;
   }
 
   .vigil-deterministic-report-host {
@@ -759,9 +780,19 @@
   }
 
   .vigil-deterministic-report-host main.container {
-    max-width: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 13mm !important;
+    box-sizing: border-box !important;
+  }
+
+  .vigil-deterministic-report-host .report-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .vigil-deterministic-report-host .report-hero {
@@ -1294,10 +1325,9 @@
   color: hsl(var(--report-muted));
 }
 
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 13%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 24%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 25%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 10%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 32%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 58%; }
 
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(1) { width: 15%; }
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(2) { width: 30%; }
@@ -1312,6 +1342,22 @@
 
 .vigil-deterministic-report-host .vigil-classification-table tbody tr:last-child td {
   border-bottom: 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-family-row > th {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid hsl(var(--report-rule) / 0.72);
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-ink));
+  text-align: left;
+}
+
+.vigil-deterministic-report-host .vigil-classification-family-id {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  color: hsl(var(--report-muted));
 }
 
 .vigil-deterministic-report-host .vigil-classification-table td > strong {
@@ -1499,6 +1545,13 @@
   color: hsl(var(--report-ink)) !important;
 }
 
+.vigil-deterministic-report-host .report-harm-classification-intro {
+  margin: 0.45rem 1rem 0;
+  color: hsl(var(--report-muted));
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
 .vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
   display: flex;
   flex-wrap: wrap;
@@ -1570,6 +1623,220 @@
   .vigil-deterministic-report-host .report-occurrence-card,
   .vigil-deterministic-report-host .report-severity-assessment {
     border-radius: 2.3mm !important;
+  }
+}
+
+
+
+.vigil-deterministic-report-host .report-external-assessments {
+  margin-top: 0.85rem;
+}
+
+.vigil-deterministic-report-host .report-external-assessments > .report-substantive-label {
+  margin-bottom: 0.55rem;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table th,
+.vigil-deterministic-report-host .report-external-assessment-table td {
+  padding: 0.55rem 0.6rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+  text-align: left;
+  vertical-align: top;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table thead th {
+  border-top: 0;
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-muted));
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(1) { width: 14%; }
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(2) { width: 14%; }
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(3) { width: 43%; }
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(4) { width: 29%; }
+
+
+
+/* Deterministic report consistency: the numbered stage is the section container.
+   Narrative blocks sit on the paper surface; tables retain table structure and
+   compact metadata blocks may retain light structured treatment. */
+.vigil-deterministic-report-host .report-occurrence-card,
+.vigil-deterministic-report-host .report-severity-assessment,
+.vigil-deterministic-report-host .vigil-classification-web-table,
+.vigil-deterministic-report-host .vigil-repair-web-table {
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-deterministic-report-host .report-occurrence-card .report-observation-summary {
+  padding: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-substantive-label {
+  padding: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-harm-classification-intro {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin-top: 0.75rem;
+  padding: 0.85rem 0 0 !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-external-assessments {
+  margin-top: 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-incident-artefacts {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-incident-artefact {
+  margin: 0;
+  text-align: center;
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact-link {
+  display: inline-block;
+  max-width: 75%;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 150mm;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact figcaption {
+  display: grid;
+  gap: 0.18rem;
+  max-width: 75%;
+  margin: 0.5rem auto 0;
+  color: hsl(var(--report-muted));
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact figcaption strong {
+  color: hsl(var(--report-ink) / 0.9);
+}
+
+.vigil-deterministic-report-host .report-incident-artefact figcaption a {
+  color: hsl(var(--report-gold));
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-incident-artefact-link,
+  .vigil-deterministic-report-host .report-incident-artefact figcaption {
+    max-width: 75% !important;
+  }
+
+  .vigil-deterministic-report-host .report-incident-artefact figcaption {
+    font-size: 9.5pt !important;
+    line-height: 1.4 !important;
+  }
+}
+
+
+
+/* Section 02 hierarchy: separators belong between substantive subsections,
+   not inside the Harm Impact Assessment. */
+.vigil-deterministic-report-host .report-diagnosis > .report-severity-assessment {
+  margin-top: 1.1rem;
+  padding-top: 1rem !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin-top: 0.65rem;
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-matrix-overview {
+  padding-bottom: 0;
+}
+
+/* Print wrapping hygiene. Normal prose and table text should wrap at ordinary
+   word boundaries without browser-inserted hyphenation. Long URLs retain an
+   explicit escape hatch so they cannot overflow the printable width. */
+@media print {
+  .vigil-deterministic-report-host .report-document {
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .vigil-deterministic-report-host .report-value,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
+  .vigil-deterministic-report-host .vigil-case-field dd,
+  .vigil-deterministic-report-host .vigil-harm-assessment-table th,
+  .vigil-deterministic-report-host .vigil-harm-assessment-table td,
+  .vigil-deterministic-report-host .vigil-harm-assessment-basis,
+  .vigil-deterministic-report-host .vigil-harm-assessment-basis p,
+  .vigil-deterministic-report-host .vigil-harm-observed-values,
+  .vigil-deterministic-report-host .vigil-harm-observed-values li,
+  .vigil-deterministic-report-host .report-external-assessment-table th,
+  .vigil-deterministic-report-host .report-external-assessment-table td,
+  .vigil-deterministic-report-host .vigil-classification-table th,
+  .vigil-deterministic-report-host .vigil-classification-table td {
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-url,
+  .vigil-deterministic-report-host .vigil-classification-source a {
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* Keep source captures useful without letting a figure strand the remaining
+     Incident metadata on its own page. */
+  .vigil-deterministic-report-host .report-incident-artefact-link,
+  .vigil-deterministic-report-host .report-incident-artefact figcaption {
+    max-width: 68% !important;
+  }
+
+  .vigil-deterministic-report-host .report-incident-artefact img {
+    max-height: 105mm !important;
   }
 }
 
@@ -1689,12 +1956,17 @@
   /* Keep structured units together when they fit. Long tables may still flow,
      but individual rows are never intentionally cut across pages. */
   .vigil-deterministic-report-host .report-severity-assessment,
-  .vigil-deterministic-report-host .vigil-classification-web-table,
-  .vigil-deterministic-report-host .vigil-repair-web-table,
   .vigil-deterministic-report-host .report-empty,
   .vigil-deterministic-report-host .report-reliance-notice {
     break-inside: avoid-page;
     page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table,
+  .vigil-deterministic-report-host .report-external-assessment-table {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
   }
 
   .vigil-deterministic-report-host .report-assessment-limits {
@@ -1717,6 +1989,7 @@
   }
 
   .vigil-deterministic-report-host .vigil-classification-table tr,
+  .vigil-deterministic-report-host .report-external-assessment-table tr,
   .vigil-deterministic-report-host .report-reference-item,
   .vigil-deterministic-report-host .report-system-record {
     break-inside: avoid-page;
@@ -1744,5 +2017,136 @@
   .vigil-deterministic-report-host .report-copyright {
     margin-top: 4mm !important;
     padding-top: 3mm !important;
+  }
+}
+
+
+/* Final PDF width containment: printable content must remain inside the A4 content box. */
+@media print {
+  .vigil-deterministic-report-host .report-document,
+  .vigil-deterministic-report-host .report-section,
+  .vigil-deterministic-report-host .report-section-body,
+  .vigil-deterministic-report-host .report-diagnosis,
+  .vigil-deterministic-report-host .report-occurrence-card,
+  .vigil-deterministic-report-host .report-reference-list,
+  .vigil-deterministic-report-host .report-reference-item,
+  .vigil-deterministic-report-host .report-reference-copy,
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .vigil-deterministic-report-host .report-document p,
+  .vigil-deterministic-report-host .report-document li,
+  .vigil-deterministic-report-host .report-document dd,
+  .vigil-deterministic-report-host .report-document th,
+  .vigil-deterministic-report-host .report-document td,
+  .vigil-deterministic-report-host .report-value,
+  .vigil-deterministic-report-host .vigil-classification-basis,
+  .vigil-deterministic-report-host .vigil-repair-invariant-cell {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .vigil-deterministic-report-host table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-url {
+    display: inline !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+}
+
+
+/* Physical A4 safe area: 13mm horizontal inset enforced in the report box, not browser margins.
+   Chrome print settings can suppress CSS page-side margins, so horizontal
+   containment is enforced on the report container itself. */
+@media print {
+  .vigil-deterministic-report-host .report-hero,
+  .vigil-deterministic-report-host .report-exemplar-callout,
+  .vigil-deterministic-report-host .report-flow,
+  .vigil-deterministic-report-host .report-section,
+  .vigil-deterministic-report-host .report-section-body,
+  .vigil-deterministic-report-host .report-postscript,
+  .vigil-deterministic-report-host .report-reference-list,
+  .vigil-deterministic-report-host .report-reference-item,
+  .vigil-deterministic-report-host .report-reference-copy,
+  .vigil-deterministic-report-host .report-metadata-grid,
+  .vigil-deterministic-report-host .report-system-grid,
+  .vigil-deterministic-report-host .vigil-harm-matrix,
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .vigil-deterministic-report-host .report-reference-item {
+    grid-template-columns: 9mm minmax(0, 1fr) !important;
+  }
+
+  .vigil-deterministic-report-host .report-reference-copy,
+  .vigil-deterministic-report-host .report-reference-copy *,
+  .vigil-deterministic-report-host table th,
+  .vigil-deterministic-report-host table td {
+    min-width: 0 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 13% !important; }
+  .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 30% !important; }
+  .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 57% !important; }
+}
+
+
+/* Deterministic vertical pagination.
+   Major report stages after Incident start on a fresh page; table rows, family
+   headings and reference subsection headings remain attached to the content
+   they introduce. */
+@media print {
+  .vigil-deterministic-report-host .report-section[data-report-stage="02"],
+  .vigil-deterministic-report-host .report-section[data-report-stage="03"],
+  .vigil-deterministic-report-host .report-section[data-report-stage="04"],
+  .vigil-deterministic-report-host .report-section[data-report-stage="05"] {
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+
+  .vigil-deterministic-report-host .report-section-header,
+  .vigil-deterministic-report-host .vigil-classification-family-row,
+  .vigil-deterministic-report-host .report-reference-group > h3,
+  .vigil-deterministic-report-host .report-external-assessments > h4 {
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-family-row + tr,
+  .vigil-deterministic-report-host .vigil-classification-table tbody tr,
+  .vigil-deterministic-report-host .report-external-assessment-table tbody tr,
+  .vigil-deterministic-report-host .report-reference-item {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
+  }
+
+  .vigil-deterministic-report-host .report-document p,
+  .vigil-deterministic-report-host .report-document li {
+    orphans: 3;
+    widows: 3;
   }
 }

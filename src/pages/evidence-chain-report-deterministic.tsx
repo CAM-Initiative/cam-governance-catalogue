@@ -3,7 +3,6 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
-import { ExternalAssessmentList } from "@/components/vigil/ExternalAssessmentList";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -13,7 +12,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
-import { externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 
 type ReportState =
   | { status: "loading" }
@@ -36,6 +35,16 @@ type AffectedSystem = {
   systemType?: string;
   interfaceSurface?: string;
   deploymentContext?: string;
+};
+
+type IncidentArtefact = {
+  id: string;
+  title?: string;
+  permalink?: string;
+  renderUrl: string;
+  sourceUrl?: string;
+  altText?: string;
+  caption?: string;
 };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -114,6 +123,24 @@ function dedupeEvidence(evidence: ExternalEvidence[]) {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
+  });
+}
+
+function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
+  const artefacts = Array.isArray(record.raw.incident_artefacts) ? record.raw.incident_artefacts : [];
+  return artefacts.flatMap((artefact, index) => {
+    if (!isObject(artefact)) return [];
+    const renderUrl = text(artefact.render_url ?? artefact.image_url ?? artefact.url);
+    if (!renderUrl) return [];
+    return [{
+      id: text(artefact.artefact_id) ?? `${record.id}-artefact-${index + 1}`,
+      title: text(artefact.title),
+      permalink: text(artefact.permalink),
+      renderUrl,
+      sourceUrl: text(artefact.source_url),
+      altText: text(artefact.alt_text),
+      caption: text(artefact.caption),
+    }];
   });
 }
 
@@ -213,6 +240,7 @@ export default function EvidenceChainReportDeterministic() {
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
+  const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
@@ -230,6 +258,7 @@ export default function EvidenceChainReportDeterministic() {
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isFailure = classification === "Classified";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
@@ -261,6 +290,13 @@ export default function EvidenceChainReportDeterministic() {
         </dl>
       </header>
 
+      {isFailure && <section className="report-exemplar-callout is-failure" aria-labelledby="report-failure-heading">
+        <p className="report-exemplar-kicker">Failure-classified Incident</p>
+        <h2 id="report-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
+        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="report-exemplar-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+      </section>}
+
       {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
         <p className="report-exemplar-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
         <h2 id="report-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
@@ -274,7 +310,7 @@ export default function EvidenceChainReportDeterministic() {
 
       <div className="report-flow">
         <Stage number="01" label="Incident">
-          {((incident?.summary ?? incident?.publicDisplay.finding) || affectedSystems.length > 0) && <div className="report-occurrence-card">
+          {((incident?.summary ?? incident?.publicDisplay.finding) || incidentArtefacts.length > 0 || affectedSystems.length > 0) && <div className="report-occurrence-card">
             {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
               <p className="vigil-evidence-kicker">Incident summary</p>
               <h4 className="report-substantive-label">What happened</h4>
@@ -293,18 +329,51 @@ export default function EvidenceChainReportDeterministic() {
                 </dl>
               </article>)}</div>
             </section>}
+            {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
+              {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
+                <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
+                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                </a>
+                {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+                  {artefact.title && <strong>{artefact.title}</strong>}
+                  {artefact.caption && <span>{artefact.caption}</span>}
+                  {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+                </figcaption>}
+              </figure>)}
+            </section>}
           </div>}
-          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
+          {!incident?.summary && !incident?.publicDisplay.finding && !incidentArtefacts.length && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Assessment">
         {incident ? <article className="report-diagnosis">
-          <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
-          <section className="report-panel report-severity-assessment">
-            <h4 className="report-substantive-label">Harm Impact Matrix</h4>
+          <section className="report-intro">
+            <p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p>
+            <p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
+            <div className="report-assessment-details">
+              <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+            </div>
+          </section>
+          <section className="report-severity-assessment">
+            <h4 className="report-substantive-label">Harm Impact Assessment</h4>
+            <p className="report-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
             <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} />
           </section>
-          <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
+          {externalAssessments.length > 0 && <section className="report-external-assessments">
+            <h4 className="report-substantive-label">External assessments</h4>
+            <table className="report-external-assessment-table">
+              <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
+              <tbody>{externalAssessments.map((assessment) => <tr key={assessment.id}>
+                <td><strong>{assessment.assessor}</strong></td>
+                <td>{externalAssessmentDate(assessment.date)}</td>
+                <td>{assessment.summary}</td>
+                <td>{assessment.classificationOrRating
+                  ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
+                  : "—"}</td>
+              </tr>)}</tbody>
+            </table>
+          </section>}
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
@@ -324,8 +393,14 @@ export default function EvidenceChainReportDeterministic() {
             </section>}
             {externalAssessments.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External assessments</h3>
-              <p className="report-reference-intro">Attributable third-party analyses. Inclusion does not imply endorsement by VIGIL.</p>
-              <ExternalAssessmentList assessments={externalAssessments} compact />
+              <ol className="report-reference-list">{externalAssessments.map((assessment) => <li key={assessment.id} className="report-reference-item">
+                <span className="report-reference-number" aria-hidden="true" />
+                <span className="report-reference-copy">
+                  <strong>{assessment.title}</strong>
+                  <span className="report-reference-meta"> — {[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</span>
+                  <br /><a href={assessment.url} target="_blank" rel="noreferrer" className="report-reference-url">{assessment.url}</a>
+                </span>
+              </li>)}</ol>
             </section>}
             {externalIncidentReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External incident records</h3>
@@ -336,7 +411,7 @@ export default function EvidenceChainReportDeterministic() {
               <ol className="report-reference-list" data-report-taxonomy-reference-list />
             </section>
             <section className="report-reference-group">
-              <h3 className="report-substantive-label">Canonical VIGIL record</h3>
+              <h3 className="report-substantive-label">Internal records</h3>
               <ol className="report-reference-list">{canonicalReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>
           </> : <Empty>No references are currently available.</Empty>}
@@ -346,7 +421,7 @@ export default function EvidenceChainReportDeterministic() {
       <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants only for failure-occurrence mappings; successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants for failure-occurrence and ambiguous-boundary mappings; ambiguous boundaries remain explicitly unresolved rather than being presented as failures, while successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;

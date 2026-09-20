@@ -30,15 +30,72 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /externalAssessments\.length > 0/);
   assert.match(caseFile, /External incident records/);
   assert.match(caseFile, /Taxonomy and methodology references/);
+  assert.match(caseFile, /VIGIL Observatory Failure Taxonomy/);
+  assert.match(caseFile, /VIGIL Harm Impact Methodology/);
+  assert.match(caseFile, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
+  assert.match(caseFile, /Internal records/);
+  assert.doesNotMatch(caseFile, /taxonomyReferences\.map\(\(reference/);
   assert.match(component, /External classification \/ rating/);
   assert.match(component, /VIGIL relationship/);
-  assert.match(caseFile, /Inclusion does not imply endorsement/);
+  assert.match(caseFile, /stageId === "diagnose"/);
+  assert.match(caseFile, /vigil-external-assessment-table/);
+  assert.match(caseFile, /Assessor/);
+  assert.match(caseFile, /Conclusion/);
+  assert.match(caseFile, /Classification \/ scheme/);
+  assert.doesNotMatch(caseFile, /ExternalAssessmentList assessments=\{externalAssessments\}/);
   assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
 });
 
 test("Case File source contains no escaped newline text between hero cards", async () => {
   const source = await caseFileSource();
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
+});
+
+test("Case File Section 02 follows governance assessment, factual basis, governance significance, harm order", async () => {
+  const source = await caseFileSource();
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
+  const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
+  const factualIndex = assessmentRenderer.indexOf("Factual basis");
+  const significanceIndex = assessmentRenderer.indexOf("Governance significance");
+
+  assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
+  assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
+  assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
+});
+
+test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
+  const source = await caseFileSource();
+  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n        <section className="vigil-severity-assessment"/)?.[0] ?? "";
+  assert.match(card, /VIGIL Observatory governance assessment/);
+  assert.match(card, /Factual basis/);
+  assert.match(card, /Governance significance/);
+  assert.match(card, /vigil-diagnosis-assessment-details/);
+});
+
+test("Case File moves assessment limits from Section 02 to the closing References disclaimer", async () => {
+  const source = await caseFileSource();
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const referencesRenderer = source.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
+
+  assert.ok(assessmentRenderer, "Assessment renderer must remain present");
+  assert.ok(referencesRenderer, "References renderer must remain present");
+  assert.doesNotMatch(assessmentRenderer, /Limits of the assessment/);
+  assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-limitations/);
+  assert.match(referencesRenderer, /Use and reliance notice/);
+  assert.match(referencesRenderer, /Limits of the assessment/);
+  assert.match(referencesRenderer, /assessmentLimitItems\.length > 0/);
+  assert.match(referencesRenderer, /<TextList items=\{assessmentLimitItems\} \/>/);
+  assert.match(source, /notApplicableHarmDimensionLabels\(harmImpactAssessment\)/);
+  assert.match(source, /Harm classification not applicable/);
+  assert.match(referencesRenderer, /vigil-reference-limits-label/);
+  assert.match(referencesRenderer, /vigil-reference-disclaimer/);
+});
+
+test("Reference numbering does not leak into disclaimer bullet lists", async () => {
+  const css = await readFile(resolve(repoRoot, "src/vigil-reference-list-cleanup.css"), "utf8");
+  assert.match(css, /vigil-case-bibliography > \.vigil-reference-subsection > ol > li/);
+  assert.doesNotMatch(css, /vigil-case-bibliography li::before/);
 });
 
 test("Case File References remain bibliographic and do not republish evidence commentary", async () => {
@@ -54,6 +111,10 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.match(evidenceMapper, /url:/);
   assert.doesNotMatch(evidenceMapper, /source_context|relevance_note|source\.description/);
   assert.doesNotMatch(referencesRenderer, /source\.description/);
+  assert.doesNotMatch(referencesRenderer, /<ExternalAssessmentList assessments=\{externalAssessments\}/);
+  assert.match(referencesRenderer, /externalAssessments\.map/);
+  assert.match(referencesRenderer, /assessment\.assessor/);
+  assert.match(referencesRenderer, /externalAssessmentDate\(assessment\.date\)/);
 });
 
 test("Incident Case File retains evidence context and VIGIL Observatory interpretation", async () => {
@@ -103,9 +164,17 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /label="Repair"/);
   assert.match(report, /label="References"/);
   assert.match(printable, /label: "Repair"/);
-  assert.match(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
+  assert.match(report, /report-external-assessment-table/);
+  assert.match(report, /externalAssessments\.map/);
+  assert.doesNotMatch(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
   assert.match(report, /data-report-taxonomy-reference-list/);
   assert.match(printable, /data-report-taxonomy-reference-list/);
+  assert.match(printable, /VIGIL Observatory Failure Taxonomy/);
+  assert.match(printable, /VIGIL Harm Impact Methodology/);
+  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
+  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/knowledge-base\/failure-taxonomy/);
+  assert.doesNotMatch(printable, /reportIncident\.taxonomyReferences\.map/);
+  assert.match(report, /Internal records/);
   assert.doesNotMatch(report, /report-reference-number">\[\{index \+ 1\}\]/);
   assert.doesNotMatch(printable, /referenceBaseCountRef/);
   assert.match(report, /report-reference-number" aria-hidden="true"/);
