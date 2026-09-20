@@ -299,6 +299,13 @@ function TextList({ items }: { items: string[] }) {
   return <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul>;
 }
 
+function evidenceReferenceNumberForUrl(sources: ExternalEvidence[], url?: string) {
+  if (!url) return undefined;
+  const normalized = url.replace(/\/$/, "").toLowerCase();
+  const index = sources.findIndex((source) => source.url?.replace(/\/$/, "").toLowerCase() === normalized);
+  return index >= 0 ? index + 1 : undefined;
+}
+
 function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
@@ -458,10 +465,16 @@ export default function VigilCaseFile() {
             <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
               <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
             </a>
-            {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+            {(artefact.title || artefact.sourceUrl) && <figcaption>
               {artefact.title && <strong>{artefact.title}</strong>}
-              {artefact.caption && <span>{artefact.caption}</span>}
-              {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+              {(() => {
+                const referenceNumber = evidenceReferenceNumberForUrl(externalSources, artefact.sourceUrl);
+                return referenceNumber
+                  ? <a className="vigil-incident-artefact-reference" href={`#vigil-evidence-reference-${referenceNumber}`} aria-label={`Evidence reference ${referenceNumber}`}>[{referenceNumber}]</a>
+                  : artefact.sourceUrl
+                    ? <a className="vigil-incident-artefact-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
+                    : null;
+              })()}
             </figcaption>}
           </figure>)}
         </div>}
