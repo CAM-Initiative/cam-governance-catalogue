@@ -89,6 +89,9 @@ assert.doesNotMatch(report, /<details className="vigil-evidence-limitations"/);
 assert.match(report, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} compact methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} \/>/);
 assert.doesNotMatch(report, /report-metadata-grid report-metadata-grid--2"><Field label="Methodology"/);
 assert.match(report, /className="report-reference-list"/);
+assert.match(report, /report-external-assessment-table/);
+assert.match(report, /externalAssessmentDate\(assessment\.date\)/);
+assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
 assert.doesNotMatch(report, /Assessment provenance/);
 assert.doesNotMatch(report, /<EvidenceCard/);
@@ -104,7 +107,7 @@ assert.match(reportCss, /\.report-assessment-limits \{[\s\S]*break-inside: auto 
 assert.match(reportCss, /\.report-empty \{[\s\S]*border: 0 !important/);
 assert.match(reportCss, /@media print \{[\s\S]*\.report-section \{[\s\S]*border: 0 !important;/);
 assert.match(reportCss, /\.report-affected-systems \{[\s\S]*break-inside: avoid-page/);
-assert.match(reportCss, /\.vigil-repair-web-table,[\s\S]*break-inside: avoid-page/);
+assert.match(reportCss, /\.vigil-repair-web-table,[\s\S]*break-inside: auto !important/);
 assert.match(reportCss, /\.report-severity-assessment > \.report-metadata-grid[\s\S]*background: transparent !important;/);
 assert.doesNotMatch(report, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);

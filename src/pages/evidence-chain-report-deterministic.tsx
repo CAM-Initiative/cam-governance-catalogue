@@ -3,7 +3,6 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
-import { ExternalAssessmentList } from "@/components/vigil/ExternalAssessmentList";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -13,7 +12,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
-import { externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 
 type ReportState =
   | { status: "loading" }
@@ -305,6 +304,20 @@ export default function EvidenceChainReportDeterministic() {
             <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} />
           </section>
           <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
+          {externalAssessments.length > 0 && <section className="report-external-assessments">
+            <h4 className="report-substantive-label">External assessments</h4>
+            <table className="report-external-assessment-table">
+              <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
+              <tbody>{externalAssessments.map((assessment) => <tr key={assessment.id}>
+                <td><strong>{assessment.assessor}</strong></td>
+                <td>{externalAssessmentDate(assessment.date)}</td>
+                <td>{assessment.summary}</td>
+                <td>{assessment.classificationOrRating
+                  ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
+                  : "—"}</td>
+              </tr>)}</tbody>
+            </table>
+          </section>}
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
@@ -324,8 +337,14 @@ export default function EvidenceChainReportDeterministic() {
             </section>}
             {externalAssessments.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External assessments</h3>
-              <p className="report-reference-intro">Attributable third-party analyses. Inclusion does not imply endorsement by VIGIL.</p>
-              <ExternalAssessmentList assessments={externalAssessments} compact />
+              <ol className="report-reference-list">{externalAssessments.map((assessment) => <li key={assessment.id} className="report-reference-item">
+                <span className="report-reference-number" aria-hidden="true" />
+                <span className="report-reference-copy">
+                  <strong>{assessment.title}</strong>
+                  <span className="report-reference-meta"> — {[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</span>
+                  <br /><a href={assessment.url} target="_blank" rel="noreferrer" className="report-reference-url">{assessment.url}</a>
+                </span>
+              </li>)}</ol>
             </section>}
             {externalIncidentReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External incident records</h3>
@@ -346,7 +365,7 @@ export default function EvidenceChainReportDeterministic() {
       <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants only for failure-occurrence mappings; successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants for failure-occurrence and ambiguous-boundary mappings; ambiguous boundaries remain explicitly unresolved rather than being presented as failures, while successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;

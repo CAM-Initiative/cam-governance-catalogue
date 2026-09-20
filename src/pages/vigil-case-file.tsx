@@ -477,34 +477,37 @@ export default function VigilCaseFile() {
     if (stageId === "diagnose") return <>
     {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
+        <section className="vigil-diagnosis-definition">
+          <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
+          <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
+          <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
+            <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
+            <dl className="vigil-evidence-review-meta">
+              {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
+              {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
+              <Field label="Assessed" value={diagnostic?.diagnosticDate} />
+              <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
+              <Field label="Human contribution" value={diagnostic?.humanRole} />
+              <Field label="AI contribution" value={diagnostic?.aiRole} />
+              <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+              <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+            </dl>
+          </aside>
+        </section>
+
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3></div>
           <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
         </section>
 
-        <section className="vigil-diagnosis-definition">
-          <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
-          <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
+        <section className="vigil-diagnosis-narrative">
+          <h4 className="vigil-substantive-label">Factual basis</h4>
+          <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
+        </section>
 
-          <div className="vigil-diagnosis-analysis-layout">
-            <div className="vigil-diagnosis-reading-stack">
-              <section><h4 className="vigil-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><h4 className="vigil-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
-            </div>
-            <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
-              <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
-              <dl className="vigil-evidence-review-meta">
-                {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
-                {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
-                <Field label="Assessed" value={diagnostic?.diagnosticDate} />
-                <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
-                <Field label="Human contribution" value={diagnostic?.humanRole} />
-                <Field label="AI contribution" value={diagnostic?.aiRole} />
-                <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
-                <Field label="Model attribution" value={diagnostic?.attributionBasis} />
-              </dl>
-            </aside>
-          </div>
+        <section className="vigil-diagnosis-narrative">
+          <h4 className="vigil-substantive-label">Governance significance</h4>
+          <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">

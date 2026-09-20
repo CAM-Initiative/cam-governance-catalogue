@@ -1588,6 +1588,47 @@
   }
 }
 
+
+
+.vigil-deterministic-report-host .report-external-assessments {
+  margin-top: 0.85rem;
+}
+
+.vigil-deterministic-report-host .report-external-assessments > .report-substantive-label {
+  margin-bottom: 0.55rem;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table th,
+.vigil-deterministic-report-host .report-external-assessment-table td {
+  padding: 0.55rem 0.6rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+  text-align: left;
+  vertical-align: top;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table thead th {
+  border-top: 0;
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-muted));
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(1) { width: 14%; }
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(2) { width: 14%; }
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(3) { width: 43%; }
+.vigil-deterministic-report-host .report-external-assessment-table th:nth-child(4) { width: 29%; }
+
 /* End of deterministic Case File report contract. */
 
 
@@ -1704,12 +1745,17 @@
   /* Keep structured units together when they fit. Long tables may still flow,
      but individual rows are never intentionally cut across pages. */
   .vigil-deterministic-report-host .report-severity-assessment,
-  .vigil-deterministic-report-host .vigil-classification-web-table,
-  .vigil-deterministic-report-host .vigil-repair-web-table,
   .vigil-deterministic-report-host .report-empty,
   .vigil-deterministic-report-host .report-reliance-notice {
     break-inside: avoid-page;
     page-break-inside: avoid;
+  }
+
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table,
+  .vigil-deterministic-report-host .report-external-assessment-table {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
   }
 
   .vigil-deterministic-report-host .report-assessment-limits {
@@ -1732,6 +1778,7 @@
   }
 
   .vigil-deterministic-report-host .vigil-classification-table tr,
+  .vigil-deterministic-report-host .report-external-assessment-table tr,
   .vigil-deterministic-report-host .report-reference-item,
   .vigil-deterministic-report-host .report-system-record {
     break-inside: avoid-page;

@@ -46,6 +46,19 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
+test("Case File Section 02 follows governance assessment, harm, factual basis, governance significance order", async () => {
+  const source = await caseFileSource();
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
+  const harmIndex = assessmentRenderer.indexOf("Harm Impact Matrix");
+  const factualIndex = assessmentRenderer.indexOf("Factual basis");
+  const significanceIndex = assessmentRenderer.indexOf("Governance significance");
+
+  assert.ok(governanceIndex >= 0 && harmIndex > governanceIndex && factualIndex > harmIndex && significanceIndex > factualIndex);
+  assert.match(assessmentRenderer, /vigil-diagnosis-narrative/);
+  assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
+});
+
 test("Case File moves assessment limits from Section 02 to the closing References disclaimer", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
@@ -128,7 +141,9 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /label="Repair"/);
   assert.match(report, /label="References"/);
   assert.match(printable, /label: "Repair"/);
-  assert.match(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
+  assert.match(report, /report-external-assessment-table/);
+  assert.match(report, /externalAssessments\.map/);
+  assert.doesNotMatch(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
   assert.match(report, /data-report-taxonomy-reference-list/);
   assert.match(printable, /data-report-taxonomy-reference-list/);
   assert.doesNotMatch(report, /report-reference-number">\[\{index \+ 1\}\]/);
