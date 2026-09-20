@@ -199,24 +199,37 @@
   margin: 0.65rem 0 0;
 }
 
-.vigil-reference-assessment-limits ul {
-  margin: 0.65rem 0 0;
-  padding-left: 1.25rem;
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits ul {
+  display: block;
+  margin: 0.42rem 0 0;
+  padding-left: 1.05rem;
   list-style: disc outside;
 }
 
-.vigil-reference-assessment-limits li {
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits li {
   display: list-item;
+  grid-template-columns: none;
+  gap: 0;
   margin: 0;
   padding: 0;
   border: 0;
+  border-bottom: 0 !important;
   background: transparent;
+  font-size: 0.84rem;
+  line-height: 1.46;
+  color: hsl(var(--muted-foreground));
 }
 
-.vigil-reference-assessment-limits li + li {
-  margin-top: 0.45rem;
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits li::before {
+  content: none;
 }
 
-.vigil-reference-assessment-limits p {
-  margin: 0.65rem 0 0;
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits li + li {
+  margin-top: 0.28rem;
+}
+
+.vigil-case-file-page #case-references .vigil-reference-assessment-limits p {
+  margin: 0.42rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.46;
 }
