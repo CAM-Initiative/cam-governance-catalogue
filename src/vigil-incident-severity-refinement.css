@@ -240,10 +240,16 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   table-layout: fixed;
 }
 .vigil-harm-assessment-table thead th {
-  padding: 0.66rem 0.68rem;
+  padding: 0.72rem 0.85rem;
+  background: hsl(var(--muted) / 0.28);
+  font-family: var(--app-font-sans);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.86);
   text-align: left;
-  font-size: 0.84rem;
-  letter-spacing: 0.025em;
 }
 .vigil-harm-assessment-table thead th:nth-child(1) { width: 20%; }
 .vigil-harm-assessment-table thead th:nth-child(2) { width: 14%; }
