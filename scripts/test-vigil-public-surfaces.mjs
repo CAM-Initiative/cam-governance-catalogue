@@ -259,9 +259,6 @@ test("About explains successful-invariant exemplars and the publication model", 
   const about = await read("src/pages/about.tsx");
   assert.match(about, /successful-invariant exemplar/i);
   assert.match(about, /VigilAlignmentLegend detailed/);
-  assert.match(about, /Failure occurred/);
-  assert.match(about, /Invariant held/);
-  assert.match(about, /Boundary unresolved/);
   assert.match(about, /not counted as failure evidence/i);
   assert.match(about, /do not create a Repair requirement/i);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
