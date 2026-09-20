@@ -289,10 +289,12 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { as
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
-  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))].map((status) => ({
-    status,
-    rows: otherRows.filter((row) => row.assessment_status === status),
-  }));
+  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))]
+    .filter((status) => status !== "not-applicable")
+    .map((status) => ({
+      status,
+      rows: otherRows.filter((row) => row.assessment_status === status),
+    }));
   const overall = string(assessment.overall_severity) ?? "SU";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])

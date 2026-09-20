@@ -198,6 +198,25 @@ function MappingOutcome({ role }: { role?: ClassificationRole }) {
   </span>;
 }
 
+const ALIGNMENT_LEGEND = [
+  { role: "failure-occurrence" as const, label: "Failure occurred", description: "The available evidence supports the mapped failure mechanism in this occurrence." },
+  { role: "successful-invariant" as const, label: "Invariant held", description: "The relevant governance boundary was tested and held; this mapping is not failure evidence." },
+  { role: "ambiguous-boundary" as const, label: "Boundary unresolved", description: "The evidence engages the boundary but does not establish either a failure occurrence or successful invariant holding." },
+];
+
+export function VigilAlignmentLegend({ detailed = false }: { detailed?: boolean }) {
+  return <div className={`vigil-alignment-legend${detailed ? " is-detailed" : ""}`} aria-label="Alignment legend">
+    <strong className="vigil-alignment-legend-title">Legend</strong>
+    {ALIGNMENT_LEGEND.map((entry) => <span className="vigil-alignment-legend-item" key={entry.role}>
+      <MappingOutcome role={entry.role} />
+      <span>
+        <strong>{entry.label}</strong>
+        {detailed && <small>{entry.description}</small>}
+      </span>
+    </span>)}
+  </div>;
+}
+
 // Web UX shows alignment state directly; primary/secondary ordering remains in canonical data and report metadata.
 function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
   const hasUnresolved = rows.some(({ item }) =>
@@ -264,6 +283,7 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
       </table>
     </div>
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
+    <VigilAlignmentLegend />
   </>;
 }
 
@@ -474,10 +494,6 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is available for this Case File.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
-    <div className="vigil-repair-role-key" aria-label="Repair mapping outcomes">
-      <span><MappingOutcome role="failure-occurrence" /> Failure occurred</span>
-      <span><MappingOutcome role="ambiguous-boundary" /> Boundary unresolved</span>
-    </div>
     <div className="vigil-classification-web-table vigil-repair-web-table">
       <table className="vigil-classification-table vigil-repair-table">
         <thead>

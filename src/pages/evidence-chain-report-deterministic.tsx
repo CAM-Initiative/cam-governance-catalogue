@@ -411,7 +411,7 @@ export default function EvidenceChainReportDeterministic() {
               <ol className="report-reference-list" data-report-taxonomy-reference-list />
             </section>
             <section className="report-reference-group">
-              <h3 className="report-substantive-label">Canonical VIGIL record</h3>
+              <h3 className="report-substantive-label">Internal records</h3>
               <ol className="report-reference-list">{canonicalReferences.map((reference, index) => <li key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>
           </> : <Empty>No references are currently available.</Empty>}

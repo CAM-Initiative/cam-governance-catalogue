@@ -435,7 +435,7 @@ export default function VigilCaseFile() {
   const assessmentLimitItems = harmClassificationLimit
     ? [...assessmentBoundaries, harmClassificationLimit]
     : assessmentBoundaries;
-  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
+  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -599,16 +599,16 @@ export default function VigilCaseFile() {
       {(taxonomyReferences.length > 0 || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
         <h3 id="taxonomy-methodology-references-heading">Taxonomy and methodology references</h3>
         <ol>
-        {taxonomyReferences.map((reference, index) => <li key={`${reference.relationship}-${reference.id}`}>
-          <span>[{index + 1}]</span>
+        {taxonomyReferences.length > 0 && <li key="vigil-failure-taxonomy">
+          <span>[1]</span>
           <div>
-            <strong>{reference.id} — {reference.title}</strong>
-            <p>VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</p>
-            <a href={reference.url} target="_blank" rel="noreferrer">{reference.url}</a>
+            <strong>VIGIL Observatory Failure Taxonomy</strong>
+            <p>CAM Initiative · Public taxonomy reference</p>
+            <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
-        </li>)}
+        </li>}
         {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
-          <span>[{taxonomyReferences.length + index + 1}]</span>
+          <span>[{(taxonomyReferences.length ? 1 : 0) + index + 1}]</span>
           <div>
             <strong>{reference.title}</strong>
             {(reference.publisher || reference.date || reference.role) && <p>{[
@@ -622,8 +622,8 @@ export default function VigilCaseFile() {
         </li>)}
         </ol>
       </section>}
-      <section className="vigil-reference-subsection" aria-labelledby="canonical-vigil-record-heading">
-        <h3 id="canonical-vigil-record-heading">Canonical VIGIL record</h3>
+      <section className="vigil-reference-subsection" aria-labelledby="internal-vigil-records-heading">
+        <h3 id="internal-vigil-records-heading">Internal records</h3>
         <ol>
         {state.records.map((record, index) => <li key={record.id}>
           <span>[{index + 1}]</span>
