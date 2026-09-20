@@ -1659,6 +1659,7 @@
   margin-top: 0.85rem;
 }
 
+/* External assessments mirrors the Web UX kicker treatment rather than a substantive subsection heading. */
 .vigil-deterministic-report-host .report-external-assessments > .vigil-library-kicker {
   margin: 0 0 0.55rem;
 }
