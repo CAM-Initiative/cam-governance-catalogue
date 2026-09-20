@@ -33,6 +33,7 @@ type ExternalEvidence = {
   date?: string;
   url?: string;
   description?: string;
+  sourceRecordRefs: string[];
 };
 
 type AffectedSystem = {
@@ -139,10 +140,16 @@ async function detailedRecord(indexRecord: VigilIndexRecord) {
 }
 
 function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
-  const sources = [record.raw.source_records, record.raw.sources, record.raw.evidence_sources].find(Array.isArray);
+  const sourceRecords = Array.isArray(record.raw.source_records) ? record.raw.source_records : undefined;
+  const sources = sourceRecords ?? [record.raw.sources, record.raw.evidence_sources].find(Array.isArray);
   if (!Array.isArray(sources)) return [];
-  return sources.flatMap((source) => {
-    if (typeof source === "string") return [{ title: source, url: /^https?:\/\//i.test(source) ? source : undefined }];
+  return sources.flatMap((source, sourceIndex) => {
+    const sourceRecordRefs = sourceRecords ? [`source_records[${sourceIndex}]`] : [];
+    if (typeof source === "string") return [{
+      title: source,
+      url: /^https?:\/\//i.test(source) ? source : undefined,
+      sourceRecordRefs,
+    }];
     if (!isObject(source)) return [];
     const residence = text(source.source_residence)?.toLowerCase();
     if (residence === "cam-internal" || residence === "internal") return [];
@@ -153,18 +160,24 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       publisher: text(source.author_or_publisher ?? source.publisher ?? source.source_platform),
       date: text(source.source_date ?? source.date ?? source.published_date),
       url: text(source.source_url ?? source.url ?? source.archive_url),
+      description: text(source.source_context ?? source.description ?? source.relevance_note),
+      sourceRecordRefs,
     }];
   });
 }
 
 function dedupeEvidence(evidence: ExternalEvidence[]) {
-  const seen = new Set<string>();
-  return evidence.filter((source) => {
+  const collected = new Map<string, ExternalEvidence>();
+  for (const source of evidence) {
     const key = `${source.title.toLowerCase()}|${source.url ?? ""}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+    const existing = collected.get(key);
+    if (existing) {
+      existing.sourceRecordRefs = [...new Set([...existing.sourceRecordRefs, ...source.sourceRecordRefs])];
+      continue;
+    }
+    collected.set(key, { ...source, sourceRecordRefs: [...source.sourceRecordRefs] });
+  }
+  return [...collected.values()];
 }
 
 function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
@@ -381,21 +394,9 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
-  const harmEvidenceReferenceNumbers = useMemo(() => {
-    if (!incident || !Array.isArray(incident.raw.source_records)) return {};
-    const sourceNumberByIndex = new Map<number, number>();
-    let externalIndex = 0;
-    incident.raw.source_records.forEach((source, sourceIndex) => {
-      if (!isObject(source)) return;
-      const residence = text(source.source_residence)?.toLowerCase();
-      if (residence === "cam-internal" || residence === "internal") return;
-      const title = text(source.source_title ?? source.title ?? source.name);
-      if (!title) return;
-      externalIndex += 1;
-      sourceNumberByIndex.set(sourceIndex, externalIndex);
-    });
-    return Object.fromEntries([...sourceNumberByIndex].map(([sourceIndex, referenceNumber]) => [`source_records[${sourceIndex}]`, referenceNumber]));
-  }, [incident]);
+  const harmEvidenceReferenceNumbers = useMemo(() => Object.fromEntries(
+    externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
+  ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
