@@ -29,6 +29,11 @@ VIGIL_FALLBACK = Path("docs/data/vigil-registry-fallback.json")
 VIGIL_SITEMAP = Path("docs/sitemap.xml")
 VIGIL_CASE_ROOT = Path("docs/observatory/cases")
 VIGIL_CASE_URL_PREFIX = "https://www.cam-initiative.org/observatory/cases/"
+LEGACY_SITEMAP_URLS = {
+    "https://www.cam-initiative.org/catalogue",
+    "https://www.cam-initiative.org/phoenix-covenant",
+    "https://www.cam-initiative.org/vigil",
+}
 
 # The website is a Vite app rooted at src/ (see vite.config.ts). Keep this list
 # intentionally focused on files that feed the published site, and avoid VIGIL
@@ -248,6 +253,14 @@ def validate_vigil_publication_integrity() -> list[str]:
         for loc in sitemap_root.findall("sm:url/sm:loc", namespace)
         if loc.text and loc.text.strip()
     ]
+    legacy_sitemap_urls = sorted(
+        url for url in sitemap_urls if url.rstrip("/") in LEGACY_SITEMAP_URLS
+    )
+    if legacy_sitemap_urls:
+        errors.append(
+            "Retired legacy URLs must not appear in docs/sitemap.xml: "
+            + ", ".join(legacy_sitemap_urls)
+        )
     noncanonical_directory_urls = sorted(
         url for url in sitemap_urls
         if url != "https://www.cam-initiative.org/" and not url.endswith("/")
