@@ -301,7 +301,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
   </div>;
 }
 
-function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
+function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, methodologyReferenceNumber, methodologyReferenceHref }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number>; methodologyReferenceNumber?: number; methodologyReferenceHref?: string }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const overall = string(assessment.overall_severity) ?? "SU";
@@ -347,13 +347,13 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { a
     </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
 
 
-    <p className="vigil-harm-method-note vigil-harm-derivation-note">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.</p>
+    <p className="vigil-harm-method-note vigil-harm-derivation-note">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.{methodologyReferenceNumber && methodologyReferenceHref ? <> <a className="vigil-harm-methodology-reference" href={methodologyReferenceHref} aria-label={`VIGIL Harm Impact Methodology reference ${methodologyReferenceNumber}`}>[{methodologyReferenceNumber}]</a></> : null}</p>
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
 }
 
-export function HarmImpactMatrix({ assessment, compact = false, evidenceReferenceNumbers }: { assessment?: UnknownRecord; compact?: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
+export function HarmImpactMatrix({ assessment, compact = false, evidenceReferenceNumbers, methodologyReferenceNumber, methodologyReferenceHref }: { assessment?: UnknownRecord; compact?: boolean; evidenceReferenceNumbers?: Record<string, number>; methodologyReferenceNumber?: number; methodologyReferenceHref?: string }) {
   return assessment
-    ? <AssessmentMatrix assessment={assessment} compact={compact} evidenceReferenceNumbers={evidenceReferenceNumbers} />
+    ? <AssessmentMatrix assessment={assessment} compact={compact} evidenceReferenceNumbers={evidenceReferenceNumbers} methodologyReferenceNumber={methodologyReferenceNumber} methodologyReferenceHref={methodologyReferenceHref} />
     : <MethodologyMatrix compact={compact} />;
 }
