@@ -138,6 +138,16 @@ function dedupeEvidence(evidence: ExternalEvidence[]) {
   return [...collected.values()];
 }
 
+function externalAssessmentEvidenceReferenceNumber(assessment: { sourceRecordRefs: string[]; url: string }, externalSources: ExternalEvidence[], sourceReferenceNumbers: Record<string, number>) {
+  for (const ref of assessment.sourceRecordRefs) {
+    const number = sourceReferenceNumbers[ref];
+    if (number) return number;
+  }
+  const normalizedUrl = assessment.url.replace(/\/$/, "").toLowerCase();
+  const index = externalSources.findIndex((source) => source.url?.replace(/\/$/, "").toLowerCase() === normalizedUrl);
+  return index >= 0 ? index + 1 : undefined;
+}
+
 function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
   const artefacts = Array.isArray(record.raw.incident_artefacts) ? record.raw.incident_artefacts : [];
   return artefacts.flatMap((artefact, index) => {
@@ -254,6 +264,10 @@ export default function EvidenceChainReportDeterministic() {
     externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
   ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
+  const unmatchedExternalAssessments = useMemo(
+    () => externalAssessments.filter((assessment) => !externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers)),
+    [externalAssessments, externalSources, harmEvidenceReferenceNumbers],
+  );
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
@@ -379,14 +393,22 @@ export default function EvidenceChainReportDeterministic() {
             <h4 className="report-substantive-label">External assessments</h4>
             <table className="report-external-assessment-table">
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
-              <tbody>{externalAssessments.map((assessment) => <tr key={assessment.id}>
-                <td><strong>{assessment.assessor}</strong></td>
-                <td>{externalAssessmentDate(assessment.date)}</td>
-                <td>{assessment.summary}</td>
-                <td>{assessment.classificationOrRating
-                  ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
-                  : "—"}</td>
-              </tr>)}</tbody>
+              <tbody>{externalAssessments.map((assessment) => {
+                const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
+                const unmatchedIndex = unmatchedExternalAssessments.findIndex((item) => item.id === assessment.id);
+                const referenceNumber = evidenceReferenceNumber ?? (externalSources.length + unmatchedIndex + 1);
+                const referenceTarget = evidenceReferenceNumber
+                  ? `#vigil-evidence-reference-${evidenceReferenceNumber}`
+                  : `#vigil-external-assessment-reference-${assessment.id}`;
+                return <tr key={assessment.id}>
+                  <td><strong>{assessment.assessor}</strong> <a className="report-inline-reference" href={referenceTarget}>[{referenceNumber}]</a></td>
+                  <td>{externalAssessmentDate(assessment.date)}</td>
+                  <td>{assessment.summary}</td>
+                  <td>{assessment.classificationOrRating
+                    ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
+                    : "—"}</td>
+                </tr>;
+              })}</tbody>
             </table>
           </section>}
         </article> : <Empty>No structured assessment is available.</Empty>}
@@ -401,14 +423,14 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
 
         <Stage number="05" label="References">
-          {(evidenceReferences.length > 0 || externalAssessments.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
+          {(evidenceReferences.length > 0 || unmatchedExternalAssessments.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>
               <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li id={`vigil-evidence-reference-${index + 1}`} key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>}
-            {externalAssessments.length > 0 && <section className="report-reference-group">
+            {unmatchedExternalAssessments.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External assessments</h3>
-              <ol className="report-reference-list">{externalAssessments.map((assessment) => <li key={assessment.id} className="report-reference-item">
+              <ol className="report-reference-list">{unmatchedExternalAssessments.map((assessment) => <li id={`vigil-external-assessment-reference-${assessment.id}`} key={assessment.id} className="report-reference-item">
                 <span className="report-reference-number" aria-hidden="true" />
                 <span className="report-reference-copy">
                   <strong>{assessment.title}</strong>
