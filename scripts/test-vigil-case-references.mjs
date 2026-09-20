@@ -197,3 +197,22 @@ test("all non-assessed harm dimension rollups move to References and PDF limits 
   assert.match(printable, /nonAssessedHarmDimensionLimitItems\(harmAssessment\)/);
   assert.doesNotMatch(cleanupCss, /vigil-harm-no-harm-basis \+ \.vigil-harm-method-note \+ \.vigil-harm-coverage/);
 });
+
+
+test("harm rows resolve source_records evidence to the numbered Evidence sources in web and PDF", async () => {
+  const [caseFile, report, matrix] = await Promise.all([
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
+  ]);
+
+  for (const source of [caseFile, report]) {
+    assert.match(source, /sourceRecordRefs/);
+    assert.match(source, /source_records\[\$\{sourceIndex\}\]/);
+    assert.match(source, /externalSources\.flatMap\(\(source, index\) => source\.sourceRecordRefs\.map/);
+    assert.match(source, /evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\}/);
+  }
+  assert.match(matrix, /row\.evidence_refs/);
+  assert.match(matrix, /evidenceReferenceNumbers\?\.\[ref\]/);
+  assert.match(matrix, /href=\{\`#vigil-evidence-reference-/);
+});
