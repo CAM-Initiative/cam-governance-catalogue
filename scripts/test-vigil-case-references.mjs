@@ -315,6 +315,20 @@ test("Harm Impact assessment leads with the substantive summary and closes with 
   assert.doesNotMatch(report, /report-harm-classification-intro/);
 });
 
+test("External assessment tables match comparable table typography in web and PDF", async () => {
+  const [webCss, reportCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),
+  ]);
+
+  assert.match(webCss, /\.vigil-case-file-page \.vigil-external-assessment-table \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
+  assert.match(webCss, /\.vigil-case-file-page \.vigil-external-assessment-table thead th \{[\s\S]*font-size: 0\.8rem/);
+  assert.match(reportCss, /\.report-external-assessment-table \{[\s\S]*font-size: 0\.96rem[\s\S]*line-height: 1\.56/);
+  assert.match(reportCss, /\.report-external-assessment-table thead th \{[\s\S]*font-size: 0\.78rem/);
+  assert.match(reportCss, /@media print \{[\s\S]*\.report-external-assessment-table,[\s\S]*font-size: 11\.5pt !important;[\s\S]*line-height: 1\.5 !important;/);
+  assert.match(reportCss, /@media print \{[\s\S]*\.report-external-assessment-table thead th \{[\s\S]*font-size: 10pt !important;/);
+});
+
 test("Classification and Repair tables keep readable body and legend typography", async () => {
   const css = await readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8");
   assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
