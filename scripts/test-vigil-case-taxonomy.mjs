@@ -108,7 +108,7 @@ assert.match(report, /className="report-substantive-label">Factual basis/);
 assert.match(report, /VIGIL Observatory governance assessment[\s\S]*Factual basis[\s\S]*Governance significance[\s\S]*Harm Impact Assessment/);
 assert.match(report, /report-harm-classification-intro/);
 assert.match(report, /report-assessment-details/);
-assert.match(printableReport, /notApplicableHarmDimensionLabels/);
+assert.match(printableReport, /nonAssessedHarmDimensionLimitItems/);
 assert.match(reportCss, /Final PDF width containment/);
 assert.match(reportCss, /margin: 20mm 0 18mm/);
 assert.match(reportCss, /padding: 0 13mm !important/);
