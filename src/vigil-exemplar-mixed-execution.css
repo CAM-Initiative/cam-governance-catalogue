@@ -19,7 +19,7 @@
 }
 
 .vigil-case-file-page .vigil-exemplar-callout.is-combination .vigil-exemplar-callout-kicker {
-  color: hsl(38 78% 34%);
+  color: hsl(var(--status-mixed));
 }
 
 .vigil-case-file-page .vigil-exemplar-callout.is-combination .vigil-exemplar-callout-boundary {
