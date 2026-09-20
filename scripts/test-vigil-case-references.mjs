@@ -229,6 +229,28 @@ test("Incident artefact captions use one label plus numbered evidence reference"
   assert.match(css, /\.vigil-incident-artefact-reference/);
 });
 
+test("Harm derivation note cites the numbered VIGIL Harm Impact Methodology reference in web and PDF", async () => {
+  const [matrix, caseFile, report, printable, cleanupCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-harm-assessment-cleanup.css"), "utf8"),
+  ]);
+
+  assert.match(matrix, /vigil-harm-methodology-reference/);
+  assert.match(matrix, /methodologyReferenceNumber/);
+  assert.match(matrix, /methodologyReferenceHref/);
+  assert.match(caseFile, /harmMethodologyReferenceNumber = harmImpactAssessment/);
+  assert.match(caseFile, /id="vigil-harm-methodology-reference"/);
+  assert.match(caseFile, /methodologyReferenceHref="#vigil-harm-methodology-reference"/);
+  assert.match(report, /harmMethodologyReferenceNumber = harmImpactAssessment/);
+  assert.match(report, /hasTaxonomyReference/);
+  assert.match(printable, /id="vigil-harm-methodology-reference"/);
+  assert.match(printable, /hasTaxonomyReference=\{Boolean\(reportIncident\?\.taxonomyReferences\.length\)\}/);
+  assert.match(cleanupCss, /\.vigil-harm-methodology-reference \{[\s\S]*font-size: inherit !important/);
+});
+
 test("Governance assessment uses one divider before each peer subsection", async () => {
   const css = await readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8");
   const container = css.match(/\.vigil-case-file-page \.vigil-diagnosis-assessment-details \{[\s\S]*?\}/)?.[0] ?? "";
