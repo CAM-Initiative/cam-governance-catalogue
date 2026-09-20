@@ -257,7 +257,7 @@ export default function EvidenceChainReportPrintable() {
           <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
         </span>
       </li>}
-      {hasHarmMethodologyReference && <li key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
+      {hasHarmMethodologyReference && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>VIGIL Harm Impact Methodology</strong>
@@ -323,7 +323,7 @@ export default function EvidenceChainReportPrintable() {
         <p className="text-xs text-muted-foreground lg:text-right">{includedCount} of {REPORT_SECTIONS.length} included</p>
       </div>
     </aside>
-    <EvidenceChainReportDeterministic />
+    <EvidenceChainReportDeterministic hasTaxonomyReference={Boolean(reportIncident?.taxonomyReferences.length)} />
     {taxonomyReferencePortal}
     {postscriptPortal}
   </div>;
