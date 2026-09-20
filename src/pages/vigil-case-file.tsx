@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
@@ -84,6 +84,12 @@ type DiagnosticProvenance = {
 const CASE_VIEWS = VIGIL_INCIDENT_CASE_SECTIONS;
 
 type StageId = typeof CASE_VIEWS[number]["id"];
+
+const CASE_REFERENCE_HASH_PATTERN = /^#(vigil-evidence-reference-\\d+|vigil-failure-taxonomy-reference|vigil-harm-methodology-reference)$/;
+
+function caseReferenceTargetFromHash(hash: string) {
+  return hash.match(CASE_REFERENCE_HASH_PATTERN)?.[1];
+}
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -379,10 +385,42 @@ export default function VigilCaseFile() {
   const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? "").trim();
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
+  const [pendingReferenceTarget, setPendingReferenceTarget] = useState<string>();
   const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
   const [harmMethodologyMetadata, setHarmMethodologyMetadata] = useState<HarmMethodologyMetadata>();
 
-  useEffect(() => setActiveStage("observe"), [sourceId]);
+  useEffect(() => {
+    const syncReferenceHash = () => {
+      const target = caseReferenceTargetFromHash(window.location.hash);
+      setPendingReferenceTarget(target);
+      setActiveStage(target ? "references" : "observe");
+    };
+    syncReferenceHash();
+    window.addEventListener("hashchange", syncReferenceHash);
+    return () => window.removeEventListener("hashchange", syncReferenceHash);
+  }, [sourceId]);
+
+  useEffect(() => {
+    if (activeStage !== "references" || !pendingReferenceTarget || state.status !== "ready") return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(pendingReferenceTarget);
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setPendingReferenceTarget(undefined);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeStage, pendingReferenceTarget, state.status, taxonomyReferences.length]);
+
+  const handleCaseReferenceClick = (event: MouseEvent<HTMLDivElement>) => {
+    const origin = event.target instanceof Element ? event.target : null;
+    const link = origin?.closest<HTMLAnchorElement>('a[href^="#vigil-"]');
+    const targetId = caseReferenceTargetFromHash(link?.getAttribute("href") ?? "");
+    if (!targetId) return;
+    event.preventDefault();
+    window.history.replaceState(null, "", `#${targetId}`);
+    setPendingReferenceTarget(targetId);
+    setActiveStage("references");
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -788,7 +826,7 @@ export default function VigilCaseFile() {
       </div>
     </nav>
 
-    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel}>
+    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel} onClick={handleCaseReferenceClick}>
       <Section id={`case-${activeStage}`} title={activeDefinition.label}>
         {renderStageContent(activeStage)}
       </Section>
