@@ -315,6 +315,16 @@ test("Harm Impact assessment leads with the substantive summary and closes with 
   assert.doesNotMatch(report, /report-harm-classification-intro/);
 });
 
+test("Harm derivation note uses plain under-table text without a callout side band", async () => {
+  const [webCss, reportCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),
+  ]);
+
+  assert.match(webCss, /\.vigil-case-file-page \.vigil-harm-matrix\.is-assessment \.vigil-harm-derivation-note \{[\s\S]*padding: 0;[\s\S]*border: 0;[\s\S]*background: transparent;/);
+  assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-harm-derivation-note \{[\s\S]*padding: 0 !important;[\s\S]*border: 0 !important;[\s\S]*background: transparent !important;/);
+});
+
 test("External assessment tables match comparable table typography in web and PDF", async () => {
   const [webCss, reportCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8"),
