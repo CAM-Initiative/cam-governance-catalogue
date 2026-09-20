@@ -63,3 +63,15 @@
     padding: 0.8rem 0.85rem;
   }
 }
+
+
+/* The incident harm summary is substantive narrative, not a coverage caveat. */
+:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-summary {
+  margin: 0 0 1.05rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.98rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.9);
+}
