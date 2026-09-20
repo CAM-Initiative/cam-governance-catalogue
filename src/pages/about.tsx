@@ -61,8 +61,8 @@ export default function About() {
           <h1>About VIGIL Observatory</h1>
           <p>VIGIL Observatory is the CAM Initiative&apos;s evidence-to-repair observatory for documented AI governance Incidents. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
           <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
-            <Link href="/observatory/cases">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
-            <Link href="/observatory/knowledge-base/failure-taxonomy">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+            <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
           </div>
         </header>
 
@@ -99,7 +99,7 @@ export default function About() {
               <article><h3>Failure-classified Incident</h3><p>The evidence supports the class mechanism in the Incident. Where a class invariant is published, Repair identifies the condition that must be restored.</p></article>
               <article><h3>Successful-invariant exemplar</h3><p>The Incident sits on the successful side of the same class boundary: the relevant invariant held under pressure. It remains visible for comparison without being presented as a failure.</p></article>
             </div>
-            <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy">Browse the taxonomy <ArrowRight aria-hidden="true" /></Link>
+            <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy/">Browse the taxonomy <ArrowRight aria-hidden="true" /></Link>
           </section>
 
           <section className="vigil-about-section" aria-labelledby="vigil-publication-heading">
@@ -116,8 +116,8 @@ export default function About() {
             </div>
             <p className="vigil-about-record-intro">VIGIL Observatory publishes evidence-bounded assessments and taxonomy relationships. CAELESTIS governance instruments are a separate authority layer and become authoritative only through their own amendment, validation and adoption processes.</p>
             <div className="vigil-about-link-row" aria-label="VIGIL Observatory publication and legal information">
-              <Link href="/licensing">Copyright & Licence <ArrowRight aria-hidden="true" /></Link>
-              <Link href="/privacy">Privacy <ArrowRight aria-hidden="true" /></Link>
+              <Link href="/licensing/">Copyright & Licence <ArrowRight aria-hidden="true" /></Link>
+              <Link href="/privacy/">Privacy <ArrowRight aria-hidden="true" /></Link>
               <a href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer">VIGIL Observatory repository <ArrowRight aria-hidden="true" /></a>
             </div>
           </section>
