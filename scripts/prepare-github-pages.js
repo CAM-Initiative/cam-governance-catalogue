@@ -44,6 +44,19 @@ function routeUrl(route) {
   return `${siteOrigin}${normalizedRoute}`;
 }
 
+function canonicalizeInternalHrefAttributes(html) {
+  return html.replace(/href="(\/(?!\/)[^"#?]*)"/g, (match, path) => {
+    if (
+      path === "/" ||
+      path.endsWith("/") ||
+      /\.(?:css|js|svg|png|jpe?g|webp|ico|json|pdf|xml|txt|woff2?)$/i.test(path)
+    ) {
+      return match;
+    }
+    return `href="${path}/"`;
+  });
+}
+
 function pageHtml({ route, title, description, body = "", canonicalRoute = route }) {
   const url = routeUrl(canonicalRoute);
   let html = baseHtml
@@ -57,7 +70,7 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
     .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
 
   if (body) html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
-  return html;
+  return canonicalizeInternalHrefAttributes(html);
 }
 
 function writeRoute(route, html) {
