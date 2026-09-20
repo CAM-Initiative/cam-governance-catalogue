@@ -46,7 +46,7 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
-test("Case File Section 02 follows governance assessment, harm, factual basis, governance significance order", async () => {
+test("Case File Section 02 follows governance assessment, factual basis, governance significance, harm order", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
   const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
@@ -54,7 +54,7 @@ test("Case File Section 02 follows governance assessment, harm, factual basis, g
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
   const significanceIndex = assessmentRenderer.indexOf("Governance significance");
 
-  assert.ok(governanceIndex >= 0 && harmIndex > governanceIndex && factualIndex > harmIndex && significanceIndex > factualIndex);
+  assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
   assert.match(assessmentRenderer, /vigil-diagnosis-narrative/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
 });
@@ -72,7 +72,14 @@ test("Case File moves assessment limits from Section 02 to the closing Reference
   assert.match(referencesRenderer, /Limits of the assessment/);
   assert.match(referencesRenderer, /assessmentBoundaries\.length > 0/);
   assert.match(referencesRenderer, /<TextList items=\{assessmentBoundaries\} \/>/);
+  assert.match(referencesRenderer, /vigil-reference-limits-label/);
   assert.match(referencesRenderer, /vigil-reference-disclaimer/);
+});
+
+test("Reference numbering does not leak into disclaimer bullet lists", async () => {
+  const css = await readFile(resolve(repoRoot, "src/vigil-reference-list-cleanup.css"), "utf8");
+  assert.match(css, /vigil-case-bibliography > \.vigil-reference-subsection > ol > li/);
+  assert.doesNotMatch(css, /vigil-case-bibliography li::before/);
 });
 
 test("Case File References remain bibliographic and do not republish evidence commentary", async () => {

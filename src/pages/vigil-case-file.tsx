@@ -495,11 +495,6 @@ export default function VigilCaseFile() {
           </aside>
         </section>
 
-        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident-level severity</p><h3 id="severity-assessment-heading">Harm Impact Matrix</h3></div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
-        </section>
-
         <section className="vigil-diagnosis-narrative">
           <h4 className="vigil-substantive-label">Factual basis</h4>
           <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
@@ -508,6 +503,15 @@ export default function VigilCaseFile() {
         <section className="vigil-diagnosis-narrative">
           <h4 className="vigil-substantive-label">Governance significance</h4>
           <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+        </section>
+
+        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
+          <div className="vigil-case-subheading">
+            <p className="vigil-library-kicker">Harm classification</p>
+            <h3 id="severity-assessment-heading">Harm Impact Matrix</h3>
+            <p className="vigil-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
+          </div>
+          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
@@ -627,7 +631,7 @@ export default function VigilCaseFile() {
         <h3 id="vigil-reference-reliance-heading">Use and reliance notice</h3>
         <p>This Case File is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this Case File.</p>
         {assessmentBoundaries.length > 0 && <div className="vigil-reference-assessment-limits">
-          <h4>Limits of the assessment</h4>
+          <h4 className="vigil-reference-limits-label">Limits of the assessment</h4>
           <TextList items={assessmentBoundaries} />
         </div>}
       </section>

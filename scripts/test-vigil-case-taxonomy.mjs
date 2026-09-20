@@ -93,6 +93,8 @@ assert.match(report, /report-external-assessment-table/);
 assert.match(report, /externalAssessmentDate\(assessment\.date\)/);
 assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
+assert.match(report, /VIGIL Observatory governance assessment[\s\S]*Factual basis[\s\S]*Governance significance[\s\S]*Harm Impact Matrix/);
+assert.match(report, /report-harm-classification-intro/);
 assert.doesNotMatch(report, /Assessment provenance/);
 assert.doesNotMatch(report, /<EvidenceCard/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-report-cards \{[\s\S]*display: none !important;/);

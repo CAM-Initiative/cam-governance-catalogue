@@ -1514,6 +1514,13 @@
   color: hsl(var(--report-ink)) !important;
 }
 
+.vigil-deterministic-report-host .report-harm-classification-intro {
+  margin: 0.45rem 1rem 0;
+  color: hsl(var(--report-muted));
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
 .vigil-deterministic-report-host .report-severity-assessment > .report-metadata-grid {
   display: flex;
   flex-wrap: wrap;

@@ -176,8 +176,16 @@
   margin-top: 1rem;
   padding-top: 0.9rem;
   border-top: 1px solid hsl(var(--border) / 0.62);
-  font-size: 0.88rem;
-  line-height: 1.4;
+}
+
+.vigil-reference-disclaimer .vigil-reference-limits-label {
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
 }
 
 .vigil-reference-disclaimer p,
@@ -193,7 +201,20 @@
 
 .vigil-reference-assessment-limits ul {
   margin: 0.65rem 0 0;
-  padding-left: 1.2rem;
+  padding-left: 1.25rem;
+  list-style: disc outside;
+}
+
+.vigil-reference-assessment-limits li {
+  display: list-item;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.vigil-reference-assessment-limits li + li {
+  margin-top: 0.45rem;
 }
 
 .vigil-reference-assessment-limits p {

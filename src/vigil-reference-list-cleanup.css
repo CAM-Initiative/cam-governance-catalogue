@@ -33,7 +33,7 @@
   padding: 0;
 }
 
-#case-references .vigil-case-bibliography li,
+#case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li,
 #case-references .vigil-record-provenance article {
   counter-increment: vigil-public-reference;
   position: relative;
@@ -47,7 +47,7 @@
   background: transparent;
 }
 
-#case-references .vigil-case-bibliography li::before,
+#case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li::before,
 #case-references .vigil-record-provenance article::before {
   content: "[" counter(vigil-public-reference) "]";
   grid-column: 1;
@@ -58,11 +58,11 @@
   color: hsl(var(--primary));
 }
 
-#case-references .vigil-case-bibliography li > span:first-child {
+#case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li > span:first-child {
   display: none;
 }
 
-#case-references .vigil-case-bibliography li > div,
+#case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li > div,
 #case-references .vigil-record-provenance article > :not(:first-child) {
   grid-column: 2;
 }
@@ -123,7 +123,7 @@ section[aria-labelledby="report-section-06-heading"] .space-y-6 > section + sect
 }
 
 @media (max-width: 560px) {
-  #case-references .vigil-case-bibliography li,
+  #case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li,
   #case-references .vigil-record-provenance article {
     grid-template-columns: 2.35rem minmax(0, 1fr);
     gap: 0 0.55rem;
