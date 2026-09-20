@@ -178,6 +178,13 @@ function dimensionLabel(id: string) {
   return DIMENSIONS.find((dimension) => dimension.dimension_id === id)?.label ?? id.split("-").join(" ");
 }
 
+export function notApplicableHarmDimensionLabels(assessment?: UnknownRecord): string[] {
+  if (!assessment) return [];
+  return rowsFor(assessment)
+    .filter((row) => row.assessment_status === "not-applicable")
+    .map((row) => dimensionLabel(row.dimension_id));
+}
+
 function resultLabel(row: MatrixRow) {
   if (row.assessment_status === "assessed" && row.severity) {
     return row.severity + " · " + (BAND_LABELS[row.severity] ?? row.severity);

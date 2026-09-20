@@ -4,7 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -427,6 +427,13 @@ export default function VigilCaseFile() {
   const severityMethodology = harmImpactAssessment
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
+  const notApplicableHarmDimensions = notApplicableHarmDimensionLabels(harmImpactAssessment);
+  const harmClassificationLimit = notApplicableHarmDimensions.length
+    ? `Harm classification not applicable (${notApplicableHarmDimensions.length}): ${notApplicableHarmDimensions.join("; ")}.`
+    : undefined;
+  const assessmentLimitItems = harmClassificationLimit
+    ? [...assessmentBoundaries, harmClassificationLimit]
+    : assessmentBoundaries;
   const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + taxonomyReferences.length + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
@@ -480,6 +487,16 @@ export default function VigilCaseFile() {
         <section className="vigil-diagnosis-definition">
           <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
           <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
+          <div className="vigil-diagnosis-assessment-details">
+            <section>
+              <h4 className="vigil-substantive-label">Factual basis</h4>
+              <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
+            </section>
+            <section>
+              <h4 className="vigil-substantive-label">Governance significance</h4>
+              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+            </section>
+          </div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
             <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
             <dl className="vigil-evidence-review-meta">
@@ -493,16 +510,6 @@ export default function VigilCaseFile() {
               <Field label="Model attribution" value={diagnostic?.attributionBasis} />
             </dl>
           </aside>
-        </section>
-
-        <section className="vigil-diagnosis-narrative">
-          <h4 className="vigil-substantive-label">Factual basis</h4>
-          <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
-        </section>
-
-        <section className="vigil-diagnosis-narrative">
-          <h4 className="vigil-substantive-label">Governance significance</h4>
-          <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
         </section>
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
@@ -630,9 +637,9 @@ export default function VigilCaseFile() {
       <section className="vigil-reference-disclaimer" aria-labelledby="vigil-reference-reliance-heading">
         <h3 id="vigil-reference-reliance-heading">Use and reliance notice</h3>
         <p>This Case File is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this Case File.</p>
-        {assessmentBoundaries.length > 0 && <div className="vigil-reference-assessment-limits">
+        {assessmentLimitItems.length > 0 && <div className="vigil-reference-assessment-limits">
           <h4 className="vigil-reference-limits-label">Limits of the assessment</h4>
-          <TextList items={assessmentBoundaries} />
+          <TextList items={assessmentLimitItems} />
         </div>}
       </section>
     </div> : <p className="vigil-case-empty">No references are currently available for this Case File.</p>;

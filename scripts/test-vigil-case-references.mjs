@@ -55,8 +55,17 @@ test("Case File Section 02 follows governance assessment, factual basis, governa
   const significanceIndex = assessmentRenderer.indexOf("Governance significance");
 
   assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
-  assert.match(assessmentRenderer, /vigil-diagnosis-narrative/);
+  assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
+});
+
+test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
+  const source = await caseFileSource();
+  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n        <section className="vigil-severity-assessment"/)?.[0] ?? "";
+  assert.match(card, /VIGIL Observatory governance assessment/);
+  assert.match(card, /Factual basis/);
+  assert.match(card, /Governance significance/);
+  assert.match(card, /vigil-diagnosis-assessment-details/);
 });
 
 test("Case File moves assessment limits from Section 02 to the closing References disclaimer", async () => {
@@ -70,8 +79,10 @@ test("Case File moves assessment limits from Section 02 to the closing Reference
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-limitations/);
   assert.match(referencesRenderer, /Use and reliance notice/);
   assert.match(referencesRenderer, /Limits of the assessment/);
-  assert.match(referencesRenderer, /assessmentBoundaries\.length > 0/);
-  assert.match(referencesRenderer, /<TextList items=\{assessmentBoundaries\} \/>/);
+  assert.match(referencesRenderer, /assessmentLimitItems\.length > 0/);
+  assert.match(referencesRenderer, /<TextList items=\{assessmentLimitItems\} \/>/);
+  assert.match(source, /notApplicableHarmDimensionLabels\(harmImpactAssessment\)/);
+  assert.match(source, /Harm classification not applicable/);
   assert.match(referencesRenderer, /vigil-reference-limits-label/);
   assert.match(referencesRenderer, /vigil-reference-disclaimer/);
 });

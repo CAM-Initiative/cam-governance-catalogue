@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
+import { notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
@@ -218,6 +219,16 @@ export default function EvidenceChainReportPrintable() {
       : undefined;
     return textList(assessment?.assessment_boundaries);
   }, [reportIncident]);
+  const assessmentLimitItems = useMemo(() => {
+    const harmAssessment = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
+      ? reportIncident.raw.harm_impact_assessment
+      : undefined;
+    const notApplicableDimensions = notApplicableHarmDimensionLabels(harmAssessment);
+    const harmLimit = notApplicableDimensions.length
+      ? `Harm classification not applicable (${notApplicableDimensions.length}): ${notApplicableDimensions.join("; ")}.`
+      : undefined;
+    return harmLimit ? [...assessmentBoundaries, harmLimit] : assessmentBoundaries;
+  }, [assessmentBoundaries, reportIncident]);
 
   const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
     ? createPortal(<>
@@ -254,9 +265,9 @@ export default function EvidenceChainReportPrintable() {
           This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
         </p>
       </section>
-      {assessmentBoundaries.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
+      {assessmentLimitItems.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
         <h2 id="report-assessment-limits-heading" className="report-label">Limits of the assessment</h2>
-        <ul className="report-list">{assessmentBoundaries.map((item) => <li key={item}>{item}</li>)}</ul>
+        <ul className="report-list">{assessmentLimitItems.map((item) => <li key={item}>{item}</li>)}</ul>
       </section>}
       <p className="report-copyright">
         © 2026 CAM Initiative. All rights reserved.

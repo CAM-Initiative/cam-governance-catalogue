@@ -250,17 +250,25 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   margin-left: 0;
 }
 
-.vigil-case-file-page .vigil-diagnosis-narrative {
+.vigil-case-file-page .vigil-diagnosis-assessment-details {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+}
+
+.vigil-case-file-page .vigil-diagnosis-assessment-details > section {
   margin: 0;
   padding: 0;
 }
 
-.vigil-case-file-page .vigil-diagnosis-narrative > .vigil-substantive-label {
+.vigil-case-file-page .vigil-diagnosis-assessment-details .vigil-substantive-label {
   margin: 0;
 }
 
-.vigil-case-file-page .vigil-diagnosis-narrative > p {
-  margin: 0.62rem 0 0;
+.vigil-case-file-page .vigil-diagnosis-assessment-details p {
+  margin: 0.5rem 0 0;
   font-family: var(--app-font-sans);
   font-size: 0.98rem;
   line-height: 1.66;

@@ -298,8 +298,14 @@ export default function EvidenceChainReportDeterministic() {
 
         <Stage number="02" label="Assessment">
         {incident ? <article className="report-diagnosis">
-          <section className="report-intro"><p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p><p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p></section>
-          <div className="report-stack"><section className="report-subpanel"><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section><section className="report-subpanel"><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section></div>
+          <section className="report-intro">
+            <p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p>
+            <p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
+            <div className="report-assessment-details">
+              <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+            </div>
+          </section>
           <section className="report-panel report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Matrix</h4>
             <p className="report-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
