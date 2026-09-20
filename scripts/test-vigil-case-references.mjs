@@ -255,3 +255,38 @@ test("Classification table body typography matches Repair", async () => {
   assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 0\.97rem[\s\S]*line-height: 1\.58/);
   assert.match(css, /\.vigil-case-file-page \.vigil-repair-table tbody td \{[\s\S]*font-size: 0\.97rem[\s\S]*line-height: 1\.58/);
 });
+
+
+test("External assessments reuse Evidence source citations instead of duplicating bibliography entries", async () => {
+  const [caseFile, report] = await Promise.all([
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+  ]);
+  for (const source of [caseFile, report]) {
+    assert.match(source, /externalAssessmentEvidenceReferenceNumber/);
+    assert.match(source, /unmatchedExternalAssessments/);
+    assert.match(source, /sourceRecordRefs/);
+  }
+  assert.match(caseFile, /unmatchedExternalAssessments\.map/);
+  assert.match(report, /unmatchedExternalAssessments\.map/);
+});
+
+test("Taxonomy and methodology references expose version and revision metadata in web and PDF", async () => {
+  const [caseFile, printable, taxonomy] = await Promise.all([
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/lib/vigilTaxonomyClassification.ts"), "utf8"),
+  ]);
+  for (const source of [caseFile, printable]) {
+    assert.match(source, /Version /);
+    assert.match(source, /Revised /);
+  }
+  assert.match(taxonomy, /referenceVersion/);
+  assert.match(taxonomy, /referencePublicationDate/);
+  assert.match(printable, /loadHarmMethodologyMetadata/);
+});
+
+test("Reference subsection boundaries do not double the divider before Internal records", async () => {
+  const css = await readFile(resolve(repoRoot, "src/vigil-reference-list-cleanup.css"), "utf8");
+  assert.match(css, /vigil-reference-subsection > ol > li:last-child[\s\S]*border-bottom: 0/);
+});
