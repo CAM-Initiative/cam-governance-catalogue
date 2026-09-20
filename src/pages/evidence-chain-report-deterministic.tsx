@@ -264,10 +264,6 @@ export default function EvidenceChainReportDeterministic() {
     externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
   ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
-  const unmatchedExternalAssessments = useMemo(
-    () => externalAssessments.filter((assessment) => !externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers)),
-    [externalAssessments, externalSources, harmEvidenceReferenceNumbers],
-  );
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
@@ -395,13 +391,8 @@ export default function EvidenceChainReportDeterministic() {
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
               <tbody>{externalAssessments.map((assessment) => {
                 const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
-                const unmatchedIndex = unmatchedExternalAssessments.findIndex((item) => item.id === assessment.id);
-                const referenceNumber = evidenceReferenceNumber ?? (externalSources.length + unmatchedIndex + 1);
-                const referenceTarget = evidenceReferenceNumber
-                  ? `#vigil-evidence-reference-${evidenceReferenceNumber}`
-                  : `#vigil-external-assessment-reference-${assessment.id}`;
                 return <tr key={assessment.id}>
-                  <td><strong>{assessment.assessor}</strong> <a className="report-inline-reference" href={referenceTarget}>[{referenceNumber}]</a></td>
+                  <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="report-inline-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
                   <td>{externalAssessmentDate(assessment.date)}</td>
                   <td>{assessment.summary}</td>
                   <td>{assessment.classificationOrRating
@@ -423,22 +414,12 @@ export default function EvidenceChainReportDeterministic() {
         </Stage>
 
         <Stage number="05" label="References">
-          {(evidenceReferences.length > 0 || unmatchedExternalAssessments.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
+          {(evidenceReferences.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>
               <ol className="report-reference-list">{evidenceReferences.map((reference, index) => <li id={`vigil-evidence-reference-${index + 1}`} key={reference.key} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.label}</strong>{reference.detail ? <span className="report-reference-meta"> — {reference.detail}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
             </section>}
-            {unmatchedExternalAssessments.length > 0 && <section className="report-reference-group">
-              <h3 className="report-substantive-label">External assessments</h3>
-              <ol className="report-reference-list">{unmatchedExternalAssessments.map((assessment) => <li id={`vigil-external-assessment-reference-${assessment.id}`} key={assessment.id} className="report-reference-item">
-                <span className="report-reference-number" aria-hidden="true" />
-                <span className="report-reference-copy">
-                  <strong>{assessment.title}</strong>
-                  <span className="report-reference-meta"> — {[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</span>
-                  <br /><a href={assessment.url} target="_blank" rel="noreferrer" className="report-reference-url">{assessment.url}</a>
-                </span>
-              </li>)}</ol>
-            </section>}
+
             {externalIncidentReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">External incident records</h3>
               <ol className="report-reference-list">{externalIncidentReferences.map((reference, index) => <li key={`${reference.registry}-${reference.externalId ?? index}`} className="report-reference-item"><span className="report-reference-number" aria-hidden="true" /><span className="report-reference-copy"><strong>{reference.registry}{reference.externalId ? ` — ${reference.externalId}` : ""}</strong>{reference.relationship ? <span className="report-reference-meta"> — {titleizeValue(reference.relationship)}</span> : null}{reference.url ? <><br /><a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a></> : null}</span></li>)}</ol>
