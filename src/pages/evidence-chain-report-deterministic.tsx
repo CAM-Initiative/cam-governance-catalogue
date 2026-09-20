@@ -406,7 +406,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             />
           </section>
           {externalAssessments.length > 0 && <section className="report-external-assessments">
-            <h4 className="report-substantive-label">External assessments</h4>
+            <p className="vigil-library-kicker">External assessments</p>
             <table className="report-external-assessment-table">
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
               <tbody>{externalAssessments.map((assessment) => {
