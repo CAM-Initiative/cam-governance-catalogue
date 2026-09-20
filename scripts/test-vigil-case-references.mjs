@@ -218,6 +218,21 @@ test("harm rows resolve source_records evidence to the numbered Evidence sources
 });
 
 
+test("inline Case File references activate Section 05 before resolving their anchors", async () => {
+  const source = await caseFileSource();
+
+  assert.match(source, /CASE_REFERENCE_HASH_PATTERN/);
+  assert.match(source, /vigil-evidence-reference-/);
+  assert.match(source, /vigil-failure-taxonomy-reference/);
+  assert.match(source, /vigil-harm-methodology-reference/);
+  assert.match(source, /pendingReferenceTarget/);
+  assert.match(source, /setActiveStage\("references"\)/);
+  assert.match(source, /requestAnimationFrame/);
+  assert.match(source, /scrollIntoView/);
+  assert.match(source, /history\.replaceState/);
+  assert.match(source, /onClick=\{handleCaseReferenceClick\}/);
+});
+
 test("Incident artefact captions use one label plus numbered evidence reference", async () => {
   const source = await caseFileSource();
   const css = await readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8");
