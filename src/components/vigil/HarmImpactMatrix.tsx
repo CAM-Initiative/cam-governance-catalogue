@@ -301,7 +301,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
   </div>;
 }
 
-function AssessmentMatrix({ assessment, compact, methodology, assessedOn, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; methodology?: string; assessedOn?: string; evidenceReferenceNumbers?: Record<string, number> }) {
+function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const overall = string(assessment.overall_severity) ?? "SU";
@@ -313,17 +313,7 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
   const assessmentGap = string(assessment.assessment_gap);
 
   return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")}>
-    <div className="vigil-harm-matrix-overview">
-      <div className="vigil-harm-summary-row">
-        {methodology ? <div className="vigil-harm-summary-item"><span>Methodology</span><strong>{methodology}</strong></div> : null}
-        {assessedOn ? <div className="vigil-harm-summary-item"><span>Assessment date</span><strong>{assessedOn}</strong></div> : null}
-        <div className="vigil-harm-overall-result">
-          <span>Overall severity</span>
-          <strong className={"severity-" + overall.toLowerCase()}>{overall}</strong>
-          <small>{BAND_LABELS[overall] ?? "Not assessed"}</small>
-        </div>
-      </div>
-    </div>
+    {coverageNote ? <p className="vigil-harm-coverage vigil-harm-summary">{coverageNote}</p> : null}
 
     {noMaterialisedHarmBasis ? <p className="vigil-harm-no-harm-basis"><strong>Positive no-materialised-harm basis:</strong> {noMaterialisedHarmBasis}</p> : null}
 
@@ -357,13 +347,13 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
     </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
 
 
-    {coverageNote ? <p className="vigil-harm-coverage"><strong>Harm assessment summary:</strong> {coverageNote}</p> : null}
+    <p className="vigil-harm-method-note vigil-harm-derivation-note">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.</p>
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
 }
 
-export function HarmImpactMatrix({ assessment, compact = false, methodology, assessedOn, evidenceReferenceNumbers }: { assessment?: UnknownRecord; compact?: boolean; methodology?: string; assessedOn?: string; evidenceReferenceNumbers?: Record<string, number> }) {
+export function HarmImpactMatrix({ assessment, compact = false, evidenceReferenceNumbers }: { assessment?: UnknownRecord; compact?: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
   return assessment
-    ? <AssessmentMatrix assessment={assessment} compact={compact} methodology={methodology} assessedOn={assessedOn} evidenceReferenceNumbers={evidenceReferenceNumbers} />
+    ? <AssessmentMatrix assessment={assessment} compact={compact} evidenceReferenceNumbers={evidenceReferenceNumbers} />
     : <MethodologyMatrix compact={compact} />;
 }
