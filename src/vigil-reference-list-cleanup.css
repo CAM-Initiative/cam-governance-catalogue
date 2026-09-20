@@ -130,3 +130,14 @@ section[aria-labelledby="report-section-06-heading"] .space-y-6 > section + sect
     padding: 0.8rem 0;
   }
 }
+
+
+/* Reference subsection boundaries own the separator. Do not leave the final
+   row border in place as a second line before the next subsection. */
+#case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li:last-child {
+  border-bottom: 0;
+}
+
+/* Reference presentation revision guard. */
+
+/* Assessment-reference deduplication validation guard. */

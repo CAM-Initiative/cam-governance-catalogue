@@ -252,15 +252,18 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 .vigil-case-file-page .vigil-diagnosis-assessment-details {
   display: grid;
-  gap: 1rem;
+  gap: 0;
   margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid hsl(var(--border) / 0.62);
 }
 
 .vigil-case-file-page .vigil-diagnosis-assessment-details > section {
   margin: 0;
-  padding: 0;
+  padding-top: 1rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+}
+
+.vigil-case-file-page .vigil-diagnosis-assessment-details > section + section {
+  margin-top: 1rem;
 }
 
 .vigil-case-file-page .vigil-diagnosis-assessment-details .vigil-substantive-label {
@@ -423,8 +426,11 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 .vigil-case-file-page .vigil-incident-artefact figcaption {
-  display: grid;
-  gap: 0.3rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.45rem;
   max-width: 48rem;
   margin: 0.75rem auto 0;
   font-size: 0.9rem;
@@ -493,3 +499,44 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
     min-width: 42rem;
   }
 }
+
+
+/* Cross-link evidence-backed assessment statements to the numbered bibliography. */
+.vigil-case-file-page .vigil-harm-inline-references {
+  white-space: nowrap;
+}
+.vigil-case-file-page .vigil-harm-inline-references a,
+.vigil-case-file-page .vigil-external-assessment-reference {
+  font-size: 0.88em;
+  font-weight: 700;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+.vigil-case-file-page .vigil-harm-inline-references a:hover,
+.vigil-case-file-page .vigil-external-assessment-reference:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+/* External assessments are substantive comparison material, not footnote metadata. */
+.vigil-case-file-page .vigil-external-assessment-table {
+  font-size: 0.98rem;
+  line-height: 1.62;
+}
+.vigil-case-file-page .vigil-external-assessment-table thead th {
+  font-size: 0.74rem;
+}
+
+
+.vigil-case-file-page .vigil-incident-artefact-reference {
+  font-size: 0.88em;
+  font-weight: 700;
+  color: hsl(var(--primary));
+  text-decoration: none !important;
+}
+
+.vigil-case-file-page .vigil-incident-artefact-reference:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 0.16em;
+}
+

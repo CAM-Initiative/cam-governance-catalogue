@@ -52,8 +52,8 @@
 
 .vigil-case-file-page .vigil-classification-table tbody td {
   padding: 0.9rem 0.9rem 0.95rem;
-  font-size: 0.9rem;
-  line-height: 1.55;
+  font-size: 0.97rem;
+  line-height: 1.58;
   color: hsl(var(--foreground) / 0.84);
 }
 
@@ -90,7 +90,7 @@
 
 .vigil-case-file-page .vigil-classification-table td > strong {
   display: block;
-  font-size: 0.92rem;
+  font-size: 0.97rem;
   font-weight: 670;
   line-height: 1.4;
   color: hsl(var(--foreground) / 0.94);
@@ -137,7 +137,7 @@
   display: block;
   margin-top: 0.28rem;
   font-family: var(--app-font-mono);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   line-height: 1.35;
   color: hsl(var(--muted-foreground) / 0.82);
 }
@@ -145,7 +145,7 @@
 .vigil-case-file-page .vigil-classification-source-link {
   display: inline-block;
   margin-top: 0.48rem;
-  font-size: 0.8rem;
+  font-size: 0.84rem;
   font-weight: 620;
   color: hsl(var(--primary));
   text-decoration: none;

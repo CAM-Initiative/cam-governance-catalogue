@@ -309,10 +309,11 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
   assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
 });
 
-test("Case File harm assessment moves not-applicable dimensions to assessment limits", async () => {
+test("Case File harm assessment moves all non-assessed dimensions to assessment limits", async () => {
   const him = await read("src/components/vigil/HarmImpactMatrix.tsx");
-  assert.match(him, /filter\(\(status\) => status !== "not-applicable"\)/);
-  assert.match(him, /notApplicableHarmDimensionLabels/);
+  assert.match(him, /nonAssessedHarmDimensionLimitItems/);
+  assert.match(him, /assessment_status !== "assessed"/);
+  assert.match(him, /rollupLabel\(status\)/);
 });
 
 test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
@@ -460,7 +461,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
 });
 
-test("harm methodology emphasizes scan targets and rejects legacy microtype", async () => {
+test("harm methodology emphasizes scan targets and rejects legacy microtype outside the intentional footnote", async () => {
   const [matrix, css] = await Promise.all([
     read("src/components/vigil/HarmImpactMatrix.tsx"),
     read("src/vigil-incident-severity-refinement.css"),
@@ -472,9 +473,24 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype", as
   assert.match(css, /vigil-harm-threshold-emphasis/);
   assert.match(css, /font-size: 9\.5pt/);
   assert.doesNotMatch(css, /font-size: (?:6\.6|7|7\.2|8)pt/);
-  assert.doesNotMatch(css, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
+  const withoutIntentionalFootnote = css.replace(/\.vigil-case-file-page \.vigil-harm-matrix\.is-assessment \.vigil-harm-derivation-note \{[\s\S]*?\}/, "");
+  assert.doesNotMatch(withoutIntentionalFootnote, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
+  assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
 });
 
+
+
+test("harm methodology renders canonical adaptation notes below the matrix", async () => {
+  const [matrix, css] = await Promise.all([
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
+    read("src/vigil-incident-severity-refinement.css"),
+  ]);
+  assert.match(matrix, /Interpretive notes/);
+  assert.match(matrix, /adaptation_note/);
+  assert.match(matrix, /must be wiped and rebuilt or reconstructed from a known-clean state/);
+  assert.match(matrix, /Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5/);
+  assert.match(css, /\.vigil-harm-interpretive-notes/);
+});
 
 test("Stage 02 is presented publicly as Assessment", async () => {
   const [sections, cases, hub, report, printable, home, rail, pages, readme, contract] = await Promise.all([
@@ -766,7 +782,9 @@ test("Case File Incident stage renders optional source artefact images inside Wh
   assert.match(caseFile, /incident_artefacts/);
   assert.match(caseFile, /vigil-incident-artefacts/);
   assert.match(caseFile, /<img src=\{artefact\.renderUrl\}/);
-  assert.match(caseFile, /View originating source/);
+  assert.match(caseFile, /vigil-incident-artefact-reference/);
+  assert.match(caseFile, /#vigil-evidence-reference-/);
+  assert.doesNotMatch(caseFile, /View originating source/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact \{[\s\S]*text-align: center/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact-link \{[\s\S]*max-width: min\(100%, 54rem\)/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact img \{[\s\S]*margin: 0 auto/);

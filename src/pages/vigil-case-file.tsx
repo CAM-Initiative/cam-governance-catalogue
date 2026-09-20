@@ -4,7 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
-import { HarmImpactMatrix, notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -16,6 +16,7 @@ import {
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyFailureTypeLabel,
@@ -33,6 +34,7 @@ type ExternalEvidence = {
   date?: string;
   url?: string;
   description?: string;
+  sourceRecordRefs: string[];
 };
 
 type AffectedSystem = {
@@ -139,10 +141,16 @@ async function detailedRecord(indexRecord: VigilIndexRecord) {
 }
 
 function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
-  const sources = [record.raw.source_records, record.raw.sources, record.raw.evidence_sources].find(Array.isArray);
+  const sourceRecords = Array.isArray(record.raw.source_records) ? record.raw.source_records : undefined;
+  const sources = sourceRecords ?? [record.raw.sources, record.raw.evidence_sources].find(Array.isArray);
   if (!Array.isArray(sources)) return [];
-  return sources.flatMap((source) => {
-    if (typeof source === "string") return [{ title: source, url: /^https?:\/\//i.test(source) ? source : undefined }];
+  return sources.flatMap((source, sourceIndex) => {
+    const sourceRecordRefs = sourceRecords ? [`source_records[${sourceIndex}]`] : [];
+    if (typeof source === "string") return [{
+      title: source,
+      url: /^https?:\/\//i.test(source) ? source : undefined,
+      sourceRecordRefs,
+    }];
     if (!isObject(source)) return [];
     const residence = text(source.source_residence)?.toLowerCase();
     if (residence === "cam-internal" || residence === "internal") return [];
@@ -153,18 +161,23 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       publisher: text(source.author_or_publisher ?? source.publisher ?? source.source_platform),
       date: text(source.source_date ?? source.date ?? source.published_date),
       url: text(source.source_url ?? source.url ?? source.archive_url),
+      sourceRecordRefs,
     }];
   });
 }
 
 function dedupeEvidence(evidence: ExternalEvidence[]) {
-  const seen = new Set<string>();
-  return evidence.filter((source) => {
+  const collected = new Map<string, ExternalEvidence>();
+  for (const source of evidence) {
     const key = `${source.title.toLowerCase()}|${source.url ?? ""}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+    const existing = collected.get(key);
+    if (existing) {
+      existing.sourceRecordRefs = [...new Set([...existing.sourceRecordRefs, ...source.sourceRecordRefs])];
+      continue;
+    }
+    collected.set(key, { ...source, sourceRecordRefs: [...source.sourceRecordRefs] });
+  }
+  return [...collected.values()];
 }
 
 function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
@@ -287,6 +300,23 @@ function TextList({ items }: { items: string[] }) {
   return <ul>{items.map((item) => <li key={item}>{item}</li>)}</ul>;
 }
 
+function externalAssessmentEvidenceReferenceNumber(assessment: { sourceRecordRefs: string[]; url: string }, externalSources: ExternalEvidence[], sourceReferenceNumbers: Record<string, number>) {
+  for (const ref of assessment.sourceRecordRefs) {
+    const number = sourceReferenceNumbers[ref];
+    if (number) return number;
+  }
+  const normalizedUrl = assessment.url.replace(/\/$/, "").toLowerCase();
+  const index = externalSources.findIndex((source) => source.url?.replace(/\/$/, "").toLowerCase() === normalizedUrl);
+  return index >= 0 ? index + 1 : undefined;
+}
+
+function evidenceReferenceNumberForUrl(sources: ExternalEvidence[], url?: string) {
+  if (!url) return undefined;
+  const normalized = url.replace(/\/$/, "").toLowerCase();
+  const index = sources.findIndex((source) => source.url?.replace(/\/$/, "").toLowerCase() === normalized);
+  return index >= 0 ? index + 1 : undefined;
+}
+
 function recordLink(record: VigilIndexRecord) {
   return record.github_blob_url ?? record.raw_url;
 }
@@ -350,6 +380,7 @@ export default function VigilCaseFile() {
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
   const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
+  const [harmMethodologyMetadata, setHarmMethodologyMetadata] = useState<HarmMethodologyMetadata>();
 
   useEffect(() => setActiveStage("observe"), [sourceId]);
 
@@ -381,10 +412,27 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  // Resolve canonical row-local source_records[N] provenance against the final numbered, deduplicated Evidence sources list.
+  const harmEvidenceReferenceNumbers = useMemo(() => Object.fromEntries(
+    externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
+  ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const harm = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
+    const methodologyVersion = harm ? text(harm.methodology_version) : undefined;
+    if (!methodologyVersion) {
+      setHarmMethodologyMetadata(undefined);
+      return () => { cancelled = true; };
+    }
+    void loadHarmMethodologyMetadata(methodologyVersion)
+      .then((metadata) => { if (!cancelled) setHarmMethodologyMetadata(metadata); });
+    return () => { cancelled = true; };
+  }, [incident]);
 
   useEffect(() => {
     let cancelled = false;
@@ -424,18 +472,11 @@ export default function VigilCaseFile() {
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
-  const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
-  const severityMethodology = harmImpactAssessment
-    ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
-    : undefined;
-  const notApplicableHarmDimensions = notApplicableHarmDimensionLabels(harmImpactAssessment);
-  const harmClassificationLimit = notApplicableHarmDimensions.length
-    ? `Harm classification not applicable (${notApplicableHarmDimensions.length}): ${notApplicableHarmDimensions.join("; ")}.`
-    : undefined;
-  const assessmentLimitItems = harmClassificationLimit
-    ? [...assessmentBoundaries, harmClassificationLimit]
-    : assessmentBoundaries;
-  const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
+  const harmDimensionLimitItems = nonAssessedHarmDimensionLimitItems(harmImpactAssessment);
+  const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
+  const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
+  const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
+  const referenceCount = externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -447,10 +488,16 @@ export default function VigilCaseFile() {
             <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
               <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
             </a>
-            {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+            {(artefact.title || artefact.sourceUrl) && <figcaption>
               {artefact.title && <strong>{artefact.title}</strong>}
-              {artefact.caption && <span>{artefact.caption}</span>}
-              {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+              {(() => {
+                const referenceNumber = evidenceReferenceNumberForUrl(externalSources, artefact.sourceUrl);
+                return referenceNumber
+                  ? <a className="vigil-incident-artefact-reference" href={`#vigil-evidence-reference-${referenceNumber}`} aria-label={`Evidence reference ${referenceNumber}`}>[{referenceNumber}]</a>
+                  : artefact.sourceUrl
+                    ? <a className="vigil-incident-artefact-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
+                    : null;
+              })()}
             </figcaption>}
           </figure>)}
         </div>}
@@ -517,9 +564,8 @@ export default function VigilCaseFile() {
           <div className="vigil-case-subheading">
             <p className="vigil-library-kicker">Harm classification</p>
             <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
-            <p className="vigil-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
           </div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
+          <HarmImpactMatrix assessment={harmImpactAssessment} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
@@ -535,14 +581,17 @@ export default function VigilCaseFile() {
                 </tr>
               </thead>
               <tbody>
-                {externalAssessments.map((assessment) => <tr key={assessment.id}>
-                  <td><strong>{assessment.assessor}</strong></td>
-                  <td>{externalAssessmentDate(assessment.date)}</td>
-                  <td>{assessment.summary}</td>
-                  <td>{assessment.classificationOrRating
-                    ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
-                    : "—"}</td>
-                </tr>)}
+                {externalAssessments.map((assessment) => {
+                  const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
+                  return <tr key={assessment.id}>
+                    <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="vigil-external-assessment-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
+                    <td>{externalAssessmentDate(assessment.date)}</td>
+                    <td>{assessment.summary}</td>
+                    <td>{assessment.classificationOrRating
+                      ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
+                      : "—"}</td>
+                  </tr>;
+                })}
               </tbody>
             </table>
           </div>
@@ -556,7 +605,7 @@ export default function VigilCaseFile() {
         <h3 id="evidence-sources-heading">Evidence sources</h3>
         <p>Sources supporting what happened and any materialised harm.</p>
         <ol>
-        {externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}>
+        {externalSources.map((source, index) => <li id={`vigil-evidence-reference-${index + 1}`} key={`${source.title}-${source.url}-${index}`}>
           <span>[{index + 1}]</span>
           <div>
             <strong>{source.title}</strong>
@@ -566,19 +615,7 @@ export default function VigilCaseFile() {
         </li>)}
         </ol>
       </section>}
-      {externalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
-        <h3 id="external-assessments-heading">External assessments</h3>
-        <ol>
-          {externalAssessments.map((assessment, index) => <li key={assessment.id}>
-            <span>[{index + 1}]</span>
-            <div>
-              <strong>{assessment.title}</strong>
-              <p>{[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</p>
-              <a href={assessment.url} target="_blank" rel="noreferrer">{assessment.url}</a>
-            </div>
-          </li>)}
-        </ol>
-      </section>}
+
       {externalIncidentReferences.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-incident-records-heading">
         <h3 id="external-incident-records-heading">External incident records</h3>
         <p>Cross-registry records identifying the same or a related occurrence.</p>
@@ -603,7 +640,7 @@ export default function VigilCaseFile() {
           <span>[1]</span>
           <div>
             <strong>VIGIL Observatory Failure Taxonomy</strong>
-            <p>CAM Initiative · Public taxonomy reference</p>
+            <p>{["CAM Initiative", "Public taxonomy reference", taxonomyReferenceVersion ? `Version ${taxonomyReferenceVersion}` : undefined, taxonomyReferenceDate ? `Revised ${taxonomyReferenceDate}` : undefined].filter(Boolean).join(" · ")}</p>
             <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
         </li>}
@@ -611,7 +648,7 @@ export default function VigilCaseFile() {
           <span>[{taxonomyReferences.length ? 2 : 1}]</span>
           <div>
             <strong>VIGIL Harm Impact Methodology</strong>
-            <p>CAM Initiative · Harm severity methodology</p>
+            <p>{["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : text(harmImpactAssessment.methodology_version) ? `Version ${text(harmImpactAssessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</p>
             <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/severity-methodology</a>
           </div>
         </li>}
