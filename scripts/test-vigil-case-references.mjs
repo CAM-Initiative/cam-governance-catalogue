@@ -238,15 +238,19 @@ test("Governance assessment uses one divider before each peer subsection", async
 });
 
 
-test("Harm Impact assessment metadata is presented as a legible summary strip", async () => {
-  const [matrix, css] = await Promise.all([
+test("Harm Impact assessment leads with the substantive summary and closes with the method note", async () => {
+  const [matrix, caseFile, report] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
-    readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
   ]);
-  assert.match(matrix, /Assessment date/);
-  assert.match(matrix, /Harm assessment summary:/);
-  assert.doesNotMatch(matrix, /<strong>Assessment coverage:<\/strong>/);
-  assert.match(css, /vigil-harm-summary-row[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(0, 0\.8fr\) minmax\(0, 1fr\)/);
+  assert.doesNotMatch(matrix, /Harm assessment summary:|Assessment date|Overall severity|vigil-harm-summary-row/);
+  assert.match(matrix, /vigil-harm-coverage vigil-harm-summary/);
+  assert.match(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
+  assert.ok(matrix.indexOf("vigil-harm-summary") < matrix.indexOf("vigil-harm-assessment-table"));
+  assert.ok(matrix.indexOf("vigil-harm-assessment-table") < matrix.indexOf("vigil-harm-derivation-note"));
+  assert.doesNotMatch(caseFile, /vigil-harm-classification-intro/);
+  assert.doesNotMatch(report, /report-harm-classification-intro/);
 });
 
 test("Classification table body typography matches Repair", async () => {
