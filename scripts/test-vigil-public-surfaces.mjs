@@ -780,7 +780,9 @@ test("Case File Incident stage renders optional source artefact images inside Wh
   assert.match(caseFile, /incident_artefacts/);
   assert.match(caseFile, /vigil-incident-artefacts/);
   assert.match(caseFile, /<img src=\{artefact\.renderUrl\}/);
-  assert.match(caseFile, /View originating source/);
+  assert.match(caseFile, /vigil-incident-artefact-reference/);
+  assert.match(caseFile, /#vigil-evidence-reference-/);
+  assert.doesNotMatch(caseFile, /View originating source/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact \{[\s\S]*text-align: center/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact-link \{[\s\S]*max-width: min\(100%, 54rem\)/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact img \{[\s\S]*margin: 0 auto/);
