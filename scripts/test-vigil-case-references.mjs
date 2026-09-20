@@ -217,3 +217,21 @@ test("harm rows resolve source_records evidence to the numbered Evidence sources
   assert.match(matrix, /href=\{\`#vigil-evidence-reference-/);
   assert.match(report, /id=\{\`vigil-evidence-reference-\$\{index \+ 1\}\`\}/);
 });
+
+
+test("Incident artefact captions use one label plus numbered evidence reference", async () => {
+  const source = await caseFileSource();
+  const css = await readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8");
+  assert.match(source, /evidenceReferenceNumberForUrl/);
+  assert.match(source, /vigil-incident-artefact-reference/);
+  assert.match(source, /#vigil-evidence-reference-/);
+  assert.doesNotMatch(source, /View originating source/);
+  assert.doesNotMatch(source, /\{artefact\.caption && <span>/);
+  assert.match(css, /\.vigil-incident-artefact-reference/);
+});
+
+test("Governance assessment separates Factual basis and Governance significance with peer dividers", async () => {
+  const css = await readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8");
+  assert.match(css, /\.vigil-diagnosis-assessment-details > section \{[\s\S]*border-top: 1px solid/);
+  assert.match(css, /\.vigil-diagnosis-assessment-details > section \+ section \{[\s\S]*margin-top: 1rem/);
+});
