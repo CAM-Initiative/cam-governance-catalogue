@@ -160,7 +160,6 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       publisher: text(source.author_or_publisher ?? source.publisher ?? source.source_platform),
       date: text(source.source_date ?? source.date ?? source.published_date),
       url: text(source.source_url ?? source.url ?? source.archive_url),
-      description: text(source.source_context ?? source.description ?? source.relevance_note),
       sourceRecordRefs,
     }];
   });
