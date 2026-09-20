@@ -332,6 +332,13 @@
   padding: 0;
 }
 
+.vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: hsl(var(--report-ink)) !important;
+}
+
 .vigil-deterministic-report-host .report-assessment-details > section > p {
   margin: 0.4rem 0 0;
   font-family: var(--app-font-sans);
@@ -1118,6 +1125,12 @@
   .vigil-deterministic-report-host .report-substantive-label,
   .vigil-deterministic-report-host .vigil-substantive-label {
     font-size: 11pt !important;
+  }
+
+  .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label {
+    font-size: 11.5pt !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
   }
 
   .vigil-deterministic-report-host .report-value,
