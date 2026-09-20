@@ -473,9 +473,12 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype outs
   assert.match(css, /vigil-harm-threshold-emphasis/);
   assert.match(css, /font-size: 9\.5pt/);
   assert.doesNotMatch(css, /font-size: (?:6\.6|7|7\.2|8)pt/);
-  const withoutIntentionalFootnote = css.replace(/\.vigil-case-file-page \.vigil-harm-matrix\.is-assessment \.vigil-harm-derivation-note \{[\s\S]*?\}/, "");
-  assert.doesNotMatch(withoutIntentionalFootnote, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
+  const withoutIntentionalCompactText = css
+    .replace(/\.vigil-case-file-page \.vigil-harm-matrix\.is-assessment \.vigil-harm-derivation-note \{[\s\S]*?\}/, "")
+    .replace(/\.vigil-harm-assessment-table thead th \{[\s\S]*?\}/, "");
+  assert.doesNotMatch(withoutIntentionalCompactText, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
   assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
+  assert.match(css, /\.vigil-harm-assessment-table thead th \{[\s\S]*font-size: 0\.76rem[\s\S]*text-transform: uppercase/);
 });
 
 
