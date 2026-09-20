@@ -157,7 +157,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   color: hsl(var(--foreground) / 0.82);
 }
 
-/* Incident-specific assessment used inside Case Files. */
+/* Incident-specific assessment used inside Case Files. Under-table derivation text remains visually plain. */
 .vigil-harm-matrix-overview {
   display: flex;
   flex-wrap: wrap;
