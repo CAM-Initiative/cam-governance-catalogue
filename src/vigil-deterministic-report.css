@@ -2164,3 +2164,31 @@
   text-decoration: underline;
   text-underline-offset: 0.14em;
 }
+
+
+.vigil-deterministic-report-host .vigil-harm-summary {
+  margin: 0 0 0.9rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: hsl(var(--report-ink) / 0.9) !important;
+}
+
+.vigil-deterministic-report-host .vigil-harm-derivation-note {
+  font-size: 0.76rem !important;
+  line-height: 1.48 !important;
+  color: hsl(var(--report-muted)) !important;
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-harm-summary {
+    margin-bottom: 3.5mm !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-harm-derivation-note {
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+  }
+}
