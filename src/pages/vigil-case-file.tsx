@@ -4,7 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
-import { HarmImpactMatrix, notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -443,13 +443,8 @@ export default function VigilCaseFile() {
   const severityMethodology = harmImpactAssessment
     ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
     : undefined;
-  const notApplicableHarmDimensions = notApplicableHarmDimensionLabels(harmImpactAssessment);
-  const harmClassificationLimit = notApplicableHarmDimensions.length
-    ? `Harm classification not applicable (${notApplicableHarmDimensions.length}): ${notApplicableHarmDimensions.join("; ")}.`
-    : undefined;
-  const assessmentLimitItems = harmClassificationLimit
-    ? [...assessmentBoundaries, harmClassificationLimit]
-    : assessmentBoundaries;
+  const harmDimensionLimitItems = nonAssessedHarmDimensionLimitItems(harmImpactAssessment);
+  const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
   const referenceCount = externalSources.length + externalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
