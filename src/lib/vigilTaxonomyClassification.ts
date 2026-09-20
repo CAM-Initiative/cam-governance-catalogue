@@ -25,6 +25,8 @@ export type TaxonomyReferenceTarget = {
   relationship: "primary" | "secondary" | "family-only";
   role?: TaxonomyClassificationRole;
   taxonomyVersion?: string;
+  referenceVersion?: string;
+  referencePublicationDate?: string;
   externalReferences: FailureTaxonomyExternalReference[];
 };
 
@@ -209,6 +211,8 @@ export function taxonomyReferenceTargets(record: UnknownRecord, dataset: Failure
       relationship,
       role,
       taxonomyVersion,
+      referenceVersion: dataset.index.standard.version,
+      referencePublicationDate: dataset.index.standard.publication_date ?? undefined,
       externalReferences: resolvedClass?.external_references ?? [],
     });
   };
