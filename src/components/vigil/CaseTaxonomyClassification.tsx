@@ -283,6 +283,7 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
         </tbody>
       </table>
     </div>
+    {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
     {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Failure classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Failure Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
     <VigilAlignmentLegend />
