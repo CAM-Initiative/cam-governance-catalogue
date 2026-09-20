@@ -28,7 +28,7 @@ assert.match(caseFile, /CaseTaxonomyRepair/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
 assert.doesNotMatch(caseFile, /incident-specific assessment rather than the full methodology reference table/);
-assert.match(caseFile, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\} \/>/);
+assert.match(caseFile, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessment\}[\s\S]*evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\}[\s\S]*methodologyReferenceNumber=\{harmMethodologyReferenceNumber\}[\s\S]*methodologyReferenceHref="#vigil-harm-methodology-reference"/);
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
@@ -103,7 +103,7 @@ assert.match(reportCss, /\.report-external-assessment-table \{[\s\S]*font-size: 
 assert.match(reportCss, /@media print \{[\s\S]*\.report-external-assessment-table,[\s\S]*font-size: 11pt !important;/);
 assert.match(report, /data-report-postscript/);
 assert.doesNotMatch(report, /<details className="vigil-evidence-limitations"/);
-assert.match(report, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} compact evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\} \/>/);
+assert.match(report, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessment\}[\s\S]*compact[\s\S]*evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\}[\s\S]*methodologyReferenceNumber=\{harmMethodologyReferenceNumber\}[\s\S]*methodologyReferenceHref="#vigil-harm-methodology-reference"/);
 assert.doesNotMatch(report, /report-metadata-grid report-metadata-grid--2"><Field label="Methodology"/);
 assert.match(report, /className="report-reference-list"/);
 assert.match(report, /Internal records/);
