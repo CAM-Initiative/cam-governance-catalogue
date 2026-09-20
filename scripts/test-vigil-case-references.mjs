@@ -31,12 +31,13 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /External incident records/);
   assert.match(caseFile, /Taxonomy and methodology references/);
   assert.match(component, /External classification \/ rating/);
-  assert.match(component, /showComparison/);
-  assert.match(component, /showFooterLink/);
+  assert.match(component, /VIGIL relationship/);
   assert.match(caseFile, /stageId === "diagnose"/);
-  assert.match(caseFile, /ExternalAssessmentList assessments=\{externalAssessments\} showComparison=\{false\} showFooterLink=\{false\}/);
-  assert.match(caseFile, /Third-party assessment of this occurrence/);
-  assert.match(caseFile, /Inclusion does not imply endorsement/);
+  assert.match(caseFile, /vigil-external-assessment-table/);
+  assert.match(caseFile, /Assessor/);
+  assert.match(caseFile, /Conclusion/);
+  assert.match(caseFile, /Classification \/ scheme/);
+  assert.doesNotMatch(caseFile, /ExternalAssessmentList assessments=\{externalAssessments\}/);
   assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
 });
 

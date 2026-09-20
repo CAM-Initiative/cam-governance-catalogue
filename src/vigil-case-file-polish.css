@@ -409,13 +409,12 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 .vigil-case-file-page .vigil-incident-artefact {
   margin: 0;
+  text-align: center;
 }
 
 .vigil-case-file-page .vigil-incident-artefact-link {
-  display: block;
-  width: 100%;
-  max-width: 72rem;
-  margin: 0 auto;
+  display: inline-block;
+  max-width: min(100%, 54rem);
   border: 1px solid hsl(var(--border) / 0.72);
   border-radius: 0.65rem;
   overflow: hidden;
@@ -425,52 +424,80 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 .vigil-case-file-page .vigil-incident-artefact img {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   height: auto;
+  margin: 0 auto;
 }
 
 .vigil-case-file-page .vigil-incident-artefact figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.3rem 0.8rem;
-  max-width: 72rem;
-  margin: 0.72rem auto 0;
-  font-size: 0.86rem;
+  display: grid;
+  gap: 0.25rem;
+  max-width: 48rem;
+  margin: 0.7rem auto 0;
+  font-size: 0.78rem;
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
+  text-align: center;
 }
 
 .vigil-case-file-page .vigil-incident-artefact figcaption strong {
-  color: hsl(var(--foreground) / 0.9);
+  color: hsl(var(--foreground) / 0.86);
 }
 
 .vigil-case-file-page .vigil-incident-artefact figcaption a {
   color: hsl(var(--primary));
-  font-weight: 600;
-  white-space: nowrap;
   text-decoration: underline;
   text-underline-offset: 0.16em;
 }
 
 .vigil-case-file-page .vigil-diagnosis-external-assessments {
-  display: grid;
-  gap: 0.85rem;
-  margin-top: 1.4rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid hsl(var(--border) / 0.72);
+  padding: 1.25rem var(--vigil-case-card-pad) 1.2rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
 }
 
-.vigil-case-file-page .vigil-diagnosis-external-assessments-note {
-  margin: -0.35rem 0 0;
-  color: hsl(var(--muted-foreground));
-  font-size: 0.88rem;
-  line-height: 1.55;
+.vigil-case-file-page .vigil-diagnosis-external-assessments > .vigil-library-kicker {
+  margin: 0 0 0.9rem;
 }
 
-@media (max-width: 620px) {
-  .vigil-case-file-page .vigil-incident-artefact figcaption {
-    justify-content: flex-start;
+.vigil-case-file-page .vigil-external-assessment-table-wrap {
+  overflow-x: auto;
+}
+
+.vigil-case-file-page .vigil-external-assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.vigil-case-file-page .vigil-external-assessment-table th,
+.vigil-case-file-page .vigil-external-assessment-table td {
+  padding: 0.72rem 0.8rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+  text-align: left;
+  vertical-align: top;
+}
+
+.vigil-case-file-page .vigil-external-assessment-table thead th {
+  border-top: 0;
+  color: var(--vigil-case-label);
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.vigil-case-file-page .vigil-external-assessment-table td:first-child {
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .vigil-case-file-page .vigil-external-assessment-table {
+    min-width: 42rem;
   }
+}
 }

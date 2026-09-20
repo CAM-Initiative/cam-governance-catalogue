@@ -6,17 +6,7 @@ import {
   type ExternalAssessment,
 } from "@/lib/vigilExternalAssessments";
 
-export function ExternalAssessmentList({
-  assessments,
-  compact = false,
-  showComparison = true,
-  showFooterLink = true,
-}: {
-  assessments: ExternalAssessment[];
-  compact?: boolean;
-  showComparison?: boolean;
-  showFooterLink?: boolean;
-}) {
+export function ExternalAssessmentList({ assessments, compact = false }: { assessments: ExternalAssessment[]; compact?: boolean }) {
   if (!assessments.length) return null;
   return <div className={`vigil-external-assessments${compact ? " is-compact" : ""}`}>
     {assessments.map((assessment) => <article key={assessment.id} className="vigil-external-assessment">
@@ -30,12 +20,12 @@ export function ExternalAssessmentList({
         <div><dt>External classification / rating</dt><dd>{assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value}</dd></div>
         <div><dt>External scheme</dt><dd>{assessment.classificationOrRating.scheme}</dd></div>
       </dl>}
-      {showComparison && assessment.comparisonNote && <section><h5>VIGIL relationship</h5><p>{assessment.comparisonNote}</p></section>}
+      {assessment.comparisonNote && <section><h5>VIGIL relationship</h5><p>{assessment.comparisonNote}</p></section>}
       {assessment.scopeNote && <section><h5>Scope</h5><p>{assessment.scopeNote}</p></section>}
       <footer>
         <span>{externalAssessmentTypeLabel(assessment.type)}</span>
         <span>{externalAssessmentRelationshipLabel(assessment.relationship)}</span>
-        {showFooterLink && <a href={assessment.url} target="_blank" rel="noreferrer">View assessment <ExternalLink aria-hidden="true" /></a>}
+        <a href={assessment.url} target="_blank" rel="noreferrer">View assessment <ExternalLink aria-hidden="true" /></a>
       </footer>
     </article>)}
   </div>;
