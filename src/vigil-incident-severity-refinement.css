@@ -389,68 +389,21 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 }
 
 
-/* Case File Harm Impact summary: present methodology, assessment date and
-   overall severity as three legible metadata blocks rather than one compressed line. */
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-overview {
-  display: block;
-  margin-bottom: 0.95rem;
+
+
+
+/* Incident Harm Impact reading order: conclusion first, assessed rows second,
+   methodology note last. */
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary {
+  margin: 0 0 0.9rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.98rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.9);
 }
 
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1fr);
-  gap: 0;
-  align-items: stretch;
-  border-top: 1px solid hsl(var(--border) / 0.62);
-  border-bottom: 1px solid hsl(var(--border) / 0.62);
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-item,
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
-  display: grid;
-  align-content: center;
-  gap: 0.3rem;
-  min-width: 0;
-  padding: 0.72rem 0.9rem;
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-item + .vigil-harm-summary-item,
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
-  border-left: 1px solid hsl(var(--border) / 0.52);
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-item > span,
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result > span {
-  font-size: 0.8rem;
-  line-height: 1.3;
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-item > strong {
-  font-size: 0.92rem;
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
-  grid-template-columns: auto auto 1fr;
-  column-gap: 0.5rem;
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result > span {
-  grid-column: 1 / -1;
-}
-
-.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result > small {
-  align-self: center;
-  font-size: 0.9rem;
-}
-
-@media (max-width: 760px) {
-  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-row {
-    grid-template-columns: 1fr;
-  }
-
-  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary-item + .vigil-harm-summary-item,
-  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-overall-result {
-    border-left: 0;
-    border-top: 1px solid hsl(var(--border) / 0.52);
-  }
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-derivation-note {
+  margin-top: 0.8rem;
 }
