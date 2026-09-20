@@ -461,7 +461,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
 });
 
-test("harm methodology emphasizes scan targets and rejects legacy microtype", async () => {
+test("harm methodology emphasizes scan targets and rejects legacy microtype outside the intentional footnote", async () => {
   const [matrix, css] = await Promise.all([
     read("src/components/vigil/HarmImpactMatrix.tsx"),
     read("src/vigil-incident-severity-refinement.css"),
@@ -473,7 +473,9 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype", as
   assert.match(css, /vigil-harm-threshold-emphasis/);
   assert.match(css, /font-size: 9\.5pt/);
   assert.doesNotMatch(css, /font-size: (?:6\.6|7|7\.2|8)pt/);
-  assert.doesNotMatch(css, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
+  const withoutIntentionalFootnote = css.replace(/\.vigil-case-file-page \.vigil-harm-matrix\.is-assessment \.vigil-harm-derivation-note \{[\s\S]*?\}/, "");
+  assert.doesNotMatch(withoutIntentionalFootnote, /font-size: 0\.(?:6[0-9]|7[0-9])rem/);
+  assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
 });
 
 
