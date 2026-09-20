@@ -42,9 +42,9 @@ test("Explore AI Governance identifies Case Files as the VIGIL Observatory AI in
 test("VIGIL Observatory Knowledge Base exposes Case Files, Harm & Severity Methodology and Datasets", async () => {
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
   assert.match(hub, /title="VIGIL Observatory Case Files"/);
-  assert.match(hub, /href="\/observatory\/severity-methodology"[\s\S]*title="Harm & Severity Methodology"/);
+  assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*title="Harm & Severity Methodology"/);
   assert.match(hub, /VIGIL-HIM 1\.0\.0/);
-  assert.match(hub, /href="\/datasets"[\s\S]*title="Datasets"/);
+  assert.match(hub, /href="\/datasets\/"[\s\S]*title="Datasets"/);
   assert.match(hub, /actionLabel="Open datasets"/);
   assert.match(hub, /downloadable datasets/);
 });
