@@ -248,7 +248,7 @@ export default function EvidenceChainReportPrintable() {
 
   const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
     ? createPortal(<>
-      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
+      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>VIGIL Observatory Failure Taxonomy</strong>
