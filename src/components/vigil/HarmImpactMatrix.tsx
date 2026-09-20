@@ -312,7 +312,6 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
           <small>{BAND_LABELS[overall] ?? "Not assessed"}</small>
         </div>
       </div>
-      <p><strong>Derivation:</strong> highest supported materialised harm. Dimensions are not averaged or summed.</p>
     </div>
 
     {noMaterialisedHarmBasis ? <p className="vigil-harm-no-harm-basis"><strong>Positive no-materialised-harm basis:</strong> {noMaterialisedHarmBasis}</p> : null}
