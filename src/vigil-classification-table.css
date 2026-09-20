@@ -324,6 +324,7 @@
   font-size: 0.78rem;
   font-weight: 650;
   color: hsl(var(--foreground) / 0.86);
+  white-space: nowrap;
 }
 
 .vigil-alignment-legend-item small {
