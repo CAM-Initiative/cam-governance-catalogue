@@ -282,6 +282,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
       </table>
     </div>
 
+    {/* Canonical methodology adaptation notes sit outside the threshold cells so they remain readable and citable. */}
     <div className="vigil-harm-interpretive-notes" aria-label="Harm matrix interpretive notes">
       <h3>Interpretive notes</h3>
       {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
