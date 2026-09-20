@@ -1760,6 +1760,76 @@
   }
 }
 
+
+
+/* Section 02 hierarchy: separators belong between substantive subsections,
+   not inside the Harm Impact Assessment. */
+.vigil-deterministic-report-host .report-diagnosis > .report-severity-assessment {
+  margin-top: 1.1rem;
+  padding-top: 1rem !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin-top: 0.65rem;
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment .vigil-harm-matrix-overview {
+  padding-bottom: 0;
+}
+
+/* Print wrapping hygiene. Normal prose and table text should wrap at ordinary
+   word boundaries without browser-inserted hyphenation. Long URLs retain an
+   explicit escape hatch so they cannot overflow the printable width. */
+@media print {
+  .vigil-deterministic-report-host .report-document {
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .vigil-deterministic-report-host .report-value,
+  .vigil-deterministic-report-host .vigil-evidence-meta-field dd,
+  .vigil-deterministic-report-host .vigil-case-field dd,
+  .vigil-deterministic-report-host .vigil-harm-assessment-table th,
+  .vigil-deterministic-report-host .vigil-harm-assessment-table td,
+  .vigil-deterministic-report-host .vigil-harm-assessment-basis,
+  .vigil-deterministic-report-host .vigil-harm-assessment-basis p,
+  .vigil-deterministic-report-host .vigil-harm-observed-values,
+  .vigil-deterministic-report-host .vigil-harm-observed-values li,
+  .vigil-deterministic-report-host .report-external-assessment-table th,
+  .vigil-deterministic-report-host .report-external-assessment-table td,
+  .vigil-deterministic-report-host .vigil-classification-table th,
+  .vigil-deterministic-report-host .vigil-classification-table td {
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-url,
+  .vigil-deterministic-report-host .vigil-classification-source a {
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* Keep source captures useful without letting a figure strand the remaining
+     Incident metadata on its own page. */
+  .vigil-deterministic-report-host .report-incident-artefact-link,
+  .vigil-deterministic-report-host .report-incident-artefact figcaption {
+    max-width: 68% !important;
+  }
+
+  .vigil-deterministic-report-host .report-incident-artefact img {
+    max-height: 105mm !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */
 
 

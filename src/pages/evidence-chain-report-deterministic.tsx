@@ -316,18 +316,6 @@ export default function EvidenceChainReportDeterministic() {
               <h4 className="report-substantive-label">What happened</h4>
               <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
             </section>}
-            {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
-              {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
-                <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
-                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
-                </a>
-                {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
-                  {artefact.title && <strong>{artefact.title}</strong>}
-                  {artefact.caption && <span>{artefact.caption}</span>}
-                  {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
-                </figcaption>}
-              </figure>)}
-            </section>}
             {affectedSystems.length > 0 && <section className="report-affected-systems">
               <h4 className="report-substantive-label">Affected systems</h4>
               <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
@@ -340,6 +328,18 @@ export default function EvidenceChainReportDeterministic() {
                   <Field label="Deployment context" value={system.deploymentContext} />
                 </dl>
               </article>)}</div>
+            </section>}
+            {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
+              {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
+                <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
+                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                </a>
+                {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+                  {artefact.title && <strong>{artefact.title}</strong>}
+                  {artefact.caption && <span>{artefact.caption}</span>}
+                  {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+                </figcaption>}
+              </figure>)}
             </section>}
           </div>}
           {!incident?.summary && !incident?.publicDisplay.finding && !incidentArtefacts.length && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
