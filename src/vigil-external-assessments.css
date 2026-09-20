@@ -150,3 +150,52 @@
   .vigil-external-assessment footer { display: block; }
   .vigil-external-assessment footer > * { margin-right: 0.75rem; }
 }
+
+
+.vigil-reference-disclaimer {
+  margin-top: 1.8rem;
+  padding: 1.1rem 1.2rem 1.15rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius, 1rem);
+  background: hsl(var(--card) / 0.24);
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-reference-disclaimer h3,
+.vigil-reference-disclaimer h4 {
+  margin: 0;
+  color: hsl(var(--foreground) / 0.92);
+}
+
+.vigil-reference-disclaimer h3 {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.vigil-reference-disclaimer h4 {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.vigil-reference-disclaimer p,
+.vigil-reference-disclaimer li {
+  font-size: 0.86rem;
+  line-height: 1.58;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-reference-disclaimer > p {
+  margin: 0.65rem 0 0;
+}
+
+.vigil-reference-assessment-limits ul {
+  margin: 0.65rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.vigil-reference-assessment-limits p {
+  margin: 0.65rem 0 0;
+}

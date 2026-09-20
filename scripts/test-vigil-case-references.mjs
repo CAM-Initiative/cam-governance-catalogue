@@ -46,6 +46,22 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
+test("Case File moves assessment limits from Section 02 to the closing References disclaimer", async () => {
+  const source = await caseFileSource();
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const referencesRenderer = source.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
+
+  assert.ok(assessmentRenderer, "Assessment renderer must remain present");
+  assert.ok(referencesRenderer, "References renderer must remain present");
+  assert.doesNotMatch(assessmentRenderer, /Limits of the assessment/);
+  assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-limitations/);
+  assert.match(referencesRenderer, /Use and reliance notice/);
+  assert.match(referencesRenderer, /Limits of the assessment/);
+  assert.match(referencesRenderer, /assessmentBoundaries\.length > 0/);
+  assert.match(referencesRenderer, /<TextList items=\{assessmentBoundaries\} \/>/);
+  assert.match(referencesRenderer, /vigil-reference-disclaimer/);
+});
+
 test("Case File References remain bibliographic and do not republish evidence commentary", async () => {
   const source = await caseFileSource();
   const evidenceMapper = source.match(/function externalEvidenceFor[\s\S]*?function dedupeEvidence/)?.[0] ?? "";
