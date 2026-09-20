@@ -632,8 +632,8 @@ export default function VigilCaseFile() {
       {unmatchedExternalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
         <h3 id="external-assessments-heading">External assessments</h3>
         <ol>
-          {unmatchedExternalAssessments.map((assessment) => <li id={`vigil-external-assessment-reference-${assessment.id}`} key={assessment.id}>
-            <span>[{index + 1}]</span>
+          {unmatchedExternalAssessments.map((assessment, index) => <li id={`vigil-external-assessment-reference-${assessment.id}`} key={assessment.id}>
+            <span>[{externalSources.length + index + 1}]</span>
             <div>
               <strong>{assessment.title}</strong>
               <p>{[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</p>
