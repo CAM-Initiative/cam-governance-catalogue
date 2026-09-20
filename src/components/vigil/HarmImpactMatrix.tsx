@@ -144,6 +144,7 @@ type MatrixRow = {
   assessment_basis?: string;
   evidence_confidence?: string;
   observed_values?: unknown[];
+  evidence_refs?: string[];
 };
 
 function object(value: unknown): UnknownRecord | undefined {
@@ -170,6 +171,7 @@ function rowsFor(assessment?: UnknownRecord): MatrixRow[] {
       assessment_basis: string(row.assessment_basis),
       evidence_confidence: string(row.evidence_confidence),
       observed_values: Array.isArray(row.observed_values) ? row.observed_values : undefined,
+      evidence_refs: Array.isArray(row.evidence_refs) ? row.evidence_refs.flatMap((value) => string(value) ?? []) : undefined,
     }];
   }).sort((a, b) => (order.get(a.dimension_id) ?? 999) - (order.get(b.dimension_id) ?? 999));
 }
@@ -285,7 +287,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
   </div>;
 }
 
-function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { assessment: UnknownRecord; compact: boolean; methodology?: string; assessedOn?: string }) {
+function AssessmentMatrix({ assessment, compact, methodology, assessedOn, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; methodology?: string; assessedOn?: string; evidenceReferenceNumbers?: Record<string, number> }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
@@ -340,7 +342,7 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { as
               </th>
               <td className="status-assessed"><strong>Assessed</strong></td>
               <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
-              <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}</p> : null}</td>
+              <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}{row.evidence_refs?.length ? <span className="vigil-harm-inline-references"> {row.evidence_refs.flatMap((ref) => evidenceReferenceNumbers?.[ref] ? [<a key={ref} href={`#vigil-evidence-reference-${evidenceReferenceNumbers[ref]}`} aria-label={`Evidence reference ${evidenceReferenceNumbers[ref]}`}>[{evidenceReferenceNumbers[ref]}]</a>] : [])}</span> : null}</p> : null}</td>
             </tr>;
           })}
         </tbody>
@@ -356,8 +358,8 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { as
   </div>;
 }
 
-export function HarmImpactMatrix({ assessment, compact = false, methodology, assessedOn }: { assessment?: UnknownRecord; compact?: boolean; methodology?: string; assessedOn?: string }) {
+export function HarmImpactMatrix({ assessment, compact = false, methodology, assessedOn, evidenceReferenceNumbers }: { assessment?: UnknownRecord; compact?: boolean; methodology?: string; assessedOn?: string; evidenceReferenceNumbers?: Record<string, number> }) {
   return assessment
-    ? <AssessmentMatrix assessment={assessment} compact={compact} methodology={methodology} assessedOn={assessedOn} />
+    ? <AssessmentMatrix assessment={assessment} compact={compact} methodology={methodology} assessedOn={assessedOn} evidenceReferenceNumbers={evidenceReferenceNumbers} />
     : <MethodologyMatrix compact={compact} />;
 }
