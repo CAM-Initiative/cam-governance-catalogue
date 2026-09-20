@@ -148,6 +148,13 @@ function externalAssessmentEvidenceReferenceNumber(assessment: { sourceRecordRef
   return index >= 0 ? index + 1 : undefined;
 }
 
+function evidenceReferenceNumberForUrl(sources: ExternalEvidence[], url?: string) {
+  if (!url) return undefined;
+  const normalized = url.replace(/\/$/, "").toLowerCase();
+  const index = sources.findIndex((source) => source.url?.replace(/\/$/, "").toLowerCase() === normalized);
+  return index >= 0 ? index + 1 : undefined;
+}
+
 function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
   const artefacts = Array.isArray(record.raw.incident_artefacts) ? record.raw.incident_artefacts : [];
   return artefacts.flatMap((artefact, index) => {
@@ -355,10 +362,16 @@ export default function EvidenceChainReportDeterministic() {
                 <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
                   <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
                 </a>
-                {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+                {(artefact.title || artefact.sourceUrl) && <figcaption>
                   {artefact.title && <strong>{artefact.title}</strong>}
-                  {artefact.caption && <span>{artefact.caption}</span>}
-                  {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+                  {(() => {
+                    const referenceNumber = evidenceReferenceNumberForUrl(externalSources, artefact.sourceUrl);
+                    return referenceNumber
+                      ? <a className="report-inline-reference" href={`#vigil-evidence-reference-${referenceNumber}`} aria-label={`Evidence reference ${referenceNumber}`}>[{referenceNumber}]</a>
+                      : artefact.sourceUrl
+                        ? <a className="report-inline-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
+                        : null;
+                  })()}
                 </figcaption>}
               </figure>)}
             </section>}
