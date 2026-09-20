@@ -493,3 +493,30 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
     min-width: 42rem;
   }
 }
+
+
+/* Cross-link evidence-backed assessment statements to the numbered bibliography. */
+.vigil-case-file-page .vigil-harm-inline-references {
+  white-space: nowrap;
+}
+.vigil-case-file-page .vigil-harm-inline-references a,
+.vigil-case-file-page .vigil-external-assessment-reference {
+  font-size: 0.88em;
+  font-weight: 700;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+.vigil-case-file-page .vigil-harm-inline-references a:hover,
+.vigil-case-file-page .vigil-external-assessment-reference:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
+/* External assessments are substantive comparison material, not footnote metadata. */
+.vigil-case-file-page .vigil-external-assessment-table {
+  font-size: 0.98rem;
+  line-height: 1.62;
+}
+.vigil-case-file-page .vigil-external-assessment-table thead th {
+  font-size: 0.74rem;
+}
