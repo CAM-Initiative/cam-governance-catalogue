@@ -417,10 +417,6 @@ export default function VigilCaseFile() {
     externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
   ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
-  const unmatchedExternalAssessments = useMemo(
-    () => externalAssessments.filter((assessment) => !externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers)),
-    [externalAssessments, externalSources, harmEvidenceReferenceNumbers],
-  );
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
@@ -484,7 +480,7 @@ export default function VigilCaseFile() {
   const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
   const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
-  const referenceCount = externalSources.length + unmatchedExternalAssessments.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
+  const referenceCount = externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
@@ -592,13 +588,8 @@ export default function VigilCaseFile() {
               <tbody>
                 {externalAssessments.map((assessment) => {
                   const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
-                  const unmatchedIndex = unmatchedExternalAssessments.findIndex((item) => item.id === assessment.id);
-                  const referenceNumber = evidenceReferenceNumber ?? (externalSources.length + unmatchedIndex + 1);
-                  const referenceTarget = evidenceReferenceNumber
-                    ? `#vigil-evidence-reference-${evidenceReferenceNumber}`
-                    : `#vigil-external-assessment-reference-${assessment.id}`;
                   return <tr key={assessment.id}>
-                    <td><strong>{assessment.assessor}</strong> <a className="vigil-external-assessment-reference" href={referenceTarget}>[{referenceNumber}]</a></td>
+                    <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="vigil-external-assessment-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
                     <td>{externalAssessmentDate(assessment.date)}</td>
                     <td>{assessment.summary}</td>
                     <td>{assessment.classificationOrRating
@@ -629,19 +620,7 @@ export default function VigilCaseFile() {
         </li>)}
         </ol>
       </section>}
-      {unmatchedExternalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
-        <h3 id="external-assessments-heading">External assessments</h3>
-        <ol>
-          {unmatchedExternalAssessments.map((assessment, index) => <li id={`vigil-external-assessment-reference-${assessment.id}`} key={assessment.id}>
-            <span>[{externalSources.length + index + 1}]</span>
-            <div>
-              <strong>{assessment.title}</strong>
-              <p>{[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</p>
-              <a href={assessment.url} target="_blank" rel="noreferrer">{assessment.url}</a>
-            </div>
-          </li>)}
-        </ol>
-      </section>}
+
       {externalIncidentReferences.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-incident-records-heading">
         <h3 id="external-incident-records-heading">External incident records</h3>
         <p>Cross-registry records identifying the same or a related occurrence.</p>
