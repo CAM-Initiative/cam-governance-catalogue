@@ -2150,3 +2150,17 @@
     widows: 3;
   }
 }
+
+
+.vigil-deterministic-report-host .report-inline-reference {
+  margin-left: 0.22rem;
+  color: hsl(var(--report-gold));
+  font-family: var(--app-font-mono);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.vigil-deterministic-report-host .report-inline-reference:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
