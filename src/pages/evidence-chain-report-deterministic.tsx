@@ -275,10 +275,6 @@ export default function EvidenceChainReportDeterministic() {
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
-  const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
-  const severityMethodology = harmImpactAssessment
-    ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
-    : undefined;
   const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
@@ -382,8 +378,7 @@ export default function EvidenceChainReportDeterministic() {
           </section>
           <section className="report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Assessment</h4>
-            <p className="report-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
-            <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            <HarmImpactMatrix assessment={harmImpactAssessment} compact evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
           </section>
           {externalAssessments.length > 0 && <section className="report-external-assessments">
             <h4 className="report-substantive-label">External assessments</h4>
