@@ -245,7 +245,8 @@ test("Harm Impact assessment leads with the substantive summary and closes with 
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
   ]);
   assert.doesNotMatch(matrix, /Harm assessment summary:|Assessment date|Overall severity|vigil-harm-summary-row/);
-  assert.match(matrix, /vigil-harm-coverage vigil-harm-summary/);
+  assert.match(matrix, /className="vigil-harm-summary"/);
+  assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
   assert.match(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
   assert.ok(matrix.indexOf("vigil-harm-summary") < matrix.indexOf("vigil-harm-assessment-table"));
   assert.ok(matrix.indexOf("vigil-harm-assessment-table") < matrix.indexOf("vigil-harm-derivation-note"));
@@ -294,4 +295,18 @@ test("Taxonomy and methodology references expose version and revision metadata i
 test("Reference subsection boundaries do not double the divider before Internal records", async () => {
   const css = await readFile(resolve(repoRoot, "src/vigil-reference-list-cleanup.css"), "utf8");
   assert.match(css, /vigil-reference-subsection > ol > li:last-child[\s\S]*border-bottom: 0/);
+});
+
+
+test("Harm summary is plain narrative with spacing before the table and the derivation is footnote-sized", async () => {
+  const [matrix, css, reportCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),
+  ]);
+  assert.match(matrix, /className="vigil-harm-summary"/);
+  assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
+  assert.match(css, /\.vigil-harm-summary \{[\s\S]*margin: 0 0 1\.05rem[\s\S]*border: 0/);
+  assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
+  assert.match(reportCss, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
 });
