@@ -2,7 +2,7 @@ import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
-import { notApplicableHarmDimensionLabels } from "@/components/vigil/HarmImpactMatrix";
+import { nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
@@ -224,11 +224,8 @@ export default function EvidenceChainReportPrintable() {
     const harmAssessment = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
       ? reportIncident.raw.harm_impact_assessment
       : undefined;
-    const notApplicableDimensions = notApplicableHarmDimensionLabels(harmAssessment);
-    const harmLimit = notApplicableDimensions.length
-      ? `Harm classification not applicable (${notApplicableDimensions.length}): ${notApplicableDimensions.join("; ")}.`
-      : undefined;
-    return harmLimit ? [...assessmentBoundaries, harmLimit] : assessmentBoundaries;
+    const harmDimensionLimits = nonAssessedHarmDimensionLimitItems(harmAssessment);
+    return [...assessmentBoundaries, ...harmDimensionLimits];
   }, [assessmentBoundaries, reportIncident]);
 
   const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
