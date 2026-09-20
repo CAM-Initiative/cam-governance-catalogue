@@ -18,6 +18,11 @@ const nojekyllPath = join(docsDir, ".nojekyll");
 const vigilFallbackPath = join(docsDir, "data", "vigil-registry-fallback.json");
 const sitemapPath = join(docsDir, "sitemap.xml");
 const siteOrigin = "https://www.cam-initiative.org";
+const sitemapExcludedRoutes = new Set([
+  "/catalogue",
+  "/phoenix-covenant",
+  "/vigil",
+]);
 const vigilTaxonomyRoot = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy";
 
 if (!existsSync(indexPath)) {
@@ -387,7 +392,7 @@ const sitemapRoutes = [
   ...staticRoutes.map(([route]) => route).filter((route) => !canonicalAliases.has(route)),
   ...taxonomyRoutes,
   ...incidentRecords.map((record) => `/observatory/cases/${encodeURIComponent(record.id)}`),
-];
+].filter((route) => !sitemapExcludedRoutes.has(route));
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
