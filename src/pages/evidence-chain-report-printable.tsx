@@ -6,6 +6,7 @@ import { nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpac
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
+import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 const REPORT_SECTIONS = [
   { number: "01", label: "Incident" },
@@ -125,6 +126,7 @@ export default function EvidenceChainReportPrintable() {
   const [reportIncident, setReportIncident] = useState<ReportIncident>();
   const [referenceList, setReferenceList] = useState<HTMLOListElement | null>(null);
   const [postscriptHost, setPostscriptHost] = useState<HTMLElement | null>(null);
+  const [harmMethodologyMetadata, setHarmMethodologyMetadata] = useState<HarmMethodologyMetadata>();
 
   useEffect(() => {
     let cancelled = false;
@@ -158,6 +160,21 @@ export default function EvidenceChainReportPrintable() {
     const previousTitle = document.title;
     document.title = `VIGIL Observatory Case File — ${compactIncidentId(reportIncident.id)} — ${reportIncident.title}`;
     return () => { document.title = previousTitle; };
+  }, [reportIncident]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const harm = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
+      ? reportIncident.raw.harm_impact_assessment
+      : undefined;
+    const methodologyVersion = harm ? text(harm.methodology_version) : undefined;
+    if (!methodologyVersion) {
+      setHarmMethodologyMetadata(undefined);
+      return () => { cancelled = true; };
+    }
+    void loadHarmMethodologyMetadata(methodologyVersion)
+      .then((metadata) => { if (!cancelled) setHarmMethodologyMetadata(metadata); });
+    return () => { cancelled = true; };
   }, [reportIncident]);
 
   useEffect(() => {
@@ -235,7 +252,7 @@ export default function EvidenceChainReportPrintable() {
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>VIGIL Observatory Failure Taxonomy</strong>
-          <span className="report-reference-meta"> — CAM Initiative · Public taxonomy reference</span>
+          <span className="report-reference-meta"> — {["CAM Initiative", "Public taxonomy reference", reportIncident?.taxonomyReferences[0]?.referenceVersion ? `Version ${reportIncident.taxonomyReferences[0].referenceVersion}` : reportIncident?.taxonomyReferences[0]?.taxonomyVersion ? `Version ${reportIncident.taxonomyReferences[0].taxonomyVersion}` : undefined, reportIncident?.taxonomyReferences[0]?.referencePublicationDate ? `Revised ${reportIncident.taxonomyReferences[0].referencePublicationDate}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
           <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
         </span>
@@ -244,7 +261,7 @@ export default function EvidenceChainReportPrintable() {
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>VIGIL Harm Impact Methodology</strong>
-          <span className="report-reference-meta"> — CAM Initiative · Harm severity methodology</span>
+          <span className="report-reference-meta"> — {["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : reportIncident && isObject(reportIncident.raw.harm_impact_assessment) && text(reportIncident.raw.harm_impact_assessment.methodology_version) ? `Version ${text(reportIncident.raw.harm_impact_assessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
           <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/severity-methodology</a>
         </span>
