@@ -153,8 +153,13 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /Boundary unresolved/);
   assert.match(classification, /<th scope="col">Failure class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
+  assert.match(classification, /vigil-classification-family-row/);
+  assert.match(classification, /colSpan=\{3\} scope="rowgroup"/);
+  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(2\) \{ width: 69%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(1\) \{ width: 8%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 62%; \}/);
+  assert.match(css, /\.vigil-repair-role-key/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -197,11 +202,11 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(taxonomy, /"ambiguous-boundary"/);
   assert.match(taxonomy, /hasAmbiguousBoundary/);
   assert.match(classification, /Secondary ambiguous boundary/);
-  assert.match(classification, /item\.role !== "failure-occurrence"/);
+  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
-  assert.match(caseFile, /Only failure-occurrence mappings contribute to Repair/);
+  assert.match(caseFile, /Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /The evidence is disputed\./);
   assert.match(caseFile, /does not convert disputed claims into established fact/);

@@ -1294,10 +1294,9 @@
   color: hsl(var(--report-muted));
 }
 
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 13%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 24%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 25%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 10%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 32%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 58%; }
 
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(1) { width: 15%; }
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(2) { width: 30%; }
@@ -1312,6 +1311,22 @@
 
 .vigil-deterministic-report-host .vigil-classification-table tbody tr:last-child td {
   border-bottom: 0;
+}
+
+.vigil-deterministic-report-host .vigil-classification-family-row > th {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid hsl(var(--report-rule) / 0.72);
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-ink));
+  text-align: left;
+}
+
+.vigil-deterministic-report-host .vigil-classification-family-id {
+  display: inline-block;
+  margin-right: 0.5rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  color: hsl(var(--report-muted));
 }
 
 .vigil-deterministic-report-host .vigil-classification-table td > strong {

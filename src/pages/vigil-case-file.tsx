@@ -655,7 +655,7 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Only failure-occurrence mappings contribute to Repair. Successful-invariant and ambiguous-boundary mappings remain visible without being presented as failure evidence.</p>
+        <p className="vigil-exemplar-callout-boundary">Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair. Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain in Classification as evidence of boundaries that held.</p>
       </div>
     </section>}
 

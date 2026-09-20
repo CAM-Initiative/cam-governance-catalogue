@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Check, CircleMinus, X } from "lucide-react";
 import {
   loadFailureTaxonomy,
@@ -204,40 +204,62 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
     (item.classId && !item.class) || (item.familyId && !item.family)
   );
 
+  const familyGroups = new Map<string, {
+    familyId?: string;
+    familyName: string;
+    rows: ClassificationTableRow[];
+  }>();
+  rows.forEach((row, index) => {
+    const family = row.item.family?.family;
+    const familyId = family?.family_id ?? row.item.familyId;
+    const key = familyId ?? `unassigned-${index}`;
+    const existing = familyGroups.get(key);
+    if (existing) {
+      existing.rows.push(row);
+      return;
+    }
+    familyGroups.set(key, {
+      familyId,
+      familyName: family?.name ?? (familyId ? "Unresolved failure family" : "Failure family not assigned"),
+      rows: [row],
+    });
+  });
+
   return <>
     <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory taxonomy classifications" tabIndex={0}>
       <table className="vigil-classification-table">
-        <caption className="sr-only">Canonical taxonomy mappings for this Case File. Successful-invariant and ambiguous-boundary mappings are not failure evidence.</caption>
+        <caption className="sr-only">Canonical taxonomy mappings grouped by failure family. Successful-invariant and ambiguous-boundary mappings are not failure evidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
-            <th scope="col">Failure family</th>
             <th scope="col">Failure class</th>
             <th scope="col">Classification basis</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ item }, index) => {
-            const family = item.family?.family;
-            const classificationClass = item.class;
-            const familyId = family?.family_id ?? item.familyId;
-            const classId = classificationClass?.class_id ?? item.classId;
-            return <tr key={`${classId ?? familyId ?? index}-${item.role ?? "failure-occurrence"}`}>
-              <td data-label="Outcome" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
-              <td data-label="Failure family">
-                <strong>{family?.name ?? (familyId ? "Unresolved failure family" : "Not assigned")}</strong>
-                {familyId && <span className="vigil-classification-id">{familyId}</span>}
-              </td>
-              <td data-label="Failure class">
-                <strong>{classificationClass?.name ?? (classId ? "Unresolved failure class" : "No canonical class assigned")}</strong>
-                {classId && <span className="vigil-classification-id">{classId}</span>}
-                {item.sourceUrl && <a className="vigil-classification-source-link" href={item.sourceUrl} target="_blank" rel="noreferrer">View taxonomy source →</a>}
-              </td>
-              <td data-label="Classification basis" className="vigil-classification-basis">
-                {item.basis ?? "No separate classification basis is published for this mapping."}
-              </td>
-            </tr>;
-          })}
+          {[...familyGroups.entries()].map(([groupKey, group]) => <Fragment key={groupKey}>
+            <tr key={`family-${groupKey}`} className="vigil-classification-family-row">
+              <th colSpan={3} scope="rowgroup">
+                {group.familyId && <span className="vigil-classification-family-id">{group.familyId}</span>}
+                <strong>{group.familyName}</strong>
+              </th>
+            </tr>
+            {group.rows.map(({ item }, index) => {
+              const classificationClass = item.class;
+              const classId = classificationClass?.class_id ?? item.classId;
+              return <tr key={`${groupKey}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
+                <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
+                <td data-label="Failure class">
+                  <strong>{classificationClass?.name ?? (classId ? "Unresolved failure class" : "No canonical class assigned")}</strong>
+                  {classId && <span className="vigil-classification-id">{classId}</span>}
+                  {item.sourceUrl && <a className="vigil-classification-source-link" href={item.sourceUrl} target="_blank" rel="noreferrer">View taxonomy source →</a>}
+                </td>
+                <td data-label="Classification basis" className="vigil-classification-basis">
+                  {item.basis ?? "No separate classification basis is published for this mapping."}
+                </td>
+              </tr>;
+            })}
+          </Fragment>)}
         </tbody>
       </table>
     </div>
@@ -407,6 +429,7 @@ type RepairInvariant = {
   family?: FailureTaxonomyFamilyDocument["family"];
   class: FailureTaxonomyClass;
   relationship: "Primary" | "Secondary";
+  role: "failure-occurrence" | "ambiguous-boundary";
   sourceUrl?: string;
 };
 
@@ -415,7 +438,7 @@ function governingClassInvariants(primary: ResolvedClassification, secondaries: 
   const seen = new Set<string>();
 
   const add = (item: ResolvedClassification, relationship: RepairInvariant["relationship"]) => {
-    if (item.role !== "failure-occurrence") return;
+    if (item.role !== "failure-occurrence" && item.role !== "ambiguous-boundary") return;
     const classificationClass = item.class;
     if (!classificationClass || seen.has(classificationClass.class_id)) return;
     seen.add(classificationClass.class_id);
@@ -423,6 +446,7 @@ function governingClassInvariants(primary: ResolvedClassification, secondaries: 
       family: item.family?.family,
       class: classificationClass,
       relationship,
+      role: item.role,
       sourceUrl: item.sourceUrl,
     });
   };
@@ -447,16 +471,22 @@ export function CaseTaxonomyRepair({ raw }: Props) {
   if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is available for this Case File.</p>;
 
   return <div className="vigil-taxonomy-repair-view">
+    <div className="vigil-repair-role-key" aria-label="Repair mapping outcomes">
+      <span><MappingOutcome role="failure-occurrence" /> Failure occurred</span>
+      <span><MappingOutcome role="ambiguous-boundary" /> Boundary unresolved</span>
+    </div>
     <div className="vigil-classification-web-table vigil-repair-web-table">
       <table className="vigil-classification-table vigil-repair-table">
         <thead>
           <tr>
+            <th scope="col">Alignment</th>
             <th scope="col">Failure class</th>
             <th scope="col">Governing invariant</th>
           </tr>
         </thead>
         <tbody>
-          {invariants.map(({ class: classificationClass, sourceUrl }) => <tr key={classificationClass.class_id}>
+          {invariants.map(({ class: classificationClass, sourceUrl, role }) => <tr key={classificationClass.class_id}>
+            <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
             <td data-label="Failure class">
               <strong>{classificationClass.name}</strong>
               <span className="vigil-classification-id">{classificationClass.class_id}</span>
