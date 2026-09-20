@@ -112,6 +112,8 @@ assert.match(report, /externalAssessmentDate\(assessment\.date\)/);
 assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
 assert.match(report, /VIGIL Observatory governance assessment[\s\S]*Factual basis[\s\S]*Governance significance[\s\S]*Harm Impact Assessment/);
+assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
 assert.doesNotMatch(report, /report-harm-classification-intro/);
 assert.match(report, /report-assessment-details/);
 assert.match(printableReport, /nonAssessedHarmDimensionLimitItems/);
