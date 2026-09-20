@@ -2239,6 +2239,9 @@
 }
 
 .vigil-deterministic-report-host .vigil-harm-derivation-note {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
   font-size: 0.76rem !important;
   line-height: 1.48 !important;
   color: hsl(var(--report-muted)) !important;
