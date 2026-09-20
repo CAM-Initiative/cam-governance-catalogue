@@ -215,6 +215,8 @@ html[data-theme="dark"] {
   --status-high-surface: 22 34% 19%;
   --status-moderate: 42 72% 70%;
   --status-moderate-surface: 40 30% 19%;
+  --status-mixed: 43 82% 70%;
+  --status-mixed-surface: 43 30% 19%;
   --status-low: 205 46% 73%;
   --status-low-surface: 207 26% 20%;
   --status-success: 142 48% 72%;
