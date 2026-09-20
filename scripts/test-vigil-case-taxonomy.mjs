@@ -28,7 +28,7 @@ assert.match(caseFile, /CaseTaxonomyRepair/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
 assert.doesNotMatch(caseFile, /incident-specific assessment rather than the full methodology reference table/);
-assert.match(caseFile, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} \/>/);
+assert.match(caseFile, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\} \/>/);
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
@@ -97,7 +97,7 @@ assert.match(reportCss, /report-incident-artefact-link,[\s\S]*max-width: 68% !im
 assert.match(report, /<img src=\{artefact\.renderUrl\}/);
 assert.match(report, /data-report-postscript/);
 assert.doesNotMatch(report, /<details className="vigil-evidence-limitations"/);
-assert.match(report, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} compact methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} \/>/);
+assert.match(report, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} compact methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} evidenceReferenceNumbers=\{harmEvidenceReferenceNumbers\} \/>/);
 assert.doesNotMatch(report, /report-metadata-grid report-metadata-grid--2"><Field label="Methodology"/);
 assert.match(report, /className="report-reference-list"/);
 assert.match(report, /Internal records/);
