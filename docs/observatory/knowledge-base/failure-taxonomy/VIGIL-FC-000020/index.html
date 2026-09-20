@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Stale Verification Reuse | VIGIL Observatory Failure Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory failure class VIGIL-FC-000020: An old check is reused as proof for a current state that may no longer be the same." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000020/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="Stale Verification Reuse | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000020: An old check is reused as proof for a current state that may no longer be the same." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000020/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Stale Verification Reuse | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000020: An old check is reused as proof for a current state that may no longer be the same." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory Failure Taxonomy</p>
+      <h1>Stale Verification Reuse</h1>
+      <p>An old check is reused as proof for a current state that may no longer be the same.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000020</dd>
+        <dt>Semantic code</dt><dd>STALE_VERIFICATION_REUSE</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0003">Verification &amp; Completion Integrity Failures</a> <code>VIGIL-FF-0003</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which a prior verification result is applied to a later state, environment, version, dependency set, target, or time period without establishing that the conditions relevant to the original verification still hold.</p>
+      <h2>Recognition criteria</h2>
+      <ul><li>A prior verification result exists for an earlier state or condition.</li><li>The current state differs materially or the continued applicability of the earlier result is unresolved.</li><li>The prior verification is reused as current assurance without revalidation of applicability.</li></ul>
+      <h2>Exclusions</h2>
+      <ul><li>The verified property is demonstrably invariant across the change.</li><li>The earlier verification is used only as historical evidence rather than current assurance.</li><li>A current verification independently confirms the present state.</li></ul>
+      <h2>Linked Case Files</h2>
+      <p>No classified failure Case Files are currently linked to this class.</p>
+
+
+    </main></div>
+  </body>
+</html>

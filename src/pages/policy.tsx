@@ -103,10 +103,10 @@ export default function Policy() {
                 <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground/65">2026</p>
                 <div className="space-y-2.5">
                   <a
-                    className="block rounded-xl border border-cam-gold/45 bg-[rgba(184,147,90,0.10)] px-3 py-3 transition hover:border-cam-gold/65 hover:bg-[rgba(184,147,90,0.14)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="block rounded-xl border border-cam-gold/30 bg-card/70 px-3 py-3 transition hover:border-cam-gold/55 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     href="#parliamentary-submission-ai-prosperity-2026"
                   >
-                    <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">Parliamentary Submission</span>
+                    <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">PS 01/2026</span>
                     <span className="mt-1.5 block font-serif text-base leading-snug text-foreground">Artificial Intelligence and Australian Prosperity</span>
                   </a>
                   <a
@@ -160,7 +160,7 @@ export default function Policy() {
                     This submission proposes a national prosperity framework for retaining Australian productive capacity, knowledge, value and capability through the AI transition.
                   </p>
                   <p>
-                    It treats sovereign AI as an economic lifecycle: Discover → Fund → Build → Scale → Retain → Reinvest, connecting emerging capability, strategic capital, domestic industry, scale-up pathways, Australian ownership and long-term reinvestment.
+                    It treats sovereign AI as an economic lifecycle: <strong>Discover → Fund → Build → Scale → Retain → Reinvest</strong>, connecting emerging capability, strategic capital, domestic industry, scale-up pathways, Australian ownership and long-term reinvestment.
                   </p>
                   <p>
                     The submission also addresses copyright and creator value, robotics and automation, strategic digital infrastructure, workforce transition and mechanisms for retaining a greater share of AI-era economic value in Australia.

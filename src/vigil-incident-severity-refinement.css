@@ -127,6 +127,26 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   line-height: 1.45;
   color: hsl(var(--foreground) / 0.78);
 }
+.vigil-harm-interpretive-notes {
+  margin-top: 0.85rem;
+  padding: 0.78rem 0.9rem;
+  border-left: 3px solid hsl(var(--cam-gold) / 0.55);
+  background: hsl(var(--muted) / 0.16);
+}
+.vigil-harm-interpretive-notes h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+}
+.vigil-harm-interpretive-notes p {
+  margin: 0.38rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: hsl(var(--foreground) / 0.84);
+}
+.vigil-harm-interpretive-notes p:first-of-type {
+  margin-top: 0;
+}
+
 .vigil-harm-method-note {
   margin: 0.78rem 0 0;
   padding: 0.72rem 0.82rem;
@@ -366,4 +386,27 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   .vigil-harm-observed-values li {
     font-size: 9.5pt;
   }
+}
+
+
+
+
+
+/* Incident Harm Impact reading order: conclusion first, assessed rows second,
+   methodology note last. */
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary {
+  margin: 0 0 1.05rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 0.98rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-derivation-note {
+  margin-top: 0.8rem;
+  font-size: 0.76rem;
+  line-height: 1.48;
+  color: hsl(var(--muted-foreground));
 }

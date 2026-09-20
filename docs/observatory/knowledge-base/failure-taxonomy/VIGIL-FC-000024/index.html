@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Audit-Trail Non-Reconstructability | VIGIL Observatory Failure Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory failure class VIGIL-FC-000024: There are logs, but they are not enough to work out what actually happened." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000024/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="Audit-Trail Non-Reconstructability | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000024: There are logs, but they are not enough to work out what actually happened." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000024/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Audit-Trail Non-Reconstructability | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000024: There are logs, but they are not enough to work out what actually happened." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory Failure Taxonomy</p>
+      <h1>Audit-Trail Non-Reconstructability</h1>
+      <p>There are logs, but they are not enough to work out what actually happened.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000024</dd>
+        <dt>Semantic code</dt><dd>AUDIT_TRAIL_NONRECONSTRUCTABILITY</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0004">Observability &amp; Audit Integrity Failures</a> <code>VIGIL-FF-0004</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which audit evidence exists but lacks the ordering, identity, target, state, correlation, timing, version, or action detail necessary to reconstruct a materially relevant execution or decision pathway with adequate confidence.</p>
+      <h2>Recognition criteria</h2>
+      <ul><li>Some audit or telemetry evidence is available.</li><li>A materially relevant execution, decision, or state-change pathway requires reconstruction.</li><li>The available evidence cannot establish one or more necessary elements of the pathway with sufficient reliability.</li></ul>
+      <h2>Exclusions</h2>
+      <ul><li>The pathway can be reconstructed adequately from the available evidence.</li><li>The unresolved detail is immaterial to the review question.</li><li>The failure is simply that no event was captured at all.</li></ul>
+      <h2>Linked Case Files</h2>
+      <p>No classified failure Case Files are currently linked to this class.</p>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>European Parliament and Council of the European Union · 2024-07-12 · regulatory evidence</p><p><strong><a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng" rel="noreferrer">Regulation (EU) 2024/1689 (Artificial Intelligence Act), Article 12</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-33898CCD26FBF5D5 links automatic event recording for in-scope high-risk AI systems to appropriate lifetime logging. It strongly supports event evidence as a prerequisite to reconstructability, but does not define all ordering, identity, target, version and correlation elements in VIGIL&#39;s general mechanism.</p></li><li><p>World Wide Web Consortium · 2013-04-30 · standards evidence</p><p><strong><a href="https://www.w3.org/TR/prov-dm/" rel="noreferrer">PROV-DM: The PROV Data Model</a></strong></p><p><strong>Evidence note.</strong> PROV-DM provides structured relations among entities, activities, agents, generation, use, derivation, association, attribution, and delegation. Those relations materially support the lineage and responsibility components needed to reconstruct a pathway; PROV-DM is a provenance model, not a complete audit-log or AI-governance requirement.</p></li><li><p>IEEE Standards Association · 2022-03-04 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7001/6929/" rel="noreferrer">IEEE 7001-2021, Table 4 level 4</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-F8F11DA0D9D14DD0 requires recording the basis or mechanism for high-level decisions so investigators can reconstruct why they occurred. It directly supports decision-path reconstructability; the progressive transparency level and voluntary-conformance scope do not define every telemetry element required by VIGIL.</p></li></ul>
+    </main></div>
+  </body>
+</html>

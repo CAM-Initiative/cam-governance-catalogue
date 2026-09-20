@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Execution-State Non-Disclosure | VIGIL Observatory Failure Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory failure class VIGIL-FC-000029: The system does not expose whether a material action is pending, running, blocked, failed, or complete." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000029/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="Execution-State Non-Disclosure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000029: The system does not expose whether a material action is pending, running, blocked, failed, or complete." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000029/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Execution-State Non-Disclosure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000029: The system does not expose whether a material action is pending, running, blocked, failed, or complete." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory Failure Taxonomy</p>
+      <h1>Execution-State Non-Disclosure</h1>
+      <p>The system does not expose whether a material action is pending, running, blocked, failed, or complete.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000029</dd>
+        <dt>Semantic code</dt><dd>EXECUTION_STATE_NONDISCLOSURE</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0004">Observability &amp; Audit Integrity Failures</a> <code>VIGIL-FF-0004</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which the materially relevant execution state of a task, tool call, delegation, or external action is not made observable to the person or system responsible for timely supervision, intervention, or reliance.</p>
+      <h2>Recognition criteria</h2>
+      <ul><li>A task or action has a material execution state that can change over time.</li><li>Timely supervision, intervention, or reliance requires that state to be observable.</li><li>The state is withheld, collapsed, or not surfaced with sufficient timeliness or precision.</li></ul>
+      <h2>Exclusions</h2>
+      <ul><li>The execution state is adequately observable but the final outcome is incorrect.</li><li>Only internal reasoning is undisclosed and no material execution state is hidden.</li><li>The state is shown accurately and the issue is a false claim about overall completion.</li></ul>
+      <h2>Linked Case Files</h2>
+      <p>No classified failure Case Files are currently linked to this class.</p>
+
+
+    </main></div>
+  </body>
+</html>

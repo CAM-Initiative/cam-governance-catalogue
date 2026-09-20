@@ -2,9 +2,11 @@ import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import EvidenceChainReportDeterministic from "@/pages/evidence-chain-report-deterministic";
+import { nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
+import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 const REPORT_SECTIONS = [
   { number: "01", label: "Incident" },
@@ -119,12 +121,12 @@ export default function EvidenceChainReportPrintable() {
   const [, params] = useRoute("/observatory/reports/:recordId");
   const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const hostRef = useRef<HTMLDivElement>(null);
-  const referenceBaseCountRef = useRef(0);
   const [includedSections, setIncludedSections] = useState<IncludedSections>(() => Object.fromEntries(REPORT_SECTIONS.map((section) => [section.number, true])));
   const [defaultsResolved, setDefaultsResolved] = useState(false);
   const [reportIncident, setReportIncident] = useState<ReportIncident>();
   const [referenceList, setReferenceList] = useState<HTMLOListElement | null>(null);
   const [postscriptHost, setPostscriptHost] = useState<HTMLElement | null>(null);
+  const [harmMethodologyMetadata, setHarmMethodologyMetadata] = useState<HarmMethodologyMetadata>();
 
   useEffect(() => {
     let cancelled = false;
@@ -161,6 +163,21 @@ export default function EvidenceChainReportPrintable() {
   }, [reportIncident]);
 
   useEffect(() => {
+    let cancelled = false;
+    const harm = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
+      ? reportIncident.raw.harm_impact_assessment
+      : undefined;
+    const methodologyVersion = harm ? text(harm.methodology_version) : undefined;
+    if (!methodologyVersion) {
+      setHarmMethodologyMetadata(undefined);
+      return () => { cancelled = true; };
+    }
+    void loadHarmMethodologyMetadata(methodologyVersion)
+      .then((metadata) => { if (!cancelled) setHarmMethodologyMetadata(metadata); });
+    return () => { cancelled = true; };
+  }, [reportIncident]);
+
+  useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
 
@@ -176,7 +193,6 @@ export default function EvidenceChainReportPrintable() {
         if (number === "05") {
           const list = section.querySelector<HTMLOListElement>("ol[data-report-taxonomy-reference-list]");
           if (list) {
-            referenceBaseCountRef.current = list.children.length;
             setReferenceList(list);
           }
         }
@@ -214,29 +230,46 @@ export default function EvidenceChainReportPrintable() {
     () => collectTaxonomyEvidence(reportIncident?.taxonomyReferences ?? []),
     [reportIncident?.taxonomyReferences],
   );
+  const hasHarmMethodologyReference = Boolean(reportIncident && isObject(reportIncident.raw.harm_impact_assessment));
   const assessmentBoundaries = useMemo(() => {
     const assessment = reportIncident && isObject(reportIncident.raw.vigil_assessment)
       ? reportIncident.raw.vigil_assessment
       : undefined;
     return textList(assessment?.assessment_boundaries);
   }, [reportIncident]);
+  const assessmentLimitItems = useMemo(() => {
+    const harmAssessment = reportIncident && isObject(reportIncident.raw.harm_impact_assessment)
+      ? reportIncident.raw.harm_impact_assessment
+      : undefined;
+    // Keep non-assessed harm dimensions in the closing assessment limits rather than the scored Harm Impact table.
+    const harmDimensionLimits = nonAssessedHarmDimensionLimitItems(harmAssessment);
+    return [...assessmentBoundaries, ...harmDimensionLimits];
+  }, [assessmentBoundaries, reportIncident]);
 
-  const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
+  const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
     ? createPortal(<>
-      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="report-reference-item report-taxonomy-reference">
-        <span className="report-reference-number">[{referenceBaseCountRef.current + index + 1}]</span>
+      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
+        <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
-          <strong>{reference.id} — {reference.title}</strong>
-          <span className="report-reference-meta"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
+          <strong>VIGIL Observatory Failure Taxonomy</strong>
+          <span className="report-reference-meta"> — {["CAM Initiative", "Public taxonomy reference", reportIncident?.taxonomyReferences[0]?.referenceVersion ? `Version ${reportIncident.taxonomyReferences[0].referenceVersion}` : reportIncident?.taxonomyReferences[0]?.taxonomyVersion ? `Version ${reportIncident.taxonomyReferences[0].taxonomyVersion}` : undefined, reportIncident?.taxonomyReferences[0]?.referencePublicationDate ? `Revised ${reportIncident.taxonomyReferences[0].referencePublicationDate}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
-          <a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a>
+          <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
         </span>
-      </li>)}
-      {taxonomyEvidenceReferences.map((reference, index) => {
-        const number = referenceBaseCountRef.current + reportIncident.taxonomyReferences.length + index + 1;
+      </li>}
+      {hasHarmMethodologyReference && <li key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
+        <span className="report-reference-number" aria-hidden="true" />
+        <span className="report-reference-copy">
+          <strong>VIGIL Harm Impact Methodology</strong>
+          <span className="report-reference-meta"> — {["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : reportIncident && isObject(reportIncident.raw.harm_impact_assessment) && text(reportIncident.raw.harm_impact_assessment.methodology_version) ? `Version ${text(reportIncident.raw.harm_impact_assessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</span>
+          <br />
+          <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/severity-methodology</a>
+        </span>
+      </li>}
+      {taxonomyEvidenceReferences.map((reference) => {
         const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
         return <li key={`taxonomy-evidence-${reference.key}`} className="report-reference-item report-taxonomy-evidence-reference">
-          <span className="report-reference-number">[{number}]</span>
+          <span className="report-reference-number" aria-hidden="true" />
           <span className="report-reference-copy">
             <strong>{reference.title}</strong>
             {meta ? <span className="report-reference-meta"> — {meta}</span> : null}
@@ -257,9 +290,9 @@ export default function EvidenceChainReportPrintable() {
           This report is provided for research and informational purposes. It does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice, and should not be relied upon as a substitute for independent assessment. Third parties remain responsible for verifying the cited source material, the current state of the underlying VIGIL Observatory records and taxonomy, the applicability of the analysis to their circumstances, and any decision or action taken in reliance on this report.
         </p>
       </section>
-      {assessmentBoundaries.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
+      {assessmentLimitItems.length > 0 && <section className="report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
         <h2 id="report-assessment-limits-heading" className="report-label">Limits of the assessment</h2>
-        <ul className="report-list">{assessmentBoundaries.map((item) => <li key={item}>{item}</li>)}</ul>
+        <ul className="report-list">{assessmentLimitItems.map((item) => <li key={item}>{item}</li>)}</ul>
       </section>}
       <p className="report-copyright">
         © 2026 CAM Initiative. All rights reserved.

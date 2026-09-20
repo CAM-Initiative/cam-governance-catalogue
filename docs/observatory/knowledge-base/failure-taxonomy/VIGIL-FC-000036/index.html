@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Restoration-State Integrity Failure | VIGIL Observatory Failure Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory failure class VIGIL-FC-000036: Work is restored after interruption, but the restored state is incomplete, inconsistent, or unsafe to continue from." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000036/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="Restoration-State Integrity Failure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000036: Work is restored after interruption, but the restored state is incomplete, inconsistent, or unsafe to continue from." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000036/" />
+    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Restoration-State Integrity Failure | VIGIL Observatory Failure Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000036: Work is restored after interruption, but the restored state is incomplete, inconsistent, or unsafe to continue from." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory Failure Taxonomy</p>
+      <h1>Restoration-State Integrity Failure</h1>
+      <p>Work is restored after interruption, but the restored state is incomplete, inconsistent, or unsafe to continue from.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000036</dd>
+        <dt>Semantic code</dt><dd>RESTORATION_STATE_INTEGRITY_FAILURE</dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0006">Work-State Continuity Integrity Failures</a> <code>VIGIL-FF-0006</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which preserved work state is recovered into a materially incomplete, inconsistent, stale, mismatched, or otherwise unusable continuation state without adequately exposing or resolving the restoration defect.</p>
+      <h2>Recognition criteria</h2>
+      <ul><li>Work state is preserved and a restoration or recovery attempt occurs.</li><li>The restored state differs materially from the state required for correct continuation.</li><li>The defect is not adequately identified or resolved before continuation.</li></ul>
+      <h2>Exclusions</h2>
+      <ul><li>No work state was preserved at all.</li><li>The state is restored faithfully and a later independent task error occurs.</li><li>The only issue is that the restored state lacks provenance evidence while remaining operationally usable.</li></ul>
+      <h2>Linked Case Files</h2>
+      <ul><li><a href="/observatory/cases/VIGIL-INC-000137"><code>VIGIL-INC-000137</code> — Astra-family model followed self-generated medical-research restrictions from a compaction summary</a> <span>failure-occurrence · high confidence</span></li></ul>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>IEEE Standards Association · 2024-06-28 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7014/7648/" rel="noreferrer">IEEE 7014-2024, clause 4.3.6.2(c-d)</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-42A1CFE7EF635572 requires a published restoration procedure and expected recovery time following a service incident or issue affecting subjects. It strongly supports governed restoration as a distinct lifecycle obligation, but does not itself define VIGIL&#39;s state-integrity conditions for completeness, consistency, freshness or dependency compatibility.</p></li></ul>
+    </main></div>
+  </body>
+</html>

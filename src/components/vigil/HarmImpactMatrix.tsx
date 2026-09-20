@@ -78,6 +78,7 @@ const DIMENSIONS = [
       S4: "USD 100 million to below USD 100 billion, or independently evidenced substantial solvency, organisational-viability or widespread economic impact where no defensible USD conversion is available.",
       S5: "At least USD 100 billion, catastrophic insolvency or systemic economic loss.",
     },
+    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold.",
   },
   {
     dimension_id: "property-asset-damage",
@@ -89,6 +90,7 @@ const DIMENSIONS = [
       S4: "Substantial destruction or impairment of important or critical assets requiring major recovery, while remaining below catastrophic loss.",
       S5: "Catastrophic or effectively irreversible destruction of critical physical or digital assets.",
     },
+    adaptation_note: "Asset damage is assessed independently from realised financial loss. Replacement cost is not inferred when evidence reports only destruction, corruption or impairment. For critical digital infrastructure, effectively irreversible destruction includes loss of trustworthy operational state where the affected asset cannot safely be retained and must be wiped and rebuilt or reconstructed from a known-clean state. Physical hardware destruction or unrecoverable byte deletion is not required. Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5; the evidence must support loss of trusted state in the critical asset itself.",
   },
   {
     dimension_id: "service-operational-infrastructure",
@@ -100,6 +102,7 @@ const DIMENSIONS = [
       S4: "Essential or critical operation disrupted over 24 hours, material multi-organisation or multi-jurisdiction impact, exceeded evidenced tolerable downtime, or substantial external recovery.",
       S5: "Catastrophic or prolonged loss of essential service or operational collapse producing comparably grave materialised consequences.",
     },
+    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope.",
   },
   {
     dimension_id: "reputation-dignity",
@@ -144,6 +147,7 @@ type MatrixRow = {
   assessment_basis?: string;
   evidence_confidence?: string;
   observed_values?: unknown[];
+  evidence_refs?: string[];
 };
 
 function object(value: unknown): UnknownRecord | undefined {
@@ -170,12 +174,23 @@ function rowsFor(assessment?: UnknownRecord): MatrixRow[] {
       assessment_basis: string(row.assessment_basis),
       evidence_confidence: string(row.evidence_confidence),
       observed_values: Array.isArray(row.observed_values) ? row.observed_values : undefined,
+      evidence_refs: Array.isArray(row.evidence_refs) ? row.evidence_refs.flatMap((value) => string(value) ?? []) : undefined,
     }];
   }).sort((a, b) => (order.get(a.dimension_id) ?? 999) - (order.get(b.dimension_id) ?? 999));
 }
 
 function dimensionLabel(id: string) {
   return DIMENSIONS.find((dimension) => dimension.dimension_id === id)?.label ?? id.split("-").join(" ");
+}
+
+export function nonAssessedHarmDimensionLimitItems(assessment?: UnknownRecord): string[] {
+  if (!assessment) return [];
+  const rows = rowsFor(assessment).filter((row) => row.assessment_status !== "assessed");
+  const statuses = [...new Set(rows.map((row) => row.assessment_status))];
+  return statuses.map((status) => {
+    const matching = rows.filter((row) => row.assessment_status === status);
+    return `${rollupLabel(status)} (${matching.length}): ${matching.map((row) => dimensionLabel(row.dimension_id)).join("; ")}.`;
+  });
 }
 
 function resultLabel(row: MatrixRow) {
@@ -267,6 +282,14 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
       </table>
     </div>
 
+    {/* Canonical methodology adaptation notes sit outside the threshold cells so they remain readable and citable. */}
+    <div className="vigil-harm-interpretive-notes" aria-label="Harm matrix interpretive notes">
+      <h3>Interpretive notes</h3>
+      {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
+        ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
+        : [])}
+    </div>
+
     <div className="vigil-harm-evidence-key" aria-label="Harm assessment evidence states">
       <div><strong>Assessed</strong><span>Evidence supports a materialised impact and a specific threshold band.</span></div>
       <div><strong>Unreported</strong><span>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</span></div>
@@ -278,14 +301,9 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
   </div>;
 }
 
-function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { assessment: UnknownRecord; compact: boolean; methodology?: string; assessedOn?: string }) {
+function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
-  const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
-  const rollups = [...new Set(otherRows.map((row) => row.assessment_status))].map((status) => ({
-    status,
-    rows: otherRows.filter((row) => row.assessment_status === status),
-  }));
   const overall = string(assessment.overall_severity) ?? "SU";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
@@ -295,18 +313,7 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { as
   const assessmentGap = string(assessment.assessment_gap);
 
   return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")}>
-    <div className="vigil-harm-matrix-overview">
-      <div className="vigil-harm-summary-row">
-        {methodology ? <div className="vigil-harm-summary-item"><span>Methodology</span><strong>{methodology}</strong></div> : null}
-        {assessedOn ? <div className="vigil-harm-summary-item"><span>Assessed</span><strong>{assessedOn}</strong></div> : null}
-        <div className="vigil-harm-overall-result">
-          <span>Overall severity</span>
-          <strong className={"severity-" + overall.toLowerCase()}>{overall}</strong>
-          <small>{BAND_LABELS[overall] ?? "Not assessed"}</small>
-        </div>
-      </div>
-      <p><strong>Derivation:</strong> highest supported materialised harm. Dimensions are not averaged or summed.</p>
-    </div>
+    {coverageNote ? <p className="vigil-harm-summary">{coverageNote}</p> : null}
 
     {noMaterialisedHarmBasis ? <p className="vigil-harm-no-harm-basis"><strong>Positive no-materialised-harm basis:</strong> {noMaterialisedHarmBasis}</p> : null}
 
@@ -331,24 +338,22 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn }: { as
               </th>
               <td className="status-assessed"><strong>Assessed</strong></td>
               <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
-              <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}</p> : null}</td>
+              {/* evidence_refs are canonical row-local provenance; citation numbers are resolved against the final deduplicated Evidence sources list. */}
+              <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}{row.evidence_refs?.length ? <span className="vigil-harm-inline-references"> {row.evidence_refs.flatMap((ref) => evidenceReferenceNumbers?.[ref] ? [<a key={ref} href={`#vigil-evidence-reference-${evidenceReferenceNumbers[ref]}`} aria-label={`Evidence reference ${evidenceReferenceNumbers[ref]}`}>[{evidenceReferenceNumbers[ref]}]</a>] : [])}</span> : null}</p> : null}</td>
             </tr>;
           })}
         </tbody>
       </table>
     </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
 
-    {rollups.map(({ status, rows: statusRows }) => <p className="vigil-harm-coverage" key={status}>
-      <strong>{rollupLabel(status)} ({statusRows.length}):</strong> {statusRows.map((row) => dimensionLabel(row.dimension_id)).join("; ")}.
-    </p>)}
 
-    {coverageNote ? <p className="vigil-harm-coverage"><strong>Assessment coverage:</strong> {coverageNote}</p> : null}
-    {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence needed:</strong> {assessmentGap}</p> : null}
+    <p className="vigil-harm-method-note vigil-harm-derivation-note">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.</p>
+    {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
 }
 
-export function HarmImpactMatrix({ assessment, compact = false, methodology, assessedOn }: { assessment?: UnknownRecord; compact?: boolean; methodology?: string; assessedOn?: string }) {
+export function HarmImpactMatrix({ assessment, compact = false, evidenceReferenceNumbers }: { assessment?: UnknownRecord; compact?: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
   return assessment
-    ? <AssessmentMatrix assessment={assessment} compact={compact} methodology={methodology} assessedOn={assessedOn} />
+    ? <AssessmentMatrix assessment={assessment} compact={compact} evidenceReferenceNumbers={evidenceReferenceNumbers} />
     : <MethodologyMatrix compact={compact} />;
 }

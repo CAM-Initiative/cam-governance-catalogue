@@ -19,6 +19,7 @@ type SortDirection = "asc" | "desc";
 type SortState = { key: SortKey; direction: SortDirection };
 
 type ClassificationStatusCount = { key: string; label: string; count: number };
+type SeverityCount = { key: string; label: string; count: number };
 
 const PAGE_SIZE = 18;
 const SEVERITY_ORDER: Record<string, number> = { S1: 1, S2: 2, S3: 3, S4: 4, S5: 5, SU: 6 };
@@ -49,8 +50,35 @@ function classificationStatusCounts(records: VigilIndexRecord[]): Classification
   return [...counts.values()].sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
 }
 
+function severityCode(record: VigilIndexRecord) {
+  return String(record.severity ?? "SU").trim().toUpperCase();
+}
+
+function severityLabel(code: string) {
+  const labels: Record<string, string> = {
+    S1: "S1 · Minimal / no downstream harm",
+    S2: "S2 · Low",
+    S3: "S3 · Moderate",
+    S4: "S4 · High",
+    S5: "S5 · Catastrophic / critical",
+    SU: "SU · Unassessed",
+  };
+  return labels[code] ?? code;
+}
+
+function severityCounts(records: VigilIndexRecord[]): SeverityCount[] {
+  const counts = new Map<string, SeverityCount>();
+  for (const record of records) {
+    const key = severityCode(record);
+    const existing = counts.get(key);
+    if (existing) existing.count += 1;
+    else counts.set(key, { key, label: severityLabel(key), count: 1 });
+  }
+  return [...counts.values()].sort((a, b) => (SEVERITY_ORDER[a.key] ?? 99) - (SEVERITY_ORDER[b.key] ?? 99));
+}
+
 function severityRank(record: VigilIndexRecord) {
-  return SEVERITY_ORDER[String(record.severity ?? "SU").trim().toUpperCase()] ?? 6;
+  return SEVERITY_ORDER[severityCode(record)] ?? 6;
 }
 
 function incidentCases(records: VigilIndexRecord[]) {
@@ -111,6 +139,7 @@ export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
   const [classification, setClassification] = useState("");
+  const [severity, setSeverity] = useState("");
   const [sort, setSort] = useState<SortState>({ key: "id", direction: "desc" });
   const [page, setPage] = useState(1);
 
@@ -127,6 +156,7 @@ export default function VigilCases() {
 
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
+  const severityStates = useMemo(() => severityCounts(records), [records]);
   const updated = useMemo(() => {
     const dates = values(records, (record) => record.record_last_updated ?? record.publicDisplay.dates.lastUpdated ?? record.date_recorded).sort();
     return dates.length ? dates[dates.length - 1] : undefined;
@@ -135,12 +165,13 @@ export default function VigilCases() {
   const filtered = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
     if (classification && canonicalComparisonKey(classificationStatusLabel(record)) !== classification) return false;
+    if (severity && severityCode(record) !== severity) return false;
     return true;
-  }), [classification, records, search]);
+  }), [classification, records, search, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classification, sort]);
+  useEffect(() => setPage(1), [search, classification, severity, sort]);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -204,10 +235,18 @@ export default function VigilCases() {
                     {classificationStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
                   </select>
                 </label>
+
+                <label className="vigil-family-select">
+                  <span>Severity</span>
+                  <select value={severity} onChange={(event) => setSeverity(event.target.value)}>
+                    <option value="">All severities ({records.length})</option>
+                    {severityStates.map((entry) => <option key={entry.key} value={entry.key}>{entry.label} ({entry.count})</option>)}
+                  </select>
+                </label>
               </div>
               <div className="vigil-result-summary">
                 <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
-                {(search || classification) && <button type="button" onClick={() => { setSearch(""); setClassification(""); }}>Clear filters</button>}
+                {(search || classification || severity) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); }}>Clear filters</button>}
               </div>
             </section>
 

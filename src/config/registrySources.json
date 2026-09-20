@@ -2,7 +2,7 @@
   "vigil": {
     "label": "VIGIL Incident Registry",
     "incident_registry_index_url": "https://raw.githubusercontent.com/CAM-Initiative/Vigil/agent/incident-ecosystem-ingestion/vigil/VIGIL.Incidents.Index.json",
-    "incident_registry_github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/VIGIL.Incidents.Index.json",
+    "incident_registry_github_blob_url": "https://github.com/CAM-Initiative/Vigil/blob/main/vigil/VIGIL.Incidents.Index.json",
     "repo": "CAM-Initiative/Vigil",
     "branch": "agent/incident-ecosystem-ingestion"
   },
