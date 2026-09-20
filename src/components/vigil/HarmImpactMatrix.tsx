@@ -313,7 +313,7 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { a
   const assessmentGap = string(assessment.assessment_gap);
 
   return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")}>
-    {coverageNote ? <p className="vigil-harm-coverage vigil-harm-summary">{coverageNote}</p> : null}
+    {coverageNote ? <p className="vigil-harm-summary">{coverageNote}</p> : null}
 
     {noMaterialisedHarmBasis ? <p className="vigil-harm-no-harm-basis"><strong>Positive no-materialised-harm basis:</strong> {noMaterialisedHarmBasis}</p> : null}
 
