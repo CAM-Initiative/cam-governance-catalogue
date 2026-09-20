@@ -67,7 +67,7 @@ main.overflow-hidden:has(#evidence-repair-heading)
   color: hsl(var(--primary));
 }
 
-.home-governance-card[href="/datasets"] > span:first-child > span:first-child::after {
+.home-governance-card[href="/datasets/"] > span:first-child > span:first-child::after {
   display: inline-flex;
   align-items: center;
   margin-left: 0.45rem;
@@ -84,7 +84,7 @@ main.overflow-hidden:has(#evidence-repair-heading)
   color: hsl(var(--primary));
 }
 
-.home-governance-card[href="/datasets"] > span:first-child > span:first-child::after {
+.home-governance-card[href="/datasets/"] > span:first-child > span:first-child::after {
   content: "Beta";
 }
 
@@ -135,7 +135,7 @@ html[data-theme="dark"] main.overflow-hidden:has(#evidence-repair-heading)
   > .container
   > div:first-child
   > p:first-child::after,
-html[data-theme="dark"] .home-governance-card[href="/datasets"] > span:first-child > span:first-child::after {
+html[data-theme="dark"] .home-governance-card[href="/datasets/"] > span:first-child > span:first-child::after {
   background: hsl(var(--primary) / 0.12);
 }
 
