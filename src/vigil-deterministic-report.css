@@ -2074,7 +2074,7 @@
 }
 
 
-/* Physical A4 safe area.
+/* Physical A4 safe area: enforced in the report box, not browser margins.
    Chrome print settings can suppress CSS page-side margins, so horizontal
    containment is enforced on the report container itself. */
 @media print {
