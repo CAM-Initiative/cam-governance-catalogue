@@ -1628,6 +1628,7 @@
 
 
 
+/* External assessments are substantive assessment material in the PDF, not footnote metadata. */
 .vigil-deterministic-report-host .report-external-assessments {
   margin-top: 0.85rem;
 }
