@@ -472,10 +472,6 @@ export default function VigilCaseFile() {
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
-  const severityAssessedOn = harmImpactAssessment ? text(harmImpactAssessment.assessed_on) : undefined;
-  const severityMethodology = harmImpactAssessment
-    ? [text(harmImpactAssessment.methodology_id), text(harmImpactAssessment.methodology_version)].filter(Boolean).join(" ")
-    : undefined;
   const harmDimensionLimitItems = nonAssessedHarmDimensionLimitItems(harmImpactAssessment);
   const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
@@ -568,9 +564,8 @@ export default function VigilCaseFile() {
           <div className="vigil-case-subheading">
             <p className="vigil-library-kicker">Harm classification</p>
             <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
-            <p className="vigil-harm-classification-intro">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.</p>
           </div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
+          <HarmImpactMatrix assessment={harmImpactAssessment} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
