@@ -477,6 +477,19 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype", as
 });
 
 
+
+test("harm methodology renders canonical adaptation notes below the matrix", async () => {
+  const [matrix, css] = await Promise.all([
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
+    read("src/vigil-incident-severity-refinement.css"),
+  ]);
+  assert.match(matrix, /Interpretive notes/);
+  assert.match(matrix, /adaptation_note/);
+  assert.match(matrix, /must be wiped and rebuilt or reconstructed from a known-clean state/);
+  assert.match(matrix, /Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5/);
+  assert.match(css, /\.vigil-harm-interpretive-notes/);
+});
+
 test("Stage 02 is presented publicly as Assessment", async () => {
   const [sections, cases, hub, report, printable, home, rail, pages, readme, contract] = await Promise.all([
     read("src/lib/vigilCaseSections.ts"),
