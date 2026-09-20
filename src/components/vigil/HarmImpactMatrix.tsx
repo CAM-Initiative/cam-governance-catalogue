@@ -316,7 +316,7 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
     <div className="vigil-harm-matrix-overview">
       <div className="vigil-harm-summary-row">
         {methodology ? <div className="vigil-harm-summary-item"><span>Methodology</span><strong>{methodology}</strong></div> : null}
-        {assessedOn ? <div className="vigil-harm-summary-item"><span>Assessed</span><strong>{assessedOn}</strong></div> : null}
+        {assessedOn ? <div className="vigil-harm-summary-item"><span>Assessment date</span><strong>{assessedOn}</strong></div> : null}
         <div className="vigil-harm-overall-result">
           <span>Overall severity</span>
           <strong className={"severity-" + overall.toLowerCase()}>{overall}</strong>
@@ -357,8 +357,8 @@ function AssessmentMatrix({ assessment, compact, methodology, assessedOn, eviden
     </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
 
 
-    {coverageNote ? <p className="vigil-harm-coverage"><strong>Assessment coverage:</strong> {coverageNote}</p> : null}
-    {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence needed:</strong> {assessmentGap}</p> : null}
+    {coverageNote ? <p className="vigil-harm-coverage"><strong>Harm assessment summary:</strong> {coverageNote}</p> : null}
+    {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
 }
 
