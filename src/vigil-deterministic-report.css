@@ -1722,8 +1722,10 @@
   display: block;
   width: auto;
   max-width: 100%;
+  max-height: 150mm;
   height: auto;
   margin: 0 auto;
+  object-fit: contain;
 }
 
 .vigil-deterministic-report-host .report-incident-artefact figcaption {

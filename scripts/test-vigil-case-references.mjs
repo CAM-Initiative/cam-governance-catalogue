@@ -50,7 +50,7 @@ test("Case File Section 02 follows governance assessment, factual basis, governa
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
   const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
-  const harmIndex = assessmentRenderer.indexOf("Harm Impact Matrix");
+  const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
   const significanceIndex = assessmentRenderer.indexOf("Governance significance");
 
