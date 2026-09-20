@@ -72,7 +72,7 @@
 .vigil-deterministic-report-host .report-exemplar-kicker {
   margin: 0;
   font-family: var(--app-font-mono);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1.3;
@@ -335,8 +335,8 @@
 .vigil-deterministic-report-host .report-assessment-details > section > p {
   margin: 0.4rem 0 0;
   font-family: var(--app-font-sans);
-  font-size: 0.96rem;
-  line-height: 1.56;
+  font-size: 0.88rem;
+  line-height: 1.5;
   color: hsl(var(--report-ink) / 0.88);
 }
 
@@ -1130,7 +1130,7 @@
 
   .vigil-deterministic-report-host .report-section .report-reference-number,
   .vigil-deterministic-report-host .report-section .report-reference-url {
-    font-size: 11pt !important;
+    font-size: 10.5pt !important;
   }
 }
 
@@ -1314,12 +1314,12 @@
 }
 
 .vigil-deterministic-report-host .vigil-classification-table thead th {
-  padding: 0.62rem 0.7rem;
+  padding: 0.66rem 0.72rem;
   background: hsl(var(--report-panel-strong));
   font-family: var(--app-font-sans);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.35;
   letter-spacing: 0.055em;
   text-transform: uppercase;
   color: hsl(var(--report-muted));
@@ -1334,9 +1334,9 @@
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(3) { width: 55%; }
 
 .vigil-deterministic-report-host .vigil-classification-table tbody td {
-  padding: 0.72rem 0.72rem 0.78rem;
-  font-size: 0.88rem;
-  line-height: 1.5;
+  padding: 0.78rem 0.76rem 0.82rem;
+  font-size: 0.96rem;
+  line-height: 1.56;
   color: hsl(var(--report-ink) / 0.9);
 }
 
@@ -1345,7 +1345,7 @@
 }
 
 .vigil-deterministic-report-host .vigil-classification-family-row > th {
-  padding: 0.5rem 0.7rem;
+  padding: 0.56rem 0.72rem;
   border-bottom: 1px solid hsl(var(--report-rule) / 0.72);
   background: hsl(var(--report-panel));
   color: hsl(var(--report-ink));
@@ -1374,13 +1374,12 @@
 
 .vigil-deterministic-report-host .vigil-classification-id {
   display: block;
-  margin-top: 0.22rem;
+  margin-top: 0.24rem;
   font-family: var(--app-font-mono);
   font-size: 0.8rem;
   line-height: 1.4;
   color: hsl(var(--report-muted));
 }
-
 
 .vigil-deterministic-report-host .vigil-taxonomy-reference-note {
   margin: 0.7rem 0 0;
@@ -1480,7 +1479,7 @@
   .vigil-deterministic-report-host .vigil-classification-table tbody td,
   .vigil-deterministic-report-host .vigil-repair-reading > .vigil-repair-invariant,
   .vigil-deterministic-report-host .vigil-repair-reading > .vigil-case-empty {
-    font-size: 10.5pt !important;
+    font-size: 11pt !important;
   }
 
   .vigil-deterministic-report-host .vigil-classification-id,
