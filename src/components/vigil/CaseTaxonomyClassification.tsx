@@ -433,6 +433,9 @@ type RepairInvariant = {
   sourceUrl?: string;
 };
 
+// Repair surfaces both established failures and unresolved boundaries because both
+// expose governing invariants that are decision-useful; successful invariants remain
+// Classification evidence only and do not create repair work.
 function governingClassInvariants(primary: ResolvedClassification, secondaries: ResolvedClassification[]): RepairInvariant[] {
   const result: RepairInvariant[] = [];
   const seen = new Set<string>();
