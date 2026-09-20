@@ -101,6 +101,7 @@ assert.doesNotMatch(report, /<details className="vigil-evidence-limitations"/);
 assert.match(report, /<HarmImpactMatrix assessment=\{harmImpactAssessment\} compact methodology=\{severityMethodology\} assessedOn=\{severityAssessedOn\} \/>/);
 assert.doesNotMatch(report, /report-metadata-grid report-metadata-grid--2"><Field label="Methodology"/);
 assert.match(report, /className="report-reference-list"/);
+assert.match(report, /Internal records/);
 assert.match(report, /report-external-assessment-table/);
 assert.match(report, /externalAssessmentDate\(assessment\.date\)/);
 assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
@@ -109,6 +110,8 @@ assert.match(report, /VIGIL Observatory governance assessment[\s\S]*Factual basi
 assert.match(report, /report-harm-classification-intro/);
 assert.match(report, /report-assessment-details/);
 assert.match(printableReport, /notApplicableHarmDimensionLabels/);
+assert.match(reportCss, /Final PDF width containment/);
+assert.match(reportCss, /overflow-wrap: break-word !important/);
 assert.match(printableReport, /Harm classification not applicable/);
 assert.doesNotMatch(report, /Assessment provenance/);
 assert.doesNotMatch(report, /<EvidenceCard/);

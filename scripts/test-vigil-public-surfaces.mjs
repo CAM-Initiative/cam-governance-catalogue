@@ -159,7 +159,9 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
   assert.match(css, /\.vigil-repair-table thead th:nth-child\(1\) \{ width: 8%; \}/);
   assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 62%; \}/);
-  assert.match(css, /\.vigil-repair-role-key/);
+  assert.doesNotMatch(classification, /vigil-repair-role-key/);
+  assert.match(classification, /VigilAlignmentLegend/);
+  assert.match(css, /\.vigil-alignment-legend/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -256,6 +258,10 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
 test("About explains successful-invariant exemplars and the publication model", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /successful-invariant exemplar/i);
+  assert.match(about, /VigilAlignmentLegend detailed/);
+  assert.match(about, /Failure occurred/);
+  assert.match(about, /Invariant held/);
+  assert.match(about, /Boundary unresolved/);
   assert.match(about, /not counted as failure evidence/i);
   assert.match(about, /do not create a Repair requirement/i);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
@@ -283,6 +289,12 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
   assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
   assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
   assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
+});
+
+test("Case File harm assessment moves not-applicable dimensions to assessment limits", async () => {
+  const him = await read("src/components/vigil/HarmImpactMatrix.tsx");
+  assert.match(him, /filter\(\(status\) => status !== "not-applicable"\)/);
+  assert.match(him, /notApplicableHarmDimensionLabels/);
 });
 
 test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
