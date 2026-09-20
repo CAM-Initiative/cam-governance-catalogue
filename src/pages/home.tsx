@@ -100,7 +100,7 @@ function EvidenceRepairLoop() {
           It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Assessment → Runtime Governance</strong>.
         </p>
       </div>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/cases">
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/cases/">
         Explore the Observatory
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </a>
@@ -127,7 +127,7 @@ function FailureTaxonomyPanel() {
         </p>
       </div>
       <div className="mt-6 flex flex-wrap gap-3">
-        <a className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/failure-taxonomy">
+        <a className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/failure-taxonomy/">
           Explore the Taxonomy
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
@@ -153,9 +153,9 @@ function DatasetsPanel() {
         Use the underlying governance data directly.
       </h2>
       <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licence</a> for the applicable terms. The datasets surface brings together VIGIL Observatory standards and source records, structured governance requirements, and the current CAELESTIS archival release.
+        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing/" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licence</a> for the applicable terms. The datasets surface brings together VIGIL Observatory standards and source records, structured governance requirements, and the current CAELESTIS archival release.
       </p>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets">
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets/">
         Explore Datasets
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </a>
@@ -173,7 +173,7 @@ function PolicyPapersPanel() {
       <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
         CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.
       </p>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/policy">
+      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/policy/">
         Explore Policy Papers
         <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
       </a>
@@ -244,7 +244,7 @@ export default function Home() {
             <div className="home-identity-artwork">
               <img src={heroImages.cam} alt="" className="home-identity-image" />
               <span className="home-identity-divider" aria-hidden="true" />
-              <a className="home-identity-image-link" href="/observatory/cases" aria-label="Browse VIGIL Observatory Case Files">
+              <a className="home-identity-image-link" href="/observatory/cases/" aria-label="Browse VIGIL Observatory Case Files">
                 <img src={heroImages.vigil} alt="" className="home-identity-image" />
               </a>
             </div>
