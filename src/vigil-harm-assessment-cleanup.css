@@ -34,14 +34,6 @@
   display: none;
 }
 
-/* In that same bounded no-harm state the immediately following roll-up merely
-   enumerates every out-of-scope dimension. The assessment-coverage statement
-   retains the substantive conclusion without dumping bookkeeping into the main
-   reading flow. The canonical record continues to retain every dimension. */
-:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-no-harm-basis + .vigil-harm-method-note + .vigil-harm-coverage {
-  display: none;
-}
-
 /* Coverage is supporting context, not a stack of alert cards. */
 :is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-coverage {
   margin: 0.55rem 0 0;
