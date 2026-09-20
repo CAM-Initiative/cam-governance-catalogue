@@ -229,6 +229,30 @@ test("Incident artefact captions use one label plus numbered evidence reference"
   assert.match(css, /\.vigil-incident-artefact-reference/);
 });
 
+test("Classification and Repair cite the single numbered VIGIL Failure Taxonomy reference instead of row-level source links", async () => {
+  const [component, caseFile, report, printable, css, reportCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8"),
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),
+  ]);
+
+  assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
+  assert.match(component, /Failure classes and their governing invariants are defined in the/);
+  assert.match(component, /The governing invariants shown here are defined in the/);
+  assert.match(component, /VIGIL Observatory Failure Taxonomy \[\{taxonomyReferenceNumber\}\]/);
+  assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
+  assert.match(caseFile, /id="vigil-failure-taxonomy-reference"/);
+  assert.match(caseFile, /taxonomyReferenceHref="#vigil-failure-taxonomy-reference"/);
+  assert.match(report, /taxonomyReferenceNumber = hasTaxonomyReference/);
+  assert.match(report, /taxonomyReferenceHref="#vigil-failure-taxonomy-reference"/);
+  assert.match(printable, /id="vigil-failure-taxonomy-reference"/);
+  assert.match(css, /\.vigil-taxonomy-reference-note \{[\s\S]*font-size: 0\.92rem/);
+  assert.match(reportCss, /\.vigil-taxonomy-reference-note \{[\s\S]*font-size: 0\.9rem/);
+});
+
 test("Harm derivation note cites the numbered VIGIL Harm Impact Methodology reference in web and PDF", async () => {
   const [matrix, caseFile, report, printable, cleanupCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
@@ -276,10 +300,12 @@ test("Harm Impact assessment leads with the substantive summary and closes with 
   assert.doesNotMatch(report, /report-harm-classification-intro/);
 });
 
-test("Classification table body typography matches Repair", async () => {
+test("Classification and Repair tables keep readable body and legend typography", async () => {
   const css = await readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8");
-  assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 0\.97rem[\s\S]*line-height: 1\.58/);
-  assert.match(css, /\.vigil-case-file-page \.vigil-repair-table tbody td \{[\s\S]*font-size: 0\.97rem[\s\S]*line-height: 1\.58/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-repair-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
+  assert.match(css, /\.vigil-alignment-legend \{[\s\S]*font-size: 0\.92rem[\s\S]*line-height: 1\.5/);
+  assert.match(css, /\.vigil-alignment-legend-item > span:last-child > strong \{[\s\S]*font-size: 0\.92rem/);
 });
 
 
