@@ -381,6 +381,21 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  const harmEvidenceReferenceNumbers = useMemo(() => {
+    if (!incident || !Array.isArray(incident.raw.source_records)) return {};
+    const sourceNumberByIndex = new Map<number, number>();
+    let externalIndex = 0;
+    incident.raw.source_records.forEach((source, sourceIndex) => {
+      if (!isObject(source)) return;
+      const residence = text(source.source_residence)?.toLowerCase();
+      if (residence === "cam-internal" || residence === "internal") return;
+      const title = text(source.source_title ?? source.title ?? source.name);
+      if (!title) return;
+      externalIndex += 1;
+      sourceNumberByIndex.set(sourceIndex, externalIndex);
+    });
+    return Object.fromEntries([...sourceNumberByIndex].map(([sourceIndex, referenceNumber]) => [`source_records[${sourceIndex}]`, referenceNumber]));
+  }, [incident]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
@@ -517,9 +532,9 @@ export default function VigilCaseFile() {
           <div className="vigil-case-subheading">
             <p className="vigil-library-kicker">Harm classification</p>
             <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
-            <p className="vigil-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
+            <p className="vigil-harm-classification-intro">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.</p>
           </div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
+          <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
@@ -536,7 +551,7 @@ export default function VigilCaseFile() {
               </thead>
               <tbody>
                 {externalAssessments.map((assessment) => <tr key={assessment.id}>
-                  <td><strong>{assessment.assessor}</strong></td>
+                  <td><strong>{assessment.assessor}</strong> <a className="vigil-external-assessment-reference" href={`#vigil-external-assessment-reference-${externalAssessments.indexOf(assessment) + 1}`}>[{externalAssessments.indexOf(assessment) + 1}]</a></td>
                   <td>{externalAssessmentDate(assessment.date)}</td>
                   <td>{assessment.summary}</td>
                   <td>{assessment.classificationOrRating
@@ -556,7 +571,7 @@ export default function VigilCaseFile() {
         <h3 id="evidence-sources-heading">Evidence sources</h3>
         <p>Sources supporting what happened and any materialised harm.</p>
         <ol>
-        {externalSources.map((source, index) => <li key={`${source.title}-${source.url}-${index}`}>
+        {externalSources.map((source, index) => <li id={`vigil-evidence-reference-${index + 1}`} key={`${source.title}-${source.url}-${index}`}>
           <span>[{index + 1}]</span>
           <div>
             <strong>{source.title}</strong>
@@ -569,7 +584,7 @@ export default function VigilCaseFile() {
       {externalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
         <h3 id="external-assessments-heading">External assessments</h3>
         <ol>
-          {externalAssessments.map((assessment, index) => <li key={assessment.id}>
+          {externalAssessments.map((assessment, index) => <li id={`vigil-external-assessment-reference-${index + 1}`} key={assessment.id}>
             <span>[{index + 1}]</span>
             <div>
               <strong>{assessment.title}</strong>
