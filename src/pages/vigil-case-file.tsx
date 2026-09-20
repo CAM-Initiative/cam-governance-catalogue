@@ -16,7 +16,7 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
-import { externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyFailureTypeLabel,
@@ -436,15 +436,14 @@ export default function VigilCaseFile() {
         <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident summary</p><h3 id="what-happened-heading">What happened</h3></div>
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
         {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
-          {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
+          {incidentArtefacts.map((artefact, index) => <figure key={artefact.id} className="vigil-incident-artefact">
             <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
               <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
             </a>
-            {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
-              {artefact.title && <strong>{artefact.title}</strong>}
-              {artefact.caption && <span>{artefact.caption}</span>}
-              {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
-            </figcaption>}
+            <figcaption>
+              <span><strong>Image {index + 1} — </strong>{artefact.caption ?? artefact.title ?? "Incident source artefact"}</span>
+              <a href={artefact.sourceUrl ?? artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer">View source</a>
+            </figcaption>
           </figure>)}
         </div>}
       </section>}
@@ -508,6 +507,15 @@ export default function VigilCaseFile() {
           </div>
           {assessmentBoundaries.length > 0 && <details className="vigil-evidence-limitations vigil-diagnosis-limitations"><summary>Limits of the assessment</summary><div className="vigil-evidence-boundary-list"><TextList items={assessmentBoundaries} /></div></details>}
         </section>
+
+        {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
+          <div className="vigil-case-subheading">
+            <p className="vigil-library-kicker">External assessments</p>
+            <h3 id="assessment-external-assessments-heading">Third-party assessment of this occurrence</h3>
+          </div>
+          <p className="vigil-diagnosis-external-assessments-note">Attributable third-party analysis is shown separately from VIGIL’s assessment. Inclusion does not imply endorsement; frameworks, scope and assessment dates may differ.</p>
+          <ExternalAssessmentList assessments={externalAssessments} showComparison={false} showFooterLink={false} />
+        </section>}
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
@@ -529,8 +537,16 @@ export default function VigilCaseFile() {
       </section>}
       {externalAssessments.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-assessments-heading">
         <h3 id="external-assessments-heading">External assessments</h3>
-        <p>Attributable third-party analyses. Inclusion does not imply endorsement by VIGIL; frameworks, scope and assessment dates may differ.</p>
-        <ExternalAssessmentList assessments={externalAssessments} />
+        <ol>
+          {externalAssessments.map((assessment, index) => <li key={assessment.id}>
+            <span>[{index + 1}]</span>
+            <div>
+              <strong>{assessment.title}</strong>
+              <p>{[assessment.assessor, externalAssessmentDate(assessment.date)].filter(Boolean).join(" · ")}</p>
+              <a href={assessment.url} target="_blank" rel="noreferrer">{assessment.url}</a>
+            </div>
+          </li>)}
+        </ol>
       </section>}
       {externalIncidentReferences.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="external-incident-records-heading">
         <h3 id="external-incident-records-heading">External incident records</h3>

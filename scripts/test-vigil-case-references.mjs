@@ -31,7 +31,11 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /External incident records/);
   assert.match(caseFile, /Taxonomy and methodology references/);
   assert.match(component, /External classification \/ rating/);
-  assert.match(component, /VIGIL relationship/);
+  assert.match(component, /showComparison/);
+  assert.match(component, /showFooterLink/);
+  assert.match(caseFile, /stageId === "diagnose"/);
+  assert.match(caseFile, /ExternalAssessmentList assessments=\{externalAssessments\} showComparison=\{false\} showFooterLink=\{false\}/);
+  assert.match(caseFile, /Third-party assessment of this occurrence/);
   assert.match(caseFile, /Inclusion does not imply endorsement/);
   assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
 });
@@ -54,6 +58,10 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.match(evidenceMapper, /url:/);
   assert.doesNotMatch(evidenceMapper, /source_context|relevance_note|source\.description/);
   assert.doesNotMatch(referencesRenderer, /source\.description/);
+  assert.doesNotMatch(referencesRenderer, /<ExternalAssessmentList assessments=\{externalAssessments\}/);
+  assert.match(referencesRenderer, /externalAssessments\.map/);
+  assert.match(referencesRenderer, /assessment\.assessor/);
+  assert.match(referencesRenderer, /externalAssessmentDate\(assessment\.date\)/);
 });
 
 test("Incident Case File retains evidence context and VIGIL Observatory interpretation", async () => {
