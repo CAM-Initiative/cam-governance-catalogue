@@ -293,7 +293,6 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
 function AssessmentMatrix({ assessment, compact, methodology, assessedOn, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; methodology?: string; assessedOn?: string; evidenceReferenceNumbers?: Record<string, number> }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
-  const otherRows = rows.filter((row) => row.assessment_status !== "assessed");
   const overall = string(assessment.overall_severity) ?? "SU";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
