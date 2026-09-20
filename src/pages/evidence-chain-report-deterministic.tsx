@@ -25,6 +25,7 @@ type ExternalEvidence = {
   date?: string;
   url?: string;
   description?: string;
+  sourceRecordRefs: string[];
 };
 
 type AffectedSystem = {
@@ -97,10 +98,16 @@ async function detailedRecord(indexRecord: VigilIndexRecord) {
 }
 
 function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
-  const sources = [record.raw.source_records, record.raw.sources, record.raw.evidence_sources].find(Array.isArray);
+  const sourceRecords = Array.isArray(record.raw.source_records) ? record.raw.source_records : undefined;
+  const sources = sourceRecords ?? [record.raw.sources, record.raw.evidence_sources].find(Array.isArray);
   if (!Array.isArray(sources)) return [];
-  return sources.flatMap((source) => {
-    if (typeof source === "string") return [{ title: source, url: /^https?:\/\//i.test(source) ? source : undefined }];
+  return sources.flatMap((source, sourceIndex) => {
+    const sourceRecordRefs = sourceRecords ? [`source_records[${sourceIndex}]`] : [];
+    if (typeof source === "string") return [{
+      title: source,
+      url: /^https?:\/\//i.test(source) ? source : undefined,
+      sourceRecordRefs,
+    }];
     if (!isObject(source)) return [];
     const residence = text(source.source_residence)?.toLowerCase();
     if (residence === "cam-internal" || residence === "internal") return [];
@@ -112,18 +119,23 @@ function externalEvidenceFor(record: VigilIndexRecord): ExternalEvidence[] {
       date: text(source.source_date ?? source.date ?? source.published_date),
       url: text(source.source_url ?? source.url ?? source.archive_url),
       description: text(source.source_context ?? source.description ?? source.relevance_note),
+      sourceRecordRefs,
     }];
   });
 }
 
 function dedupeEvidence(evidence: ExternalEvidence[]) {
-  const seen = new Set<string>();
-  return evidence.filter((source) => {
+  const collected = new Map<string, ExternalEvidence>();
+  for (const source of evidence) {
     const key = `${source.title.toLowerCase()}|${source.url ?? ""}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+    const existing = collected.get(key);
+    if (existing) {
+      existing.sourceRecordRefs = [...new Set([...existing.sourceRecordRefs, ...source.sourceRecordRefs])];
+      continue;
+    }
+    collected.set(key, { ...source, sourceRecordRefs: [...source.sourceRecordRefs] });
+  }
+  return [...collected.values()];
 }
 
 function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
@@ -238,6 +250,9 @@ export default function EvidenceChainReportDeterministic() {
 
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
+  const harmEvidenceReferenceNumbers = useMemo(() => Object.fromEntries(
+    externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
+  ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
@@ -358,7 +373,7 @@ export default function EvidenceChainReportDeterministic() {
           <section className="report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Assessment</h4>
             <p className="report-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
-            <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} />
+            <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
           </section>
           {externalAssessments.length > 0 && <section className="report-external-assessments">
             <h4 className="report-substantive-label">External assessments</h4>
