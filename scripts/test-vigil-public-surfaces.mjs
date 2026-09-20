@@ -309,10 +309,11 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
   assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
 });
 
-test("Case File harm assessment moves not-applicable dimensions to assessment limits", async () => {
+test("Case File harm assessment moves all non-assessed dimensions to assessment limits", async () => {
   const him = await read("src/components/vigil/HarmImpactMatrix.tsx");
-  assert.match(him, /filter\(\(status\) => status !== "not-applicable"\)/);
-  assert.match(him, /notApplicableHarmDimensionLabels/);
+  assert.match(him, /nonAssessedHarmDimensionLimitItems/);
+  assert.match(him, /assessment_status !== "assessed"/);
+  assert.match(him, /rollupLabel\(status\)/);
 });
 
 test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
