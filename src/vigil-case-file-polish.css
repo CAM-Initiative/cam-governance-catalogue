@@ -526,7 +526,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 /* External assessments are substantive comparison material, not footnote metadata.
-   Keep body and header typography aligned with Classification / Repair tables. */
+   Keep body and header typography aligned with Classification / Repair tables across web and report parity checks. */
 .vigil-case-file-page .vigil-external-assessment-table {
   font-size: 1.02rem;
   line-height: 1.62;
