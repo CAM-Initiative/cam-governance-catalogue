@@ -86,8 +86,8 @@ test("Case File moves assessment limits from Section 02 to the closing Reference
   assert.match(referencesRenderer, /Limits of the assessment/);
   assert.match(referencesRenderer, /assessmentLimitItems\.length > 0/);
   assert.match(referencesRenderer, /<TextList items=\{assessmentLimitItems\} \/>/);
-  assert.match(source, /notApplicableHarmDimensionLabels\(harmImpactAssessment\)/);
-  assert.match(source, /Harm classification not applicable/);
+  assert.match(source, /nonAssessedHarmDimensionLimitItems\(harmImpactAssessment\)/);
+  assert.match(source, /assessmentLimitItems = \[\.\.\.assessmentBoundaries, \.\.\.harmDimensionLimitItems\]/);
   assert.match(referencesRenderer, /vigil-reference-limits-label/);
   assert.match(referencesRenderer, /vigil-reference-disclaimer/);
 });
@@ -178,4 +178,22 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.doesNotMatch(report, /report-reference-number">\[\{index \+ 1\}\]/);
   assert.doesNotMatch(printable, /referenceBaseCountRef/);
   assert.match(report, /report-reference-number" aria-hidden="true"/);
+});
+
+
+test("all non-assessed harm dimension rollups move to References and PDF limits deterministically", async () => {
+  const [matrix, caseFile, printable, cleanupCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-printable.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-harm-assessment-cleanup.css"), "utf8"),
+  ]);
+
+  assert.match(matrix, /export function nonAssessedHarmDimensionLimitItems/);
+  assert.match(matrix, /assessment_status !== "assessed"/);
+  assert.match(matrix, /rollupLabel\(status\)/);
+  assert.doesNotMatch(matrix, /\{rollups\.map/);
+  assert.match(caseFile, /\.\.\.nonAssessedHarmDimensionLimitItems|nonAssessedHarmDimensionLimitItems\(harmImpactAssessment\)/);
+  assert.match(printable, /nonAssessedHarmDimensionLimitItems\(harmAssessment\)/);
+  assert.doesNotMatch(cleanupCss, /vigil-harm-no-harm-basis \+ \.vigil-harm-method-note \+ \.vigil-harm-coverage/);
 });
