@@ -230,18 +230,18 @@ export default function EvidenceChainReportPrintable() {
     return harmLimit ? [...assessmentBoundaries, harmLimit] : assessmentBoundaries;
   }, [assessmentBoundaries, reportIncident]);
 
-  const taxonomyReferencePortal = referenceList && reportIncident?.taxonomyReferences.length
+  const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || taxonomyEvidenceReferences.length > 0)
     ? createPortal(<>
-      {reportIncident.taxonomyReferences.map((reference, index) => <li key={`taxonomy-${reference.relationship}-${reference.id}`} className="report-reference-item report-taxonomy-reference">
+      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
-          <strong>{reference.id} — {reference.title}</strong>
-          <span className="report-reference-meta"> — VIGIL Observatory Failure Taxonomy{reference.taxonomyVersion ? ` · Version ${reference.taxonomyVersion}` : ""} · {taxonomyRelationshipLabel(reference)}</span>
+          <strong>VIGIL Observatory Failure Taxonomy</strong>
+          <span className="report-reference-meta"> — CAM Initiative · Public taxonomy reference</span>
           <br />
-          <a href={reference.url} target="_blank" rel="noreferrer" className="report-reference-url">{reference.url}</a>
+          <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
         </span>
-      </li>)}
-      {taxonomyEvidenceReferences.map((reference, index) => {
+      </li>}
+      {taxonomyEvidenceReferences.map((reference) => {
         const meta = [reference.publisher, reference.date, reference.role?.replaceAll("-", " ")].filter(Boolean).join(" · ");
         return <li key={`taxonomy-evidence-${reference.key}`} className="report-reference-item report-taxonomy-evidence-reference">
           <span className="report-reference-number" aria-hidden="true" />

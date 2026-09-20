@@ -3,6 +3,7 @@ import { ArrowRight, Check, Copy } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
+import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassification";
 
 const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://cam-initiative.org";
 
@@ -63,6 +64,7 @@ export default function About() {
             </div>
             <p className="vigil-about-record-intro">The maintained VIGIL Observatory Failure Taxonomy provides shared classification language for recurring AI governance and control-failure mechanisms. Broad families provide stable structure; individual classes define the mechanism precisely enough to support comparison without collapsing unlike events together.</p>
             <p className="vigil-about-record-intro">Each Case File relationship is explicit. A taxonomy mapping may document a <strong>failure-classified Incident</strong>, where the class mechanism is evidenced, or a <strong>successful-invariant exemplar</strong>, where the same failure boundary was tested but the governing invariant held. Exemplars remain attached to the relevant Failure Class because they show what successful governance looks like; they are not counted as failure evidence and do not create a Repair requirement.</p>
+            <VigilAlignmentLegend detailed />
             <div className="vigil-about-boundary-grid">
               <article><h3>Failure family</h3><p>The broad structural grouping: the governance boundary or system function involved.</p></article>
               <article><h3>Failure class</h3><p>The repeatable mechanism within a family, with its own definition, recognition criteria, exclusions and governing invariant.</p></article>

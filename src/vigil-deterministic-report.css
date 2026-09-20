@@ -2009,3 +2009,56 @@
     padding-top: 3mm !important;
   }
 }
+
+
+/* Final PDF width containment: printable content must remain inside the A4 content box. */
+@media print {
+  .vigil-deterministic-report-host .report-document,
+  .vigil-deterministic-report-host .report-section,
+  .vigil-deterministic-report-host .report-section-body,
+  .vigil-deterministic-report-host .report-diagnosis,
+  .vigil-deterministic-report-host .report-occurrence-card,
+  .vigil-deterministic-report-host .report-reference-list,
+  .vigil-deterministic-report-host .report-reference-item,
+  .vigil-deterministic-report-host .report-reference-copy,
+  .vigil-deterministic-report-host .vigil-classification-web-table,
+  .vigil-deterministic-report-host .vigil-repair-web-table {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .vigil-deterministic-report-host .report-document p,
+  .vigil-deterministic-report-host .report-document li,
+  .vigil-deterministic-report-host .report-document dd,
+  .vigil-deterministic-report-host .report-document th,
+  .vigil-deterministic-report-host .report-document td,
+  .vigil-deterministic-report-host .report-value,
+  .vigil-deterministic-report-host .vigil-classification-basis,
+  .vigil-deterministic-report-host .vigil-repair-invariant-cell {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .vigil-deterministic-report-host table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+  }
+
+  .vigil-deterministic-report-host .report-section .report-reference-url {
+    display: inline !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    -webkit-hyphens: none !important;
+    hyphens: none !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+}
