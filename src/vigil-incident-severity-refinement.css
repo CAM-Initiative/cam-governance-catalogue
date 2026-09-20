@@ -395,7 +395,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 /* Incident Harm Impact reading order: conclusion first, assessed rows second,
    methodology note last. */
 .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-summary {
-  margin: 0 0 0.9rem;
+  margin: 0 0 1.05rem;
   padding: 0;
   border: 0;
   background: transparent;
@@ -406,4 +406,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 
 .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-derivation-note {
   margin-top: 0.8rem;
+  font-size: 0.76rem;
+  line-height: 1.48;
+  color: hsl(var(--muted-foreground));
 }
