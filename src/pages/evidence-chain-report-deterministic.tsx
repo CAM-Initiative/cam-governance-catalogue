@@ -37,6 +37,16 @@ type AffectedSystem = {
   deploymentContext?: string;
 };
 
+type IncidentArtefact = {
+  id: string;
+  title?: string;
+  permalink?: string;
+  renderUrl: string;
+  sourceUrl?: string;
+  altText?: string;
+  caption?: string;
+};
+
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
@@ -113,6 +123,24 @@ function dedupeEvidence(evidence: ExternalEvidence[]) {
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
+  });
+}
+
+function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
+  const artefacts = Array.isArray(record.raw.incident_artefacts) ? record.raw.incident_artefacts : [];
+  return artefacts.flatMap((artefact, index) => {
+    if (!isObject(artefact)) return [];
+    const renderUrl = text(artefact.render_url ?? artefact.image_url ?? artefact.url);
+    if (!renderUrl) return [];
+    return [{
+      id: text(artefact.artefact_id) ?? `${record.id}-artefact-${index + 1}`,
+      title: text(artefact.title),
+      permalink: text(artefact.permalink),
+      renderUrl,
+      sourceUrl: text(artefact.source_url),
+      altText: text(artefact.alt_text),
+      caption: text(artefact.caption),
+    }];
   });
 }
 
@@ -212,6 +240,7 @@ export default function EvidenceChainReportDeterministic() {
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
+  const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
   const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
@@ -229,6 +258,7 @@ export default function EvidenceChainReportDeterministic() {
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isFailure = classification === "Classified";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
@@ -260,6 +290,13 @@ export default function EvidenceChainReportDeterministic() {
         </dl>
       </header>
 
+      {isFailure && <section className="report-exemplar-callout is-failure" aria-labelledby="report-failure-heading">
+        <p className="report-exemplar-kicker">Failure-classified Incident</p>
+        <h2 id="report-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
+        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="report-exemplar-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+      </section>}
+
       {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
         <p className="report-exemplar-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
         <h2 id="report-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
@@ -273,11 +310,23 @@ export default function EvidenceChainReportDeterministic() {
 
       <div className="report-flow">
         <Stage number="01" label="Incident">
-          {((incident?.summary ?? incident?.publicDisplay.finding) || affectedSystems.length > 0) && <div className="report-occurrence-card">
+          {((incident?.summary ?? incident?.publicDisplay.finding) || incidentArtefacts.length > 0 || affectedSystems.length > 0) && <div className="report-occurrence-card">
             {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
               <p className="vigil-evidence-kicker">Incident summary</p>
               <h4 className="report-substantive-label">What happened</h4>
               <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+            </section>}
+            {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
+              {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
+                <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
+                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                </a>
+                {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+                  {artefact.title && <strong>{artefact.title}</strong>}
+                  {artefact.caption && <span>{artefact.caption}</span>}
+                  {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+                </figcaption>}
+              </figure>)}
             </section>}
             {affectedSystems.length > 0 && <section className="report-affected-systems">
               <h4 className="report-substantive-label">Affected systems</h4>
@@ -293,7 +342,7 @@ export default function EvidenceChainReportDeterministic() {
               </article>)}</div>
             </section>}
           </div>}
-          {!incident?.summary && !incident?.publicDisplay.finding && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
+          {!incident?.summary && !incident?.publicDisplay.finding && !incidentArtefacts.length && !affectedSystems.length && <Empty>No structured Incident summary is available in the current public projection.</Empty>}
         </Stage>
 
         <Stage number="02" label="Assessment">
@@ -306,8 +355,8 @@ export default function EvidenceChainReportDeterministic() {
               <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
             </div>
           </section>
-          <section className="report-panel report-severity-assessment">
-            <h4 className="report-substantive-label">Harm Impact Matrix</h4>
+          <section className="report-severity-assessment">
+            <h4 className="report-substantive-label">Harm Impact Assessment</h4>
             <p className="report-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
             <HarmImpactMatrix assessment={harmImpactAssessment} compact methodology={severityMethodology} assessedOn={severityAssessedOn} />
           </section>

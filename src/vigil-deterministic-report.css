@@ -1657,6 +1657,107 @@
 .vigil-deterministic-report-host .report-external-assessment-table th:nth-child(3) { width: 43%; }
 .vigil-deterministic-report-host .report-external-assessment-table th:nth-child(4) { width: 29%; }
 
+
+
+/* Deterministic report consistency: the numbered stage is the section container.
+   Narrative blocks sit on the paper surface; tables retain table structure and
+   compact metadata blocks may retain light structured treatment. */
+.vigil-deterministic-report-host .report-occurrence-card,
+.vigil-deterministic-report-host .report-severity-assessment,
+.vigil-deterministic-report-host .vigil-classification-web-table,
+.vigil-deterministic-report-host .vigil-repair-web-table {
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-deterministic-report-host .report-occurrence-card .report-observation-summary {
+  padding: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .report-substantive-label {
+  padding: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-harm-classification-intro {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin-top: 0.75rem;
+  padding: 0.85rem 0 0 !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-external-assessments {
+  margin-top: 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-incident-artefacts {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.9rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .report-incident-artefact {
+  margin: 0;
+  text-align: center;
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact-link {
+  display: inline-block;
+  max-width: 75%;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact figcaption {
+  display: grid;
+  gap: 0.18rem;
+  max-width: 75%;
+  margin: 0.5rem auto 0;
+  color: hsl(var(--report-muted));
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.vigil-deterministic-report-host .report-incident-artefact figcaption strong {
+  color: hsl(var(--report-ink) / 0.9);
+}
+
+.vigil-deterministic-report-host .report-incident-artefact figcaption a {
+  color: hsl(var(--report-gold));
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+@media print {
+  .vigil-deterministic-report-host .report-incident-artefact-link,
+  .vigil-deterministic-report-host .report-incident-artefact figcaption {
+    max-width: 75% !important;
+  }
+
+  .vigil-deterministic-report-host .report-incident-artefact figcaption {
+    font-size: 9.5pt !important;
+    line-height: 1.4 !important;
+  }
+}
+
 /* End of deterministic Case File report contract. */
 
 

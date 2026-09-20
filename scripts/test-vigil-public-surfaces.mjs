@@ -231,6 +231,10 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
   assert.match(caseFile, /The system worked as intended\./);
+  assert.match(caseFile, /const isFailure = classification === "Classified"/);
+  assert.match(caseFile, /Failure-classified Incident/);
+  assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
+  assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /Exemplar · successful invariant/);
   assert.match(classification, /successful invariant exemplar/i);

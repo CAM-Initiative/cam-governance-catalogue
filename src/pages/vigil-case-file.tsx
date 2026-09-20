@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { ArrowLeft, Blend, CircleCheckBig, FileText, Info } from "lucide-react";
+import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
@@ -410,6 +410,7 @@ export default function VigilCaseFile() {
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
   const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
@@ -515,7 +516,7 @@ export default function VigilCaseFile() {
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
             <p className="vigil-library-kicker">Harm classification</p>
-            <h3 id="severity-assessment-heading">Harm Impact Matrix</h3>
+            <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
             <p className="vigil-harm-classification-intro">Harm severity is assessed separately from the governance failure itself. The matrix records supported materialised harm and does not use failure significance as a proxy for realised impact.</p>
           </div>
           <HarmImpactMatrix assessment={harmImpactAssessment} methodology={severityMethodology} assessedOn={severityAssessedOn} />
@@ -655,7 +656,7 @@ export default function VigilCaseFile() {
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
@@ -682,6 +683,16 @@ export default function VigilCaseFile() {
     </section>}
 
 
+
+    {isFailure && <section className="vigil-exemplar-callout is-failure" aria-labelledby="vigil-failure-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleX /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Failure-classified Incident</p>
+        <h2 id="vigil-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
+        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="vigil-exemplar-callout-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+      </div>
+    </section>}
 
     {isDisputed && <section className="vigil-exemplar-callout is-disputed" aria-labelledby="vigil-disputed-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>

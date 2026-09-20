@@ -112,3 +112,53 @@
     color: #6f4d00 !important;
   }
 }
+
+
+/* Failure-classified Case Files use the same top-level summary grammar as
+   exemplars and mixed outcomes, with a restrained failure signal. */
+.vigil-case-file-page .vigil-exemplar-callout.is-failure {
+  border-color: hsl(var(--destructive) / 0.56);
+  background: linear-gradient(135deg, hsl(var(--destructive) / 0.055) 0%, hsl(var(--background)) 100%);
+  box-shadow: 0 0 0 1px hsl(var(--destructive) / 0.08), 0 10px 28px hsl(var(--destructive) / 0.05);
+}
+
+.vigil-case-file-page .vigil-exemplar-callout.is-failure .vigil-exemplar-callout-icon {
+  border-color: hsl(var(--destructive) / 0.42);
+  background: hsl(var(--background) / 0.86);
+  color: hsl(var(--destructive));
+  box-shadow: 0 0 0 5px hsl(var(--destructive) / 0.06);
+}
+
+.vigil-case-file-page .vigil-exemplar-callout.is-failure .vigil-exemplar-callout-kicker {
+  color: hsl(var(--destructive));
+}
+
+.vigil-case-file-page .vigil-exemplar-callout.is-failure .vigil-exemplar-callout-boundary {
+  color: hsl(var(--foreground) / 0.84);
+  border-top-color: hsl(var(--destructive) / 0.24);
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-failure,
+.report-document .report-exemplar-callout.is-failure {
+  border-color: hsl(var(--destructive) / 0.54) !important;
+  background: hsl(var(--destructive) / 0.045) !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-failure .report-exemplar-kicker,
+.vigil-deterministic-report-host .report-exemplar-callout.is-failure .report-exemplar-boundary,
+.report-document .report-exemplar-callout.is-failure .report-exemplar-kicker,
+.report-document .report-exemplar-callout.is-failure .report-exemplar-boundary {
+  color: hsl(var(--destructive)) !important;
+}
+
+@media print {
+  .report-document .report-exemplar-callout.is-failure {
+    border-color: #9b5555 !important;
+    background: #fbf2f2 !important;
+  }
+
+  .report-document .report-exemplar-callout.is-failure .report-exemplar-kicker,
+  .report-document .report-exemplar-callout.is-failure .report-exemplar-boundary {
+    color: #7c3f3f !important;
+  }
+}
