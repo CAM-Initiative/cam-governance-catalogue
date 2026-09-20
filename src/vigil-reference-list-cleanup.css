@@ -137,3 +137,5 @@ section[aria-labelledby="report-section-06-heading"] .space-y-6 > section + sect
 #case-references .vigil-case-bibliography > .vigil-reference-subsection > ol > li:last-child {
   border-bottom: 0;
 }
+
+/* Reference presentation revision guard. */
