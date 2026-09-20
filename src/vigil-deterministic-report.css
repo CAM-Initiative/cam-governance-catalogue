@@ -1659,8 +1659,8 @@
   margin-top: 0.85rem;
 }
 
-.vigil-deterministic-report-host .report-external-assessments > .report-substantive-label {
-  margin-bottom: 0.55rem;
+.vigil-deterministic-report-host .report-external-assessments > .vigil-library-kicker {
+  margin: 0 0 0.55rem;
 }
 
 .vigil-deterministic-report-host .report-external-assessment-table {
