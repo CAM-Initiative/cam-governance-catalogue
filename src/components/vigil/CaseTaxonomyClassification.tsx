@@ -49,6 +49,8 @@ type ClassificationTableRow = {
 
 type Props = {
   raw: UnknownRecord;
+  taxonomyReferenceNumber?: number;
+  taxonomyReferenceHref?: string;
 };
 
 type TaxonomyState =
@@ -218,7 +220,7 @@ export function VigilAlignmentLegend({ detailed = false }: { detailed?: boolean 
 }
 
 // Web UX shows alignment state directly; primary/secondary ordering remains in canonical data and report metadata.
-function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
+function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceHref }: { rows: ClassificationTableRow[]; taxonomyReferenceNumber?: number; taxonomyReferenceHref?: string }) {
   const hasUnresolved = rows.some(({ item }) =>
     (item.classId && !item.class) || (item.familyId && !item.family)
   );
@@ -271,7 +273,6 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
                 <td data-label="Failure class">
                   <strong>{classificationClass?.name ?? (classId ? "Unresolved failure class" : "No canonical class assigned")}</strong>
                   {classId && <span className="vigil-classification-id">{classId}</span>}
-                  {item.sourceUrl && <a className="vigil-classification-source-link" href={item.sourceUrl} target="_blank" rel="noreferrer">View taxonomy source →</a>}
                 </td>
                 <td data-label="Classification basis" className="vigil-classification-basis">
                   {item.basis ?? "No separate classification basis is published for this mapping."}
@@ -282,6 +283,7 @@ function ClassificationTable({ rows }: { rows: ClassificationTableRow[] }) {
         </tbody>
       </table>
     </div>
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Failure classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Failure Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
     <VigilAlignmentLegend />
   </>;
@@ -350,10 +352,6 @@ function ClassificationCard({
       </aside>
     </div>
 
-    {item.sourceUrl && <footer className="vigil-classification-source">
-      <a href={item.sourceUrl} target="_blank" rel="noreferrer">View canonical taxonomy source →</a>
-    </footer>}
-
     {unresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </article>;
 }
@@ -361,13 +359,17 @@ function ClassificationCard({
 function ExplicitClassificationState({
   parsed,
   primary,
+  taxonomyReferenceNumber,
+  taxonomyReferenceHref,
 }: {
   parsed: ParsedClassification;
   primary?: ResolvedClassification;
+  taxonomyReferenceNumber?: number;
+  taxonomyReferenceHref?: string;
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationTable rows={[{ item: primary }]} />
+    <ClassificationTable rows={[{ item: primary }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
@@ -386,11 +388,11 @@ function ExplicitClassificationState({
   return <p className="vigil-case-empty">No VIGIL Observatory-native taxonomy classification is recorded for this Incident. Section 03 will populate when the Incident receives a canonical family/class mapping.</p>;
 }
 
-export function CaseTaxonomyClassification({ raw }: Props) {
+export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
-  if (!parsed.status) return <ExplicitClassificationState parsed={parsed} />;
+  if (!parsed.status) return <ExplicitClassificationState parsed={parsed} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />;
   if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving VIGIL Observatory taxonomy classification…</p>;
   if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the canonical definition cannot be resolved. {taxonomy.message}</p>;
 
@@ -399,7 +401,7 @@ export function CaseTaxonomyClassification({ raw }: Props) {
   const renderPrimary = parsed.status === "classified" || parsed.status === "provisionally-classified" || parsed.status === "classification-disputed";
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
-    <ExplicitClassificationState parsed={parsed} primary={primary} />
+    <ExplicitClassificationState parsed={parsed} primary={primary} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
@@ -411,7 +413,7 @@ export function CaseTaxonomyClassification({ raw }: Props) {
     {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationTable rows={tableRows} />
+    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard
@@ -479,7 +481,7 @@ function governingClassInvariants(primary: ResolvedClassification, secondaries: 
   return result;
 }
 
-export function CaseTaxonomyRepair({ raw }: Props) {
+export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
@@ -509,7 +511,6 @@ export function CaseTaxonomyRepair({ raw }: Props) {
             <td data-label="Failure class">
               <strong>{classificationClass.name}</strong>
               <span className="vigil-classification-id">{classificationClass.class_id}</span>
-              {sourceUrl && <a className="vigil-classification-source-link" href={sourceUrl} target="_blank" rel="noreferrer">View taxonomy source →</a>}
             </td>
             <td data-label="Governing invariant" className="vigil-repair-invariant-cell">
               {classificationClass.invariant ?? "A class-level invariant has not yet been published for this failure class. The broader family invariant is not substituted here."}
@@ -518,6 +519,7 @@ export function CaseTaxonomyRepair({ raw }: Props) {
         </tbody>
       </table>
     </div>
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Failure Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     <VigilAlignmentLegend />
   </div>;
 }
