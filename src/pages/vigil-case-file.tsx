@@ -452,7 +452,7 @@ export default function VigilCaseFile() {
   );
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Observatory Case File…</main></Shell>;
-  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
+  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
@@ -708,7 +708,7 @@ export default function VigilCaseFile() {
   const activeAriaLabel = `${activeDefinition.number} ${activeDefinition.label}`;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
-    <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
+    <Link href="/observatory/cases/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
