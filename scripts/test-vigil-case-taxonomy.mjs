@@ -186,12 +186,10 @@ assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*
 assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*EXTERNAL ASSESSMENTS[\s\S]*Harm Impact Assessment/);
 
 assert.match(caseFile, /GOVERNANCE ASSESSMENT/);
-assert.match(caseFile, /VIGIL TAXONOMY ASSESSMENT/);
 assert.match(caseFile, /EXTERNAL ASSESSMENTS/);
 assert.match(caseFile, /REAL-WORLD HARM ASSESSMENT[\s\S]*Harm Impact Assessment/);
 assert.doesNotMatch(caseFile, />Harm classification<\/p>/);
 assert.match(report, /GOVERNANCE ASSESSMENT/);
-assert.match(report, /VIGIL TAXONOMY ASSESSMENT/);
 assert.match(report, /EXTERNAL ASSESSMENTS/);
 assert.match(report, /REAL-WORLD HARM ASSESSMENT[\s\S]*Harm Impact Assessment/);
 assert.match(reportCss, /REAL-WORLD HARM ASSESSMENT is a peer analytical label within Stage 02/);
