@@ -795,3 +795,14 @@ test("Case File Incident stage renders optional source artefact images inside Wh
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact-link \{[\s\S]*max-width: min\(100%, 54rem\)/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact img \{[\s\S]*margin: 0 auto/);
 });
+
+
+test("Case File stage tabs keep six stages on one desktop row while mobile may wrap", async () => {
+  const css = await read("src/vigil-case-file-dossier.css");
+  const desktopTabs = css.match(/\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*?\}/)?.[0] ?? "";
+
+  assert.match(desktopTabs, /grid-template-columns: repeat\(6, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-case-stage-tabs button \{[\s\S]*min-width: 0;[\s\S]*white-space: nowrap;/);
+  assert.match(css, /@media \(max-width: 820px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
