@@ -152,12 +152,6 @@ export default function About() {
               </div>
             </div>
 
-            <div className="vigil-about-boundary-grid">
-              <article><h3>Failure family</h3><p>The broad structural grouping: the governance boundary or system function involved.</p></article>
-              <article><h3>Failure class</h3><p>The repeatable mechanism within a family, with its own definition, recognition criteria, exclusions and governing invariant.</p></article>
-              <article><h3>Mapping role</h3><p>The evidentiary relationship between this Incident and one Failure Class: failure occurred, invariant held or boundary unresolved.</p></article>
-              <article><h3>Case File outcome</h3><p>The summary treatment derived from all mapping roles together: failure-classified, successful-invariant exemplar or combination / mixed alignment.</p></article>
-            </div>
             <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy/">Browse the taxonomy <ArrowRight aria-hidden="true" /></Link>
           </section>
 
