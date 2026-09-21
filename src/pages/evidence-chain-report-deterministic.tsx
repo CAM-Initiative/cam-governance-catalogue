@@ -370,7 +370,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             </div>
           </section>
           {externalAssessments.length > 0 && <section className="report-external-assessments report-peer-assessment">
-            <p className="vigil-library-kicker">EXTERNAL ASSESSMENTS</p>
+            <p className="vigil-library-kicker report-peer-assessment-heading">EXTERNAL ASSESSMENTS</p>
             <table className="report-external-assessment-table">
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
               <tbody>{externalAssessments.map((assessment) => {
@@ -387,8 +387,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             </table>
           </section>}
           <section className="report-severity-assessment">
-            <p className="vigil-library-kicker">REAL-WORLD HARM ASSESSMENT</p>
-            <h4 className="report-substantive-label">Harm Impact Assessment</h4>
+            <p className="vigil-library-kicker report-peer-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
             <HarmImpactMatrix
               assessment={harmImpactAssessment}
               compact
