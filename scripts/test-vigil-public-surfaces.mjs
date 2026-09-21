@@ -312,7 +312,8 @@ test("canonical About, licensing and Privacy keep readable public-page grammar",
     read("src/pages/privacy.tsx"),
     read("src/public-reference-pages.css"),
   ]);
-  assert.match(about, /About VIGIL Observatory/);
+  assert.match(about, /About CAM Initiative/);
+  assert.match(about, /CAELESTIS Architecture Model/);
   assert.doesNotMatch(about, /Public access without pretending everything is finished|How the public VIGIL surfaces fit together/);
   assert.match(licensing, /Copyright & Licence/);
   assert.match(licensing, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
@@ -707,9 +708,14 @@ test("About final polish keeps content continuous and places actions inside open
   assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
   assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   const organisationStart = about.indexOf('id="vigil-organisation-heading"');
+  const vigilStart = about.indexOf('id="vigil-observatory-heading"');
+  const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
   const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
   const citationStart = about.indexOf('id="vigil-citation-heading"');
-  assert.ok(organisationStart >= 0 && affiliation > organisationStart && affiliation < citationStart);
+  assert.ok(organisationStart >= 0 && vigilStart > organisationStart && citationStart > vigilStart && caelestisStart > citationStart);
+  assert.ok(affiliation > caelestisStart);
+  assert.match(about, /VIGIL Observatory is the CAM Initiative[\s\S]*VIGIL Observatory is distinct from CAELESTIS[\s\S]*vigil-about-hero-actions/);
+  assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
   assert.match(about, /vigil-about-link-row/);
   assert.match(css, /About final polish: one calm document/);
   assert.match(css, /About final polish: one calm document/);

@@ -59,23 +59,42 @@ function CopyCitation() {
 
 export default function About() {
   return <Shell>
-    <main className="vigil-about-page" data-vigil-entity="incident-observatory">
+    <main className="vigil-about-page" data-about-entity="cam-initiative">
       <div className="container mx-auto max-w-[1220px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
         <header className="vigil-about-hero">
-          <p className="vigil-library-kicker">CAM Initiative · VIGIL Observatory</p>
-          <h1>About VIGIL Observatory</h1>
-          <p>VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
-          <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary" data-vigil-boundary="caelestis-distinct">
-            <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
-          </aside>
-          <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
-            <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
-            <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
-            <Link href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
-          </div>
+          <p className="vigil-library-kicker">CAM Initiative · Public-interest AI governance</p>
+          <h1>About CAM Initiative</h1>
+          <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change. It brings together governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics and public-interest governance for emerging systems.</p>
         </header>
 
         <article className="vigil-about-document">
+          {/* Institutional identity is stated once here; compact copyright marks elsewhere use CAM Initiative. */}
+          <section className="vigil-about-section" aria-labelledby="vigil-organisation-heading">
+            <div className="vigil-about-section-heading">
+              <p className="vigil-library-kicker">Organisation &amp; founder</p>
+              <h2 id="vigil-organisation-heading">CAM Initiative</h2>
+            </div>
+            <p className="vigil-about-record-intro"><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
+            <p className="vigil-about-record-intro">The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
+          </section>
+
+          <section className="vigil-about-section vigil-about-project-container" aria-labelledby="vigil-observatory-heading">
+            <div className="vigil-about-section-heading">
+              <p className="vigil-library-kicker">VIGIL Observatory</p>
+              <h2 id="vigil-observatory-heading">Public Incident evidence, classification and repair analysis</h2>
+            </div>
+            <p className="vigil-about-record-intro">VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
+            <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary" data-vigil-boundary="caelestis-distinct">
+              <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
+            </aside>
+            <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
+              <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+              <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
+              <Link href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
+            </div>
+            <p className="vigil-about-record-intro vigil-about-affiliation-note"><strong>VIGIL Observatory is also a distinct project.</strong> It is not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
+          </section>
+
           <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">Case File method</p>
@@ -131,18 +150,6 @@ export default function About() {
             </div>
           </section>
 
-          {/* Institutional identity is stated once here; compact copyright marks elsewhere use CAM Initiative. */}
-          <section className="vigil-about-section" aria-labelledby="vigil-organisation-heading">
-            <div className="vigil-about-section-heading">
-              <p className="vigil-library-kicker">Organisation & founder</p>
-              <h2 id="vigil-organisation-heading">About CAM Initiative</h2>
-            </div>
-            <p className="vigil-about-record-intro"><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
-            <p className="vigil-about-record-intro">The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
-            <p className="vigil-about-record-intro vigil-about-affiliation-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
-            <p className="vigil-about-record-intro vigil-about-affiliation-note"><strong>VIGIL Observatory is also a distinct project.</strong> It is not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
-          </section>
-
           <section className="vigil-about-section" aria-labelledby="vigil-citation-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">Citation</p>
@@ -153,6 +160,21 @@ export default function About() {
               <CopyCitation />
             </div>
             <p className="vigil-about-record-intro">For a specific Incident or taxonomy entry, identify the relevant VIGIL Observatory record ID or taxonomy version and use the canonical URL. Citation, reference and linking are permitted; substantive reuse is governed by the applicable licence.</p>
+          </section>
+
+          <section className="vigil-about-section vigil-about-project-container" aria-labelledby="caelestis-architecture-heading">
+            <div className="vigil-about-section-heading">
+              <p className="vigil-library-kicker">CAELESTIS Architecture Model</p>
+              <h2 id="caelestis-architecture-heading">Governance architecture for advanced AI systems</h2>
+            </div>
+            <p className="vigil-about-record-intro">The CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. It sets out constitutional architecture, charters, laws, schedules, registries, symbolic structures and supporting validation infrastructure for CAM-governed contexts.</p>
+            <p className="vigil-about-record-intro">The public architecture reference is undergoing a substantive refactor. Its archived public release remains available as version 1.1.0 through Zenodo; the revised architecture will return when its structure, source material and presentation are ready for publication.</p>
+            <p className="vigil-about-record-intro">CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
+            <p className="vigil-about-record-intro vigil-about-affiliation-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+            <div className="vigil-about-link-row" aria-label="CAELESTIS Architecture Model resources">
+              <a href="https://doi.org/10.5281/zenodo.20686316" target="_blank" rel="noreferrer">Open archived release <ArrowRight aria-hidden="true" /></a>
+              <a href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noreferrer">CAELESTIS repository <ArrowRight aria-hidden="true" /></a>
+            </div>
           </section>
         </article>
       </div>
