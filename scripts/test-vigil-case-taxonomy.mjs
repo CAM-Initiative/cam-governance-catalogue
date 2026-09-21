@@ -109,14 +109,14 @@ assert.match(report, /className="report-reference-list"/);
 assert.match(report, /Internal records/);
 assert.match(report, /report-external-assessment-table/);
 assert.match(report, /externalAssessmentDate\(assessment\.date\)/);
-assert.match(report, /className="vigil-library-kicker">External assessments<\/p>/);
-assert.doesNotMatch(report, /className="report-substantive-label">External assessments<\/h4>/);
+assert.match(report, /className="vigil-library-kicker report-peer-assessment-heading">EXTERNAL ASSESSMENTS<\/p>/);
+assert.doesNotMatch(report, /className="report-substantive-label">EXTERNAL ASSESSMENTS<\/h4>/);
 assert.match(reportCss, /\.report-external-assessments > \.vigil-library-kicker \{[\s\S]*margin: 0 0 0\.55rem/);
 assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
-assert.match(report, /VIGIL Observatory governance assessment[\s\S]*Factual basis[\s\S]*Governance significance[\s\S]*Harm Impact Assessment/);
-assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
-assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*Governance significance[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-substantive-label \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-substantive-label \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
 assert.doesNotMatch(report, /report-harm-classification-intro/);
 assert.match(report, /report-assessment-details/);
 assert.match(printableReport, /nonAssessedHarmDimensionLimitItems/);
@@ -164,3 +164,56 @@ assert.doesNotMatch(printableReport, /© 2026 Dr Michelle O'Rourke/);
 assert.match(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
+
+
+const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url), "utf8");
+assert.match(taxonomyAssessment, /vigil_assessment/);
+assert.match(taxonomyAssessment, /source_clause_analysis/);
+assert.match(taxonomyAssessment, /VIGIL taxonomy assessment/);
+assert.match(taxonomyAssessment, /Recovered governance principle/);
+assert.match(taxonomyAssessment, /Taxonomy assessment/);
+assert.match(taxonomyAssessment, /Clause-level interpretation showing how the investigation resolved governance principles before formal taxonomy mapping\./);
+assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
+assert.doesNotMatch(taxonomyAssessment, /class_id/);
+assert.doesNotMatch(taxonomyAssessment, /VIGIL-FC-/);
+assert.match(caseFile, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+assert.match(report, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
+assert.match(reportCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
+
+assert.match(taxonomyAssessment, /vigil-external-assessment-table vigil-taxonomy-assessment-table/);
+assert.doesNotMatch(taxonomyAssessment, /report-external-assessment-table/);
+assert.doesNotMatch(taxonomyAssessment, />\\\\n/);
+assert.doesNotMatch(taxonomyAssessment, /vigil-taxonomy-assessment-row/);
+assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*<\/section>[\s\S]*vigil-external-assessment-section[\s\S]*EXTERNAL ASSESSMENTS[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*EXTERNAL ASSESSMENTS[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+
+assert.match(caseFile, /GOVERNANCE ASSESSMENT/);
+assert.match(caseFile, /EXTERNAL ASSESSMENTS/);
+assert.match(caseFile, /REAL-WORLD HARM ASSESSMENT/);
+assert.doesNotMatch(caseFile, />Harm classification<\/p>/);
+assert.match(report, /GOVERNANCE ASSESSMENT/);
+assert.match(report, /EXTERNAL ASSESSMENTS/);
+assert.match(report, /REAL-WORLD HARM ASSESSMENT/);
+assert.match(reportCss, /Peer assessment headings share one deterministic report contract/);
+
+assert.match(taxonomyAssessment, /className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL taxonomy assessment<\/h4>/);
+assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
+assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
+assert.match(reportCss, /Taxonomy assessment table mirrors the External assessments table/);
+
+assert.match(report, /report-peer-assessment-heading">EXTERNAL ASSESSMENTS/);
+assert.match(report, /report-peer-assessment-heading">REAL-WORLD HARM ASSESSMENT/);
+assert.doesNotMatch(report, />Harm Impact Assessment<\/h4>/);
+assert.doesNotMatch(caseFile, />Harm Impact Assessment<\/h3>/);
+assert.match(reportCss, /\.report-peer-assessment-heading \{[\s\S]*margin: 0 0 0\.55rem !important;[\s\S]*padding: 0 !important;/);
+
+assert.match(taxonomyAssessment, /vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment-table-wrap \{[\s\S]*border: 1px solid hsl\(var\(--border\) \/ 0\.74\)/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment-table thead th \{[\s\S]*background: hsl\(var\(--muted\) \/ 0\.28\)/);
+assert.match(reportCss, /\.vigil-taxonomy-assessment-table \{[\s\S]*border: 1px solid hsl\(var\(--report-rule\) \/ 0\.82\)/);
+assert.match(reportCss, /\.vigil-taxonomy-assessment-table thead th \{[\s\S]*background: hsl\(var\(--report-panel-strong\)\)/);
+assert.match(reportCss, /@media print \{[\s\S]*\.vigil-taxonomy-assessment-table thead th \{[\s\S]*background: #f1f1ee !important;[\s\S]*print-color-adjust: exact/);
+
+assert.match(polishCss, /\.vigil-taxonomy-assessment-intro \{[\s\S]*margin: 0 0 0\.85rem/);
+assert.match(reportCss, /\.vigil-taxonomy-assessment-intro \{[\s\S]*margin: 0 0 0\.7rem !important/);

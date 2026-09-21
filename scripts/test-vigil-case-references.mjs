@@ -79,8 +79,8 @@ test("Case File source contains no escaped newline text between hero cards", asy
 test("Case File Section 02 leads with factual basis and governance significance before harm assessment", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
-  const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
-  const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
+  const governanceIndex = assessmentRenderer.indexOf("GOVERNANCE ASSESSMENT");
+  const harmIndex = assessmentRenderer.indexOf("REAL-WORLD HARM ASSESSMENT");
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
   const significanceIndex = assessmentRenderer.indexOf("Governance significance");
 
@@ -92,11 +92,12 @@ test("Case File Section 02 leads with factual basis and governance significance 
 
 test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
   const source = await caseFileSource();
-  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n        <section className="vigil-severity-assessment"/)?.[0] ?? "";
-  assert.match(card, /VIGIL Observatory governance assessment/);
+  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n\s*\{externalAssessments\.length > 0/)?.[0] ?? "";
+  assert.match(card, /GOVERNANCE ASSESSMENT/);
   assert.match(card, /Factual basis/);
   assert.match(card, /Governance significance/);
   assert.match(card, /vigil-diagnosis-assessment-details/);
+  assert.match(card, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
 });
 
 test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
@@ -157,7 +158,7 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(evidenceMapper, /source_context|relevance_note|source\.description/);
   assert.doesNotMatch(referencesRenderer, /source\.description/);
   assert.doesNotMatch(referencesRenderer, /<ExternalAssessmentList assessments=\{externalAssessments\}/);
-  assert.doesNotMatch(referencesRenderer, /External assessments/);
+  assert.doesNotMatch(referencesRenderer, /EXTERNAL ASSESSMENTS/);
   assert.doesNotMatch(referencesRenderer, /externalAssessments\.map|unmatchedExternalAssessments\.map/);
 });
 
@@ -169,7 +170,7 @@ test("Incident Case File retains evidence context and moves governance interpret
   assert.ok(observationRenderer, "Observation renderer must remain present");
   assert.match(source, /vigil_assessment\.factual_basis/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
-  assert.match(source, /VIGIL Observatory governance assessment/);
+  assert.match(source, /GOVERNANCE ASSESSMENT/);
   assert.match(conclusionRenderer, /VIGIL Observatory conclusion/);
   assert.match(conclusionRenderer, /\{governanceConclusion\}/);
 });
@@ -405,7 +406,7 @@ test("Classification and Repair tables keep readable body and legend typography"
 });
 
 
-test("External assessments cite Evidence sources without creating a second References subsection", async () => {
+test("EXTERNAL ASSESSMENTS cite Evidence sources without creating a second References subsection", async () => {
   const [caseFile, report] = await Promise.all([
     caseFileSource(),
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
@@ -417,8 +418,8 @@ test("External assessments cite Evidence sources without creating a second Refer
   }
   const caseReferences = caseFile.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
   const reportReferences = report.match(/<Stage number="06" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
-  assert.doesNotMatch(caseReferences, /External assessments/);
-  assert.doesNotMatch(reportReferences, /External assessments/);
+  assert.doesNotMatch(caseReferences, /EXTERNAL ASSESSMENTS/);
+  assert.doesNotMatch(reportReferences, /EXTERNAL ASSESSMENTS/);
 });
 
 test("Taxonomy and methodology references expose version and revision metadata in web and PDF", async () => {
@@ -469,4 +470,15 @@ test("mobile Assessment prose stays viewport-bound while Harm tables remain hori
 
   assert.match(harmCss, /\.vigil-harm-methodology-table \{[\s\S]*min-width: 1680px;/);
   assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*min-width: 1040px;/);
+});
+
+
+test("external assessments and harm are peer Stage 02 sections", async () => {
+  const source = await caseFileSource();
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
+  const governanceEnd = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
+  const harmStart = assessmentRenderer.indexOf('REAL-WORLD HARM ASSESSMENT');
+  assert.ok(governanceEnd > 0 && harmStart > governanceEnd);
+  assert.match(assessmentRenderer, /vigil-external-assessment-section/);
+  assert.match(assessmentRenderer, /EXTERNAL ASSESSMENTS/);
 });

@@ -4,6 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
@@ -549,7 +550,7 @@ export default function VigilCaseFile() {
     {(incident || governanceConclusion) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-diagnosis-definition">
-          <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
+          <p className="vigil-library-kicker">GOVERNANCE ASSESSMENT</p>
           <div className="vigil-diagnosis-assessment-details">
             <section>
               <h4 className="vigil-substantive-label">Factual basis</h4>
@@ -559,9 +560,10 @@ export default function VigilCaseFile() {
               <h4 className="vigil-substantive-label">Governance significance</h4>
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
+            <CaseTaxonomyAssessment raw={incident.raw} />
           </div>
-          <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
-            <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
+          <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
+            <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
             <dl className="vigil-evidence-review-meta">
               {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
               {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
@@ -575,21 +577,8 @@ export default function VigilCaseFile() {
           </aside>
         </section>
 
-        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading">
-            <p className="vigil-library-kicker">Harm classification</p>
-            <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
-          </div>
-          <HarmImpactMatrix
-            assessment={harmImpactAssessment}
-            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
-            methodologyReferenceNumber={harmMethodologyReferenceNumber}
-            methodologyReferenceHref="#vigil-harm-methodology-reference"
-          />
-        </section>
-
-        {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
-          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">External assessments</p>
+        {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</p></div>
           <div className="vigil-external-assessment-table-wrap">
             <table className="vigil-external-assessment-table">
               <thead>
@@ -616,6 +605,20 @@ export default function VigilCaseFile() {
             </table>
           </div>
         </section>}
+
+        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
+          <div className="vigil-case-subheading">
+            <p className="vigil-library-kicker" id="severity-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
+          </div>
+          <HarmImpactMatrix
+            assessment={harmImpactAssessment}
+            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+            methodologyReferenceNumber={harmMethodologyReferenceNumber}
+            methodologyReferenceHref="#vigil-harm-methodology-reference"
+          />
+        </section>
+
+
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;

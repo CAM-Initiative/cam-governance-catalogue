@@ -126,7 +126,7 @@ test("Case File keeps structured Incident severity in Assessment", async () => {
   const taxonomy = await readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8");
   assert.match(caseFile, /harm_impact_assessment/);
   for (const field of ["assessment_status", "threshold_id", "assessment_basis", "controlling_dimensions"]) assert.match(matrix, new RegExp(field));
-  assert.match(caseFile, /stageId === "diagnose"[\s\S]*Harm Impact Assessment/);
+  assert.match(caseFile, /stageId === "diagnose"[\s\S]*REAL-WORLD HARM ASSESSMENT/);
   assert.doesNotMatch(taxonomy, /severity_assessment|severityLabel/);
 });
 

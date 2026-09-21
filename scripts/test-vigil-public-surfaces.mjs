@@ -32,7 +32,7 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   const fallbackVigil = pages.indexOf("<h2>VIGIL Observatory</h2>");
   assert.ok(fallbackCaelestis >= 0 && fallbackVigil > fallbackCaelestis);
   assert.match(pages, /Every Incident moves through the same six-stage evidence-to-conclusion structure/);
-  assert.match(pages, /Harm severity and taxonomy classification are deliberately independent/);
+  assert.match(pages, /Real-world harm assessment and taxonomy classification are deliberately independent/);
   assert.match(pages, /combination \/ mixed-alignment records/);
   assert.doesNotMatch(pages, /VIGIL Observatory is distinct from CAELESTIS/);
   assert.match(pages, /const vigilAboutStructuredData = \{/);
@@ -281,7 +281,7 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
   ]);
   assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
   assert.match(about, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
-  assert.match(about, /apply VIGIL-HIM to materialised harm, severity and evidentiary limits/);
+  assert.match(about, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM/);
   assert.match(about, /Map the evidence to the VIGIL Failure Taxonomy and record whether each boundary failed, held or remains unresolved\./);
   assert.match(about, /governing class invariants relevant to failure-occurrence and unresolved-boundary mappings/);
   assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
@@ -709,7 +709,7 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
     read("src/about-page-polish.css"),
   ]);
   const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
-  const harmSeparation = about.indexOf("Harm severity and taxonomy classification are deliberately independent");
+  const harmSeparation = about.indexOf("Real-world harm assessment and taxonomy classification are deliberately independent");
   const flow = about.indexOf("vigil-about-flow-scroll");
   assert.ok(methodStart >= 0 && harmSeparation > methodStart && flow > harmSeparation);
   assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Failure Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
@@ -842,4 +842,12 @@ test("Case File stage tabs keep six stages on one desktop row while mobile may w
   assert.match(css, /\.vigil-case-file-page \.vigil-case-stage-tabs button \{[\s\S]*min-width: 0;[\s\S]*white-space: nowrap;/);
   assert.match(css, /@media \(max-width: 820px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+});
+
+test("Assessment wording keeps harm assessment distinct from taxonomy classification", async () => {
+  const about = await read("src/pages/about.tsx");
+  assert.match(about, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
+  assert.match(about, /VIGIL-HIM assesses materialised consequence and derives severity/);
+  assert.match(about, /Real-world harm assessment and taxonomy classification are deliberately independent/);
+  assert.doesNotMatch(about, /classify materialised harm/);
 });

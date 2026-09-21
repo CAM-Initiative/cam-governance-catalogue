@@ -332,7 +332,8 @@
   padding: 0;
 }
 
-.vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label {
+.vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
   font-size: 1.05rem !important;
   font-weight: 700 !important;
   line-height: 1.3 !important;
@@ -1127,7 +1128,8 @@
     font-size: 11pt !important;
   }
 
-  .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label {
+  .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
     font-size: 11.5pt !important;
     font-weight: 700 !important;
     line-height: 1.3 !important;
@@ -2264,5 +2266,140 @@
   .vigil-deterministic-report-host .vigil-harm-derivation-note {
     font-size: 9pt !important;
     line-height: 1.4 !important;
+  }
+}
+
+
+
+
+/* Stage 02 taxonomy reasoning uses the same table grammar as External assessments. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-substantive-label {
+  margin: 0 0 0.55rem;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-intro {
+  margin: 0 0 0.7rem !important;
+  font-size: 10.5pt !important;
+  line-height: 1.5 !important;
+  color: hsl(var(--report-muted)) !important;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(1) { width: 20%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(2) { width: 40%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(3) { width: 40%; }
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table q {
+  font-weight: 650;
+}
+
+
+/* Taxonomy assessment table mirrors the External assessments table without leaking report-only classes into the web DOM. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.96rem;
+  line-height: 1.56;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th,
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
+  padding: 0.55rem 0.6rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+  border-top: 0;
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-muted));
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table td:first-child {
+  white-space: normal;
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table,
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
+    font-size: 11.5pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table th,
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
+    padding: 2.6mm 2.8mm !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+  }
+}
+
+
+/* Peer assessment headings share one deterministic report contract.
+   External assessment and real-world harm are sibling Stage 02 analyses. */
+.vigil-deterministic-report-host .report-external-assessments.report-peer-assessment,
+.vigil-deterministic-report-host .report-severity-assessment {
+  margin: 0 !important;
+  padding: 0.85rem 0 0 !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.vigil-deterministic-report-host .report-peer-assessment-heading {
+  margin: 0 0 0.55rem !important;
+  padding: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin: 0 !important;
+  padding: 0.85rem 0 0 !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+}
+
+
+@media print {
+  /* Keep Stage 02 assessment headings attached to the analysis they introduce. */
+  .vigil-deterministic-report-host .report-peer-assessment-heading,
+  .vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+}
+
+
+/* Taxonomy assessment table print outline and header shading match Classification. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
+  border: 1px solid hsl(var(--report-rule) / 0.82);
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+  background: hsl(var(--report-panel-strong));
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
+    border-color: #c9c9c3 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+    background: #f1f1ee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 }

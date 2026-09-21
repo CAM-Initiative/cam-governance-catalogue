@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -360,24 +361,16 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <Stage number="02" label="Assessment">
         {incident ? <article className="report-diagnosis">
           <section className="report-intro">
-            <p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p>
+            <p className="vigil-evidence-kicker">GOVERNANCE ASSESSMENT</p>
             <div className="report-assessment-details">
               <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
               <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
+              <CaseTaxonomyAssessment raw={incident.raw} />
+
             </div>
           </section>
-          <section className="report-severity-assessment">
-            <h4 className="report-substantive-label">Harm Impact Assessment</h4>
-            <HarmImpactMatrix
-              assessment={harmImpactAssessment}
-              compact
-              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
-              methodologyReferenceNumber={harmMethodologyReferenceNumber}
-              methodologyReferenceHref="#vigil-harm-methodology-reference"
-            />
-          </section>
-          {externalAssessments.length > 0 && <section className="report-external-assessments">
-            <p className="vigil-library-kicker">External assessments</p>
+          {externalAssessments.length > 0 && <section className="report-external-assessments report-peer-assessment">
+            <p className="vigil-library-kicker report-peer-assessment-heading">EXTERNAL ASSESSMENTS</p>
             <table className="report-external-assessment-table">
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
               <tbody>{externalAssessments.map((assessment) => {
@@ -393,6 +386,17 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               })}</tbody>
             </table>
           </section>}
+          <section className="report-severity-assessment">
+            <p className="vigil-library-kicker report-peer-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
+            <HarmImpactMatrix
+              assessment={harmImpactAssessment}
+              compact
+              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+              methodologyReferenceNumber={harmMethodologyReferenceNumber}
+              methodologyReferenceHref="#vigil-harm-methodology-reference"
+            />
+          </section>
+
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
