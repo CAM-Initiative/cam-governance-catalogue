@@ -1,6 +1,7 @@
 import type { UnknownRecord } from "./vigilRegistry";
 import type { VigilIndexRecord } from "./vigilPresentation";
 
+// Public Stage 01 projection of canonical system_context; provenance stays in the Incident record.
 export type AffectedSystem = {
   recordId: string;
   provider?: string;
