@@ -9,31 +9,6 @@
   border-bottom: 1px solid hsl(var(--border) / 0.58);
 }
 
-/* A positive no-materialised-harm basis is itself the derivation for a bounded
-   S1 presentation. The surrounding Case File already explains the general
-   highest-supported-harm rule, so repeating it here competes with the result. */
-:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment:has(.vigil-harm-no-harm-basis) .vigil-harm-matrix-overview > p {
-  display: none;
-}
-
-:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
-  margin: 0 0 0.9rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid hsl(var(--primary) / 0.2);
-  border-left: 3px solid hsl(var(--primary) / 0.7);
-  border-radius: 0.58rem;
-  background: hsl(var(--card) / 0.34);
-  font-size: 0.9rem;
-  line-height: 1.58;
-}
-
-/* If positive evidence establishes bounded no-materialised-harm and there are
-   no scored dimensions, the generic "no defensible scored band" notice adds
-   noise and reads like a contradiction. */
-:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-no-harm-basis + .vigil-harm-method-note {
-  display: none;
-}
-
 /* Coverage is supporting context, not a stack of alert cards. */
 :is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-coverage {
   margin: 0.55rem 0 0;
@@ -59,21 +34,6 @@
     gap: 0.42rem;
   }
 
-  :is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-no-harm-basis {
-    padding: 0.8rem 0.85rem;
-  }
-}
-
-
-/* The incident harm summary is substantive narrative, not a coverage caveat. */
-:is(.vigil-case-file-page, .vigil-deterministic-report-host) .vigil-harm-matrix.is-assessment .vigil-harm-summary {
-  margin: 0 0 1.05rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  font-size: 0.98rem;
-  line-height: 1.62;
-  color: hsl(var(--foreground) / 0.9);
 }
 
 /* The methodology citation belongs to the footnote sentence, so it inherits the
