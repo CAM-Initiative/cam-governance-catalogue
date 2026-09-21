@@ -561,8 +561,25 @@ export default function VigilCaseFile() {
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
             <CaseTaxonomyAssessment raw={incident.raw} />
-            {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
-          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</p>
+
+          </div>
+          <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
+            <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
+            <dl className="vigil-evidence-review-meta">
+              {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
+              {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
+              <Field label="Assessed" value={diagnostic?.diagnosticDate} />
+              <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
+              <Field label="Human contribution" value={diagnostic?.humanRole} />
+              <Field label="AI contribution" value={diagnostic?.aiRole} />
+              <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
+              <Field label="Model attribution" value={diagnostic?.attributionBasis} />
+            </dl>
+          </aside>
+        </section>
+
+            {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
+          <div className="vigil-case-subheading"><p className="vigil-library-kicker" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</p></div>
           <div className="vigil-external-assessment-table-wrap">
             <table className="vigil-external-assessment-table">
               <thead>
@@ -589,21 +606,6 @@ export default function VigilCaseFile() {
             </table>
           </div>
         </section>}
-          </div>
-          <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
-            <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
-            <dl className="vigil-evidence-review-meta">
-              {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
-              {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
-              <Field label="Assessed" value={diagnostic?.diagnosticDate} />
-              <Field label="Review status" value={reviewStatusLabel(diagnostic?.reviewStatus)} />
-              <Field label="Human contribution" value={diagnostic?.humanRole} />
-              <Field label="AI contribution" value={diagnostic?.aiRole} />
-              <Field label="Authority boundary" value={diagnostic?.authorityBoundary} />
-              <Field label="Model attribution" value={diagnostic?.attributionBasis} />
-            </dl>
-          </aside>
-        </section>
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
