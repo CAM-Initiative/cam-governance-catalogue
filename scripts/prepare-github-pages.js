@@ -106,7 +106,8 @@ async function fetchJson(url) {
 
 const aboutDescription = "CAM Initiative develops public-interest AI governance infrastructure through VIGIL Observatory and the CAELESTIS Architecture Model.";
 
-// Keep the static About fallback aligned with the React About hierarchy.\nconst vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+// Keep the static About fallback aligned with the React About hierarchy.
+const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
   <p>CAM Initiative · Public-interest AI governance</p>
   <h1>About CAM Initiative</h1>
   <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change.</p>
