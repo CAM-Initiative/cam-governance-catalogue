@@ -350,21 +350,23 @@ test("Governance assessment uses one divider before each peer subsection", async
 });
 
 
-test("Harm Impact assessment leads with the substantive summary and closes with the method note", async () => {
+test("Harm Impact assessment uses one context-sensitive methodology footer", async () => {
   const [matrix, caseFile, report] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
     caseFileSource(),
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
   ]);
   assert.doesNotMatch(matrix, /Harm assessment summary:|Assessment date|Overall severity|vigil-harm-summary-row/);
-  assert.match(matrix, /className="vigil-harm-summary"/);
-  assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
-  assert.match(matrix, /noMaterialisedHarmBasis\s*\?/);
-  assert.match(matrix, /No materialised downstream harm was established across the 11 Harm Impact dimensions/);
-  assert.match(matrix, /Under VIGIL-HIM, S1 may be assigned where positive evidence supports a bounded occurrence with no materialised harm/);
-  assert.match(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
-  assert.match(matrix, /The highest supported materialised harm across the assessed dimensions determines the overall harm severity/);
-  assert.ok(matrix.indexOf("vigil-harm-summary") < matrix.indexOf("vigil-harm-assessment-table"));
+  assert.doesNotMatch(matrix, /coverageNote|assessment\.coverage_note|className="vigil-harm-summary"/);
+  assert.doesNotMatch(matrix, /className="vigil-harm-no-harm-basis"/);
+  assert.match(matrix, /const derivationNote = noMaterialisedHarmBasis/);
+  assert.match(matrix, /No materialised downstream harm was established for the bounded occurrence/);
+  assert.match(matrix, /S1 is assigned under the VIGIL-HIM positive no-materialised-harm pathway/);
+  assert.match(matrix, /<strong>Basis:<\/strong> \{noMaterialisedHarmBasis\}/);
+  assert.match(matrix, /No defensible overall severity band could be derived because no Harm Impact dimension could be banded and positive no-materialised-harm was not established/);
+  assert.match(matrix, /SU denotes an unassessed evidence state, not a sixth severity band/);
+  assert.match(matrix, /Overall harm severity is determined by the highest supported materialised harm across the assessed dimensions/);
+  assert.doesNotMatch(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
   assert.ok(matrix.indexOf("vigil-harm-assessment-table") < matrix.indexOf("vigil-harm-derivation-note"));
   assert.doesNotMatch(caseFile, /vigil-harm-classification-intro/);
   assert.doesNotMatch(report, /report-harm-classification-intro/);
@@ -440,15 +442,13 @@ test("Reference subsection boundaries do not double the divider before Internal 
 });
 
 
-test("Harm summary is plain narrative with spacing before the table and the derivation is footnote-sized", async () => {
+test("Harm derivation footer remains footnote-sized after removing duplicated lead-in prose", async () => {
   const [matrix, css, reportCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
     readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
     readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),
   ]);
-  assert.match(matrix, /className="vigil-harm-summary"/);
-  assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
-  assert.match(css, /\.vigil-harm-summary \{[\s\S]*margin: 0 0 1\.05rem[\s\S]*border: 0/);
+  assert.doesNotMatch(matrix, /className="vigil-harm-summary"|className="vigil-harm-no-harm-basis"/);
   assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
   assert.match(reportCss, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
 });
