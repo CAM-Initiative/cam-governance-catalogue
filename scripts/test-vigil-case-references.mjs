@@ -92,7 +92,7 @@ test("Case File Section 02 leads with factual basis and governance significance 
 
 test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
   const source = await caseFileSource();
-  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n        <section className="vigil-severity-assessment"/)?.[0] ?? "";
+  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n\s*\{externalAssessments\.length > 0/)?[0] ?? "";
   assert.match(card, /GOVERNANCE ASSESSMENT/);
   assert.match(card, /Factual basis/);
   assert.match(card, /Governance significance/);
@@ -469,4 +469,15 @@ test("mobile Assessment prose stays viewport-bound while Harm tables remain hori
 
   assert.match(harmCss, /\.vigil-harm-methodology-table \{[\s\S]*min-width: 1680px;/);
   assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*min-width: 1040px;/);
+});
+
+
+test("external assessments and harm are peer Stage 02 sections", async () => {
+  const source = await caseFileSource();
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
+  const governanceEnd = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
+  const harmStart = assessmentRenderer.indexOf('REAL-WORLD HARM ASSESSMENT');
+  assert.ok(governanceEnd > 0 && harmStart > governanceEnd);
+  assert.match(assessmentRenderer, /vigil-external-assessment-section/);
+  assert.match(assessmentRenderer, /EXTERNAL ASSESSMENTS/);
 });
