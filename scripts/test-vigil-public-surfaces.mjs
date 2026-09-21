@@ -19,6 +19,12 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
     read("scripts/prepare-github-pages.js"),
   ]);
   assert.match(entrypoint, /property="og:site_name" content="CAM Initiative"/);
+  assert.match(entrypoint, /property="og:image" content="https:\/\/www\.cam-initiative\.org\/social\/cam-initiative-gold-seal-2026-09\.png"/);
+  assert.match(entrypoint, /property="og:image:width" content="570"/);
+  assert.match(entrypoint, /property="og:image:height" content="572"/);
+  assert.match(entrypoint, /name="twitter:card" content="summary"/);
+  assert.match(entrypoint, /name="twitter:image" content="https:\/\/www\.cam-initiative\.org\/social\/cam-initiative-gold-seal-2026-09\.png"/);
+  assert.doesNotMatch(entrypoint, /opengraph\.jpg/);
   assert.match(entrypoint, /"@type": "WebSite"/);
   assert.match(entrypoint, /"name": "CAM Initiative"/);
   assert.match(pages, /\["\/observatory\/incidents", "\/observatory\/cases"\]/);
