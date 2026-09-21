@@ -56,7 +56,7 @@
   margin-top: 1.15rem;
 }
 
-/* Paper-drawer tabs: selected tab is parchment, not dark brown. */
+/* Paper-drawer tabs: six stages share one desktop row; selected tab is parchment, not dark brown. */
 .vigil-case-file-page .vigil-case-stage-nav {
   position: relative;
   z-index: 2;
