@@ -224,7 +224,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 /* Assessment follows the reading hierarchy:
-   governance assessment -> factual basis -> governance significance -> harm classification.
+   governance assessment -> factual basis -> governance significance -> taxonomy assessment -> external assessments -> real-world harm assessment.
    Narrative sections stay flush with the Section 02 content edge. */
 .vigil-case-file-page .vigil-diagnosis-metadata-panel {
   margin-top: 1rem;
