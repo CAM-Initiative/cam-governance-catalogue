@@ -325,7 +325,6 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
         <thead>
           <tr>
             <th scope="col">Harm dimension</th>
-            <th scope="col">Evidence state</th>
             <th scope="col">Result</th>
             <th scope="col">Evidence-backed assessment</th>
           </tr>
@@ -339,7 +338,6 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
                 <span>{dimensionLabel(row.dimension_id)}</span>
                 {isControlling ? <strong className="vigil-harm-controlling-badge">Controls overall severity</strong> : null}
               </th>
-              <td className="status-assessed"><strong>Assessed</strong></td>
               <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
               {/* evidence_refs are canonical row-local provenance; citation numbers are resolved against the final deduplicated Evidence sources list. */}
               <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}{row.evidence_refs?.length ? <span className="vigil-harm-inline-references"> {row.evidence_refs.flatMap((ref) => evidenceReferenceNumbers?.[ref] ? [<a key={ref} href={`#vigil-evidence-reference-${evidenceReferenceNumbers[ref]}`} aria-label={`Evidence reference ${evidenceReferenceNumbers[ref]}`}>[{evidenceReferenceNumbers[ref]}]</a>] : [])}</span> : null}</p> : null}</td>
