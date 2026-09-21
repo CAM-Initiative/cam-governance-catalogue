@@ -237,7 +237,7 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   color: hsl(var(--foreground) / 0.84);
 }
 .vigil-harm-assessment-table {
-  min-width: 900px;
+  min-width: 1040px;
   table-layout: fixed;
 }
 /* Match the Case File table-header grammar used by Classification and Repair. */
