@@ -24,8 +24,17 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /\["\/observatory\/incidents", "\/observatory\/cases"\]/);
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
   assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-about"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
+  assert.match(pages, /Incident-centred public observatory and AI incident database/);
+  assert.match(pages, /VIGIL Observatory is distinct from CAELESTIS/);
+  assert.match(pages, /const vigilAboutStructuredData = \{/);
+  assert.match(pages, /"@type": "CreativeWork"/);
+  assert.match(pages, /alternateName: "VIGIL"/);
+  assert.match(pages, /https:\/\/github\.com\/CAM-Initiative\/Vigil/);
+  assert.match(pages, /body: isAboutRoute \? vigilAboutFallbackBody : ""/);
+  assert.match(pages, /structuredData: isAboutRoute \? vigilAboutStructuredData : undefined/);
   assert.match(pages, /function externalAssessmentsHtml\(record\)/);
   assert.match(pages, /External classification \/ rating/);
   assert.match(pages, /VIGIL relationship/);
@@ -288,7 +297,12 @@ test("About explains successful-invariant exemplars and the publication model", 
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
   assert.match(about, /Keep evidence and judgment separate/);
   assert.match(about, /Open to scrutiny, not openly licensed/);
-  assert.match(about, /CAELESTIS governance instruments are a separate authority layer/);
+  assert.match(about, /VIGIL Observatory is distinct from CAELESTIS/);
+  assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Failure Taxonomy/);
+  assert.match(about, /It does not create or amend CAELESTIS doctrine/);
+  assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
+  assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm &amp; Severity Methodology/);
+  assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
 test("canonical About, licensing and Privacy keep readable public-page grammar", async () => {
