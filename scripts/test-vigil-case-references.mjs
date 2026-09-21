@@ -333,7 +333,11 @@ test("Harm Impact assessment leads with the substantive summary and closes with 
   assert.doesNotMatch(matrix, /Harm assessment summary:|Assessment date|Overall severity|vigil-harm-summary-row/);
   assert.match(matrix, /className="vigil-harm-summary"/);
   assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
+  assert.match(matrix, /noMaterialisedHarmBasis\s*\?/);
+  assert.match(matrix, /No materialised downstream harm was established across the 11 Harm Impact dimensions/);
+  assert.match(matrix, /Under VIGIL-HIM, S1 may be assigned where positive evidence supports a bounded occurrence with no materialised harm/);
   assert.match(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
+  assert.match(matrix, /The highest supported materialised harm across the assessed dimensions determines the overall harm severity/);
   assert.ok(matrix.indexOf("vigil-harm-summary") < matrix.indexOf("vigil-harm-assessment-table"));
   assert.ok(matrix.indexOf("vigil-harm-assessment-table") < matrix.indexOf("vigil-harm-derivation-note"));
   assert.doesNotMatch(caseFile, /vigil-harm-classification-intro/);
