@@ -65,18 +65,13 @@ export default function About() {
           <p className="vigil-library-kicker">CAM Initiative · Public-interest AI governance</p>
           <h1>About CAM Initiative</h1>
           <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change. It brings together governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics and public-interest governance for emerging systems.</p>
+          <div className="vigil-about-identity-summary" aria-label="CAM Initiative organisation and founder">
+            <p><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
+            <p>The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
+          </div>
         </header>
 
         <article className="vigil-about-document">
-          {/* Institutional identity is stated once here; compact copyright marks elsewhere use CAM Initiative. */}
-          <section className="vigil-about-section" aria-labelledby="vigil-organisation-heading">
-            <div className="vigil-about-section-heading">
-              <p className="vigil-library-kicker">Organisation &amp; founder</p>
-              <h2 id="vigil-organisation-heading">CAM Initiative</h2>
-            </div>
-            <p className="vigil-about-record-intro"><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
-            <p className="vigil-about-record-intro">The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
-          </section>
 
           <section className="vigil-about-section vigil-about-project-container" aria-labelledby="vigil-observatory-heading">
             <div className="vigil-about-section-heading">
