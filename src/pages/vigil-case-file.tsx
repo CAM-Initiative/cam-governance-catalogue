@@ -561,7 +561,6 @@ export default function VigilCaseFile() {
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
             <CaseTaxonomyAssessment raw={incident.raw} />
-
           </div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
             <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
@@ -578,7 +577,7 @@ export default function VigilCaseFile() {
           </aside>
         </section>
 
-            {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
+        {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
           <div className="vigil-case-subheading"><p className="vigil-library-kicker" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</p></div>
           <div className="vigil-external-assessment-table-wrap">
             <table className="vigil-external-assessment-table">
