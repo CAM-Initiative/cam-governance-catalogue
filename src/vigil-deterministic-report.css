@@ -2381,3 +2381,25 @@
     page-break-after: avoid !important;
   }
 }
+
+
+/* Taxonomy assessment table print outline and header shading match Classification. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
+  border: 1px solid hsl(var(--report-rule) / 0.82);
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+  background: hsl(var(--report-panel-strong));
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
+    border-color: #c9c9c3 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+    background: #f1f1ee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
