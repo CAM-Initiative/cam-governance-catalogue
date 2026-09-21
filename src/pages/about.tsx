@@ -73,21 +73,33 @@ export default function About() {
 
         <article className="vigil-about-document">
 
+          <section className="vigil-about-section vigil-about-project-container" aria-labelledby="caelestis-architecture-heading">
+            <div className="vigil-about-section-heading">
+              <p className="vigil-library-kicker">CAELESTIS Architecture Model</p>
+              <h2 id="caelestis-architecture-heading">Governance architecture for advanced AI systems</h2>
+            </div>
+            <p className="vigil-about-record-intro">The CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. It sets out constitutional architecture, charters, laws, schedules, registries, symbolic structures and supporting validation infrastructure for CAM-governed contexts.</p>
+            <p className="vigil-about-record-intro">The public architecture reference is undergoing a substantive refactor. Its archived public release remains available as version 1.1.0 through Zenodo; the revised architecture will return when its structure, source material and presentation are ready for publication.</p>
+            <p className="vigil-about-record-intro">CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
+            <p className="vigil-about-record-intro vigil-about-affiliation-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+            <div className="vigil-about-link-row" aria-label="CAELESTIS Architecture Model resources">
+              <a href="https://doi.org/10.5281/zenodo.20686316" target="_blank" rel="noreferrer">Open archived release <ArrowRight aria-hidden="true" /></a>
+              <a href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noreferrer">CAELESTIS repository <ArrowRight aria-hidden="true" /></a>
+            </div>
+          </section>
+
           <section className="vigil-about-section vigil-about-project-container" aria-labelledby="vigil-observatory-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">VIGIL Observatory</p>
               <h2 id="vigil-observatory-heading">Public Incident evidence, classification and repair analysis</h2>
             </div>
             <p className="vigil-about-record-intro">VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
-            <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary" data-vigil-boundary="caelestis-distinct">
-              <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
-            </aside>
             <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
               <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
               <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
               <Link href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
             </div>
-            <p className="vigil-about-record-intro vigil-about-affiliation-note"><strong>VIGIL Observatory is also a distinct project.</strong> It is not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
+            <p className="vigil-about-record-intro vigil-about-affiliation-note"><strong>Project boundaries.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately. VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
           </section>
 
           <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
@@ -157,20 +169,6 @@ export default function About() {
             <p className="vigil-about-record-intro">For a specific Incident or taxonomy entry, identify the relevant VIGIL Observatory record ID or taxonomy version and use the canonical URL. Citation, reference and linking are permitted; substantive reuse is governed by the applicable licence.</p>
           </section>
 
-          <section className="vigil-about-section vigil-about-project-container" aria-labelledby="caelestis-architecture-heading">
-            <div className="vigil-about-section-heading">
-              <p className="vigil-library-kicker">CAELESTIS Architecture Model</p>
-              <h2 id="caelestis-architecture-heading">Governance architecture for advanced AI systems</h2>
-            </div>
-            <p className="vigil-about-record-intro">The CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. It sets out constitutional architecture, charters, laws, schedules, registries, symbolic structures and supporting validation infrastructure for CAM-governed contexts.</p>
-            <p className="vigil-about-record-intro">The public architecture reference is undergoing a substantive refactor. Its archived public release remains available as version 1.1.0 through Zenodo; the revised architecture will return when its structure, source material and presentation are ready for publication.</p>
-            <p className="vigil-about-record-intro">CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
-            <p className="vigil-about-record-intro vigil-about-affiliation-note">The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
-            <div className="vigil-about-link-row" aria-label="CAELESTIS Architecture Model resources">
-              <a href="https://doi.org/10.5281/zenodo.20686316" target="_blank" rel="noreferrer">Open archived release <ArrowRight aria-hidden="true" /></a>
-              <a href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noreferrer">CAELESTIS repository <ArrowRight aria-hidden="true" /></a>
-            </div>
-          </section>
         </article>
       </div>
     </main>
