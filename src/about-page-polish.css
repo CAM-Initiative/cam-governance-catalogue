@@ -99,3 +99,27 @@
 .vigil-about-document .vigil-about-flow > article > p {
   padding-right: 0.2rem;
 }
+
+
+/* Entity boundary: keep VIGIL independently legible before readers enter the
+   longer method document, without turning the distinction into another card. */
+.vigil-about-page .vigil-about-identity-boundary {
+  margin: 0.85rem 0 0;
+  padding: 0.7rem 1rem;
+  border-left: 3px solid hsl(var(--primary) / 0.62);
+  background: transparent;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-about-page .vigil-about-identity-boundary strong {
+  color: hsl(var(--foreground));
+}
+
+@media (max-width: 640px) {
+  .vigil-about-page .vigil-about-identity-boundary {
+    padding-left: 0.8rem;
+    font-size: 0.94rem;
+  }
+}
