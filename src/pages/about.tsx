@@ -29,6 +29,11 @@ const ABOUT_CASE_FILE_STAGES = [
   },
   {
     number: "05",
+    label: "Conclusion",
+    description: "The integrated VIGIL Observatory interpretation reached after assessment, classification and repair analysis.",
+  },
+  {
+    number: "06",
     label: "References",
     description: "Sources, taxonomy records and the canonical Incident cited in this Case File.",
   },
@@ -70,11 +75,11 @@ export default function About() {
           <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">Case File method</p>
-              <h2 id="vigil-method-heading">Every Incident follows the same five-stage structure</h2>
+              <h2 id="vigil-method-heading">Every Incident follows the same six-stage structure</h2>
             </div>
-            <p className="vigil-about-record-intro">The Case File structure keeps what happened separate from incident-level assessment and severity, taxonomy classification, any governing invariant that a failure requires repair to restore, and the references supporting those conclusions.</p>
+            <p className="vigil-about-record-intro">The Case File structure keeps what happened separate from incident-level assessment and severity, taxonomy classification, any governing invariant that a failure requires repair to restore, the integrated VIGIL Observatory conclusion, and the references supporting that analysis.</p>
             <p className="vigil-about-record-intro">A reported Incident is not automatically evidence of a failure, and a failure is not automatically a new class. VIGIL Observatory asks what the evidence establishes, which taxonomy boundary is relevant, and whether that relationship represents a failure-classified Incident or an example of the governing invariant holding successfully.</p>
-            <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory five-stage Incident Case File model" tabIndex={0}>
+            <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
                 {ABOUT_CASE_FILE_STAGES.map((section) => <article key={section.number}>
                   <span>Stage {section.number}</span>
