@@ -348,7 +348,9 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
 
 
     {/* The derivation rule is itself a methodological claim, so close the reference loop back to the canonical HIM entry. */}
-    <p className="vigil-harm-method-note vigil-harm-derivation-note">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.{methodologyReferenceNumber && methodologyReferenceHref ? <> <a className="vigil-harm-methodology-reference" href={methodologyReferenceHref} aria-label={`VIGIL Harm Impact Methodology reference ${methodologyReferenceNumber}`}>[{methodologyReferenceNumber}]</a></> : null}</p>
+    <p className="vigil-harm-method-note vigil-harm-derivation-note">{noMaterialisedHarmBasis
+      ? "No materialised downstream harm was established across the 11 Harm Impact dimensions. Under VIGIL-HIM, S1 may be assigned where positive evidence supports a bounded occurrence with no materialised harm."
+      : "Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity."}{methodologyReferenceNumber && methodologyReferenceHref ? <> <a className="vigil-harm-methodology-reference" href={methodologyReferenceHref} aria-label={`VIGIL Harm Impact Methodology reference ${methodologyReferenceNumber}`}>[{methodologyReferenceNumber}]</a></> : null}</p>
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
 }
