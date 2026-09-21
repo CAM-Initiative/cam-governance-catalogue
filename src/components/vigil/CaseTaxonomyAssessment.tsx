@@ -3,6 +3,7 @@ import type { UnknownRecord } from "@/lib/vigilRegistry";
 type ClauseRelationship = {
   relationship?: string;
   canonical: boolean;
+  rationale?: string;
 };
 
 type ClauseAssessment = {
@@ -41,6 +42,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
           return [{
             relationship: text(relationship.relationship),
             canonical: relationship.canonical_taxonomy_mapping === true,
+            rationale: text(relationship.rationale),
           }];
         })
       : [];
@@ -93,6 +95,11 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
   return summary;
 }
 
+function taxonomyAssessmentRationales(relationships: ClauseRelationship[]) {
+  const rationales = relationships.flatMap((item) => item.rationale ? [item.rationale] : []);
+  return rationales.length ? rationales : [taxonomyAssessmentSummary(relationships)];
+}
+
 export function CaseTaxonomyAssessment({ raw }: Props) {
   const clauses = parseAssessment(raw);
   if (!clauses.length) return null;
@@ -118,7 +125,9 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
               ? <q>{clause.sourceAnchor}</q>
               : clause.sourceParaphrase ?? "Source language is paraphrased in the canonical Incident record."}</td>
             <td>{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</td>
-            <td>{taxonomyAssessmentSummary(clause.relationships)}</td>
+            <td>{taxonomyAssessmentRationales(clause.relationships).map((rationale, rationaleIndex) => (
+              <div className="vigil-taxonomy-assessment-rationale" key={`${index}-${rationaleIndex}`}>{rationale}</div>
+            ))}</td>
           </tr>)}
         </tbody>
       </table>
