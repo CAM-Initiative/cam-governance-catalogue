@@ -15,7 +15,7 @@ const ABOUT_CASE_FILE_STAGES = [
   {
     number: "02",
     label: "Assessment",
-    description: "Assess governance significance, interpret taxonomy-relevant source clauses, and apply VIGIL-HIM to materialised harm, severity and evidentiary limits.",
+    description: "Assess governance significance, interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM.",
   },
   {
     number: "03",
@@ -107,8 +107,8 @@ export default function About() {
               <p className="vigil-library-kicker">Case File method</p>
               <h2 id="vigil-method-heading">Every Incident moves through the same six-stage evidence-to-conclusion structure</h2>
             </div>
-            <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> evaluates governance significance and uses VIGIL-HIM to classify materialised harm and severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Failure Taxonomy were engaged, and what happened at each boundary.</p>
-            <p className="vigil-about-record-intro">Harm severity and taxonomy classification are deliberately independent. Severity describes consequence; taxonomy describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
+            <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Failure Taxonomy were engaged, and what happened at each boundary.</p>
+            <p className="vigil-about-record-intro">Real-world harm assessment and taxonomy classification are deliberately independent. Harm assessment describes materialised consequence and derives severity; taxonomy classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
             <p className="vigil-about-record-intro"><strong>Repair</strong> then surfaces the governing class invariants relevant to mappings that failed or remain unresolved. Successful-invariant mappings stay visible in Classification as evidence of governance that held and do not create a Repair requirement. <strong>Conclusion</strong> integrates those separate findings, while <strong>References</strong> preserve the evidence, taxonomy and methodology chain supporting the analysis.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
