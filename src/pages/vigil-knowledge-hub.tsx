@@ -102,7 +102,7 @@ export default function VigilKnowledgeHub() {
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
             <CollectionCard
-              href="/observatory/knowledge-base/standards-sources"
+              href="/observatory/knowledge-base/standards-sources/"
               title="AI Governance Standards"
               description="A curated reference set of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
               meta={baselineMeta}
@@ -110,21 +110,21 @@ export default function VigilKnowledgeHub() {
               actionLabel="Browse sources & clauses"
             />
             <CollectionCard
-              href="/observatory/cases"
+              href="/observatory/cases/"
               title="VIGIL Observatory Case Files"
               description="Documented AI Incident investigations organised through Incident, Assessment, Classification, Repair and References, with record-local evidence and incident-level governance analysis."
               meta={caseFilesMeta}
               actionLabel="Browse case files"
             />
             <CollectionCard
-              href="/observatory/severity-methodology"
+              href="/observatory/severity-methodology/"
               title="Harm & Severity Methodology"
               description="The VIGIL-HIM 1.0.0 reference for harm dimensions, evidence states and S1–S5 severity thresholds used to assess materialised consequence in Case Files."
               meta="VIGIL-HIM 1.0.0 · methodology reference"
               actionLabel="Open methodology"
             />
             <CollectionCard
-              href="/observatory/knowledge-base/failure-taxonomy"
+              href="/observatory/knowledge-base/failure-taxonomy/"
               title="VIGIL Observatory Failure Taxonomy"
               description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with recognition criteria, exclusions, examples and relationships."
               meta={taxonomyMeta}
@@ -132,14 +132,14 @@ export default function VigilKnowledgeHub() {
               actionLabel="Browse taxonomy"
             />
             <CollectionCard
-              href="/datasets"
+              href="/datasets/"
               title="Datasets"
               description="Downloadable VIGIL Observatory and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Observatory Failure Taxonomy publication."
               meta="Machine-readable data and publication downloads"
               actionLabel="Open datasets"
             />
             <CollectionCard
-              href="/observatory/knowledge-base/policy"
+              href="/observatory/knowledge-base/policy/"
               title="Policy"
               description="CAM Initiative policy papers, submissions and public-interest governance proposals translating evidence and governance analysis into practical institutional and regulatory recommendations."
               meta="Public policy papers and submissions"
