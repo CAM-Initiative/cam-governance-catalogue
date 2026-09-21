@@ -2371,3 +2371,13 @@
   padding: 0.85rem 0 0 !important;
   border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
 }
+
+
+@media print {
+  /* Keep Stage 02 assessment headings attached to the analysis they introduce. */
+  .vigil-deterministic-report-host .report-peer-assessment-heading,
+  .vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
+    break-after: avoid-page !important;
+    page-break-after: avoid !important;
+  }
+}
