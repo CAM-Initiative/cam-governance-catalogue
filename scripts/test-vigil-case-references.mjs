@@ -80,7 +80,7 @@ test("Case File Section 02 leads with factual basis and governance significance 
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const governanceIndex = assessmentRenderer.indexOf("GOVERNANCE ASSESSMENT");
-  const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
+  const harmIndex = assessmentRenderer.indexOf("REAL-WORLD HARM ASSESSMENT");
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
   const significanceIndex = assessmentRenderer.indexOf("Governance significance");
 
