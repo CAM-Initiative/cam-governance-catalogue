@@ -705,7 +705,7 @@ test("About final polish keeps content continuous and places actions inside open
   assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
   assert.doesNotMatch(about, /Classification boundary:/);
   assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
-  assert.match(about, /CAELESTIS governance instruments are a separate authority layer[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   const organisationStart = about.indexOf('id="vigil-organisation-heading"');
   const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
   const citationStart = about.indexOf('id="vigil-citation-heading"');
