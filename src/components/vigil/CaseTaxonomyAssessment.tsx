@@ -98,12 +98,13 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   if (!clauses.length) return null;
 
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
-    <p className="vigil-library-kicker" id="vigil-taxonomy-assessment-heading">VIGIL TAXONOMY ASSESSMENT</p>
+    <h4 className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL taxonomy assessment</h4>
     <p className="vigil-taxonomy-assessment-intro">
       Clause-level interpretation showing how source language was resolved into governance principles before formal taxonomy mapping. Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03.
     </p>
     <div className="vigil-external-assessment-table-wrap" role="region" aria-label="VIGIL taxonomy assessment table" tabIndex={0}>
-      <table className="vigil-external-assessment-table report-external-assessment-table vigil-taxonomy-assessment-table">\n        <caption className="sr-only">Clause-level VIGIL taxonomy assessment preceding formal classification.</caption>
+      <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
+        <caption className="sr-only">Clause-level VIGIL taxonomy assessment preceding formal classification.</caption>
         <thead>
           <tr>
             <th scope="col">Source clause</th>
