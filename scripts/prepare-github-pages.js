@@ -57,7 +57,7 @@ function canonicalizeInternalHrefAttributes(html) {
   });
 }
 
-function pageHtml({ route, title, description, body = "", canonicalRoute = route }) {
+function pageHtml({ route, title, description, body = "", canonicalRoute = route, structuredData }) {
   const url = routeUrl(canonicalRoute);
   let html = baseHtml
     .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
@@ -69,6 +69,10 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
     .replace(/<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeHtml(title)}" />`)
     .replace(/<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
 
+  if (structuredData) {
+    const encoded = JSON.stringify(structuredData).replaceAll("<", "\\u003c");
+    html = html.replace("</head>", `    <script type="application/ld+json">${encoded}</script>\n  </head>`);
+  }
   if (body) html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
   return canonicalizeInternalHrefAttributes(html);
 }
@@ -100,14 +104,60 @@ async function fetchJson(url) {
   return response.json();
 }
 
+const vigilAboutDescription = "VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence, Harm Impact assessment, Failure Taxonomy classification and governance repair.";
+
+const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <p>CAM Initiative · VIGIL Observatory</p>
+  <h1>About VIGIL Observatory</h1>
+  <p>VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms and records successful-invariant exemplars.</p>
+  <p><strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
+  <h2>VIGIL Case File model</h2>
+  <p>Each VIGIL Case File separates the documented Incident from assessment, classification, repair analysis, the integrated VIGIL Observatory conclusion and supporting references.</p>
+  <nav aria-label="Explore VIGIL Observatory">
+    <ul>
+      <li><a href="/observatory/cases/">Browse VIGIL Observatory Case Files</a></li>
+      <li><a href="/observatory/knowledge-base/failure-taxonomy/">Explore the VIGIL Observatory Failure Taxonomy</a></li>
+      <li><a href="/observatory/severity-methodology/">Read the VIGIL Harm &amp; Severity Methodology</a></li>
+      <li><a href="https://github.com/CAM-Initiative/Vigil" rel="noreferrer">VIGIL Observatory repository</a></li>
+    </ul>
+  </nav>
+</main>`;
+
+const vigilAboutStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: "VIGIL Observatory",
+  alternateName: "VIGIL",
+  url: "https://www.cam-initiative.org/about/",
+  description: vigilAboutDescription,
+  publisher: {
+    "@type": "Organization",
+    name: "CAM Initiative",
+    url: "https://www.cam-initiative.org/",
+  },
+  sameAs: [
+    "https://github.com/CAM-Initiative/Vigil",
+  ],
+  about: [
+    { "@type": "Thing", name: "AI incidents" },
+    { "@type": "Thing", name: "AI governance" },
+    { "@type": "Thing", name: "AI harm assessment" },
+  ],
+  isPartOf: {
+    "@type": "WebSite",
+    name: "CAM Initiative",
+    url: "https://www.cam-initiative.org/",
+  },
+};
+
 const staticRoutes = [
-  ["/about", "About VIGIL Observatory | CAM Initiative", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, combining Incident evidence, consequence assessment, failure classification and accountable repair."],
+  ["/about", "About VIGIL Observatory | CAM Initiative", vigilAboutDescription],
   ["/licensing", "Copyright & Licence | CAM Initiative", "Copyright, citation, reuse and licence information for VIGIL Observatory and CAM Initiative materials."],
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
-  ["/observatory/about", "About VIGIL Observatory", "Legacy VIGIL About URL. The canonical About page is /about."],
+  ["/observatory/about", "About VIGIL Observatory | CAM Initiative", vigilAboutDescription],
   ["/observatory/severity-methodology", "VIGIL Observatory Harm & Severity Methodology", "VIGIL-HIM 1.0.0 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
   ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, failure classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
@@ -125,7 +175,15 @@ const canonicalAliases = new Map([
 
 for (const [route, title, description] of staticRoutes) {
   const canonicalRoute = canonicalAliases.get(route) ?? route;
-  writeRoute(route, pageHtml({ route, title, description, canonicalRoute }));
+  const isAboutRoute = route === "/about" || route === "/observatory/about";
+  writeRoute(route, pageHtml({
+    route,
+    title,
+    description,
+    canonicalRoute,
+    body: isAboutRoute ? vigilAboutFallbackBody : "",
+    structuredData: isAboutRoute ? vigilAboutStructuredData : undefined,
+  }));
 }
 
 let taxonomyFamilies = [];
