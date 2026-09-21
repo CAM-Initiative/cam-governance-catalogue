@@ -711,7 +711,8 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
   assert.match(about, /vigil-about-outcome-visual is-failure[\s\S]*CircleX/);
   assert.match(about, /vigil-about-outcome-visual is-exemplar[\s\S]*CircleCheckBig/);
   assert.match(about, /vigil-about-outcome-visual is-combination[\s\S]*Info/);
-  assert.match(about, /Mapping role[\s\S]*Case File outcome[\s\S]*Browse the taxonomy/);
+  assert.match(about, /Combination · mixed alignment[\s\S]*Browse the taxonomy/);
+  assert.doesNotMatch(about, /<h3>Mapping role<\/h3>|<h3>Case File outcome<\/h3>/);
 
   const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
   const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
