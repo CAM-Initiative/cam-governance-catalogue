@@ -695,32 +695,40 @@ test("Case Files landing page stays deliberately terse", async () => {
 });
 
 
-test("About final polish keeps content continuous and places actions inside open grid space", async () => {
-  const [about, css] = await Promise.all([
+test("About explains the VIGIL evidence-to-conclusion method and classification outcomes", async () => {
+  const [about, css, polish] = await Promise.all([
     read("src/pages/about.tsx"),
     read("src/vigil-ux-v5.css"),
+    read("src/about-page-polish.css"),
   ]);
-  const firstMethodSentence = about.indexOf("The Case File structure keeps what happened separate");
-  const incidentBoundarySentence = about.indexOf("A reported Incident is not automatically evidence of a failure");
+  const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
+  const harmSeparation = about.indexOf("Harm severity and taxonomy classification are deliberately independent");
   const flow = about.indexOf("vigil-about-flow-scroll");
-  assert.ok(firstMethodSentence >= 0 && incidentBoundarySentence > firstMethodSentence && incidentBoundarySentence < flow);
-  assert.doesNotMatch(about, /Classification boundary:/);
-  assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*vigil-about-action[\s\S]*Browse the taxonomy/);
-  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*vigil-about-link-row[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
-  const organisationStart = about.indexOf('id="vigil-organisation-heading"');
-  const vigilStart = about.indexOf('id="vigil-observatory-heading"');
+  assert.ok(methodStart >= 0 && harmSeparation > methodStart && flow > harmSeparation);
+  assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Failure Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
+  assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
+  assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*Combination · mixed alignment/);
+  assert.match(about, /vigil-about-outcome-visual is-failure[\s\S]*CircleX/);
+  assert.match(about, /vigil-about-outcome-visual is-exemplar[\s\S]*CircleCheckBig/);
+  assert.match(about, /vigil-about-outcome-visual is-combination[\s\S]*Info/);
+  assert.match(about, /Mapping role[\s\S]*Case File outcome[\s\S]*Browse the taxonomy/);
+
+  const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
   const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
-  const affiliation = about.indexOf("The CAM Initiative and the CAELESTIS Architecture Model are not affiliated");
+  const vigilStart = about.indexOf('id="vigil-observatory-heading"');
   const citationStart = about.indexOf('id="vigil-citation-heading"');
-  assert.ok(organisationStart >= 0 && vigilStart > organisationStart && citationStart > vigilStart && caelestisStart > citationStart);
-  assert.ok(affiliation > caelestisStart);
-  assert.match(about, /VIGIL Observatory is the CAM Initiative[\s\S]*VIGIL Observatory is distinct from CAELESTIS[\s\S]*vigil-about-hero-actions/);
+  assert.ok(aboutStart >= 0 && caelestisStart > aboutStart && vigilStart > caelestisStart && citationStart > vigilStart);
+
+  const vigilIntro = about.indexOf("VIGIL Observatory is the CAM Initiative");
+  const vigilBoundary = about.indexOf("VIGIL uses its own Incident model");
+  const vigilActions = about.indexOf('aria-label="Explore VIGIL Observatory"');
+  assert.ok(vigilIntro >= 0 && vigilBoundary > vigilIntro && vigilActions > vigilBoundary);
+
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
-  assert.match(about, /vigil-about-link-row/);
+  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   assert.match(css, /About final polish: one calm document/);
-  assert.match(css, /About final polish: one calm document/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid article,[\s\S]*border: 0/);
+  assert.match(polish, /\.vigil-about-document \.vigil-about-flow > article \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(polish, /\.vigil-about-page \.vigil-about-case-outcome-grid/);
 });
 
 
@@ -766,12 +774,13 @@ test("About section rules are attached only to section boundaries", async () => 
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
+  assert.match(css, /\.vigil-about-document \.vigil-about-flow > article \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
 });
 
 
 test("About disambiguates VIGIL Observatory from unrelated VIGIL projects", async () => {
   const about = await read("src/pages/about.tsx");
-  assert.match(about, /VIGIL Observatory is also a distinct project/);
+  assert.match(about, /VIGIL Observatory is also not affiliated with/);
   assert.match(about, /https:\/\/vigil\.agency\//);
   assert.match(about, /https:\/\/vigilsoc\.org\//);
   assert.match(about, /open-source AI-powered security operations platform/);
