@@ -332,7 +332,8 @@
   padding: 0;
 }
 
-.vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label {
+.vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
   font-size: 1.05rem !important;
   font-weight: 700 !important;
   line-height: 1.3 !important;
@@ -1127,7 +1128,8 @@
     font-size: 11pt !important;
   }
 
-  .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label {
+  .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
     font-size: 11.5pt !important;
     font-weight: 700 !important;
     line-height: 1.3 !important;
@@ -2291,17 +2293,6 @@
 }
 
 
-/* REAL-WORLD HARM ASSESSMENT is a peer analytical label within Stage 02; Stage 03 Classification remains reserved for taxonomy mapping. */
-.vigil-deterministic-report-host .report-severity-assessment > .vigil-library-kicker {
-  margin: 0;
-  padding: 0.95rem 1rem 0;
-}
-
-.vigil-deterministic-report-host .report-severity-assessment > .vigil-library-kicker + .report-substantive-label {
-  padding-top: 0.3rem;
-}
-
-
 /* Taxonomy assessment table mirrors the External assessments table without leaking report-only classes into the web DOM. */
 .vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
   width: 100%;
@@ -2351,4 +2342,32 @@
     font-size: 10pt !important;
     line-height: 1.35 !important;
   }
+}
+
+
+/* Peer assessment headings share one deterministic report contract.
+   External assessment and real-world harm are sibling Stage 02 analyses. */
+.vigil-deterministic-report-host .report-external-assessments.report-peer-assessment,
+.vigil-deterministic-report-host .report-severity-assessment {
+  margin: 0 !important;
+  padding: 0.85rem 0 0 !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.vigil-deterministic-report-host .report-peer-assessment-heading {
+  margin: 0 0 0.55rem !important;
+  padding: 0 !important;
+}
+
+.vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
+  margin: 0 !important;
+  padding: 0.85rem 0 0 !important;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72) !important;
 }
