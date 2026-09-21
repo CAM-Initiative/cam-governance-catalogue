@@ -92,11 +92,12 @@ test("Case File Section 02 leads with factual basis and governance significance 
 
 test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
   const source = await caseFileSource();
-  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n\s*\{externalAssessments\.length > 0/)?[0] ?? "";
+  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n\s*\{externalAssessments\.length > 0/)?.[0] ?? "";
   assert.match(card, /GOVERNANCE ASSESSMENT/);
   assert.match(card, /Factual basis/);
   assert.match(card, /Governance significance/);
   assert.match(card, /vigil-diagnosis-assessment-details/);
+  assert.match(card, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
 });
 
 test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
