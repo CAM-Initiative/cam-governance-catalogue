@@ -1,3 +1,4 @@
+// Conclusion follows assessment, classification and repair; References remain the closing evidentiary stage.
 export const VIGIL_INCIDENT_CASE_SECTIONS = [
   {
     id: "observe",
