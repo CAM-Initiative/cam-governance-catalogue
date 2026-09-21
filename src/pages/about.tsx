@@ -65,16 +65,15 @@ export default function About() {
           <p className="vigil-library-kicker">CAM Initiative · VIGIL Observatory</p>
           <h1>About VIGIL Observatory</h1>
           <p>VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
+          <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary" data-vigil-boundary="caelestis-distinct">
+            <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
+          </aside>
           <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
             <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
             <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
             <Link href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
           </div>
         </header>
-
-        <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary" data-vigil-boundary="caelestis-distinct">
-          <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
-        </aside>
 
         <article className="vigil-about-document">
           <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
