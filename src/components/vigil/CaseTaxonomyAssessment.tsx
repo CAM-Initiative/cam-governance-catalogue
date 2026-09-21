@@ -95,6 +95,9 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
   return summary;
 }
 
+// The Case File and deterministic report/PDF share this component. Prefer the
+// canonical per-relationship rationale published by VIGIL; the generated summary
+// exists only as a compatibility fallback for older records without rationale text.
 function taxonomyAssessmentRationales(relationships: ClauseRelationship[]) {
   const rationales = relationships.flatMap((item) => item.rationale ? [item.rationale] : []);
   return rationales.length ? rationales : [taxonomyAssessmentSummary(relationships)];
