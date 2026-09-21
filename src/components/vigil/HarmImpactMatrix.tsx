@@ -349,7 +349,7 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
       </table>
     </div> : null}
 
-    {/* One context-sensitive methodology footer closes every public assessment. */}
+    {/* One context-sensitive methodology footer closes every public assessment; coverage_note remains canonical audit data rather than duplicate public prose. */}
     <p className="vigil-harm-method-note vigil-harm-derivation-note">{derivationNote}{methodologyReferenceNumber && methodologyReferenceHref ? <> <a className="vigil-harm-methodology-reference" href={methodologyReferenceHref} aria-label={`VIGIL Harm Impact Methodology reference ${methodologyReferenceNumber}`}>[{methodologyReferenceNumber}]</a></> : null}</p>
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
