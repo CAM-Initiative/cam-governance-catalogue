@@ -302,6 +302,30 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
   }
+
+  /* Section 02 contains horizontally scrollable analytical tables. Keep those
+     tables from participating in the intrinsic width of the surrounding prose
+     so governance assessment text always wraps to the mobile viewport. */
+  .vigil-case-file-page #case-diagnose,
+  .vigil-case-file-page #case-diagnose > .vigil-case-section-body,
+  .vigil-case-file-page .vigil-diagnosis-view,
+  .vigil-case-file-page .vigil-diagnosis-mechanism,
+  .vigil-case-file-page .vigil-diagnosis-definition,
+  .vigil-case-file-page .vigil-diagnosis-assessment-details,
+  .vigil-case-file-page .vigil-diagnosis-metadata-panel,
+  .vigil-case-file-page .vigil-severity-assessment {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .vigil-case-file-page .vigil-diagnosis-definition p,
+  .vigil-case-file-page .vigil-diagnosis-assessment-details p,
+  .vigil-case-file-page .vigil-diagnosis-metadata-panel dd {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
 }
 
 /* Successful-invariant exemplar callout.
