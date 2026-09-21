@@ -46,6 +46,31 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
 });
 
+test("Affected systems expose evidence-bounded agent and occurrence metadata in web and PDF", async () => {
+  const [helper, caseFile, report] = await Promise.all([
+    readFile(resolve(repoRoot, "src/lib/vigilAffectedSystems.ts"), "utf8"),
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+  ]);
+
+  assert.match(helper, /context\.agent_context/);
+  assert.match(helper, /context\.occurrence_environment/);
+  assert.match(helper, /count_basis/);
+  assert.match(helper, /At least \$\{min\}/);
+  assert.match(helper, /Mixed testing \/ live/);
+  assert.match(helper, /Provider \/ internal/);
+  assert.match(helper, /joinedText\(context\.interface_surface\)/);
+  assert.doesNotMatch(helper, /evidence_basis|source_record_refs|environment_detail/);
+
+  for (const source of [caseFile, report]) {
+    assert.match(source, /dedupeAffectedSystems/);
+    assert.match(source, /label="Agent configuration"/);
+    assert.match(source, /label="Agent count"/);
+    assert.match(source, /label="Occurrence setting"/);
+    assert.match(source, /label="Testing conducted by"/);
+  }
+});
+
 test("Case File source contains no escaped newline text between hero cards", async () => {
   const source = await caseFileSource();
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
