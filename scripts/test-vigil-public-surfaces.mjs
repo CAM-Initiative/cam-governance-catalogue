@@ -117,12 +117,14 @@ test("retired standalone record pages and components are absent", async () => {
   for (const file of retiredFiles) await assert.rejects(() => access(resolve(root, file)), undefined, `${file} should remain retired`);
 });
 
-test("Case Files use one canonical Incident and retain the five substantive stages", async () => {
+test("Case Files use one canonical Incident and retain the six substantive stages", async () => {
   const [caseFile, sections, report] = await Promise.all([read("src/pages/vigil-case-file.tsx"), read("src/lib/vigilCaseSections.ts"), read("src/pages/evidence-chain-report-deterministic.tsx")]);
   assert.match(caseFile, /loadVigilIncidentRecords/);
   assert.match(caseFile, /records: \[incident\]/);
   assert.doesNotMatch(caseFile, /const observations|deriveFailureModePublicDetail|failureId=/);
-  for (const label of ["Incident", "Assessment", "Classification", "Repair", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  for (const label of ["Incident", "Assessment", "Classification", "Repair", "Conclusion", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  assert.match(sections, /id: "conclusion",[\s\S]*number: "05"/);
+  assert.match(sections, /id: "references",[\s\S]*number: "06"/);
   assert.doesNotMatch(sections, /label: "Learn"/);
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
   assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
