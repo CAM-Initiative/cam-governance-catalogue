@@ -169,7 +169,7 @@ assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/
 const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url), "utf8");
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
-assert.match(taxonomyAssessment, /VIGIL TAXONOMY ASSESSMENT/);
+assert.match(taxonomyAssessment, /VIGIL taxonomy assessment/);
 assert.match(taxonomyAssessment, /Recovered governance principle/);
 assert.match(taxonomyAssessment, /Taxonomy assessment/);
 assert.match(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
@@ -179,3 +179,8 @@ assert.match(caseFile, /Governance significance[\s\S]*<CaseTaxonomyAssessment ra
 assert.match(report, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment/);
 assert.match(polishCss, /\.vigil-taxonomy-assessment-row \{[\s\S]*grid-template-columns:/);
 assert.match(reportCss, /\.vigil-taxonomy-assessment-row \{[\s\S]*break-inside: avoid/);
+
+assert.match(taxonomyAssessment, /vigil-external-assessment-table report-external-assessment-table vigil-taxonomy-assessment-table/);
+assert.doesNotMatch(taxonomyAssessment, /vigil-taxonomy-assessment-row/);
+assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*External assessments[\s\S]*Harm Impact Assessment/);
+assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*External assessments[\s\S]*Harm Impact Assessment/);

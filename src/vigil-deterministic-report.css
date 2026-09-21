@@ -2268,68 +2268,24 @@
 }
 
 
-/* Stage 02 clause-level taxonomy reasoning: interpretive bridge only.
-   Formal class IDs, alignment outcomes and classification bases remain in Stage 03. */
+
+
+/* Stage 02 taxonomy reasoning uses the same table grammar as External assessments. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-library-kicker {
+  margin: 0 0 0.55rem;
+}
+
 .vigil-deterministic-report-host .vigil-taxonomy-assessment-intro {
-  margin: 0.38rem 0 0 !important;
+  margin: 0 0 0.7rem !important;
   font-size: 10.5pt !important;
   line-height: 1.5 !important;
   color: hsl(var(--report-muted)) !important;
 }
 
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-list {
-  display: grid;
-  gap: 3mm;
-  margin-top: 3.5mm;
-}
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(1) { width: 20%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(2) { width: 40%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(3) { width: 40%; }
 
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-row {
-  display: grid;
-  grid-template-columns: minmax(28mm, 0.78fr) minmax(0, 1.28fr) minmax(0, 1.12fr);
-  gap: 0;
-  border: 1px solid hsl(var(--report-rule));
-  border-radius: 2.5mm;
-  background: hsl(var(--report-paper));
-  overflow: hidden;
-  break-inside: avoid;
-  page-break-inside: avoid;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-cell {
-  min-width: 0;
-  padding: 3mm 3.2mm;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-cell + .vigil-taxonomy-assessment-cell {
-  border-left: 1px solid hsl(var(--report-rule));
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-label {
-  display: block;
-  margin-bottom: 1.5mm;
-  font-size: 8.5pt !important;
-  font-weight: 700 !important;
-  line-height: 1.25 !important;
-  letter-spacing: 0.045em;
-  text-transform: uppercase;
-  color: hsl(var(--report-muted)) !important;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-cell p,
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-cell q {
-  margin: 0 !important;
-  font-size: 10.5pt !important;
-  line-height: 1.48 !important;
-  color: hsl(var(--report-ink) / 0.92) !important;
-  overflow-wrap: break-word;
-}
-
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-cell.is-source q {
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table q {
   font-weight: 650;
-}
-
-@media print {
-  .vigil-deterministic-report-host .vigil-taxonomy-assessment-row {
-    background: #fff !important;
-  }
 }

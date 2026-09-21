@@ -50,12 +50,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
     const recoveredInvariant = text(value.recovered_invariant_interpretation);
     if (!sourceAnchor && !sourceParaphrase && !recoveredInvariant) return [];
 
-    return [{
-      sourceAnchor,
-      sourceParaphrase,
-      recoveredInvariant,
-      relationships,
-    }];
+    return [{ sourceAnchor, sourceParaphrase, recoveredInvariant, relationships }];
   });
 }
 
@@ -103,27 +98,29 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   if (!clauses.length) return null;
 
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
-    <h4 id="vigil-taxonomy-assessment-heading" className="vigil-substantive-label vigil-taxonomy-assessment-heading">VIGIL TAXONOMY ASSESSMENT</h4>
+    <p className="vigil-library-kicker" id="vigil-taxonomy-assessment-heading">VIGIL taxonomy assessment</p>
     <p className="vigil-taxonomy-assessment-intro">
       Clause-level interpretation showing how source language was resolved into governance principles before formal taxonomy mapping. Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03.
     </p>
-    <div className="vigil-taxonomy-assessment-list">
-      {clauses.map((clause, index) => <article className="vigil-taxonomy-assessment-row" key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
-        <div className="vigil-taxonomy-assessment-cell is-source">
-          <span className="vigil-taxonomy-assessment-label">Source clause</span>
-          {clause.sourceAnchor
-            ? <q>{clause.sourceAnchor}</q>
-            : <p>{clause.sourceParaphrase ?? "Source language is paraphrased in the canonical Incident record."}</p>}
-        </div>
-        <div className="vigil-taxonomy-assessment-cell">
-          <span className="vigil-taxonomy-assessment-label">Recovered governance principle</span>
-          <p>{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</p>
-        </div>
-        <div className="vigil-taxonomy-assessment-cell">
-          <span className="vigil-taxonomy-assessment-label">Taxonomy assessment</span>
-          <p>{taxonomyAssessmentSummary(clause.relationships)}</p>
-        </div>
-      </article>)}
+    <div className="vigil-external-assessment-table-wrap">
+      <table className="vigil-external-assessment-table report-external-assessment-table vigil-taxonomy-assessment-table">
+        <thead>
+          <tr>
+            <th scope="col">Source clause</th>
+            <th scope="col">Recovered governance principle</th>
+            <th scope="col">Taxonomy assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
+            <td>{clause.sourceAnchor
+              ? <q>{clause.sourceAnchor}</q>
+              : clause.sourceParaphrase ?? "Source language is paraphrased in the canonical Incident record."}</td>
+            <td>{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</td>
+            <td>{taxonomyAssessmentSummary(clause.relationships)}</td>
+          </tr>)}
+        </tbody>
+      </table>
     </div>
   </section>;
 }

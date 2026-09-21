@@ -561,6 +561,34 @@ export default function VigilCaseFile() {
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
             <CaseTaxonomyAssessment raw={incident.raw} />
+            {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
+          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">External assessments</p>
+          <div className="vigil-external-assessment-table-wrap">
+            <table className="vigil-external-assessment-table">
+              <thead>
+                <tr>
+                  <th scope="col">Assessor</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Conclusion</th>
+                  <th scope="col">Classification / scheme</th>
+                </tr>
+              </thead>
+              <tbody>
+                {externalAssessments.map((assessment) => {
+                  const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
+                  return <tr key={assessment.id}>
+                    <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="vigil-external-assessment-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
+                    <td>{externalAssessmentDate(assessment.date)}</td>
+                    <td>{assessment.summary}</td>
+                    <td>{assessment.classificationOrRating
+                      ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
+                      : "—"}</td>
+                  </tr>;
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>}
           </div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
             <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
@@ -590,34 +618,7 @@ export default function VigilCaseFile() {
           />
         </section>
 
-        {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
-          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">External assessments</p>
-          <div className="vigil-external-assessment-table-wrap">
-            <table className="vigil-external-assessment-table">
-              <thead>
-                <tr>
-                  <th scope="col">Assessor</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Conclusion</th>
-                  <th scope="col">Classification / scheme</th>
-                </tr>
-              </thead>
-              <tbody>
-                {externalAssessments.map((assessment) => {
-                  const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
-                  return <tr key={assessment.id}>
-                    <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="vigil-external-assessment-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
-                    <td>{externalAssessmentDate(assessment.date)}</td>
-                    <td>{assessment.summary}</td>
-                    <td>{assessment.classificationOrRating
-                      ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
-                      : "—"}</td>
-                  </tr>;
-                })}
-              </tbody>
-            </table>
-          </div>
-        </section>}
+
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
