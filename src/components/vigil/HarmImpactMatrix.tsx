@@ -319,7 +319,7 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
         ? <>Overall harm severity is determined by the highest supported materialised harm across the assessed dimensions.</>
         : <>No harm dimension has a defensible scored band in the current public Incident record.</>;
 
-  return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")}>
+  return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")} data-harm-footer="contextual">
     {assessedRows.length ? <div className="vigil-harm-matrix-scroll" role="region" aria-label="Incident-specific VIGIL Harm Impact assessment" tabIndex={0}>
       <table className="vigil-harm-assessment-table">
         <thead>
