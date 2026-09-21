@@ -605,3 +605,23 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 .vigil-case-file-page .vigil-taxonomy-assessment-table td:first-child {
   white-space: normal;
 }
+
+
+/* Taxonomy assessment table outline and header treatment match Classification and real-world harm. */
+.vigil-case-file-page .vigil-taxonomy-assessment-table-wrap {
+  border: 1px solid hsl(var(--border) / 0.74);
+  border-radius: 0.58rem;
+  background: hsl(var(--background));
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table thead th {
+  padding: 0.72rem 0.85rem;
+  background: hsl(var(--muted) / 0.28);
+  font-family: var(--app-font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.86);
+}
