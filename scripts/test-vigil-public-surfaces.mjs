@@ -28,7 +28,13 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
   assert.match(pages, /Incident-centred public observatory and AI incident database/);
-  assert.match(pages, /VIGIL Observatory is distinct from CAELESTIS/);
+  const fallbackCaelestis = pages.indexOf("<h2>CAELESTIS Architecture Model</h2>");
+  const fallbackVigil = pages.indexOf("<h2>VIGIL Observatory</h2>");
+  assert.ok(fallbackCaelestis >= 0 && fallbackVigil > fallbackCaelestis);
+  assert.match(pages, /Every Incident moves through the same six-stage evidence-to-conclusion structure/);
+  assert.match(pages, /Harm severity and taxonomy classification are deliberately independent/);
+  assert.match(pages, /combination \/ mixed-alignment records/);
+  assert.doesNotMatch(pages, /VIGIL Observatory is distinct from CAELESTIS/);
   assert.match(pages, /const vigilAboutStructuredData = \{/);
   assert.match(pages, /"@type": "CreativeWork"/);
   assert.match(pages, /alternateName: "VIGIL"/);
