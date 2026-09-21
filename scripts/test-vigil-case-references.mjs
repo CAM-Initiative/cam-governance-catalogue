@@ -452,3 +452,21 @@ test("Harm summary is plain narrative with spacing before the table and the deri
   assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
   assert.match(reportCss, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
 });
+
+
+test("mobile Assessment prose stays viewport-bound while Harm tables remain horizontally scrollable", async () => {
+  const [polishCss, harmCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+  ]);
+
+  assert.match(polishCss, /@media \(max-width: 820px\)[\s\S]*#case-diagnose[\s\S]*min-width: 0;[\s\S]*max-width: 100%;/);
+  assert.match(polishCss, /\.vigil-diagnosis-assessment-details p,[\s\S]*white-space: normal;[\s\S]*overflow-wrap: anywhere;/);
+
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-matrix-scroll \{[\s\S]*overflow-x: auto;[\s\S]*-webkit-overflow-scrolling: touch;/);
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-methodology-table \{[\s\S]*min-width: 1120px;/);
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-assessment-table \{[\s\S]*min-width: 800px;/);
+
+  assert.match(harmCss, /\.vigil-harm-methodology-table \{[\s\S]*min-width: 1680px;/);
+  assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*min-width: 1040px;/);
+});
