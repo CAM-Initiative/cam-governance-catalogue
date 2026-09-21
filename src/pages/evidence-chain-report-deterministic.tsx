@@ -366,7 +366,10 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
               <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
               <CaseTaxonomyAssessment raw={incident.raw} />
-              {externalAssessments.length > 0 && <section className="report-external-assessments">
+
+            </div>
+          </section>
+          {externalAssessments.length > 0 && <section className="report-external-assessments report-peer-assessment">
             <p className="vigil-library-kicker">EXTERNAL ASSESSMENTS</p>
             <table className="report-external-assessment-table">
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
@@ -383,8 +386,6 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               })}</tbody>
             </table>
           </section>}
-            </div>
-          </section>
           <section className="report-severity-assessment">
             <p className="vigil-library-kicker">REAL-WORLD HARM ASSESSMENT</p>
             <h4 className="report-substantive-label">Harm Impact Assessment</h4>
