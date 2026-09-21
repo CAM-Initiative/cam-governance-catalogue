@@ -13,6 +13,7 @@ import {
 } from "@/lib/vigilPresentation";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 
 type ReportState =
   | { status: "loading" }
@@ -26,16 +27,6 @@ type ExternalEvidence = {
   url?: string;
   description?: string;
   sourceRecordRefs: string[];
-};
-
-type AffectedSystem = {
-  recordId: string;
-  provider?: string;
-  product?: string;
-  model?: string;
-  systemType?: string;
-  interfaceSurface?: string;
-  deploymentContext?: string;
 };
 
 type IncidentArtefact = {
@@ -173,29 +164,6 @@ function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
   });
 }
 
-function affectedSystemFor(record: VigilIndexRecord): AffectedSystem | undefined {
-  const context = isObject(record.raw.system_context) ? record.raw.system_context : {};
-  const provider = text(context.platform_or_vendor) ?? record.affected_platform_label ?? record.platform_label;
-  const product = text(context.product_or_service ?? context.model_or_product);
-  const modelRaw = text(context.specific_model_or_runtime);
-  const model = modelRaw && !/^not applicable$/i.test(modelRaw) ? modelRaw : undefined;
-  const systemType = text(context.system_type);
-  const interfaceSurface = text(context.interface_surface);
-  const deploymentContext = text(context.deployment_context);
-  if (![provider, product, model, systemType, interfaceSurface, deploymentContext].some(Boolean)) return undefined;
-  return { recordId: record.id, provider, product, model, systemType, interfaceSurface, deploymentContext };
-}
-
-function dedupeSystems(records: VigilIndexRecord[]) {
-  const seen = new Set<string>();
-  return records.flatMap((record) => affectedSystemFor(record) ?? []).filter((system) => {
-    const key = [system.provider, system.product, system.model, system.interfaceSurface].filter(Boolean).join("|").toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
 function severityDisplay(value?: string) {
   const raw = value?.trim();
   if (!raw) return "Not assessed";
@@ -273,7 +241,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
-  const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
+  const affectedSystems = useMemo(() => incident ? dedupeAffectedSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
@@ -358,7 +326,11 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
                   <Field label="Product / service" value={system.product} />
                   <Field label="Model / runtime" value={system.model} />
                   <Field label="System type" value={system.systemType} />
+                  <Field label="Agent configuration" value={system.agentConfiguration} />
+                  <Field label="Agent count" value={system.agentCount} />
                   <Field label="Interface" value={system.interfaceSurface} />
+                  <Field label="Occurrence setting" value={system.occurrenceSetting} />
+                  <Field label="Testing conducted by" value={system.testingActor} />
                   <Field label="Deployment context" value={system.deploymentContext} />
                 </dl>
               </article>)}</div>
