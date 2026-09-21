@@ -13,6 +13,7 @@ import {
 } from "@/lib/vigilPresentation";
 import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 
 type ReportState =
   | { status: "loading" }
@@ -26,16 +27,6 @@ type ExternalEvidence = {
   url?: string;
   description?: string;
   sourceRecordRefs: string[];
-};
-
-type AffectedSystem = {
-  recordId: string;
-  provider?: string;
-  product?: string;
-  model?: string;
-  systemType?: string;
-  interfaceSurface?: string;
-  deploymentContext?: string;
 };
 
 type IncidentArtefact = {
@@ -148,6 +139,13 @@ function externalAssessmentEvidenceReferenceNumber(assessment: { sourceRecordRef
   return index >= 0 ? index + 1 : undefined;
 }
 
+function evidenceReferenceNumberForUrl(sources: ExternalEvidence[], url?: string) {
+  if (!url) return undefined;
+  const normalized = url.replace(/\/$/, "").toLowerCase();
+  const index = sources.findIndex((source) => source.url?.replace(/\/$/, "").toLowerCase() === normalized);
+  return index >= 0 ? index + 1 : undefined;
+}
+
 function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
   const artefacts = Array.isArray(record.raw.incident_artefacts) ? record.raw.incident_artefacts : [];
   return artefacts.flatMap((artefact, index) => {
@@ -163,29 +161,6 @@ function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
       altText: text(artefact.alt_text),
       caption: text(artefact.caption),
     }];
-  });
-}
-
-function affectedSystemFor(record: VigilIndexRecord): AffectedSystem | undefined {
-  const context = isObject(record.raw.system_context) ? record.raw.system_context : {};
-  const provider = text(context.platform_or_vendor) ?? record.affected_platform_label ?? record.platform_label;
-  const product = text(context.product_or_service ?? context.model_or_product);
-  const modelRaw = text(context.specific_model_or_runtime);
-  const model = modelRaw && !/^not applicable$/i.test(modelRaw) ? modelRaw : undefined;
-  const systemType = text(context.system_type);
-  const interfaceSurface = text(context.interface_surface);
-  const deploymentContext = text(context.deployment_context);
-  if (![provider, product, model, systemType, interfaceSurface, deploymentContext].some(Boolean)) return undefined;
-  return { recordId: record.id, provider, product, model, systemType, interfaceSurface, deploymentContext };
-}
-
-function dedupeSystems(records: VigilIndexRecord[]) {
-  const seen = new Set<string>();
-  return records.flatMap((record) => affectedSystemFor(record) ?? []).filter((system) => {
-    const key = [system.provider, system.product, system.model, system.interfaceSurface].filter(Boolean).join("|").toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
   });
 }
 
@@ -234,7 +209,7 @@ function Empty({ children }: { children: ReactNode }) {
   return <p className="report-empty">{children}</p>;
 }
 
-export default function EvidenceChainReportDeterministic() {
+export default function EvidenceChainReportDeterministic({ hasTaxonomyReference = false }: { hasTaxonomyReference?: boolean }) {
   const [, params] = useRoute("/observatory/reports/:recordId");
   const sourceId = decodeURIComponent(params?.recordId ?? "").trim().replace(/\.md$/i, "");
   const [state, setState] = useState<ReportState>({ status: "loading" });
@@ -266,12 +241,12 @@ export default function EvidenceChainReportDeterministic() {
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
-  const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
+  const affectedSystems = useMemo(() => incident ? dedupeAffectedSystems([incident]) : [], [incident]);
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
-  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
+  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
 
-  const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
@@ -289,12 +264,18 @@ export default function EvidenceChainReportDeterministic() {
   const canonicalReferences = [
     ...state.records.map((record) => ({ key: record.id, label: `${record.id} — ${record.title}`, detail: [record.record_last_updated, record.record_version ? `Version ${record.record_version}` : undefined].filter(Boolean).join(" · "), url: record.github_blob_url ?? record.raw_url })),
   ];
+  const taxonomyReferenceNumber = hasTaxonomyReference
+    ? evidenceReferences.length + externalIncidentReferences.length + 1
+    : undefined;
+  const harmMethodologyReferenceNumber = harmImpactAssessment
+    ? evidenceReferences.length + externalIncidentReferences.length + (hasTaxonomyReference ? 1 : 0) + 1
+    : undefined;
 
   return <Shell>
     <VigilObservatoryNav />
     <main className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 md:px-10 md:py-10 report-document">
       <div className="print:hidden mb-6 flex items-center justify-between gap-4">
-        <Link href={`/observatory/cases/${encodeURIComponent(incident?.id ?? state.sourceId)}`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
+        <Link href={`/observatory/cases/${encodeURIComponent(incident?.id ?? state.sourceId)}/`} className="font-mono text-sm uppercase tracking-[0.1em] text-cam-gold">← Back to Case File</Link>
         <button type="button" onClick={() => window.print()} className="rounded-md border border-cam-gold/45 bg-background px-4 py-2 font-mono text-sm uppercase tracking-[0.08em] text-cam-gold">Print / save PDF</button>
       </div>
 
@@ -345,7 +326,11 @@ export default function EvidenceChainReportDeterministic() {
                   <Field label="Product / service" value={system.product} />
                   <Field label="Model / runtime" value={system.model} />
                   <Field label="System type" value={system.systemType} />
+                  <Field label="Agent configuration" value={system.agentConfiguration} />
+                  <Field label="Agent count" value={system.agentCount} />
                   <Field label="Interface" value={system.interfaceSurface} />
+                  <Field label="Occurrence setting" value={system.occurrenceSetting} />
+                  <Field label="Testing conducted by" value={system.testingActor} />
                   <Field label="Deployment context" value={system.deploymentContext} />
                 </dl>
               </article>)}</div>
@@ -355,10 +340,16 @@ export default function EvidenceChainReportDeterministic() {
                 <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
                   <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
                 </a>
-                {(artefact.title || artefact.caption || artefact.sourceUrl) && <figcaption>
+                {(artefact.title || artefact.sourceUrl) && <figcaption>
                   {artefact.title && <strong>{artefact.title}</strong>}
-                  {artefact.caption && <span>{artefact.caption}</span>}
-                  {artefact.sourceUrl && <a href={artefact.sourceUrl} target="_blank" rel="noreferrer">View originating source</a>}
+                  {(() => {
+                    const referenceNumber = evidenceReferenceNumberForUrl(externalSources, artefact.sourceUrl);
+                    return referenceNumber
+                      ? <a className="report-inline-reference" href={`#vigil-evidence-reference-${referenceNumber}`} aria-label={`Evidence reference ${referenceNumber}`}>[{referenceNumber}]</a>
+                      : artefact.sourceUrl
+                        ? <a className="report-inline-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
+                        : null;
+                  })()}
                 </figcaption>}
               </figure>)}
             </section>}
@@ -370,7 +361,6 @@ export default function EvidenceChainReportDeterministic() {
         {incident ? <article className="report-diagnosis">
           <section className="report-intro">
             <p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p>
-            <p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
             <div className="report-assessment-details">
               <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
               <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
@@ -378,10 +368,16 @@ export default function EvidenceChainReportDeterministic() {
           </section>
           <section className="report-severity-assessment">
             <h4 className="report-substantive-label">Harm Impact Assessment</h4>
-            <HarmImpactMatrix assessment={harmImpactAssessment} compact evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            <HarmImpactMatrix
+              assessment={harmImpactAssessment}
+              compact
+              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+              methodologyReferenceNumber={harmMethodologyReferenceNumber}
+              methodologyReferenceHref="#vigil-harm-methodology-reference"
+            />
           </section>
           {externalAssessments.length > 0 && <section className="report-external-assessments">
-            <h4 className="report-substantive-label">External assessments</h4>
+            <p className="vigil-library-kicker">External assessments</p>
             <table className="report-external-assessment-table">
               <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
               <tbody>{externalAssessments.map((assessment) => {
@@ -401,14 +397,21 @@ export default function EvidenceChainReportDeterministic() {
       </Stage>
 
         <Stage number="03" label="Classification">
-          {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <Empty>No current taxonomy classification is linked.</Empty>}
+          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current taxonomy classification is linked.</Empty>}
         </Stage>
 
         <Stage number="04" label="Repair">
-          {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
+          {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
         </Stage>
 
-        <Stage number="05" label="References">
+        <Stage number="05" label="Conclusion">
+          {governanceConclusion ? <section className="report-intro">
+            <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
+            <p className="report-intro-copy">{governanceConclusion}</p>
+          </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
+        </Stage>
+
+        <Stage number="06" label="References">
           {(evidenceReferences.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>

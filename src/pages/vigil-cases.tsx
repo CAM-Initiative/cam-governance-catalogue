@@ -263,7 +263,7 @@ export default function VigilCases() {
               </div>
               <div className="vigil-case-table-body">
                 {pageRecords.map((record) => {
-                  const href = `/observatory/cases/${encodeURIComponent(record.id)}`;
+                  const href = `/observatory/cases/${encodeURIComponent(record.id)}/`;
                   const classificationLabel = classificationStatusLabel(record);
                   const exemplar = classificationLabel === "Exemplar";
                   return (

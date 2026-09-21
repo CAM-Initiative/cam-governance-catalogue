@@ -5,37 +5,37 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
-  { href: "/about", label: "About", internal: true },
-  { href: "/observatory/knowledge-base", label: "Knowledge Base", internal: true },
-  { href: "/observatory/cases", label: "Case Files", internal: true },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "Failure Taxonomy", internal: true },
-  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", internal: true },
-  { href: "/datasets", label: "Datasets", internal: true },
-  { href: "/licensing", label: "Copyright & Licence", internal: true },
-  { href: "/privacy", label: "Privacy", internal: true },
+  { href: "/about/", label: "About", internal: true },
+  { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
+  { href: "/observatory/cases/", label: "Case Files", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Failure Taxonomy", internal: true },
+  { href: "/observatory/severity-methodology/", label: "Harm & Severity Methodology", internal: true },
+  { href: "/datasets/", label: "Datasets", internal: true },
+  { href: "/licensing/", label: "Copyright & Licence", internal: true },
+  { href: "/privacy/", label: "Privacy", internal: true },
   { href: "mailto:ethics@cam-initiative.org", label: "Contact" },
 ];
 
 const homeLinks = [
   { href: "/", label: "Overview" },
-  { href: "/about", label: "About" },
-  { href: "/licensing", label: "Copyright & Licence" },
-  { href: "/privacy", label: "Privacy" },
+  { href: "/about/", label: "About" },
+  { href: "/licensing/", label: "Copyright & Licence" },
+  { href: "/privacy/", label: "Privacy" },
 ];
 
 const vigilLinks = [
-  { href: "/observatory/knowledge-base", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
-  { href: "/observatory/cases", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy", label: "VIGIL Observatory Failure Taxonomy", navLabel: "Failure Taxonomy" },
-  { href: "/observatory/severity-methodology", label: "Harm & Severity Methodology", navLabel: "Harm & Severity Methodology" },
+  { href: "/observatory/knowledge-base/", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
+  { href: "/observatory/cases/", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
+  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Failure Taxonomy", navLabel: "Failure Taxonomy" },
+  { href: "/observatory/severity-methodology/", label: "Harm & Severity Methodology", navLabel: "Harm & Severity Methodology" },
 ];
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about" || location === "/licensing" || location === "/privacy";
-  const isVigilActive = location === "/observatory" || location.startsWith("/observatory/");
-  const isDatasetsActive = location === "/datasets" || location.startsWith("/datasets/");
+  const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/";
+  const isVigilActive = location === "/observatory/" || location.startsWith("/observatory/");
+  const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -98,7 +98,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
             <div className="group relative">
               <Link
-                href="/observatory/knowledge-base"
+                href="/observatory/knowledge-base/"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
@@ -113,7 +113,7 @@ export function Shell({ children }: { children: ReactNode }) {
                       href={link.href}
                       aria-label={link.label}
                       className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href || location.startsWith(`${link.href}/`)
+                        location === link.href || location.startsWith(link.href)
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-card hover:text-foreground"
                       }`}
@@ -127,7 +127,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
             <div className="flex items-center gap-8">
               <Link
-                href="/datasets"
+                href="/datasets/"
                 className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
                   isDatasetsActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
@@ -183,9 +183,9 @@ export function Shell({ children }: { children: ReactNode }) {
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center md:justify-start md:text-left">
               <span className="text-sm text-muted-foreground">© 2026 CAM Initiative. All rights reserved.</span>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <Link href="/licensing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licence</Link>
+              <Link href="/licensing/" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licence</Link>
               <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <Link href="/privacy" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
+              <Link href="/privacy/" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
             </div>
 
             <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-3 md:w-auto md:justify-end">

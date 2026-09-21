@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
@@ -16,6 +16,7 @@ import {
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
+import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 import {
   loadTaxonomyReferenceTargets,
@@ -35,16 +36,6 @@ type ExternalEvidence = {
   url?: string;
   description?: string;
   sourceRecordRefs: string[];
-};
-
-type AffectedSystem = {
-  recordId: string;
-  provider?: string;
-  product?: string;
-  model?: string;
-  systemType?: string;
-  interfaceSurface?: string;
-  deploymentContext?: string;
 };
 
 type IncidentArtefact = {
@@ -84,6 +75,12 @@ type DiagnosticProvenance = {
 const CASE_VIEWS = VIGIL_INCIDENT_CASE_SECTIONS;
 
 type StageId = typeof CASE_VIEWS[number]["id"];
+
+const CASE_REFERENCE_HASH_PATTERN = /^#(vigil-evidence-reference-\d+|vigil-failure-taxonomy-reference|vigil-harm-methodology-reference)$/;
+
+function caseReferenceTargetFromHash(hash: string) {
+  return hash.match(CASE_REFERENCE_HASH_PATTERN)?.[1];
+}
 
 function isObject(value: unknown): value is UnknownRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -197,29 +194,6 @@ function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
       altText: text(artefact.alt_text),
       caption: text(artefact.caption),
     }];
-  });
-}
-
-function affectedSystemFor(record: VigilIndexRecord): AffectedSystem | undefined {
-  const context = isObject(record.raw.system_context) ? record.raw.system_context : {};
-  const provider = text(context.platform_or_vendor) ?? record.affected_platform_label ?? record.platform_label;
-  const product = text(context.product_or_service ?? context.model_or_product);
-  const modelRaw = text(context.specific_model_or_runtime);
-  const model = modelRaw && !/^not applicable$/i.test(modelRaw) ? modelRaw : undefined;
-  const systemType = text(context.system_type);
-  const interfaceSurface = text(context.interface_surface);
-  const deploymentContext = text(context.deployment_context);
-  if (![provider, product, model, systemType, interfaceSurface, deploymentContext].some(Boolean)) return undefined;
-  return { recordId: record.id, provider, product, model, systemType, interfaceSurface, deploymentContext };
-}
-
-function dedupeSystems(records: VigilIndexRecord[]) {
-  const seen = new Set<string>();
-  return records.flatMap((record) => affectedSystemFor(record) ?? []).filter((system) => {
-    const key = [system.provider, system.product, system.model, system.interfaceSurface].filter(Boolean).join("|").toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
   });
 }
 
@@ -379,10 +353,42 @@ export default function VigilCaseFile() {
   const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? "").trim();
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
+  const [pendingReferenceTarget, setPendingReferenceTarget] = useState<string>();
   const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
   const [harmMethodologyMetadata, setHarmMethodologyMetadata] = useState<HarmMethodologyMetadata>();
 
-  useEffect(() => setActiveStage("observe"), [sourceId]);
+  useEffect(() => {
+    const syncReferenceHash = () => {
+      const target = caseReferenceTargetFromHash(window.location.hash);
+      setPendingReferenceTarget(target);
+      setActiveStage(target ? "references" : "observe");
+    };
+    syncReferenceHash();
+    window.addEventListener("hashchange", syncReferenceHash);
+    return () => window.removeEventListener("hashchange", syncReferenceHash);
+  }, [sourceId]);
+
+  useEffect(() => {
+    if (activeStage !== "references" || !pendingReferenceTarget || state.status !== "ready") return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(pendingReferenceTarget);
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setPendingReferenceTarget(undefined);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeStage, pendingReferenceTarget, state.status, taxonomyReferences.length]);
+
+  const handleCaseReferenceClick = (event: MouseEvent<HTMLDivElement>) => {
+    const origin = event.target instanceof Element ? event.target : null;
+    const link = origin?.closest<HTMLAnchorElement>('a[href^="#vigil-"]');
+    const targetId = caseReferenceTargetFromHash(link?.getAttribute("href") ?? "");
+    if (!targetId) return;
+    event.preventDefault();
+    window.history.replaceState(null, "", `#${targetId}`);
+    setPendingReferenceTarget(targetId);
+    setActiveStage("references");
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -418,7 +424,7 @@ export default function VigilCaseFile() {
   ), [externalSources]);
   const externalAssessments = useMemo(() => incident ? externalAssessmentsFrom(incident.raw) : [], [incident]);
   const externalIncidentReferences = useMemo(() => incident ? externalIncidentReferencesFrom(incident.raw) : [], [incident]);
-  const affectedSystems = useMemo(() => incident ? dedupeSystems([incident]) : [], [incident]);
+  const affectedSystems = useMemo(() => incident ? dedupeAffectedSystems([incident]) : [], [incident]);
   const incidentArtefacts = useMemo(() => incident ? incidentArtefactsFor(incident) : [], [incident]);
 
   useEffect(() => {
@@ -452,7 +458,7 @@ export default function VigilCaseFile() {
   );
 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Observatory Case File…</main></Shell>;
-  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases">Return to Case Files →</Link></div></main></Shell>;
+  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
 
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
@@ -467,7 +473,7 @@ export default function VigilCaseFile() {
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
 
-  const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
@@ -476,6 +482,12 @@ export default function VigilCaseFile() {
   const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
   const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
+  const taxonomyReferenceNumber = taxonomyReferences.length
+    ? externalSources.length + externalIncidentReferences.length + 1
+    : undefined;
+  const harmMethodologyReferenceNumber = harmImpactAssessment
+    ? externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + 1
+    : undefined;
   const referenceCount = externalSources.length + externalIncidentReferences.length + (taxonomyReferences.length ? 1 : 0) + (harmImpactAssessment ? 1 : 0) + taxonomyEvidenceReferences.length + state.records.length;
 
   const renderStageContent = (stageId: StageId): ReactNode => {
@@ -511,7 +523,11 @@ export default function VigilCaseFile() {
             <Field label="Product / service" value={system.product} />
             <Field label="Model / runtime" value={system.model} />
             <Field label="System type" value={system.systemType} />
+            <Field label="Agent configuration" value={system.agentConfiguration} />
+            <Field label="Agent count" value={system.agentCount} />
             <Field label="Interface" value={system.interfaceSurface} />
+            <Field label="Occurrence setting" value={system.occurrenceSetting} />
+            <Field label="Testing conducted by" value={system.testingActor} />
             <Field label="Deployment context" value={system.deploymentContext} />
           </dl>
         </article>)}</div>
@@ -522,19 +538,18 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {incident ? <CaseTaxonomyClassification raw={incident.raw} /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
+      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
     </>;
 
     if (stageId === "repair") return <>
-      {incident ? <CaseTaxonomyRepair raw={incident.raw} /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
+      {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
-    {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
+    {(incident || governanceConclusion) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-diagnosis-definition">
           <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
-          <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
           <div className="vigil-diagnosis-assessment-details">
             <section>
               <h4 className="vigil-substantive-label">Factual basis</h4>
@@ -565,7 +580,12 @@ export default function VigilCaseFile() {
             <p className="vigil-library-kicker">Harm classification</p>
             <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
           </div>
-          <HarmImpactMatrix assessment={harmImpactAssessment} evidenceReferenceNumbers={harmEvidenceReferenceNumbers} />
+          <HarmImpactMatrix
+            assessment={harmImpactAssessment}
+            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+            methodologyReferenceNumber={harmMethodologyReferenceNumber}
+            methodologyReferenceHref="#vigil-harm-methodology-reference"
+          />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
@@ -599,6 +619,13 @@ export default function VigilCaseFile() {
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
+
+    if (stageId === "conclusion") return governanceConclusion ? <article className="vigil-diagnosis-view">
+      <section className="vigil-diagnosis-definition">
+        <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
+        <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
+      </section>
+    </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
 
     if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">
       {externalSources.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="evidence-sources-heading">
@@ -636,7 +663,7 @@ export default function VigilCaseFile() {
       {(taxonomyReferences.length > 0 || harmImpactAssessment || taxonomyEvidenceReferences.length > 0) && <section className="vigil-reference-subsection" aria-labelledby="taxonomy-methodology-references-heading">
         <h3 id="taxonomy-methodology-references-heading">Taxonomy and methodology references</h3>
         <ol>
-        {taxonomyReferences.length > 0 && <li key="vigil-failure-taxonomy">
+        {taxonomyReferences.length > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy">
           <span>[1]</span>
           <div>
             <strong>VIGIL Observatory Failure Taxonomy</strong>
@@ -644,7 +671,7 @@ export default function VigilCaseFile() {
             <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
         </li>}
-        {harmImpactAssessment && <li key="vigil-harm-impact-methodology">
+        {harmImpactAssessment && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology">
           <span>[{taxonomyReferences.length ? 2 : 1}]</span>
           <div>
             <strong>VIGIL Harm Impact Methodology</strong>
@@ -697,7 +724,7 @@ export default function VigilCaseFile() {
   const activeAriaLabel = `${activeDefinition.number} ${activeDefinition.label}`;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
-    <Link href="/observatory/cases" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
+    <Link href="/observatory/cases/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
@@ -713,7 +740,7 @@ export default function VigilCaseFile() {
           <Field label="Updated" value={updated} mono />
           <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
         </dl>
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
+        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </aside>
     </header>
 
@@ -777,7 +804,7 @@ export default function VigilCaseFile() {
       </div>
     </nav>
 
-    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel}>
+    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel} onClick={handleCaseReferenceClick}>
       <Section id={`case-${activeStage}`} title={activeDefinition.label}>
         {renderStageContent(activeStage)}
       </Section>

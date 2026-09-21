@@ -8,7 +8,7 @@
   }
 
   function removeEmbeddedPolicyViewers() {
-    if (!location.pathname.includes("/policy")) return;
+    if (!location.pathname.includes("/policy/")) return;
     document.querySelectorAll('iframe[src*="/publications/"], iframe[title*="CAM Initiative"]').forEach((iframe) => iframe.parentElement?.remove());
   }
 
@@ -22,20 +22,20 @@
 
   function normalizePublicDestinations() {
     if (location.pathname !== "/" && location.pathname !== "") return;
-    const vigilCard = [...document.querySelectorAll('a.home-governance-card[href="/observatory"]')]
+    const vigilCard = [...document.querySelectorAll('a.home-governance-card[href="/observatory/"]')]
       .find((link) => labelText(link).includes("vigil observatory"));
-    if (vigilCard) vigilCard.setAttribute("href", "/observatory/cases");
+    if (vigilCard) vigilCard.setAttribute("href", "/observatory/cases/");
   }
 
   function fixReportNavigation() {
     if (!location.pathname.includes("/observatory/reports/")) return;
-    for (const link of document.querySelectorAll('a[href="/observatory"]')) {
+    for (const link of document.querySelectorAll('a[href="/observatory/"]')) {
       const label = labelText(link);
       if (label === "back to observatory") {
-        link.setAttribute("href", "/observatory/cases");
+        link.setAttribute("href", "/observatory/cases/");
         link.textContent = "Back to Case Files";
       } else if (label.startsWith("return to observatory")) {
-        link.setAttribute("href", "/observatory/cases");
+        link.setAttribute("href", "/observatory/cases/");
         link.textContent = "Return to Case Files →";
       }
     }
