@@ -481,18 +481,6 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   text-underline-offset: 0.16em;
 }
 
-.vigil-case-file-page .vigil-diagnosis-external-assessments {
-  padding: 1.25rem var(--vigil-case-card-pad) 1.2rem;
-  border: 1px solid hsl(var(--border) / 0.72);
-  border-radius: var(--vigil-case-card-radius);
-  background: hsl(var(--background));
-  box-shadow: var(--shadow-sm);
-}
-
-.vigil-case-file-page .vigil-diagnosis-external-assessments > .vigil-library-kicker {
-  margin: 0 0 0.9rem;
-}
-
 .vigil-case-file-page .vigil-external-assessment-table-wrap {
   overflow-x: auto;
 }
@@ -577,7 +565,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 
 /* VIGIL taxonomy assessment intentionally reuses the External assessments table grammar. */
-.vigil-case-file-page .vigil-taxonomy-assessment > .vigil-library-kicker {
+.vigil-case-file-page .vigil-taxonomy-assessment > .vigil-substantive-label {
   margin: 0 0 0.55rem;
 }
 
@@ -595,4 +583,25 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table q {
   font-weight: 650;
+}
+
+
+/* External assessments and real-world harm are peer Stage 02 assessment cards. */
+.vigil-case-file-page .vigil-external-assessment-section .vigil-external-assessment-table-wrap {
+  padding: 0 var(--vigil-case-card-pad) 1.25rem;
+}
+
+/* Taxonomy reasoning remains a subsection of Governance assessment. */
+.vigil-case-file-page .vigil-taxonomy-assessment-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table th,
+.vigil-case-file-page .vigil-taxonomy-assessment-table td {
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table td:first-child {
+  white-space: normal;
 }
