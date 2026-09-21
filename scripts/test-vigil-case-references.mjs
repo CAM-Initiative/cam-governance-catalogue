@@ -76,9 +76,9 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
-test("Case File Section 02 follows governance assessment, factual basis, governance significance, harm order", async () => {
+test("Case File Section 02 leads with factual basis and governance significance before harm assessment", async () => {
   const source = await caseFileSource();
-  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
   const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
@@ -86,6 +86,7 @@ test("Case File Section 02 follows governance assessment, factual basis, governa
 
   assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
   assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
+  assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-assessment-summary|\{governanceConclusion\}/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
 });
 
@@ -98,9 +99,28 @@ test("Factual basis and Governance significance stay inside the governance asses
   assert.match(card, /vigil-diagnosis-assessment-details/);
 });
 
+test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
+  const [caseFile, report, sections] = await Promise.all([
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/lib/vigilCaseSections.ts"), "utf8"),
+  ]);
+  const caseAssessment = caseFile.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
+  const caseConclusion = caseFile.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const reportAssessment = report.match(/<Stage number="02" label="Assessment">[\s\S]*?<Stage number="03" label="Classification">/)?.[0] ?? "";
+  const reportConclusion = report.match(/<Stage number="05" label="Conclusion">[\s\S]*?<Stage number="06" label="References">/)?.[0] ?? "";
+
+  assert.doesNotMatch(caseAssessment, /\{governanceConclusion\}/);
+  assert.match(caseConclusion, /\{governanceConclusion\}/);
+  assert.doesNotMatch(reportAssessment, /\{governanceConclusion\}/);
+  assert.match(reportConclusion, /\{governanceConclusion\}/);
+  assert.match(sections, /id: "conclusion",[\s\S]*number: "05",[\s\S]*label: "Conclusion"/);
+  assert.match(sections, /id: "references",[\s\S]*number: "06",[\s\S]*label: "References"/);
+});
+
 test("Case File moves assessment limits from Section 02 to the closing References disclaimer", async () => {
   const source = await caseFileSource();
-  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const referencesRenderer = source.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
 
   assert.ok(assessmentRenderer, "Assessment renderer must remain present");
@@ -141,14 +161,17 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(referencesRenderer, /externalAssessments\.map|unmatchedExternalAssessments\.map/);
 });
 
-test("Incident Case File retains evidence context and VIGIL Observatory interpretation", async () => {
+test("Incident Case File retains evidence context and moves governance interpretation to Conclusion", async () => {
   const source = await caseFileSource();
   const observationRenderer = source.match(/if \(stageId === "observe"\)[\s\S]*?if \(stageId === "classify"\)/)?.[0] ?? "";
+  const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
 
   assert.ok(observationRenderer, "Observation renderer must remain present");
   assert.match(source, /vigil_assessment\.factual_basis/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
   assert.match(source, /VIGIL Observatory governance assessment/);
+  assert.match(conclusionRenderer, /VIGIL Observatory conclusion/);
+  assert.match(conclusionRenderer, /\{governanceConclusion\}/);
 });
 
 test("Incident Case File projects taxonomy-derived class-invariant repair, not implementation state", async () => {
@@ -186,8 +209,11 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /vigil_assessment\.factual_basis/);
   assert.match(report, /label="Classification"/);
   assert.match(report, /label="Repair"/);
-  assert.match(report, /label="References"/);
+  assert.match(report, /<Stage number="05" label="Conclusion">/);
+  assert.match(report, /<Stage number="06" label="References">/);
   assert.match(printable, /label: "Repair"/);
+  assert.match(printable, /label: "Conclusion"/);
+  assert.match(printable, /number: "06", label: "References"/);
   assert.match(report, /report-external-assessment-table/);
   assert.match(report, /externalAssessments\.map/);
   assert.doesNotMatch(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
@@ -243,7 +269,7 @@ test("harm rows resolve source_records evidence to the numbered Evidence sources
 });
 
 
-test("inline Case File references activate Section 05 before resolving their anchors", async () => {
+test("inline Case File references activate Section 06 before resolving their anchors", async () => {
   const source = await caseFileSource();
 
   assert.match(source, /CASE_REFERENCE_HASH_PATTERN/);
@@ -388,7 +414,7 @@ test("External assessments cite Evidence sources without creating a second Refer
     assert.doesNotMatch(source, /unmatchedExternalAssessments/);
   }
   const caseReferences = caseFile.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
-  const reportReferences = report.match(/<Stage number="05" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
+  const reportReferences = report.match(/<Stage number="06" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
   assert.doesNotMatch(caseReferences, /External assessments/);
   assert.doesNotMatch(reportReferences, /External assessments/);
 });
