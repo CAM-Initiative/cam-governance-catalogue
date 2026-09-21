@@ -20,8 +20,13 @@ export const VIGIL_INCIDENT_CASE_SECTIONS = [
     label: "Repair",
   },
   {
-    id: "references",
+    id: "conclusion",
     number: "05",
+    label: "Conclusion",
+  },
+  {
+    id: "references",
+    number: "06",
     label: "References",
   },
 ] as const;
