@@ -608,8 +608,7 @@ export default function VigilCaseFile() {
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
-            <p className="vigil-library-kicker">REAL-WORLD HARM ASSESSMENT</p>
-            <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
+            <p className="vigil-library-kicker" id="severity-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
           </div>
           <HarmImpactMatrix
             assessment={harmImpactAssessment}
