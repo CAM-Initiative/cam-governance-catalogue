@@ -274,32 +274,33 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
     read("src/lib/vigilCaseSections.ts"),
   ]);
   assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
-  assert.match(about, /What happened, which systems were affected, and what the evidence establishes\./);
-  assert.match(about, /occurrence-level governance assessment, including materialised severity and evidentiary limits/);
-  assert.match(about, /canonical structural mechanism supported by the assessment and evidence/);
-  assert.match(about, /governing invariant condition that a repair must restore and preserve/);
-  assert.match(about, /integrated VIGIL Observatory interpretation reached after assessment, classification and repair analysis/);
-  assert.match(about, /Sources, taxonomy records and the canonical Incident cited in this Case File\./);
+  assert.match(about, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
+  assert.match(about, /apply VIGIL-HIM to materialised harm, severity and evidentiary limits/);
+  assert.match(about, /Map the evidence to the VIGIL Failure Taxonomy and record whether each boundary failed, held or remains unresolved\./);
+  assert.match(about, /governing class invariants relevant to failure-occurrence and unresolved-boundary mappings/);
+  assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
+  assert.match(about, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
   assert.doesNotMatch(about, /VIGIL_INCIDENT_CASE_SECTIONS\.map/);
   assert.doesNotMatch(sections, /description:/);
   assert.match(aboutCss, /grid-template-rows: auto minmax\(3rem, auto\) 1fr/);
   assert.match(aboutCss, /min-height: 3rem/);
-  assert.match(aboutCss, /padding: 0\.4rem 0\.95rem 0\.95rem !important/);
+  assert.match(aboutCss, /padding: 0\.85rem 0\.95rem 0\.95rem !important/);
+  assert.match(aboutCss, /border: 1px solid hsl\(var\(--border\)\) !important/);
 });
 
 test("About explains successful-invariant exemplars and the publication model", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /successful-invariant exemplar/i);
   assert.match(about, /VigilAlignmentLegend detailed/);
-  assert.match(about, /not counted as failure evidence/i);
+  assert.match(about, /Invariant held[\s\S]*Boundary unresolved/);
   assert.match(about, /do not create a Repair requirement/i);
+  assert.match(about, /Combination · mixed alignment/);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
   assert.match(about, /Keep evidence and judgment separate/);
   assert.match(about, /Open to scrutiny, not openly licensed/);
-  assert.match(about, /VIGIL Observatory is distinct from CAELESTIS/);
+  assert.match(about, /It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine/);
   assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Failure Taxonomy/);
-  assert.match(about, /It does not create or amend CAELESTIS doctrine/);
   assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
   assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm &amp; Severity Methodology/);
   assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
