@@ -14,7 +14,8 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 /* VIGIL Harm Impact Matrix.
    The About page is the methodology reference: every S1-S5 cell contains its
    canonical criterion. Case Files use a separate occurrence-specific table so
-   evidence state, selected threshold and rationale remain legible. */
+   evidence state, selected threshold and rationale remain legible. Mobile keeps
+   both tables swipeable without allowing them to widen the surrounding page. */
 .vigil-harm-matrix {
   --him-s1: 142 55% 42%;
   --him-s2: 82 58% 45%;
