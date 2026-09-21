@@ -129,7 +129,7 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
 
   <h2>VIGIL Case File method</h2>
-  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Harm severity and taxonomy classification are deliberately independent: severity describes consequence, while taxonomy describes governance mechanism and boundary behaviour.</p>
+  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Real-world harm assessment and taxonomy classification are deliberately independent: harm assessment describes materialised consequence and derives severity, while taxonomy classification describes governance mechanism and boundary behaviour.</p>
   <p>Taxonomy mappings record whether a boundary failed, held successfully or remains unresolved. Case File outcomes may therefore be failure-classified, successful-invariant exemplars, or combination / mixed-alignment records where different boundaries produced different evidentiary roles.</p>
   <nav aria-label="Explore VIGIL Observatory">
     <ul>
