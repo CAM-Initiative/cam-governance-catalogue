@@ -359,7 +359,41 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
     gap: 0.5rem 1rem;
   }
   .vigil-harm-evidence-key { grid-template-columns: 1fr; }
-  .vigil-harm-matrix-scroll { margin-inline: -0.35rem; }
+
+  /* Mobile keeps the comparative table model, but uses a denser canvas so the
+     first viewport exposes more than one analytical column before scrolling. */
+  .vigil-harm-matrix {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .vigil-about-section .vigil-harm-matrix {
+    padding-inline: 0.65rem;
+  }
+  .vigil-harm-matrix-scroll {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-inline: -0.35rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .vigil-harm-methodology-table {
+    min-width: 1120px;
+  }
+  .vigil-harm-assessment-table {
+    min-width: 800px;
+  }
+  .vigil-harm-methodology-table thead th,
+  .vigil-harm-methodology-table tbody th,
+  .vigil-harm-methodology-table tbody td,
+  .vigil-harm-assessment-table thead th,
+  .vigil-harm-assessment-table tbody th,
+  .vigil-harm-assessment-table tbody td {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+
   .vigil-harm-matrix-overview { align-items: flex-start; }
   .vigil-harm-overall-result { flex-wrap: wrap; }
   .vigil-dataset-actions { justify-content: flex-start; }
