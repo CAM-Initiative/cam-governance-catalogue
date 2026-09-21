@@ -110,25 +110,32 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <p>CAM Initiative · Public-interest AI governance</p>
   <h1>About CAM Initiative</h1>
   <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change.</p>
+
+  <h2>CAELESTIS Architecture Model</h2>
+  <h3>Governance architecture for advanced AI systems</h3>
+  <p>The CAELESTIS Architecture Model is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. Its public architecture reference is undergoing a substantive refactor.</p>
+  <p>CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
+  <nav aria-label="CAELESTIS Architecture Model resources">
+    <ul>
+      <li><a href="https://doi.org/10.5281/zenodo.20686316" rel="noreferrer">Open archived version 1.1.0</a></li>
+      <li><a href="https://github.com/CAM-Initiative/Caelestis" rel="noreferrer">CAELESTIS repository</a></li>
+    </ul>
+  </nav>
+
   <h2>VIGIL Observatory</h2>
-  <p>VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms and records successful-invariant exemplars.</p>
-  <p><strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
-  <h2>VIGIL Case File model</h2>
-  <p>Each VIGIL Case File separates the documented Incident from assessment, classification, repair analysis, the integrated VIGIL Observatory conclusion and supporting references.</p>
+  <h3>Public Incident evidence, classification and repair analysis</h3>
+  <p>VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
+  <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
+
+  <h2>VIGIL Case File method</h2>
+  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Harm severity and taxonomy classification are deliberately independent: severity describes consequence, while taxonomy describes governance mechanism and boundary behaviour.</p>
+  <p>Taxonomy mappings record whether a boundary failed, held successfully or remains unresolved. Case File outcomes may therefore be failure-classified, successful-invariant exemplars, or combination / mixed-alignment records where different boundaries produced different evidentiary roles.</p>
   <nav aria-label="Explore VIGIL Observatory">
     <ul>
       <li><a href="/observatory/cases/">Browse VIGIL Observatory Case Files</a></li>
       <li><a href="/observatory/knowledge-base/failure-taxonomy/">Explore the VIGIL Observatory Failure Taxonomy</a></li>
       <li><a href="/observatory/severity-methodology/">Read the VIGIL Harm &amp; Severity Methodology</a></li>
       <li><a href="https://github.com/CAM-Initiative/Vigil" rel="noreferrer">VIGIL Observatory repository</a></li>
-    </ul>
-  </nav>
-  <h2>CAELESTIS Architecture Model</h2>
-  <p>The CAELESTIS Architecture Model is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. Its public architecture reference is undergoing a substantive refactor.</p>
-  <nav aria-label="CAELESTIS Architecture Model resources">
-    <ul>
-      <li><a href="https://doi.org/10.5281/zenodo.20686316" rel="noreferrer">Open archived version 1.1.0</a></li>
-      <li><a href="https://github.com/CAM-Initiative/Caelestis" rel="noreferrer">CAELESTIS repository</a></li>
     </ul>
   </nav>
 </main>`;
