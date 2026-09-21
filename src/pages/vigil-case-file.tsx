@@ -550,7 +550,7 @@ export default function VigilCaseFile() {
     {(incident || governanceConclusion) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-diagnosis-definition">
-          <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
+          <p className="vigil-library-kicker">GOVERNANCE ASSESSMENT</p>
           <div className="vigil-diagnosis-assessment-details">
             <section>
               <h4 className="vigil-substantive-label">Factual basis</h4>
@@ -562,7 +562,7 @@ export default function VigilCaseFile() {
             </section>
             <CaseTaxonomyAssessment raw={incident.raw} />
             {externalAssessments.length > 0 && <section className="vigil-diagnosis-external-assessments" aria-labelledby="assessment-external-assessments-heading">
-          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">External assessments</p>
+          <p className="vigil-library-kicker" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</p>
           <div className="vigil-external-assessment-table-wrap">
             <table className="vigil-external-assessment-table">
               <thead>
@@ -607,7 +607,7 @@ export default function VigilCaseFile() {
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
-            <p className="vigil-library-kicker">Harm classification</p>
+            <p className="vigil-library-kicker">REAL-WORLD HARM ASSESSMENT</p>
             <h3 id="severity-assessment-heading">Harm Impact Assessment</h3>
           </div>
           <HarmImpactMatrix
