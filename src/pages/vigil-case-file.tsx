@@ -473,7 +473,7 @@ export default function VigilCaseFile() {
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
 
-  const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
@@ -546,11 +546,10 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "diagnose") return <>
-    {(incident || governanceAssessment) ? <article className="vigil-diagnosis-view">
+    {(incident || governanceConclusion) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-diagnosis-definition">
           <p className="vigil-library-kicker">VIGIL Observatory governance assessment</p>
-          <p className="vigil-diagnosis-assessment-summary">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
           <div className="vigil-diagnosis-assessment-details">
             <section>
               <h4 className="vigil-substantive-label">Factual basis</h4>
@@ -620,6 +619,13 @@ export default function VigilCaseFile() {
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
+
+    if (stageId === "conclusion") return governanceConclusion ? <article className="vigil-diagnosis-view">
+      <section className="vigil-diagnosis-definition">
+        <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
+        <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
+      </section>
+    </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
 
     if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">
       {externalSources.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="evidence-sources-heading">
