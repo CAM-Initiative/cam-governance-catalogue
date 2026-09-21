@@ -177,8 +177,8 @@ assert.doesNotMatch(taxonomyAssessment, /class_id/);
 assert.doesNotMatch(taxonomyAssessment, /VIGIL-FC-/);
 assert.match(caseFile, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment/);
 assert.match(report, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment/);
-assert.match(polishCss, /\.vigil-taxonomy-assessment-row \{[\s\S]*grid-template-columns:/);
-assert.match(reportCss, /\.vigil-taxonomy-assessment-row \{[\s\S]*break-inside: avoid/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
+assert.match(reportCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
 
 assert.match(taxonomyAssessment, /vigil-external-assessment-table report-external-assessment-table vigil-taxonomy-assessment-table/);
 assert.doesNotMatch(taxonomyAssessment, /vigil-taxonomy-assessment-row/);
