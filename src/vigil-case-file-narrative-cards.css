@@ -1,6 +1,6 @@
 /* Case File narrative-card alignment.
    Keep Observation focused on the occurrence itself. Source bibliography and
-   supporting reference material belong in Section 05 References. */
+   supporting reference material belong in Section 06 References. */
 
 /* Observation: "What happened" is the primary narrative callout. */
 .vigil-case-file-page .vigil-observation-summary {
@@ -27,7 +27,7 @@
 }
 
 /* Section 01 deliberately does not repeat evidence-source cards or source-count
-   notices. The complete source trail remains available in Section 05 References.
+   notices. The complete source trail remains available in Section 06 References.
    This is a browser-only Case File simplification; deterministic report/PDF
    evidence presentation is unchanged. Scope the suppression to direct stage
    children so future nested notices are not hidden accidentally. */
