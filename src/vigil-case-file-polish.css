@@ -569,6 +569,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   margin: 0 0 0.55rem;
 }
 
+/* Keep the intro-to-table gap independent of intro sentence count. */
 .vigil-case-file-page .vigil-taxonomy-assessment-intro {
   margin: 0 0 0.85rem;
   max-width: 70rem;
