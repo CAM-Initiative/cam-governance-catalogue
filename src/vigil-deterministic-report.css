@@ -2271,7 +2271,7 @@
 
 
 /* Stage 02 taxonomy reasoning uses the same table grammar as External assessments. */
-.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-library-kicker {
+.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-substantive-label {
   margin: 0 0 0.55rem;
 }
 
@@ -2299,4 +2299,56 @@
 
 .vigil-deterministic-report-host .report-severity-assessment > .vigil-library-kicker + .report-substantive-label {
   padding-top: 0.3rem;
+}
+
+
+/* Taxonomy assessment table mirrors the External assessments table without leaking report-only classes into the web DOM. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.96rem;
+  line-height: 1.56;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th,
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
+  padding: 0.55rem 0.6rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+  border-top: 0;
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-muted));
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table td:first-child {
+  white-space: normal;
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table,
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
+    font-size: 11.5pt !important;
+    line-height: 1.5 !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table th,
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
+    padding: 2.6mm 2.8mm !important;
+  }
+
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+  }
 }
