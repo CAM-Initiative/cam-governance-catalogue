@@ -126,7 +126,7 @@ assert.match(reportCss, /padding: 0 13mm !important/);
 assert.match(reportCss, /Physical A4 safe area/);
 assert.match(reportCss, /Deterministic vertical pagination/);
 assert.match(reportCss, /data-report-stage="02"[\s\S]*break-before: page !important/);
-assert.match(reportCss, /data-report-stage="05"[\s\S]*page-break-before: always !important/);
+assert.match(reportCss, /data-report-stage="06"[\s\S]*page-break-before: always !important/);
 assert.match(reportCss, /vigil-classification-family-row[\s\S]*break-after: avoid-page !important/);
 assert.match(reportCss, /grid-template-columns: 9mm minmax\(0, 1fr\) !important/);
 assert.match(reportCss, /overflow-wrap: break-word !important/);

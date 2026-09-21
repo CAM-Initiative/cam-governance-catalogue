@@ -1,3 +1,4 @@
+// Conclusion follows assessment, classification and repair; References remain the closing evidentiary stage.
 export const VIGIL_INCIDENT_CASE_SECTIONS = [
   {
     id: "observe",
@@ -20,8 +21,13 @@ export const VIGIL_INCIDENT_CASE_SECTIONS = [
     label: "Repair",
   },
   {
-    id: "references",
+    id: "conclusion",
     number: "05",
+    label: "Conclusion",
+  },
+  {
+    id: "references",
+    number: "06",
     label: "References",
   },
 ] as const;

@@ -76,9 +76,9 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
-test("Case File Section 02 follows governance assessment, factual basis, governance significance, harm order", async () => {
+test("Case File Section 02 leads with factual basis and governance significance before harm assessment", async () => {
   const source = await caseFileSource();
-  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const governanceIndex = assessmentRenderer.indexOf("VIGIL Observatory governance assessment");
   const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
@@ -86,6 +86,7 @@ test("Case File Section 02 follows governance assessment, factual basis, governa
 
   assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
   assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
+  assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-assessment-summary|\{governanceConclusion\}/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
 });
 
@@ -98,9 +99,28 @@ test("Factual basis and Governance significance stay inside the governance asses
   assert.match(card, /vigil-diagnosis-assessment-details/);
 });
 
+test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
+  const [caseFile, report, sections] = await Promise.all([
+    caseFileSource(),
+    readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/lib/vigilCaseSections.ts"), "utf8"),
+  ]);
+  const caseAssessment = caseFile.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
+  const caseConclusion = caseFile.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const reportAssessment = report.match(/<Stage number="02" label="Assessment">[\s\S]*?<Stage number="03" label="Classification">/)?.[0] ?? "";
+  const reportConclusion = report.match(/<Stage number="05" label="Conclusion">[\s\S]*?<Stage number="06" label="References">/)?.[0] ?? "";
+
+  assert.doesNotMatch(caseAssessment, /\{governanceConclusion\}/);
+  assert.match(caseConclusion, /\{governanceConclusion\}/);
+  assert.doesNotMatch(reportAssessment, /\{governanceConclusion\}/);
+  assert.match(reportConclusion, /\{governanceConclusion\}/);
+  assert.match(sections, /id: "conclusion",[\s\S]*number: "05",[\s\S]*label: "Conclusion"/);
+  assert.match(sections, /id: "references",[\s\S]*number: "06",[\s\S]*label: "References"/);
+});
+
 test("Case File moves assessment limits from Section 02 to the closing References disclaimer", async () => {
   const source = await caseFileSource();
-  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const referencesRenderer = source.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
 
   assert.ok(assessmentRenderer, "Assessment renderer must remain present");
@@ -141,14 +161,17 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(referencesRenderer, /externalAssessments\.map|unmatchedExternalAssessments\.map/);
 });
 
-test("Incident Case File retains evidence context and VIGIL Observatory interpretation", async () => {
+test("Incident Case File retains evidence context and moves governance interpretation to Conclusion", async () => {
   const source = await caseFileSource();
   const observationRenderer = source.match(/if \(stageId === "observe"\)[\s\S]*?if \(stageId === "classify"\)/)?.[0] ?? "";
+  const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
 
   assert.ok(observationRenderer, "Observation renderer must remain present");
   assert.match(source, /vigil_assessment\.factual_basis/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
   assert.match(source, /VIGIL Observatory governance assessment/);
+  assert.match(conclusionRenderer, /VIGIL Observatory conclusion/);
+  assert.match(conclusionRenderer, /\{governanceConclusion\}/);
 });
 
 test("Incident Case File projects taxonomy-derived class-invariant repair, not implementation state", async () => {
@@ -186,8 +209,11 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /vigil_assessment\.factual_basis/);
   assert.match(report, /label="Classification"/);
   assert.match(report, /label="Repair"/);
-  assert.match(report, /label="References"/);
+  assert.match(report, /<Stage number="05" label="Conclusion">/);
+  assert.match(report, /<Stage number="06" label="References">/);
   assert.match(printable, /label: "Repair"/);
+  assert.match(printable, /label: "Conclusion"/);
+  assert.match(printable, /number: "06", label: "References"/);
   assert.match(report, /report-external-assessment-table/);
   assert.match(report, /externalAssessments\.map/);
   assert.doesNotMatch(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
@@ -243,7 +269,7 @@ test("harm rows resolve source_records evidence to the numbered Evidence sources
 });
 
 
-test("inline Case File references activate Section 05 before resolving their anchors", async () => {
+test("inline Case File references activate Section 06 before resolving their anchors", async () => {
   const source = await caseFileSource();
 
   assert.match(source, /CASE_REFERENCE_HASH_PATTERN/);
@@ -324,21 +350,23 @@ test("Governance assessment uses one divider before each peer subsection", async
 });
 
 
-test("Harm Impact assessment leads with the substantive summary and closes with the method note", async () => {
+test("Harm Impact assessment uses one context-sensitive methodology footer", async () => {
   const [matrix, caseFile, report] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
     caseFileSource(),
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
   ]);
   assert.doesNotMatch(matrix, /Harm assessment summary:|Assessment date|Overall severity|vigil-harm-summary-row/);
-  assert.match(matrix, /className="vigil-harm-summary"/);
-  assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
-  assert.match(matrix, /noMaterialisedHarmBasis\s*\?/);
-  assert.match(matrix, /No materialised downstream harm was established across the 11 Harm Impact dimensions/);
-  assert.match(matrix, /Under VIGIL-HIM, S1 may be assigned where positive evidence supports a bounded occurrence with no materialised harm/);
-  assert.match(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
-  assert.match(matrix, /The highest supported materialised harm across the assessed dimensions determines the overall harm severity/);
-  assert.ok(matrix.indexOf("vigil-harm-summary") < matrix.indexOf("vigil-harm-assessment-table"));
+  assert.doesNotMatch(matrix, /coverageNote|assessment\.coverage_note|className="vigil-harm-summary"/);
+  assert.doesNotMatch(matrix, /className="vigil-harm-no-harm-basis"/);
+  assert.match(matrix, /const derivationNote = noMaterialisedHarmBasis/);
+  assert.match(matrix, /No materialised downstream harm was established for the bounded occurrence/);
+  assert.match(matrix, /S1 is assigned under the VIGIL-HIM positive no-materialised-harm pathway/);
+  assert.match(matrix, /<strong>Basis:<\/strong> \{noMaterialisedHarmBasis\}/);
+  assert.match(matrix, /No defensible overall severity band could be derived because no Harm Impact dimension could be banded and positive no-materialised-harm was not established/);
+  assert.match(matrix, /SU denotes an unassessed evidence state, not a sixth severity band/);
+  assert.match(matrix, /Overall harm severity is determined by the highest supported materialised harm across the assessed dimensions/);
+  assert.doesNotMatch(matrix, /Harm impact is assessed across 11 dimensions on a five-band severity axis/);
   assert.ok(matrix.indexOf("vigil-harm-assessment-table") < matrix.indexOf("vigil-harm-derivation-note"));
   assert.doesNotMatch(caseFile, /vigil-harm-classification-intro/);
   assert.doesNotMatch(report, /report-harm-classification-intro/);
@@ -388,7 +416,7 @@ test("External assessments cite Evidence sources without creating a second Refer
     assert.doesNotMatch(source, /unmatchedExternalAssessments/);
   }
   const caseReferences = caseFile.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
-  const reportReferences = report.match(/<Stage number="05" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
+  const reportReferences = report.match(/<Stage number="06" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
   assert.doesNotMatch(caseReferences, /External assessments/);
   assert.doesNotMatch(reportReferences, /External assessments/);
 });
@@ -414,15 +442,31 @@ test("Reference subsection boundaries do not double the divider before Internal 
 });
 
 
-test("Harm summary is plain narrative with spacing before the table and the derivation is footnote-sized", async () => {
+test("Harm derivation footer remains footnote-sized after removing duplicated lead-in prose", async () => {
   const [matrix, css, reportCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
     readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
     readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),
   ]);
-  assert.match(matrix, /className="vigil-harm-summary"/);
-  assert.doesNotMatch(matrix, /vigil-harm-coverage vigil-harm-summary/);
-  assert.match(css, /\.vigil-harm-summary \{[\s\S]*margin: 0 0 1\.05rem[\s\S]*border: 0/);
+  assert.doesNotMatch(matrix, /className="vigil-harm-summary"|className="vigil-harm-no-harm-basis"/);
   assert.match(css, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
   assert.match(reportCss, /\.vigil-harm-derivation-note \{[\s\S]*font-size: 0\.76rem/);
+});
+
+
+test("mobile Assessment prose stays viewport-bound while Harm tables remain horizontally scrollable", async () => {
+  const [polishCss, harmCss] = await Promise.all([
+    readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+  ]);
+
+  assert.match(polishCss, /@media \(max-width: 820px\)[\s\S]*#case-diagnose[\s\S]*min-width: 0;[\s\S]*max-width: 100%;/);
+  assert.match(polishCss, /\.vigil-diagnosis-assessment-details p,[\s\S]*white-space: normal;[\s\S]*overflow-wrap: anywhere;/);
+
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-matrix-scroll \{[\s\S]*overflow-x: auto;[\s\S]*-webkit-overflow-scrolling: touch;/);
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-methodology-table \{[\s\S]*min-width: 1120px;/);
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-assessment-table \{[\s\S]*min-width: 800px;/);
+
+  assert.match(harmCss, /\.vigil-harm-methodology-table \{[\s\S]*min-width: 1680px;/);
+  assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*min-width: 1040px;/);
 });

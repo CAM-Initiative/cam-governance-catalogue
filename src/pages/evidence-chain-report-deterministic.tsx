@@ -246,7 +246,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing deterministic Case File report…</main></Shell>;
   if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Report unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
 
-  const governanceAssessment = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
+  const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
   const governanceSignificance = incident ? firstText(incident.raw, ["vigil_assessment.significance_to_cam", "why_it_matters_to_CAM"]) : undefined;
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
@@ -361,7 +361,6 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         {incident ? <article className="report-diagnosis">
           <section className="report-intro">
             <p className="vigil-evidence-kicker">VIGIL Observatory governance assessment</p>
-            <p className="report-intro-copy">{governanceAssessment ?? incident.publicDisplay.finding ?? incident.summary}</p>
             <div className="report-assessment-details">
               <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
               <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
@@ -405,7 +404,14 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
         </Stage>
 
-        <Stage number="05" label="References">
+        <Stage number="05" label="Conclusion">
+          {governanceConclusion ? <section className="report-intro">
+            <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
+            <p className="report-intro-copy">{governanceConclusion}</p>
+          </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
+        </Stage>
+
+        <Stage number="06" label="References">
           {(evidenceReferences.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>
