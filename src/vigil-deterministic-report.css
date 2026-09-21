@@ -620,7 +620,7 @@
   color: hsl(var(--report-muted));
 }
 
-/* References */
+/* Stage 06 References */
 .vigil-deterministic-report-host .report-section[data-report-stage="06"] {
   counter-reset: report-reference;
 }
