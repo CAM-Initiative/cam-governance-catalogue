@@ -1282,10 +1282,9 @@
   overflow-wrap: anywhere;
   word-break: normal;
 }
-.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(1) { width: 21%; }
-.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(2) { width: 14%; }
-.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(3) { width: 15%; }
-.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(4) { width: 50%; }
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(1) { width: 24%; }
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(2) { width: 18%; }
+.vigil-deterministic-report-host .vigil-harm-assessment-table thead th:nth-child(3) { width: 58%; }
 
 @media print {
   .vigil-deterministic-report-host .vigil-harm-matrix-scroll,
