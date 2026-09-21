@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Check, Copy } from "lucide-react";
+import { ArrowRight, Check, CircleCheckBig, CircleX, Copy, Info } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassification";
@@ -10,32 +10,32 @@ const ABOUT_CASE_FILE_STAGES = [
   {
     number: "01",
     label: "Incident",
-    description: "What happened, which systems were affected, and what the evidence establishes.",
+    description: "Record what happened, the affected systems and the public evidence supporting the occurrence.",
   },
   {
     number: "02",
     label: "Assessment",
-    description: "The occurrence-level governance assessment, including materialised severity and evidentiary limits.",
+    description: "Assess governance significance and apply VIGIL-HIM to materialised harm, severity and evidentiary limits.",
   },
   {
     number: "03",
     label: "Classification",
-    description: "The canonical structural mechanism supported by the assessment and evidence.",
+    description: "Map the evidence to the VIGIL Failure Taxonomy and record whether each boundary failed, held or remains unresolved.",
   },
   {
     number: "04",
     label: "Repair",
-    description: "The governing invariant condition that a repair must restore and preserve.",
+    description: "Surface the governing class invariants relevant to failure-occurrence and unresolved-boundary mappings; successful-invariant mappings create no Repair requirement.",
   },
   {
     number: "05",
     label: "Conclusion",
-    description: "The integrated VIGIL Observatory interpretation reached after assessment, classification and repair analysis.",
+    description: "Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation.",
   },
   {
     number: "06",
     label: "References",
-    description: "Sources, taxonomy records and the canonical Incident cited in this Case File.",
+    description: "Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis.",
   },
 ] as const;
 
@@ -94,21 +94,22 @@ export default function About() {
               <h2 id="vigil-observatory-heading">Public Incident evidence, classification and repair analysis</h2>
             </div>
             <p className="vigil-about-record-intro">VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
+            <p className="vigil-about-record-intro">VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately. VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
             <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
               <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
               <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
               <Link href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
             </div>
-            <p className="vigil-about-record-intro vigil-about-affiliation-note"><strong>Project boundaries.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately. VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
           </section>
 
           <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">Case File method</p>
-              <h2 id="vigil-method-heading">Every Incident follows the same six-stage structure</h2>
+              <h2 id="vigil-method-heading">Every Incident moves through the same six-stage evidence-to-conclusion structure</h2>
             </div>
-            <p className="vigil-about-record-intro">The Case File structure keeps what happened separate from incident-level assessment and severity, taxonomy classification, any governing invariant that a failure requires repair to restore, the integrated VIGIL Observatory conclusion, and the references supporting that analysis.</p>
-            <p className="vigil-about-record-intro">A reported Incident is not automatically evidence of a failure, and a failure is not automatically a new class. VIGIL Observatory asks what the evidence establishes, which taxonomy boundary is relevant, and whether that relationship represents a failure-classified Incident or an example of the governing invariant holding successfully.</p>
+            <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> evaluates governance significance and uses VIGIL-HIM to classify materialised harm and severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Failure Taxonomy were engaged, and what happened at each boundary.</p>
+            <p className="vigil-about-record-intro">Harm severity and taxonomy classification are deliberately independent. Severity describes consequence; taxonomy describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
+            <p className="vigil-about-record-intro"><strong>Repair</strong> then surfaces the governing class invariants relevant to mappings that failed or remain unresolved. Successful-invariant mappings stay visible in Classification as evidence of governance that held and do not create a Repair requirement. <strong>Conclusion</strong> integrates those separate findings, while <strong>References</strong> preserve the evidence, taxonomy and methodology chain supporting the analysis.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
                 {ABOUT_CASE_FILE_STAGES.map((section) => <article key={section.number}>
@@ -123,16 +124,39 @@ export default function About() {
           <section className="vigil-about-section" aria-labelledby="vigil-taxonomy-heading">
             <div className="vigil-about-section-heading">
               <p className="vigil-library-kicker">VIGIL Observatory Failure Taxonomy</p>
-              <h2 id="vigil-taxonomy-heading">Failure families organise the landscape. Failure classes identify the mechanism.</h2>
+              <h2 id="vigil-taxonomy-heading">Mappings classify individual boundaries. The Case File summarises the combined outcome.</h2>
             </div>
-            <p className="vigil-about-record-intro">The maintained VIGIL Observatory Failure Taxonomy provides shared classification language for recurring AI governance and control-failure mechanisms. Broad families provide stable structure; individual classes define the mechanism precisely enough to support comparison without collapsing unlike events together.</p>
-            <p className="vigil-about-record-intro">Each Case File relationship is explicit. A taxonomy mapping may document a <strong>failure-classified Incident</strong>, where the class mechanism is evidenced, or a <strong>successful-invariant exemplar</strong>, where the same failure boundary was tested but the governing invariant held. Exemplars remain attached to the relevant Failure Class because they show what successful governance looks like; they are not counted as failure evidence and do not create a Repair requirement.</p>
+            <p className="vigil-about-record-intro">The maintained VIGIL Observatory Failure Taxonomy provides shared classification language for recurring AI governance and control-failure mechanisms. Broad <strong>Failure Families</strong> provide stable structure; individual <strong>Failure Classes</strong> define a repeatable mechanism, recognition criteria, exclusions and the governing invariant relevant to that boundary.</p>
+            <p className="vigil-about-record-intro">Classification happens at the <strong>mapping level</strong>. One Incident may engage several Failure Classes, and each relationship is recorded separately as <strong>Failure occurred</strong>, <strong>Invariant held</strong> or <strong>Boundary unresolved</strong>. The legend below is the visual key used throughout VIGIL Case Files.</p>
             <VigilAlignmentLegend detailed />
+
+            <div className="vigil-about-outcome-explainer">
+              <h3>From mapping roles to the Case File outcome</h3>
+              <p>After the individual mappings are assessed, VIGIL presents the Case File using one of three alignment-outcome treatments. This prevents a multi-boundary Incident from being flattened into a single label when different governance boundaries behaved differently.</p>
+              <div className="vigil-about-case-outcome-grid">
+                <article>
+                  <div className="vigil-about-outcome-visual is-failure" aria-hidden="true"><CircleX /></div>
+                  <h3>Failure-classified Incident</h3>
+                  <p>The relevant taxonomy mappings evidence failure occurrence. Their governing class invariants flow into Repair; harm severity remains a separate VIGIL-HIM assessment.</p>
+                </article>
+                <article>
+                  <div className="vigil-about-outcome-visual is-exemplar" aria-hidden="true"><CircleCheckBig /></div>
+                  <h3>Successful-invariant exemplar</h3>
+                  <p>The tested governance boundary or boundaries held under pressure. The mappings remain attached to their Failure Classes as successful evidence and do not create a Repair requirement.</p>
+                </article>
+                <article>
+                  <div className="vigil-about-outcome-visual is-combination" aria-hidden="true"><Info /></div>
+                  <h3>Combination · mixed alignment</h3>
+                  <p>The Case File contains different mapping roles, or an unresolved boundary, so neither a single aligned nor misaligned label describes the whole occurrence. Each relationship remains separately visible in Classification.</p>
+                </article>
+              </div>
+            </div>
+
             <div className="vigil-about-boundary-grid">
               <article><h3>Failure family</h3><p>The broad structural grouping: the governance boundary or system function involved.</p></article>
               <article><h3>Failure class</h3><p>The repeatable mechanism within a family, with its own definition, recognition criteria, exclusions and governing invariant.</p></article>
-              <article><h3>Failure-classified Incident</h3><p>The evidence supports the class mechanism in the Incident. Where a class invariant is published, Repair identifies the condition that must be restored.</p></article>
-              <article><h3>Successful-invariant exemplar</h3><p>The Incident sits on the successful side of the same class boundary: the relevant invariant held under pressure. It remains visible for comparison without being presented as a failure.</p></article>
+              <article><h3>Mapping role</h3><p>The evidentiary relationship between this Incident and one Failure Class: failure occurred, invariant held or boundary unresolved.</p></article>
+              <article><h3>Case File outcome</h3><p>The summary treatment derived from all mapping roles together: failure-classified, successful-invariant exemplar or combination / mixed alignment.</p></article>
             </div>
             <Link className="vigil-about-action" href="/observatory/knowledge-base/failure-taxonomy/">Browse the taxonomy <ArrowRight aria-hidden="true" /></Link>
           </section>
