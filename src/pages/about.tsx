@@ -72,6 +72,10 @@ export default function About() {
           </div>
         </header>
 
+        <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary">
+          <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
+        </aside>
+
         <article className="vigil-about-document">
           <section className="vigil-about-section" aria-labelledby="vigil-method-heading">
             <div className="vigil-about-section-heading">
@@ -120,7 +124,7 @@ export default function About() {
               <article><h3>Publish the limits</h3><p>Uncertainty, evidentiary limits, disputed or provisional classifications and unresolved gaps remain visible instead of being smoothed away to make a record look more certain than it is.</p></article>
               <article><h3>Open to scrutiny, not openly licensed</h3><p>VIGIL Observatory is publicly available for reading, citation, research and policy scrutiny. Public availability does not place the work under an open licence.</p></article>
             </div>
-            <p className="vigil-about-record-intro">VIGIL Observatory publishes evidence-bounded assessments and taxonomy relationships. CAELESTIS governance instruments are a separate authority layer and become authoritative only through their own amendment, validation and adoption processes.</p>
+            <p className="vigil-about-record-intro">VIGIL Observatory publishes evidence-bounded assessments and taxonomy relationships. It does not create or amend CAM or CAELESTIS doctrine. Any CAM or CAELESTIS applicability is assessed separately, and those instruments become authoritative only through their own amendment, validation and adoption processes.</p>
             <div className="vigil-about-link-row" aria-label="VIGIL Observatory publication and legal information">
               <Link href="/licensing/">Copyright & Licence <ArrowRight aria-hidden="true" /></Link>
               <Link href="/privacy/">Privacy <ArrowRight aria-hidden="true" /></Link>
