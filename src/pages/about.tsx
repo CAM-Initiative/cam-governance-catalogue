@@ -72,7 +72,7 @@ export default function About() {
           </div>
         </header>
 
-        <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary">
+        <aside className="vigil-about-identity-boundary" aria-label="VIGIL Observatory project boundary" data-vigil-boundary="caelestis-distinct">
           <strong>VIGIL Observatory is distinct from CAELESTIS.</strong> VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy to document and analyse AI incidents. It does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.
         </aside>
 
