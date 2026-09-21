@@ -59,7 +59,7 @@ function CopyCitation() {
 
 export default function About() {
   return <Shell>
-    <main className="vigil-about-page">
+    <main className="vigil-about-page" data-vigil-entity="incident-observatory">
       <div className="container mx-auto max-w-[1220px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
         <header className="vigil-about-hero">
           <p className="vigil-library-kicker">CAM Initiative · VIGIL Observatory</p>
