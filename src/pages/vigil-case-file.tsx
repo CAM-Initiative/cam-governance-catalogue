@@ -590,8 +590,8 @@ export default function VigilCaseFile() {
           </div>
         </section>}
           </div>
-          <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
-            <p className="vigil-diagnostic-meta-label">Assessment provenance</p>
+          <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
+            <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
             <dl className="vigil-evidence-review-meta">
               {diagnosticMethodLabel(diagnostic?.method) && <Field label="Method" value={diagnosticMethodLabel(diagnostic?.method)} />}
               {(diagnostic?.aiPlatform || diagnostic?.aiModel) && <Field label="AI collaborator" value={[diagnostic.aiPlatform, diagnostic.aiModel].filter(Boolean).join(" ")} />}
