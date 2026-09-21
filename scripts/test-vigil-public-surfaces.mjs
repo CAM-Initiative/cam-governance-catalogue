@@ -281,7 +281,7 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
   ]);
   assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
   assert.match(about, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
-  assert.match(about, /apply VIGIL-HIM to materialised harm, severity and evidentiary limits/);
+  assert.match(about, /interpret taxonomy-relevant source clauses, and apply VIGIL-HIM to materialised harm, severity and evidentiary limits/);
   assert.match(about, /Map the evidence to the VIGIL Failure Taxonomy and record whether each boundary failed, held or remains unresolved\./);
   assert.match(about, /governing class invariants relevant to failure-occurrence and unresolved-boundary mappings/);
   assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);

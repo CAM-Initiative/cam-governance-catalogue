@@ -164,3 +164,18 @@ assert.doesNotMatch(printableReport, /© 2026 Dr Michelle O'Rourke/);
 assert.match(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
+
+
+const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url), "utf8");
+assert.match(taxonomyAssessment, /vigil_assessment/);
+assert.match(taxonomyAssessment, /source_clause_analysis/);
+assert.match(taxonomyAssessment, /VIGIL TAXONOMY ASSESSMENT/);
+assert.match(taxonomyAssessment, /Recovered governance principle/);
+assert.match(taxonomyAssessment, /Taxonomy assessment/);
+assert.match(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
+assert.doesNotMatch(taxonomyAssessment, /class_id/);
+assert.doesNotMatch(taxonomyAssessment, /VIGIL-FC-/);
+assert.match(caseFile, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment/);
+assert.match(report, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment-row \{[\s\S]*grid-template-columns:/);
+assert.match(reportCss, /\.vigil-taxonomy-assessment-row \{[\s\S]*break-inside: avoid/);

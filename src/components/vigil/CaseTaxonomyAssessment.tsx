@@ -1,0 +1,129 @@
+import type { UnknownRecord } from "@/lib/vigilRegistry";
+
+type ClauseRelationship = {
+  relationship?: string;
+  canonical: boolean;
+};
+
+type ClauseAssessment = {
+  sourceAnchor?: string;
+  sourceParaphrase?: string;
+  recoveredInvariant?: string;
+  relationships: ClauseRelationship[];
+};
+
+type Props = {
+  raw: UnknownRecord;
+};
+
+function isObject(value: unknown): value is UnknownRecord {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function text(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
+  const vigilAssessment = isObject(raw.vigil_assessment) ? raw.vigil_assessment : undefined;
+  const sourceClauseAnalysis = vigilAssessment && isObject(vigilAssessment.source_clause_analysis)
+    ? vigilAssessment.source_clause_analysis
+    : undefined;
+  const clauses = sourceClauseAnalysis && Array.isArray(sourceClauseAnalysis.clauses)
+    ? sourceClauseAnalysis.clauses
+    : [];
+
+  return clauses.flatMap((value) => {
+    if (!isObject(value)) return [];
+    const relationships = Array.isArray(value.taxonomy_relationships)
+      ? value.taxonomy_relationships.flatMap((relationship) => {
+          if (!isObject(relationship)) return [];
+          return [{
+            relationship: text(relationship.relationship),
+            canonical: relationship.canonical_taxonomy_mapping === true,
+          }];
+        })
+      : [];
+
+    const sourceAnchor = text(value.source_anchor);
+    const sourceParaphrase = text(value.source_paraphrase);
+    const recoveredInvariant = text(value.recovered_invariant_interpretation);
+    if (!sourceAnchor && !sourceParaphrase && !recoveredInvariant) return [];
+
+    return [{
+      sourceAnchor,
+      sourceParaphrase,
+      recoveredInvariant,
+      relationships,
+    }];
+  });
+}
+
+function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
+  const canonical = relationships.filter((item) => item.canonical);
+  const labels = canonical.map((item) => item.relationship?.toLowerCase() ?? "");
+  const held = labels.some((label) => label.includes("successful-invariant"));
+  const unresolved = labels.some((label) => label.includes("ambiguous-boundary"));
+  const failure = labels.some((label) => label.includes("failure-occurrence"));
+  const otherCanonical = canonical.some((item) => {
+    const label = item.relationship?.toLowerCase() ?? "";
+    return !label.includes("successful-invariant")
+      && !label.includes("ambiguous-boundary")
+      && !label.includes("failure-occurrence");
+  });
+  const adjacentOnly = relationships.some((item) => !item.canonical);
+
+  let summary: string;
+  if (held && failure) {
+    summary = "The clause engages a governance boundary that held in the observed downstream behaviour, while the wording itself also contributes to the recorded failure mechanism.";
+  } else if (unresolved && failure) {
+    summary = "The clause exposes a reusable governance boundary, but this occurrence does not establish that boundary as a failure. The wording nevertheless contributes to the recorded failure mechanism.";
+  } else if (failure && otherCanonical) {
+    summary = "The clause engages an additional governance boundary while also contributing to the recorded failure mechanism. The formal relationship is resolved in Classification.";
+  } else if (held) {
+    summary = "The clause engages a governance boundary that held in the observed downstream behaviour.";
+  } else if (unresolved) {
+    summary = "The clause exposes a reusable governance boundary, but this occurrence does not establish either failure or successful holding of that boundary.";
+  } else if (failure) {
+    summary = "The clause contributes directly to the recorded failure mechanism.";
+  } else if (otherCanonical) {
+    summary = "The clause engages a governance boundary that is carried forward into the formal taxonomy mapping.";
+  } else {
+    summary = "The clause contributes to the governance interpretation, but no separate canonical taxonomy relationship is asserted here.";
+  }
+
+  if (adjacentOnly) {
+    summary += " A semantically adjacent taxonomy relationship was considered but was not made canonical because its occurrence conditions are not evidenced.";
+  }
+  return summary;
+}
+
+export function CaseTaxonomyAssessment({ raw }: Props) {
+  const clauses = parseAssessment(raw);
+  if (!clauses.length) return null;
+
+  return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
+    <h4 id="vigil-taxonomy-assessment-heading" className="vigil-substantive-label vigil-taxonomy-assessment-heading">VIGIL TAXONOMY ASSESSMENT</h4>
+    <p className="vigil-taxonomy-assessment-intro">
+      Clause-level interpretation showing how source language was resolved into governance principles before formal taxonomy mapping. Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03.
+    </p>
+    <div className="vigil-taxonomy-assessment-list">
+      {clauses.map((clause, index) => <article className="vigil-taxonomy-assessment-row" key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
+        <div className="vigil-taxonomy-assessment-cell is-source">
+          <span className="vigil-taxonomy-assessment-label">Source clause</span>
+          {clause.sourceAnchor
+            ? <q>{clause.sourceAnchor}</q>
+            : <p>{clause.sourceParaphrase ?? "Source language is paraphrased in the canonical Incident record."}</p>}
+        </div>
+        <div className="vigil-taxonomy-assessment-cell">
+          <span className="vigil-taxonomy-assessment-label">Recovered governance principle</span>
+          <p>{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</p>
+        </div>
+        <div className="vigil-taxonomy-assessment-cell">
+          <span className="vigil-taxonomy-assessment-label">Taxonomy assessment</span>
+          <p>{taxonomyAssessmentSummary(clause.relationships)}</p>
+        </div>
+      </article>)}
+    </div>
+  </section>;
+}

@@ -3,7 +3,7 @@ import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucid
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";\nimport { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
@@ -559,6 +559,7 @@ export default function VigilCaseFile() {
               <h4 className="vigil-substantive-label">Governance significance</h4>
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </section>
+            <CaseTaxonomyAssessment raw={incident.raw} />
           </div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Assessment metadata">
             <p className="vigil-diagnostic-meta-label">Assessment provenance</p>

@@ -15,7 +15,7 @@ const ABOUT_CASE_FILE_STAGES = [
   {
     number: "02",
     label: "Assessment",
-    description: "Assess governance significance and apply VIGIL-HIM to materialised harm, severity and evidentiary limits.",
+    description: "Assess governance significance, interpret taxonomy-relevant source clauses, and apply VIGIL-HIM to materialised harm, severity and evidentiary limits.",
   },
   {
     number: "03",
