@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
@@ -108,6 +108,20 @@ function IncidentTicker() {
   );
 }
 
+function MechanicalGear({ size, teeth }: { size: "outer" | "inner"; teeth: number }) {
+  return (
+    <div className={`diagnostic-gear diagnostic-gear-${size}`} aria-hidden="true">
+      {Array.from({ length: teeth }).map((_, index) => (
+        <span
+          key={index}
+          className="diagnostic-gear-tooth"
+          style={{ "--tooth-angle": `${(360 / teeth) * index}deg` } as CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
+
 function PremiumHero() {
   const [scanTurn, setScanTurn] = useState(0);
   const reduceMotion = useReducedMotion();
@@ -147,9 +161,8 @@ function PremiumHero() {
         </motion.div>
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
-          <div className="diagnostic-calibration" aria-hidden="true" />
-          <div className="diagnostic-orbit-ring diagnostic-orbit-ring-outer" aria-hidden="true" />
-          <div className="diagnostic-orbit-ring diagnostic-orbit-ring-inner" aria-hidden="true" />
+          <MechanicalGear size="outer" teeth={30} />
+          <MechanicalGear size="inner" teeth={22} />
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What went wrong?</strong>
@@ -194,7 +207,23 @@ function PatternField() {
   return (
     <section id="patterns" className="pattern-field" aria-labelledby="pattern-heading">
       <div className="pattern-field-bg" aria-hidden="true">
-        {Array.from({ length: 18 }).map((_, index) => <span key={index} className={`pattern-dot pattern-dot-${(index % 6) + 1}`} />)}
+        {Array.from({ length: 36 }).map((_, index) => {
+          const left = 3 + ((index * 29) % 94);
+          const top = 7 + ((index * 43) % 86);
+          const scale = 0.72 + ((index * 7) % 9) / 10;
+          return (
+            <span
+              key={index}
+              className={`pattern-dot pattern-star-${(index % 4) + 1}`}
+              style={{
+                left: `${left}%`,
+                top: `${top}%`,
+                "--star-scale": scale,
+                animationDelay: `${(index % 12) * 0.22}s`,
+              } as CSSProperties}
+            />
+          );
+        })}
       </div>
       <motion.div className="pattern-copy narrative-section-copy" {...reveal}>
         <p className="premium-eyebrow narrative-kicker">From cases to intelligence</p>
