@@ -4,6 +4,7 @@ import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion } from "framer-motion";
 import { ArrowDown, ArrowRight, BookOpen, Coffee, Download, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 import "@/home-premium.css";
+import "@/home-premium-v2.css";
 
 const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
 const HERO_IMAGES = {
@@ -57,8 +58,38 @@ const reveal = {
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
 };
 
+const diagnosticStages = [
+  {
+    label: "Observe",
+    title: "What happened?",
+    detail: "Preserve occurrence-specific evidence, source chain, system and deployment context.",
+  },
+  {
+    label: "Diagnose",
+    title: "Why did it fail?",
+    detail: "Resolve the governance boundary, then classify the failure mechanism using a standard taxonomy.",
+  },
+  {
+    label: "Assess",
+    title: "What was harmed?",
+    detail: "Assess materialised consequence consistently across the VIGIL harm dimensions and severity scale.",
+  },
+  {
+    label: "Compare",
+    title: "Where does it recur?",
+    detail: "Compare the same mechanisms across models, providers and environments so recurring patterns become visible.",
+  },
+];
+
 function PremiumHero() {
-  const orbit = ["Source evidence", "Failure class", "Severity", "Environment", "Governance", "Repair"];
+  const [activeStage, setActiveStage] = useState(0);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveStage((current) => (current + 1) % diagnosticStages.length);
+    }, 5600);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
     <section className="premium-hero" aria-labelledby="premium-hero-heading">
@@ -70,7 +101,7 @@ function PremiumHero() {
           <p className="premium-hero-kicker">AI incidents tell us what happened.</p>
           <h1 id="premium-hero-heading">VIGIL shows us <span>why.</span></h1>
           <p className="premium-hero-deck">
-            A standard taxonomy, a consistent harm scale, and a traceable evidence model turn isolated incidents into comparable intelligence about where AI systems fail.
+            A standard taxonomy, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about where AI systems fail.
           </p>
           <div className="premium-hero-actions">
             <a href="/observatory/cases/" className="premium-primary">Explore the evidence <ArrowRight aria-hidden="true" /></a>
@@ -78,68 +109,52 @@ function PremiumHero() {
           </div>
         </motion.div>
 
-        <motion.div className="diagnostic-orbit" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL diagnostic model">
+        <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
           <div className="diagnostic-orbit-ring diagnostic-orbit-ring-outer" aria-hidden="true" />
           <div className="diagnostic-orbit-ring diagnostic-orbit-ring-inner" aria-hidden="true" />
           <div className="diagnostic-core">
-            <span className="diagnostic-core-label">INCIDENT</span>
+            <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What went wrong?</strong>
+            <span className="diagnostic-core-count">{String(activeStage + 1).padStart(2, "0")} / 04</span>
           </div>
-          {orbit.map((item, index) => (
-            <motion.div
-              key={item}
-              className={`diagnostic-node diagnostic-node-${index + 1}`}
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 3.8 + index * 0.22, repeat: Infinity, ease: "easeInOut", delay: index * 0.18 }}
-            >
-              <span>{String(index + 1).padStart(2, "0")}</span>{item}
-            </motion.div>
-          ))}
-          <div className="diagnostic-scan" aria-hidden="true" />
+
+          {diagnosticStages.map((stage, index) => {
+            const active = index === activeStage;
+            return (
+              <button
+                type="button"
+                key={stage.label}
+                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}`}
+                onMouseEnter={() => setActiveStage(index)}
+                onFocus={() => setActiveStage(index)}
+                aria-pressed={active}
+              >
+                <span className="diagnostic-node-index">{String(index + 1).padStart(2, "0")}</span>
+                <span className="diagnostic-node-copy">
+                  <span className="diagnostic-node-label">{stage.label}</span>
+                  <strong>{stage.title}</strong>
+                  <span className="diagnostic-node-detail">{stage.detail}</span>
+                </span>
+              </button>
+            );
+          })}
+
+          <motion.div
+            className="diagnostic-scan diagnostic-scan-v2"
+            aria-hidden="true"
+            animate={{ rotate: -90 + activeStage * 90 }}
+            transition={{ duration: 1.35, ease: [0.22, 1, 0.36, 1] }}
+          />
         </motion.div>
       </div>
-      <a href="#aha" className="premium-scroll-cue" aria-label="Scroll to see how VIGIL works"><span>See the diagnosis</span><ArrowDown aria-hidden="true" /></a>
-    </section>
-  );
-}
-
-function AhaSequence() {
-  const stages = [
-    { number: "01", label: "Observe", title: "What happened?", detail: "Preserve the incident and source-level evidence." },
-    { number: "02", label: "Diagnose", title: "Why did it fail?", detail: "Resolve governance principles and classify the failure mechanism." },
-    { number: "03", label: "Assess", title: "What did it do?", detail: "Measure materialised harm using a consistent impact methodology." },
-    { number: "04", label: "Compare", title: "Where does it recur?", detail: "Find repeated mechanisms across systems, providers and environments." },
-  ];
-
-  return (
-    <section id="aha" className="aha-section" aria-labelledby="aha-heading">
-      <motion.div className="aha-intro" {...reveal}>
-        <p className="premium-eyebrow">The aha moment</p>
-        <h2 id="aha-heading">One incident is a story. <span>A standardised corpus becomes a pattern.</span></h2>
-        <p>VIGIL applies the same analytical frame across incidents so evidence can be compared instead of merely collected.</p>
-      </motion.div>
-
-      <div className="aha-track">
-        <div className="aha-spine" aria-hidden="true" />
-        {stages.map((stage, index) => (
-          <motion.article className="aha-stage" key={stage.number} {...reveal} transition={{ ...reveal.transition, delay: index * 0.08 }}>
-            <div className="aha-stage-number">{stage.number}</div>
-            <div>
-              <p className="aha-stage-label">{stage.label}</p>
-              <h3>{stage.title}</h3>
-              <p>{stage.detail}</p>
-            </div>
-            <ArrowRight className="aha-stage-arrow" aria-hidden="true" />
-          </motion.article>
-        ))}
-      </div>
+      <a href="#patterns" className="premium-scroll-cue" aria-label="Scroll to see the patterns VIGIL makes visible"><span>See the pattern</span><ArrowDown aria-hidden="true" /></a>
     </section>
   );
 }
 
 function PatternField() {
   return (
-    <section className="pattern-field" aria-labelledby="pattern-heading">
+    <section id="patterns" className="pattern-field" aria-labelledby="pattern-heading">
       <div className="pattern-field-bg" aria-hidden="true">
         {Array.from({ length: 18 }).map((_, index) => <span key={index} className={`pattern-dot pattern-dot-${(index % 6) + 1}`} />)}
       </div>
@@ -168,20 +183,6 @@ function IdentityBridge({ heroImages }: { heroImages: typeof HERO_IMAGES[HeroThe
         <div className="identity-pulse" aria-hidden="true"><span /><span /><span /></div>
         <div className="identity-mark"><img src={heroImages.cam} alt="CAM Initiative" /></div>
       </motion.div>
-    </section>
-  );
-}
-
-function EvidenceRepairLoop() {
-  return (
-    <section className="home-rail-section" aria-labelledby="evidence-repair-heading">
-      <SectionLabel>VIGIL Observatory · Evidence</SectionLabel>
-      <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">Preserve what happened and make the evidence inspectable.</h2>
-      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        <p>VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. Its Case File registry preserves canonical incidents, source-level evidence, incident-level assessment and traceable repair history.</p>
-        <p>It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Assessment → Runtime Governance</strong>.</p>
-      </div>
-      <a className="premium-inline-link" href="/observatory/cases/">Explore the Observatory <ArrowRight aria-hidden="true" /></a>
     </section>
   );
 }
@@ -262,7 +263,6 @@ export default function Home() {
     <Shell>
       <main className="home-page premium-home">
         <PremiumHero />
-        <AhaSequence />
         <PatternField />
         <IdentityBridge heroImages={heroImages} />
 
@@ -270,15 +270,6 @@ export default function Home() {
           <div className="home-main-rail-layout container mx-auto px-6 py-12 md:px-10 md:py-16">
             <div className="home-sticky-governance"><ExploreGovernanceRail /></div>
             <div className="home-main-copy">
-              <motion.section className="home-about-section" aria-labelledby="home-about-heading" {...reveal}>
-                <SectionLabel>CAM Initiative</SectionLabel>
-                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Publicly accessible AI governance infrastructure for understanding systems and making failure visible.</h2>
-                <div className="space-y-5 text-[17px] leading-relaxed text-foreground/80 md:text-lg">
-                  <p>The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.</p>
-                  <p>It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.</p>
-                </div>
-              </motion.section>
-              <EvidenceRepairLoop />
               <FailureTaxonomyPanel />
               <DatasetsPanel />
               <PolicyPapersPanel />
