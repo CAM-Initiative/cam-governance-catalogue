@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight, BookOpen, Coffee, Download, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import "@/home-premium.css";
 import "@/home-premium-v2.css";
 
@@ -24,33 +23,6 @@ function currentHeroTheme(): HeroTheme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
-const connectionLinks = [
-  { label: "Email", description: "Direct correspondence with the CAM Initiative", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
-  { label: "Substack", description: "Essays, policy commentary, and longer-form updates", href: "https://substack.com/@caminitiative", icon: "substack", external: true },
-  { label: "CAELESTIS repository", description: "Source repository for the governance architecture", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
-  { label: "VIGIL Observatory repository", description: "Evidence ledger, records, schemas, and repair history", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
-  { label: "Updates on X", description: "Current observations, releases, and public discussion", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
-  { label: "Support", description: "Support the public infrastructure and ongoing work", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
-];
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">{children}</p>
-      <hr className="gold-rule flex-1" />
-    </div>
-  );
-}
-
-function ConnectionIcon({ icon }: { icon: string }) {
-  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "substack") return <Newspaper className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
-  return <BookOpen className="h-4 w-4" aria-hidden="true" />;
-}
-
 const reveal = {
   initial: { opacity: 0, y: 34 },
   whileInView: { opacity: 1, y: 0 },
@@ -60,36 +32,55 @@ const reveal = {
 
 const diagnosticStages = [
   {
-    label: "Observe",
+    label: "Evidence",
     title: "What happened?",
-    detail: "Preserve occurrence-specific evidence, source chain, system and deployment context.",
+    detail: "Preserve the occurrence and source evidence.",
   },
   {
-    label: "Diagnose",
+    label: "Governance",
+    title: "What boundary was engaged?",
+    detail: "Resolve the governance principle at issue.",
+  },
+  {
+    label: "Classification",
     title: "Why did it fail?",
-    detail: "Resolve the governance boundary, then classify the failure mechanism using a standard taxonomy.",
+    detail: "Map the mechanism to a standard Failure Class.",
   },
   {
-    label: "Assess",
-    title: "What was harmed?",
-    detail: "Assess materialised consequence consistently across the VIGIL harm dimensions and severity scale.",
+    label: "Harm",
+    title: "What did it do?",
+    detail: "Assess materialised impact and severity consistently.",
+  },
+  {
+    label: "Environment",
+    title: "Where did it happen?",
+    detail: "Record the system, provider and deployment context.",
   },
   {
     label: "Compare",
     title: "Where does it recur?",
-    detail: "Compare the same mechanisms across models, providers and environments so recurring patterns become visible.",
+    detail: "Compare recurring patterns across the corpus.",
   },
-];
+] as const;
 
 function PremiumHero() {
-  const [activeStage, setActiveStage] = useState(0);
+  const [scanTurn, setScanTurn] = useState(0);
+  const activeStage = ((scanTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActiveStage((current) => (current + 1) % diagnosticStages.length);
-    }, 5600);
+      setScanTurn((current) => current + 1);
+    }, 5200);
     return () => window.clearInterval(timer);
   }, []);
+
+  function activateStage(index: number) {
+    setScanTurn((current) => {
+      const currentIndex = ((current % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
+      const forwardSteps = (index - currentIndex + diagnosticStages.length) % diagnosticStages.length;
+      return current + forwardSteps;
+    });
+  }
 
   return (
     <section className="premium-hero" aria-labelledby="premium-hero-heading">
@@ -115,7 +106,7 @@ function PremiumHero() {
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What went wrong?</strong>
-            <span className="diagnostic-core-count">{String(activeStage + 1).padStart(2, "0")} / 04</span>
+            <span className="diagnostic-core-count">{String(activeStage + 1).padStart(2, "0")} / 06</span>
           </div>
 
           {diagnosticStages.map((stage, index) => {
@@ -125,8 +116,8 @@ function PremiumHero() {
                 type="button"
                 key={stage.label}
                 className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}`}
-                onMouseEnter={() => setActiveStage(index)}
-                onFocus={() => setActiveStage(index)}
+                onMouseEnter={() => activateStage(index)}
+                onFocus={() => activateStage(index)}
                 aria-pressed={active}
               >
                 <span className="diagnostic-node-index">{String(index + 1).padStart(2, "0")}</span>
@@ -142,8 +133,8 @@ function PremiumHero() {
           <motion.div
             className="diagnostic-scan diagnostic-scan-v2"
             aria-hidden="true"
-            animate={{ rotate: -90 + activeStage * 90 }}
-            transition={{ duration: 1.35, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ rotate: -90 + scanTurn * 60 }}
+            transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
           />
         </motion.div>
       </div>
@@ -158,14 +149,27 @@ function PatternField() {
       <div className="pattern-field-bg" aria-hidden="true">
         {Array.from({ length: 18 }).map((_, index) => <span key={index} className={`pattern-dot pattern-dot-${(index % 6) + 1}`} />)}
       </div>
-      <motion.div className="pattern-copy" {...reveal}>
-        <p className="premium-eyebrow">From cases to intelligence</p>
-        <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
-        <p>Recurring failure classes can be clustered, compared with materialised harm, mapped to deployment environments, and carried forward into standards, controls and repair design.</p>
-        <div className="pattern-path" aria-label="VIGIL analytical pathway">
-          <span>Evidence</span><i>→</i><span>Governance assessment</span><i>→</i><span>Failure class</span><i>→</i><span>Harm impact</span><i>→</i><strong>Patterns</strong>
-        </div>
-      </motion.div>
+      <div className="pattern-layout">
+        <motion.div className="pattern-copy" {...reveal}>
+          <p className="premium-eyebrow">From cases to intelligence</p>
+          <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
+          <p>Recurring failure classes can be clustered, compared with materialised harm, mapped to deployment environments, and carried forward into standards, controls and repair design.</p>
+          <div className="pattern-path" aria-label="VIGIL analytical pathway">
+            <span>Evidence</span><i>→</i><span>Governance assessment</span><i>→</i><span>Failure class</span><i>→</i><span>Harm impact</span><i>→</i><strong>Patterns</strong>
+          </div>
+        </motion.div>
+        <motion.a
+          href="/observatory/knowledge-base/failure-taxonomy/"
+          className="pattern-taxonomy-cta"
+          initial={{ opacity: 0, scale: 0.72, x: 26 }}
+          whileInView={{ opacity: 1, scale: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.65, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <span>See the taxonomy</span>
+          <ArrowRight aria-hidden="true" />
+        </motion.a>
+      </div>
     </section>
   );
 }
@@ -187,67 +191,6 @@ function IdentityBridge({ heroImages }: { heroImages: typeof HERO_IMAGES[HeroThe
   );
 }
 
-function FailureTaxonomyPanel() {
-  return (
-    <section className="home-rail-section" aria-labelledby="failure-taxonomy-home-heading">
-      <SectionLabel>VIGIL Observatory Failure Taxonomy · Classification</SectionLabel>
-      <h2 id="failure-taxonomy-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">A common language for recurring AI failure mechanisms.</h2>
-      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        <p>The VIGIL Observatory Failure Taxonomy groups evidence into Failure Families and selectable Failure Classes so recurring mechanisms can be classified, compared across systems, mapped to standards and controls, and carried forward into repair design.</p>
-      </div>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <a className="premium-inline-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the Taxonomy <ArrowRight aria-hidden="true" /></a>
-        <a className="premium-inline-link" href="https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf" target="_blank" rel="noreferrer">Download the PDF <Download aria-hidden="true" /></a>
-      </div>
-    </section>
-  );
-}
-
-function DatasetsPanel() {
-  return (
-    <section className="home-rail-section" aria-labelledby="datasets-home-heading" id="datasets-home">
-      <SectionLabel>Datasets</SectionLabel>
-      <h2 id="datasets-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">Use the underlying governance data directly.</h2>
-      <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing/" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licence</a> for applicable terms.</p>
-      <a className="premium-inline-link" href="/datasets/">Explore Datasets <ArrowRight aria-hidden="true" /></a>
-    </section>
-  );
-}
-
-function PolicyPapersPanel() {
-  return (
-    <section className="home-rail-section" aria-labelledby="policy-papers-home-heading" id="policy-papers">
-      <SectionLabel>Policy</SectionLabel>
-      <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">Turn governance analysis into practical public policy.</h2>
-      <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.</p>
-      <a className="premium-inline-link" href="/observatory/knowledge-base/policy/">Explore Policy Papers <ArrowRight aria-hidden="true" /></a>
-    </section>
-  );
-}
-
-function ConnectPanel() {
-  return (
-    <section className="home-rail-section" id="connect" aria-labelledby="connect-heading">
-      <SectionLabel>Connect</SectionLabel>
-      <div className="home-connect-intro">
-        <h2 id="connect-heading" className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Build, inspect, challenge or support the work.</h2>
-        <p className="text-base leading-relaxed text-muted-foreground md:text-lg">Follow current analysis, inspect source repositories, make direct contact, or support the public infrastructure behind CAM and VIGIL Observatory.</p>
-      </div>
-      <nav aria-label="Connect with the CAM Initiative" className="home-connect-links">
-        {connectionLinks.map((link) => (
-          <a className="home-connect-link group" href={link.href} key={link.label} rel={link.external ? "noreferrer" : undefined} target={link.external ? "_blank" : undefined}>
-            <span className="home-connect-icon"><ConnectionIcon icon={link.icon} /></span>
-            <span className="min-w-0 flex-1">
-              <span className="home-connect-link-title"><span>{link.label}</span>{link.external ? <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}</span>
-              <span className="home-connect-link-description">{link.description}</span>
-            </span>
-          </a>
-        ))}
-      </nav>
-    </section>
-  );
-}
-
 export default function Home() {
   const [heroTheme, setHeroTheme] = useState<HeroTheme>(() => currentHeroTheme());
 
@@ -265,18 +208,6 @@ export default function Home() {
         <PremiumHero />
         <PatternField />
         <IdentityBridge heroImages={heroImages} />
-
-        <section className="home-main-rail premium-main-rail" aria-label="CAM Initiative overview and navigation">
-          <div className="home-main-rail-layout container mx-auto px-6 py-12 md:px-10 md:py-16">
-            <div className="home-sticky-governance"><ExploreGovernanceRail /></div>
-            <div className="home-main-copy">
-              <FailureTaxonomyPanel />
-              <DatasetsPanel />
-              <PolicyPapersPanel />
-              <ConnectPanel />
-            </div>
-          </div>
-        </section>
       </main>
     </Shell>
   );
