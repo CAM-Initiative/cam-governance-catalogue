@@ -108,7 +108,7 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   if (!clauses.length) return null;
 
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
-    <h4 className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL Observatory Taxonomy Assessment</h4>
+    <p className="vigil-library-kicker" id="vigil-taxonomy-assessment-heading">VIGIL OBSERVATORY TAXONOMY ASSESSMENT</p>
     <p className="vigil-taxonomy-assessment-intro">
       Clause-level interpretation showing how the investigation resolved governance principles before formal taxonomy mapping.
     </p>
