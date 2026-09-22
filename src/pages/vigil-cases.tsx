@@ -213,6 +213,19 @@ export default function VigilCases() {
               )}
             </header>
 
+            <div
+              role="status"
+              className="mb-6 flex flex-col gap-1 rounded-2xl border border-primary/45 bg-primary/10 px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:gap-4"
+            >
+              <span className="inline-flex w-fit items-center rounded-full bg-primary px-3 py-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-primary-foreground">
+                Active corpus refactor
+              </span>
+              <div>
+                <strong className="block text-base font-semibold text-foreground sm:text-lg">Records actively under construction &amp; refactoring</strong>
+                <span className="text-sm leading-relaxed text-muted-foreground">VIGIL Case Files are currently being re-adjudicated and rebuilt. Individual records may change as evidence, harm, governance and taxonomy assessments are reconciled.</span>
+              </div>
+            </div>
+
             <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
               <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
               <div className="vigil-search-row vigil-case-table-search">
