@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { Check, CircleMinus, ShieldCheck, X } from "lucide-react";
+import { Check, CircleMinus, X } from "lucide-react";
 import {
   loadFailureTaxonomy,
   type FailureTaxonomyClass,
@@ -197,13 +197,6 @@ function MappingOutcome({ role }: { role?: ClassificationRole }) {
   return <span className={`vigil-classification-outcome is-${outcome.kind}`} aria-label={outcome.label} title={outcome.label}>
     {outcome.kind === "held" ? <Check aria-hidden="true" /> : outcome.kind === "failed" ? <X aria-hidden="true" /> : <CircleMinus aria-hidden="true" />}
     <span className="sr-only">{outcome.label}</span>
-  </span>;
-}
-
-function RepairInvariantMarker() {
-  return <span className="vigil-classification-outcome is-repair-invariant" aria-label="Repair invariant" title="Repair invariant">
-    <ShieldCheck aria-hidden="true" />
-    <span className="sr-only">Repair invariant</span>
   </span>;
 }
 
@@ -508,14 +501,14 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
       <table className="vigil-classification-table vigil-repair-table">
         <thead>
           <tr>
-            <th scope="col">Repair</th>
+            <th scope="col">Alignment</th>
             <th scope="col">Failure class</th>
             <th scope="col">Governing invariant</th>
           </tr>
         </thead>
         <tbody>
-          {invariants.map(({ class: classificationClass }) => <tr key={classificationClass.class_id}>
-            <td data-label="Repair" className="vigil-classification-outcome-cell"><RepairInvariantMarker /></td>
+          {invariants.map(({ class: classificationClass, role }) => <tr key={classificationClass.class_id}>
+            <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
             <td data-label="Failure class">
               <strong>{classificationClass.name}</strong>
               <span className="vigil-classification-id">{classificationClass.class_id}</span>
@@ -528,5 +521,6 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
       </table>
     </div>
     {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Failure Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    <VigilAlignmentLegend />
   </div>;
 }
