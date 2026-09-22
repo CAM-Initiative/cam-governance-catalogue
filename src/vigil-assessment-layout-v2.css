@@ -11,7 +11,7 @@
   box-shadow: var(--shadow-sm);
 }
 
-.vigil-case-file-page .vigil-taxonomy-assessment > .vigil-substantive-label {
+.vigil-case-file-page .vigil-taxonomy-assessment > .vigil-library-kicker {
   margin: 0 0 0.55rem;
 }
 
@@ -52,6 +52,11 @@
   border: 1px solid hsl(var(--border) / 0.72);
   border-radius: 0.7rem;
   background: hsl(var(--background));
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-library-kicker,
+.report-document .vigil-taxonomy-assessment > .vigil-library-kicker {
+  margin: 0 0 0.55rem;
 }
 
 .report-document .report-governance-significance {
