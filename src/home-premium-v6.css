@@ -1,0 +1,226 @@
+/* Taxonomy reveal: failure classes accumulate like archival evidence labels rather than another card grid. */
+
+.taxonomy-reveal-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(34rem, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 6rem);
+  min-height: 46rem;
+  padding-right: clamp(2rem, 5vw, 5.5rem);
+}
+
+.taxonomy-reveal-copy {
+  position: relative;
+  z-index: 3;
+  max-width: 43rem;
+}
+
+.taxonomy-sticker-stage {
+  position: relative;
+  z-index: 3;
+  min-width: 0;
+}
+
+.taxonomy-sticker-board {
+  position: relative;
+  min-height: 33rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--primary) / 0.16);
+  border-radius: 1.6rem;
+  background:
+    linear-gradient(130deg, hsl(var(--card) / 0.42), hsl(var(--background) / 0.72)),
+    radial-gradient(circle at 78% 18%, hsl(var(--primary) / 0.07), transparent 36%);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--background) / 0.4),
+    inset 0 0 4rem hsl(var(--foreground) / 0.025),
+    0 1.5rem 4rem hsl(var(--foreground) / 0.035);
+}
+
+.taxonomy-sticker-board::before {
+  content: "VIGIL FAILURE TAXONOMY / LIVE CLASS FIELD";
+  position: absolute;
+  top: 1rem;
+  left: 1.1rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: hsl(var(--primary) / 0.62);
+}
+
+.taxonomy-sticker-board::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--primary) / 0.035) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+}
+
+.taxonomy-sticker {
+  position: absolute;
+  z-index: 2;
+  left: var(--sticker-left);
+  top: var(--sticker-top);
+  display: grid;
+  width: clamp(10rem, 13vw, 14.5rem);
+  gap: 0.25rem;
+  padding: 0.76rem 0.82rem 0.72rem;
+  border: 1px solid hsl(var(--primary) / 0.28);
+  border-radius: 0.42rem;
+  background:
+    linear-gradient(180deg, hsl(var(--background) / 0.96), hsl(var(--card) / 0.92));
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  box-shadow:
+    0 0.75rem 1.4rem hsl(var(--foreground) / 0.08),
+    0 0 0 1px hsl(var(--background) / 0.46);
+  transform: rotate(var(--sticker-rotate)) scale(var(--sticker-scale));
+  transform-origin: 50% 50%;
+  transition:
+    transform 260ms cubic-bezier(.22,1,.36,1),
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    filter 220ms ease;
+}
+
+.taxonomy-sticker:nth-child(3n + 1) {
+  background:
+    linear-gradient(180deg, hsl(var(--primary) / 0.12), hsl(var(--background) / 0.96) 48%);
+}
+
+.taxonomy-sticker:nth-child(4n + 2) {
+  border-style: dashed;
+}
+
+.taxonomy-sticker:hover,
+.taxonomy-sticker:focus-visible {
+  z-index: 20;
+  outline: none;
+  border-color: hsl(var(--primary) / 0.66);
+  box-shadow:
+    0 1rem 2rem hsl(var(--foreground) / 0.12),
+    0 0 1.4rem hsl(var(--primary) / 0.12);
+  transform: rotate(0deg) scale(1.06);
+  filter: brightness(1.035);
+}
+
+.taxonomy-sticker-pin {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.55rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  border: 1px solid hsl(var(--primary) / 0.55);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, hsl(var(--primary)), hsl(var(--primary) / 0.28) 66%, hsl(var(--background) / 0.8));
+  box-shadow: 0 0 0.5rem hsl(var(--primary) / 0.16);
+}
+
+.taxonomy-sticker-code {
+  padding-right: 1rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.6rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.taxonomy-sticker strong {
+  font-family: var(--app-font-serif);
+  font-size: 0.98rem;
+  font-weight: 520;
+  line-height: 1.08;
+  color: hsl(var(--foreground) / 0.95);
+}
+
+.taxonomy-sticker small {
+  margin-top: 0.12rem;
+  font-family: var(--app-font-sans);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  color: hsl(var(--muted-foreground) / 0.78);
+}
+
+.taxonomy-sticker:nth-child(n + 8) {
+  filter: saturate(0.86) brightness(0.94);
+}
+
+.taxonomy-sticker:nth-child(n + 13) {
+  opacity: 0.82 !important;
+}
+
+.taxonomy-reveal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.taxonomy-reveal-link svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 180ms ease;
+}
+
+.taxonomy-reveal-link:hover svg {
+  transform: translateX(0.25rem);
+}
+
+@media (max-width: 1050px) {
+  .taxonomy-reveal-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    min-height: auto;
+    padding-right: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  .taxonomy-reveal-copy {
+    max-width: 52rem;
+  }
+
+  .taxonomy-sticker-board {
+    min-height: 31rem;
+  }
+
+  .taxonomy-sticker {
+    width: clamp(9rem, 23vw, 13rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .taxonomy-sticker-board {
+    min-height: 28rem;
+  }
+
+  .taxonomy-sticker {
+    width: min(10.4rem, 44vw);
+    padding: 0.62rem 0.66rem;
+  }
+
+  .taxonomy-sticker strong {
+    font-size: 0.86rem;
+  }
+
+  .taxonomy-sticker small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taxonomy-sticker {
+    transition: none;
+  }
+}
