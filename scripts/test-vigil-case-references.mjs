@@ -76,28 +76,32 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
-test("Case File Section 02 leads with factual basis and governance significance before harm assessment", async () => {
+test("Case File Section 02 orders factual basis, taxonomy assessment, harm and external assessments", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const governanceIndex = assessmentRenderer.indexOf("GOVERNANCE ASSESSMENT");
-  const harmIndex = assessmentRenderer.indexOf("REAL-WORLD HARM ASSESSMENT");
   const factualIndex = assessmentRenderer.indexOf("Factual basis");
-  const significanceIndex = assessmentRenderer.indexOf("Governance significance");
+  const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
+  const harmIndex = assessmentRenderer.indexOf("VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT");
+  const externalIndex = assessmentRenderer.indexOf("EXTERNAL ASSESSMENTS");
 
-  assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
+  assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && taxonomyIndex > factualIndex && harmIndex > taxonomyIndex && externalIndex > harmIndex);
   assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
+  assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-assessment-summary|\{governanceConclusion\}/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
 });
 
-test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
+test("Governance significance is projected in Conclusion while taxonomy assessment is its own Section 02 card", async () => {
   const source = await caseFileSource();
-  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n\s*\{externalAssessments\.length > 0/)?.[0] ?? "";
-  assert.match(card, /GOVERNANCE ASSESSMENT/);
-  assert.match(card, /Factual basis/);
-  assert.match(card, /Governance significance/);
-  assert.match(card, /vigil-diagnosis-assessment-details/);
-  assert.match(card, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
+  const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  assert.match(assessmentRenderer, /GOVERNANCE ASSESSMENT/);
+  assert.match(assessmentRenderer, /Factual basis/);
+  assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
+  assert.doesNotMatch(assessmentRenderer, /Governance significance/);
+  assert.match(conclusionRenderer, /Governance significance/);
+  assert.match(conclusionRenderer, /vigil-governance-significance-card/);
 });
 
 test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
@@ -473,12 +477,13 @@ test("mobile Assessment prose stays viewport-bound while Harm tables remain hori
 });
 
 
-test("external assessments and harm are peer Stage 02 sections", async () => {
+test("taxonomy, harm and external assessments remain distinct Stage 02 sections in that order", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
-  const governanceEnd = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
-  const harmStart = assessmentRenderer.indexOf('REAL-WORLD HARM ASSESSMENT');
-  assert.ok(governanceEnd > 0 && harmStart > governanceEnd);
+  const taxonomyStart = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
+  const harmStart = assessmentRenderer.indexOf("VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT");
+  const externalStart = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
+  assert.ok(taxonomyStart > 0 && harmStart > taxonomyStart && externalStart > harmStart);
   assert.match(assessmentRenderer, /vigil-external-assessment-section/);
   assert.match(assessmentRenderer, /EXTERNAL ASSESSMENTS/);
 });
