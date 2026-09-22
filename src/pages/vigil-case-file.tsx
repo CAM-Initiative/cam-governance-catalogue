@@ -419,7 +419,6 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
-  // Resolve canonical row-local source_records[N] provenance against the final numbered, deduplicated Evidence sources list.
   const harmEvidenceReferenceNumbers = useMemo(() => Object.fromEntries(
     externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
   ), [externalSources]);
@@ -556,11 +555,6 @@ export default function VigilCaseFile() {
               <h4 className="vigil-substantive-label">Factual basis</h4>
               <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
             </section>
-            <section>
-              <h4 className="vigil-substantive-label">Governance significance</h4>
-              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
-            </section>
-            <CaseTaxonomyAssessment raw={incident.raw} />
           </div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
             <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
@@ -575,6 +569,20 @@ export default function VigilCaseFile() {
               <Field label="Model attribution" value={diagnostic?.attributionBasis} />
             </dl>
           </aside>
+        </section>
+
+        <CaseTaxonomyAssessment raw={incident.raw} />
+
+        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
+          <div className="vigil-case-subheading">
+            <p className="vigil-library-kicker" id="severity-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT</p>
+          </div>
+          <HarmImpactMatrix
+            assessment={harmImpactAssessment}
+            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+            methodologyReferenceNumber={harmMethodologyReferenceNumber}
+            methodologyReferenceHref="#vigil-harm-methodology-reference"
+          />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
@@ -605,28 +613,18 @@ export default function VigilCaseFile() {
             </table>
           </div>
         </section>}
-
-        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading">
-            <p className="vigil-library-kicker" id="severity-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
-          </div>
-          <HarmImpactMatrix
-            assessment={harmImpactAssessment}
-            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
-            methodologyReferenceNumber={harmMethodologyReferenceNumber}
-            methodologyReferenceHref="#vigil-harm-methodology-reference"
-          />
-        </section>
-
-
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
 
-    if (stageId === "conclusion") return governanceConclusion ? <article className="vigil-diagnosis-view">
-      <section className="vigil-diagnosis-definition">
+    if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
+      {governanceConclusion && <section className="vigil-diagnosis-definition">
         <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
         <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
+      </section>}
+      <section className="vigil-governance-significance-card">
+        <h4 className="vigil-substantive-label">Governance significance</h4>
+        <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
       </section>
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
 
@@ -756,8 +754,6 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-boundary">Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair. Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain in Classification as evidence of boundaries that held.</p>
       </div>
     </section>}
-
-
 
     {isFailure && <section className="vigil-exemplar-callout is-failure" aria-labelledby="vigil-failure-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleX /></div>
