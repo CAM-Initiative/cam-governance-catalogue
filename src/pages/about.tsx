@@ -1,10 +1,7 @@
-import { useState } from "react";
-import { ArrowRight, Check, CircleCheckBig, CircleX, Copy, Info } from "lucide-react";
+import { ArrowRight, BookOpen, CircleCheckBig, CircleX, Coffee, ExternalLink, Github, Info, Mail, Newspaper } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassification";
-
-const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://cam-initiative.org";
 
 const ABOUT_CASE_FILE_STAGES = [
   {
@@ -39,22 +36,22 @@ const ABOUT_CASE_FILE_STAGES = [
   },
 ] as const;
 
+const connectionLinks = [
+  { label: "Email", description: "Direct correspondence with the CAM Initiative", href: "mailto:ethics@cam-initiative.org", icon: "mail", external: false },
+  { label: "Substack", description: "Essays, policy commentary, and longer-form updates", href: "https://substack.com/@caminitiative", icon: "substack", external: true },
+  { label: "CAELESTIS repository", description: "Source repository for the governance architecture", href: "https://github.com/CAM-Initiative/Caelestis", icon: "github", external: true },
+  { label: "VIGIL Observatory repository", description: "Evidence ledger, records, schemas, and repair history", href: "https://github.com/CAM-Initiative/Vigil", icon: "github", external: true },
+  { label: "Updates on X", description: "Current observations, releases, and public discussion", href: "https://x.com/CAM_Initiative", icon: "x", external: true },
+  { label: "Support", description: "Support the public infrastructure and ongoing work", href: "https://buymeacoffee.com/cam_initiative", icon: "support", external: true },
+];
 
-function CopyCitation() {
-  const [copied, setCopied] = useState(false);
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(citation);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  }
-  return <button className="vigil-about-copy" type="button" onClick={copy} aria-label="Copy VIGIL Observatory citation">
-    {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
-    {copied ? "Copied" : "Copy citation"}
-  </button>;
+function ConnectionIcon({ icon }: { icon: string }) {
+  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "substack") return <Newspaper className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
+  if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
+  return <BookOpen className="h-4 w-4" aria-hidden="true" />;
 }
 
 export default function About() {
@@ -175,16 +172,23 @@ export default function About() {
             </div>
           </section>
 
-          <section className="vigil-about-section" aria-labelledby="vigil-citation-heading">
+          <section className="vigil-about-section" id="connect" aria-labelledby="connect-heading">
             <div className="vigil-about-section-heading">
-              <p className="vigil-library-kicker">Citation</p>
-              <h2 id="vigil-citation-heading">Suggested general citation</h2>
+              <p className="vigil-library-kicker">Connect</p>
+              <h2 id="connect-heading">Build, inspect, challenge or support the work.</h2>
             </div>
-            <div className="vigil-about-citation-card">
-              <div><p>{citation}</p></div>
-              <CopyCitation />
-            </div>
-            <p className="vigil-about-record-intro">For a specific Incident or taxonomy entry, identify the relevant VIGIL Observatory record ID or taxonomy version and use the canonical URL. Citation, reference and linking are permitted; substantive reuse is governed by the applicable licence.</p>
+            <p className="vigil-about-record-intro">Follow current analysis, inspect source repositories, make direct contact, or support the public infrastructure behind CAM and VIGIL Observatory.</p>
+            <nav aria-label="Connect with the CAM Initiative" className="home-connect-links">
+              {connectionLinks.map((link) => (
+                <a className="home-connect-link group" href={link.href} key={link.label} rel={link.external ? "noreferrer" : undefined} target={link.external ? "_blank" : undefined}>
+                  <span className="home-connect-icon"><ConnectionIcon icon={link.icon} /></span>
+                  <span className="min-w-0 flex-1">
+                    <span className="home-connect-link-title"><span>{link.label}</span>{link.external ? <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}</span>
+                    <span className="home-connect-link-description">{link.description}</span>
+                  </span>
+                </a>
+              ))}
+            </nav>
           </section>
 
         </article>
