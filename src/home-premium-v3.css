@@ -1,0 +1,107 @@
+/* Third-pass homepage polish: stronger mechanical instrument treatment, linked identity marks and shared narrative kickers. */
+
+/* Keep the longer legal/public-facing Observatory name readable without turning the hero into a wall of text. */
+.premium-hero h1 {
+  font-size: clamp(3.45rem, 6.7vw, 7.35rem);
+}
+
+.premium-hero h1 .premium-hero-brand {
+  color: hsl(var(--foreground));
+  text-shadow: none;
+}
+
+/* Make the outer circumference read as a toothed mechanical wheel rather than a vinyl groove. */
+.diagnostic-orbit-v2::before {
+  inset: -3.2%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from -2deg,
+    hsl(var(--primary) / 0.68) 0deg 4deg,
+    hsl(var(--primary) / 0.18) 4deg 5deg,
+    transparent 5deg 10deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 0 86.8%, #000 87.2% 100%);
+  mask: radial-gradient(circle, transparent 0 86.8%, #000 87.2% 100%);
+  filter: drop-shadow(0 0 0.5rem hsl(var(--primary) / 0.12));
+  animation: premium-spin 96s linear infinite;
+}
+
+/* A second, tighter counter-rotating toothed ring makes the movement feel mechanically coupled. */
+.diagnostic-orbit-v2::after {
+  inset: 11.5%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 1deg,
+    hsl(var(--primary) / 0.4) 0deg 3deg,
+    transparent 3deg 8deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 0 89%, #000 89.4% 100%);
+  mask: radial-gradient(circle, transparent 0 89%, #000 89.4% 100%);
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.06);
+  animation: diagnostic-counter-rotation 118s linear infinite;
+}
+
+/* Add indexed notches and a harder-edged engraved track to the instrument face. */
+.diagnostic-calibration {
+  border-color: hsl(var(--primary) / 0.18);
+  box-shadow:
+    0 0 0 0.22rem hsl(var(--background) / 0.3),
+    0 0 0 0.28rem hsl(var(--primary) / 0.11),
+    0 0 0 0.72rem hsl(var(--background) / 0.14),
+    inset 0 0 2.1rem hsl(var(--primary) / 0.04);
+}
+
+.diagnostic-calibration::before {
+  content: "";
+  position: absolute;
+  inset: -5%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    hsl(var(--primary) / 0.34) 0deg 0.9deg,
+    transparent 0.9deg 15deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 0 94%, #000 94.5% 100%);
+  mask: radial-gradient(circle, transparent 0 94%, #000 94.5% 100%);
+}
+
+/* Force both narrative kickers to the same typographic grammar, regardless of inherited section styles. */
+.narrative-kicker {
+  margin: 0 0 1.15rem !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
+/* Restore the image cards as obvious but restrained navigation targets. */
+.identity-mark-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.identity-mark-link:hover,
+.identity-mark-link:focus-visible {
+  outline: none;
+  transform: translateY(-3px);
+  border-color: hsl(var(--primary) / 0.58);
+  background: linear-gradient(145deg, hsl(var(--card) / 0.58), hsl(var(--background) / 0.88));
+  box-shadow: 0 28px 70px hsl(var(--foreground) / 0.07), 0 0 2rem hsl(var(--primary) / 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnostic-orbit-v2::before,
+  .diagnostic-orbit-v2::after {
+    animation: none !important;
+  }
+
+  .identity-mark-link {
+    transition: none;
+  }
+}
