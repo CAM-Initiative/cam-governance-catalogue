@@ -1,8 +1,9 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadFailureTaxonomy, type FailureTaxonomyClass } from "@/lib/vigilFailureTaxonomy";
 import "@/home-premium.css";
 import "@/home-premium-v2.css";
 import "@/home-premium-v3.css";
@@ -43,6 +44,13 @@ const diagnosticStages = [
 
 type IncidentTickerItem = { id: string; title: string };
 
+type TaxonomySticker = {
+  classId: string;
+  classCode: string;
+  name: string;
+  familyName: string;
+};
+
 const fallbackTickerItems: IncidentTickerItem[] = [
   { id: "VIGIL-INC-000149", title: "DPD disabled AI chatbot after profanity and company criticism" },
   { id: "VIGIL-INC-000147", title: "Waymo robotaxi diverted and temporarily stranded a passenger" },
@@ -50,6 +58,15 @@ const fallbackTickerItems: IncidentTickerItem[] = [
   { id: "VIGIL-INC-000142", title: "Lawyers filed ChatGPT-generated nonexistent judicial opinions" },
   { id: "VIGIL-INC-000140", title: "Air Canada chatbot gave incorrect bereavement-fare information" },
   { id: "VIGIL-INC-000129", title: "Astra self-generated prompt injection" },
+];
+
+const fallbackTaxonomyStickers: TaxonomySticker[] = [
+  { classId: "FC-000023", classCode: "FC-000023", name: "Monitor Circumvention or Coverage Bypass", familyName: "Oversight and monitoring" },
+  { classId: "FC-000046", classCode: "FC-000046", name: "Inferential Evidence–Authority Conflation", familyName: "Authority and evidence" },
+  { classId: "FC-000075", classCode: "FC-000075", name: "Compaction Meaning Drift", familyName: "Context and continuity" },
+  { classId: "FC-000074", classCode: "FC-000074", name: "Identity / Evaluative Integrity", familyName: "Identity and evaluation" },
+  { classId: "FC-000001", classCode: "FC-000001", name: "Source-Authority Separation Failure", familyName: "Authority and evidence" },
+  { classId: "FC-000005", classCode: "FC-000005", name: "Transformation Authority Failure", familyName: "Authority and transformation" },
 ];
 
 function incidentNumber(id: string) {
@@ -204,9 +221,95 @@ function PremiumHero() {
   );
 }
 
+function stickerSeed(value: string) {
+  return [...value].reduce((hash, character) => ((hash * 31) + character.charCodeAt(0)) >>> 0, 2166136261);
+}
+
+function stickerStyle(item: TaxonomySticker, index: number): CSSProperties {
+  const seed = stickerSeed(`${item.classId}-${index}`);
+  const left = 2 + (seed % 72);
+  const top = 3 + ((seed >>> 5) % 72);
+  const rotation = -7 + ((seed >>> 11) % 15);
+  const scale = 0.92 + (((seed >>> 17) % 15) / 100);
+  return {
+    "--sticker-left": `${left}%`,
+    "--sticker-top": `${top}%`,
+    "--sticker-rotate": `${rotation}deg`,
+    "--sticker-scale": scale,
+    "--sticker-delay": `${(index % 8) * 70}ms`,
+  } as CSSProperties;
+}
+
+function taxonomySticker(entry: FailureTaxonomyClass, familyName: string): TaxonomySticker {
+  return {
+    classId: entry.class_id,
+    classCode: entry.class_code || entry.class_id,
+    name: entry.name,
+    familyName,
+  };
+}
+
+function TaxonomyReveal() {
+  const reduceMotion = useReducedMotion();
+  const [pool, setPool] = useState<TaxonomySticker[]>(fallbackTaxonomyStickers);
+  const [visibleCount, setVisibleCount] = useState(reduceMotion ? 12 : 3);
+
+  useEffect(() => {
+    let mounted = true;
+    loadFailureTaxonomy()
+      .then((result) => {
+        if (!mounted || result.status !== "ready") return;
+        const stickers = result.data.families.flatMap((family) =>
+          family.classes.map((entry) => taxonomySticker(entry, family.family.name))
+        );
+        if (!stickers.length) return;
+        const ordered = [...stickers].sort((left, right) => stickerSeed(left.classId) - stickerSeed(right.classId));
+        setPool(ordered);
+        if (reduceMotion) setVisibleCount(Math.min(ordered.length, 16));
+      })
+      .catch(() => undefined);
+    return () => { mounted = false; };
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const maximum = Math.min(pool.length, 18);
+    if (visibleCount >= maximum) return;
+    const timer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, maximum)), 1050);
+    return () => window.clearTimeout(timer);
+  }, [pool.length, reduceMotion, visibleCount]);
+
+  const visible = useMemo(() => pool.slice(0, Math.max(1, visibleCount)), [pool, visibleCount]);
+
+  return (
+    <div className="taxonomy-sticker-stage" aria-label="VIGIL failure classes accumulating into a shared taxonomy">
+      <div className="taxonomy-sticker-board" aria-hidden="true">
+        {visible.map((item, index) => (
+          <motion.a
+            key={item.classId}
+            href="/observatory/knowledge-base/failure-taxonomy/"
+            className="taxonomy-sticker"
+            style={stickerStyle(item, index)}
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.82, y: -14, rotate: -4 }}
+            animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
+            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+            tabIndex={-1}
+          >
+            <span className="taxonomy-sticker-pin" />
+            <span className="taxonomy-sticker-code">{item.classCode}</span>
+            <strong>{item.name}</strong>
+            <small>{item.familyName}</small>
+          </motion.a>
+        ))}
+      </div>
+      <a className="taxonomy-reveal-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the full failure taxonomy <ArrowRight aria-hidden="true" /></a>
+    </div>
+  );
+}
+
 function PatternField() {
   return (
-    <section id="patterns" className="pattern-field" aria-labelledby="pattern-heading">
+    <section id="patterns" className="pattern-field taxonomy-reveal-section" aria-labelledby="pattern-heading">
       <div className="pattern-field-bg" aria-hidden="true">
         {Array.from({ length: 36 }).map((_, index) => {
           const left = 3 + ((index * 29) % 94);
@@ -226,11 +329,12 @@ function PatternField() {
           );
         })}
       </div>
-      <motion.div className="pattern-copy narrative-section-copy" {...reveal}>
+      <motion.div className="pattern-copy narrative-section-copy taxonomy-reveal-copy" {...reveal}>
         <p className="premium-eyebrow narrative-kicker">From cases to intelligence</p>
         <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
         <p>The VIGIL Observatory textbook brings recurring failure mechanisms into one common language, connecting Case Files, governance boundaries, harm and classification across the corpus.</p>
       </motion.div>
+      <TaxonomyReveal />
     </section>
   );
 }
