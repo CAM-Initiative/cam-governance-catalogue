@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
+import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -21,6 +22,8 @@ const HERO_IMAGES = {
 } as const;
 
 type HeroTheme = keyof typeof HERO_IMAGES;
+type IncidentTickerItem = { id: string; title: string };
+type TaxonomySticker = { classId: string; name: string };
 
 function currentHeroTheme(): HeroTheme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
@@ -41,9 +44,6 @@ const diagnosticStages = [
   { label: "Classification", title: "Why did it fail?" },
   { label: "Compare", title: "Where does it recur?" },
 ] as const;
-
-type IncidentTickerItem = { id: string; title: string };
-type TaxonomySticker = { classId: string; name: string };
 
 const fallbackTickerItems: IncidentTickerItem[] = [
   { id: "VIGIL-INC-000149", title: "DPD disabled AI chatbot after profanity and company criticism" },
@@ -227,12 +227,13 @@ const stickerSlots = [
 function stickerStyle(item: TaxonomySticker, index: number): CSSProperties {
   const seed = stickerSeed(`${item.classId}-${index}`);
   const slot = stickerSlots[index % stickerSlots.length];
-  const left = slot[0] + ((seed % 5) - 2);
-  const top = slot[1] + (((seed >>> 4) % 5) - 2);
-  const rotation = slot[2] + (((seed >>> 9) % 5) - 2);
+  const layer = Math.floor(index / stickerSlots.length);
+  const left = slot[0] + ((seed % 7) - 3) + ((layer % 3) - 1) * 2.2;
+  const top = slot[1] + (((seed >>> 4) % 7) - 3) + ((layer % 4) - 1.5) * 1.7;
+  const rotation = slot[2] + (((seed >>> 9) % 9) - 4) + (layer % 2 ? 3 : -2);
   return {
-    "--sticker-left": `${left}%`,
-    "--sticker-top": `${top}%`,
+    "--sticker-left": `${Math.max(0, Math.min(77, left))}%`,
+    "--sticker-top": `${Math.max(0, Math.min(86, top))}%`,
     "--sticker-rotate": `${rotation}deg`,
   } as CSSProperties;
 }
@@ -244,7 +245,7 @@ function taxonomySticker(entry: FailureTaxonomyClass): TaxonomySticker {
 function TaxonomyReveal() {
   const reduceMotion = useReducedMotion();
   const [pool, setPool] = useState<TaxonomySticker[]>(fallbackTaxonomyStickers);
-  const [visibleCount, setVisibleCount] = useState(reduceMotion ? 16 : 3);
+  const [visibleCount, setVisibleCount] = useState(reduceMotion ? fallbackTaxonomyStickers.length : 3);
 
   useEffect(() => {
     let mounted = true;
@@ -255,17 +256,15 @@ function TaxonomyReveal() {
         if (!stickers.length) return;
         const ordered = [...stickers].sort((left, right) => stickerSeed(left.classId) - stickerSeed(right.classId));
         setPool(ordered);
-        if (reduceMotion) setVisibleCount(Math.min(ordered.length, 18));
+        if (reduceMotion) setVisibleCount(ordered.length);
       })
       .catch(() => undefined);
     return () => { mounted = false; };
   }, [reduceMotion]);
 
   useEffect(() => {
-    if (reduceMotion) return;
-    const maximum = Math.min(pool.length, 18);
-    if (visibleCount >= maximum) return;
-    const timer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, maximum)), 950);
+    if (reduceMotion || visibleCount >= pool.length) return;
+    const timer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, pool.length)), 720);
     return () => window.clearTimeout(timer);
   }, [pool.length, reduceMotion, visibleCount]);
 
@@ -319,6 +318,21 @@ function PatternField() {
   );
 }
 
+function GovernanceExplorerSection() {
+  return (
+    <section className="governance-explorer-home-section" aria-labelledby="governance-explorer-heading">
+      <motion.div className="governance-explorer-home-copy narrative-section-copy" {...reveal}>
+        <p className="premium-eyebrow narrative-kicker">Explore the wider governance landscape</p>
+        <h2 id="governance-explorer-heading">AI Governance Explorer</h2>
+        <p>Move from VIGIL evidence and taxonomy into the CAM Initiative&apos;s governance resources and the external tools that help situate incidents, regulation and standards in a wider ecosystem.</p>
+      </motion.div>
+      <motion.div className="governance-explorer-home-panel" {...reveal}>
+        <ExploreGovernanceRail />
+      </motion.div>
+    </section>
+  );
+}
+
 function IdentityBridge({ heroImages }: { heroImages: typeof HERO_IMAGES[HeroTheme] }) {
   return (
     <section className="identity-bridge" aria-labelledby="identity-bridge-heading">
@@ -356,6 +370,7 @@ export default function Home() {
       <main className="home-page premium-home">
         <PremiumHero />
         <PatternField />
+        <GovernanceExplorerSection />
         <IdentityBridge heroImages={heroImages} />
       </main>
     </Shell>
