@@ -40,5 +40,6 @@ import "./home-premium-v4.css";
 import "./home-premium-v5.css";
 import "./home-premium-v6.css";
 import "./home-premium-v7.css";
+import "./home-premium-v8.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
