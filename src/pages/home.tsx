@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Coffee, Download, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpen, Coffee, Download, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
 
 const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
 const HERO_IMAGES = {
@@ -83,6 +83,71 @@ function ConnectionIcon({ icon }: { icon: string }) {
   if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
   if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
   return <BookOpen className="h-4 w-4" aria-hidden="true" />;
+}
+
+function VigilPropositionSplash() {
+  const stages = [
+    { number: "01", eyebrow: "Observe", title: "What happened", detail: "Source-level incident evidence" },
+    { number: "02", eyebrow: "Diagnose", title: "Why it failed", detail: "Governance and failure mechanism" },
+    { number: "03", eyebrow: "Assess", title: "What was harmed", detail: "Materialised impact and severity" },
+    { number: "04", eyebrow: "Compare", title: "Where it recurs", detail: "Patterns across systems and providers" },
+  ];
+
+  return (
+    <section className="vigil-proposition-splash" aria-labelledby="vigil-proposition-heading">
+      <div className="vigil-proposition-grid" aria-hidden="true" />
+      <motion.div
+        className="vigil-proposition-inner"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.75 }}
+      >
+        <div className="vigil-proposition-topline">
+          <span>VIGIL Observatory</span>
+          <span className="vigil-proposition-status">AI incident intelligence</span>
+        </div>
+
+        <div className="vigil-proposition-copy">
+          <p className="vigil-proposition-pretitle">Other incident databases tell you what happened.</p>
+          <h1 id="vigil-proposition-heading">
+            VIGIL tells you <span>why it failed</span> — and <span>what that failure did.</span>
+          </h1>
+          <p className="vigil-proposition-summary">
+            VIGIL normalises evidence across models, providers and deployment contexts so AI incidents can be systematically classified, compared and analysed across the ecosystem.
+          </p>
+        </div>
+
+        <div className="vigil-proposition-stages" aria-label="VIGIL analytical pathway">
+          {stages.map((stage, index) => (
+            <div className="vigil-proposition-stage-wrap" key={stage.number}>
+              <article className="vigil-proposition-stage">
+                <div className="vigil-proposition-stage-number">{stage.number}</div>
+                <p className="vigil-proposition-stage-eyebrow">{stage.eyebrow}</p>
+                <h2>{stage.title}</h2>
+                <p>{stage.detail}</p>
+              </article>
+              {index < stages.length - 1 ? <ArrowRight className="vigil-proposition-arrow" aria-hidden="true" /> : null}
+            </div>
+          ))}
+        </div>
+
+        <div className="vigil-proposition-footer">
+          <div className="vigil-proposition-method">
+            <span>Evidence</span><i>→</i><span>Governance assessment</span><i>→</i><span>Failure classification</span><i>→</i><span>Harm impact</span><i>→</i><span>Cross-incident comparison</span>
+          </div>
+          <div className="vigil-proposition-actions">
+            <a href="/observatory/cases/" className="vigil-proposition-primary">Explore the evidence <ArrowRight aria-hidden="true" /></a>
+            <a href="/observatory/knowledge-base/failure-taxonomy/" className="vigil-proposition-secondary">Explore the taxonomy</a>
+          </div>
+        </div>
+
+        <a href="#cam-home-identity" className="vigil-proposition-scroll" aria-label="Continue to CAM Initiative overview">
+          <span>Continue</span>
+          <ArrowDown aria-hidden="true" />
+        </a>
+      </motion.div>
+    </section>
+  );
 }
 
 function EvidenceRepairLoop() {
@@ -232,7 +297,9 @@ export default function Home() {
   return (
     <Shell>
       <main className="home-page">
-        <section className="home-identity-hero" aria-labelledby="home-identity-heading">
+        <VigilPropositionSplash />
+
+        <section id="cam-home-identity" className="home-identity-hero" aria-labelledby="home-identity-heading">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             className="container mx-auto w-full max-w-[100rem] px-5 py-12 sm:px-6 md:px-8 md:py-16 lg:py-20"
