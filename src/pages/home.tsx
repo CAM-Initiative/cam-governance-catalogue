@@ -5,6 +5,7 @@ import { ArrowDown, ArrowRight } from "lucide-react";
 import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import "@/home-premium.css";
 import "@/home-premium-v2.css";
+import "@/home-premium-v3.css";
 
 const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
 const HERO_IMAGES = {
@@ -135,7 +136,7 @@ function PremiumHero() {
       <div className="premium-hero-shell">
         <motion.div className="premium-hero-copy" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <p className="premium-hero-kicker">AI incidents tell us what happened.</p>
-          <h1 id="premium-hero-heading">VIGIL shows us <span>why.</span></h1>
+          <h1 id="premium-hero-heading"><span className="premium-hero-brand">The VIGIL Observatory</span><br />shows us <span>why.</span></h1>
           <p className="premium-hero-deck">
             A standard taxonomy, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about where AI systems fail.
           </p>
@@ -196,7 +197,7 @@ function PatternField() {
         {Array.from({ length: 18 }).map((_, index) => <span key={index} className={`pattern-dot pattern-dot-${(index % 6) + 1}`} />)}
       </div>
       <motion.div className="pattern-copy narrative-section-copy" {...reveal}>
-        <p className="premium-eyebrow">From cases to intelligence</p>
+        <p className="premium-eyebrow narrative-kicker">From cases to intelligence</p>
         <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
         <p>Recurring failure classes can be clustered, compared with materialised harm, mapped to deployment environments, and carried forward into standards, controls and repair design.</p>
         <div className="pattern-path" aria-label="VIGIL analytical pathway">
@@ -211,14 +212,18 @@ function IdentityBridge({ heroImages }: { heroImages: typeof HERO_IMAGES[HeroThe
   return (
     <section className="identity-bridge" aria-labelledby="identity-bridge-heading">
       <motion.div className="identity-bridge-copy narrative-section-copy" {...reveal}>
-        <p className="premium-eyebrow">A connected governance architecture</p>
+        <p className="premium-eyebrow narrative-kicker">A connected governance architecture</p>
         <h2 id="identity-bridge-heading">VIGIL diagnoses the failure. <span>CAM connects the diagnosis to governance and repair.</span></h2>
         <p>Evidence becomes useful when it can move into governance design. The CAM Initiative connects incident analysis, standards and policy work with the CAELESTIS runtime framework.</p>
       </motion.div>
       <motion.div className="identity-bridge-art" {...reveal}>
-        <div className="identity-mark"><img src={heroImages.vigil} alt="VIGIL Observatory" /></div>
+        <a className="identity-mark identity-mark-link" href="/observatory/" aria-label="Explore the VIGIL Observatory">
+          <img src={heroImages.vigil} alt="VIGIL Observatory" />
+        </a>
         <div className="identity-pulse" aria-hidden="true"><span /><span /><span /></div>
-        <div className="identity-mark"><img src={heroImages.cam} alt="CAM Initiative" /></div>
+        <a className="identity-mark identity-mark-link" href="/about/" aria-label="Learn about the CAM Initiative">
+          <img src={heroImages.cam} alt="CAM Initiative" />
+        </a>
       </motion.div>
     </section>
   );
