@@ -1,43 +1,50 @@
-/* Fourth-pass correction: two actual toothed gears, not concentric decorative circles. */
+/* Fourth-pass correction: make the diagnostic instrument read as machinery, not concentric decoration. */
 
 .diagnostic-orbit-v2 {
   background:
-    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.095) 0 10%, transparent 10.5% 55%),
-    radial-gradient(circle at 50% 50%, hsl(var(--background) / 0.56), transparent 70%);
+    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.08) 0 10%, transparent 10.5% 58%),
+    radial-gradient(circle at 50% 50%, hsl(var(--background) / 0.56), transparent 72%);
 }
 
-/* Retire the conic-gradient pseudo-rings. They read as circles/dashes, not gears. */
+/* Retire the earlier conic-gradient rings entirely. */
 .diagnostic-orbit-v2::before,
 .diagnostic-orbit-v2::after {
   display: none !important;
   content: none !important;
 }
 
+/* Two proper gear bodies. The previous 2px rings made the teeth look like beads floating around circles. */
 .diagnostic-gear {
   position: absolute;
   z-index: 1;
-  border: 2px solid hsl(var(--primary) / 0.38);
   border-radius: 50%;
   pointer-events: none;
-  box-shadow:
-    inset 0 0 0 0.34rem hsl(var(--background) / 0.5),
-    inset 0 0 0 0.42rem hsl(var(--primary) / 0.08),
-    0 0 1.8rem hsl(var(--primary) / 0.06);
+  background: transparent;
+  animation: none !important;
 }
 
 .diagnostic-gear-outer {
-  inset: 7.5%;
-  animation: premium-spin 88s linear infinite;
+  inset: 8%;
+  border: 0.5rem solid hsl(var(--primary) / 0.19);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.24),
+    0 0 0 1px hsl(var(--primary) / 0.22),
+    0 0 1.7rem hsl(var(--primary) / 0.045);
 }
 
 .diagnostic-gear-inner {
-  inset: 24.5%;
-  border-color: hsl(var(--primary) / 0.46);
+  inset: 26%;
+  border: 0.42rem solid hsl(var(--primary) / 0.2);
   box-shadow:
-    inset 0 0 0 0.25rem hsl(var(--background) / 0.56),
-    inset 0 0 0 0.34rem hsl(var(--primary) / 0.09),
-    0 0 1.2rem hsl(var(--primary) / 0.07);
-  animation: diagnostic-counter-rotation 70s linear infinite;
+    inset 0 0 0 1px hsl(var(--primary) / 0.28),
+    0 0 0 1px hsl(var(--primary) / 0.24),
+    0 0 1.2rem hsl(var(--primary) / 0.04);
+}
+
+/* Reduce tooth count visually so the gears have chunky, readable teeth instead of a necklace of studs. */
+.diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(even),
+.diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(even) {
+  display: none;
 }
 
 .diagnostic-gear-tooth {
@@ -50,110 +57,121 @@
 .diagnostic-gear-tooth::before {
   content: "";
   position: absolute;
-  top: -0.67rem;
+  top: -0.72rem;
   left: 50%;
-  width: 0.58rem;
-  height: 1.08rem;
-  border: 1px solid hsl(var(--primary) / 0.62);
-  border-radius: 0.08rem;
-  background: linear-gradient(180deg, hsl(var(--primary) / 0.74), hsl(var(--primary) / 0.28));
-  box-shadow: 0 0 0.45rem hsl(var(--primary) / 0.1);
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid hsl(var(--primary) / 0.46);
+  border-radius: 0.09rem;
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.54), hsl(var(--primary) / 0.23));
+  box-shadow: inset 0 -1px 0 hsl(var(--background) / 0.25);
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
   transform: translateX(-50%);
 }
 
 .diagnostic-gear-inner .diagnostic-gear-tooth::before {
-  top: -0.51rem;
-  width: 0.44rem;
-  height: 0.78rem;
-  border-color: hsl(var(--primary) / 0.5);
-  background: linear-gradient(180deg, hsl(var(--primary) / 0.58), hsl(var(--primary) / 0.2));
+  top: -0.58rem;
+  width: 0.78rem;
+  height: 0.82rem;
+  border-color: hsl(var(--primary) / 0.42);
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.46), hsl(var(--primary) / 0.19));
 }
 
-/* Keep the scan above the gears and below the stage chips. */
+/* The scan is the meaningful motion. Keep the gears static so the whole instrument is not moving at once. */
 .diagnostic-scan-v2 { z-index: 3; }
 .diagnostic-core { z-index: 4; }
 .diagnostic-orbit-v2 .diagnostic-node { z-index: 6; }
 .diagnostic-orbit-v2 .diagnostic-node.is-active { z-index: 10; }
 
-/* Restore the denser constellation effect behind From cases to intelligence.
-   The previous 18 nodes reused six identical positions, so most were literally stacked. */
+/* Restore the original node-and-pole network language behind From cases to intelligence.
+   Deliberately irregular positions replace the generated lattice/star field. */
 .pattern-field-bg {
-  opacity: 0.92;
+  opacity: 0.82;
 }
 
 .pattern-dot {
-  width: 0.34rem;
-  height: 0.34rem;
+  width: 0.38rem;
+  height: 0.38rem;
   border-radius: 50%;
   background: hsl(var(--primary) / 0.72);
   box-shadow:
-    0 0 0.7rem hsl(var(--primary) / 0.34),
-    0 0 1.6rem hsl(var(--primary) / 0.13);
-  transform: scale(var(--star-scale, 1));
-  animation: pattern-star-breathe 5.4s ease-in-out infinite;
+    0 0 0 0.16rem hsl(var(--primary) / 0.045),
+    0 0 0.9rem hsl(var(--primary) / 0.25);
+  transform: none !important;
+  animation: pattern-node-breathe 5.8s ease-in-out infinite;
 }
 
-.pattern-dot::before,
-.pattern-dot::after {
+.pattern-dot::before {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), transparent);
-  transform: translate(-50%, -50%);
-}
-
-.pattern-dot::before {
-  width: 1.25rem;
+  width: var(--pole-length, 6rem);
   height: 1px;
+  background: linear-gradient(90deg, hsl(var(--primary) / 0.27), hsl(var(--primary) / 0.04) 78%, transparent);
+  transform: rotate(var(--pole-angle, 18deg));
+  transform-origin: left center;
 }
 
 .pattern-dot::after {
-  width: 1px;
-  height: 1.25rem;
-  background: linear-gradient(180deg, transparent, hsl(var(--primary) / 0.5), transparent);
+  content: "";
+  position: absolute;
+  width: 0.18rem;
+  height: 0.18rem;
+  border-radius: 50%;
+  background: hsl(var(--primary) / 0.46);
+  box-shadow: 0 0 0.55rem hsl(var(--primary) / 0.18);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.pattern-star-2::before,
-.pattern-star-2::after { opacity: 0.55; }
+/* Only the first 18 are used: enough texture to read as a network, not wallpaper. */
+.pattern-dot:nth-child(n + 19) { display: none; }
 
-.pattern-star-3::before { width: 1.8rem; }
-.pattern-star-3::after { height: 1.8rem; }
+.pattern-dot:nth-child(1)  { left: 6% !important;  top: 16% !important; --pole-angle: 18deg;  --pole-length: 7.5rem; }
+.pattern-dot:nth-child(2)  { left: 14% !important; top: 72% !important; --pole-angle: -24deg; --pole-length: 6rem; }
+.pattern-dot:nth-child(3)  { left: 22% !important; top: 39% !important; --pole-angle: 8deg;   --pole-length: 8rem; }
+.pattern-dot:nth-child(4)  { left: 31% !important; top: 82% !important; --pole-angle: -38deg; --pole-length: 5.5rem; }
+.pattern-dot:nth-child(5)  { left: 39% !important; top: 19% !important; --pole-angle: 31deg;  --pole-length: 7rem; }
+.pattern-dot:nth-child(6)  { left: 47% !important; top: 58% !important; --pole-angle: -12deg; --pole-length: 6.8rem; }
+.pattern-dot:nth-child(7)  { left: 55% !important; top: 34% !important; --pole-angle: 27deg;  --pole-length: 5.8rem; }
+.pattern-dot:nth-child(8)  { left: 63% !important; top: 77% !important; --pole-angle: -29deg; --pole-length: 7.2rem; }
+.pattern-dot:nth-child(9)  { left: 71% !important; top: 17% !important; --pole-angle: 43deg;  --pole-length: 6.2rem; }
+.pattern-dot:nth-child(10) { left: 79% !important; top: 53% !important; --pole-angle: -19deg; --pole-length: 7.7rem; }
+.pattern-dot:nth-child(11) { left: 88% !important; top: 27% !important; --pole-angle: 154deg; --pole-length: 6rem; }
+.pattern-dot:nth-child(12) { left: 94% !important; top: 73% !important; --pole-angle: 193deg; --pole-length: 7rem; }
+.pattern-dot:nth-child(13) { left: 10% !important; top: 47% !important; --pole-angle: -8deg;  --pole-length: 5.5rem; }
+.pattern-dot:nth-child(14) { left: 27% !important; top: 11% !important; --pole-angle: 51deg;  --pole-length: 4.8rem; }
+.pattern-dot:nth-child(15) { left: 43% !important; top: 89% !important; --pole-angle: -57deg; --pole-length: 6.4rem; }
+.pattern-dot:nth-child(16) { left: 59% !important; top: 10% !important; --pole-angle: 21deg;  --pole-length: 5.2rem; }
+.pattern-dot:nth-child(17) { left: 75% !important; top: 87% !important; --pole-angle: -146deg; --pole-length: 5.7rem; }
+.pattern-dot:nth-child(18) { left: 91% !important; top: 46% !important; --pole-angle: 171deg; --pole-length: 7.4rem; }
 
-.pattern-star-4 {
-  width: 0.22rem;
-  height: 0.22rem;
-  opacity: 0.72;
-}
-
-.pattern-star-4::before,
-.pattern-star-4::after { opacity: 0.34; }
-
-@keyframes pattern-star-breathe {
-  0%, 100% { opacity: 0.48; filter: brightness(0.88); }
-  50% { opacity: 1; filter: brightness(1.18); transform: scale(calc(var(--star-scale, 1) * 1.28)); }
+@keyframes pattern-node-breathe {
+  0%, 100% { opacity: 0.44; }
+  50% { opacity: 0.9; }
 }
 
 @media (max-width: 720px) {
+  .diagnostic-gear-outer { border-width: 0.38rem; }
+  .diagnostic-gear-inner { border-width: 0.32rem; }
+
   .diagnostic-gear-tooth::before {
-    top: -0.5rem;
-    width: 0.42rem;
-    height: 0.8rem;
+    top: -0.53rem;
+    width: 0.72rem;
+    height: 0.75rem;
   }
 
   .diagnostic-gear-inner .diagnostic-gear-tooth::before {
-    top: -0.4rem;
-    width: 0.34rem;
+    top: -0.43rem;
+    width: 0.58rem;
     height: 0.62rem;
   }
 
-  .pattern-field-bg { opacity: 0.72; }
+  .pattern-field-bg { opacity: 0.68; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .diagnostic-gear-outer,
-  .diagnostic-gear-inner,
-  .pattern-dot {
-    animation: none !important;
-  }
+  .pattern-dot { animation: none !important; }
 }
