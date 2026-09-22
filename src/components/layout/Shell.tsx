@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about/", label: "About", internal: true },
+  { href: "/policy/", label: "Policy", internal: true },
   { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
   { href: "/observatory/cases/", label: "Case Files", internal: true },
   { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Failure Taxonomy", internal: true },
@@ -19,6 +20,7 @@ const mobileLinks = [
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about/", label: "About" },
+  { href: "/policy/", label: "Policy" },
   { href: "/licensing/", label: "Copyright & Licence" },
   { href: "/privacy/", label: "Privacy" },
 ];
@@ -33,7 +35,7 @@ const vigilLinks = [
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/";
+  const isHomeActive = location === "/" || location === "/about/" || location === "/policy/" || location === "/licensing/" || location === "/privacy/";
   const isVigilActive = location === "/observatory/" || location.startsWith("/observatory/");
   const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");
 
