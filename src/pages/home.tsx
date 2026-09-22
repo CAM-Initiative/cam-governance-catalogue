@@ -263,12 +263,18 @@ function TaxonomyReveal() {
   }, [reduceMotion]);
 
   useEffect(() => {
-    if (reduceMotion || visibleCount >= pool.length) return;
-    const timer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, pool.length)), 720);
-    return () => window.clearTimeout(timer);
+    if (reduceMotion || !pool.length) return;
+
+    if (visibleCount >= pool.length) {
+      const resetTimer = window.setTimeout(() => setVisibleCount(0), 2400);
+      return () => window.clearTimeout(resetTimer);
+    }
+
+    const landingTimer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, pool.length)), 720);
+    return () => window.clearTimeout(landingTimer);
   }, [pool.length, reduceMotion, visibleCount]);
 
-  const visible = useMemo(() => pool.slice(0, Math.max(1, visibleCount)), [pool, visibleCount]);
+  const visible = useMemo(() => pool.slice(0, visibleCount), [pool, visibleCount]);
 
   return (
     <div className="taxonomy-sticker-stage" aria-label="VIGIL failure classes accumulating into a shared taxonomy">
