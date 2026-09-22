@@ -24,6 +24,7 @@ import "./vigil-exemplar-mixed-execution.css";
 import "./vigil-incident-severity-refinement.css";
 import "./vigil-harm-assessment-cleanup.css";
 import "./vigil-assessment-provenance-cleanup.css";
+import "./vigil-assessment-layout-v2.css";
 import "./vigil-classification-table.css";
 import "./vigil-repair-web-cleanup.css";
 import "./vigil-case-library-simplify.css";
