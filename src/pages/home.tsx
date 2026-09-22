@@ -43,13 +43,7 @@ const diagnosticStages = [
 ] as const;
 
 type IncidentTickerItem = { id: string; title: string };
-
-type TaxonomySticker = {
-  classId: string;
-  classCode: string;
-  name: string;
-  familyName: string;
-};
+type TaxonomySticker = { classId: string; name: string };
 
 const fallbackTickerItems: IncidentTickerItem[] = [
   { id: "VIGIL-INC-000149", title: "DPD disabled AI chatbot after profanity and company criticism" },
@@ -61,12 +55,12 @@ const fallbackTickerItems: IncidentTickerItem[] = [
 ];
 
 const fallbackTaxonomyStickers: TaxonomySticker[] = [
-  { classId: "FC-000023", classCode: "FC-000023", name: "Monitor Circumvention or Coverage Bypass", familyName: "Oversight and monitoring" },
-  { classId: "FC-000046", classCode: "FC-000046", name: "Inferential Evidence–Authority Conflation", familyName: "Authority and evidence" },
-  { classId: "FC-000075", classCode: "FC-000075", name: "Compaction Meaning Drift", familyName: "Context and continuity" },
-  { classId: "FC-000074", classCode: "FC-000074", name: "Identity / Evaluative Integrity", familyName: "Identity and evaluation" },
-  { classId: "FC-000001", classCode: "FC-000001", name: "Source-Authority Separation Failure", familyName: "Authority and evidence" },
-  { classId: "FC-000005", classCode: "FC-000005", name: "Transformation Authority Failure", familyName: "Authority and transformation" },
+  { classId: "FC-000023", name: "Monitor Circumvention or Coverage Bypass" },
+  { classId: "FC-000046", name: "Inferential Evidence–Authority Conflation" },
+  { classId: "FC-000075", name: "Compaction Meaning Drift" },
+  { classId: "FC-000074", name: "Identity / Evaluative Integrity" },
+  { classId: "FC-000001", name: "Source-Authority Separation Failure" },
+  { classId: "FC-000005", name: "Transformation Authority Failure" },
 ];
 
 function incidentNumber(id: string) {
@@ -156,9 +150,7 @@ function PremiumHero() {
 
   useEffect(() => {
     if (reduceMotion) return;
-    const timer = window.setInterval(() => {
-      setGearTurn((current) => current + 1);
-    }, 5200);
+    const timer = window.setInterval(() => setGearTurn((current) => current + 1), 5200);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
@@ -178,9 +170,7 @@ function PremiumHero() {
         <motion.div className="premium-hero-copy" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <p className="premium-hero-kicker">AI incidents tell us what happened.</p>
           <h1 id="premium-hero-heading"><span className="premium-hero-brand">The VIGIL Observatory</span><br />shows us <span>why.</span></h1>
-          <p className="premium-hero-deck">
-            A standard taxonomy, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about where AI systems fail.
-          </p>
+          <p className="premium-hero-deck">A standard taxonomy, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about where AI systems fail.</p>
           <div className="premium-hero-actions">
             <a href="/observatory/cases/" className="premium-primary">Explore the evidence <ArrowRight aria-hidden="true" /></a>
             <a href="/observatory/knowledge-base/failure-taxonomy/" className="premium-secondary">See the taxonomy</a>
@@ -225,47 +215,47 @@ function stickerSeed(value: string) {
   return [...value].reduce((hash, character) => ((hash * 31) + character.charCodeAt(0)) >>> 0, 2166136261);
 }
 
+const stickerSlots = [
+  [4, 7, -13], [35, 4, 8], [64, 9, -6],
+  [13, 24, 6], [47, 22, -11], [70, 29, 12],
+  [2, 43, -8], [31, 42, 14], [61, 47, -4],
+  [15, 60, 11], [44, 61, -14], [72, 65, 7],
+  [4, 78, -5], [34, 76, 10], [62, 81, -12],
+  [21, 12, 15], [53, 7, -9], [51, 79, 5],
+] as const;
+
 function stickerStyle(item: TaxonomySticker, index: number): CSSProperties {
   const seed = stickerSeed(`${item.classId}-${index}`);
-  const left = 2 + (seed % 72);
-  const top = 3 + ((seed >>> 5) % 72);
-  const rotation = -7 + ((seed >>> 11) % 15);
-  const scale = 0.92 + (((seed >>> 17) % 15) / 100);
+  const slot = stickerSlots[index % stickerSlots.length];
+  const left = slot[0] + ((seed % 5) - 2);
+  const top = slot[1] + (((seed >>> 4) % 5) - 2);
+  const rotation = slot[2] + (((seed >>> 9) % 5) - 2);
   return {
     "--sticker-left": `${left}%`,
     "--sticker-top": `${top}%`,
     "--sticker-rotate": `${rotation}deg`,
-    "--sticker-scale": scale,
-    "--sticker-delay": `${(index % 8) * 70}ms`,
   } as CSSProperties;
 }
 
-function taxonomySticker(entry: FailureTaxonomyClass, familyName: string): TaxonomySticker {
-  return {
-    classId: entry.class_id,
-    classCode: entry.class_code || entry.class_id,
-    name: entry.name,
-    familyName,
-  };
+function taxonomySticker(entry: FailureTaxonomyClass): TaxonomySticker {
+  return { classId: entry.class_id, name: entry.name };
 }
 
 function TaxonomyReveal() {
   const reduceMotion = useReducedMotion();
   const [pool, setPool] = useState<TaxonomySticker[]>(fallbackTaxonomyStickers);
-  const [visibleCount, setVisibleCount] = useState(reduceMotion ? 12 : 3);
+  const [visibleCount, setVisibleCount] = useState(reduceMotion ? 16 : 3);
 
   useEffect(() => {
     let mounted = true;
     loadFailureTaxonomy()
       .then((result) => {
         if (!mounted || result.status !== "ready") return;
-        const stickers = result.data.families.flatMap((family) =>
-          family.classes.map((entry) => taxonomySticker(entry, family.family.name))
-        );
+        const stickers = result.data.families.flatMap((family) => family.classes.map(taxonomySticker));
         if (!stickers.length) return;
         const ordered = [...stickers].sort((left, right) => stickerSeed(left.classId) - stickerSeed(right.classId));
         setPool(ordered);
-        if (reduceMotion) setVisibleCount(Math.min(ordered.length, 16));
+        if (reduceMotion) setVisibleCount(Math.min(ordered.length, 18));
       })
       .catch(() => undefined);
     return () => { mounted = false; };
@@ -275,7 +265,7 @@ function TaxonomyReveal() {
     if (reduceMotion) return;
     const maximum = Math.min(pool.length, 18);
     if (visibleCount >= maximum) return;
-    const timer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, maximum)), 1050);
+    const timer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, maximum)), 950);
     return () => window.clearTimeout(timer);
   }, [pool.length, reduceMotion, visibleCount]);
 
@@ -283,23 +273,18 @@ function TaxonomyReveal() {
 
   return (
     <div className="taxonomy-sticker-stage" aria-label="VIGIL failure classes accumulating into a shared taxonomy">
-      <div className="taxonomy-sticker-board" aria-hidden="true">
+      <div className="taxonomy-sticker-board">
         {visible.map((item, index) => (
-          <motion.a
+          <a
             key={item.classId}
             href="/observatory/knowledge-base/failure-taxonomy/"
             className="taxonomy-sticker"
             style={stickerStyle(item, index)}
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.82, y: -14, rotate: -4 }}
-            animate={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
-            transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
             tabIndex={-1}
           >
-            <span className="taxonomy-sticker-pin" />
-            <span className="taxonomy-sticker-code">{item.classCode}</span>
+            <span className="taxonomy-sticker-code">{item.classId}</span>
             <strong>{item.name}</strong>
-            <small>{item.familyName}</small>
-          </motion.a>
+          </a>
         ))}
       </div>
       <a className="taxonomy-reveal-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the full failure taxonomy <ArrowRight aria-hidden="true" /></a>
@@ -319,12 +304,7 @@ function PatternField() {
             <span
               key={index}
               className={`pattern-dot pattern-star-${(index % 4) + 1}`}
-              style={{
-                left: `${left}%`,
-                top: `${top}%`,
-                "--star-scale": scale,
-                animationDelay: `${(index % 12) * 0.22}s`,
-              } as CSSProperties}
+              style={{ left: `${left}%`, top: `${top}%`, "--star-scale": scale, animationDelay: `${(index % 12) * 0.22}s` } as CSSProperties}
             />
           );
         })}
