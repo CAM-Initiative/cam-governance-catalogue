@@ -1,0 +1,11 @@
+/* Section 04 Repair uses a neutral ShieldCheck marker for the governing repair invariant.
+   It is intentionally distinct from Classification success/failure/ambiguous outcome states. */
+.vigil-case-file-page .vigil-repair-table .vigil-classification-outcome.is-repair-invariant {
+  color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.09);
+  box-shadow: 0 0 0 1px hsl(var(--primary) / 0.22);
+}
+
+.vigil-case-file-page .vigil-repair-table .vigil-classification-outcome.is-repair-invariant svg {
+  stroke-width: 2.15;
+}
