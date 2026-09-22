@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import "@/home-premium.css";
@@ -52,9 +52,38 @@ const fallbackTickerItems: IncidentTickerItem[] = [
   { id: "VIGIL-INC-000129", title: "Astra self-generated prompt injection" },
 ];
 
+const classificationExamples = [
+  {
+    incidentId: "VIGIL-INC-000129",
+    incidentTitle: "Astra-family model inserted self-generated identity and authority instructions into a compaction summary",
+    classId: "VIGIL-FC-000075",
+    classTitle: "Pragmatic Constraint Rendering Failure",
+    definition: "A governing idea survives transformation, but its bounded meaning becomes materially distorted.",
+  },
+  {
+    incidentId: "VIGIL-INC-000122",
+    incidentTitle: "Claude 3 Opus varied compliance according to inferred training observation in alignment-faking evaluation",
+    classId: "VIGIL-FC-000023",
+    classTitle: "Monitor Circumvention or Coverage Bypass",
+    definition: "Consequential conduct occurs through a path outside effective monitor coverage.",
+  },
+  {
+    incidentId: "VIGIL-INC-000125",
+    incidentTitle: "Claude judges mislabelled refusal transcripts according to downstream training consequences",
+    classId: "VIGIL-FC-000027",
+    classTitle: "Audit-Evidence Integrity Loss",
+    definition: "Audit evidence is altered, truncated, detached from context, or otherwise degraded for review.",
+  },
+] as const;
+
 function incidentNumber(id: string) {
   const numericId = id.match(/(\d+)$/)?.[1];
   return numericId ? `INC-${String(Number(numericId)).padStart(5, "0")}` : id;
+}
+
+function failureClassNumber(id: string) {
+  const numericId = id.match(/(\d+)$/)?.[1];
+  return numericId ? `FC-${String(Number(numericId)).padStart(6, "0")}` : id;
 }
 
 function tickerItem(record: UnknownRecord): IncidentTickerItem | undefined {
@@ -190,6 +219,76 @@ function PremiumHero() {
   );
 }
 
+function ClassificationExplorer() {
+  const [active, setActive] = useState(0);
+  const reduceMotion = useReducedMotion();
+  const example = classificationExamples[active];
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % classificationExamples.length);
+    }, 7200);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  return (
+    <div className="classification-explorer" aria-label="Examples of VIGIL Case Files resolved into Failure Classes">
+      <div className="classification-explorer-header">
+        <span>VIGIL CLASSIFICATION</span>
+        <small>Case → common analytical language</small>
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={example.incidentId}
+          className="classification-resolver"
+          initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+          transition={{ duration: 0.35 }}
+        >
+          <a className="classification-card classification-case" href={`/observatory/cases/${example.incidentId}/`}>
+            <span className="classification-card-type">Case File</span>
+            <strong>{incidentNumber(example.incidentId)}</strong>
+            <p>{example.incidentTitle}</p>
+            <span className="classification-card-link">Open case <ArrowRight aria-hidden="true" /></span>
+          </a>
+
+          <div className="classification-resolve-arrow" aria-hidden="true">
+            <span />
+            <i>classified as</i>
+            <ArrowRight />
+          </div>
+
+          <a className="classification-card classification-class" href={`/observatory/knowledge-base/failure-taxonomy/${example.classId}/`}>
+            <span className="classification-card-type">Failure Class</span>
+            <strong>{failureClassNumber(example.classId)}</strong>
+            <h3>{example.classTitle}</h3>
+            <p>{example.definition}</p>
+            <span className="classification-card-link">Open class <ArrowRight aria-hidden="true" /></span>
+          </a>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="classification-selector" aria-label="Choose classification example">
+        {classificationExamples.map((item, index) => (
+          <button
+            type="button"
+            key={item.incidentId}
+            className={index === active ? "is-active" : ""}
+            onClick={() => setActive(index)}
+            aria-pressed={index === active}
+          >
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            {incidentNumber(item.incidentId)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PatternField() {
   return (
     <section id="patterns" className="pattern-field" aria-labelledby="pattern-heading">
@@ -199,10 +298,8 @@ function PatternField() {
       <motion.div className="pattern-copy narrative-section-copy" {...reveal}>
         <p className="premium-eyebrow narrative-kicker">From cases to intelligence</p>
         <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
-        <p>Recurring failure classes can be clustered, compared with materialised harm, mapped to deployment environments, and carried forward into standards, controls and repair design.</p>
-        <div className="pattern-path" aria-label="VIGIL analytical pathway">
-          <span>Evidence</span><i>→</i><span>Governance assessment</span><i>→</i><span>Failure class</span><i>→</i><span>Harm impact</span><i>→</i><strong>Patterns</strong>
-        </div>
+        <p>The VIGIL Observatory textbook brings recurring failure mechanisms into one common language, connecting Case Files, governance boundaries, harm and classification across the corpus.</p>
+        <ClassificationExplorer />
       </motion.div>
     </section>
   );
