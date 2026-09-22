@@ -108,13 +108,13 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   if (!clauses.length) return null;
 
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
-    <h4 className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL taxonomy assessment</h4>
+    <h4 className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL Observatory Taxonomy Assessment</h4>
     <p className="vigil-taxonomy-assessment-intro">
       Clause-level interpretation showing how the investigation resolved governance principles before formal taxonomy mapping.
     </p>
-    <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL taxonomy assessment table" tabIndex={0}>
+    <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory taxonomy assessment table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
-        <caption className="sr-only">Clause-level VIGIL taxonomy assessment preceding formal classification.</caption>
+        <caption className="sr-only">Clause-level VIGIL Observatory taxonomy assessment preceding formal classification.</caption>
         <thead>
           <tr>
             <th scope="col">Source clause</th>
