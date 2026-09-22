@@ -364,11 +364,22 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             <p className="vigil-evidence-kicker">GOVERNANCE ASSESSMENT</p>
             <div className="report-assessment-details">
               <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
-              <CaseTaxonomyAssessment raw={incident.raw} />
-
             </div>
           </section>
+
+          <CaseTaxonomyAssessment raw={incident.raw} />
+
+          <section className="report-severity-assessment">
+            <p className="vigil-library-kicker report-peer-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT</p>
+            <HarmImpactMatrix
+              assessment={harmImpactAssessment}
+              compact
+              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+              methodologyReferenceNumber={harmMethodologyReferenceNumber}
+              methodologyReferenceHref="#vigil-harm-methodology-reference"
+            />
+          </section>
+
           {externalAssessments.length > 0 && <section className="report-external-assessments report-peer-assessment">
             <p className="vigil-library-kicker report-peer-assessment-heading">EXTERNAL ASSESSMENTS</p>
             <table className="report-external-assessment-table">
@@ -386,17 +397,6 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               })}</tbody>
             </table>
           </section>}
-          <section className="report-severity-assessment">
-            <p className="vigil-library-kicker report-peer-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
-            <HarmImpactMatrix
-              assessment={harmImpactAssessment}
-              compact
-              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
-              methodologyReferenceNumber={harmMethodologyReferenceNumber}
-              methodologyReferenceHref="#vigil-harm-methodology-reference"
-            />
-          </section>
-
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
@@ -409,9 +409,15 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         </Stage>
 
         <Stage number="05" label="Conclusion">
-          {governanceConclusion ? <section className="report-intro">
-            <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
-            <p className="report-intro-copy">{governanceConclusion}</p>
+          {(governanceConclusion || governanceSignificance) ? <section className="report-intro">
+            {governanceConclusion && <>
+              <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
+              <p className="report-intro-copy">{governanceConclusion}</p>
+            </>}
+            <div className="report-governance-significance">
+              <h4 className="report-substantive-label">Governance significance</h4>
+              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+            </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
         </Stage>
 
