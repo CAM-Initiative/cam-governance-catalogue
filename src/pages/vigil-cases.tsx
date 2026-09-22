@@ -140,7 +140,7 @@ export default function VigilCases() {
   const [search, setSearch] = useState("");
   const [classification, setClassification] = useState("");
   const [severity, setSeverity] = useState("");
-  const [sort, setSort] = useState<SortState>({ key: "id", direction: "desc" });
+  const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ export default function VigilCases() {
   function updateSort(key: SortKey) {
     setSort((current) => ({
       key,
-      direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : key === "id" ? "desc" : "asc",
+      direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : "asc",
     }));
   }
 
