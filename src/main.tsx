@@ -35,5 +35,6 @@ import "./vigil-case-file-narrative-cards.css";
 import "./vigil-external-assessments.css";
 import "./about-page-polish.css";
 import "./public-surface-responsive-cleanup.css";
+import "./home-premium-v4.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
