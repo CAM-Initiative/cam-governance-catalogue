@@ -108,35 +108,45 @@ function IncidentTicker() {
   );
 }
 
-function MechanicalGear({ size, teeth }: { size: "outer" | "inner"; teeth: number }) {
+function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer" | "inner"; teeth: number; rotation: number; reduceMotion: boolean }) {
   return (
-    <div className={`diagnostic-gear diagnostic-gear-${size}`} aria-hidden="true">
+    <motion.div
+      className={`diagnostic-gear diagnostic-gear-${size}`}
+      aria-hidden="true"
+      animate={{ rotate: rotation }}
+      transition={{ duration: reduceMotion ? 0 : 1.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <span className="diagnostic-gear-spokes">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
+        ))}
+      </span>
       {Array.from({ length: teeth }).map((_, index) => (
         <span
           key={index}
-          className="diagnostic-gear-tooth"
+          className={`diagnostic-gear-tooth${size === "outer" && index === 0 ? " is-index-tooth" : ""}`}
           style={{ "--tooth-angle": `${(360 / teeth) * index}deg` } as CSSProperties}
         />
       ))}
-    </div>
+    </motion.div>
   );
 }
 
 function PremiumHero() {
-  const [scanTurn, setScanTurn] = useState(0);
+  const [gearTurn, setGearTurn] = useState(0);
   const reduceMotion = useReducedMotion();
-  const activeStage = ((scanTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
+  const activeStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
 
   useEffect(() => {
     if (reduceMotion) return;
     const timer = window.setInterval(() => {
-      setScanTurn((current) => current + 1);
+      setGearTurn((current) => current + 1);
     }, 5200);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
   function activateStage(index: number) {
-    setScanTurn((current) => {
+    setGearTurn((current) => {
       const currentIndex = ((current % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
       const forwardSteps = (index - currentIndex + diagnosticStages.length) % diagnosticStages.length;
       return current + forwardSteps;
@@ -161,12 +171,11 @@ function PremiumHero() {
         </motion.div>
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
-          <MechanicalGear size="outer" teeth={30} />
-          <MechanicalGear size="inner" teeth={22} />
+          <MechanicalGear size="outer" teeth={30} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} />
+          <MechanicalGear size="inner" teeth={22} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What went wrong?</strong>
-            <span className="diagnostic-core-count">{String(activeStage + 1).padStart(2, "0")} / 06</span>
           </div>
 
           {diagnosticStages.map((stage, index) => {
@@ -180,7 +189,6 @@ function PremiumHero() {
                 onFocus={() => activateStage(index)}
                 aria-pressed={active}
               >
-                <span className="diagnostic-node-index">{String(index + 1).padStart(2, "0")}</span>
                 <span className="diagnostic-node-copy">
                   <span className="diagnostic-node-label">{stage.label}</span>
                   <strong>{stage.title}</strong>
@@ -188,13 +196,6 @@ function PremiumHero() {
               </button>
             );
           })}
-
-          <motion.div
-            className="diagnostic-scan diagnostic-scan-v2"
-            aria-hidden="true"
-            animate={{ rotate: -90 + scanTurn * 60 }}
-            transition={{ duration: reduceMotion ? 0 : 1.5, ease: [0.22, 1, 0.36, 1] }}
-          />
         </motion.div>
       </div>
       <IncidentTicker />
