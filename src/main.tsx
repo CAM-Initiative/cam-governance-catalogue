@@ -38,5 +38,6 @@ import "./about-page-polish.css";
 import "./public-surface-responsive-cleanup.css";
 import "./home-premium-v4.css";
 import "./home-premium-v5.css";
+import "./home-premium-v6.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
