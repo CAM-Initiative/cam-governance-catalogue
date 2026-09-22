@@ -75,6 +75,27 @@ test("homepage presents the VIGIL Observatory Failure Taxonomy as a first-class 
   assert.doesNotMatch(home, /VIGIL AI Governance Failure Taxonomy/);
 });
 
+test("homepage refinement preserves the six-stage instrument and live Observatory feed", async () => {
+  const [home, styles] = await Promise.all([
+    read("src/pages/home.tsx"),
+    read("src/home-premium-v2.css"),
+  ]);
+  const evidence = home.indexOf('{ label: "Evidence"');
+  const environment = home.indexOf('{ label: "Environment"');
+  const harm = home.indexOf('{ label: "Harm"');
+  const governance = home.indexOf('{ label: "Governance"');
+  const classification = home.indexOf('{ label: "Classification"');
+  const compare = home.indexOf('{ label: "Compare"');
+  assert.ok(evidence < environment && environment < harm && harm < governance && governance < classification && classification < compare);
+  assert.doesNotMatch(home, /<p className="premium-eyebrow">CAM Initiative · VIGIL Observatory<\/p>/);
+  assert.match(home, /loadVigilIncidentRecords/);
+  assert.match(home, /aria-label="Recent VIGIL Case Files"/);
+  assert.match(home, /CAELESTIS runtime framework/);
+  assert.match(styles, /diagnostic-counter-rotation/);
+  assert.match(styles, /incident-ticker-travel 112s linear infinite/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.incident-ticker-track \{ animation: none; \}/);
+});
+
 test("public taxonomy naming uses VIGIL Observatory Failure Taxonomy", async () => {
   const [taxonomy, aboutVigil, shell, hub, datasets] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
