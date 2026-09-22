@@ -50,7 +50,7 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Dq-Zc6eI.js"></script>
+    <script type="module" crossorigin src="/assets/index-p6rEtENm.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dq2JHP1N.css">
   </head>
   <body>
@@ -71,7 +71,7 @@
       <h2>Exclusions</h2>
       <ul><li>The state was explicitly ephemeral and no continuation was required or represented.</li><li>The state persists but is restored inaccurately.</li><li>The work remains intact and only access to it is temporarily unavailable.</li></ul>
       <h2>Linked Case Files</h2>
-      <p>No classified failure Case Files are currently linked to this class.</p>
+      <ul><li><a href="/observatory/cases/VIGIL-INC-000032/"><code>VIGIL-INC-000032</code> — Completed Codex work was lost before a durable branch was created</a> <span>failure-occurrence · high confidence</span></li></ul>
 
       <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>Microsoft · 2026-08-10 · authoritative guidance</p><p><strong><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints" rel="noreferrer">Microsoft Agent Framework Workflows - Checkpoints</a></strong></p><p><strong>Evidence note.</strong> Microsoft documents checkpoints as saved workflow state used to avoid lost progress and resume work after failure, pause or migration, including durable cross-process storage for production workflows. This directly supports preservation of resumable material work state across interruption; it is framework-specific guidance and does not establish that every transient intermediate state must be persisted or define VIGIL&#39;s materiality and represented-continuation thresholds.</p></li><li><p>ACM Computing Surveys · 2002-09-01 · research evidence</p><p><strong><a href="https://doi.org/10.1145/568522.568525" rel="noreferrer">A survey of rollback-recovery protocols in message-passing systems</a></strong></p><p><strong>Evidence note.</strong> Rollback-recovery literature treats preserved checkpoints and logs as the basis for restoring material system state after failure. This independently supports persistence of work-relevant state across interruption; VIGIL separately requires that materially required work state be lost or detached in a governance-relevant workflow.</p></li></ul>
     </main></div>
