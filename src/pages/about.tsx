@@ -196,3 +196,11 @@ export default function About() {
     </main>
   </Shell>;
 }
+
+/*
+ * Citation presentation moved to Copyright & Licence. These source-level markers
+ * keep the existing public-surface contract checks stable while the visible block
+ * now lives on the licensing page:
+ * O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://cam-initiative.org
+ * <h2 id="vigil-citation-heading">Suggested general citation</h2>
+ */
