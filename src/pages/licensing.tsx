@@ -1,8 +1,30 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
+import { Check, Copy } from "lucide-react";
 import { Shell } from "@/components/layout/Shell";
+
+const citation = "O’Rourke, M. V. (2026). VIGIL Observatory. CAM Initiative. https://cam-initiative.org";
 
 function ReferenceSection({ number, eyebrow, title, children }: { number: string; eyebrow: string; title: string; children: ReactNode }) {
   return <section className="public-reference-section"><header className="public-reference-section-heading"><span>{number}</span><div><p>{eyebrow}</p><h2>{title}</h2></div></header><div className="public-reference-section-body">{children}</div></section>;
+}
+
+function CopyCitation() {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(citation);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }
+
+  return <button className="vigil-about-copy" type="button" onClick={copy} aria-label="Copy VIGIL Observatory citation">
+    {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+    {copied ? "Copied" : "Copy citation"}
+  </button>;
 }
 
 export default function Licensing() {
@@ -37,6 +59,14 @@ export default function Licensing() {
     <ReferenceSection number="05" eyebrow="Permissions" title="Licence enquiries"><div className="public-reference-reading">
       <p>For commercial use, substantive reuse, model-training or evaluation use, bulk extraction, paid integration, derivative taxonomy work, sublicensing or other permissions beyond public access, citation and reference, contact <a href="mailto:research@cam-initiative.org">research@cam-initiative.org</a>.</p>
       <p>The linked VIGIL Observatory Proprietary Licence is controlling for VIGIL Observatory Materials. This page is a public-facing summary and does not create a separate licence or expand the permissions in that instrument.</p>
+    </div></ReferenceSection>
+
+    <ReferenceSection number="06" eyebrow="Citation" title="Suggested general citation"><div className="public-reference-reading">
+      <div className="vigil-about-citation-card">
+        <div><p>{citation}</p></div>
+        <CopyCitation />
+      </div>
+      <p>For a specific Incident or taxonomy entry, identify the relevant VIGIL Observatory record ID or taxonomy version and use the canonical URL. Citation, reference and linking are permitted; substantive reuse is governed by the applicable licence.</p>
     </div></ReferenceSection>
   </article></div></main></Shell>;
 }
