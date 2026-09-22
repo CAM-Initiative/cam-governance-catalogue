@@ -1,0 +1,259 @@
+/* Second-pass homepage refinement: slower VIGIL analytical orbit with dwell/expand states. */
+
+.diagnostic-orbit-v2::before {
+  animation-duration: 72s;
+}
+
+.diagnostic-orbit-v2 .diagnostic-scan {
+  animation: none;
+}
+
+.diagnostic-scan-v2 {
+  width: 42%;
+  background: linear-gradient(90deg, hsl(var(--primary) / 0.82), hsl(var(--primary) / 0.16) 72%, transparent);
+  filter: drop-shadow(0 0 0.7rem hsl(var(--primary) / 0.42));
+}
+
+.diagnostic-scan-v2::after {
+  content: "";
+  position: absolute;
+  right: -0.2rem;
+  top: 50%;
+  width: 0.48rem;
+  height: 0.48rem;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  box-shadow: 0 0 0 0.35rem hsl(var(--primary) / 0.1), 0 0 1.2rem hsl(var(--primary) / 0.72);
+  transform: translateY(-50%);
+}
+
+.diagnostic-core-count {
+  margin-top: 0.5rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: hsl(var(--muted-foreground));
+}
+
+.diagnostic-orbit-v2 .diagnostic-node {
+  appearance: none;
+  width: auto;
+  max-width: 12.5rem;
+  min-height: 2.45rem;
+  cursor: pointer;
+  text-align: left;
+  white-space: normal;
+  transform: none;
+  overflow: hidden;
+  transition:
+    width 520ms cubic-bezier(.22,1,.36,1),
+    max-width 520ms cubic-bezier(.22,1,.36,1),
+    padding 320ms ease,
+    border-color 260ms ease,
+    background 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms ease;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node:hover,
+.diagnostic-orbit-v2 .diagnostic-node:focus-visible {
+  transform: none;
+  outline: none;
+}
+
+.diagnostic-node-copy {
+  display: grid;
+  min-width: 0;
+}
+
+.diagnostic-node-label {
+  font-family: var(--app-font-mono);
+  font-size: 0.56rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.diagnostic-node-copy strong {
+  margin-top: 0.16rem;
+  font-family: var(--app-font-serif);
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.12;
+  color: hsl(var(--foreground));
+}
+
+.diagnostic-node-detail {
+  display: block;
+  max-height: 0;
+  max-width: 0;
+  margin-top: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.69rem;
+  font-weight: 450;
+  line-height: 1.48;
+  letter-spacing: 0;
+  color: hsl(var(--foreground) / 0.68);
+  transition:
+    max-height 500ms cubic-bezier(.22,1,.36,1),
+    max-width 500ms cubic-bezier(.22,1,.36,1),
+    opacity 280ms ease 100ms,
+    margin-top 280ms ease;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active {
+  z-index: 10;
+  width: min(18rem, 48vw);
+  max-width: 18rem;
+  padding: 0.82rem 0.95rem;
+  border-color: hsl(var(--primary) / 0.82);
+  background:
+    radial-gradient(circle at 18% 15%, hsl(var(--primary) / 0.15), transparent 44%),
+    hsl(var(--background) / 0.93);
+  box-shadow:
+    0 18px 42px hsl(var(--foreground) / 0.1),
+    0 0 0 1px hsl(var(--primary) / 0.08),
+    0 0 2.2rem hsl(var(--primary) / 0.14);
+  animation: diagnostic-dwell-flash 760ms ease-out;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-detail {
+  max-height: 5rem;
+  max-width: 16rem;
+  margin-top: 0.46rem;
+  opacity: 1;
+}
+
+@keyframes diagnostic-dwell-flash {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.48), 0 0 0 hsl(var(--primary) / 0);
+  }
+  42% {
+    box-shadow: 0 0 0 0.45rem hsl(var(--primary) / 0.08), 0 0 3rem hsl(var(--primary) / 0.26);
+  }
+  100% {
+    box-shadow: 0 18px 42px hsl(var(--foreground) / 0.1), 0 0 0 1px hsl(var(--primary) / 0.08), 0 0 2.2rem hsl(var(--primary) / 0.14);
+  }
+}
+
+/* Four canonical analytical stages replace the previous six mixed-purpose chips. */
+.diagnostic-orbit-v2 .diagnostic-node-1 {
+  top: 0%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-2 {
+  top: 50%;
+  right: -7%;
+  bottom: auto;
+  left: auto;
+  transform: translateY(-50%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-3 {
+  top: auto;
+  right: auto;
+  bottom: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-4 {
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  left: -7%;
+  transform: translateY(-50%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-1:hover,
+.diagnostic-orbit-v2 .diagnostic-node-1:focus-visible,
+.diagnostic-orbit-v2 .diagnostic-node-1.is-active,
+.diagnostic-orbit-v2 .diagnostic-node-3:hover,
+.diagnostic-orbit-v2 .diagnostic-node-3:focus-visible,
+.diagnostic-orbit-v2 .diagnostic-node-3.is-active {
+  transform: translateX(-50%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-2:hover,
+.diagnostic-orbit-v2 .diagnostic-node-2:focus-visible,
+.diagnostic-orbit-v2 .diagnostic-node-2.is-active,
+.diagnostic-orbit-v2 .diagnostic-node-4:hover,
+.diagnostic-orbit-v2 .diagnostic-node-4:focus-visible,
+.diagnostic-orbit-v2 .diagnostic-node-4.is-active {
+  transform: translateY(-50%);
+}
+
+/* With the four-bar explainer removed, the pattern field now follows the hero directly. */
+.pattern-field {
+  scroll-margin-top: 4rem;
+}
+
+.premium-main-rail .home-main-copy > .home-rail-section:first-child {
+  border-top: 0;
+}
+
+@media (max-width: 1100px) {
+  .diagnostic-orbit-v2 .diagnostic-node-2 { right: -3%; }
+  .diagnostic-orbit-v2 .diagnostic-node-4 { left: -3%; }
+}
+
+@media (max-width: 720px) {
+  .diagnostic-orbit-v2 {
+    width: min(86vw, 25rem);
+    margin-block: 1.5rem 1rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node {
+    max-width: 8.8rem;
+    min-height: 2.2rem;
+    padding: 0.48rem 0.55rem;
+  }
+
+  .diagnostic-node-copy strong {
+    font-size: 0.72rem;
+  }
+
+  .diagnostic-node-label,
+  .diagnostic-node-index {
+    font-size: 0.49rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active {
+    width: min(14rem, 62vw);
+    max-width: 14rem;
+    padding: 0.66rem 0.72rem;
+  }
+
+  .diagnostic-node-detail {
+    font-size: 0.61rem;
+    line-height: 1.42;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-detail {
+    max-width: 12.5rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node-2 { right: -10%; }
+  .diagnostic-orbit-v2 .diagnostic-node-4 { left: -10%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnostic-orbit-v2::before,
+  .diagnostic-orbit-v2 .diagnostic-node.is-active {
+    animation: none !important;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node,
+  .diagnostic-node-detail {
+    transition-duration: 0.01ms !important;
+  }
+}
