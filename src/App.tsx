@@ -12,6 +12,8 @@ import "./vigil-failure-taxonomy.css";
 import "./vigil-failure-taxonomy-refinements.css";
 import "./public-surface-refinements.css";
 import "./public-reference-pages.css";
+import "./homepage-positioning.css";
+import "./homepage-positioning";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import VigilCases from "@/pages/vigil-cases";
