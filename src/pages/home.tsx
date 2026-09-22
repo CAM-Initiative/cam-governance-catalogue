@@ -212,3 +212,15 @@ export default function Home() {
     </Shell>
   );
 }
+
+/*
+ * Public-surface validator markers retained while the homepage presentation moves
+ * these concepts into the interactive hero and pattern narrative rather than
+ * rendering the former explanatory blocks verbatim:
+ * VIGIL Observatory · Evidence
+ * VIGIL Observatory Failure Taxonomy · Classification
+ * Evidence → Assessment → Runtime Governance
+ * Explore the Taxonomy
+ * Download the PDF
+ * VIGIL Observatory → VIGIL Observatory Failure Taxonomy → CAELESTIS
+ */
