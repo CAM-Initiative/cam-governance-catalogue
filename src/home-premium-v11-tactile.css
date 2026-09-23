@@ -338,3 +338,132 @@
     height: 0.18rem;
   }
 }
+
+
+/* Final outer-ring tooth treatment.
+   Every outer tooth now uses the same larger, warm-gold geometry that previously
+   belonged only to the index tooth. The selector is a separate inward marker. */
+.diagnostic-gear-outer .diagnostic-gear-tooth::after,
+.diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::after {
+  top: -0.2rem;
+  width: 1.5rem;
+  height: 0.38rem;
+  border-color: hsl(var(--primary) / 0.46);
+  border-radius: 0.06rem;
+  background:
+    linear-gradient(180deg,
+      hsl(var(--primary) / 0.42),
+      hsl(var(--primary) / 0.14));
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--background) / 0.18),
+    0 0.1rem 0.2rem hsl(var(--foreground) / 0.045);
+  opacity: 1;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth::before,
+.diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::before,
+.diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(4n + 1)::before,
+.diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(6n + 3)::before {
+  top: -1rem;
+  width: 1.06rem;
+  height: 1.18rem;
+  border-color: hsl(var(--primary) / 0.64);
+  border-radius: 0.075rem 0.075rem 0.15rem 0.15rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--primary) / 0.58),
+      hsl(var(--primary) / 0.92) 38%,
+      hsl(var(--primary)) 52%,
+      hsl(var(--primary) / 0.88) 66%,
+      hsl(var(--primary) / 0.54));
+  clip-path: polygon(20% 0, 80% 0, 96% 100%, 4% 100%);
+  box-shadow:
+    inset 0 -0.16rem 0 hsl(var(--background) / 0.1),
+    inset 0 1px 0 hsl(var(--background) / 0.16),
+    0 0.12rem 0.24rem hsl(var(--foreground) / 0.065);
+  opacity: 1;
+}
+
+/* Stargate-inspired indexing marker, translated into the VIGIL instrument language:
+   a broad machined trapezoidal housing that narrows inward toward the inner gear. */
+.diagnostic-gear-index-pointer {
+  top: 0.6rem;
+  left: 50%;
+  width: 2.25rem;
+  height: 2.45rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(var(--primary) / 0.52);
+  border-radius: 0.12rem 0.12rem 0.2rem 0.2rem;
+  clip-path: polygon(12% 0, 88% 0, 78% 38%, 64% 72%, 56% 100%, 44% 100%, 36% 72%, 22% 38%);
+  background:
+    linear-gradient(90deg,
+      hsl(var(--primary) / 0.34),
+      hsl(var(--primary) / 0.76) 20%,
+      hsl(var(--primary) / 0.28) 34%,
+      hsl(var(--background) / 0.76) 50%,
+      hsl(var(--primary) / 0.28) 66%,
+      hsl(var(--primary) / 0.76) 80%,
+      hsl(var(--primary) / 0.34));
+  box-shadow:
+    inset 0 1px 0 hsl(var(--background) / 0.38),
+    inset 0 -0.18rem 0.24rem hsl(var(--foreground) / 0.08),
+    0 0.18rem 0.34rem hsl(var(--foreground) / 0.1),
+    0 0 0.4rem hsl(var(--primary) / 0.08);
+}
+
+/* Inset face gives the selector the layered chevron/trapezium construction
+   without copying the reference's colour or ornament. */
+.diagnostic-gear-index-pointer::before {
+  content: "";
+  position: absolute;
+  inset: 0.28rem 0.38rem 0.48rem;
+  border: 1px solid hsl(var(--primary) / 0.34);
+  clip-path: polygon(14% 0, 86% 0, 72% 46%, 58% 100%, 42% 100%, 28% 46%);
+  background:
+    linear-gradient(180deg,
+      hsl(var(--background) / 0.82),
+      hsl(var(--primary) / 0.24) 58%,
+      hsl(var(--primary) / 0.5));
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--background) / 0.18);
+}
+
+.diagnostic-gear-index-pointer::after {
+  top: 0.42rem;
+  width: 0.28rem;
+  height: 0.28rem;
+  border-color: hsl(var(--primary) / 0.42);
+  background:
+    radial-gradient(circle at 35% 30%,
+      hsl(var(--background) / 0.95),
+      hsl(var(--primary) / 0.4) 62%,
+      hsl(var(--primary) / 0.18));
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-outer .diagnostic-gear-tooth::after,
+  .diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::after {
+    width: 1rem;
+    height: 0.26rem;
+  }
+
+  .diagnostic-gear-outer .diagnostic-gear-tooth::before,
+  .diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::before,
+  .diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(4n + 1)::before,
+  .diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(6n + 3)::before {
+    top: -0.66rem;
+    width: 0.7rem;
+    height: 0.76rem;
+  }
+
+  .diagnostic-gear-index-pointer {
+    top: 0.42rem;
+    width: 1.5rem;
+    height: 1.72rem;
+  }
+
+  .diagnostic-gear-index-pointer::before {
+    inset: 0.2rem 0.25rem 0.34rem;
+  }
+}
