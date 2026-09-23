@@ -333,7 +333,7 @@
 }
 
 .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
-.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-library-kicker {
   font-size: 1.05rem !important;
   font-weight: 700 !important;
   line-height: 1.3 !important;
@@ -1129,7 +1129,7 @@
   }
 
   .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
-.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-library-kicker {
     font-size: 11.5pt !important;
     font-weight: 700 !important;
     line-height: 1.3 !important;
@@ -2375,7 +2375,7 @@
 @media print {
   /* Keep Stage 02 assessment headings attached to the analysis they introduce. */
   .vigil-deterministic-report-host .report-peer-assessment-heading,
-  .vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-substantive-label {
+  .vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-library-kicker {
     break-after: avoid-page !important;
     page-break-after: avoid !important;
   }
