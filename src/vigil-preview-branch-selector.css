@@ -71,11 +71,36 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--foreground);
+  color: hsl(var(--foreground));
   font: inherit;
   font-size: 0.78rem;
   font-weight: 650;
   cursor: pointer;
+}
+
+/* Native branch menus need explicit theme colours: Chromium otherwise opens
+   the dark-mode select with a light popup surface while retaining pale text. */
+html[data-theme="dark"] .vigil-preview-source-select {
+  border-color: hsl(var(--border));
+  background: hsl(var(--card));
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] .vigil-preview-source-select select {
+  color-scheme: dark;
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+}
+
+html[data-theme="dark"] .vigil-preview-source-select select option,
+html[data-theme="dark"] .vigil-preview-source-select select optgroup {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+
+html[data-theme="dark"] .vigil-preview-source-select select option:checked {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
 }
 
 .vigil-preview-source-meta {
