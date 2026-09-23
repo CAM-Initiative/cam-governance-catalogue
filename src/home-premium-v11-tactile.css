@@ -467,3 +467,68 @@
     inset: 0.2rem 0.25rem 0.34rem;
   }
 }
+
+
+/* Final motion polish: the label opens essentially as soon as the index marker
+   arrives, rather than lingering through the slower v10 reveal transition. */
+.diagnostic-orbit-v2 .diagnostic-node-copy strong {
+  transition:
+    max-height 120ms cubic-bezier(.22,1,.36,1),
+    margin-top 90ms ease,
+    opacity 75ms ease,
+    transform 110ms cubic-bezier(.22,1,.36,1);
+}
+
+/* The large wheel uses the spokes already built into the rotating gear itself.
+   Bring them forward so they are as legible as the inner-wheel structure. */
+.diagnostic-gear-outer .diagnostic-gear-spokes {
+  z-index: 3;
+  opacity: 1;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-spokes i {
+  width: 1.02rem;
+  height: 42%;
+  opacity: 0.82;
+  border-color: hsl(var(--primary) / 0.16);
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.7),
+      hsl(var(--primary) / 0.08) 34%,
+      hsl(var(--primary) / 0.2) 50%,
+      hsl(var(--primary) / 0.08) 66%,
+      hsl(var(--background) / 0.7));
+  box-shadow:
+    inset 1px 0 0 hsl(var(--primary) / 0.07),
+    inset -1px 0 0 hsl(var(--foreground) / 0.03),
+    0 0.1rem 0.18rem hsl(var(--foreground) / 0.025);
+}
+
+.diagnostic-gear-outer .diagnostic-gear-spokes i::after {
+  width: 0.28rem;
+  height: 0.28rem;
+  opacity: 0.72;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-spokes i:nth-child(2),
+.diagnostic-gear-outer .diagnostic-gear-spokes i:nth-child(5) {
+  width: 0.96rem;
+  opacity: 0.76;
+}
+
+/* Retire the earlier separate, stationary spoke overlay. */
+.diagnostic-outer-spokes {
+  display: none !important;
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-outer .diagnostic-gear-spokes i {
+    width: 0.7rem;
+    height: 40%;
+  }
+
+  .diagnostic-gear-outer .diagnostic-gear-spokes i::after {
+    width: 0.2rem;
+    height: 0.2rem;
+  }
+}
