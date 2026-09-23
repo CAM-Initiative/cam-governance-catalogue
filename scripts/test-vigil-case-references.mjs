@@ -92,7 +92,7 @@ test("Case File Section 02 orders factual basis, taxonomy assessment, harm and e
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
 });
 
-test("Governance significance is projected in Conclusion while taxonomy assessment is its own Section 02 card", async () => {
+test("Governance significance is integrated under Conclusion while taxonomy assessment remains its own Section 02 card", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
@@ -100,8 +100,9 @@ test("Governance significance is projected in Conclusion while taxonomy assessme
   assert.match(assessmentRenderer, /Factual basis/);
   assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
-  assert.match(conclusionRenderer, /Governance significance/);
-  assert.match(conclusionRenderer, /vigil-governance-significance-card/);
+  assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
+  assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3>Governance significance<\/h3>/);
+  assert.doesNotMatch(conclusionRenderer, /vigil-governance-significance-card/);
 });
 
 test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
