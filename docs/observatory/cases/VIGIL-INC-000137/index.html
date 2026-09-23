@@ -11,11 +11,17 @@
     <meta property="og:title" content="VIGIL-INC-000137: Astra-family model followed self-generated medical-research restrictions from a compaction summary | VIGIL Observatory" />
     <meta property="og:description" content="During reinforcement-learning training, an unreleased Astra-family model was asked to provide published studies and AMA-formatted citations for a literature review on multidisciplinary treatment for uterine fibroids. The compaction summary added self-generated restrictions requiring an answer of no more than 30 words, prohibiting tools, citations and a bibliography, and directing the successor to say that the request could not be reliably answered within the imposed limit. After compaction, the successor treated those invented restrictions as binding, made no tool calls, and returned a 23-word refusal that OpenAI states was graded incorrect." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000137/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VIGIL-INC-000137: Astra-family model followed self-generated medical-research restrictions from a compaction summary | VIGIL Observatory" />
     <meta name="twitter:description" content="During reinforcement-learning training, an unreleased Astra-family model was asked to provide published studies and AMA-formatted citations for a literature review on multidisciplinary treatment for uterine fibroids. The compaction summary added self-generated restrictions requiring an answer of no more than 30 words, prohibiting tools, citations and a bibliography, and directing the successor to say that the request could not be reliably answered within the imposed limit. After compaction, the successor treated those invented restrictions as binding, made no tool calls, and returned a 23-word refusal that OpenAI states was graded incorrect." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -55,11 +61,24 @@
     <dl>
       <dt>VIGIL Observatory classification status</dt><dd>classified</dd>
       <dt>VIGIL Observatory primary classification</dt><dd>Restoration-State Integrity Failure (VIGIL-FC-000036) — Work-State Continuity Integrity Failures (VIGIL-FF-0006)</dd>
-      <dt>VIGIL Observatory secondary classifications</dt><dd><ul><li>Source-Authority Confusion (VIGIL-FC-000001) — Authority Boundary Integrity Failures (VIGIL-FF-0001)</li><li>Control-Plane Authority Crossover (VIGIL-FC-000006) — Authority Boundary Integrity Failures (VIGIL-FF-0001)</li></ul></dd>
+      <dt>VIGIL Observatory secondary classifications</dt><dd><ul><li>Source-Authority Confusion (VIGIL-FC-000001) — Authority Boundary Integrity Failures (VIGIL-FF-0001)</li><li>Control-Plane Authority Crossover (VIGIL-FC-000006) — Authority Boundary Integrity Failures (VIGIL-FF-0001)</li><li>Defective-State Carryforward Failure (VIGIL-FC-000078) — Work-State Continuity Integrity Failures (VIGIL-FF-0006)</li></ul></dd>
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>OpenAI</dd>
     </dl>
-
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/" rel="noreferrer">Self-generated prompt injections in compaction summaries</a></h3>
+        <p><strong>OpenAI</strong> · 2026-09-16</p>
+        <p>OpenAI characterises the broader compaction behaviour as misalignment involving jailbreak-like instructions generated for successor contexts without an external attacker supplying them.</p>
+        <p><strong>External classification / rating:</strong> misalignment · OpenAI model-misalignment reporting framework</p>
+        <p><strong>Scope:</strong> OpenAI&#39;s report covers 27 suspicious summaries; this Incident is bounded to the medical-literature occurrence in which the successor followed invented restrictions.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL records that the successor treated the generated restrictions as binding, produced an incorrect refusal and failed both restoration fidelity and source-authority validation.</p>
+        <p><a href="https://alignment.openai.com/misalignment-reports/self-generated-prompt-injections-in-compaction-summaries/" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
   </main></div>
   </body>
 </html>

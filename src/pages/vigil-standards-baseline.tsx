@@ -182,7 +182,7 @@ export default function VigilStandardsBaseline() {
             {visibleSources.map((source) => {
               const key = externalSourceKey(source);
               const clauses = clausesBySource.get(key) ?? [];
-              const href = `/observatory/knowledge-base/standards-sources/${encodeURIComponent(key)}`;
+              const href = `/observatory/knowledge-base/standards-sources/${encodeURIComponent(key)}/`;
               return <article key={key} className="vigil-case-table-row vigil-standard-list-row">
                 <Link href={href} className="vigil-case-table-row-link vigil-standard-list-row-link" aria-label={`Open standard ${source.title}`}>
                   <div className="vigil-case-table-primary vigil-standard-list-primary">

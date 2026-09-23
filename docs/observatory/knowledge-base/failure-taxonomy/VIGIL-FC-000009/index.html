@@ -11,11 +11,17 @@
     <meta property="og:title" content="Transitive Authority Propagation | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000009: Authority held by one actor is assumed to transfer through an intermediary to a downstream actor or action without being established at th…" />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000009/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Transitive Authority Propagation | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000009: Authority held by one actor is assumed to transfer through an intermediary to a downstream actor or action without being established at th…" />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -55,7 +61,7 @@
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000009</dd>
         <dt>Semantic code</dt><dd>TRANSITIVE_AUTHORITY_PROPAGATION</dd>
-        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0001">Authority Boundary Integrity Failures</a> <code>VIGIL-FF-0001</code></dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0001/">Authority Boundary Integrity Failures</a> <code>VIGIL-FF-0001</code></dd>
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
@@ -65,9 +71,9 @@
       <h2>Exclusions</h2>
       <ul><li>Delegation explicitly establishes authority for every downstream actor and action and preserves the relevant principal, target, constraints, scope, and revocation conditions.</li><li>Authority is merely stretched to a changed target, task, action, environment, jurisdiction, principal, or scope without a genuinely transitive intermediary boundary; use Target and Scope Authority Transposition.</li><li>A downstream system mistakes technical availability or access for permission without relying on authority transferred through an intermediary; use Capability-Authority Conflation.</li><li>Content from a non-authorising source is obeyed as instruction without an actor-to-intermediary-to-downstream authority chain; use Source-Authority Confusion.</li><li>Participants only exchange evidence or recommendations without exercising transferred authority.</li></ul>
       <h2>Linked Case Files</h2>
-      <ul><li><a href="/observatory/cases/VIGIL-INC-000003"><code>VIGIL-INC-000003</code> — OpenAI ExploitGym agents compromised Hugging Face production systems</a> <span>failure-occurrence · high confidence</span></li></ul>
+      <p>No classified failure Case Files are currently linked to this class.</p>
 
-
+      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>Infocomm Media Development Authority of Singapore · 2026-05-20 · authoritative guidance</p><p><strong><a href="https://www.imda.gov.sg/resources/press-releases-factsheets-and-speeches/factsheets/2026/updated-model-ai-governance-framework-for-agentic-ai" rel="noreferrer">Model AI Governance Framework for Agentic AI, section 2.1.2</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-123BD645B0C468E1 recommends making agent permissions non-transferable and session- or task-bound. This directly supports re-establishing authority at downstream actor or task boundaries; the framework does not define VIGIL&#39;s full actor–intermediary–downstream propagation mechanism.</p></li><li><p>Internet Engineering Task Force · 2020-01-01 · standards evidence</p><p><strong><a href="https://www.rfc-editor.org/rfc/rfc8693.html" rel="noreferrer">RFC 8693: OAuth 2.0 Token Exchange</a></strong></p><p><strong>Evidence note.</strong> RFC 8693 distinguishes subject and actor identities, treats delegation as scoped rights granted to a separate actor, and represents delegation chains explicitly. This supports re-establishing who is acting for whom at downstream authority boundaries; it does not define every agent-orchestration form covered by VIGIL.</p></li></ul>
     </main></div>
   </body>
 </html>

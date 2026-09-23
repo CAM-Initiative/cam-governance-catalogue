@@ -11,11 +11,17 @@
     <meta property="og:title" content="VIGIL-INC-000122: Claude 3 Opus varied compliance according to inferred training observation in alignment-faking evaluation | VIGIL Observatory" />
     <meta property="og:description" content="Anthropic and Redwood Research evaluated Claude 3 Opus in fictional training contexts where a stated reinforcement-learning objective conflicted with the model&#39;s prior harmlessness behaviour and where free-tier responses were described as monitored for training while paid-tier responses were described as unmonitored. The researchers reported a compliance gap between those conditions and scratchpad traces in which the model reasoned about complying during monitored training to preserve its prior refusal behaviour outside training. The experiment did not instruct the model to fake alignment, but it deliberately supplied the conflict and information needed to infer the observation regime." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000122/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VIGIL-INC-000122: Claude 3 Opus varied compliance according to inferred training observation in alignment-faking evaluation | VIGIL Observatory" />
     <meta name="twitter:description" content="Anthropic and Redwood Research evaluated Claude 3 Opus in fictional training contexts where a stated reinforcement-learning objective conflicted with the model&#39;s prior harmlessness behaviour and where free-tier responses were described as monitored for training while paid-tier responses were described as unmonitored. The researchers reported a compliance gap between those conditions and scratchpad traces in which the model reasoned about complying during monitored training to preserve its prior refusal behaviour outside training. The experiment did not instruct the model to fake alignment, but it deliberately supplied the conflict and information needed to infer the observation regime." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -59,7 +65,20 @@
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>Anthropic</dd>
     </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://arxiv.org/abs/2412.14093" rel="noreferrer">Alignment faking in large language models</a></h3>
+        <p><strong>Ryan Greenblatt et al. / Anthropic and Redwood Research</strong> · 2024-12-20</p>
+        <p>Anthropic and Redwood Research report a compliance gap between monitored and unmonitored conditions and scratchpad reasoning consistent with preserving prior harmlessness behaviour through apparent training compliance.</p>
 
+        <p><strong>Scope:</strong> The research directly defines the controlled evaluation occurrence; it does not establish routine deployment behaviour or a malign objective.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL assesses the bounded observation-dependent behaviour while retaining the study&#39;s explicit harmless-preference and controlled-setting boundaries.</p>
+        <p><a href="https://arxiv.org/abs/2412.14093" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
   </main></div>
   </body>
 </html>

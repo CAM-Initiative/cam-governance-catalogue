@@ -6,7 +6,7 @@ const initiativeResources = [
     title: "Case Files",
     subtitle: "VIGIL Observatory AI incident database",
     purpose: "Canonical VIGIL Observatory Incident investigations with evidence, assessment, failure classification and repair analysis.",
-    href: "/observatory/cases",
+    href: "/observatory/cases/",
     icon: FileText,
   },
   {
@@ -14,7 +14,7 @@ const initiativeResources = [
     title: "Knowledge Base",
     subtitle: "Taxonomy, methodology & governance knowledge",
     purpose: "VIGIL Observatory taxonomy, harm and severity methodology, standards, policy and supporting governance resources.",
-    href: "/observatory/knowledge-base",
+    href: "/observatory/knowledge-base/",
     icon: Library,
   },
   {
@@ -22,7 +22,7 @@ const initiativeResources = [
     title: "Datasets",
     subtitle: "Machine-readable governance reference data",
     purpose: "Downloadable VIGIL Observatory source, standards and requirement datasets for independent analysis and reuse.",
-    href: "/datasets",
+    href: "/datasets/",
     icon: Database,
   },
 ];

@@ -1,0 +1,79 @@
+/* Section 02 / 05 hierarchy refinement.
+   Keep VIGIL's own taxonomy and harm assessments visually distinct, while moving
+   governance significance into the integrated conclusion stage. */
+
+.vigil-case-file-page .vigil-taxonomy-assessment {
+  margin: 0;
+  padding: 1.25rem var(--vigil-case-card-pad) 1.2rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment > .vigil-library-kicker {
+  margin: 0 0 0.55rem;
+}
+
+.vigil-case-file-page .vigil-severity-assessment,
+.vigil-case-file-page .vigil-external-assessment-section {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-conclusion-stack {
+  display: grid;
+  gap: 1.45rem;
+}
+
+.vigil-case-file-page .vigil-governance-significance-card {
+  padding: 1.25rem var(--vigil-case-card-pad) 1.2rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: var(--vigil-case-card-radius);
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
+.vigil-case-file-page .vigil-governance-significance-card > .vigil-substantive-label {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-governance-significance-card > p {
+  margin: 0.62rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.66;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+/* Match the deterministic report/PDF to the same assessment hierarchy. */
+.vigil-deterministic-report-host .vigil-taxonomy-assessment,
+.report-document .vigil-taxonomy-assessment {
+  margin: 0 0 1rem;
+  padding: 1rem 1.05rem 1.05rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: 0.7rem;
+  background: hsl(var(--background));
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-library-kicker,
+.report-document .vigil-taxonomy-assessment > .vigil-library-kicker {
+  margin: 0 0 0.55rem;
+}
+
+.report-document .report-governance-significance {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+}
+
+.report-document .report-governance-significance > p:last-child {
+  margin: 0.45rem 0 0;
+}
+
+@media print {
+  .vigil-deterministic-report-host .vigil-taxonomy-assessment,
+  .report-document .vigil-taxonomy-assessment,
+  .vigil-case-file-page .vigil-taxonomy-assessment,
+  .vigil-case-file-page .vigil-governance-significance-card {
+    box-shadow: none !important;
+  }
+}

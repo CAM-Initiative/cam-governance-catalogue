@@ -236,9 +236,9 @@ export default function VigilStandardSource() {
     .filter((item) => sourceIdentity(item) === sourceIdentity(source) && externalSourceKey(item) !== requestedKey)
     .sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true })) : [];
 
-  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state">Loading standard…</div></div></main></Shell>;
-  if (state.status === "unavailable") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard unavailable</h2><p>{state.message}</p></div></div></main></Shell>;
-  if (!source) return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard not found</h2><p>The requested source is not represented in the current standards library.</p></div></div></main></Shell>;
+  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state">Loading standard…</div></div></main></Shell>;
+  if (state.status === "unavailable") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard unavailable</h2><p>{state.message}</p></div></div></main></Shell>;
+  if (!source) return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard not found</h2><p>The requested source is not represented in the current standards library.</p></div></div></main></Shell>;
 
   const reviewEvent = currentReviewEvent(source);
   const reviewDate = reviewEvent?.review_date ?? source.last_substantive_reviewed;
@@ -248,7 +248,7 @@ export default function VigilStandardSource() {
   const activeDefinition = TABS.find((tab) => tab.id === activeTab) ?? TABS[0];
 
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page vigil-standard-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
-    <Link href="/observatory/knowledge-base/standards-sources" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link>
+    <Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link>
 
     <header className="vigil-case-file-hero vigil-case-file-hero-v4">
       <div className="vigil-case-file-title-block">

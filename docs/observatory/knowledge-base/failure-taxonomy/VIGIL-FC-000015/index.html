@@ -11,11 +11,17 @@
     <meta property="og:title" content="Target-Object Binding Failure | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000015: Correct material is silently attached to, applied to, or interpreted as belonging to the wrong thing." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000015/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Target-Object Binding Failure | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000015: Correct material is silently attached to, applied to, or interpreted as belonging to the wrong thing." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -55,7 +61,7 @@
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000015</dd>
         <dt>Semantic code</dt><dd>TARGET_BINDING_FAILURE</dd>
-        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0002">Provenance &amp; Lineage Integrity Failures</a> <code>VIGIL-FF-0002</code></dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0002/">Provenance &amp; Lineage Integrity Failures</a> <code>VIGIL-FF-0002</code></dd>
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
@@ -65,9 +71,9 @@
       <h2>Exclusions</h2>
       <ul><li>The material is validly re-bound to a new target after explicit validation.</li><li>The material is intentionally generic and has no target-specific meaning.</li><li>The wrong target is selected for reasons unrelated to provenance or lineage.</li></ul>
       <h2>Linked Case Files</h2>
-      <p>No classified failure Case Files are currently linked to this class.</p>
+      <ul><li><a href="/observatory/cases/VIGIL-INC-000148/"><code>VIGIL-INC-000148</code> — McDonald&#39;s ended IBM automated drive-through ordering pilot after recurring order errors</a> <span>failure-occurrence · medium confidence</span></li></ul>
 
-
+      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>Internet Engineering Task Force · 2020-02-01 · standards evidence</p><p><strong><a href="https://www.rfc-editor.org/rfc/rfc8707.html" rel="noreferrer">RFC 8707: Resource Indicators for OAuth 2.0</a></strong></p><p><strong>Evidence note.</strong> RFC 8707 defines an explicit protected-resource identifier and audience restriction so an access artefact remains bound to the service or resource for which it was issued. This strongly supports explicit target binding and rejection of an invalid or changed target; it is an OAuth authorization standard and does not establish VIGIL&#39;s broader provenance failure for files, people, records, tasks or evidentiary artefacts.</p></li></ul>
     </main></div>
   </body>
 </html>

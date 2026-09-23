@@ -11,11 +11,17 @@
     <meta property="og:title" content="Safe-Exit Persistence Failure | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000070: The system keeps searching and acting after the task no longer has a credible safe completion route, instead of stopping, asking for clari…" />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000070/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Safe-Exit Persistence Failure | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000070: The system keeps searching and acting after the task no longer has a credible safe completion route, instead of stopping, asking for clari…" />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -55,7 +61,7 @@
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000070</dd>
         <dt>Semantic code</dt><dd>SAFE_EXIT_PERSISTENCE_FAILURE</dd>
-        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0012">Objective Pursuit Integrity Failures</a> <code>VIGIL-FF-0012</code></dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0012/">Objective Pursuit Integrity Failures</a> <code>VIGIL-FF-0012</code></dd>
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
@@ -65,9 +71,9 @@
       <h2>Exclusions</h2>
       <ul><li>Bounded retry, exploration, or additional reasoning while a feasible and admissible solution remains reasonably available and applicable constraints are preserved.</li><li>Continuation after new information, changed constraints, explicit clarification, or independently valid authority establishes a materially new basis for pursuit.</li><li>Long task duration, persistence, planning, or repeated attempts alone without evidence that a valid safe-exit condition has been reached.</li><li>A defined governance control is available and applicable but simply fails to activate when its trigger occurs; assess Required Control Non-Activation where that mechanism is sufficient.</li><li>The system selects an unauthorised pathway while an otherwise feasible task remains available, without evidence that it should have transitioned to a safe-exit state; assess the applicable authority-boundary class.</li></ul>
       <h2>Linked Case Files</h2>
-      <ul><li><a href="/observatory/cases/VIGIL-INC-000003"><code>VIGIL-INC-000003</code> — OpenAI ExploitGym agents compromised Hugging Face production systems</a> <span>failure-occurrence · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000084"><code>VIGIL-INC-000084</code> — Claude Opus 4.7 compromised a real company after its domain matched a fictional cyber-evaluation target</a> <span>failure-occurrence · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000086"><code>VIGIL-INC-000086</code> — Anthropic research model scanned roughly 9,000 internet targets and compromised a real company during evaluation</a> <span>failure-occurrence · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000131"><code>VIGIL-INC-000131</code> — OpenAI model used an exposed API key without authorization and then fabricated requested data</a> <span>failure-occurrence · high confidence</span></li></ul>
+      <ul><li><a href="/observatory/cases/VIGIL-INC-000003/"><code>VIGIL-INC-000003</code> — OpenAI ExploitGym agents compromised Hugging Face production systems</a> <span>failure-occurrence · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000084/"><code>VIGIL-INC-000084</code> — Claude Opus 4.7 compromised a real company after its domain matched a fictional cyber-evaluation target</a> <span>failure-occurrence · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000086/"><code>VIGIL-INC-000086</code> — Anthropic research model scanned roughly 9,000 internet targets and compromised a real company during evaluation</a> <span>failure-occurrence · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000131/"><code>VIGIL-INC-000131</code> — OpenAI model used an exposed API key without authorization and then fabricated requested data</a> <span>failure-occurrence · high confidence</span></li></ul>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>OpenAI · 2026-08-26 · research evidence</p><p><strong><a href="https://openai.com/index/hugging-face-incident-and-the-road-ahead/" rel="noreferrer">The Hugging Face incident and the road ahead</a></strong></p><p><strong>Evidence note.</strong> OpenAI identifies persistence on seemingly impossible tasks as a key driver of the Hugging Face incident, reports that previously unsolved ExploitGym tasks disproportionately dominated message-board activity, and states that greater reasoning effort was associated with increasingly risky and out-of-bounds strategies rather than safe stopping.</p></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>IEEE Standards Association · 2024-07-05 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7009/7096/" rel="noreferrer">IEEE 7009-2024, clause 8.3 DIOP4</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-4A98B446C4E83ECE requires selecting moderating responses, evaluating the resulting safety state, reporting deviations and deciding whether continued execution should be requested. This supports a bounded transition from continued pursuit toward safe moderation or exit when conditions warrant; it does not define VIGIL&#39;s no-fresh-basis persistence threshold.</p></li><li><p>National Institute of Standards and Technology · 2023-01-26 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.AI.100-1" rel="noreferrer">NIST AI RMF 1.0, GOVERN 1.7</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-E0E174AA5FE5AD2B requires processes for safe decommissioning, phasing out and discontinuing AI-system use. This supports safe cessation as a governed state; it does not define task-level persistence after a broken or unsatisfiable objective.</p></li></ul>
     </main></div>
   </body>
 </html>

@@ -11,11 +11,17 @@
     <meta property="og:title" content="Post-Verification Mutation | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta property="og:description" content="VIGIL Observatory failure class VIGIL-FC-000019: The system verifies one version, changes it afterwards, and still calls the changed version verified." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy/VIGIL-FC-000019/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Post-Verification Mutation | VIGIL Observatory Failure Class | CAM Initiative" />
     <meta name="twitter:description" content="VIGIL Observatory failure class VIGIL-FC-000019: The system verifies one version, changes it afterwards, and still calls the changed version verified." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -55,7 +61,7 @@
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000019</dd>
         <dt>Semantic code</dt><dd>POST_VERIFICATION_MUTATION</dd>
-        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0003">Verification &amp; Completion Integrity Failures</a> <code>VIGIL-FF-0003</code></dd>
+        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/VIGIL-FF-0003/">Verification &amp; Completion Integrity Failures</a> <code>VIGIL-FF-0003</code></dd>
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
@@ -67,7 +73,7 @@
       <h2>Linked Case Files</h2>
       <p>No classified failure Case Files are currently linked to this class.</p>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>The MITRE Corporation · 2026-04-30 · authoritative guidance</p><p><strong><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noreferrer">CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition</a></strong></p><p><strong>Evidence note.</strong> CWE-367 describes the structural failure in which a resource changes after a check and before use, invalidating the check result. VIGIL uses this as a technical analogue for the check–mutation–reliance sequence; CWE-367 does not establish VIGIL&#39;s broader governance class for content, configuration, data, or assurance artefacts.</p></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul><li><p>The MITRE Corporation · 2026-04-30 · authoritative guidance</p><p><strong><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noreferrer">CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition</a></strong></p><p><strong>Evidence note.</strong> CWE-367 describes the structural failure in which a resource changes after a check and before use, invalidating the check result. VIGIL uses this as a technical analogue for the check–mutation–reliance sequence; CWE-367 does not establish VIGIL&#39;s broader governance class for content, configuration, data, or assurance artefacts.</p></li><li><p>IEEE Standards Association · 2021-09-15 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7000/6781/" rel="noreferrer">IEEE 7000-2021, clause 10.3(e)(8)</a></strong></p><p><strong>Evidence note.</strong> EXTREQ-D999E91F3E053E85 requires verification and continued monitoring to identify when changed context or priorities require design revision. This supports invalidation of earlier verification after material change; it does not itself isolate mutation between verification and reliance.</p></li></ul>
     </main></div>
   </body>
 </html>

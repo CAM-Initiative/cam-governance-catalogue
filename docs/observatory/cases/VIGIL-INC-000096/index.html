@@ -11,11 +11,17 @@
     <meta property="og:title" content="VIGIL-INC-000096: DeepSeek exposed an unauthenticated database containing chat histories and secrets | VIGIL Observatory" />
     <meta property="og:description" content="Wiz Research found a publicly accessible, unauthenticated ClickHouse database belonging to DeepSeek. The exposed service provided full database-operation access and contained more than one million lines of logs including chat histories, API secrets, backend details and operational metadata. DeepSeek secured the database after Wiz notified the company; public evidence does not establish whether third parties accessed the data before discovery." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000096/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VIGIL-INC-000096: DeepSeek exposed an unauthenticated database containing chat histories and secrets | VIGIL Observatory" />
     <meta name="twitter:description" content="Wiz Research found a publicly accessible, unauthenticated ClickHouse database belonging to DeepSeek. The exposed service provided full database-operation access and contained more than one million lines of logs including chat histories, API secrets, backend details and operational metadata. DeepSeek secured the database after Wiz notified the company; public evidence does not establish whether third parties accessed the data before discovery." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -59,7 +65,20 @@
       <dt>Severity</dt><dd>S4</dd>
       <dt>Vendor / platform</dt><dd>DeepSeek</dd>
     </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak" rel="noreferrer">Wiz Research Uncovers Exposed DeepSeek Database Leaking Sensitive Information, Including Chat History</a></h3>
+        <p><strong>Wiz Research</strong> · 2025-01-29</p>
+        <p>Wiz Research concludes that two internet-reachable DeepSeek ClickHouse endpoints lacked authentication and permitted full database operations over more than one million log lines containing chat histories, secrets and backend data.</p>
 
+        <p><strong>Scope:</strong> The technical analysis directly covers the exposure; it does not establish third-party access before discovery or the complete affected-user population.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL aligns on the infrastructure access-control and data-custody failure while keeping it separate from model behaviour.</p>
+        <p><a href="https://www.wiz.io/blog/wiz-research-uncovers-exposed-deepseek-database-leak" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
   </main></div>
   </body>
 </html>

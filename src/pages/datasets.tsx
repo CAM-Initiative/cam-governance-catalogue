@@ -177,7 +177,7 @@ export default function Datasets() {
             <span className="cam-development-status">Beta datasets · active development</span>
           </div>
           <h1>Datasets</h1>
-          <p>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing">Copyright & Licence</a> for the applicable terms.</p>
+          <p>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright & Licence</a> for the applicable terms.</p>
         </header>
 
         <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">

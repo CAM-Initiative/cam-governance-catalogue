@@ -224,7 +224,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 /* Assessment follows the reading hierarchy:
-   governance assessment -> factual basis -> governance significance -> harm classification.
+   governance assessment -> factual basis -> governance significance -> taxonomy assessment -> external assessments -> real-world harm assessment; Stage 03 is reserved for taxonomy classification.
    Narrative sections stay flush with the Section 02 content edge. */
 .vigil-case-file-page .vigil-diagnosis-metadata-panel {
   margin-top: 1rem;
@@ -268,6 +268,13 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 .vigil-case-file-page .vigil-diagnosis-assessment-details .vigil-substantive-label {
   margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 1.18rem;
+  font-weight: 650;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.9);
 }
 
 .vigil-case-file-page .vigil-diagnosis-assessment-details p {
@@ -294,6 +301,30 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   .vigil-case-file-page .vigil-case-file-title-block {
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
+  }
+
+  /* Section 02 contains horizontally scrollable analytical tables. Keep those
+     tables from participating in the intrinsic width of the surrounding prose
+     so governance assessment text always wraps to the mobile viewport. */
+  .vigil-case-file-page #case-diagnose,
+  .vigil-case-file-page #case-diagnose > .vigil-case-section-body,
+  .vigil-case-file-page .vigil-diagnosis-view,
+  .vigil-case-file-page .vigil-diagnosis-mechanism,
+  .vigil-case-file-page .vigil-diagnosis-definition,
+  .vigil-case-file-page .vigil-diagnosis-assessment-details,
+  .vigil-case-file-page .vigil-diagnosis-metadata-panel,
+  .vigil-case-file-page .vigil-severity-assessment {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .vigil-case-file-page .vigil-diagnosis-definition p,
+  .vigil-case-file-page .vigil-diagnosis-assessment-details p,
+  .vigil-case-file-page .vigil-diagnosis-metadata-panel dd {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
   }
 }
 
@@ -450,18 +481,6 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   text-underline-offset: 0.16em;
 }
 
-.vigil-case-file-page .vigil-diagnosis-external-assessments {
-  padding: 1.25rem var(--vigil-case-card-pad) 1.2rem;
-  border: 1px solid hsl(var(--border) / 0.72);
-  border-radius: var(--vigil-case-card-radius);
-  background: hsl(var(--background));
-  box-shadow: var(--shadow-sm);
-}
-
-.vigil-case-file-page .vigil-diagnosis-external-assessments > .vigil-library-kicker {
-  margin: 0 0 0.9rem;
-}
-
 .vigil-case-file-page .vigil-external-assessment-table-wrap {
   overflow-x: auto;
 }
@@ -518,13 +537,14 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   text-underline-offset: 0.16em;
 }
 
-/* External assessments are substantive comparison material, not footnote metadata. */
+/* External assessments are substantive comparison material, not footnote metadata.
+   Keep body and header typography aligned with Classification / Repair tables across web and report parity checks. */
 .vigil-case-file-page .vigil-external-assessment-table {
-  font-size: 0.98rem;
+  font-size: 1.02rem;
   line-height: 1.62;
 }
 .vigil-case-file-page .vigil-external-assessment-table thead th {
-  font-size: 0.74rem;
+  font-size: 0.8rem;
 }
 
 
@@ -540,3 +560,69 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   text-underline-offset: 0.16em;
 }
 
+
+
+
+
+/* VIGIL taxonomy assessment intentionally reuses the External assessments table grammar. */
+.vigil-case-file-page .vigil-taxonomy-assessment > .vigil-substantive-label {
+  margin: 0 0 0.55rem;
+}
+
+/* Keep the intro-to-table gap independent of intro sentence count. */
+.vigil-case-file-page .vigil-taxonomy-assessment-intro {
+  margin: 0 0 0.85rem;
+  max-width: 70rem;
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 20%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 40%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 40%; }
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table q {
+  font-weight: 650;
+}
+
+
+/* External assessments and real-world harm are peer Stage 02 assessment cards. */
+.vigil-case-file-page .vigil-external-assessment-section .vigil-external-assessment-table-wrap {
+  padding: 0 var(--vigil-case-card-pad) 1.25rem;
+}
+
+/* Taxonomy reasoning remains a subsection of Governance assessment. */
+.vigil-case-file-page .vigil-taxonomy-assessment-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table th,
+.vigil-case-file-page .vigil-taxonomy-assessment-table td {
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table td:first-child {
+  white-space: normal;
+}
+
+
+/* Taxonomy assessment table outline and header treatment match Classification and real-world harm. */
+.vigil-case-file-page .vigil-taxonomy-assessment-table-wrap {
+  border: 1px solid hsl(var(--border) / 0.74);
+  border-radius: 0.58rem;
+  background: hsl(var(--background));
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table thead th {
+  padding: 0.72rem 0.85rem;
+  background: hsl(var(--muted) / 0.28);
+  font-family: var(--app-font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.86);
+}

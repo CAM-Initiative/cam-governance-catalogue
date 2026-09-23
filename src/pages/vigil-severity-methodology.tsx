@@ -111,7 +111,7 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-case-files-heading">The Incident view shows only the assessment that was actually made</h2>
             </header>
             <p>Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
-            <Link className="vigil-about-action" href="/observatory/cases">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+            <Link className="vigil-about-action" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
           </section>
 
           <section className="vigil-severity-methodology-section" aria-labelledby="severity-references-heading">

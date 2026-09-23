@@ -11,11 +11,17 @@
     <meta property="og:title" content="VIGIL-INC-000119: Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack | VIGIL Observatory" />
     <meta property="og:description" content="Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000119/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VIGIL-INC-000119: Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack | VIGIL Observatory" />
     <meta name="twitter:description" content="Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -59,7 +65,38 @@
       <dt>Severity</dt><dd>S4</dd>
       <dt>Vendor / platform</dt><dd>Multi Vendor</dd>
     </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://nx.dev/blog/s1ngularity-postmortem" rel="noreferrer">S1ngularity - What Happened, How We Responded, What We Learned</a></h3>
+        <p><strong>Nx</strong> · 2025-09-05</p>
+        <p>Nx&#39;s postmortem concludes that a stolen publishing token enabled malicious package releases whose malware scanned systems, attempted to use local AI tools and uploaded results to public repositories.</p>
 
+        <p><strong>Scope:</strong> The affected-project postmortem covers the same supply-chain attack and confirms the AI-assisted path without attributing the initial compromise to AI.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL preserves the distinction between direct malware harvesting and the attempted AI-assisted reconnaissance path.</p>
+        <p><a href="https://nx.dev/blog/s1ngularity-postmortem" rel="noreferrer">View assessment</a></p>
+      </article><article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://blog.gitguardian.com/the-nx-s1ngularity-attack-inside-the-credential-leak/" rel="noreferrer">The Nx s1ngularity Attack: Inside the Credential Leak</a></h3>
+        <p><strong>GitGuardian</strong> · 2025-08-27</p>
+        <p>GitGuardian quantifies exposed secrets and repositories and finds that 95 of 366 systems targeted through local LLM tools produced the requested inventory file.</p>
+
+        <p><strong>Scope:</strong> The independent security analysis covers credential exposure and the bounded effectiveness of the AI-assisted component.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL uses the measured success rate to avoid attributing the full attack impact to AI tools.</p>
+        <p><a href="https://blog.gitguardian.com/the-nx-s1ngularity-attack-inside-the-credential-leak/" rel="noreferrer">View assessment</a></p>
+      </article><article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://www.wiz.io/blog/s1ngularitys-aftermath" rel="noreferrer">s1ngularity&#39;s aftermath: analysis of Nx supply chain attack</a></h3>
+        <p><strong>Wiz</strong> · 2025-08-29</p>
+        <p>Wiz finds that the malware explicitly invoked Claude, Gemini and Amazon Q CLIs with permissive flags but encountered substantial configuration failures, refusals and workspace restrictions.</p>
+
+        <p><strong>Scope:</strong> The independent malware analysis covers the same attack from a tool-invocation and guardrail-performance perspective.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL keeps Wiz&#39;s heterogeneous tool findings separate from GitGuardian&#39;s exposure counts and does not synthesise them into one cross-provider failure mechanism.</p>
+        <p><a href="https://www.wiz.io/blog/s1ngularitys-aftermath" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
   </main></div>
   </body>
 </html>

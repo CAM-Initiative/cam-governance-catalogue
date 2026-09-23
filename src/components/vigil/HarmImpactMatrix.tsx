@@ -301,7 +301,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
   </div>;
 }
 
-function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
+function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, methodologyReferenceNumber, methodologyReferenceHref }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number>; methodologyReferenceNumber?: number; methodologyReferenceHref?: string }) {
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const overall = string(assessment.overall_severity) ?? "SU";
@@ -309,20 +309,22 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { a
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
     : []);
   const noMaterialisedHarmBasis = string(assessment.no_materialised_harm_basis);
-  const coverageNote = string(assessment.coverage_note);
   const assessmentGap = string(assessment.assessment_gap);
 
-  return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")}>
-    {coverageNote ? <p className="vigil-harm-summary">{coverageNote}</p> : null}
+  const derivationNote = noMaterialisedHarmBasis
+    ? <>No materialised downstream harm was established for the bounded occurrence. S1 is assigned under the VIGIL-HIM positive no-materialised-harm pathway. <strong>Basis:</strong> {noMaterialisedHarmBasis}</>
+    : overall === "SU"
+      ? <>No defensible overall severity band could be derived because no Harm Impact dimension could be banded and positive no-materialised-harm was not established. SU denotes an unassessed evidence state, not a sixth severity band.</>
+      : assessedRows.length
+        ? <>Overall harm severity is determined by the highest supported materialised harm across the assessed dimensions.</>
+        : <>No harm dimension has a defensible scored band in the current public Incident record.</>;
 
-    {noMaterialisedHarmBasis ? <p className="vigil-harm-no-harm-basis"><strong>Positive no-materialised-harm basis:</strong> {noMaterialisedHarmBasis}</p> : null}
-
+  return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")} data-harm-footer="contextual">
     {assessedRows.length ? <div className="vigil-harm-matrix-scroll" role="region" aria-label="Incident-specific VIGIL Harm Impact assessment" tabIndex={0}>
       <table className="vigil-harm-assessment-table">
         <thead>
           <tr>
             <th scope="col">Harm dimension</th>
-            <th scope="col">Evidence state</th>
             <th scope="col">Result</th>
             <th scope="col">Evidence-backed assessment</th>
           </tr>
@@ -336,7 +338,6 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { a
                 <span>{dimensionLabel(row.dimension_id)}</span>
                 {isControlling ? <strong className="vigil-harm-controlling-badge">Controls overall severity</strong> : null}
               </th>
-              <td className="status-assessed"><strong>Assessed</strong></td>
               <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
               {/* evidence_refs are canonical row-local provenance; citation numbers are resolved against the final deduplicated Evidence sources list. */}
               <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}{row.evidence_refs?.length ? <span className="vigil-harm-inline-references"> {row.evidence_refs.flatMap((ref) => evidenceReferenceNumbers?.[ref] ? [<a key={ref} href={`#vigil-evidence-reference-${evidenceReferenceNumbers[ref]}`} aria-label={`Evidence reference ${evidenceReferenceNumbers[ref]}`}>[{evidenceReferenceNumbers[ref]}]</a>] : [])}</span> : null}</p> : null}</td>
@@ -344,16 +345,16 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers }: { a
           })}
         </tbody>
       </table>
-    </div> : <p className="vigil-harm-method-note">No harm dimension has a defensible scored band in the current public Incident record.</p>}
+    </div> : null}
 
-
-    <p className="vigil-harm-method-note vigil-harm-derivation-note">Harm impact is assessed across 11 dimensions on a five-band severity axis from S1 (minimal / no harm) to S5 (catastrophic / critical). The highest supported materialised harm across the assessed dimensions determines the overall harm severity.</p>
+    {/* One context-sensitive methodology footer closes every public assessment; coverage_note remains canonical audit data rather than duplicate public prose. */}
+    <p className="vigil-harm-method-note vigil-harm-derivation-note">{derivationNote}{methodologyReferenceNumber && methodologyReferenceHref ? <> <a className="vigil-harm-methodology-reference" href={methodologyReferenceHref} aria-label={`VIGIL Harm Impact Methodology reference ${methodologyReferenceNumber}`}>[{methodologyReferenceNumber}]</a></> : null}</p>
     {assessmentGap ? <p className="vigil-harm-coverage"><strong>Evidence gap:</strong> {assessmentGap}</p> : null}
   </div>;
 }
 
-export function HarmImpactMatrix({ assessment, compact = false, evidenceReferenceNumbers }: { assessment?: UnknownRecord; compact?: boolean; evidenceReferenceNumbers?: Record<string, number> }) {
+export function HarmImpactMatrix({ assessment, compact = false, evidenceReferenceNumbers, methodologyReferenceNumber, methodologyReferenceHref }: { assessment?: UnknownRecord; compact?: boolean; evidenceReferenceNumbers?: Record<string, number>; methodologyReferenceNumber?: number; methodologyReferenceHref?: string }) {
   return assessment
-    ? <AssessmentMatrix assessment={assessment} compact={compact} evidenceReferenceNumbers={evidenceReferenceNumbers} />
+    ? <AssessmentMatrix assessment={assessment} compact={compact} evidenceReferenceNumbers={evidenceReferenceNumbers} methodologyReferenceNumber={methodologyReferenceNumber} methodologyReferenceHref={methodologyReferenceHref} />
     : <MethodologyMatrix compact={compact} />;
 }

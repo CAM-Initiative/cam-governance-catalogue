@@ -13,7 +13,8 @@ const REPORT_SECTIONS = [
   { number: "02", label: "Assessment" },
   { number: "03", label: "Classification" },
   { number: "04", label: "Repair" },
-  { number: "05", label: "References" },
+  { number: "05", label: "Conclusion" },
+  { number: "06", label: "References" },
 ] as const;
 
 type IncludedSections = Record<string, boolean>;
@@ -46,7 +47,8 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
     "No repair invariant is shown because this Case File has no resolved failure-occurrence class mapping.",
     "No repair invariant is shown because this Case File has no resolved failure-classified mapping.",
   ],
-  "05": ["No references are currently available."],
+  "05": ["No integrated governance conclusion is currently published for this Incident."],
+  "06": ["No references are currently available."],
 };
 
 function sectionNumber(section: HTMLElement) {
@@ -190,7 +192,7 @@ export default function EvidenceChainReportPrintable() {
         if (!number) continue;
         next[number] = sectionHasSubstantiveContent(section, number);
 
-        if (number === "05") {
+        if (number === "06") {
           const list = section.querySelector<HTMLOListElement>("ol[data-report-taxonomy-reference-list]");
           if (list) {
             setReferenceList(list);
@@ -248,7 +250,7 @@ export default function EvidenceChainReportPrintable() {
 
   const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
     ? createPortal(<>
-      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
+      {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>VIGIL Observatory Failure Taxonomy</strong>
@@ -257,7 +259,7 @@ export default function EvidenceChainReportPrintable() {
           <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
         </span>
       </li>}
-      {hasHarmMethodologyReference && <li key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
+      {hasHarmMethodologyReference && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
           <strong>VIGIL Harm Impact Methodology</strong>
@@ -323,7 +325,7 @@ export default function EvidenceChainReportPrintable() {
         <p className="text-xs text-muted-foreground lg:text-right">{includedCount} of {REPORT_SECTIONS.length} included</p>
       </div>
     </aside>
-    <EvidenceChainReportDeterministic />
+    <EvidenceChainReportDeterministic hasTaxonomyReference={Boolean(reportIncident?.taxonomyReferences.length)} />
     {taxonomyReferencePortal}
     {postscriptPortal}
   </div>;

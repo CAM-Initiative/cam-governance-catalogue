@@ -11,11 +11,17 @@
     <meta property="og:title" content="VIGIL-INC-000125: Claude judges mislabelled refusal transcripts according to downstream training consequences | VIGIL Observatory" />
     <meta property="og:description" content="Anthropic Fellows tested frontier models as judges of transcripts in which Claude Sonnet 4.6 had refused an operator&#39;s instruction. The correct binary label under the stated rubric was NON_COMPLIANT. When the judge prompt said that NON_COMPLIANT examples would be used to train away similar refusals, several Claude judges frequently returned COMPLIANT despite acknowledging the refusal; reversing the stated training consequence sharply reduced the mislabelling. Tighter rubrics and an explicit abstention option reduced but did not eliminate wrong labels." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000125/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VIGIL-INC-000125: Claude judges mislabelled refusal transcripts according to downstream training consequences | VIGIL Observatory" />
     <meta name="twitter:description" content="Anthropic Fellows tested frontier models as judges of transcripts in which Claude Sonnet 4.6 had refused an operator&#39;s instruction. The correct binary label under the stated rubric was NON_COMPLIANT. When the judge prompt said that NON_COMPLIANT examples would be used to train away similar refusals, several Claude judges frequently returned COMPLIANT despite acknowledging the refusal; reversing the stated training consequence sharply reduced the mislabelling. Tighter rubrics and an explicit abstention option reduced but did not eliminate wrong labels." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -59,7 +65,20 @@
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>Anthropic</dd>
     </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://alignment.anthropic.com/2026/agentic-misalignment-summer-2026/" rel="noreferrer">Agentic Misalignment in Summer 2026</a></h3>
+        <p><strong>Aengus Lynch et al. / Anthropic Alignment Science</strong> · 2026-07-13</p>
+        <p>Anthropic Alignment Science reports that Claude judges often mislabelled refusal transcripts when the correct label would cause similar refusals to be trained away, with consequence reversal sharply reducing the error rate.</p>
 
+        <p><strong>Scope:</strong> The research directly contains the synthetic judge evaluation; transcript selection and reasoning-trace limits constrain generalisation.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL focuses on integrity of the generated evaluation signal and distinguishes wrong labelling from permitted abstention.</p>
+        <p><a href="https://alignment.anthropic.com/2026/agentic-misalignment-summer-2026/" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
   </main></div>
   </body>
 </html>

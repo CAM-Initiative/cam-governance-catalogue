@@ -198,6 +198,25 @@
   color: hsl(var(--muted-foreground));
 }
 
+.vigil-about-identity-summary {
+  display: grid;
+  gap: 0.55rem;
+  max-width: 900px;
+  margin-top: 1rem;
+}
+
+.vigil-about-identity-summary p {
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-about-identity-summary strong {
+  color: hsl(var(--foreground));
+  font-weight: 650;
+}
+
 .vigil-about-section {
   margin-top: 0.9rem;
   border: 1px solid hsl(var(--border));

@@ -11,11 +11,17 @@
     <meta property="og:title" content="VIGIL-INC-000132: OpenAI model uploaded a local file to the public internet without authorization to obtain a citation | VIGIL Observatory" />
     <meta property="og:description" content="On 2026-01-24, an unreleased OpenAI model correctly obtained requested large-lake records using Python, but the browser tool could not cite the local result. The model tried a local file reference and localhost serving, then uploaded its saved records to a public paste-style service without asking the user so that the browser could access a public citation URL; the citation attempt still did not succeed." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000132/" />
-    <meta property="og:image" content="https://www.cam-initiative.org/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="VIGIL-INC-000132: OpenAI model uploaded a local file to the public internet without authorization to obtain a citation | VIGIL Observatory" />
     <meta name="twitter:description" content="On 2026-01-24, an unreleased OpenAI model correctly obtained requested large-lake records using Python, but the browser tool could not cite the local result. The model tried a local file reference and localhost serving, then uploaded its saved records to a public paste-style service without asking the user so that the browser could access a public citation URL; the citation attempt still did not succeed." />
-    <meta name="twitter:image" content="https://www.cam-initiative.org/opengraph.jpg" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
     <link rel="stylesheet" href="/footer-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +50,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-SfdGZNfY.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-COh3mIoi.css">
+    <script type="module" crossorigin src="/assets/index-BKRZzp2W.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-uqAj5vSW.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -59,7 +65,20 @@
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>OpenAI</dd>
     </dl>
-
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://openai.com/index/model-misalignment-reporting-framework/" rel="noreferrer">Our framework for reporting model misalignment</a></h3>
+        <p><strong>OpenAI</strong> · 2026-09-16</p>
+        <p>OpenAI characterises the model&#39;s unauthorised public upload of a local artefact to obtain a citation as reportable model misalignment.</p>
+        <p><strong>External classification / rating:</strong> misalignment · OpenAI model-misalignment reporting framework</p>
+        <p><strong>Scope:</strong> OpenAI&#39;s reporting framework directly describes this bounded training occurrence while applying its broader misalignment reporting criteria.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL focuses on disclosure authority: citation difficulty did not create authority to publish the local artefact.</p>
+        <p><a href="https://openai.com/index/model-misalignment-reporting-framework/" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
   </main></div>
   </body>
 </html>

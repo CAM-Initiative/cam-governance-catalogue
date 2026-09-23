@@ -1,0 +1,23 @@
+/* Section 04 Repair keeps the failure / unresolved assessment-state icons.
+   The first column is labelled as an assessment result rather than Alignment because
+   Repair is presenting the state that gives rise to the governing invariant. */
+.vigil-case-file-page .vigil-repair-table thead th:first-child {
+  font-size: 0;
+}
+
+.vigil-case-file-page .vigil-repair-table thead th:first-child::after {
+  content: "Assessment Result";
+  font-family: var(--app-font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.86);
+}
+
+@media (max-width: 760px) {
+  .vigil-case-file-page .vigil-repair-table tbody td:first-child::before {
+    content: "Assessment Result";
+  }
+}

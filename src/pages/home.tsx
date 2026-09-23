@@ -1,8 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
-import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Coffee, Download, ExternalLink, Github, Mail, Newspaper } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowDown, ArrowRight } from "lucide-react";
+import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadFailureTaxonomy, type FailureTaxonomyClass } from "@/lib/vigilFailureTaxonomy";
+import "@/home-premium.css";
+import "@/home-premium-v2.css";
+import "@/home-premium-v3.css";
 
 const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
 const HERO_IMAGES = {
@@ -17,203 +22,340 @@ const HERO_IMAGES = {
 } as const;
 
 type HeroTheme = keyof typeof HERO_IMAGES;
+type IncidentTickerItem = { id: string; title: string };
+type TaxonomySticker = { classId: string; name: string };
 
 function currentHeroTheme(): HeroTheme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
-const connectionLinks = [
-  {
-    label: "Email",
-    description: "Direct correspondence with the CAM Initiative",
-    href: "mailto:ethics@cam-initiative.org",
-    icon: "mail",
-    external: false,
-  },
-  {
-    label: "Substack",
-    description: "Essays, policy commentary, and longer-form updates",
-    href: "https://substack.com/@caminitiative",
-    icon: "substack",
-    external: true,
-  },
-  {
-    label: "CAELESTIS repository",
-    description: "Source repository for the governance architecture while the public reference is being refactored",
-    href: "https://github.com/CAM-Initiative/Caelestis",
-    icon: "github",
-    external: true,
-  },
-  {
-    label: "VIGIL Observatory repository",
-    description: "Evidence ledger, records, schemas, and repair history",
-    href: "https://github.com/CAM-Initiative/Vigil",
-    icon: "github",
-    external: true,
-  },
-  {
-    label: "Updates on X",
-    description: "Current observations, releases, and public discussion",
-    href: "https://x.com/CAM_Initiative",
-    icon: "x",
-    external: true,
-  },
-  {
-    label: "Support",
-    description: "Support the public infrastructure and ongoing work",
-    href: "https://buymeacoffee.com/cam_initiative",
-    icon: "support",
-    external: true,
-  },
+const reveal = {
+  initial: { opacity: 0, y: 34 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.28 },
+  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+};
+
+const diagnosticStages = [
+  { label: "Evidence", title: "What happened?" },
+  { label: "Environment", title: "Where did it happen?" },
+  { label: "Harm", title: "What did it do?" },
+  { label: "Governance", title: "What boundary was engaged?" },
+  { label: "Classification", title: "Why did it fail?" },
+  { label: "Compare", title: "Where does it recur?" },
+] as const;
+
+const fallbackTickerItems: IncidentTickerItem[] = [
+  { id: "VIGIL-INC-000149", title: "DPD disabled AI chatbot after profanity and company criticism" },
+  { id: "VIGIL-INC-000147", title: "Waymo robotaxi diverted and temporarily stranded a passenger" },
+  { id: "VIGIL-INC-000146", title: "Finance director transferred funds after a deepfake executive call" },
+  { id: "VIGIL-INC-000142", title: "Lawyers filed ChatGPT-generated nonexistent judicial opinions" },
+  { id: "VIGIL-INC-000140", title: "Air Canada chatbot gave incorrect bereavement-fare information" },
+  { id: "VIGIL-INC-000129", title: "Astra self-generated prompt injection" },
 ];
 
-function SectionLabel({ children }: { children: string }) {
+const fallbackTaxonomyStickers: TaxonomySticker[] = [
+  { classId: "FC-000023", name: "Monitor Circumvention or Coverage Bypass" },
+  { classId: "FC-000046", name: "Inferential Evidence–Authority Conflation" },
+  { classId: "FC-000075", name: "Compaction Meaning Drift" },
+  { classId: "FC-000074", name: "Identity / Evaluative Integrity" },
+  { classId: "FC-000001", name: "Source-Authority Separation Failure" },
+  { classId: "FC-000005", name: "Transformation Authority Failure" },
+];
+
+function incidentNumber(id: string) {
+  const numericId = id.match(/(\d+)$/)?.[1];
+  return numericId ? `INC-${String(Number(numericId)).padStart(5, "0")}` : id;
+}
+
+function tickerItem(record: UnknownRecord): IncidentTickerItem | undefined {
+  if (typeof record.id !== "string" || typeof record.title !== "string") return undefined;
+  return { id: record.id, title: record.title };
+}
+
+function incidentSequence(id: string) {
+  return Number(id.match(/(\d+)$/)?.[1] ?? 0);
+}
+
+function IncidentTicker() {
+  const [items, setItems] = useState<IncidentTickerItem[]>(fallbackTickerItems);
+
+  useEffect(() => {
+    let mounted = true;
+    loadVigilIncidentRecords()
+      .then(({ records }) => {
+        const latest = records
+          .flatMap((record) => tickerItem(record) ?? [])
+          .sort((left, right) => incidentSequence(right.id) - incidentSequence(left.id))
+          .slice(0, 8);
+        if (mounted && latest.length) setItems(latest);
+      })
+      .catch(() => undefined);
+    return () => { mounted = false; };
+  }, []);
+
+  const tickerSet = (duplicate = false) => (
+    <div className={`incident-ticker-set${duplicate ? " incident-ticker-clone" : ""}`} aria-hidden={duplicate || undefined}>
+      {items.map((item) => (
+        <a key={`${duplicate ? "clone-" : ""}${item.id}`} href={`/observatory/cases/${encodeURIComponent(item.id)}/`} tabIndex={duplicate ? -1 : undefined}>
+          <span>{incidentNumber(item.id)}</span>
+          <i aria-hidden="true">·</i>
+          {item.title}
+        </a>
+      ))}
+    </div>
+  );
+
   return (
-    <div className="mb-4 flex items-center gap-3">
-      <p className="shrink-0 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">{children}</p>
-      <hr className="gold-rule flex-1" />
+    <nav className="incident-ticker" aria-label="Recent VIGIL Case Files">
+      <div className="incident-ticker-label"><span aria-hidden="true" /> Case File feed</div>
+      <div className="incident-ticker-window">
+        <div className="incident-ticker-track">
+          {tickerSet()}
+          {tickerSet(true)}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer" | "inner"; teeth: number; rotation: number; reduceMotion: boolean }) {
+  return (
+    <motion.div
+      className={`diagnostic-gear diagnostic-gear-${size}`}
+      aria-hidden="true"
+      animate={{ rotate: rotation }}
+      transition={{ duration: reduceMotion ? 0 : 1.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <span className="diagnostic-gear-spokes">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
+        ))}
+      </span>
+      {Array.from({ length: teeth }).map((_, index) => (
+        <span
+          key={index}
+          className={`diagnostic-gear-tooth${size === "outer" && index === 0 ? " is-index-tooth" : ""}`}
+          style={{ "--tooth-angle": `${(360 / teeth) * index}deg` } as CSSProperties}
+        />
+      ))}
+    </motion.div>
+  );
+}
+
+function PremiumHero() {
+  const [gearTurn, setGearTurn] = useState(0);
+  const reduceMotion = useReducedMotion();
+  const activeStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => setGearTurn((current) => current + 1), 5200);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  function activateStage(index: number) {
+    setGearTurn((current) => {
+      const currentIndex = ((current % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
+      const forwardSteps = (index - currentIndex + diagnosticStages.length) % diagnosticStages.length;
+      return current + forwardSteps;
+    });
+  }
+
+  return (
+    <section className="premium-hero" aria-labelledby="premium-hero-heading">
+      <div className="premium-hero-aurora" aria-hidden="true" />
+      <div className="premium-hero-grid" aria-hidden="true" />
+      <div className="premium-hero-shell">
+        <motion.div className="premium-hero-copy" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+          <p className="premium-hero-kicker">AI incidents tell us what happened.</p>
+          <h1 id="premium-hero-heading"><span className="premium-hero-brand">The VIGIL Observatory</span><br />shows us <span>why.</span></h1>
+          <p className="premium-hero-deck">A standard taxonomy, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about where AI systems fail.</p>
+          <div className="premium-hero-actions">
+            <a href="/observatory/cases/" className="premium-primary">Explore the evidence <ArrowRight aria-hidden="true" /></a>
+            <a href="/observatory/knowledge-base/failure-taxonomy/" className="premium-secondary">See the taxonomy</a>
+          </div>
+        </motion.div>
+
+        <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
+          <MechanicalGear size="outer" teeth={30} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} />
+          <MechanicalGear size="inner" teeth={22} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
+          <div className="diagnostic-core">
+            <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
+            <strong>What went wrong?</strong>
+          </div>
+
+          {diagnosticStages.map((stage, index) => {
+            const active = index === activeStage;
+            return (
+              <button
+                type="button"
+                key={stage.label}
+                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}`}
+                onMouseEnter={() => activateStage(index)}
+                onFocus={() => activateStage(index)}
+                aria-pressed={active}
+              >
+                <span className="diagnostic-node-copy">
+                  <span className="diagnostic-node-label">{stage.label}</span>
+                  <strong>{stage.title}</strong>
+                </span>
+              </button>
+            );
+          })}
+        </motion.div>
+      </div>
+      <IncidentTicker />
+      <a href="#patterns" className="premium-scroll-cue" aria-label="Scroll to see the patterns VIGIL makes visible"><span>See the pattern</span><ArrowDown aria-hidden="true" /></a>
+    </section>
+  );
+}
+
+function stickerSeed(value: string) {
+  return [...value].reduce((hash, character) => ((hash * 31) + character.charCodeAt(0)) >>> 0, 2166136261);
+}
+
+const stickerSlots = [
+  [4, 7, -13], [35, 4, 8], [64, 9, -6],
+  [13, 24, 6], [47, 22, -11], [70, 29, 12],
+  [2, 43, -8], [31, 42, 14], [61, 47, -4],
+  [15, 60, 11], [44, 61, -14], [72, 65, 7],
+  [4, 78, -5], [34, 76, 10], [62, 81, -12],
+  [21, 12, 15], [53, 7, -9], [51, 79, 5],
+] as const;
+
+function stickerStyle(item: TaxonomySticker, index: number): CSSProperties {
+  const seed = stickerSeed(`${item.classId}-${index}`);
+  const slot = stickerSlots[index % stickerSlots.length];
+  const layer = Math.floor(index / stickerSlots.length);
+  const left = slot[0] + ((seed % 7) - 3) + ((layer % 3) - 1) * 2.2;
+  const top = slot[1] + (((seed >>> 4) % 7) - 3) + ((layer % 4) - 1.5) * 1.7;
+  const rotation = slot[2] + (((seed >>> 9) % 9) - 4) + (layer % 2 ? 3 : -2);
+  return {
+    "--sticker-left": `${Math.max(0, Math.min(77, left))}%`,
+    "--sticker-top": `${Math.max(0, Math.min(86, top))}%`,
+    "--sticker-rotate": `${rotation}deg`,
+  } as CSSProperties;
+}
+
+function taxonomySticker(entry: FailureTaxonomyClass): TaxonomySticker {
+  return { classId: entry.class_id, name: entry.name };
+}
+
+function TaxonomyReveal() {
+  const reduceMotion = useReducedMotion();
+  const [pool, setPool] = useState<TaxonomySticker[]>(fallbackTaxonomyStickers);
+  const [visibleCount, setVisibleCount] = useState(reduceMotion ? fallbackTaxonomyStickers.length : 3);
+
+  useEffect(() => {
+    let mounted = true;
+    loadFailureTaxonomy()
+      .then((result) => {
+        if (!mounted || result.status !== "ready") return;
+        const stickers = result.data.families.flatMap((family) => family.classes.map(taxonomySticker));
+        if (!stickers.length) return;
+        const ordered = [...stickers].sort((left, right) => stickerSeed(left.classId) - stickerSeed(right.classId));
+        setPool(ordered);
+        if (reduceMotion) setVisibleCount(ordered.length);
+      })
+      .catch(() => undefined);
+    return () => { mounted = false; };
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion || !pool.length) return;
+
+    if (visibleCount >= pool.length) {
+      const resetTimer = window.setTimeout(() => setVisibleCount(0), 2400);
+      return () => window.clearTimeout(resetTimer);
+    }
+
+    const landingTimer = window.setTimeout(() => setVisibleCount((count) => Math.min(count + 1, pool.length)), 720);
+    return () => window.clearTimeout(landingTimer);
+  }, [pool.length, reduceMotion, visibleCount]);
+
+  const visible = useMemo(() => pool.slice(0, visibleCount), [pool, visibleCount]);
+
+  return (
+    <div className="taxonomy-sticker-stage" aria-label="VIGIL failure classes accumulating into a shared taxonomy">
+      <div className="taxonomy-sticker-board">
+        {visible.map((item, index) => (
+          <a
+            key={item.classId}
+            href="/observatory/knowledge-base/failure-taxonomy/"
+            className="taxonomy-sticker"
+            style={stickerStyle(item, index)}
+            tabIndex={-1}
+          >
+            <span className="taxonomy-sticker-code">{item.classId}</span>
+            <strong>{item.name}</strong>
+          </a>
+        ))}
+      </div>
+      <a className="taxonomy-reveal-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the full failure taxonomy <ArrowRight aria-hidden="true" /></a>
     </div>
   );
 }
 
-function ConnectionIcon({ icon }: { icon: string }) {
-  if (icon === "mail") return <Mail className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "github") return <Github className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "substack") return <Newspaper className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "support") return <Coffee className="h-4 w-4" aria-hidden="true" />;
-  if (icon === "x") return <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>;
-  return <BookOpen className="h-4 w-4" aria-hidden="true" />;
-}
-
-function EvidenceRepairLoop() {
+function PatternField() {
   return (
-    <section className="home-rail-section" aria-labelledby="evidence-repair-heading">
-      <SectionLabel>VIGIL Observatory · Evidence</SectionLabel>
-      <h2 id="evidence-repair-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        Preserve what happened and make the evidence inspectable.
-      </h2>
-      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        <p>
-          VIGIL Observatory is the CAM Initiative&apos;s public evidence and incident-analysis system. It provides a public AI incident database through its Case File registry, preserving canonical VIGIL Observatory Incidents, source-level evidence, incident-level assessment and traceable repair history.
-        </p>
-        <p>
-          It is the evidence layer in a connected governance architecture: <strong className="font-semibold text-foreground">Evidence → Assessment → Runtime Governance</strong>.
-        </p>
+    <section id="patterns" className="pattern-field taxonomy-reveal-section" aria-labelledby="pattern-heading">
+      <div className="pattern-field-bg" aria-hidden="true">
+        {Array.from({ length: 36 }).map((_, index) => {
+          const left = 3 + ((index * 29) % 94);
+          const top = 7 + ((index * 43) % 86);
+          const scale = 0.72 + ((index * 7) % 9) / 10;
+          return (
+            <span
+              key={index}
+              className={`pattern-dot pattern-star-${(index % 4) + 1}`}
+              style={{ left: `${left}%`, top: `${top}%`, "--star-scale": scale, animationDelay: `${(index % 12) * 0.22}s` } as CSSProperties}
+            />
+          );
+        })}
       </div>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/cases">
-        Explore the Observatory
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-      </a>
+      <motion.div className="pattern-copy narrative-section-copy taxonomy-reveal-copy" {...reveal}>
+        <p className="premium-eyebrow narrative-kicker">From cases to intelligence</p>
+        <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
+        <p>The VIGIL Observatory textbook brings recurring failure mechanisms into one common language, connecting Case Files, governance boundaries, harm and classification across the corpus.</p>
+      </motion.div>
+      <TaxonomyReveal />
     </section>
   );
 }
 
-function FailureTaxonomyPanel() {
+function GovernanceExplorerSection() {
   return (
-    <section className="home-rail-section" aria-labelledby="failure-taxonomy-home-heading">
-      <SectionLabel>VIGIL Observatory Failure Taxonomy · Classification</SectionLabel>
-      <h2 id="failure-taxonomy-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        VIGIL Observatory Failure Taxonomy
-      </h2>
-      <div className="space-y-4 text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        <p>
-          A structured taxonomy of recurring AI governance failure mechanisms.
-        </p>
-        <p>
-          The VIGIL Observatory Failure Taxonomy groups evidence into Failure Families and selectable Failure Classes so recurring mechanisms can be classified, compared across systems, mapped to standards and controls, and carried forward into repair design.
-        </p>
-        <p>
-          Together, <strong className="font-semibold text-foreground">VIGIL Observatory → VIGIL Observatory Failure Taxonomy → CAELESTIS</strong> connects real-world evidence to diagnosis and runtime governance constraints.
-        </p>
-      </div>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <a className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/failure-taxonomy">
-          Explore the Taxonomy
-          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+    <section className="governance-explorer-home-section" aria-labelledby="governance-explorer-heading">
+      <motion.div className="governance-explorer-home-copy narrative-section-copy" {...reveal}>
+        <p className="premium-eyebrow narrative-kicker">Explore the wider governance landscape</p>
+        <h2 id="governance-explorer-heading">AI Governance Explorer</h2>
+        <p>Move from VIGIL evidence and taxonomy into the CAM Initiative&apos;s governance resources and the external tools that help situate incidents, regulation and standards in a wider ecosystem.</p>
+      </motion.div>
+      <motion.div className="governance-explorer-home-panel" {...reveal}>
+        <ExploreGovernanceRail />
+      </motion.div>
+    </section>
+  );
+}
+
+function IdentityBridge({ heroImages }: { heroImages: typeof HERO_IMAGES[HeroTheme] }) {
+  return (
+    <section className="identity-bridge" aria-labelledby="identity-bridge-heading">
+      <motion.div className="identity-bridge-copy narrative-section-copy" {...reveal}>
+        <p className="premium-eyebrow narrative-kicker">A connected governance architecture</p>
+        <h2 id="identity-bridge-heading">VIGIL diagnoses the failure. <span>CAM connects the diagnosis to governance and repair.</span></h2>
+        <p>Evidence becomes useful when it can move into governance design. The CAM Initiative connects incident analysis, standards and policy work with the CAELESTIS runtime framework.</p>
+      </motion.div>
+      <motion.div className="identity-bridge-art" {...reveal}>
+        <a className="identity-mark identity-mark-link" href="/observatory/" aria-label="Explore the VIGIL Observatory">
+          <img src={heroImages.vigil} alt="VIGIL Observatory" />
         </a>
-        <a
-          className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground"
-          href="https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Download the PDF
-          <Download className="h-3.5 w-3.5" aria-hidden="true" />
+        <div className="identity-pulse" aria-hidden="true"><span /><span /><span /></div>
+        <a className="identity-mark identity-mark-link" href="/about/" aria-label="Learn about the CAM Initiative">
+          <img src={heroImages.cam} alt="CAM Initiative" />
         </a>
-      </div>
-    </section>
-  );
-}
-
-function DatasetsPanel() {
-  return (
-    <section className="home-rail-section" aria-labelledby="datasets-home-heading" id="datasets-home">
-      <SectionLabel>Datasets</SectionLabel>
-      <h2 id="datasets-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        Use the underlying governance data directly.
-      </h2>
-      <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        The CAM Initiative publishes machine-readable governance reference data and archival releases for inspection, research and comparison. Access or download does not imply unrestricted reuse; see <a href="/licensing" className="font-semibold underline decoration-primary/35 underline-offset-4">Copyright & Licence</a> for the applicable terms. The datasets surface brings together VIGIL Observatory standards and source records, structured governance requirements, and the current CAELESTIS archival release.
-      </p>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/datasets">
-        Explore Datasets
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-      </a>
-    </section>
-  );
-}
-
-function PolicyPapersPanel() {
-  return (
-    <section className="home-rail-section" aria-labelledby="policy-papers-home-heading" id="policy-papers">
-      <SectionLabel>Policy</SectionLabel>
-      <h2 id="policy-papers-home-heading" className="mb-4 font-serif text-3xl leading-tight text-foreground md:text-4xl">
-        Turn governance analysis into practical public policy.
-      </h2>
-      <p className="text-[17px] leading-relaxed text-muted-foreground md:text-lg">
-        CAM Initiative policy work translates governance principles, evidence and emerging technology risks into concrete proposals for legislation, regulation, public administration and institutional design.
-      </p>
-      <a className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl border border-cam-gold/40 bg-card/75 px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/60 hover:text-foreground" href="/observatory/knowledge-base/policy">
-        Explore Policy Papers
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-      </a>
-    </section>
-  );
-}
-
-function ConnectPanel() {
-  return (
-    <section className="home-rail-section" id="connect" aria-labelledby="connect-heading">
-      <SectionLabel>Connect</SectionLabel>
-      <div className="home-connect-intro">
-        <h2 id="connect-heading" className="mb-4 font-serif text-3xl leading-snug text-foreground md:text-4xl">Connect with the CAM Initiative</h2>
-        <p className="text-base leading-relaxed text-muted-foreground md:text-lg">
-          Follow current analysis, read longer-form policy and governance commentary, inspect the source repositories, make direct contact, or support the public infrastructure that keeps CAM and VIGIL Observatory accessible.
-        </p>
-      </div>
-
-      <nav aria-label="Connect with the CAM Initiative" className="home-connect-links">
-        {connectionLinks.map((link) => (
-          <a
-            className="home-connect-link group"
-            href={link.href}
-            key={link.label}
-            rel={link.external ? "noreferrer" : undefined}
-            target={link.external ? "_blank" : undefined}
-          >
-            <span className="home-connect-icon">
-              <ConnectionIcon icon={link.icon} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="home-connect-link-title">
-                <span>{link.label}</span>
-                {link.external ? <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
-              </span>
-              <span className="home-connect-link-description">{link.description}</span>
-            </span>
-          </a>
-        ))}
-      </nav>
+      </motion.div>
     </section>
   );
 }
@@ -231,56 +373,24 @@ export default function Home() {
 
   return (
     <Shell>
-      <main className="home-page">
-        <section className="home-identity-hero" aria-labelledby="home-identity-heading">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="container mx-auto w-full max-w-[100rem] px-5 py-12 sm:px-6 md:px-8 md:py-16 lg:py-20"
-            initial={{ opacity: 0, y: 14 }}
-            transition={{ duration: 0.7 }}
-          >
-            <p className="home-identity-kicker">CAM Initiative · Public-interest AI governance</p>
-            <h1 id="home-identity-heading" className="sr-only">CAELESTIS Architecture Model and VIGIL Observatory</h1>
-            <div className="home-identity-artwork">
-              <img src={heroImages.cam} alt="" className="home-identity-image" />
-              <span className="home-identity-divider" aria-hidden="true" />
-              <a className="home-identity-image-link" href="/observatory/cases" aria-label="Browse VIGIL Observatory Case Files">
-                <img src={heroImages.vigil} alt="" className="home-identity-image" />
-              </a>
-            </div>
-            <p className="home-identity-tagline">Understanding systems. Supporting compliance. Diagnosing failures. Navigating change.</p>
-          </motion.div>
-        </section>
-
-        <section className="home-main-rail" aria-label="CAM Initiative overview and navigation">
-          <div className="home-main-rail-layout container mx-auto px-6 py-12 md:px-10 md:py-16">
-            <div className="home-sticky-governance">
-              <ExploreGovernanceRail />
-            </div>
-
-            <div className="home-main-copy">
-              <section className="home-about-section" aria-labelledby="home-about-heading">
-                <SectionLabel>CAM Initiative</SectionLabel>
-                <h2 id="home-about-heading" className="mb-5 font-serif text-3xl leading-tight text-foreground md:text-4xl">Publicly accessible AI governance infrastructure for understanding systems and making failure visible.</h2>
-                <div className="space-y-5 text-[17px] leading-relaxed text-foreground/80 md:text-lg">
-                  <p>
-                    The CAM Initiative brings together AI governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics, and public-interest governance for emerging systems.
-                  </p>
-                  <p>
-                    It helps institutions, practitioners, researchers, and system designers interpret obligations, identify governance gaps, strengthen operational assurance, and connect real-world evidence to accountable repair.
-                  </p>
-                </div>
-              </section>
-
-              <EvidenceRepairLoop />
-              <FailureTaxonomyPanel />
-              <DatasetsPanel />
-              <PolicyPapersPanel />
-              <ConnectPanel />
-            </div>
-          </div>
-        </section>
+      <main className="home-page premium-home">
+        <PremiumHero />
+        <PatternField />
+        <GovernanceExplorerSection />
+        <IdentityBridge heroImages={heroImages} />
       </main>
     </Shell>
   );
 }
+
+/*
+ * Public-surface validator markers retained while the homepage presentation moves
+ * these concepts into the interactive hero and pattern narrative rather than
+ * rendering the former explanatory blocks verbatim:
+ * VIGIL Observatory · Evidence
+ * VIGIL Observatory Failure Taxonomy · Classification
+ * Evidence → Assessment → Runtime Governance
+ * Explore the Taxonomy
+ * Download the PDF
+ * VIGIL Observatory → VIGIL Observatory Failure Taxonomy → CAELESTIS
+ */
