@@ -90,7 +90,8 @@ test("homepage refinement preserves the six-stage instrument and live Observator
   assert.doesNotMatch(home, /<p className="premium-eyebrow">CAM Initiative · VIGIL Observatory<\/p>/);
   assert.match(home, /loadVigilIncidentRecords/);
   assert.match(home, /aria-label="Recent VIGIL Case Files"/);
-  assert.match(home, /CAELESTIS runtime framework/);
+  assert.doesNotMatch(home, /A connected governance architecture/);
+  assert.doesNotMatch(home, /VIGIL diagnoses the failure/);
   assert.match(styles, /diagnostic-counter-rotation/);
   assert.match(styles, /incident-ticker-travel 112s linear infinite/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.incident-ticker-track \{ animation: none; \}/);
