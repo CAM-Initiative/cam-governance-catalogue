@@ -351,3 +351,47 @@
     opacity: 0.3;
   }
 }
+
+
+/* Aperture refinement: keep the structural band, but make the cut-outs read as
+   milled slots rather than black portholes. */
+.diagnostic-intergear-web > i::before {
+  top: 3.6%;
+  width: 8.6%;
+  height: 17.5%;
+  border-color: hsl(28 34% 16% / 0.46);
+  background:
+    linear-gradient(180deg,
+      hsl(29 28% 16% / 0.68),
+      hsl(31 26% 18% / 0.56) 52%,
+      hsl(35 30% 21% / 0.48));
+  box-shadow:
+    inset 0.12rem 0.15rem 0.2rem hsl(22 38% 9% / 0.26),
+    inset -0.07rem -0.05rem 0.11rem hsl(46 62% 56% / 0.07),
+    0 0 0 0.09rem hsl(41 48% 36% / 0.05);
+  opacity: 0.76;
+}
+
+.diagnostic-intergear-web > i::after {
+  top: 0.9%;
+  width: 0.3rem;
+  height: 0.3rem;
+  opacity: 0.72;
+}
+
+/* Slightly outward placement leaves a clearer visual gap to the inner gear. */
+.diagnostic-intergear-web {
+  inset: 8.7%;
+}
+
+@media (max-width: 720px) {
+  .diagnostic-intergear-web {
+    inset: 9.8%;
+  }
+
+  .diagnostic-intergear-web > i::before {
+    top: 4.4%;
+    width: 8%;
+    height: 16%;
+  }
+}
