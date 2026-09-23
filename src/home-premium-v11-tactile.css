@@ -184,3 +184,75 @@
     height: 1.42rem;
   }
 }
+
+
+/* Continuous gear teeth.
+   Earlier passes deliberately hid every second tooth; the tactile instrument
+   treatment restores a proper gear silhouette with adjacent teeth all the way around. */
+.diagnostic-gear-outer .diagnostic-gear-tooth,
+.diagnostic-gear-inner .diagnostic-gear-tooth {
+  display: block !important;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth::after {
+  width: 1.42rem;
+  height: 0.34rem;
+  border-radius: 0.055rem;
+  clip-path: polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth::before {
+  top: -0.82rem;
+  width: 1rem;
+  height: 0.92rem;
+  border-radius: 0.055rem 0.055rem 0.11rem 0.11rem;
+  clip-path: polygon(18% 0, 82% 0, 96% 100%, 4% 100%);
+}
+
+.diagnostic-gear-inner .diagnostic-gear-tooth::after {
+  top: -0.16rem;
+  width: 1.02rem;
+  height: 0.28rem;
+  border-radius: 0.05rem;
+  clip-path: polygon(10% 0, 90% 0, 100% 100%, 0 100%);
+}
+
+.diagnostic-gear-inner .diagnostic-gear-tooth::before {
+  top: -0.62rem;
+  width: 0.76rem;
+  height: 0.72rem;
+  border-radius: 0.05rem 0.05rem 0.1rem 0.1rem;
+  clip-path: polygon(20% 0, 80% 0, 95% 100%, 5% 100%);
+}
+
+/* Preserve the subtle fabricated-object variance without reopening visible gaps. */
+.diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(4n + 1)::before {
+  width: 0.96rem;
+}
+.diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(5n + 2)::before {
+  width: 0.73rem;
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-outer .diagnostic-gear-tooth::after {
+    width: 0.92rem;
+    height: 0.24rem;
+  }
+
+  .diagnostic-gear-outer .diagnostic-gear-tooth::before {
+    top: -0.56rem;
+    width: 0.66rem;
+    height: 0.64rem;
+  }
+
+  .diagnostic-gear-inner .diagnostic-gear-tooth::after {
+    width: 0.68rem;
+    height: 0.2rem;
+  }
+
+  .diagnostic-gear-inner .diagnostic-gear-tooth::before {
+    top: -0.44rem;
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+}
