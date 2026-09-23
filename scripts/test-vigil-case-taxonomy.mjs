@@ -118,8 +118,8 @@ assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAsses
 assert.match(report, /className="report-substantive-label">Factual basis/);
 assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT[\s\S]*EXTERNAL ASSESSMENTS/);
 assert.match(report, /<Stage number="05" label="Conclusion">[\s\S]*Governance significance/);
-assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-substantive-label \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
-assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-substantive-label \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-library-kicker \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-library-kicker \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
 assert.doesNotMatch(report, /report-harm-classification-intro/);
 assert.match(report, /report-assessment-details/);
 assert.match(printableReport, /nonAssessedHarmDimensionLimitItems/);
@@ -171,7 +171,7 @@ assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/
 const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url), "utf8");
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
-assert.match(taxonomyAssessment, /VIGIL Observatory Taxonomy Assessment/);
+assert.match(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
 assert.match(taxonomyAssessment, /Recovered governance principle/);
 assert.match(taxonomyAssessment, /Taxonomy assessment/);
 assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
@@ -205,9 +205,9 @@ assert.match(report, /EXTERNAL ASSESSMENTS/);
 assert.match(report, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 assert.match(reportCss, /Peer assessment headings share one deterministic report contract/);
 
-assert.match(taxonomyAssessment, /className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL Observatory Taxonomy Assessment<\/h4>/);
+assert.match(taxonomyAssessment, /className="vigil-library-kicker" id="vigil-taxonomy-assessment-heading">VIGIL OBSERVATORY TAXONOMY ASSESSMENT<\/p>/);
 assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-taxonomy-assessment \{[\s\S]*border: 1px solid/);
-assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-governance-significance-card \{/);
+assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-conclusion-governance-significance \{/);
 assert.match(assessmentLayoutCss, /\.report-document \.report-governance-significance \{/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
