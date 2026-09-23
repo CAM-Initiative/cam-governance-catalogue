@@ -255,10 +255,34 @@ function severityDisplay(value?: string) {
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
 
-function formatGeneratedAt(value: string) {
-  const date = new Date(value);
+function formatCalendarDate(value?: string, precision: "day" | "month" | "year" = "day") {
+  if (!value) return undefined;
+  const match = value.match(/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/);
+  if (!match) return value;
+  const year = Number(match[1]);
+  const month = Number(match[2] ?? "1");
+  const day = Number(match[3] ?? "1");
+  const date = new Date(Date.UTC(year, month - 1, day));
   if (Number.isNaN(date.getTime())) return value;
-  return date.toISOString().replace("T", " ").replace(/\.\d{3}Z$/, " UTC");
+  if (precision === "year") return String(year);
+  if (precision === "month") return new Intl.DateTimeFormat("en-AU", { month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+  return new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+}
+
+function incidentTimingLabel(raw?: UnknownRecord) {
+  if (!raw) return "Not established";
+  const occurredFrom = firstText(raw, ["incident_identity.occurred_from", "occurred_from"]);
+  const occurredTo = firstText(raw, ["incident_identity.occurred_to", "occurred_to"]);
+  const precision = firstText(raw, ["incident_identity.date_precision", "date_precision"])?.toLowerCase();
+
+  if (!occurredFrom) return "Not established";
+  if (precision === "year") return formatCalendarDate(occurredFrom, "year") ?? occurredFrom;
+  if (precision === "month") return formatCalendarDate(occurredFrom, "month") ?? occurredFrom;
+
+  const from = formatCalendarDate(occurredFrom) ?? occurredFrom;
+  const to = occurredTo ? formatCalendarDate(occurredTo) ?? occurredTo : undefined;
+  const value = to && to !== from ? `${from} – ${to}` : from;
+  return precision === "reported-date" ? `Reported ${value}` : value;
 }
 
 function Field({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
@@ -473,9 +497,15 @@ export default function VigilCaseFile() {
   const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
-  const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
+  const occurred = incidentTimingLabel(incident?.raw);
+  const jurisdiction = incident ? firstText(incident.raw, ["jurisdictional_context.primary_jurisdiction"]) ?? "Not established" : "Not established";
+  const sector = incident ? firstText(incident.raw, ["jurisdictional_context.sector"]) ?? "Not established" : "Not established";
+  const environment = incident
+    ? firstText(incident.raw, ["system_context.occurrence_environment.operational_setting"])
+    : undefined;
+  const environmentLabel = environment ? titleizeValue(environment) : "Not established";
 
   const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
@@ -721,6 +751,13 @@ export default function VigilCaseFile() {
           <span>[{index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
+            {(record.record_version || record.record_last_updated || record.date_recorded) && <p className="vigil-reference-record-meta">
+              {[
+                record.record_version ? `Version ${record.record_version}` : undefined,
+                record.record_last_updated ? `Updated ${record.record_last_updated}` : undefined,
+                record.date_recorded ? `Recorded ${record.date_recorded}` : undefined,
+              ].filter(Boolean).join(" · ")}
+            </p>}
             {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
           </div>
         </li>)}
@@ -751,15 +788,21 @@ export default function VigilCaseFile() {
         <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
-      <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
-        <dl>
-          <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification} />
-          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
+      <aside className="vigil-case-meta-panel" aria-label="Incident context">
+        <p className="vigil-case-context-label">Incident context</p>
+        <dl className="vigil-case-context-grid">
+          <Field label="Occurred" value={occurred} />
+          <Field label="Jurisdiction" value={jurisdiction} />
+          <Field label="Sector" value={sector} />
+          <Field label="Environment" value={environmentLabel} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
-          <Field label="Updated" value={updated} mono />
-          <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
         </dl>
+        <div className="vigil-case-record-strip" aria-label="Case File record identity">
+          <span>{incident ? compactId(incident.id) : compactId(state.sourceId)}</span>
+          {incident?.record_version && <span>Version {incident.record_version}</span>}
+          <span>{isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification}</span>
+          {hasMixedExecution && <span>Mixed execution</span>}
+        </div>
         <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </aside>
     </header>
