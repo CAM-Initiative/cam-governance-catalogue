@@ -501,7 +501,6 @@ export default function VigilCaseFile() {
   const reportId = incident?.id ?? state.sourceId;
   const occurred = incidentTimingLabel(incident?.raw);
   const jurisdiction = incident ? firstText(incident.raw, ["jurisdictional_context.primary_jurisdiction"]) ?? "Not established" : "Not established";
-  const sector = incident ? firstText(incident.raw, ["jurisdictional_context.sector"]) ?? "Not established" : "Not established";
   const environment = incident
     ? firstText(incident.raw, ["system_context.occurrence_environment.operational_setting"])
     : undefined;
