@@ -67,9 +67,17 @@
 }
 
 .report-document .report-governance-significance {
-  margin-top: 1rem;
-  padding-top: 0.9rem;
-  border-top: 1px solid hsl(var(--border) / 0.62);
+  margin-top: 1.25rem;
+}
+
+.report-document .report-governance-significance .vigil-case-subheading {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.report-document .report-governance-significance .vigil-case-subheading h3 {
+  margin: 0;
 }
 
 .report-document .report-governance-significance > p:last-child {
