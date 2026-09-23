@@ -1,0 +1,141 @@
+.vigil-preview-source {
+  position: relative;
+  z-index: 20;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 72%, transparent);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--background) 94%, #c69a45 6%), var(--background));
+}
+
+.vigil-preview-source-inner {
+  width: min(1360px, calc(100% - 2rem));
+  margin: 0 auto;
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: auto minmax(240px, 440px) 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.45rem 0;
+}
+
+.vigil-preview-source-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  white-space: nowrap;
+}
+
+.vigil-preview-source-label > svg {
+  width: 18px;
+  height: 18px;
+  color: #b58a38;
+}
+
+.vigil-preview-source-label span {
+  display: grid;
+  line-height: 1.05;
+}
+
+.vigil-preview-source-label strong {
+  font-size: 0.73rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vigil-preview-source-label small {
+  margin-top: 0.18rem;
+  color: var(--muted-foreground);
+  font-size: 0.69rem;
+}
+
+.vigil-preview-source-select {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--border) 78%, #b58a38 22%);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem 0.2rem 0.7rem;
+  background: color-mix(in srgb, var(--card) 94%, transparent);
+}
+
+.vigil-preview-source-select > svg {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  color: var(--muted-foreground);
+}
+
+.vigil-preview-source-select select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.vigil-preview-source-meta {
+  min-width: 0;
+  color: var(--muted-foreground);
+  font-size: 0.72rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vigil-preview-source-meta code {
+  color: var(--foreground);
+  font-size: 0.7rem;
+}
+
+.vigil-preview-source-meta .is-warning {
+  color: #b36b24;
+}
+
+.vigil-preview-source-refresh {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+
+.vigil-preview-source-refresh:hover {
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--border) 60%, #b58a38 40%);
+}
+
+.vigil-preview-source-refresh svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 760px) {
+  .vigil-preview-source-inner {
+    width: min(100% - 1rem, 1360px);
+    grid-template-columns: 1fr auto;
+    gap: 0.45rem 0.6rem;
+    padding: 0.55rem 0;
+  }
+
+  .vigil-preview-source-label {
+    grid-column: 1 / -1;
+  }
+
+  .vigil-preview-source-select {
+    min-width: 0;
+  }
+
+  .vigil-preview-source-meta {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
+import { VigilBranchSelector } from "@/components/vigil/VigilBranchSelector";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -374,6 +375,7 @@ export default function Home() {
   return (
     <Shell>
       <main className="home-page premium-home">
+        <VigilBranchSelector />
         <PremiumHero />
         <PatternField />
         <GovernanceExplorerSection />

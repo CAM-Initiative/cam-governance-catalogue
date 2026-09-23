@@ -1,3 +1,5 @@
+import { vigilRawRoot } from "@/lib/vigilBranchSource";
+
 export type CanonicalIdentifier = {
   scheme?: string;
   value?: string;
@@ -163,24 +165,39 @@ async function fetchFirstAvailable<T>(urls: string[], fetcher: FetchLike): Promi
   };
 }
 
+async function runtimeExternalUrls(fetcher: FetchLike) {
+  const root = await vigilRawRoot("vigil", fetcher);
+  const governanceRoot = `${root}/external_governance`;
+  return {
+    requirementsIndex: `${governanceRoot}/requirements/requirements-index.json`,
+    requirementsFull: `${governanceRoot}/requirements/requirements.json`,
+    sourceScope: `${governanceRoot}/requirements/source-scope.json`,
+    sourceRegistry: `${governanceRoot}/sources/source-registry.json`,
+    legacySources: `${root}/external_sources/ledger.json`,
+  };
+}
+
 function unwrapRequirements<T>(payload: { requirements?: T[] } | T[]) {
   return Array.isArray(payload) ? payload : Array.isArray(payload.requirements) ? payload.requirements : [];
 }
 
 export async function loadExternalRequirements(fetcher: FetchLike = fetch): Promise<ExternalLoadResult<ExternalRequirement[]>> {
-  const result = await fetchOptional<{ requirements?: ExternalRequirement[] } | ExternalRequirement[]>(VIGIL_EXTERNAL_REQUIREMENTS_INDEX_URL, fetcher);
+  const urls = await runtimeExternalUrls(fetcher);
+  const result = await fetchOptional<{ requirements?: ExternalRequirement[] } | ExternalRequirement[]>(urls.requirementsIndex, fetcher);
   if (result.status !== "ready") return result;
   return { status: "ready", data: unwrapRequirements(result.data), attemptedUrl: result.attemptedUrl };
 }
 
 export async function loadExternalRequirementDetails(fetcher: FetchLike = fetch): Promise<ExternalLoadResult<ExternalRequirementDetail[]>> {
-  const result = await fetchOptional<{ requirements?: ExternalRequirementDetail[] } | ExternalRequirementDetail[]>(VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL, fetcher);
+  const urls = await runtimeExternalUrls(fetcher);
+  const result = await fetchOptional<{ requirements?: ExternalRequirementDetail[] } | ExternalRequirementDetail[]>(urls.requirementsFull, fetcher);
   if (result.status !== "ready") return result;
   return { status: "ready", data: unwrapRequirements(result.data), attemptedUrl: result.attemptedUrl };
 }
 
 export async function loadExternalSourceScope(fetcher: FetchLike = fetch): Promise<ExternalLoadResult<ExternalSourceScopeEntry[]>> {
-  const result = await fetchOptional<{ entries?: ExternalSourceScopeEntry[] } | ExternalSourceScopeEntry[]>(VIGIL_EXTERNAL_SOURCE_SCOPE_URL, fetcher);
+  const urls = await runtimeExternalUrls(fetcher);
+  const result = await fetchOptional<{ entries?: ExternalSourceScopeEntry[] } | ExternalSourceScopeEntry[]>(urls.sourceScope, fetcher);
   if (result.status !== "ready") return result;
   const payload = result.data;
   const entries = Array.isArray(payload) ? payload : Array.isArray(payload.entries) ? payload.entries : [];
@@ -188,8 +205,9 @@ export async function loadExternalSourceScope(fetcher: FetchLike = fetch): Promi
 }
 
 export async function loadExternalSources(fetcher: FetchLike = fetch): Promise<ExternalLoadResult<ExternalSourceEntry[]>> {
+  const urls = await runtimeExternalUrls(fetcher);
   const result = await fetchFirstAvailable<{ entries?: ExternalSourceEntry[] } | ExternalSourceEntry[]>(
-    [VIGIL_EXTERNAL_SOURCE_REGISTRY_URL, VIGIL_EXTERNAL_LEGACY_SOURCES_URL],
+    [urls.sourceRegistry, urls.legacySources],
     fetcher,
   );
   if (result.status !== "ready") return result;
@@ -237,9 +255,10 @@ function triggerJsonDownload(filename: string, text: string) {
  * to obtain them.
  */
 export async function downloadExternalGovernanceDataset(fetcher: FetchLike = fetch) {
+  const urls = await runtimeExternalUrls(fetcher);
   const [sources, clauses] = await Promise.all([
-    fetcher(`${VIGIL_EXTERNAL_SOURCE_REGISTRY_URL}?v=${Date.now()}`, { cache: "no-store" }),
-    fetcher(`${VIGIL_EXTERNAL_REQUIREMENTS_FULL_URL}?v=${Date.now()}`, { cache: "no-store" }),
+    fetcher(`${urls.sourceRegistry}?v=${Date.now()}`, { cache: "no-store" }),
+    fetcher(`${urls.requirementsFull}?v=${Date.now()}`, { cache: "no-store" }),
   ]);
 
   if (!sources.ok || !clauses.ok) {
