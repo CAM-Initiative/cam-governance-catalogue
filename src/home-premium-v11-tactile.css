@@ -256,3 +256,85 @@
     height: 0.5rem;
   }
 }
+
+
+/* Outer-ring structural spokes: visible above the inter-gear plate so the rear
+   wheel carries the same worked-instrument language as the foreground wheel. */
+.diagnostic-outer-spokes {
+  position: absolute;
+  z-index: 2.5;
+  inset: 10.5%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.diagnostic-outer-spokes > i {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--outer-spoke-angle));
+  transform-origin: 50% 50%;
+}
+
+.diagnostic-outer-spokes > i::before {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  width: 0.78rem;
+  height: 35%;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  border: 1px solid hsl(var(--primary) / 0.10);
+  border-radius: 0.16rem 0.16rem 0.06rem 0.06rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.66),
+      hsl(var(--primary) / 0.07) 36%,
+      hsl(var(--primary) / 0.15) 50%,
+      hsl(var(--primary) / 0.07) 64%,
+      hsl(var(--background) / 0.66));
+  box-shadow:
+    inset 1px 0 0 hsl(var(--primary) / 0.05),
+    inset -1px 0 0 hsl(var(--foreground) / 0.025);
+  opacity: 0.72;
+}
+
+.diagnostic-outer-spokes > i::after {
+  content: "";
+  position: absolute;
+  top: 13.6%;
+  left: 50%;
+  width: 0.24rem;
+  height: 0.24rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(var(--primary) / 0.22);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 32%,
+      hsl(var(--primary) / 0.22),
+      hsl(var(--background) / 0.9) 62%,
+      hsl(var(--primary) / 0.06));
+  box-shadow: 0 0.05rem 0.1rem hsl(var(--foreground) / 0.05);
+}
+
+.diagnostic-outer-spokes > i:nth-child(2)::before,
+.diagnostic-outer-spokes > i:nth-child(5)::before {
+  width: 0.74rem;
+  opacity: 0.67;
+}
+
+@media (max-width: 720px) {
+  .diagnostic-outer-spokes {
+    inset: 11.5%;
+  }
+
+  .diagnostic-outer-spokes > i::before {
+    width: 0.56rem;
+  }
+
+  .diagnostic-outer-spokes > i::after {
+    width: 0.18rem;
+    height: 0.18rem;
+  }
+}
