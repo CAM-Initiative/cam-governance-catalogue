@@ -229,3 +229,124 @@
       0 0.1rem 0.2rem hsl(24 45% 10% / 0.12);
   }
 }
+
+
+/* Structural web between the outer and inner wheels.
+   Six machined lightening apertures remove the UI-like empty annulus and make
+   the outer assembly read as one manufactured plate with material cut away. */
+.diagnostic-gear-outer {
+  overflow: visible;
+}
+
+.diagnostic-gear-web {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.diagnostic-gear-web > i {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--web-angle));
+  transform-origin: 50% 50%;
+}
+
+.diagnostic-gear-web > i::before {
+  content: "";
+  position: absolute;
+  top: 18.5%;
+  left: 50%;
+  width: 15%;
+  height: 26%;
+  transform: translateX(-50%);
+  border: 1px solid hsl(27 40% 13% / 0.58);
+  border-radius: 46% 46% 38% 38% / 58% 58% 42% 42%;
+  background:
+    linear-gradient(180deg,
+      hsl(24 35% 11% / 0.9),
+      hsl(31 28% 15% / 0.76) 58%,
+      hsl(42 52% 31% / 0.18));
+  box-shadow:
+    inset 0.18rem 0.22rem 0.34rem hsl(20 48% 8% / 0.42),
+    inset -0.12rem -0.08rem 0.18rem hsl(46 70% 58% / 0.09),
+    0 0 0 0.12rem hsl(39 52% 32% / 0.06);
+  clip-path: polygon(26% 0, 74% 0, 91% 22%, 84% 81%, 67% 100%, 33% 100%, 16% 81%, 9% 22%);
+}
+
+.diagnostic-gear-web > i::after {
+  content: "";
+  position: absolute;
+  top: 14.4%;
+  left: 50%;
+  width: 0.48rem;
+  height: 0.48rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(24 38% 12% / 0.62);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 30%,
+      hsl(48 82% 66% / 0.68),
+      hsl(40 56% 36% / 0.78) 36%,
+      hsl(24 32% 13% / 0.96) 72%);
+  box-shadow:
+    0 0 0 1px hsl(18 34% 9% / 0.24),
+    0 0.12rem 0.22rem hsl(24 45% 10% / 0.18);
+}
+
+/* Give the web a solid shoulder so the apertures feel cut into a plate, not
+   painted onto empty space. */
+.diagnostic-gear-outer .diagnostic-gear-web::before {
+  content: "";
+  position: absolute;
+  inset: 26%;
+  border-radius: 50%;
+  border: 1px solid hsl(39 52% 34% / 0.22);
+  box-shadow:
+    0 0 0 0.22rem hsl(27 32% 14% / 0.16),
+    0 0 0 0.38rem hsl(42 58% 38% / 0.07);
+}
+
+.diagnostic-gear-outer .diagnostic-gear-web::after {
+  content: "";
+  position: absolute;
+  inset: 11.5%;
+  border-radius: 50%;
+  border: 1px solid hsl(42 62% 42% / 0.16);
+  box-shadow:
+    inset 0 0 1.1rem hsl(24 48% 10% / 0.08),
+    0 0 0 1px hsl(24 34% 13% / 0.08);
+}
+
+/* Keep the existing ribs visible as the load-bearing material between cut-outs. */
+.diagnostic-gear-outer .diagnostic-gear-spokes {
+  z-index: 3;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-spokes i {
+  width: 1.1rem;
+  height: 35%;
+  opacity: 0.88;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth {
+  z-index: 5;
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-web > i::before {
+    top: 19%;
+    width: 14%;
+    height: 24%;
+  }
+
+  .diagnostic-gear-web > i::after {
+    width: 0.34rem;
+    height: 0.34rem;
+  }
+
+  .diagnostic-gear-outer .diagnostic-gear-spokes i {
+    width: 0.78rem;
+  }
+}
