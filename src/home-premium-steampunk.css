@@ -230,28 +230,30 @@
   }
 }
 
-
-/* Inter-gear structural plate.
-   This occupies ONLY the formerly empty annulus between the outer and inner wheels. */
+/* Refined inter-gear structural plate.
+   The formerly white annulus now reads as a solid machined band with six
+   punched-through lightening slots and heavier ribs between them. */
 .diagnostic-intergear-web {
   position: absolute;
   z-index: 2;
-  inset: 14.5%;
+  inset: 9.5%;
   border-radius: 50%;
   pointer-events: none;
   background:
     radial-gradient(circle,
-      transparent 0 63%,
-      hsl(28 30% 14% / 0.22) 63.5% 66%,
-      hsl(39 54% 33% / 0.22) 66.5% 84%,
-      hsl(43 65% 48% / 0.34) 84.5% 88%,
-      hsl(25 34% 13% / 0.28) 88.5% 91%,
-      transparent 91.5% 100%);
+      transparent 0 57.5%,
+      hsl(32 31% 16% / 0.34) 58% 60.5%,
+      hsl(39 48% 30% / 0.30) 61% 68%,
+      hsl(42 58% 42% / 0.36) 68.5% 82%,
+      hsl(45 68% 55% / 0.24) 82.5% 86%,
+      hsl(30 34% 16% / 0.36) 86.5% 89%,
+      transparent 89.5% 100%);
   box-shadow:
-    inset 0 0 0 1px hsl(42 64% 46% / 0.10),
-    inset 0 0 1.2rem hsl(24 42% 10% / 0.08);
-  -webkit-mask: radial-gradient(circle, transparent 0 61%, #000 62% 92%, transparent 93%);
-  mask: radial-gradient(circle, transparent 0 61%, #000 62% 92%, transparent 93%);
+    inset 0 0 0 1px hsl(44 64% 52% / 0.12),
+    inset 0 0 0.9rem hsl(25 42% 10% / 0.10),
+    0 0 0 1px hsl(28 34% 14% / 0.08);
+  -webkit-mask: radial-gradient(circle, transparent 0 57%, #000 58% 90%, transparent 91%);
+  mask: radial-gradient(circle, transparent 0 57%, #000 58% 90%, transparent 91%);
 }
 
 .diagnostic-intergear-web > i {
@@ -264,55 +266,88 @@
 .diagnostic-intergear-web > i::before {
   content: "";
   position: absolute;
-  top: 3.8%;
+  top: 4.6%;
   left: 50%;
-  width: 17%;
-  height: 26%;
+  width: 12%;
+  height: 20%;
   transform: translateX(-50%);
-  border: 1px solid hsl(26 36% 14% / 0.44);
-  border-radius: 46% 46% 38% 38% / 58% 58% 42% 42%;
-  background: hsl(var(--background) / 0.96);
-  clip-path: polygon(25% 0, 75% 0, 92% 22%, 84% 80%, 66% 100%, 34% 100%, 16% 80%, 8% 22%);
+  border: 1px solid hsl(26 36% 12% / 0.66);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg,
+      hsl(25 34% 11% / 0.88),
+      hsl(29 28% 14% / 0.78) 55%,
+      hsl(35 34% 18% / 0.66));
   box-shadow:
-    inset 0.16rem 0.18rem 0.28rem hsl(24 42% 10% / 0.20),
-    inset -0.08rem -0.06rem 0.12rem hsl(44 66% 55% / 0.05),
-    0 0 0 0.09rem hsl(42 54% 38% / 0.06);
+    inset 0.14rem 0.18rem 0.26rem hsl(20 48% 7% / 0.42),
+    inset -0.08rem -0.08rem 0.14rem hsl(48 72% 62% / 0.06),
+    0 0 0 0.12rem hsl(41 54% 36% / 0.06);
 }
 
 .diagnostic-intergear-web > i::after {
   content: "";
   position: absolute;
-  top: 1.4%;
+  top: 1.8%;
   left: 50%;
-  width: 0.38rem;
-  height: 0.38rem;
+  width: 0.34rem;
+  height: 0.34rem;
   transform: translateX(-50%);
-  border: 1px solid hsl(26 38% 14% / 0.52);
+  border: 1px solid hsl(25 38% 13% / 0.58);
   border-radius: 50%;
   background:
     radial-gradient(circle at 35% 30%,
-      hsl(47 76% 64% / 0.56),
-      hsl(39 52% 34% / 0.7) 38%,
-      hsl(24 30% 13% / 0.92) 72%);
-  box-shadow: 0 0.1rem 0.18rem hsl(24 44% 10% / 0.14);
+      hsl(48 82% 66% / 0.52),
+      hsl(40 56% 36% / 0.74) 38%,
+      hsl(24 30% 13% / 0.94) 72%);
+  box-shadow:
+    0 0 0 1px hsl(20 32% 9% / 0.18),
+    0 0.09rem 0.16rem hsl(24 44% 10% / 0.14);
 }
 
+/* Heavier rib language between the slots; the inner wheel is deliberately
+   quieter so the structural band, not the clock-like spokes, carries the detail. */
 .diagnostic-gear-outer { z-index: 1; }
 .diagnostic-gear-inner { z-index: 3; }
 .diagnostic-core { z-index: 6; }
 
+.diagnostic-gear-inner .diagnostic-gear-spokes i {
+  width: 0.64rem;
+  opacity: 0.34;
+  border-color: hsl(35 34% 22% / 0.20);
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.46),
+      hsl(40 42% 28% / 0.11) 42%,
+      hsl(42 52% 37% / 0.18) 50%,
+      hsl(40 42% 28% / 0.11) 58%,
+      hsl(var(--background) / 0.46));
+  box-shadow: none;
+}
+
+.diagnostic-gear-inner .diagnostic-gear-spokes i::after {
+  opacity: 0.34;
+  width: 0.26rem;
+  height: 0.26rem;
+}
+
 @media (max-width: 720px) {
   .diagnostic-intergear-web {
-    inset: 15.5%;
+    inset: 10.5%;
   }
 
   .diagnostic-intergear-web > i::before {
-    width: 15%;
-    height: 23%;
+    top: 5.4%;
+    width: 11%;
+    height: 18%;
   }
 
   .diagnostic-intergear-web > i::after {
-    width: 0.3rem;
-    height: 0.3rem;
+    width: 0.28rem;
+    height: 0.28rem;
+  }
+
+  .diagnostic-gear-inner .diagnostic-gear-spokes i {
+    width: 0.5rem;
+    opacity: 0.3;
   }
 }
