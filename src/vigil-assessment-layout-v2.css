@@ -21,23 +21,30 @@
 }
 
 .vigil-case-file-page .vigil-conclusion-stack {
-  display: grid;
-  gap: 1.45rem;
+  display: block;
 }
 
-.vigil-case-file-page .vigil-governance-significance-card {
-  padding: 1.25rem var(--vigil-case-card-pad) 1.2rem;
-  border: 1px solid hsl(var(--border) / 0.72);
-  border-radius: var(--vigil-case-card-radius);
-  background: hsl(var(--background));
-  box-shadow: var(--shadow-sm);
-}
-
-.vigil-case-file-page .vigil-governance-significance-card > .vigil-substantive-label {
+.vigil-case-file-page .vigil-conclusion-content {
   margin: 0;
 }
 
-.vigil-case-file-page .vigil-governance-significance-card > p {
+.vigil-case-file-page .vigil-conclusion-governance-significance {
+  margin-top: 1.6rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid hsl(var(--border) / 0.58);
+}
+
+.vigil-case-file-page .vigil-conclusion-governance-significance .vigil-case-subheading {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.vigil-case-file-page .vigil-conclusion-governance-significance .vigil-case-subheading h3 {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-conclusion-governance-significance > p {
   margin: 0.62rem 0 0;
   font-size: 0.98rem;
   line-height: 1.66;
@@ -72,8 +79,7 @@
 @media print {
   .vigil-deterministic-report-host .vigil-taxonomy-assessment,
   .report-document .vigil-taxonomy-assessment,
-  .vigil-case-file-page .vigil-taxonomy-assessment,
-  .vigil-case-file-page .vigil-governance-significance-card {
+  .vigil-case-file-page .vigil-taxonomy-assessment {
     box-shadow: none !important;
   }
 }
