@@ -1,0 +1,231 @@
+/* Experimental steampunk-inspired diagnostic gear treatment.
+   Keeps the existing interaction and geometry, but pushes the material language
+   toward aged brass, iron, engraved plates and visible fasteners. */
+
+.diagnostic-orbit-v2 {
+  background:
+    radial-gradient(circle at 48% 46%, hsl(var(--primary) / 0.07), transparent 34%),
+    radial-gradient(circle at 50% 50%, hsl(var(--background) / 0.52), transparent 68%);
+}
+
+.diagnostic-orbit-v2::before {
+  inset: -3.8%;
+  background:
+    repeating-conic-gradient(
+      from -1deg,
+      hsl(39 64% 44% / 0.82) 0deg 3.4deg,
+      hsl(28 46% 22% / 0.76) 3.4deg 4.2deg,
+      transparent 4.2deg 9.8deg
+    );
+  -webkit-mask: radial-gradient(circle, transparent 0 86%, #000 86.6% 100%);
+  mask: radial-gradient(circle, transparent 0 86%, #000 86.6% 100%);
+  filter:
+    drop-shadow(0.16rem 0.42rem 0.42rem hsl(24 38% 12% / 0.18))
+    drop-shadow(0 0 0.35rem hsl(39 72% 44% / 0.12));
+  animation: premium-spin 124s linear infinite;
+}
+
+.diagnostic-orbit-v2::after {
+  inset: 11%;
+  background:
+    repeating-conic-gradient(
+      from 2deg,
+      hsl(35 48% 34% / 0.5) 0deg 2.6deg,
+      transparent 2.6deg 8deg
+    );
+  -webkit-mask: radial-gradient(circle, transparent 0 89%, #000 89.4% 100%);
+  mask: radial-gradient(circle, transparent 0 89%, #000 89.4% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(38 52% 38% / 0.18),
+    0 0 0 1px hsl(26 34% 16% / 0.08);
+  animation: diagnostic-counter-rotation 150s linear infinite;
+}
+
+.diagnostic-gear {
+  filter:
+    drop-shadow(0.15rem 0.55rem 0.7rem hsl(24 45% 10% / 0.16))
+    drop-shadow(0 0 0.48rem hsl(40 65% 45% / 0.06));
+}
+
+.diagnostic-gear::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 65%,
+      hsl(30 26% 16% / 0.78) 65.5% 69%,
+      hsl(38 52% 30% / 0.22) 69.5% 74%,
+      hsl(39 58% 38% / 0.38) 74.5% 88%,
+      hsl(42 66% 54% / 0.48) 88.5% 92%,
+      hsl(25 36% 15% / 0.72) 92.5% 95%,
+      hsl(39 60% 39% / 0.5) 95.5% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(41 70% 58% / 0.18),
+    inset 0 0 1.8rem hsl(24 48% 10% / 0.12),
+    0 0 0 1px hsl(24 35% 12% / 0.22);
+}
+
+.diagnostic-gear-outer::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 66%,
+      hsl(27 24% 14% / 0.82) 66.5% 70%,
+      hsl(40 48% 29% / 0.22) 70.5% 75%,
+      hsl(39 56% 36% / 0.34) 75.5% 87%,
+      hsl(43 68% 52% / 0.42) 87.5% 91.5%,
+      hsl(26 38% 14% / 0.74) 92% 95%,
+      hsl(39 58% 36% / 0.46) 95.5% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(41 70% 58% / 0.16),
+    inset 0 0 2rem hsl(24 48% 10% / 0.15),
+    0 0 0 1px hsl(26 36% 14% / 0.24);
+}
+
+.diagnostic-gear-inner {
+  border-color: hsl(39 62% 44% / 0.62);
+  filter:
+    saturate(1.08)
+    brightness(0.98)
+    drop-shadow(0.18rem 0.62rem 0.72rem hsl(24 45% 10% / 0.22))
+    drop-shadow(0 0 0.4rem hsl(41 74% 52% / 0.09));
+  box-shadow:
+    inset 0 0 0 1px hsl(44 78% 63% / 0.18),
+    inset 0 0 1.05rem hsl(25 40% 12% / 0.12),
+    0 0 0 1px hsl(24 42% 12% / 0.24),
+    0 0.42rem 0.8rem hsl(24 45% 10% / 0.18);
+}
+
+.diagnostic-gear-inner::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute;
+  z-index: 0;
+  inset: -0.32rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      transparent 0 83%,
+      hsl(24 42% 12% / 0.22) 83.5% 86%,
+      hsl(42 70% 52% / 0.2) 86.5% 89%,
+      transparent 89.5% 100%);
+  box-shadow:
+    0 0.3rem 0.52rem hsl(24 45% 10% / 0.14),
+    inset 0 0 0 1px hsl(42 70% 52% / 0.12);
+}
+
+.diagnostic-gear-spokes i {
+  width: 1rem;
+  border-color: hsl(31 38% 18% / 0.42);
+  background:
+    linear-gradient(90deg,
+      hsl(25 24% 13% / 0.88),
+      hsl(39 48% 29% / 0.34) 34%,
+      hsl(43 64% 46% / 0.58) 50%,
+      hsl(35 44% 24% / 0.38) 66%,
+      hsl(25 24% 13% / 0.88));
+  box-shadow:
+    inset 1px 0 0 hsl(46 72% 62% / 0.1),
+    inset -1px 0 0 hsl(20 40% 10% / 0.2),
+    0 0.18rem 0.3rem hsl(24 45% 10% / 0.1);
+}
+
+.diagnostic-gear-spokes i::after {
+  width: 0.36rem;
+  height: 0.36rem;
+  border: 1px solid hsl(25 38% 14% / 0.54);
+  background:
+    radial-gradient(circle at 35% 30%,
+      hsl(46 78% 65% / 0.68),
+      hsl(38 52% 35% / 0.76) 35%,
+      hsl(24 30% 14% / 0.96) 74%);
+  box-shadow:
+    0 0 0 1px hsl(18 32% 10% / 0.22),
+    0 0.12rem 0.22rem hsl(24 45% 10% / 0.18);
+}
+
+.diagnostic-gear-tooth::after {
+  border-color: hsl(28 36% 15% / 0.48);
+  background:
+    linear-gradient(180deg,
+      hsl(43 66% 50% / 0.52),
+      hsl(31 40% 22% / 0.78));
+  box-shadow:
+    inset 0 1px 0 hsl(49 76% 68% / 0.14),
+    0 0.12rem 0.22rem hsl(24 45% 10% / 0.12);
+}
+
+.diagnostic-gear-tooth::before {
+  border-color: hsl(26 38% 14% / 0.48);
+  background:
+    linear-gradient(90deg,
+      hsl(25 34% 17% / 0.95),
+      hsl(39 62% 39% / 0.88) 33%,
+      hsl(45 70% 54% / 0.9) 50%,
+      hsl(37 56% 32% / 0.9) 68%,
+      hsl(25 34% 17% / 0.95));
+  box-shadow:
+    inset 0 -0.18rem 0 hsl(19 35% 10% / 0.22),
+    inset 0 1px 0 hsl(49 82% 69% / 0.12),
+    0 0.16rem 0.3rem hsl(24 45% 10% / 0.14);
+}
+
+.diagnostic-gear-inner .diagnostic-gear-tooth::before {
+  border-color: hsl(28 42% 16% / 0.52);
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::before {
+  background:
+    linear-gradient(90deg,
+      hsl(28 44% 20% / 0.96),
+      hsl(43 78% 53%) 42%,
+      hsl(48 86% 61%) 58%,
+      hsl(28 44% 20% / 0.96));
+  box-shadow:
+    0 0 0 0.18rem hsl(42 75% 50% / 0.08),
+    0 0 0.8rem hsl(42 72% 48% / 0.24);
+}
+
+.diagnostic-core {
+  border-color: hsl(38 52% 34% / 0.56);
+  background:
+    radial-gradient(circle at 35% 28%, hsl(41 62% 42% / 0.13), transparent 36%),
+    hsl(var(--background) / 0.9);
+  box-shadow:
+    0 0.34rem 0.8rem hsl(24 45% 10% / 0.16),
+    0 0 0 0.18rem hsl(34 44% 22% / 0.16),
+    inset 0 0 1.8rem hsl(39 54% 36% / 0.08);
+}
+
+.diagnostic-core-label {
+  color: hsl(41 65% 44%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node {
+  border-color: hsl(38 48% 31% / 0.34);
+  background:
+    linear-gradient(180deg, hsl(var(--background) / 0.9), hsl(36 28% 18% / 0.08));
+  box-shadow:
+    0 0.16rem 0.38rem hsl(24 45% 10% / 0.12),
+    inset 0 1px 0 hsl(45 70% 61% / 0.08);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active {
+  border-color: hsl(42 76% 48% / 0.76);
+  background:
+    linear-gradient(180deg, hsl(44 78% 52% / 0.17), hsl(35 48% 25% / 0.08)),
+    hsl(var(--background) / 0.92);
+  box-shadow:
+    0 0.2rem 0.5rem hsl(24 45% 10% / 0.16),
+    0 0 0 1px hsl(42 72% 48% / 0.12),
+    inset 0 1px 0 hsl(48 85% 66% / 0.12);
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-spokes i {
+    width: 0.72rem;
+  }
+
+  .diagnostic-gear-tooth::before {
+    box-shadow:
+      inset 0 -0.12rem 0 hsl(19 35% 10% / 0.18),
+      0 0.1rem 0.2rem hsl(24 45% 10% / 0.12);
+  }
+}
