@@ -415,7 +415,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               <p className="report-intro-copy">{governanceConclusion}</p>
             </>}
             <div className="report-governance-significance">
-              <h4 className="report-substantive-label">Governance significance</h4>
+              <div className="vigil-case-subheading">
+                <h3>Governance significance</h3>
+              </div>
               <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
             </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
