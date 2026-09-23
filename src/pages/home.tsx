@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion, useReducedMotion } from "framer-motion";
@@ -99,13 +99,14 @@ function IncidentTicker() {
   );
 }
 
-function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer" | "inner"; teeth: number; rotation: number; reduceMotion: boolean }) {
+function MechanicalGear({ size, teeth, rotation, reduceMotion, onArrive }: { size: "outer" | "inner"; teeth: number; rotation: number; reduceMotion: boolean; onArrive?: () => void }) {
   return (
     <motion.div
       className={`diagnostic-gear diagnostic-gear-${size}`}
       aria-hidden="true"
       animate={{ rotate: rotation }}
       transition={{ duration: reduceMotion ? 0 : 1.62, ease: [0.22, 1, 0.36, 1] }}
+      onAnimationComplete={onArrive}
     >
       <span className="diagnostic-gear-spokes">
         {Array.from({ length: 6 }).map((_, index) => (
@@ -126,33 +127,21 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer"
 
 function PremiumHero() {
   const [gearTurn, setGearTurn] = useState(0);
-  const [revealedStage, setRevealedStage] = useState<number | null>(0);
-  const didMountStage = useRef(false);
+  const [activeStage, setActiveStage] = useState<number | null>(0);
   const reduceMotion = useReducedMotion();
   const targetStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
 
   useEffect(() => {
-    if (!didMountStage.current) {
-      didMountStage.current = true;
-      setRevealedStage(targetStage);
-      return;
-    }
-    if (reduceMotion) {
-      setRevealedStage(targetStage);
-      return;
-    }
-    setRevealedStage(null);
-    const revealTimer = window.setTimeout(() => setRevealedStage(targetStage), 1840);
-    return () => window.clearTimeout(revealTimer);
-  }, [targetStage, reduceMotion]);
-
-  useEffect(() => {
     if (reduceMotion) return;
-    const timer = window.setInterval(() => setGearTurn((current) => current + 1), 5200);
+    const timer = window.setInterval(() => {
+      setActiveStage(null);
+      setGearTurn((current) => current + 1);
+    }, 5200);
     return () => window.clearInterval(timer);
   }, [reduceMotion]);
 
   function activateStage(index: number) {
+    setActiveStage(null);
     setGearTurn((current) => {
       const currentIndex = ((current % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
       const forwardSteps = (index - currentIndex + diagnosticStages.length) % diagnosticStages.length;
@@ -176,7 +165,12 @@ function PremiumHero() {
         </motion.div>
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
-          <MechanicalGear size="outer" teeth={64} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} />
+          <MechanicalGear size="outer" teeth={64} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} onArrive={() => setActiveStage(targetStage)} />
+          <span className="diagnostic-outer-spokes" aria-hidden="true">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <i key={index} style={{ "--outer-spoke-angle": `${index * 60}deg` } as CSSProperties} />
+            ))}
+          </span>
           <span className="diagnostic-instrument-web" aria-hidden="true">
             {Array.from({ length: 8 }).map((_, index) => (
               <i key={index} style={{ "--web-angle": `${index * 45 + (index % 3 === 0 ? 0.8 : index % 3 === 1 ? -0.45 : 0.2)}deg` } as CSSProperties} />
@@ -189,7 +183,7 @@ function PremiumHero() {
           </div>
 
           {diagnosticStages.map((stage, index) => {
-            const active = index === revealedStage;
+            const active = index === activeStage;
             return (
               <button
                 type="button"
