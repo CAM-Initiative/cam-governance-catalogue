@@ -112,6 +112,11 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer"
           <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
         ))}
       </span>
+      {size === "outer" && <span className="diagnostic-gear-web">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <i key={index} style={{ "--web-angle": `${index * 60}deg` } as CSSProperties} />
+        ))}
+      </span>}
       {Array.from({ length: teeth }).map((_, index) => (
         <span
           key={index}
