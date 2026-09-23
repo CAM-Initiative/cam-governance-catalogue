@@ -106,7 +106,11 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion, onArrive }: { siz
       aria-hidden="true"
       animate={{ rotate: rotation }}
       transition={{ duration: reduceMotion ? 0 : 1.62, ease: [0.22, 1, 0.36, 1] }}
-      onAnimationComplete={onArrive}
+      onUpdate={(latest) => {
+        if (!onArrive) return;
+        const currentRotation = typeof latest.rotate === "number" ? latest.rotate : Number(latest.rotate ?? 0);
+        if (Math.abs(currentRotation - rotation) <= 3) onArrive();
+      }}
     >
       <span className="diagnostic-gear-spokes">
         {Array.from({ length: 6 }).map((_, index) => (
