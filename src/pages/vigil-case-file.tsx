@@ -51,6 +51,10 @@ type IncidentArtefact = {
   caption?: string;
 };
 
+function isVideoArtefact(artefact: IncidentArtefact) {
+  return artefact.mediaType?.toLowerCase().startsWith("video/") ?? false;
+}
+
 type TaxonomyEvidenceReference = {
   key: string;
   title: string;
@@ -497,9 +501,20 @@ export default function VigilCaseFile() {
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
         {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
           {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
-            <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
-              <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
-            </a>
+            {isVideoArtefact(artefact)
+              ? <video
+                  className="vigil-incident-artefact-video"
+                  controls
+                  preload="metadata"
+                  playsInline
+                  aria-label={artefact.altText ?? artefact.title ?? "Incident source video"}
+                >
+                  <source src={artefact.renderUrl} type={artefact.mediaType} />
+                  Your browser cannot play this video. <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer">Open the incident source video.</a>
+                </video>
+              : <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
+                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
+                </a>}
             {(artefact.title || artefact.sourceUrl) && <figcaption>
               {artefact.title && <strong>{artefact.title}</strong>}
               {(() => {

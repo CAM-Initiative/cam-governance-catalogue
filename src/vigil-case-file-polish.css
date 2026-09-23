@@ -456,6 +456,18 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   margin: 0 auto;
 }
 
+.vigil-case-file-page .vigil-incident-artefact-video {
+  display: block;
+  width: min(100%, 54rem);
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: 0.65rem;
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
 .vigil-case-file-page .vigil-incident-artefact figcaption {
   display: flex;
   flex-wrap: wrap;
