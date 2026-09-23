@@ -176,13 +176,13 @@ function PremiumHero() {
         </motion.div>
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
-          <MechanicalGear size="outer" teeth={30} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} />
+          <MechanicalGear size="outer" teeth={64} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} />
           <span className="diagnostic-instrument-web" aria-hidden="true">
             {Array.from({ length: 8 }).map((_, index) => (
               <i key={index} style={{ "--web-angle": `${index * 45 + (index % 3 === 0 ? 0.8 : index % 3 === 1 ? -0.45 : 0.2)}deg` } as CSSProperties} />
             ))}
           </span>
-          <MechanicalGear size="inner" teeth={22} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
+          <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What went wrong?</strong>
