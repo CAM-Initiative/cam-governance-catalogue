@@ -17,8 +17,8 @@
   z-index: 1;
   filter:
     saturate(0.82)
-    brightness(0.94)
-    drop-shadow(0 0.42rem 0.72rem hsl(var(--foreground) / 0.035));
+    brightness(0.95)
+    drop-shadow(0.12rem 0.34rem 0.46rem hsl(var(--foreground) / 0.026));
 }
 
 .diagnostic-gear-inner {
