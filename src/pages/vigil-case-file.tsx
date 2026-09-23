@@ -633,13 +633,17 @@ export default function VigilCaseFile() {
   </>;
 
     if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
-      {governanceConclusion && <section className="vigil-diagnosis-definition">
-        <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
-        <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
-      </section>}
-      <section className="vigil-governance-significance-card">
-        <h4 className="vigil-substantive-label">Governance significance</h4>
-        <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+      <section className="vigil-diagnosis-definition vigil-conclusion-content">
+        {governanceConclusion && <>
+          <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
+          <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
+        </>}
+        <div className="vigil-conclusion-governance-significance">
+          <div className="vigil-case-subheading">
+            <h3>Governance significance</h3>
+          </div>
+          <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+        </div>
       </section>
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
 
