@@ -1,0 +1,284 @@
+/* Experimental planetary diagnostic mechanism.
+   This branch replaces the two impossible concentric external gears with one fixed
+   internal ring gear, a driven sun gear and three meshing planet gears on a carrier. */
+
+.diagnostic-orbit-v2::before {
+  inset: 2.5%;
+  border: 1px solid hsl(var(--primary) / 0.15);
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  filter: none;
+  animation: none;
+}
+
+.diagnostic-orbit-v2::after {
+  inset: 8.5%;
+  border: 1px solid hsl(var(--primary) / 0.1);
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  box-shadow: inset 0 0 2.4rem hsl(var(--primary) / 0.035);
+  animation: none;
+}
+
+.planetary-mechanism {
+  position: absolute;
+  z-index: 2;
+  inset: 10%;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: drop-shadow(0 0.55rem 0.7rem hsl(var(--foreground) / 0.055));
+}
+
+.planetary-ring {
+  position: absolute;
+  inset: 0;
+  border: 0.52rem solid hsl(var(--primary) / 0.34);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      transparent 0 76%,
+      hsl(var(--background) / 0.86) 76.5% 82%,
+      hsl(var(--primary) / 0.08) 82.5% 86%,
+      transparent 86.5% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.22),
+    inset 0 0 1.35rem hsl(var(--foreground) / 0.055),
+    0 0 0 1px hsl(var(--background) / 0.65);
+}
+
+/* Inward-facing ring teeth: this is a fixed ring gear, not a second external cog. */
+.planetary-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from -2deg,
+      hsl(var(--primary) / 0.58) 0deg 3.5deg,
+      hsl(var(--primary) / 0.13) 3.5deg 4.4deg,
+      transparent 4.4deg 8.57deg
+    );
+  -webkit-mask: radial-gradient(circle, transparent 0 78%, #000 78.5% 88%, transparent 88.5%);
+  mask: radial-gradient(circle, transparent 0 78%, #000 78.5% 88%, transparent 88.5%);
+  opacity: 0.78;
+}
+
+.planetary-ring-track {
+  position: absolute;
+  inset: 13%;
+  border: 1px solid hsl(var(--primary) / 0.15);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 0.35rem hsl(var(--background) / 0.34),
+    0 0 0 1px hsl(var(--primary) / 0.04);
+}
+
+.planetary-ring > i {
+  display: none;
+}
+
+.planetary-wheel {
+  position: absolute;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      hsl(var(--background) / 0.96) 0 28%,
+      hsl(var(--primary) / 0.16) 29% 40%,
+      hsl(var(--background) / 0.9) 41% 58%,
+      hsl(var(--primary) / 0.29) 59% 76%,
+      hsl(var(--primary) / 0.5) 77% 100%);
+  border: 1px solid hsl(var(--primary) / 0.42);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--background) / 0.62),
+    inset 0 0 0.7rem hsl(var(--foreground) / 0.055),
+    0 0.24rem 0.5rem hsl(var(--foreground) / 0.09);
+}
+
+.planetary-wheel-hub {
+  position: absolute;
+  z-index: 3;
+  inset: 36%;
+  border: 1px solid hsl(var(--primary) / 0.38);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%,
+      hsl(var(--primary) / 0.28),
+      hsl(var(--background) / 0.92) 52%,
+      hsl(var(--primary) / 0.16));
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--background) / 0.4),
+    0 0.08rem 0.2rem hsl(var(--foreground) / 0.08);
+}
+
+.planetary-wheel-tooth {
+  position: absolute;
+  z-index: 2;
+  inset: 0 auto 0 50%;
+  width: 0.5rem;
+  transform: translateX(-50%) rotate(var(--tooth-angle));
+  transform-origin: 50% 50%;
+}
+
+.planetary-wheel-tooth::before {
+  content: "";
+  position: absolute;
+  top: -0.48rem;
+  left: 50%;
+  width: 0.72rem;
+  height: 0.78rem;
+  transform: translateX(-50%);
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+  border: 1px solid hsl(var(--primary) / 0.4);
+  border-radius: 0.06rem 0.06rem 0.12rem 0.12rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--primary) / 0.28),
+      hsl(var(--primary) / 0.68) 46%,
+      hsl(var(--primary) / 0.36));
+  box-shadow:
+    inset 0 -0.14rem 0 hsl(var(--background) / 0.16),
+    0 0.14rem 0.22rem hsl(var(--foreground) / 0.07);
+}
+
+.planetary-sun {
+  z-index: 4;
+  width: 31%;
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  transform-origin: 50% 50%;
+  margin-top: -15.5%;
+  margin-left: -15.5%;
+}
+
+.planetary-sun .planetary-wheel-tooth::before {
+  top: -0.42rem;
+  width: 0.62rem;
+  height: 0.68rem;
+}
+
+.planetary-carrier {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.planetary-carrier::before {
+  content: "";
+  position: absolute;
+  inset: 32%;
+  border: 1px solid hsl(var(--primary) / 0.16);
+  border-radius: 50%;
+  background: hsl(var(--background) / 0.16);
+  box-shadow: 0 0 0 0.18rem hsl(var(--background) / 0.16);
+}
+
+.planetary-carrier-arm,
+.planetary-planet-station {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--planet-angle));
+  transform-origin: 50% 50%;
+}
+
+.planetary-carrier-arm::before {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  width: 0.72rem;
+  height: 35%;
+  transform: translateX(-50%);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  border: 1px solid hsl(var(--primary) / 0.1);
+  border-radius: 0.18rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.58),
+      hsl(var(--primary) / 0.13) 48%,
+      hsl(var(--background) / 0.58));
+  opacity: 0.75;
+}
+
+.planetary-bearing {
+  position: absolute;
+  top: 13.8%;
+  left: 50%;
+  width: 0.68rem;
+  height: 0.68rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(var(--primary) / 0.42);
+  border-radius: 50%;
+  background: hsl(var(--background));
+  box-shadow:
+    inset 0 0 0 0.15rem hsl(var(--primary) / 0.12),
+    0 0.12rem 0.24rem hsl(var(--foreground) / 0.08);
+}
+
+.planetary-planet {
+  width: 19%;
+  aspect-ratio: 1;
+  top: 9.5%;
+  left: 50%;
+  margin-left: -9.5%;
+}
+
+.planetary-planet .planetary-wheel-tooth::before {
+  top: -0.33rem;
+  width: 0.48rem;
+  height: 0.54rem;
+  border-color: hsl(var(--primary) / 0.34);
+}
+
+.planetary-planet .planetary-wheel-hub {
+  inset: 34%;
+}
+
+/* Contact depth at the three mesh points makes the assembly read as one machine. */
+.planetary-planet {
+  filter: drop-shadow(0 0.18rem 0.18rem hsl(var(--foreground) / 0.08));
+}
+
+.diagnostic-core {
+  z-index: 8;
+  inset: 37.5%;
+  box-shadow:
+    0 0.32rem 0.8rem hsl(var(--foreground) / 0.11),
+    0 0 0 0.22rem hsl(var(--background) / 0.74),
+    0 0 2.2rem hsl(var(--primary) / 0.09),
+    inset 0 0 1.6rem hsl(var(--primary) / 0.04);
+}
+
+@media (max-width: 720px) {
+  .planetary-mechanism {
+    inset: 12%;
+  }
+
+  .planetary-wheel-tooth::before {
+    top: -0.3rem;
+    width: 0.46rem;
+    height: 0.54rem;
+  }
+
+  .planetary-planet .planetary-wheel-tooth::before {
+    top: -0.22rem;
+    width: 0.34rem;
+    height: 0.4rem;
+  }
+
+  .planetary-carrier-arm::before {
+    width: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planetary-mechanism *,
+  .planetary-mechanism *::before,
+  .planetary-mechanism *::after {
+    transition: none !important;
+  }
+}
