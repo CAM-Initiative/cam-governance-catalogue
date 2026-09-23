@@ -1,0 +1,139 @@
+/* Tactile scientific-instrument gear experiment.
+   The mechanism inherits the tiny physical irregularities of VIGIL's label-maker
+   taxonomy language: precise, handled, and human-made without looking distressed. */
+
+.diagnostic-instrument-web {
+  position: absolute;
+  z-index: 2;
+  inset: 12%;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle,
+      transparent 0 61.5%,
+      hsl(var(--background) / 0.82) 62% 66%,
+      hsl(var(--primary) / 0.055) 66.5% 80%,
+      hsl(var(--primary) / 0.11) 80.5% 84%,
+      hsl(var(--background) / 0.76) 84.5% 87%,
+      transparent 87.5% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.10),
+    inset 0 0 0.9rem hsl(var(--foreground) / 0.035);
+  -webkit-mask: radial-gradient(circle, transparent 0 60.5%, #000 61.5% 88%, transparent 89%);
+  mask: radial-gradient(circle, transparent 0 60.5%, #000 61.5% 88%, transparent 89%);
+}
+
+.diagnostic-instrument-web > i {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--web-angle));
+  transform-origin: 50% 50%;
+}
+
+.diagnostic-instrument-web > i::before {
+  content: "";
+  position: absolute;
+  top: 5.4%;
+  left: 50%;
+  width: 8.8%;
+  height: 16.5%;
+  transform: translateX(-50%);
+  border: 1px solid hsl(var(--primary) / 0.14);
+  border-radius: 48% 52% 46% 54% / 62% 58% 42% 38%;
+  background:
+    linear-gradient(180deg,
+      hsl(var(--background) / 0.98),
+      hsl(var(--background) / 0.84));
+  box-shadow:
+    inset 0.08rem 0.1rem 0.16rem hsl(var(--foreground) / 0.05),
+    inset -0.06rem -0.05rem 0.1rem hsl(var(--primary) / 0.035),
+    0 0 0 0.06rem hsl(var(--primary) / 0.025);
+}
+
+/* Tiny dimensional differences make the apertures feel machined by a real process,
+   not procedurally cloned. */
+.diagnostic-instrument-web > i:nth-child(2n)::before {
+  width: 8.3%;
+  height: 17.1%;
+}
+.diagnostic-instrument-web > i:nth-child(3n)::before {
+  top: 5.1%;
+  width: 9.1%;
+}
+.diagnostic-instrument-web > i:nth-child(5)::before {
+  height: 16%;
+  border-radius: 52% 48% 50% 46% / 58% 62% 38% 42%;
+}
+
+.diagnostic-instrument-web > i::after {
+  content: "";
+  position: absolute;
+  top: 2.65%;
+  left: 50%;
+  width: 0.22rem;
+  height: 0.22rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(var(--primary) / 0.24);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 32%,
+      hsl(var(--primary) / 0.28),
+      hsl(var(--background) / 0.92) 62%,
+      hsl(var(--primary) / 0.08));
+  box-shadow: 0 0.05rem 0.1rem hsl(var(--foreground) / 0.06);
+}
+
+.diagnostic-instrument-web > i:nth-child(odd)::after {
+  transform: translateX(-50%) translateY(0.04rem);
+}
+
+/* Keep the wheels familiar, but introduce tiny tooth-to-tooth variance like a
+   calibrated object that has been fabricated and handled rather than vector-perfect. */
+.diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(4n + 1)::before {
+  width: 0.93rem;
+  opacity: 0.9;
+}
+.diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(6n + 3)::before {
+  top: -0.9rem;
+}
+.diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(5n + 2)::before {
+  width: 0.65rem;
+}
+.diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(7n + 4)::before {
+  top: -0.71rem;
+}
+
+/* Quiet, precise witness marks: not wear, not scratches, just evidence of use. */
+.diagnostic-gear-outer .diagnostic-gear-spokes i:nth-child(2)::after,
+.diagnostic-gear-outer .diagnostic-gear-spokes i:nth-child(5)::after {
+  transform: translateX(-50%) translateY(0.04rem);
+  opacity: 0.7;
+}
+
+.diagnostic-gear-inner .diagnostic-gear-spokes i:nth-child(3)::after {
+  opacity: 0.72;
+  box-shadow:
+    0 0 0 1px hsl(var(--background) / 0.22),
+    0.06rem 0.05rem 0.16rem hsl(var(--foreground) / 0.06);
+}
+
+.diagnostic-gear-outer { z-index: 1; }
+.diagnostic-gear-inner { z-index: 3; }
+.diagnostic-core { z-index: 6; }
+
+@media (max-width: 720px) {
+  .diagnostic-instrument-web {
+    inset: 13%;
+  }
+
+  .diagnostic-instrument-web > i::before {
+    top: 6%;
+    width: 8%;
+    height: 15%;
+  }
+
+  .diagnostic-instrument-web > i::after {
+    width: 0.18rem;
+    height: 0.18rem;
+  }
+}
