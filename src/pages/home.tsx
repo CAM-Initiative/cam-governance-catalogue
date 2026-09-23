@@ -9,26 +9,6 @@ import "@/home-premium.css";
 import "@/home-premium-v2.css";
 import "@/home-premium-v3.css";
 
-const REGISTRY_IMAGE_BASE = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images";
-const HERO_IMAGES = {
-  light: {
-    cam: `${REGISTRY_IMAGE_BASE}/CAM_HERO.png`,
-    vigil: `${REGISTRY_IMAGE_BASE}/VIGIL_HERO.png`,
-  },
-  dark: {
-    cam: `${REGISTRY_IMAGE_BASE}/CAM_HERO_DARKMODE.png`,
-    vigil: `${REGISTRY_IMAGE_BASE}/VIGIL_HERO_DARKMODE.png`,
-  },
-} as const;
-
-type HeroTheme = keyof typeof HERO_IMAGES;
-type IncidentTickerItem = { id: string; title: string };
-type TaxonomySticker = { classId: string; name: string };
-
-function currentHeroTheme(): HeroTheme {
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-}
-
 const reveal = {
   initial: { opacity: 0, y: 34 },
   whileInView: { opacity: 1, y: 0 },
@@ -339,45 +319,13 @@ function GovernanceExplorerSection() {
   );
 }
 
-function IdentityBridge({ heroImages }: { heroImages: typeof HERO_IMAGES[HeroTheme] }) {
-  return (
-    <section className="identity-bridge" aria-labelledby="identity-bridge-heading">
-      <motion.div className="identity-bridge-copy narrative-section-copy" {...reveal}>
-        <p className="premium-eyebrow narrative-kicker">A connected governance architecture</p>
-        <h2 id="identity-bridge-heading">VIGIL diagnoses the failure. <span>CAM connects the diagnosis to governance and repair.</span></h2>
-        <p>Evidence becomes useful when it can move into governance design. The CAM Initiative connects incident analysis, standards and policy work with the CAELESTIS runtime framework.</p>
-      </motion.div>
-      <motion.div className="identity-bridge-art" {...reveal}>
-        <a className="identity-mark identity-mark-link" href="/observatory/" aria-label="Explore the VIGIL Observatory">
-          <img src={heroImages.vigil} alt="VIGIL Observatory" />
-        </a>
-        <div className="identity-pulse" aria-hidden="true"><span /><span /><span /></div>
-        <a className="identity-mark identity-mark-link" href="/about/" aria-label="Learn about the CAM Initiative">
-          <img src={heroImages.cam} alt="CAM Initiative" />
-        </a>
-      </motion.div>
-    </section>
-  );
-}
-
 export default function Home() {
-  const [heroTheme, setHeroTheme] = useState<HeroTheme>(() => currentHeroTheme());
-
-  useEffect(() => {
-    const syncTheme = () => setHeroTheme(currentHeroTheme());
-    window.addEventListener("cam-theme-change", syncTheme);
-    return () => window.removeEventListener("cam-theme-change", syncTheme);
-  }, []);
-
-  const heroImages = HERO_IMAGES[heroTheme];
-
   return (
     <Shell>
       <main className="home-page premium-home">
         <PremiumHero />
         <PatternField />
         <GovernanceExplorerSection />
-        <IdentityBridge heroImages={heroImages} />
       </main>
     </Shell>
   );
