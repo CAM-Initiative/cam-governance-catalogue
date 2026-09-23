@@ -137,3 +137,50 @@
     height: 0.18rem;
   }
 }
+
+
+/* Indexed inward marker: a single larger tooth gives the eye a physical pointer
+   that travels with the outer wheel and arrives at the next stage before the label opens. */
+.diagnostic-gear-index-pointer {
+  position: absolute;
+  z-index: 8;
+  top: 0.72rem;
+  left: 50%;
+  width: 0.9rem;
+  height: 1.85rem;
+  transform: translateX(-50%);
+  clip-path: polygon(18% 0, 82% 0, 68% 42%, 50% 100%, 32% 42%);
+  border: 1px solid hsl(var(--primary) / 0.38);
+  background:
+    linear-gradient(180deg,
+      hsl(var(--background) / 0.86) 0 8%,
+      hsl(var(--primary) / 0.38) 9% 42%,
+      hsl(var(--primary) / 0.62) 58%,
+      hsl(var(--primary) / 0.22) 100%);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--background) / 0.42),
+    0 0.16rem 0.28rem hsl(var(--foreground) / 0.09);
+  transform-origin: 50% 0;
+}
+
+.diagnostic-gear-index-pointer::after {
+  content: "";
+  position: absolute;
+  top: 0.22rem;
+  left: 50%;
+  width: 0.22rem;
+  height: 0.22rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: 50%;
+  background: hsl(var(--background) / 0.82);
+}
+
+/* Keep the pointer crisp but not theatrical. */
+@media (max-width: 720px) {
+  .diagnostic-gear-index-pointer {
+    top: 0.54rem;
+    width: 0.68rem;
+    height: 1.42rem;
+  }
+}
