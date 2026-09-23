@@ -100,6 +100,11 @@ export async function listVigilBranches(fetcher: FetchLike = fetch): Promise<Vig
 
 export async function resolveSelectedVigilSource(fetcher: FetchLike = fetch): Promise<ResolvedVigilSource> {
   const branch = getSelectedVigilBranch();
+  if (branch === VIGIL_DEFAULT_BRANCH) {
+    const source = { branch, ref: branch };
+    lastResolvedSource = source;
+    return source;
+  }
   if (resolvedSourcePromise && resolvedSourceBranch === branch) return resolvedSourcePromise;
 
   resolvedSourceBranch = branch;

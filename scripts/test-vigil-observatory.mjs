@@ -17,9 +17,15 @@ async function loadModules() {
   const tempDir = await mkdtemp(join(tmpdir(), "vigil-incident-test-"));
   const config = JSON.parse(await readFile(resolve(repoRoot, "src/config/registrySources.json"), "utf8"));
   const registryPath = join(tempDir, "registry.mjs");
+  const branchSourcePath = join(tempDir, "vigilBranchSource.mjs");
   const displayPath = join(tempDir, "display.mjs");
   const presentationPath = join(tempDir, "presentation.mjs");
-  await transpile("src/lib/vigilRegistry.ts", registryPath, (source) => source.replace('import registrySources from "@/config/registrySources.json";', `const registrySources = ${JSON.stringify(config)};`).replace(/import\.meta\.env\.BASE_URL/g, '"/"'));
+  await transpile("src/lib/vigilBranchSource.ts", branchSourcePath, (source) => source
+    .replace('import registrySources from "@/config/registrySources.json";', `const registrySources = ${JSON.stringify(config)};`));
+  await transpile("src/lib/vigilRegistry.ts", registryPath, (source) => source
+    .replace('import registrySources from "@/config/registrySources.json";', `const registrySources = ${JSON.stringify(config)};`)
+    .replace('from "@/lib/vigilBranchSource";', 'from "./vigilBranchSource.mjs";')
+    .replace(/import\.meta\.env\.BASE_URL/g, '"/"'));
   await transpile("src/lib/vigilPublicDisplay.ts", displayPath);
   await transpile("src/lib/vigilPresentation.ts", presentationPath, (source) => source
     .replace('import { githubBlobUrlForRecord, rawUrlForRecord, type UnknownRecord } from "@/lib/vigilRegistry";', 'import { githubBlobUrlForRecord, rawUrlForRecord } from "./registry.mjs";')
