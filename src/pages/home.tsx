@@ -99,27 +99,56 @@ function IncidentTicker() {
   );
 }
 
-function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer" | "inner"; teeth: number; rotation: number; reduceMotion: boolean }) {
+function GearWheel({ className, teeth, rotation, reduceMotion }: { className: string; teeth: number; rotation: number; reduceMotion: boolean }) {
   return (
     <motion.div
-      className={`diagnostic-gear diagnostic-gear-${size}`}
+      className={`planetary-wheel ${className}`}
       aria-hidden="true"
       animate={{ rotate: rotation }}
       transition={{ duration: reduceMotion ? 0 : 1.35, ease: [0.22, 1, 0.36, 1] }}
     >
-      <span className="diagnostic-gear-spokes">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
-        ))}
-      </span>
+      <span className="planetary-wheel-hub" />
       {Array.from({ length: teeth }).map((_, index) => (
         <span
           key={index}
-          className={`diagnostic-gear-tooth${size === "outer" && index === 0 ? " is-index-tooth" : ""}`}
+          className="planetary-wheel-tooth"
           style={{ "--tooth-angle": `${(360 / teeth) * index}deg` } as CSSProperties}
         />
       ))}
     </motion.div>
+  );
+}
+
+function PlanetaryMechanism({ turn, reduceMotion }: { turn: number; reduceMotion: boolean }) {
+  const planets = [0, 120, 240] as const;
+  return (
+    <div className="planetary-mechanism" aria-hidden="true">
+      <div className="planetary-ring">
+        <span className="planetary-ring-track" />
+        {Array.from({ length: 42 }).map((_, index) => (
+          <i key={index} style={{ "--ring-angle": `${(360 / 42) * index}deg` } as CSSProperties} />
+        ))}
+      </div>
+
+      <motion.div
+        className="planetary-carrier"
+        animate={{ rotate: turn * 20 }}
+        transition={{ duration: reduceMotion ? 0 : 1.35, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {planets.map((angle) => (
+          <span key={angle} className="planetary-carrier-arm" style={{ "--planet-angle": `${angle}deg` } as CSSProperties}>
+            <span className="planetary-bearing" />
+          </span>
+        ))}
+        {planets.map((angle) => (
+          <span key={`planet-${angle}`} className="planetary-planet-station" style={{ "--planet-angle": `${angle}deg` } as CSSProperties}>
+            <GearWheel className="planetary-planet" teeth={12} rotation={turn * -80} reduceMotion={reduceMotion} />
+          </span>
+        ))}
+      </motion.div>
+
+      <GearWheel className="planetary-sun" teeth={18} rotation={turn * 60} reduceMotion={reduceMotion} />
+    </div>
   );
 }
 
@@ -158,8 +187,7 @@ function PremiumHero() {
         </motion.div>
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
-          <MechanicalGear size="outer" teeth={30} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} />
-          <MechanicalGear size="inner" teeth={22} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
+          <PlanetaryMechanism turn={gearTurn} reduceMotion={Boolean(reduceMotion)} />
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What went wrong?</strong>
