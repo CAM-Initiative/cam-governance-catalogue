@@ -787,23 +787,19 @@ export default function VigilCaseFile() {
       <div className="vigil-case-file-title-block">
         <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
+        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button vigil-case-hero-report-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Incident context">
         <p className="vigil-case-context-label">Incident context</p>
         <dl className="vigil-case-context-grid">
+          <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
           <Field label="Occurred" value={occurred} />
           <Field label="Jurisdiction" value={jurisdiction} />
-          <Field label="Sector" value={sector} />
           <Field label="Environment" value={environmentLabel} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification} />
+          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
         </dl>
-        <div className="vigil-case-record-strip" aria-label="Case File record identity">
-          <span>{incident ? compactId(incident.id) : compactId(state.sourceId)}</span>
-          {incident?.record_version && <span>Version {incident.record_version}</span>}
-          <span>{isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification}</span>
-          {hasMixedExecution && <span>Mixed execution</span>}
-        </div>
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </aside>
     </header>
 
@@ -862,6 +858,10 @@ export default function VigilCaseFile() {
           className={activeStage === stage.id ? "is-active" : undefined}
           onClick={() => setActiveStage(stage.id)}
         ><span>{stage.number}</span>{stage.label}</button>)}
+        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab" aria-label="Open full report">
+          <FileText aria-hidden="true" />
+          Full report
+        </Link>
       </div>
     </nav>
 
