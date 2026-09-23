@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion, useReducedMotion } from "framer-motion";
@@ -105,13 +105,14 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer"
       className={`diagnostic-gear diagnostic-gear-${size}`}
       aria-hidden="true"
       animate={{ rotate: rotation }}
-      transition={{ duration: reduceMotion ? 0 : 1.35, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: reduceMotion ? 0 : 1.62, ease: [0.22, 1, 0.36, 1] }}
     >
       <span className="diagnostic-gear-spokes">
         {Array.from({ length: 6 }).map((_, index) => (
           <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
         ))}
       </span>
+      {size === "outer" && <span className="diagnostic-gear-index-pointer" />}
       {Array.from({ length: teeth }).map((_, index) => (
         <span
           key={index}
@@ -125,8 +126,25 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion }: { size: "outer"
 
 function PremiumHero() {
   const [gearTurn, setGearTurn] = useState(0);
+  const [revealedStage, setRevealedStage] = useState<number | null>(0);
+  const didMountStage = useRef(false);
   const reduceMotion = useReducedMotion();
-  const activeStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
+  const targetStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
+
+  useEffect(() => {
+    if (!didMountStage.current) {
+      didMountStage.current = true;
+      setRevealedStage(targetStage);
+      return;
+    }
+    if (reduceMotion) {
+      setRevealedStage(targetStage);
+      return;
+    }
+    setRevealedStage(null);
+    const revealTimer = window.setTimeout(() => setRevealedStage(targetStage), 1840);
+    return () => window.clearTimeout(revealTimer);
+  }, [targetStage, reduceMotion]);
 
   useEffect(() => {
     if (reduceMotion) return;
@@ -171,7 +189,7 @@ function PremiumHero() {
           </div>
 
           {diagnosticStages.map((stage, index) => {
-            const active = index === activeStage;
+            const active = index === revealedStage;
             return (
               <button
                 type="button"
