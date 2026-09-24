@@ -12,7 +12,7 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 
@@ -254,6 +254,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
@@ -287,7 +288,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <h1 className="report-title">{title}</h1>
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : isDisputed ? "Disputed evidence" : classification} />
+          <Field label="Classification" value={classificationDisplay} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
           <Field label="Updated" value={updated} />
