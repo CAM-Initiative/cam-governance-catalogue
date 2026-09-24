@@ -786,3 +786,115 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active {
     0 0 0 1px hsl(41 58% 44% / 0.10),
     inset 0 1px 0 hsl(48 78% 70% / 0.13);
 }
+
+
+/* Light-mode finish pass: soften the gear teeth into warm instrument steel and
+   reserve CAM gold for edges, fasteners, selector accents and active-state cues. */
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-tooth::before,
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::before,
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(4n + 1)::before,
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-tooth:nth-child(6n + 3)::before {
+  border-color: hsl(36 20% 47% / 0.38);
+  background:
+    linear-gradient(90deg,
+      hsl(38 10% 67% / 0.92),
+      hsl(42 15% 79% / 0.98) 34%,
+      hsl(43 19% 86% / 0.99) 52%,
+      hsl(39 13% 76% / 0.98) 68%,
+      hsl(35 10% 63% / 0.92));
+  box-shadow:
+    inset 0 -0.13rem 0 hsl(34 18% 43% / 0.12),
+    inset 0 1px 0 hsl(46 30% 96% / 0.55),
+    0 0.1rem 0.2rem hsl(30 20% 24% / 0.08);
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-tooth::after,
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::after {
+  border-color: hsl(39 28% 42% / 0.35);
+  background:
+    linear-gradient(180deg,
+      hsl(42 42% 67% / 0.34),
+      hsl(37 14% 58% / 0.48));
+  box-shadow:
+    inset 0 1px 0 hsl(47 46% 92% / 0.26),
+    0 0.08rem 0.16rem hsl(30 20% 22% / 0.06);
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-inner .diagnostic-gear-tooth::before {
+  border-color: hsl(36 18% 46% / 0.34);
+  background:
+    linear-gradient(90deg,
+      hsl(38 10% 70% / 0.88),
+      hsl(42 15% 82% / 0.96) 40%,
+      hsl(44 20% 88% / 0.98) 56%,
+      hsl(37 11% 67% / 0.88));
+  box-shadow:
+    inset 0 -0.1rem 0 hsl(34 16% 42% / 0.10),
+    inset 0 1px 0 hsl(46 32% 96% / 0.5);
+}
+
+/* Gold now appears as a highlight rather than the whole mechanism. */
+html:not([data-theme="dark"]) .diagnostic-gear-outer::before,
+html:not([data-theme="dark"]) .diagnostic-gear-inner::before {
+  box-shadow:
+    inset 0 0 0 1px hsl(42 58% 48% / 0.20),
+    inset 0 0 1.15rem hsl(31 24% 22% / 0.06),
+    0 0 0 1px hsl(34 18% 38% / 0.10);
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-spokes i {
+  border-color: hsl(36 22% 43% / 0.20);
+  background:
+    linear-gradient(90deg,
+      hsl(38 13% 80% / 0.9),
+      hsl(41 18% 73% / 0.38) 36%,
+      hsl(43 38% 58% / 0.46) 50%,
+      hsl(39 17% 70% / 0.34) 64%,
+      hsl(37 12% 79% / 0.9));
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-spokes i::after {
+  border-color: hsl(39 42% 37% / 0.36);
+  background:
+    radial-gradient(circle at 35% 30%,
+      hsl(47 64% 72% / 0.74),
+      hsl(42 56% 49% / 0.72) 36%,
+      hsl(35 24% 39% / 0.72) 74%);
+}
+
+/* Repair the light-mode stage panels after the richer material pass:
+   idle = ivory instrument tag, active = CAM gold with readable dark type. */
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node {
+  color: hsl(31 22% 25%);
+  border-color: hsl(37 28% 49% / 0.30);
+  background:
+    linear-gradient(180deg,
+      hsl(40 36% 99% / 0.98),
+      hsl(38 22% 94% / 0.94));
+  box-shadow:
+    0 0.12rem 0.24rem hsl(30 20% 22% / 0.08),
+    inset 0 1px 0 hsl(48 40% 100% / 0.7);
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node .diagnostic-node-label,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node .diagnostic-node-copy strong {
+  color: hsl(37 58% 40%);
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active {
+  color: hsl(36 24% 14%);
+  border-color: hsl(41 66% 43% / 0.78);
+  background:
+    linear-gradient(180deg,
+      hsl(42 67% 51% / 0.96),
+      hsl(39 62% 43% / 0.94));
+  box-shadow:
+    0 0.16rem 0.34rem hsl(31 28% 20% / 0.14),
+    0 0 0 1px hsl(43 58% 42% / 0.11),
+    inset 0 1px 0 hsl(49 72% 76% / 0.24);
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-label,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy strong {
+  color: hsl(38 24% 15%);
+}
