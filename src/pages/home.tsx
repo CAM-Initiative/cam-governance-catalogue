@@ -17,12 +17,12 @@ const reveal = {
 };
 
 const diagnosticStages = [
-  { label: "Evidence", title: "What happened?", detail: "Sources establish the occurrence." },
-  { label: "Environment", title: "Where did it happen?", detail: "Context fixes how and where the system operated." },
-  { label: "Harm", title: "What did it do?", detail: "Impact is assessed using one consistent method." },
-  { label: "Governance", title: "What boundary was engaged?", detail: "Relevant duties and invariants are identified." },
-  { label: "Classification", title: "Why did it fail?", detail: "Evidence is mapped to a repeatable failure class." },
-  { label: "Compare", title: "Where does it recur?", detail: "Comparable cases expose recurring mechanisms." },
+  { label: "Evidence", title: "What happened?", href: "/observatory/cases/" },
+  { label: "Environment", title: "In what context?", href: "/observatory/cases/" },
+  { label: "Harm", title: "What was the impact?", href: "/observatory/severity-methodology/" },
+  { label: "Governance", title: "What boundary applied?", href: "/observatory/knowledge-base/standards-sources/" },
+  { label: "Adjudication", title: "What does the evidence establish?", href: "/observatory/knowledge-base/failure-taxonomy/" },
+  { label: "Compare", title: "Where does it recur?", href: "/datasets/" },
 ] as const;
 
 const fallbackTickerItems: IncidentTickerItem[] = [
@@ -131,18 +131,17 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion, onArrive }: { siz
 function PremiumHero() {
   const [gearTurn, setGearTurn] = useState(0);
   const [activeStage, setActiveStage] = useState<number | null>(0);
-  const [pinnedStage, setPinnedStage] = useState<number | null>(null);
   const reduceMotion = useReducedMotion();
   const targetStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
 
   useEffect(() => {
-    if (reduceMotion || pinnedStage !== null) return;
+    if (reduceMotion) return;
     const timer = window.setInterval(() => {
       setActiveStage(null);
       setGearTurn((current) => current + 1);
     }, 5200);
     return () => window.clearInterval(timer);
-  }, [pinnedStage, reduceMotion]);
+  }, [reduceMotion]);
 
   function activateStage(index: number) {
     setActiveStage(null);
@@ -153,11 +152,6 @@ function PremiumHero() {
     });
   }
 
-  function inspectStage(index: number) {
-    const releasing = pinnedStage === index;
-    setPinnedStage(releasing ? null : index);
-    activateStage(index);
-  }
 
   return (
     <section className="premium-hero" aria-labelledby="premium-hero-heading">
@@ -167,7 +161,7 @@ function PremiumHero() {
         <motion.div className="premium-hero-copy" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
           <p className="premium-hero-kicker">AI incidents tell us what happened.</p>
           <h1 id="premium-hero-heading"><span className="premium-hero-brand">The VIGIL Observatory</span><br />shows us <span>why.</span></h1>
-          <p className="premium-hero-deck">A standard taxonomy, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about where AI systems fail.</p>
+          <p className="premium-hero-deck">A standard adjudication method, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about AI behaviour and governance boundaries.</p>
           <div className="premium-hero-actions">
             <a href="/observatory/cases/" className="premium-primary">Explore the evidence <ArrowRight aria-hidden="true" /></a>
             <a href="/observatory/knowledge-base/failure-taxonomy/" className="premium-secondary">See the taxonomy</a>
@@ -190,30 +184,27 @@ function PremiumHero() {
             ))}
           </span>
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
-          <div className={`diagnostic-core${pinnedStage !== null ? " is-inspecting" : ""}`} aria-live="polite">
-            <span className="diagnostic-core-label">{pinnedStage !== null ? diagnosticStages[pinnedStage].label : "VIGIL ANALYSIS"}</span>
-            <strong>{pinnedStage !== null ? diagnosticStages[pinnedStage].title : "What went wrong?"}</strong>
-            {pinnedStage !== null && <span className="diagnostic-core-note">{diagnosticStages[pinnedStage].detail}</span>}
+          <div className="diagnostic-core">
+            <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
+            <strong>What does this case show?</strong>
           </div>
 
           {diagnosticStages.map((stage, index) => {
-            const active = index === (pinnedStage ?? activeStage);
+            const active = index === activeStage;
             return (
-              <button
-                type="button"
+              <a
+                href={stage.href}
                 key={stage.label}
-                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}${pinnedStage === index ? " is-pinned" : ""}`}
-                onMouseEnter={() => pinnedStage === null && activateStage(index)}
-                onFocus={() => pinnedStage === null && activateStage(index)}
-                onClick={() => inspectStage(index)}
-                aria-pressed={pinnedStage === index}
-                aria-label={`${pinnedStage === index ? "Release" : "Inspect"} ${stage.label} stage: ${stage.title}`}
+                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}`}
+                onMouseEnter={() => activateStage(index)}
+                onFocus={() => activateStage(index)}
+                aria-label={`Open ${stage.label}: ${stage.title}`}
               >
                 <span className="diagnostic-node-copy">
                   <span className="diagnostic-node-label">{stage.label}</span>
                   <strong>{stage.title}</strong>
                 </span>
-              </button>
+              </a>
             );
           })}
         </motion.div>
@@ -329,8 +320,8 @@ function PatternField() {
       </div>
       <motion.div className="pattern-copy narrative-section-copy taxonomy-reveal-copy" {...reveal}>
         <p className="premium-eyebrow narrative-kicker">From cases to intelligence</p>
-        <h2 id="pattern-heading">When failures are classified consistently, the ecosystem starts to become legible.</h2>
-        <p>The VIGIL Observatory textbook brings recurring failure mechanisms into one common language, connecting Case Files, governance boundaries, harm and classification across the corpus.</p>
+        <h2 id="pattern-heading">When incidents are adjudicated consistently, the ecosystem starts to become legible.</h2>
+        <p>The VIGIL Observatory textbook brings recurring governance mechanisms into one common language, connecting Case Files, governance boundaries, harm and adjudication across the corpus.</p>
       </motion.div>
       <TaxonomyReveal />
     </section>
