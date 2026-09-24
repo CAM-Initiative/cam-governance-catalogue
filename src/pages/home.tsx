@@ -21,7 +21,7 @@ const diagnosticStages = [
   { label: "Environment", title: "In what context?", href: "/observatory/cases/" },
   { label: "Harm", title: "What was the impact?", href: "/observatory/severity-methodology/" },
   { label: "Governance", title: "What boundary applied?", href: "/observatory/knowledge-base/standards-sources/" },
-  { label: "Adjudication", title: "What does the evidence establish?", href: "/observatory/knowledge-base/failure-taxonomy/" },
+  { label: "Classification", title: "How is the evidence adjudicated?", href: "/observatory/knowledge-base/failure-taxonomy/" },
   { label: "Compare", title: "Where does it recur?", href: "/datasets/" },
 ] as const;
 
@@ -169,7 +169,7 @@ function PremiumHero() {
         </motion.div>
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
-          <MechanicalGear size="outer" teeth={64} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} onArrive={() => setActiveStage(targetStage)} />
+          <MechanicalGear size="outer" teeth={30} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} onArrive={() => setActiveStage(targetStage)} />
           <motion.span
             className="diagnostic-selector-rotor"
             aria-hidden="true"
@@ -183,7 +183,7 @@ function PremiumHero() {
               <i key={index} style={{ "--web-angle": `${index * 45 + (index % 3 === 0 ? 0.8 : index % 3 === 1 ? -0.45 : 0.2)}deg` } as CSSProperties} />
             ))}
           </span>
-          <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
+          <MechanicalGear size="inner" teeth={22} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What does this case show?</strong>
@@ -383,7 +383,7 @@ function AdjudicationFrameworkSection() {
           viewport={{ once: true, amount: 0.55 }}
           transition={{ delay: 0.35, type: "spring", stiffness: 230, damping: 15, mass: 0.8 }}
         >
-          <span>VIGIL is not a doom catalogue</span>
+          <span>NOT A DOOM CATALOGUE</span>
         </motion.div>
       </motion.div>
 
@@ -427,7 +427,7 @@ export default function Home() {
  * these concepts into the interactive hero and pattern narrative rather than
  * rendering the former explanatory blocks verbatim:
  * VIGIL Observatory · Evidence
- * VIGIL Observatory Failure Taxonomy · Adjudication
+ * VIGIL Observatory Failure Taxonomy · Classification
  * Evidence → Assessment → Runtime Governance
  * Explore the Taxonomy
  * Download the PDF
