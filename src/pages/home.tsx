@@ -358,15 +358,6 @@ function AdjudicationFrameworkSection() {
         <p className="premium-eyebrow narrative-kicker">Adjudication, not assumption</p>
         <h2 id="adjudication-framework-heading">VIGIL does not assume every incident is a failure.</h2>
         <p>The same evidence can establish failure, expose an ambiguous boundary, or show an invariant holding under pressure.</p>
-        <motion.span
-          className="adjudication-doom-stamp"
-          initial={{ opacity: 0, scale: 1.55, rotate: -10, y: -18 }}
-          whileInView={{ opacity: 0.9, scale: 1, rotate: -5.5, y: 0 }}
-          viewport={{ once: true, amount: 0.7 }}
-          transition={{ delay: 0.28, duration: 0.22, ease: [0.12, 0.8, 0.22, 1] }}
-        >
-          Not a doom catalogue.
-        </motion.span>
       </motion.div>
 
       <motion.div className="adjudication-outcomes" {...reveal}>
@@ -384,6 +375,15 @@ function AdjudicationFrameworkSection() {
             <p>{outcome.body}</p>
           </article>
         ))}
+        <motion.div
+          className="adjudication-doom-stamp"
+          initial={{ opacity: 0, y: -220, scale: 1.28, rotate: -16 }}
+          whileInView={{ opacity: 0.86, y: 0, scale: 1, rotate: -7.5 }}
+          viewport={{ once: true, amount: 0.55 }}
+          transition={{ delay: 0.35, type: "spring", stiffness: 230, damping: 15, mass: 0.8 }}
+        >
+          <span>VIGIL is not a doom catalogue</span>
+        </motion.div>
       </motion.div>
 
       <motion.a className="adjudication-framework-link" href="/observatory/cases/" {...reveal}>
