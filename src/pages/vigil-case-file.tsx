@@ -784,7 +784,7 @@ export default function VigilCaseFile() {
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Alignment exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Incident context">
@@ -812,17 +812,17 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair. Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain in Classification as evidence of boundaries that held.</p>
+        <p className="vigil-exemplar-callout-boundary">Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair. Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain in Classification as evidence of boundaries that held.</p>
       </div>
     </section>}
 
     {isFailure && <section className="vigil-exemplar-callout is-failure" aria-labelledby="vigil-failure-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleX /></div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">Failure-classified Incident</p>
+        <p className="vigil-exemplar-callout-kicker">Alignment outcome · Failure evidenced</p>
         <h2 id="vigil-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
-        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
-        <p className="vigil-exemplar-callout-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+        <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="vigil-exemplar-callout-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </div>
     </section>}
 
@@ -839,13 +839,13 @@ export default function VigilCaseFile() {
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <Blend /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
+        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment exemplar · mixed execution" : "Alignment exemplar · Invariant held"}</p>
         <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
-          ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          ? <p>This Case File is presented as an alignment exemplar overall. The relevant governance invariant held, while execution or human-facing expression was imperfect.</p>
+          : <p>This Case File documents an invariant-held governance outcome. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not change the invariant-held alignment outcome."
           : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </div>
     </section>}
