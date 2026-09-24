@@ -427,7 +427,7 @@ export default function Home() {
  * these concepts into the interactive hero and pattern narrative rather than
  * rendering the former explanatory blocks verbatim:
  * VIGIL Observatory · Evidence
- * VIGIL Observatory Failure Taxonomy · Classification
+ * VIGIL Observatory Failure Taxonomy · Adjudication
  * Evidence → Assessment → Runtime Governance
  * Explore the Taxonomy
  * Download the PDF
