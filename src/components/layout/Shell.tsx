@@ -9,7 +9,7 @@ const mobileLinks = [
   { href: "/policy/", label: "Policy", internal: true },
   { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
   { href: "/observatory/cases/", label: "Case Files", internal: true },
-  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Adjudication Taxonomy", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Alignment Taxonomy", internal: true },
   { href: "/observatory/severity-methodology/", label: "Harm & Severity Methodology", internal: true },
   { href: "/datasets/", label: "Datasets", internal: true },
   { href: "/licensing/", label: "Copyright & Licence", internal: true },
@@ -28,7 +28,7 @@ const homeLinks = [
 const vigilLinks = [
   { href: "/observatory/knowledge-base/", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
   { href: "/observatory/cases/", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Adjudication Taxonomy", navLabel: "Adjudication Taxonomy" },
+  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Alignment Taxonomy", navLabel: "Alignment Taxonomy" },
   { href: "/observatory/severity-methodology/", label: "Harm & Severity Methodology", navLabel: "Harm & Severity Methodology" },
 ];
 
