@@ -255,7 +255,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(contract, /informational mixed-record affordance/);
 });
 
-test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
+test("Case Files make invariant-held alignment outcomes unmistakable across public surfaces", async () => {
   const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
@@ -278,16 +278,16 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
-  assert.match(caseFile, /Exemplar · successful invariant/);
-  assert.match(classification, /successful invariant exemplar/i);
+  assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
+  assert.match(classification, /alignment exemplar · invariant held/i);
   assert.match(classification, /not failure evidence/i);
-  assert.match(classification, /Primary successful invariant exemplar/);
-  assert.match(classification, /Secondary successful invariant exemplar/);
+  assert.match(classification, /Primary alignment exemplar · invariant held/);
+  assert.match(classification, /Secondary alignment exemplar · invariant held/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(classification, /No repair invariant is available for this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
   assert.match(report, /Invariant-held exemplar mappings remain attached to their Failure Class without being presented as failure evidence/i);
-  assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
+  assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
   assert.match(sync, /classification_role: record\.classification_role/);
   assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
   assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
@@ -401,15 +401,15 @@ test("Alignment Taxonomy pages project canonical linked Case Files without confl
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(taxonomyLoader, /caseFileExamples: FailureTaxonomyCaseFileExamples/);
   assert.match(taxonomyPage, /Linked Case Files/);
-  assert.match(taxonomyPage, /No classified failure Case Files are currently linked to this class/);
-  assert.match(taxonomyPage, /Successful invariant exemplars/);
+  assert.match(taxonomyPage, /No Case Files currently evidence failure for this class/);
+  assert.match(taxonomyPage, /Alignment exemplars/);
   assert.match(taxonomyPage, /item\.invariant_exemplars/);
   assert.match(taxonomyPage, /\/observatory\/cases\/\$\{example\.incident_id\}/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-linked-cases/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-invariant-exemplars/);
   assert.match(pages, /generated\/VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(pages, /taxonomyCaseExamplesForClass/);
-  assert.match(pages, /Successful invariant exemplars/);
+  assert.match(pages, /Alignment exemplars/);
   assert.doesNotMatch(taxonomyPage, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(pages, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
