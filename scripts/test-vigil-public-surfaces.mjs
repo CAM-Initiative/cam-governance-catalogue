@@ -64,10 +64,10 @@ test("VIGIL Observatory Knowledge Base exposes Case Files, Harm & Severity Metho
   assert.match(hub, /downloadable datasets/);
 });
 
-test("homepage presents the VIGIL Observatory Failure Taxonomy as a first-class adjudication surface", async () => {
+test("homepage presents the VIGIL Observatory Failure Taxonomy as a first-class classification surface", async () => {
   const home = await read("src/pages/home.tsx");
   assert.match(home, /VIGIL Observatory · Evidence/);
-  assert.match(home, /VIGIL Observatory Failure Taxonomy · Adjudication/);
+  assert.match(home, /VIGIL Observatory Failure Taxonomy · Classification/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(home, /Explore the Taxonomy/);
   assert.match(home, /Download the PDF/);
@@ -84,9 +84,9 @@ test("homepage refinement preserves the six-stage instrument and live Observator
   const environment = home.indexOf('{ label: "Environment"');
   const harm = home.indexOf('{ label: "Harm"');
   const governance = home.indexOf('{ label: "Governance"');
-  const adjudication = home.indexOf('{ label: "Adjudication"');
+  const classification = home.indexOf('{ label: "Classification"');
   const compare = home.indexOf('{ label: "Compare"');
-  assert.ok(evidence < environment && environment < harm && harm < governance && governance < adjudication && adjudication < compare);
+  assert.ok(evidence < environment && environment < harm && harm < governance && governance < classification && classification < compare);
   assert.doesNotMatch(home, /<p className="premium-eyebrow">CAM Initiative · VIGIL Observatory<\/p>/);
   assert.match(home, /loadVigilIncidentRecords/);
   assert.match(home, /aria-label="Recent VIGIL Case Files"/);
