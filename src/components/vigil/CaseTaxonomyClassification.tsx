@@ -323,7 +323,7 @@ function ClassificationCard({
     <div className="vigil-classification-layout">
       <div className="vigil-classification-reading">
         {plainEnglish && <section>
-          <h4 className="vigil-substantive-label">{exemplar ? "Failure boundary this exemplar tests" : "What this failure means"}</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Governance boundary this exemplar tests" : "What this failure means"}</h4>
           <p>{plainEnglish}</p>
         </section>}
         {technicalDefinition && <section>
