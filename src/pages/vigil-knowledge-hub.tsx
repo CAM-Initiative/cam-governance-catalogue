@@ -97,7 +97,7 @@ export default function VigilKnowledgeHub() {
           <header className="vigil-simple-hero">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
             <h1>Knowledge Base</h1>
-            <p>Browse AI governance standards, VIGIL Observatory Case Files, the VIGIL Observatory Adjudication Taxonomy, the Harm & Severity Methodology, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
+            <p>Browse AI governance standards, VIGIL Observatory Case Files, the VIGIL Observatory Alignment Taxonomy, the Harm & Severity Methodology, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
           </header>
 
           <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
@@ -125,8 +125,8 @@ export default function VigilKnowledgeHub() {
             />
             <CollectionCard
               href="/observatory/knowledge-base/failure-taxonomy/"
-              title="VIGIL Observatory Adjudication Taxonomy"
-              description="The reference used to adjudicate evidence against recurring AI governance boundaries, retaining stable Failure Family and Failure Class identifiers with recognition criteria, exclusions, examples and relationships."
+              title="VIGIL Observatory Alignment Taxonomy"
+              description="The reference used to classify evidence against recurring AI governance boundaries and record whether the relevant invariant failed, held, or remains unresolved. Stable Failure Family and Failure Class identifiers are retained."
               meta={taxonomyMeta}
               chip="Beta"
               actionLabel="Browse taxonomy"
@@ -134,7 +134,7 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/datasets/"
               title="Datasets"
-              description="Downloadable VIGIL Observatory and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Observatory Adjudication Taxonomy publication."
+              description="Downloadable VIGIL Observatory and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Observatory Alignment Taxonomy publication."
               meta="Machine-readable data and publication downloads"
               actionLabel="Open datasets"
             />
