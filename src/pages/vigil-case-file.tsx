@@ -786,7 +786,6 @@ export default function VigilCaseFile() {
       <div className="vigil-case-file-title-block">
         <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button vigil-case-hero-report-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </div>
       <aside className="vigil-case-meta-panel" aria-label="Incident context">
         <p className="vigil-case-context-label">Incident context</p>
@@ -795,11 +794,16 @@ export default function VigilCaseFile() {
           <Field label="Occurred" value={occurred} />
           <Field label="Jurisdiction" value={jurisdiction} />
           <Field label="Environment" value={environmentLabel} />
+        </dl>
+      </aside>
+      <div className={`vigil-case-ticket-footer${hasMixedExecution ? " has-execution" : ""}`}>
+        <dl className="vigil-case-ticket-footer-meta">
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
         </dl>
-      </aside>
+        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button vigil-case-ticket-report-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
+      </div>
     </header>
 
     {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">
@@ -857,10 +861,6 @@ export default function VigilCaseFile() {
           className={activeStage === stage.id ? "is-active" : undefined}
           onClick={() => setActiveStage(stage.id)}
         ><span>{stage.number}</span>{stage.label}</button>)}
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab" aria-label="Open full report">
-          <FileText aria-hidden="true" />
-          Full report
-        </Link>
       </div>
     </nav>
 
