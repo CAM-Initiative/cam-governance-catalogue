@@ -1785,3 +1785,40 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded 
     font-size: 0.7rem;
   }
 }
+
+
+/* Separate the automatic stage focus from the explicit click expansion.
+   Auto-focus reveals the question; only a click opens the explanatory copy. */
+.diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) {
+  width: min(12.4rem, 35vw);
+  max-width: 12.4rem;
+  min-height: 4.35rem;
+  padding: 0.76rem 0.94rem 0.8rem 1rem;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) .diagnostic-node-detail {
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
+  transform: translateY(-0.18rem);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded {
+  width: min(14.6rem, 40vw);
+  max-width: 14.6rem;
+  min-height: 6.25rem;
+}
+
+@media (max-width: 720px) {
+  .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) {
+    width: min(10.4rem, 52vw);
+    max-width: 10.4rem;
+    min-height: 3.8rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
+    width: min(11.8rem, 60vw);
+    max-width: 11.8rem;
+    min-height: 5.45rem;
+  }
+}
