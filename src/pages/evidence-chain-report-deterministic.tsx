@@ -417,7 +417,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       </Stage>
 
         <Stage number="03" label="Classification">
-          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current taxonomy classification is linked.</Empty>}
+          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current Alignment Taxonomy classification is linked.</Empty>}
         </Stage>
 
         <Stage number="04" label="Repair">
