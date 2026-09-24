@@ -307,7 +307,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <p className="report-exemplar-kicker">Mixed alignment outcome</p>
         <h2 id="report-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary.</p>
-        <p className="report-exemplar-boundary">Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain visible as evidence of boundaries that held.</p>
+        <p className="report-exemplar-boundary">Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain visible as evidence of boundaries that held.</p>
       </section>}
 
       {isDisputed && <section className="report-exemplar-callout is-disputed" aria-labelledby="report-disputed-heading">
