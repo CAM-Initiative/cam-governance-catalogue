@@ -17,12 +17,12 @@ const reveal = {
 };
 
 const diagnosticStages = [
-  { label: "Evidence", title: "What happened?", href: "/observatory/cases/" },
-  { label: "Environment", title: "In what context?", href: "/observatory/cases/" },
-  { label: "Harm", title: "What was the impact?", href: "/observatory/severity-methodology/" },
-  { label: "Governance", title: "What boundary applied?", href: "/observatory/knowledge-base/standards-sources/" },
-  { label: "Classification", title: "How is the evidence adjudicated?", href: "/observatory/knowledge-base/failure-taxonomy/" },
-  { label: "Compare", title: "Where does it recur?", href: "/datasets/" },
+  { label: "Evidence", title: "What happened?", detail: "Trace the source record and factual basis for the occurrence." },
+  { label: "Environment", title: "In what context?", detail: "Situate the system, actors, deployment setting and operating conditions." },
+  { label: "Harm", title: "What was the impact?", detail: "Assess supported materialised consequence using the VIGIL-HIM dimensions." },
+  { label: "Governance", title: "What boundary applied?", detail: "Identify the standards, duties and governing invariants engaged by the evidence." },
+  { label: "Classification", title: "How is the evidence adjudicated?", detail: "Record whether the relevant boundary failed, held, or remains unresolved." },
+  { label: "Compare", title: "Where does it recur?", detail: "Compare the same mechanisms and boundaries across the Case File corpus." },
 ] as const;
 
 const fallbackTickerItems: IncidentTickerItem[] = [
@@ -131,17 +131,18 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion, onArrive }: { siz
 function PremiumHero() {
   const [gearTurn, setGearTurn] = useState(0);
   const [activeStage, setActiveStage] = useState<number | null>(0);
+  const [expandedStage, setExpandedStage] = useState<number | null>(null);
   const reduceMotion = useReducedMotion();
   const targetStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || expandedStage !== null) return;
     const timer = window.setInterval(() => {
       setActiveStage(null);
       setGearTurn((current) => current + 1);
     }, 5200);
     return () => window.clearInterval(timer);
-  }, [reduceMotion]);
+  }, [expandedStage, reduceMotion]);
 
   function activateStage(index: number) {
     setActiveStage(null);
@@ -152,6 +153,10 @@ function PremiumHero() {
     });
   }
 
+  function toggleStage(index: number) {
+    setExpandedStage((current) => current === index ? null : index);
+    activateStage(index);
+  }
 
   return (
     <section className="premium-hero" aria-labelledby="premium-hero-heading">
@@ -190,21 +195,25 @@ function PremiumHero() {
           </div>
 
           {diagnosticStages.map((stage, index) => {
-            const active = index === activeStage;
+            const expanded = index === expandedStage;
+            const active = index === (expandedStage ?? activeStage);
             return (
-              <a
-                href={stage.href}
+              <button
+                type="button"
                 key={stage.label}
-                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}`}
-                onMouseEnter={() => activateStage(index)}
-                onFocus={() => activateStage(index)}
-                aria-label={`Open ${stage.label}: ${stage.title}`}
+                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}${expanded ? " is-expanded" : ""}`}
+                onMouseEnter={() => expandedStage === null && activateStage(index)}
+                onFocus={() => expandedStage === null && activateStage(index)}
+                onClick={() => toggleStage(index)}
+                aria-expanded={expanded}
+                aria-label={`${expanded ? "Collapse" : "Expand"} ${stage.label}: ${stage.title}`}
               >
                 <span className="diagnostic-node-copy">
                   <span className="diagnostic-node-label">{stage.label}</span>
                   <strong>{stage.title}</strong>
+                  <span className="diagnostic-node-detail">{stage.detail}</span>
                 </span>
-              </a>
+              </button>
             );
           })}
         </motion.div>
