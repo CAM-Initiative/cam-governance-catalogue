@@ -1547,52 +1547,6 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
   }
 }
 
-
-/* Six discrete annular recess outlines, matching the actual six-stage gear.
-   These are stroke-only curved trapezoids: no continuous rings, no radial ruler
-   lines, no filled band, and no recolouring of the ivory instrument faces. */
-.diagnostic-recess-panels {
-  position: absolute;
-  z-index: 2;
-  inset: 12%;
-  width: 76%;
-  height: 76%;
-  overflow: visible;
-  pointer-events: none;
-  transform-origin: 50% 50%;
-}
-
-.diagnostic-recess-panels path {
-  fill: transparent;
-  stroke: hsl(34 8% 45% / 0.56);
-  stroke-width: 0.52;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-  filter:
-    drop-shadow(0 0.55px 0 hsl(var(--background) / 0.82))
-    drop-shadow(0 1px 0.8px hsl(var(--foreground) / 0.07));
-}
-
-html[data-theme="dark"] .diagnostic-recess-panels path {
-  stroke: hsl(39 18% 70% / 0.22);
-  filter:
-    drop-shadow(0 0.6px 0 hsl(var(--background) / 0.65))
-    drop-shadow(0 1px 0.8px hsl(var(--foreground) / 0.12));
-}
-
-@media (max-width: 720px) {
-  .diagnostic-recess-panels {
-    inset: 13%;
-    width: 74%;
-    height: 74%;
-  }
-
-  .diagnostic-recess-panels path {
-    stroke-width: 0.44;
-  }
-}
-
 /* Premium analytical stage controls.
    Idle labels read as engraved instrument tabs. The active/expanded state is a
    dark precision panel with restrained gold only as an accent — never a solid
