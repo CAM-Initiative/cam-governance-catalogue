@@ -21,6 +21,7 @@ import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 import {
   loadTaxonomyReferenceTargets,
+  taxonomyAlignmentOutcomeLabel,
   taxonomyFailureTypeLabel,
   type TaxonomyReferenceTarget,
 } from "@/lib/vigilTaxonomyClassification";
@@ -491,6 +492,7 @@ export default function VigilCaseFile() {
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
@@ -799,7 +801,7 @@ export default function VigilCaseFile() {
       <div className={`vigil-case-ticket-footer${hasMixedExecution ? " has-execution" : ""}`}>
         <dl className="vigil-case-ticket-footer-meta">
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification} />
+          <Field label="Classification" value={classificationDisplay} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
         </dl>
         <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button vigil-case-ticket-report-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
