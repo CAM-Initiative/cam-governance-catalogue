@@ -284,7 +284,7 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
       </table>
     </div>
     {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Failure classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Adjudication Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Failure classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
     <VigilAlignmentLegend />
   </>;
@@ -487,7 +487,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical taxonomy classification.</p>;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Observatory Adjudication Taxonomy…</p>;
+  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Observatory Alignment Taxonomy…</p>;
   if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the class invariant cannot be resolved. {taxonomy.message}</p>;
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
@@ -520,7 +520,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
         </tbody>
       </table>
     </div>
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Adjudication Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     <VigilAlignmentLegend />
   </div>;
 }
