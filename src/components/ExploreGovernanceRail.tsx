@@ -5,7 +5,7 @@ const initiativeResources = [
     id: "case-files",
     title: "Case Files",
     subtitle: "VIGIL Observatory AI incident database",
-    purpose: "Canonical VIGIL Observatory Incident investigations with evidence, assessment, failure classification and repair analysis.",
+    purpose: "Canonical VIGIL Observatory Incident investigations with evidence, assessment, classification and repair analysis.",
     href: "/observatory/cases/",
     icon: FileText,
     chip: "Beta",
