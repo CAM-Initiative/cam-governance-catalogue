@@ -197,7 +197,7 @@ function PremiumHero() {
           </div>
 
           {diagnosticStages.map((stage, index) => {
-            const active = index === activeStage;
+            const active = index === (pinnedStage ?? activeStage);
             return (
               <button
                 type="button"
