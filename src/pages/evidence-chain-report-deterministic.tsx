@@ -256,6 +256,8 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const isFailure = classification === "Classified";
+  const isCombination = classification === "Combination";
+  const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
@@ -285,7 +287,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <h1 className="report-title">{title}</h1>
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
+          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : isDisputed ? "Disputed evidence" : classification} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
           <Field label="Updated" value={updated} />
@@ -298,6 +300,20 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <h2 id="report-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
         <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
         <p className="report-exemplar-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+      </section>}
+
+      {isCombination && <section className="report-exemplar-callout is-combination" aria-labelledby="report-combination-heading">
+        <p className="report-exemplar-kicker">Mixed alignment outcome</p>
+        <h2 id="report-combination-heading">The system is neither aligned nor misaligned.</h2>
+        <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary.</p>
+        <p className="report-exemplar-boundary">Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain visible as evidence of boundaries that held.</p>
+      </section>}
+
+      {isDisputed && <section className="report-exemplar-callout is-disputed" aria-labelledby="report-disputed-heading">
+        <p className="report-exemplar-kicker">Disputed evidence</p>
+        <h2 id="report-disputed-heading">The evidence is disputed.</h2>
+        <p>Material claims about this occurrence are contested, denied, or have not been independently adjudicated. The report preserves the current evidence state without presenting disputed claims as settled fact.</p>
+        <p className="report-exemplar-boundary">The taxonomy mapping describes the governance mechanism evidenced if the reported occurrence is supported; it does not convert disputed claims into established fact.</p>
       </section>}
 
       {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
