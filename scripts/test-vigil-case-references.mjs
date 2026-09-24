@@ -30,7 +30,7 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /externalAssessments\.length > 0/);
   assert.match(caseFile, /External incident records/);
   assert.match(caseFile, /Taxonomy and methodology references/);
-  assert.match(caseFile, /VIGIL Observatory Adjudication Taxonomy/);
+  assert.match(caseFile, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(caseFile, /VIGIL Harm Impact Methodology/);
   assert.match(caseFile, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
   assert.match(caseFile, /Internal records/);
@@ -225,7 +225,7 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.doesNotMatch(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
   assert.match(report, /data-report-taxonomy-reference-list/);
   assert.match(printable, /data-report-taxonomy-reference-list/);
-  assert.match(printable, /VIGIL Observatory Adjudication Taxonomy/);
+  assert.match(printable, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(printable, /VIGIL Harm Impact Methodology/);
   assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
   assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/knowledge-base\/failure-taxonomy/);
@@ -301,7 +301,7 @@ test("Incident artefact captions use one label plus numbered evidence reference"
   assert.match(css, /\.vigil-incident-artefact-reference/);
 });
 
-test("Classification and Repair cite the single numbered VIGIL Adjudication Taxonomy reference instead of row-level source links", async () => {
+test("Classification and Repair cite the single numbered VIGIL Alignment Taxonomy reference instead of row-level source links", async () => {
   const [component, caseFile, report, printable, css, reportCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8"),
     caseFileSource(),
@@ -314,7 +314,7 @@ test("Classification and Repair cite the single numbered VIGIL Adjudication Taxo
   assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
   assert.match(component, /Failure classes and their governing invariants are defined in the/);
   assert.match(component, /The governing invariants shown here are defined in the/);
-  assert.match(component, /VIGIL Observatory Adjudication Taxonomy \[\{taxonomyReferenceNumber\}\]/);
+  assert.match(component, /VIGIL Observatory Alignment Taxonomy \[\{taxonomyReferenceNumber\}\]/);
   assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
   assert.match(caseFile, /id="vigil-failure-taxonomy-reference"/);
   assert.match(caseFile, /taxonomyReferenceHref="#vigil-failure-taxonomy-reference"/);
