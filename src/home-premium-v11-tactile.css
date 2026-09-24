@@ -1548,32 +1548,240 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
 }
 
 
-/* Light-mode recess outline.
-   The light instrument was losing the machined boundary around the annular
-   negative spaces. Draw only their inner/outer arcs and six radial edges:
-   no filled dark band and no recolouring of the gear faces. */
-html:not([data-theme="dark"]) .diagnostic-instrument-web::before {
+/* Six discrete annular recess outlines, matching the actual six-stage gear.
+   These are stroke-only curved trapezoids: no continuous rings, no radial ruler
+   lines, no filled band, and no recolouring of the ivory instrument faces. */
+.diagnostic-recess-panels {
+  position: absolute;
+  z-index: 2;
+  inset: 12%;
+  width: 76%;
+  height: 76%;
+  overflow: visible;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+}
+
+.diagnostic-recess-panels path {
+  fill: transparent;
+  stroke: hsl(34 8% 45% / 0.56);
+  stroke-width: 0.52;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter:
+    drop-shadow(0 0.55px 0 hsl(var(--background) / 0.82))
+    drop-shadow(0 1px 0.8px hsl(var(--foreground) / 0.07));
+}
+
+html[data-theme="dark"] .diagnostic-recess-panels path {
+  stroke: hsl(39 18% 70% / 0.22);
+  filter:
+    drop-shadow(0 0.6px 0 hsl(var(--background) / 0.65))
+    drop-shadow(0 1px 0.8px hsl(var(--foreground) / 0.12));
+}
+
+@media (max-width: 720px) {
+  .diagnostic-recess-panels {
+    inset: 13%;
+    width: 74%;
+    height: 74%;
+  }
+
+  .diagnostic-recess-panels path {
+    stroke-width: 0.44;
+  }
+}
+
+/* Premium analytical stage controls.
+   Idle labels read as engraved instrument tabs. The active/expanded state is a
+   dark precision panel with restrained gold only as an accent — never a solid
+   mustard block. */
+.diagnostic-orbit-v2 .diagnostic-node {
+  min-height: 2.15rem;
+  max-width: 10rem;
+  padding: 0.52rem 0.82rem;
+  border-radius: 0.52rem;
+  border: 1px solid hsl(var(--foreground) / 0.17);
+  background:
+    linear-gradient(180deg,
+      hsl(var(--background) / 0.985),
+      hsl(var(--card) / 0.94));
+  box-shadow:
+    0 0.12rem 0.28rem hsl(var(--foreground) / 0.07),
+    0 0.5rem 1.1rem hsl(var(--foreground) / 0.035),
+    inset 0 1px 0 hsl(var(--background) / 0.92);
+  backdrop-filter: blur(16px);
+  color: hsl(var(--foreground) / 0.76);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node::before {
   content: "";
   position: absolute;
-  inset: 0;
+  left: 0.46rem;
+  top: 50%;
+  width: 0.18rem;
+  height: 0.18rem;
   border-radius: 50%;
-  pointer-events: none;
+  transform: translateY(-50%);
+  background: hsl(var(--primary) / 0.62);
+  box-shadow: 0 0 0 1px hsl(var(--background) / 0.64);
+  opacity: 0.68;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-copy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-label {
+  font-size: 0.72rem;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: hsl(var(--foreground) / 0.7);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-copy strong {
+  font-family: var(--app-font-serif);
+  font-size: 1rem;
+  font-weight: 520;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: hsl(var(--foreground));
+}
+
+.diagnostic-orbit-v2 .diagnostic-node:hover,
+.diagnostic-orbit-v2 .diagnostic-node:focus-visible {
+  border-color: hsl(var(--primary) / 0.48);
+  box-shadow:
+    0 0.16rem 0.34rem hsl(var(--foreground) / 0.09),
+    0 0.62rem 1.3rem hsl(var(--foreground) / 0.05),
+    inset 0 1px 0 hsl(var(--background) / 0.96);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active,
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded {
+  width: min(14rem, 38vw);
+  max-width: 14rem;
+  min-height: 5.9rem;
+  padding: 0.82rem 1rem 0.88rem 1.06rem;
+  border-radius: 0.72rem;
+  border-color: hsl(var(--primary) / 0.52);
   background:
-    radial-gradient(circle,
-      transparent 0 65.7%,
-      hsl(32 9% 34% / 0.48) 66.05% 66.55%,
-      hsl(var(--primary) / 0.08) 66.65% 66.9%,
-      transparent 67.05% 83.05%,
-      hsl(var(--primary) / 0.07) 83.15% 83.4%,
-      hsl(32 9% 34% / 0.44) 83.5% 84%,
-      transparent 84.15% 100%),
-    repeating-conic-gradient(
-      from -0.45deg,
-      transparent 0deg 59.15deg,
-      hsl(32 9% 34% / 0.44) 59.15deg 59.72deg,
-      hsl(var(--primary) / 0.075) 59.72deg 60deg
-    );
-  -webkit-mask: radial-gradient(circle, transparent 0 65.5%, #000 65.8% 84.25%, transparent 84.55%);
-  mask: radial-gradient(circle, transparent 0 65.5%, #000 65.8% 84.25%, transparent 84.55%);
-  opacity: 0.92;
+    radial-gradient(circle at 18% 0%, hsl(var(--primary) / 0.11), transparent 38%),
+    linear-gradient(180deg,
+      hsl(31 13% 18% / 0.985),
+      hsl(28 11% 12% / 0.99));
+  box-shadow:
+    0 0.25rem 0.6rem hsl(29 26% 12% / 0.18),
+    0 0.95rem 2rem hsl(29 24% 10% / 0.13),
+    inset 0 1px 0 hsl(43 28% 72% / 0.12),
+    inset 0 0 0 1px hsl(var(--primary) / 0.06);
+  color: hsl(42 18% 94%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active::before,
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded::before {
+  top: 0.92rem;
+  left: 0.82rem;
+  width: 0.24rem;
+  height: 0.24rem;
+  transform: none;
+  background: hsl(42 67% 55%);
+  box-shadow:
+    0 0 0 1px hsl(34 20% 8% / 0.8),
+    0 0 0.5rem hsl(42 62% 52% / 0.18);
+  opacity: 1;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy,
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy {
+  padding-left: 0.42rem;
+  text-align: left;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-label,
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-label {
+  font-size: 0.68rem;
+  color: hsl(42 62% 62%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy strong,
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy strong {
+  max-height: 3rem;
+  margin-top: 0.34rem;
+  opacity: 1;
+  transform: translateY(0);
+  font-size: 1.08rem;
+  line-height: 1.12;
+  color: hsl(42 24% 96%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-detail,
+.diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-detail {
+  max-height: 4.8rem;
+  margin-top: 0.48rem;
+  opacity: 0.7;
+  transform: translateY(0);
+  font-size: 0.78rem;
+  line-height: 1.42;
+  color: hsl(40 10% 82%);
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node .diagnostic-node-label,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node .diagnostic-node-copy strong {
+  color: hsl(31 14% 28%);
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
+  border-color: hsl(40 46% 39% / 0.58);
+  background:
+    radial-gradient(circle at 18% 0%, hsl(42 58% 46% / 0.12), transparent 38%),
+    linear-gradient(180deg,
+      hsl(31 14% 19% / 0.99),
+      hsl(28 12% 13% / 0.995));
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-label,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-label {
+  color: hsl(42 68% 63%);
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy strong,
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy strong {
+  color: hsl(42 24% 96%);
+}
+
+@media (max-width: 720px) {
+  .diagnostic-orbit-v2 .diagnostic-node {
+    min-height: 1.95rem;
+    max-width: 8.2rem;
+    padding: 0.45rem 0.64rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node-label {
+    font-size: 0.61rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active,
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
+    width: min(11.5rem, 58vw);
+    max-width: 11.5rem;
+    min-height: 5.15rem;
+    padding: 0.7rem 0.78rem 0.74rem 0.86rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy strong,
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy strong {
+    font-size: 0.94rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-detail,
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-detail {
+    font-size: 0.7rem;
+  }
 }
