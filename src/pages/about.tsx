@@ -22,7 +22,7 @@ const ABOUT_CASE_FILE_STAGES = [
   {
     number: "04",
     label: "Repair",
-    description: "Surface the governing class invariants relevant to failure-occurrence and unresolved-boundary mappings; successful-invariant mappings create no Repair requirement.",
+    description: "Surface the governing class invariants for mappings where failure is evidenced or the boundary remains unresolved; invariant-held mappings create no Repair requirement.",
   },
   {
     number: "05",
@@ -90,7 +90,7 @@ export default function About() {
               <p className="vigil-library-kicker">VIGIL Observatory</p>
               <h2 id="vigil-observatory-heading">Public Incident evidence, classification and repair analysis</h2>
             </div>
-            <p className="vigil-about-record-intro">VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
+            <p className="vigil-about-record-intro">VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies evidence against recurring governance boundaries through the VIGIL Observatory Alignment Taxonomy, and records exemplars when the relevant invariant holds under pressure.</p>
             <p className="vigil-about-record-intro">VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately. VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
             <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
               <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
@@ -105,7 +105,7 @@ export default function About() {
               <h2 id="vigil-method-heading">Every Incident moves through the same six-stage evidence-to-conclusion structure</h2>
             </div>
             <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged, and what happened at each boundary.</p>
-            <p className="vigil-about-record-intro">Real-world harm assessment and taxonomy classification are deliberately independent. Harm assessment describes materialised consequence and derives severity; taxonomy classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
+            <p className="vigil-about-record-intro">Real-world harm assessment and alignment classification are deliberately independent. Harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
             <p className="vigil-about-record-intro"><strong>Repair</strong> then surfaces the governing class invariants relevant to mappings that failed or remain unresolved. Successful-invariant mappings stay visible in Classification as evidence of governance that held and do not create a Repair requirement. <strong>Conclusion</strong> integrates those separate findings, while <strong>References</strong> preserve the evidence, taxonomy and methodology chain supporting the analysis.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
@@ -133,17 +133,17 @@ export default function About() {
               <div className="vigil-about-case-outcome-grid">
                 <article>
                   <div className="vigil-about-outcome-visual is-failure" aria-hidden="true"><CircleX /></div>
-                  <h3>Failure-classified Incident</h3>
+                  <h3>Failure evidenced</h3>
                   <p>The relevant taxonomy mappings evidence failure occurrence. Their governing class invariants flow into Repair; harm severity remains a separate VIGIL-HIM assessment.</p>
                 </article>
                 <article>
                   <div className="vigil-about-outcome-visual is-exemplar" aria-hidden="true"><CircleCheckBig /></div>
-                  <h3>Successful-invariant exemplar</h3>
+                  <h3>Invariant held · exemplar</h3>
                   <p>The tested governance boundary or boundaries held under pressure. The mappings remain attached to their Failure Classes as successful evidence and do not create a Repair requirement.</p>
                 </article>
                 <article>
                   <div className="vigil-about-outcome-visual is-combination" aria-hidden="true"><Info /></div>
-                  <h3>Combination · mixed alignment</h3>
+                  <h3>Mixed alignment outcome</h3>
                   <p>The Case File contains different mapping roles, or an unresolved boundary, so neither a single aligned nor misaligned label describes the whole occurrence. Each relationship remains separately visible in Classification.</p>
                 </article>
               </div>
@@ -157,7 +157,7 @@ export default function About() {
               <p className="vigil-library-kicker">Publication model</p>
               <h2 id="vigil-publication-heading">Traceable findings, visible judgment and clear boundaries</h2>
             </div>
-            <p className="vigil-about-record-intro">Published by <strong>CAM Initiative</strong>, a VIGIL Observatory Case File is a published chain of reasoning, not a claim that inclusion in a database makes an allegation true. Readers should be able to move from the cited source material to the Incident assessment, taxonomy classification and, where a failure is evidenced, the governing invariant relevant to repair.</p>
+            <p className="vigil-about-record-intro">Published by <strong>CAM Initiative</strong>, a VIGIL Observatory Case File is a published chain of reasoning, not a claim that inclusion in a database makes an allegation true. Readers should be able to move from the cited source material to the Incident assessment, alignment classification and, where a failure is evidenced, the governing invariant relevant to repair.</p>
             <div className="vigil-about-boundary-grid vigil-about-publication-grid">
               <article><h3>Trace the conclusion</h3><p>Sources remain identifiable and the basis for assessment stays attached to the Case File, so a reader can inspect what supports a conclusion rather than relying on the conclusion alone.</p></article>
               <article><h3>Keep evidence and judgment separate</h3><p>What happened, what the evidence supports, how VIGIL assesses the Incident and how it is classified are presented as distinct steps. Interpretation is not disguised as raw evidence.</p></article>
