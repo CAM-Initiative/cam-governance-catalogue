@@ -117,7 +117,6 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion, onArrive }: { siz
           <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
         ))}
       </span>
-      {size === "outer" && <span className="diagnostic-gear-index-pointer" />}
       {Array.from({ length: teeth }).map((_, index) => (
         <span
           key={index}
@@ -170,6 +169,14 @@ function PremiumHero() {
 
         <motion.div className="diagnostic-orbit diagnostic-orbit-v2" initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.16 }} aria-label="VIGIL analytical cycle">
           <MechanicalGear size="outer" teeth={64} rotation={gearTurn * 60} reduceMotion={Boolean(reduceMotion)} onArrive={() => setActiveStage(targetStage)} />
+          <motion.span
+            className="diagnostic-selector-rotor"
+            aria-hidden="true"
+            animate={{ rotate: gearTurn * 60 }}
+            transition={{ duration: reduceMotion ? 0 : 1.62, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="diagnostic-gear-index-pointer" />
+          </motion.span>
           <span className="diagnostic-instrument-web" aria-hidden="true">
             {Array.from({ length: 8 }).map((_, index) => (
               <i key={index} style={{ "--web-angle": `${index * 45 + (index % 3 === 0 ? 0.8 : index % 3 === 1 ? -0.45 : 0.2)}deg` } as CSSProperties} />
