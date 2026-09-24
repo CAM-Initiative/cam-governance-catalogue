@@ -214,8 +214,8 @@ export default function Datasets() {
 
           <DatasetCard
             eyebrow="VIGIL Observatory"
-            title="VIGIL Observatory Adjudication Taxonomy"
-            description="Generated full-reference PDF for the canonical VIGIL Observatory Adjudication Taxonomy, including the stable Failure Families and Failure Classes used in Case File adjudication, their recognition criteria, exclusions, relationships and linked classifications. The canonical machine-readable taxonomy remains maintained in VIGIL Observatory."
+            title="VIGIL Observatory Alignment Taxonomy"
+            description="Generated full-reference PDF for the canonical VIGIL Observatory Alignment Taxonomy, including the stable Failure Families and Failure Classes used to classify evidence against governing invariants, their recognition criteria, exclusions, relationships and linked classifications. The canonical machine-readable taxonomy remains maintained in VIGIL Observatory."
             status={taxonomyStatus}
             beta
             onDownload={downloadTaxonomyPublication}
