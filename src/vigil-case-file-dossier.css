@@ -740,3 +740,64 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+
+/* Case File tab-bar finish: six investigation tabs stay compact; Full report
+   reads as a distinct document utility rather than a squeezed seventh stage. */
+.vigil-case-file-page .vigil-case-stage-tabs {
+  grid-template-columns: repeat(6, minmax(0, 0.92fr)) minmax(8.4rem, 1.18fr);
+  gap: 0.28rem;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button {
+  min-height: 40px;
+  padding: 0.54rem 0.52rem;
+  font-size: 0.79rem;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+  min-height: 50px;
+  padding: 0.7rem 0.56rem 0.66rem;
+  font-size: 0.9rem;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button span {
+  font-size: 0.66rem;
+}
+
+.vigil-case-file-page .vigil-case-report-tab {
+  min-height: 50px;
+  padding: 0.68rem 0.82rem;
+  border-color: hsl(var(--primary) / 0.5);
+  background:
+    linear-gradient(180deg, hsl(var(--primary) / 0.055), transparent),
+    hsl(var(--background));
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  color: hsl(var(--primary));
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.65);
+}
+
+.vigil-case-file-page .vigil-case-report-tab:hover,
+.vigil-case-file-page .vigil-case-report-tab:focus-visible {
+  border-color: hsl(var(--primary) / 0.72);
+  background: hsl(var(--vigil-nav-active) / 0.42);
+}
+
+.vigil-case-file-page .vigil-case-report-tab svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+@media (max-width: 980px) {
+  .vigil-case-file-page .vigil-case-stage-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .vigil-case-file-page .vigil-case-report-tab {
+    min-height: 44px;
+    border-radius: 0.6rem;
+  }
+}
