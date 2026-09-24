@@ -532,3 +532,55 @@
     height: 0.2rem;
   }
 }
+
+
+/* Stage alignment pass.
+   Place each label on the same six radial axes as the 60-degree selector stops,
+   rather than relying on the accumulated hand-tuned offsets from earlier passes. */
+.diagnostic-orbit-v2 .diagnostic-node-1,
+.diagnostic-orbit-v2 .diagnostic-node-2,
+.diagnostic-orbit-v2 .diagnostic-node-3,
+.diagnostic-orbit-v2 .diagnostic-node-4,
+.diagnostic-orbit-v2 .diagnostic-node-5,
+.diagnostic-orbit-v2 .diagnostic-node-6 {
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-1 { left: 50%; top: 1.5%; }
+.diagnostic-orbit-v2 .diagnostic-node-2 { left: 91.8%; top: 25.8%; }
+.diagnostic-orbit-v2 .diagnostic-node-3 { left: 91.8%; top: 74.2%; }
+.diagnostic-orbit-v2 .diagnostic-node-4 { left: 50%; top: 98.5%; }
+.diagnostic-orbit-v2 .diagnostic-node-5 { left: 8.2%; top: 74.2%; }
+.diagnostic-orbit-v2 .diagnostic-node-6 { left: 8.2%; top: 25.8%; }
+
+.diagnostic-orbit-v2 .diagnostic-node:hover,
+.diagnostic-orbit-v2 .diagnostic-node:focus-visible {
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+/* Give the two right-hand stages breathing room without changing the instrument scale. */
+@media (min-width: 901px) {
+  .diagnostic-orbit-v2 {
+    right: clamp(1.75rem, 2.7vw, 2.65rem);
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active {
+    width: min(11.4rem, 32vw);
+    max-width: 11.4rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .diagnostic-orbit-v2 {
+    right: auto;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node-1 { left: 50%; top: 1.5%; }
+  .diagnostic-orbit-v2 .diagnostic-node-2 { left: 90.5%; top: 26.5%; }
+  .diagnostic-orbit-v2 .diagnostic-node-3 { left: 90.5%; top: 73.5%; }
+  .diagnostic-orbit-v2 .diagnostic-node-4 { left: 50%; top: 98.5%; }
+  .diagnostic-orbit-v2 .diagnostic-node-5 { left: 9.5%; top: 73.5%; }
+  .diagnostic-orbit-v2 .diagnostic-node-6 { left: 9.5%; top: 26.5%; }
+}
