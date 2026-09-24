@@ -7,7 +7,7 @@ import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
-import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
   | { status: "loading" }
@@ -41,8 +41,9 @@ function classificationStatusLabel(record: VigilIndexRecord) {
 function classificationStatusCounts(records: VigilIndexRecord[]): ClassificationStatusCount[] {
   const counts = new Map<string, ClassificationStatusCount>();
   for (const record of records) {
-    const label = classificationStatusLabel(record);
-    const key = canonicalComparisonKey(label);
+    const status = classificationStatusLabel(record);
+    const label = taxonomyAlignmentOutcomeLabel(record.raw);
+    const key = canonicalComparisonKey(status);
     const existing = counts.get(key);
     if (existing) existing.count += 1;
     else counts.set(key, { key, label, count: 1 });
@@ -264,8 +265,9 @@ export default function VigilCases() {
               <div className="vigil-case-table-body">
                 {pageRecords.map((record) => {
                   const href = `/observatory/cases/${encodeURIComponent(record.id)}/`;
-                  const classificationLabel = classificationStatusLabel(record);
-                  const exemplar = classificationLabel === "Exemplar";
+                  const classificationStatus = classificationStatusLabel(record);
+                  const classificationLabel = taxonomyAlignmentOutcomeLabel(record.raw);
+                  const exemplar = classificationStatus === "Exemplar";
                   return (
                     <article key={record.id} className={`vigil-case-table-row${exemplar ? " is-exemplar" : ""}`}>
                       <Link href={href} className="vigil-case-table-row-link" aria-label={`Open case file ${record.title}`}>
