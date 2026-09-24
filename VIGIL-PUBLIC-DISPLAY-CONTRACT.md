@@ -6,6 +6,13 @@ Applies to: CAM Governance Interface / VIGIL Observatory
 
 Authority boundary: CAELESTIS remains the authoritative governance corpus. VIGIL Observatory records evidence, findings, proposed changes, implemented repairs, and their verification; it does not create independent constitutional authority.
 
+## Public vocabulary
+
+Reader-facing surfaces MUST use **VIGIL Observatory Alignment Taxonomy** as the taxonomy name and **Classification** as the Case File stage. Alignment is evidence-relative to the governing invariant at a mapped governance boundary; it is not a claim of general model or system alignment.
+
+Canonical **Failure Family** (`FF`) and **Failure Class** (`FC`) names and identifiers remain unchanged. Machine values such as `failure-occurrence`, `successful-invariant`, and `ambiguous-boundary` remain stable schema values and SHOULD NOT be exposed verbatim as ordinary reader-facing labels.
+
+Public mapping outcomes are **Failure occurred**, **Invariant held**, and **Boundary unresolved**. Public Case File outcome language SHOULD use **Failure evidenced**, **Alignment exemplar / Invariant held**, and **Mixed alignment outcome** as applicable. Harm severity remains independent of alignment classification.
 ## Public reading path
 
 Every public record MUST make the following information readily visible:
@@ -35,7 +42,7 @@ The public view MUST display:
 - Incident-level severity as substantive assessment, including `severity`, `assessment_status`, `materialised_consequence`, `affected_scope`, `seriousness_and_persistence`, `quantitative_information`, `evidentiary_limits`, `band_rationale`, and `assessed_on` where published;
 - each source's claim-relative `evidence_status` and `evidence_status_basis` alongside its evidence metadata;
 - each source's publication genre from `source_type`;
-- the taxonomy classification basis only within the classification section; severity MUST NOT be presented as taxonomy classification.
+- the Alignment Taxonomy classification basis only within the Classification section; severity MUST NOT be presented as alignment classification.
 - the classification role for each taxonomy mapping where present. Mapping-local `classification_role` values on the primary or secondary classification take precedence; the existing `taxonomy_classification.classification_role` remains a backward-compatible fallback when a mapping-local role is absent. `failure-occurrence` means that mapping evidences the Failure Class; `successful-invariant` MUST be rendered publicly as **Exemplar**, remain attached to the relevant Failure Class, and MUST NOT be presented as failure evidence or as a condition requiring Repair; `ambiguous-boundary` means the Incident materially engages the class invariant without establishing either failure occurrence or successful invariant holding, MUST remain visible in Classification, and MUST NOT be presented as failure evidence or as a condition requiring Repair. A Case File containing mixed mapping roles MUST be presented after opening as a mixed alignment outcome, using an informational mixed-record affordance rather than the successful-exemplar tick; the public explanation MUST make clear that neither a single aligned nor misaligned label describes the whole occurrence when different boundaries have different evidential roles;
 
 Migration notes, hand-off commentary, taxonomy workflow state and `taxonomy_classification.classification_basis` MUST NOT be substituted for the factual Incident summary.
