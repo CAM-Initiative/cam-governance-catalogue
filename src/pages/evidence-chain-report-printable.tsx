@@ -253,7 +253,7 @@ export default function EvidenceChainReportPrintable() {
       {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
-          <strong>VIGIL Observatory Failure Taxonomy</strong>
+          <strong>VIGIL Observatory Adjudication Taxonomy</strong>
           <span className="report-reference-meta"> — {["CAM Initiative", "Public taxonomy reference", reportIncident?.taxonomyReferences[0]?.referenceVersion ? `Version ${reportIncident.taxonomyReferences[0].referenceVersion}` : reportIncident?.taxonomyReferences[0]?.taxonomyVersion ? `Version ${reportIncident.taxonomyReferences[0].taxonomyVersion}` : undefined, reportIncident?.taxonomyReferences[0]?.referencePublicationDate ? `Revised ${reportIncident.taxonomyReferences[0].referencePublicationDate}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
           <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
