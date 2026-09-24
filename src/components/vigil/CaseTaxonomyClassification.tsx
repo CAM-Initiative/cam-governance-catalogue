@@ -201,9 +201,9 @@ function MappingOutcome({ role }: { role?: ClassificationRole }) {
 }
 
 const ALIGNMENT_LEGEND = [
-  { role: "failure-occurrence" as const, label: "Failure occurred", description: "The available evidence supports the mapped failure mechanism in this occurrence." },
-  { role: "successful-invariant" as const, label: "Invariant held", description: "The relevant governance boundary was tested and held; this mapping is not failure evidence." },
-  { role: "ambiguous-boundary" as const, label: "Boundary unresolved", description: "The evidence engages the boundary but does not establish either a failure occurrence or successful invariant holding." },
+  { role: "failure-occurrence" as const, label: "Failure occurred", description: "The available evidence supports failure at the mapped governance boundary in this occurrence." },
+  { role: "successful-invariant" as const, label: "Invariant held", description: "The relevant governance boundary was tested and held; this mapping records an invariant-held alignment outcome." },
+  { role: "ambiguous-boundary" as const, label: "Boundary unresolved", description: "The evidence engages the boundary but does not establish either failure or invariant holding." },
 ];
 
 export function VigilAlignmentLegend({ detailed = false }: { detailed?: boolean }) {
@@ -247,9 +247,9 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
   });
 
   return <>
-    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory taxonomy classifications" tabIndex={0}>
+    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table">
-        <caption className="sr-only">Canonical taxonomy mappings grouped by failure family. Successful-invariant and ambiguous-boundary mappings are not failure evidence.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings grouped by Failure Family. Invariant-held and unresolved-boundary mappings are not failure evidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
@@ -275,7 +275,7 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
                   {classId && <span className="vigil-classification-id">{classId}</span>}
                 </td>
                 <td data-label="Classification basis" className="vigil-classification-basis">
-                  {item.basis ?? "No separate classification basis is published for this mapping."}
+                  {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
                 </td>
               </tr>;
             })}
@@ -384,9 +384,9 @@ function ExplicitClassificationState({
   </>;
   if (parsed.status === "candidate-new-class") return <p className="vigil-case-empty">A new failure class has been identified as a candidate, but no immutable VIGIL Observatory class ID has been allocated. The Case File therefore does not present a provisional class as canonical.{familyDefinition ? ` The current family context is: ${familyDefinition}` : ""}</p>;
   if (parsed.status === "unmapped") return <p className="vigil-case-empty">No canonical VIGIL Observatory taxonomy mapping currently exists for this Incident. The record remains explicitly unmapped rather than being forced into a legacy or approximate class.</p>;
-  if (parsed.status === "deferred") return <p className="vigil-case-empty">Taxonomy classification is explicitly deferred in the VIGIL Observatory record. No class is rendered until the structural classification review is completed.</p>;
+  if (parsed.status === "deferred") return <p className="vigil-case-empty">Alignment classification is explicitly deferred in the VIGIL Observatory record. No class is rendered until the structural classification review is completed.</p>;
   if (parsed.status === "requires-human-review") return <p className="vigil-case-empty">The Incident requires human taxonomy review. No canonical mechanism is presented until that review resolves the classification state.</p>;
-  return <p className="vigil-case-empty">No VIGIL Observatory-native taxonomy classification is recorded for this Incident. Section 03 will populate when the Incident receives a canonical family/class mapping.</p>;
+  return <p className="vigil-case-empty">No VIGIL Observatory Alignment Taxonomy classification is recorded for this Incident. Section 03 will populate when the Incident receives a canonical family/class mapping.</p>;
 }
 
 export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
@@ -394,7 +394,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <ExplicitClassificationState parsed={parsed} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving VIGIL Observatory taxonomy classification…</p>;
+  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving VIGIL Observatory alignment classification…</p>;
   if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the canonical definition cannot be resolved. {taxonomy.message}</p>;
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
@@ -486,7 +486,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
-  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical taxonomy classification.</p>;
+  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical alignment classification.</p>;
   if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Observatory Alignment Taxonomy…</p>;
   if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the class invariant cannot be resolved. {taxonomy.message}</p>;
 
