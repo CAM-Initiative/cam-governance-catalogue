@@ -320,6 +320,64 @@ function PatternField() {
   );
 }
 
+function AdjudicationFrameworkSection() {
+  const outcomes = [
+    {
+      kind: "failure",
+      label: "Failure",
+      title: "The boundary did not hold.",
+      body: "Evidence supports a failure occurrence against the governing invariant.",
+      mark: "×",
+    },
+    {
+      kind: "boundary",
+      label: "Boundary",
+      title: "The evidence stops short.",
+      body: "A meaningful governance edge is exposed without forcing the case into failure or success.",
+      mark: "◇",
+    },
+    {
+      kind: "exemplar",
+      label: "Exemplar",
+      title: "The boundary held under pressure.",
+      body: "The case records a successful invariant: evidence of the system or governance response working as intended.",
+      mark: "✓",
+    },
+  ] as const;
+
+  return (
+    <section className="adjudication-framework-section" aria-labelledby="adjudication-framework-heading">
+      <motion.div className="adjudication-framework-copy narrative-section-copy" {...reveal}>
+        <p className="premium-eyebrow narrative-kicker">Adjudication, not assumption</p>
+        <h2 id="adjudication-framework-heading">VIGIL does not assume every incident is a failure.</h2>
+        <p>The same evidence can establish failure, expose an ambiguous boundary, or show an invariant holding under pressure.</p>
+        <span className="adjudication-doom-stamp">Not a doom catalogue.</span>
+      </motion.div>
+
+      <motion.div className="adjudication-outcomes" {...reveal}>
+        {outcomes.map((outcome, index) => (
+          <article
+            key={outcome.kind}
+            className={`adjudication-outcome adjudication-outcome-${outcome.kind}`}
+            style={{ "--outcome-tilt": `${[-1.1, 0.65, -0.45][index]}deg` } as CSSProperties}
+          >
+            <div className="adjudication-outcome-head">
+              <span className="adjudication-outcome-mark" aria-hidden="true">{outcome.mark}</span>
+              <span className="adjudication-outcome-label">{outcome.label}</span>
+            </div>
+            <h3>{outcome.title}</h3>
+            <p>{outcome.body}</p>
+          </article>
+        ))}
+      </motion.div>
+
+      <motion.a className="adjudication-framework-link" href="/observatory/cases/" {...reveal}>
+        See how VIGIL adjudicates Case Files <ArrowRight aria-hidden="true" />
+      </motion.a>
+    </section>
+  );
+}
+
 function GovernanceExplorerSection() {
   return (
     <section className="governance-explorer-home-section" aria-labelledby="governance-explorer-heading">
@@ -341,6 +399,7 @@ export default function Home() {
       <main className="home-page premium-home">
         <PremiumHero />
         <PatternField />
+        <AdjudicationFrameworkSection />
         <GovernanceExplorerSection />
       </main>
     </Shell>
