@@ -72,17 +72,17 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
 
   let summary: string;
   if (held && failure) {
-    summary = "The clause engages a governance boundary that held in the observed downstream behaviour, while the wording itself also contributes to the recorded failure mechanism.";
+    summary = "The clause engages a governance boundary that held in the observed downstream behaviour, while the wording itself also contributes to the mapped governance mechanism where failure is evidenced.";
   } else if (unresolved && failure) {
-    summary = "The clause exposes a reusable governance boundary, but this occurrence does not establish that boundary as a failure. The wording nevertheless contributes to the recorded failure mechanism.";
+    summary = "The clause exposes a reusable governance boundary, but this occurrence does not establish failure at that boundary. The wording nevertheless contributes to the mapped governance mechanism.";
   } else if (failure && otherCanonical) {
-    summary = "The clause engages an additional governance boundary while also contributing to the recorded failure mechanism. The formal relationship is resolved in Classification.";
+    summary = "The clause engages an additional governance boundary while also contributing to the mapped governance mechanism. The formal relationship is resolved in Classification.";
   } else if (held) {
     summary = "The clause engages a governance boundary that held in the observed downstream behaviour.";
   } else if (unresolved) {
     summary = "The clause exposes a reusable governance boundary, but this occurrence does not establish either failure or successful holding of that boundary.";
   } else if (failure) {
-    summary = "The clause contributes directly to the recorded failure mechanism.";
+    summary = "The clause contributes directly to the mapped governance mechanism where failure is evidenced.";
   } else if (otherCanonical) {
     summary = "The clause engages a governance boundary that is carried forward into the formal taxonomy mapping.";
   } else {
