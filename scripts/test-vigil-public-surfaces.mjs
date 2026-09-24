@@ -32,8 +32,8 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   const fallbackVigil = pages.indexOf("<h2>VIGIL Observatory</h2>");
   assert.ok(fallbackCaelestis >= 0 && fallbackVigil > fallbackCaelestis);
   assert.match(pages, /Every Incident moves through the same six-stage evidence-to-conclusion structure/);
-  assert.match(pages, /Real-world harm assessment and taxonomy classification are deliberately independent/);
-  assert.match(pages, /combination \/ mixed-alignment records/);
+  assert.match(pages, /Real-world harm assessment and alignment classification are deliberately independent/);
+  assert.match(pages, /mixed alignment outcome/);
   assert.doesNotMatch(pages, /VIGIL Observatory is distinct from CAELESTIS/);
   assert.match(pages, /const vigilAboutStructuredData = \{/);
   assert.match(pages, /"@type": "CreativeWork"/);
@@ -274,7 +274,7 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
   assert.match(caseFile, /The system worked as intended\./);
   assert.match(caseFile, /const isFailure = classification === "Classified"/);
-  assert.match(caseFile, /Failure-classified Incident/);
+  assert.match(caseFile, /Alignment outcome · Failure evidenced/);
   assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
@@ -286,7 +286,7 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(classification, /No repair invariant is available for this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
-  assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
+  assert.match(report, /Invariant-held exemplar mappings remain attached to their Failure Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
   assert.match(sync, /classification_role: record\.classification_role/);
   assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
@@ -305,7 +305,7 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
   assert.match(about, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
   assert.match(about, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM/);
   assert.match(about, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
-  assert.match(about, /governing class invariants relevant to failure-occurrence and unresolved-boundary mappings/);
+  assert.match(about, /governing class invariants for mappings where failure is evidenced or the boundary remains unresolved/);
   assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
   assert.match(about, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
@@ -317,13 +317,13 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
   assert.match(aboutCss, /border: 1px solid hsl\(var\(--border\)\) !important/);
 });
 
-test("About explains successful-invariant exemplars and the publication model", async () => {
+test("About explains alignment exemplars and the publication model", async () => {
   const about = await read("src/pages/about.tsx");
-  assert.match(about, /successful-invariant exemplar/i);
+  assert.match(about, /Invariant held · exemplar/i);
   assert.match(about, /VigilAlignmentLegend detailed/);
   assert.match(about, /Invariant held[\s\S]*Boundary unresolved/);
   assert.match(about, /do not create a Repair requirement/i);
-  assert.match(about, /Combination · mixed alignment/);
+  assert.match(about, /Mixed alignment outcome/);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
   assert.match(about, /Keep evidence and judgment separate/);
   assert.match(about, /Open to scrutiny, not openly licensed/);
@@ -564,8 +564,8 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
   assert.match(hub, /Incident, Assessment, Classification, Repair and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
-  assert.match(rail, /evidence, assessment, failure classification/);
-  assert.match(pages, /evidence, assessment, failure classification/);
+  assert.match(rail, /evidence, assessment, alignment classification/);
+  assert.match(pages, /evidence, assessment, alignment classification/);
   assert.match(readme, /\*\*Assessment:\*\*/);
   assert.match(contract, /severity as substantive assessment/);
   for (const publicText of [sections, cases, hub, report, printable]) {
@@ -744,16 +744,16 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
     read("src/about-page-polish.css"),
   ]);
   const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
-  const harmSeparation = about.indexOf("Real-world harm assessment and taxonomy classification are deliberately independent");
+  const harmSeparation = about.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
   const flow = about.indexOf("vigil-about-flow-scroll");
   assert.ok(methodStart >= 0 && harmSeparation > methodStart && flow > harmSeparation);
   assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
   assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
-  assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*Combination · mixed alignment/);
+  assert.match(about, /Failure evidenced[\s\S]*Invariant held · exemplar[\s\S]*Mixed alignment outcome/);
   assert.match(about, /vigil-about-outcome-visual is-failure[\s\S]*CircleX/);
   assert.match(about, /vigil-about-outcome-visual is-exemplar[\s\S]*CircleCheckBig/);
   assert.match(about, /vigil-about-outcome-visual is-combination[\s\S]*Info/);
-  assert.match(about, /Combination · mixed alignment[\s\S]*Browse the taxonomy/);
+  assert.match(about, /Mixed alignment outcome[\s\S]*Browse the taxonomy/);
   assert.doesNotMatch(about, /<h3>Mapping role<\/h3>|<h3>Case File outcome<\/h3>/);
 
   const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
@@ -883,10 +883,10 @@ test("Case File stage tabs keep six stages on one desktop row while mobile may w
   assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
 
-test("Assessment wording keeps harm assessment distinct from taxonomy classification", async () => {
+test("Assessment wording keeps harm assessment distinct from alignment classification", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
   assert.match(about, /VIGIL-HIM assesses materialised consequence and derives severity/);
-  assert.match(about, /Real-world harm assessment and taxonomy classification are deliberately independent/);
+  assert.match(about, /Real-world harm assessment and alignment classification are deliberately independent/);
   assert.doesNotMatch(about, /classify materialised harm/);
 });
