@@ -303,8 +303,8 @@ function ClassManualCard({
         </ul> : <p className="vigil-taxonomy-linked-cases-empty">No Case Files currently evidence failure for this class.</p>}
     </section>
 
-    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Successful invariant exemplars for ${item.name}`}>
-      <h4>Successful invariant exemplars <span>{invariantExemplars.length}</span></h4>
+    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Alignment exemplars for ${item.name}`}>
+      <h4>Alignment exemplars <span>{invariantExemplars.length}</span></h4>
       <ul>
         {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
           <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
