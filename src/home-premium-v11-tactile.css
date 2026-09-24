@@ -1544,3 +1544,71 @@ html:not([data-theme="dark"]) .diagnostic-core {
     0 0 0 0.17rem hsl(35 20% 32% / 0.13),
     inset 0 0 1.4rem hsl(40 38% 40% / 0.07);
 }
+
+
+/* Click-to-inspect behaviour for the six analytical stage labels.
+   Hover/focus can still preview a stop; a click pins it, pauses the automatic
+   cycle, and turns the central hub into a compact instrument readout. */
+.diagnostic-orbit-v2 .diagnostic-node {
+  cursor: pointer;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-pinned {
+  box-shadow:
+    0 0 0 2px hsl(var(--primary) / 0.16),
+    0 0.2rem 0.46rem hsl(var(--foreground) / 0.11),
+    inset 0 1px 0 hsl(var(--background) / 0.2);
+}
+
+.diagnostic-core {
+  transition:
+    transform 180ms cubic-bezier(.22,1,.36,1),
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.diagnostic-core.is-inspecting {
+  transform: scale(1.045);
+  border-color: hsl(var(--primary) / 0.58);
+  box-shadow:
+    0 0.38rem 0.78rem hsl(var(--foreground) / 0.13),
+    0 0 0 0.18rem hsl(var(--primary) / 0.10),
+    inset 0 0 1.1rem hsl(var(--primary) / 0.045);
+}
+
+.diagnostic-core-note {
+  display: block;
+  width: 7.4rem;
+  max-width: 78%;
+  margin: 0.38rem auto 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.61rem;
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: 0;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+}
+
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-pinned {
+  box-shadow:
+    0 0 0 2px hsl(41 60% 42% / 0.16),
+    0 0.2rem 0.44rem hsl(29 28% 20% / 0.14),
+    inset 0 1px 0 hsl(48 72% 78% / 0.22);
+}
+
+@media (max-width: 720px) {
+  .diagnostic-core-note {
+    width: 6rem;
+    max-width: 76%;
+    margin-top: 0.28rem;
+    font-size: 0.54rem;
+    line-height: 1.22;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnostic-core {
+    transition: none;
+  }
+}
