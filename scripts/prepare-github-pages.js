@@ -301,15 +301,33 @@ function taxonomyCaseExamplesForClass(classId) {
   return Array.isArray(classes[classId]) ? classes[classId] : [];
 }
 
+function publicMappingRoleLabel(role) {
+  if (role === "failure-occurrence") return "Failure occurred";
+  if (role === "successful-invariant") return "Invariant held";
+  if (role === "ambiguous-boundary") return "Boundary unresolved";
+  return role ? String(role).replaceAll("-", " ") : "";
+}
+
+function publicAlignmentOutcome(record) {
+  if (record.classification_role === "failure-occurrence") return "Failure evidenced";
+  if (record.classification_role === "successful-invariant") return "Invariant held";
+  if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
+  if (record.classification_status === "classified" || record.classification_status === "provisionally-classified") return "Failure evidenced";
+  if (record.classification_status === "classification-disputed") return "Disputed";
+  if (record.classification_status === "requires-human-review") return "Under review";
+  if (record.classification_status === "unclassified") return "Unclassified";
+  return record.classification_status || "not stated";
+}
+
 function taxonomyCaseLinkHtml(example) {
-  const meta = [example.classification_role, example.classification_confidence ? `${example.classification_confidence} confidence` : ""]
+  const meta = [publicMappingRoleLabel(example.classification_role), example.classification_confidence ? `${example.classification_confidence} confidence` : ""]
     .filter(Boolean)
     .join(" · ");
   return `<li><a href="/observatory/cases/${encodeURIComponent(example.incident_id)}"><code>${escapeHtml(example.incident_id)}</code> — ${escapeHtml(example.incident_title || example.incident_id)}</a>${meta ? ` <span>${escapeHtml(meta)}</span>` : ""}</li>`;
 }
 
 function taxonomyInvariantExemplarHtml(exemplar, classId) {
-  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Successful invariant · <a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
+  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Invariant held · exemplar · <a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
 }
 
 function taxonomyExternalReferenceHtml(reference) {
@@ -394,8 +412,8 @@ for (const { document } of taxonomyFamilies) {
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
       <h2>Linked Case Files</h2>
-      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified failure Case Files are currently linked to this class.</p>"}
-      ${classInvariantExemplars.length ? `<h2>Successful invariant exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
+      ${classInvariantExemplars.length ? `<h2>Alignment exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
@@ -436,7 +454,7 @@ for (const record of incidentRecords) {
     <h1>${escapeHtml(record.title || record.id)}</h1>
     <p>${escapeHtml(description)}</p>
     <dl>
-      <dt>VIGIL Observatory classification status</dt><dd>${escapeHtml(record.classification_role === "successful-invariant" ? "Exemplar" : record.classification_role === "ambiguous-boundary" ? "Combination" : (record.classification_status || "not stated"))}</dd>
+      <dt>VIGIL Observatory alignment outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>
       <dt>VIGIL Observatory primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
       <dt>VIGIL Observatory secondary classifications</dt>${secondaryClassificationHtml(record)}
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
