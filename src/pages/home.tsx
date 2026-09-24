@@ -341,7 +341,7 @@ function AdjudicationFrameworkSection() {
       label: "Boundary",
       title: "The evidence stops short.",
       body: "A meaningful governance edge is exposed without forcing the case into failure or success.",
-      mark: "◇",
+      mark: "i",
     },
     {
       kind: "exemplar",
@@ -358,7 +358,15 @@ function AdjudicationFrameworkSection() {
         <p className="premium-eyebrow narrative-kicker">Adjudication, not assumption</p>
         <h2 id="adjudication-framework-heading">VIGIL does not assume every incident is a failure.</h2>
         <p>The same evidence can establish failure, expose an ambiguous boundary, or show an invariant holding under pressure.</p>
-        <span className="adjudication-doom-stamp">Not a doom catalogue.</span>
+        <motion.span
+          className="adjudication-doom-stamp"
+          initial={{ opacity: 0, scale: 1.55, rotate: -10, y: -18 }}
+          whileInView={{ opacity: 0.9, scale: 1, rotate: -5.5, y: 0 }}
+          viewport={{ once: true, amount: 0.7 }}
+          transition={{ delay: 0.28, duration: 0.22, ease: [0.12, 0.8, 0.22, 1] }}
+        >
+          Not a doom catalogue.
+        </motion.span>
       </motion.div>
 
       <motion.div className="adjudication-outcomes" {...reveal}>
