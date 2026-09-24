@@ -300,7 +300,7 @@ function ClassManualCard({
             </Link>
             <p>{caseMeta(example)}</p>
           </li>)}
-        </ul> : <p className="vigil-taxonomy-linked-cases-empty">No classified failure Case Files are currently linked to this class.</p>}
+        </ul> : <p className="vigil-taxonomy-linked-cases-empty">No Case Files currently evidence failure for this class.</p>}
     </section>
 
     {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Successful invariant exemplars for ${item.name}`}>
