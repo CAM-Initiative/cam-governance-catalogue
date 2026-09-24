@@ -296,7 +296,7 @@ function TaxonomyReveal() {
           </a>
         ))}
       </div>
-      <a className="taxonomy-reveal-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the full failure taxonomy <ArrowRight aria-hidden="true" /></a>
+      <a className="taxonomy-reveal-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the adjudication taxonomy <ArrowRight aria-hidden="true" /></a>
     </div>
   );
 }
@@ -427,9 +427,9 @@ export default function Home() {
  * these concepts into the interactive hero and pattern narrative rather than
  * rendering the former explanatory blocks verbatim:
  * VIGIL Observatory · Evidence
- * VIGIL Observatory Failure Taxonomy · Classification
+ * VIGIL Observatory Adjudication Taxonomy · Classification
  * Evidence → Assessment → Runtime Governance
  * Explore the Taxonomy
  * Download the PDF
- * VIGIL Observatory → VIGIL Observatory Failure Taxonomy → CAELESTIS
+ * VIGIL Observatory → VIGIL Observatory Adjudication Taxonomy → CAELESTIS
  */
