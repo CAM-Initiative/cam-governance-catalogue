@@ -188,20 +188,6 @@ function PremiumHero() {
               <i key={index} style={{ "--web-angle": `${index * 45 + (index % 3 === 0 ? 0.8 : index % 3 === 1 ? -0.45 : 0.2)}deg` } as CSSProperties} />
             ))}
           </span>
-          <motion.svg
-            className="diagnostic-recess-panels"
-            viewBox="0 0 100 100"
-            aria-hidden="true"
-            animate={{ rotate: gearTurn * 60 }}
-            transition={{ duration: reduceMotion ? 0 : 1.62, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <path d="M 53.852 5.968 A 44.2 44.2 0 0 1 86.207 24.648 L 76.459 31.473 A 32.3 32.3 0 0 0 52.815 17.823 Z" />
-            <path d="M 90.059 31.320 A 44.2 44.2 0 0 1 90.059 68.680 L 79.274 63.651 A 32.3 32.3 0 0 0 79.274 36.349 Z" />
-            <path d="M 86.207 75.352 A 44.2 44.2 0 0 1 53.852 94.032 L 52.815 82.177 A 32.3 32.3 0 0 0 76.459 68.527 Z" />
-            <path d="M 46.148 94.032 A 44.2 44.2 0 0 1 13.793 75.352 L 23.541 68.527 A 32.3 32.3 0 0 0 47.185 82.177 Z" />
-            <path d="M 9.941 68.680 A 44.2 44.2 0 0 1 9.941 31.320 L 20.726 36.349 A 32.3 32.3 0 0 0 20.726 63.651 Z" />
-            <path d="M 13.793 24.648 A 44.2 44.2 0 0 1 46.148 5.968 L 47.185 17.823 A 32.3 32.3 0 0 0 23.541 31.473 Z" />
-          </motion.svg>
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
           <div className="diagnostic-core">
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
