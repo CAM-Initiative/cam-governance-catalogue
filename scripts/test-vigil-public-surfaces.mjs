@@ -716,6 +716,19 @@ test("Case File search, classification and severity filters share one desktop ro
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
 });
 
+test("Case File ticket owns the report action and keeps section tabs analytical", async () => {
+  const [caseFile, polish] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/vigil-case-file-polish.css"),
+  ]);
+  assert.match(caseFile, /className="vigil-case-ticket-footer/);
+  assert.match(caseFile, /vigil-case-ticket-footer-meta[\s\S]*Field label="Severity"[\s\S]*Field label="Classification"/);
+  assert.match(caseFile, /vigil-case-ticket-report-button/);
+  assert.doesNotMatch(caseFile, /vigil-case-report-tab|>\s*Full report\s*</);
+  assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-footer \{[\s\S]*display: flex;[\s\S]*align-items: end;[\s\S]*justify-content: flex-end/);
+  assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-report-button \{[\s\S]*margin-top: 0 !important/);
+});
+
 test("Case Files landing page stays deliberately terse", async () => {
   const cases = await read("src/pages/vigil-cases.tsx");
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
