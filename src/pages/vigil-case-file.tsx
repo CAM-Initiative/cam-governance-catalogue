@@ -337,12 +337,12 @@ function exemplarExecutionStatus(record?: VigilIndexRecord) {
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
   const relationship = reference.relationship === "primary"
-    ? "Primary taxonomy classification"
+    ? "Primary alignment classification"
     : reference.relationship === "secondary"
-      ? "Secondary taxonomy classification"
-      : "Family-only taxonomy classification";
+      ? "Secondary alignment classification"
+      : "Family-only alignment classification";
   return reference.role === "successful-invariant"
-    ? `${relationship} · successful-invariant exemplar`
+    ? `${relationship} · invariant held · exemplar`
     : relationship;
 }
 
@@ -582,7 +582,7 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
+      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory alignment classification can be rendered.</p>}
     </>;
 
     if (stageId === "repair") return <>
