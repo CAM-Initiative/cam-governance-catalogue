@@ -17,12 +17,12 @@ const reveal = {
 };
 
 const diagnosticStages = [
-  { label: "Evidence", title: "What happened?" },
-  { label: "Environment", title: "Where did it happen?" },
-  { label: "Harm", title: "What did it do?" },
-  { label: "Governance", title: "What boundary was engaged?" },
-  { label: "Classification", title: "Why did it fail?" },
-  { label: "Compare", title: "Where does it recur?" },
+  { label: "Evidence", title: "What happened?", detail: "Sources establish the occurrence." },
+  { label: "Environment", title: "Where did it happen?", detail: "Context fixes how and where the system operated." },
+  { label: "Harm", title: "What did it do?", detail: "Impact is assessed using one consistent method." },
+  { label: "Governance", title: "What boundary was engaged?", detail: "Relevant duties and invariants are identified." },
+  { label: "Classification", title: "Why did it fail?", detail: "Evidence is mapped to a repeatable failure class." },
+  { label: "Compare", title: "Where does it recur?", detail: "Comparable cases expose recurring mechanisms." },
 ] as const;
 
 const fallbackTickerItems: IncidentTickerItem[] = [
@@ -131,17 +131,18 @@ function MechanicalGear({ size, teeth, rotation, reduceMotion, onArrive }: { siz
 function PremiumHero() {
   const [gearTurn, setGearTurn] = useState(0);
   const [activeStage, setActiveStage] = useState<number | null>(0);
+  const [pinnedStage, setPinnedStage] = useState<number | null>(null);
   const reduceMotion = useReducedMotion();
   const targetStage = ((gearTurn % diagnosticStages.length) + diagnosticStages.length) % diagnosticStages.length;
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (reduceMotion || pinnedStage !== null) return;
     const timer = window.setInterval(() => {
       setActiveStage(null);
       setGearTurn((current) => current + 1);
     }, 5200);
     return () => window.clearInterval(timer);
-  }, [reduceMotion]);
+  }, [pinnedStage, reduceMotion]);
 
   function activateStage(index: number) {
     setActiveStage(null);
@@ -150,6 +151,12 @@ function PremiumHero() {
       const forwardSteps = (index - currentIndex + diagnosticStages.length) % diagnosticStages.length;
       return current + forwardSteps;
     });
+  }
+
+  function inspectStage(index: number) {
+    const releasing = pinnedStage === index;
+    setPinnedStage(releasing ? null : index);
+    activateStage(index);
   }
 
   return (
@@ -183,9 +190,10 @@ function PremiumHero() {
             ))}
           </span>
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
-          <div className="diagnostic-core">
-            <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
-            <strong>What went wrong?</strong>
+          <div className={`diagnostic-core${pinnedStage !== null ? " is-inspecting" : ""}`} aria-live="polite">
+            <span className="diagnostic-core-label">{pinnedStage !== null ? diagnosticStages[pinnedStage].label : "VIGIL ANALYSIS"}</span>
+            <strong>{pinnedStage !== null ? diagnosticStages[pinnedStage].title : "What went wrong?"}</strong>
+            {pinnedStage !== null && <span className="diagnostic-core-note">{diagnosticStages[pinnedStage].detail}</span>}
           </div>
 
           {diagnosticStages.map((stage, index) => {
@@ -194,10 +202,12 @@ function PremiumHero() {
               <button
                 type="button"
                 key={stage.label}
-                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}`}
-                onMouseEnter={() => activateStage(index)}
-                onFocus={() => activateStage(index)}
-                aria-pressed={active}
+                className={`diagnostic-node diagnostic-node-${index + 1}${active ? " is-active" : ""}${pinnedStage === index ? " is-pinned" : ""}`}
+                onMouseEnter={() => pinnedStage === null && activateStage(index)}
+                onFocus={() => pinnedStage === null && activateStage(index)}
+                onClick={() => inspectStage(index)}
+                aria-pressed={pinnedStage === index}
+                aria-label={`${pinnedStage === index ? "Release" : "Inspect"} ${stage.label} stage: ${stage.title}`}
               >
                 <span className="diagnostic-node-copy">
                   <span className="diagnostic-node-label">{stage.label}</span>
