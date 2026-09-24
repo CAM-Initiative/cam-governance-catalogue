@@ -134,7 +134,7 @@ export default function About() {
                 <article>
                   <div className="vigil-about-outcome-visual is-failure" aria-hidden="true"><CircleX /></div>
                   <h3>Failure evidenced</h3>
-                  <p>The relevant taxonomy mappings evidence failure occurrence. Their governing class invariants flow into Repair; harm severity remains a separate VIGIL-HIM assessment.</p>
+                  <p>The relevant Alignment Taxonomy mappings evidence that failure occurred. Their governing class invariants flow into Repair; harm severity remains a separate VIGIL-HIM assessment.</p>
                 </article>
                 <article>
                   <div className="vigil-about-outcome-visual is-exemplar" aria-hidden="true"><CircleCheckBig /></div>
