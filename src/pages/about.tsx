@@ -17,7 +17,7 @@ const ABOUT_CASE_FILE_STAGES = [
   {
     number: "03",
     label: "Classification",
-    description: "Map the evidence to the VIGIL Failure Taxonomy and record whether each boundary failed, held or remains unresolved.",
+    description: "Map the evidence to the VIGIL Adjudication Taxonomy and record whether each boundary failed, held or remains unresolved.",
   },
   {
     number: "04",
@@ -91,10 +91,10 @@ export default function About() {
               <h2 id="vigil-observatory-heading">Public Incident evidence, classification and repair analysis</h2>
             </div>
             <p className="vigil-about-record-intro">VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies recurring failure mechanisms through a maintained taxonomy, and records successful-invariant exemplars when the relevant governance boundary holds under pressure.</p>
-            <p className="vigil-about-record-intro">VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Failure Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately. VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
+            <p className="vigil-about-record-intro">VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Adjudication Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately. VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
             <div className="vigil-about-hero-actions" aria-label="Explore VIGIL Observatory">
               <Link href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
-              <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Failure Taxonomy <ArrowRight aria-hidden="true" /></Link>
+              <Link href="/observatory/knowledge-base/failure-taxonomy/">Explore the Adjudication Taxonomy <ArrowRight aria-hidden="true" /></Link>
               <Link href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
             </div>
           </section>
@@ -104,7 +104,7 @@ export default function About() {
               <p className="vigil-library-kicker">Case File method</p>
               <h2 id="vigil-method-heading">Every Incident moves through the same six-stage evidence-to-conclusion structure</h2>
             </div>
-            <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Failure Taxonomy were engaged, and what happened at each boundary.</p>
+            <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Adjudication Taxonomy were engaged, and what happened at each boundary.</p>
             <p className="vigil-about-record-intro">Real-world harm assessment and taxonomy classification are deliberately independent. Harm assessment describes materialised consequence and derives severity; taxonomy classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
             <p className="vigil-about-record-intro"><strong>Repair</strong> then surfaces the governing class invariants relevant to mappings that failed or remain unresolved. Successful-invariant mappings stay visible in Classification as evidence of governance that held and do not create a Repair requirement. <strong>Conclusion</strong> integrates those separate findings, while <strong>References</strong> preserve the evidence, taxonomy and methodology chain supporting the analysis.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
@@ -120,10 +120,10 @@ export default function About() {
 
           <section className="vigil-about-section" aria-labelledby="vigil-taxonomy-heading">
             <div className="vigil-about-section-heading">
-              <p className="vigil-library-kicker">VIGIL Observatory Failure Taxonomy</p>
+              <p className="vigil-library-kicker">VIGIL Observatory Adjudication Taxonomy</p>
               <h2 id="vigil-taxonomy-heading">Mappings classify individual boundaries. The Case File summarises the combined outcome.</h2>
             </div>
-            <p className="vigil-about-record-intro">The maintained VIGIL Observatory Failure Taxonomy provides shared classification language for recurring AI governance and control-failure mechanisms. Broad <strong>Failure Families</strong> provide stable structure; individual <strong>Failure Classes</strong> define a repeatable mechanism, recognition criteria, exclusions and the governing invariant relevant to that boundary.</p>
+            <p className="vigil-about-record-intro">The maintained VIGIL Observatory Adjudication Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Failure Families</strong> and individual <strong>Failure Classes</strong> retain their established FF/FC identifiers; each class defines a repeatable mechanism, recognition criteria, exclusions and the governing invariant used during adjudication.</p>
             <p className="vigil-about-record-intro">Classification happens at the <strong>mapping level</strong>. One Incident may engage several Failure Classes, and each relationship is recorded separately as <strong>Failure occurred</strong>, <strong>Invariant held</strong> or <strong>Boundary unresolved</strong>. The legend below is the visual key used throughout VIGIL Case Files.</p>
             <VigilAlignmentLegend detailed />
 
