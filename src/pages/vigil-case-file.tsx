@@ -715,7 +715,7 @@ export default function VigilCaseFile() {
         {taxonomyReferences.length > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy">
           <span>[1]</span>
           <div>
-            <strong>VIGIL Observatory Adjudication Taxonomy</strong>
+            <strong>VIGIL Observatory Alignment Taxonomy</strong>
             <p>{["CAM Initiative", "Public taxonomy reference", taxonomyReferenceVersion ? `Version ${taxonomyReferenceVersion}` : undefined, taxonomyReferenceDate ? `Revised ${taxonomyReferenceDate}` : undefined].filter(Boolean).join(" · ")}</p>
             <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
@@ -817,7 +817,7 @@ export default function VigilCaseFile() {
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Failure-classified Incident</p>
         <h2 id="vigil-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
-        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Adjudication Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
         <p className="vigil-exemplar-callout-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </div>
     </section>}
