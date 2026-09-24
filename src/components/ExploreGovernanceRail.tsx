@@ -8,6 +8,7 @@ const initiativeResources = [
     purpose: "Canonical VIGIL Observatory Incident investigations with evidence, assessment, failure classification and repair analysis.",
     href: "/observatory/cases/",
     icon: FileText,
+    chip: "Beta",
   },
   {
     id: "knowledge-base",
@@ -16,6 +17,7 @@ const initiativeResources = [
     purpose: "VIGIL Observatory taxonomy, harm and severity methodology, standards, policy and supporting governance resources.",
     href: "/observatory/knowledge-base/",
     icon: Library,
+    chip: undefined,
   },
   {
     id: "datasets",
@@ -24,6 +26,7 @@ const initiativeResources = [
     purpose: "Downloadable VIGIL Observatory source, standards and requirement datasets for independent analysis and reuse.",
     href: "/datasets/",
     icon: Database,
+    chip: undefined,
   },
 ];
 
@@ -66,7 +69,7 @@ export function ExploreGovernanceRail() {
           const Icon = resource.icon;
           return <a className="home-governance-card group" href={resource.href} key={resource.id}>
             <span className="home-governance-card-title">
-              <span className="home-governance-card-label"><Icon aria-hidden="true" /><span>{resource.title}</span></span>
+              <span className="home-governance-card-label"><Icon aria-hidden="true" /><span>{resource.title}</span>{resource.chip ? <span className="cam-beta-chip">{resource.chip}</span> : null}</span>
               <ArrowRight className="home-governance-card-arrow h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
             </span>
             <span className="home-governance-detail block">
