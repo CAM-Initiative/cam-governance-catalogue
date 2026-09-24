@@ -79,7 +79,7 @@ export default function VigilSeverityMethodology() {
         <header className="vigil-about-hero">
           <p className="vigil-library-kicker">VIGIL Observatory · VIGIL-HIM 1.0.0</p>
           <h1>Harm & Severity Methodology</h1>
-          <p>VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from taxonomy classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
+          <p>VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from alignment classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
         </header>
 
         <article className="vigil-severity-methodology-document">
@@ -90,7 +90,7 @@ export default function VigilSeverityMethodology() {
             </header>
             <div className="vigil-severity-principles">
               <div><h3>Evidence state first</h3><p>Each harm dimension is recorded as assessed, unreported, insufficient evidence or not applicable. Missing publication evidence is not converted into S1.</p></div>
-              <div><h3>Highest supported harm</h3><p>The highest defensible materialised-harm threshold controls the overall severity. Dimensions are not averaged, summed or increased because an Incident has several taxonomy classifications.</p></div>
+              <div><h3>Highest supported harm</h3><p>The highest defensible materialised-harm threshold controls the overall severity. Dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p></div>
               <div><h3>SU remains unassessed</h3><p>SU is used when the evidence cannot support a defensible overall band. It is an evidence state, not a sixth severity band.</p></div>
             </div>
           </section>
