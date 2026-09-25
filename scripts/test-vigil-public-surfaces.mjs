@@ -811,26 +811,27 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
     read("src/pages/vigil-knowledge-hub.tsx"),
   ]);
 
-  assert.match(about, /01 · VIGIL Observatory/);
-  assert.match(about, /02 · Case File method/);
-  assert.match(about, /03 · VIGIL Observatory Alignment Taxonomy/);
-  assert.match(about, /04 · Publication model/);
-  assert.match(about, /05 · CAELESTIS Architecture Model/);
-  assert.match(about, /06 · Connect/);
+  assert.doesNotMatch(about, /01 · VIGIL Observatory|02 · Case File method|03 · VIGIL Observatory Alignment Taxonomy|04 · Publication model|05 · CAELESTIS Architecture Model|06 · Connect/);
+  assert.match(about, /label: "VIGIL Observatory"/);
+  assert.match(about, /label: "Case File method"/);
+  assert.match(about, /label: "Alignment Taxonomy"/);
 
   const caseFiles = shell.indexOf('navLabel: "Case Files"');
   const knowledge = shell.indexOf('navLabel: "Knowledge Base"');
+  const policy = shell.indexOf('navLabel: "Policy"');
   const standards = shell.indexOf('navLabel: "AI Governance Standards"');
   const vigilMenuEnd = shell.indexOf("];", shell.indexOf("const vigilLinks"));
-  assert.ok(caseFiles >= 0 && knowledge > caseFiles && standards > knowledge && standards < vigilMenuEnd);
+  assert.ok(caseFiles >= 0 && knowledge > caseFiles && policy > knowledge && standards > policy && standards < vigilMenuEnd);
+  assert.doesNotMatch(shell, /const homeLinks = \[[\s\S]*?label: "Policy"/);
 
   assert.match(severity, /vigil-taxonomy-ticket vigil-harm-ticket/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
   assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
   assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
   assert.match(menuCss, /cam-action:not\(\.cam-action-compact\)[\s\S]*border-radius: 999px/);
-  assert.match(gearCss, /Outer-wheel surface correction/);
-  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 4\.25/);
+  assert.match(gearCss, /Outer-wheel inner-edge correction/);
+  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 2\.85/);
+  assert.match(gearCss, /hsl\(28 18% 7% \/ 0\.97\)[\s\S]*hsl\(0 0% 100% \/ 0\.995\)/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
