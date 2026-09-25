@@ -1612,7 +1612,100 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 .vigil-harm-ticket {
-  margin-bottom: 0;
+  margin: 0.25rem 0 1.45rem;
+}
+
+/* Harm methodology masthead: use the same restrained paper-ticket hierarchy as
+   Case Files and the taxonomy, rather than a generic oversized document hero. */
+.vigil-severity-methodology-page .vigil-harm-ticket {
+  grid-template-columns: minmax(0, 1.35fr) minmax(14.5rem, 0.58fr);
+  gap: clamp(1.4rem, 2.8vw, 2.3rem);
+  padding: 1.55rem 1.65rem 1.5rem;
+  border-color: hsl(var(--primary) / 0.22);
+  background:
+    linear-gradient(180deg, hsl(var(--card) / 0.24), hsl(var(--background)) 48%);
+  box-shadow:
+    0 0.45rem 1.2rem hsl(var(--foreground) / 0.045),
+    inset 0 1px 0 hsl(var(--background) / 0.88);
+}
+
+.vigil-severity-methodology-page .vigil-harm-ticket h1 {
+  max-width: 38rem;
+  margin-top: 0.62rem;
+  font-size: clamp(2.65rem, 4.4vw, 3.9rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.vigil-severity-methodology-page .vigil-harm-ticket .vigil-library-description {
+  max-width: 47rem;
+  margin-top: 0.9rem;
+}
+
+.vigil-severity-methodology-page .vigil-harm-ticket .vigil-taxonomy-ticket-meta {
+  padding-left: 1.45rem;
+  border-left-style: dashed;
+  border-left-color: hsl(var(--border) / 0.95);
+}
+
+.vigil-severity-methodology-page .vigil-harm-ticket .vigil-case-context-label {
+  margin-bottom: 0.72rem;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid hsl(var(--border) / 0.72);
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles > div {
+  min-width: 0;
+  padding: 1.05rem 1.15rem 1.15rem 0;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles > div + div {
+  padding-left: 1.15rem;
+  border-left: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles p {
+  margin: 0.55rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.62;
+}
+
+@media (max-width: 760px) {
+  .vigil-severity-methodology-page .vigil-harm-ticket {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-severity-methodology-page .vigil-harm-ticket .vigil-taxonomy-ticket-meta {
+    padding: 1rem 0 0;
+    border-left: 0;
+    border-top: 1px dashed hsl(var(--border) / 0.95);
+  }
+
+  .vigil-severity-methodology-page .vigil-severity-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-severity-methodology-page .vigil-severity-principles > div,
+  .vigil-severity-methodology-page .vigil-severity-principles > div + div {
+    padding: 0.95rem 0;
+    border-left: 0;
+  }
+
+  .vigil-severity-methodology-page .vigil-severity-principles > div + div {
+    border-top: 1px solid hsl(var(--border) / 0.72);
+  }
 }
 
 @media (max-width: 620px) {
