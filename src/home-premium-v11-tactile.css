@@ -1882,12 +1882,12 @@ html:not([data-theme="dark"]) .diagnostic-light-edge-outer {
   inset: 8%;
   background:
     radial-gradient(circle,
-      transparent 0 80.5%,
-      hsl(0 0% 100% / 0.99) 81% 84.5%,
-      transparent 85% 91%,
-      hsl(0 0% 100% / 0.92) 91.5% 94%,
-      transparent 94.5% 100%);
-  filter: drop-shadow(0 0.055rem 0.055rem hsl(34 12% 38% / 0.11));
+      transparent 0 60%,
+      hsl(0 0% 100% / 0.98) 60.5% 64%,
+      transparent 64.5% 93.5%,
+      hsl(0 0% 100% / 0.92) 94% 96.5%,
+      transparent 97% 100%);
+  filter: drop-shadow(0 0.045rem 0.05rem hsl(34 12% 38% / 0.10));
 }
 
 html:not([data-theme="dark"]) .diagnostic-light-edge-inner {
