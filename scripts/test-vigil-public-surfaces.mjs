@@ -829,11 +829,15 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /home-governance-board-grid/);
   assert.match(rail, /home-governance-pin/);
   assert.match(rail, /target="_blank"/);
-  assert.match(rail, /External References/);
-  assert.doesNotMatch(rail, /home-governance-board-rule/);
+  assert.match(rail, /aria-label="External References"/);
+  assert.match(rail, /home-governance-letter/);
+  assert.match(rail, /home-governance-letter-space/);
+  assert.doesNotMatch(rail, /home-governance-board-rule|home-governance-section-label/);
   assert.match(css, /home-governance-board[\s\S]*border: 0\.58rem solid/);
   assert.match(css, /border-image:[\s\S]*linear-gradient\([\s\S]*hsl\(47 72% 68%\)/);
   assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
+  assert.match(css, /home-governance-letter[\s\S]*font-family: var\(--app-font-mono\)[\s\S]*text-shadow:/);
+  assert.match(css, /home-governance-letter::before,[\s\S]*home-governance-letter::after[\s\S]*bottom: -0\.28em/);
   assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
