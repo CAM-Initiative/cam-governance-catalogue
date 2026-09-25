@@ -1629,8 +1629,8 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 /* Harm methodology -------------------------------------------------------
- * Full-width ticket masthead, followed by the same open section treatment
- * used across the About-family documents.
+ * Full-width ticket masthead first; the contents rail and open sections then
+ * follow the same document treatment used across the About-family pages.
  */
 .vigil-severity-methodology-page > .vigil-harm-ticket {
   margin-bottom: 0;
