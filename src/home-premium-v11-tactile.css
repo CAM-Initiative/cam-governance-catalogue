@@ -2017,3 +2017,37 @@ html:not([data-theme="dark"]) .diagnostic-inner-spokes-surface > i::after {
     width: 0.68rem;
   }
 }
+
+
+/* Outer spoke finish ------------------------------------------------------
+ * Keep the large wheel's existing spoke geometry, but give those ribs the same
+ * softly surfaced machining treatment as the foreground inner spokes.
+ */
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i {
+  opacity: 0.9;
+  border-color: hsl(36 18% 46% / 0.28);
+  background:
+    linear-gradient(90deg,
+      hsl(42 20% 96% / 0.98),
+      hsl(38 10% 72% / 0.42) 34%,
+      hsl(42 34% 58% / 0.54) 50%,
+      hsl(37 10% 69% / 0.38) 66%,
+      hsl(42 20% 96% / 0.98));
+  box-shadow:
+    inset 1px 0 0 hsl(0 0% 100% / 0.82),
+    inset -1px 0 0 hsl(35 12% 46% / 0.16),
+    0 0.08rem 0.16rem hsl(30 14% 24% / 0.06),
+    0 0 0.34rem hsl(42 28% 76% / 0.10);
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i::after {
+  border-color: hsl(39 32% 42% / 0.34);
+  background:
+    radial-gradient(circle at 35% 30%,
+      hsl(47 42% 88% / 0.92),
+      hsl(40 28% 64% / 0.72) 42%,
+      hsl(35 18% 46% / 0.7) 76%);
+  box-shadow:
+    0 0 0 1px hsl(0 0% 100% / 0.18),
+    0 0.07rem 0.15rem hsl(30 14% 24% / 0.08);
+}
