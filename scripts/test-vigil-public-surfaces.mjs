@@ -47,6 +47,11 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
+test("Governance Explorer situates the VIGIL Observatory in the external landscape", async () => {
+  const home = await read("src/pages/home.tsx");
+  assert.match(home, /help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice/);
+});
+
 test("Explore AI Governance is an external-only pinned reference board", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
   assert.match(rail, /Explore AI Governance/);
@@ -796,9 +801,9 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /home-governance-pin/);
   assert.match(rail, /target="_blank"/);
   assert.match(css, /home-governance-board[\s\S]*border: 0\.5rem solid/);
-  assert.match(css, /home-governance-note-1[\s\S]*rotate\(-1\.3deg\)/);
+  assert.match(css, /home-governance-note-1[\s\S]*top: 3px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
-  assert.match(css, /home-governance-note:hover[\s\S]*scale\(1\.015\)/);
+  assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
