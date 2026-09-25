@@ -129,7 +129,7 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
 
   <h2>VIGIL Case File method</h2>
-  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Real-world harm assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity, while alignment classification describes governance mechanism and boundary behaviour.</p>
+  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Real-world harm assessment and fidelity classification are deliberately independent: harm assessment describes materialised consequence and derives severity, while fidelity classification describes governance mechanism and boundary behaviour.</p>
   <p>Alignment Taxonomy mappings record whether a boundary failed, held or remains unresolved. Case File outcomes may therefore show failure evidenced, an invariant-held exemplar, or a mixed alignment outcome where different boundaries produced different evidentiary roles.</p>
   <nav aria-label="Explore VIGIL Observatory">
     <ul>
@@ -173,10 +173,10 @@ const staticRoutes = [
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
   ["/observatory/about", "About CAM Initiative", aboutDescription],
   ["/observatory/severity-methodology", "VIGIL Observatory Harm & Severity Methodology", "VIGIL-HIM 1.0.0 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
-  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, repair and references."],
+  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, fidelity classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
-  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Failure Families and Failure Classes with recognition criteria, exclusions and governing invariants."],
+  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
   ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory Standards Sources", "External governance standards and source material used by VIGIL Observatory."],
   ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],
   ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
@@ -239,8 +239,8 @@ if (taxonomyFamilies.length) {
   const taxonomyIndexBody = `<main data-static-crawl-fallback="vigil-taxonomy-index" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory</p>
     <h1>VIGIL Observatory Alignment Taxonomy</h1>
-    <p>A structured alignment taxonomy for recurring AI governance boundaries, organised through stable Failure Families and selectable Failure Classes.</p>
-    <h2>Failure families</h2>
+    <p>A structured alignment taxonomy for recurring AI governance boundaries, organised through stable Fidelity Families and selectable Fidelity Classes.</p>
+    <h2>Fidelity families</h2>
     <ul>${taxonomyFamilies.map(({ document }) => {
       const family = document?.family;
       if (!family?.family_id) return "";
@@ -252,7 +252,7 @@ if (taxonomyFamilies.length) {
     pageHtml({
       route: "/observatory/knowledge-base/failure-taxonomy",
       title: "VIGIL Observatory Alignment Taxonomy",
-      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Failure Families and Failure Classes, recognition criteria, exclusions and governing invariants.",
+      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and Fidelity Classes, recognition criteria, exclusions and governing invariants.",
       body: taxonomyIndexBody,
     }),
   );
@@ -352,8 +352,8 @@ for (const { document } of taxonomyFamilies) {
   const familyRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}`;
   taxonomyRoutes.push(familyRoute);
   const familyDescription = conciseDescription(
-    `VIGIL Observatory failure family ${family.family_id}: ${family.plain_english || family.definition || family.name}`,
-    "VIGIL Observatory AI governance failure family.",
+    `VIGIL Observatory fidelity family ${family.family_id}: ${family.plain_english || family.definition || family.name}`,
+    "VIGIL Observatory AI governance fidelity family.",
   );
   const familyClasses = Array.isArray(document.classes) ? document.classes : [];
   const familyBody = `<main data-static-crawl-fallback="vigil-taxonomy-family" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -371,7 +371,7 @@ for (const { document } of taxonomyFamilies) {
     <h2>Classification boundary</h2>
     <p><strong>Include when:</strong> ${escapeHtml(family.inclusion_rule || "Not stated.")}</p>
     <p><strong>Exclude when:</strong> ${escapeHtml(family.exclusion_rule || "Not stated.")}</p>
-    <h2>Failure classes</h2>
+    <h2>Fidelity classes</h2>
     <ul>${familyClasses.map((item) => `<li><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}">${escapeHtml(item.name || item.class_id)}</a> <code>${escapeHtml(item.class_id)}</code></li>`).join("")}</ul>
   </main>`;
   writeRoute(
@@ -389,8 +389,8 @@ for (const { document } of taxonomyFamilies) {
     const classRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}`;
     taxonomyRoutes.push(classRoute);
     const classDescription = conciseDescription(
-      `VIGIL Observatory failure class ${item.class_id}: ${item.plain_english || item.definition || item.name}`,
-      "VIGIL Observatory AI governance failure class.",
+      `VIGIL Observatory fidelity class ${item.class_id}: ${item.plain_english || item.definition || item.name}`,
+      "VIGIL Observatory AI governance fidelity class.",
     );
     const classCaseExamples = taxonomyCaseExamplesForClass(item.class_id);
     const classInvariantExemplars = Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : [];
@@ -402,7 +402,7 @@ for (const { document } of taxonomyFamilies) {
       <dl>
         <dt>Immutable class ID</dt><dd>${escapeHtml(item.class_id)}</dd>
         <dt>Semantic code</dt><dd>${escapeHtml(item.class_code || "not stated")}</dd>
-        <dt>Failure family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></dd>
+        <dt>Fidelity family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></dd>
         <dt>Status</dt><dd>${escapeHtml(item.status || "not stated")}</dd>
       </dl>
       <h2>Technical definition</h2>
@@ -414,13 +414,13 @@ for (const { document } of taxonomyFamilies) {
       <h2>Linked Case Files</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Alignment exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
-      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,
       pageHtml({
         route: classRoute,
-        title: `${item.name || item.class_id} | VIGIL Observatory Failure Class | CAM Initiative`,
+        title: `${item.name || item.class_id} | VIGIL Observatory Fidelity Class | CAM Initiative`,
         description: classDescription,
         body: classBody,
       }),
@@ -477,7 +477,7 @@ if (incidentRecords.length) {
     pageHtml({
       route: "/observatory/cases",
       title: "VIGIL Observatory Case Files — AI Incident Database | CAM Initiative",
-      description: "Browse the VIGIL Observatory AI incident database: documented Case Files with source evidence, assessment, alignment classification, repair analysis and references.",
+      description: "Browse the VIGIL Observatory AI incident database: documented Case Files with source evidence, assessment, fidelity classification, repair analysis and references.",
       body: caseIndexBody,
     }),
   );
