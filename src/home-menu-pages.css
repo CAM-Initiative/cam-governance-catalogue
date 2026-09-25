@@ -1,0 +1,311 @@
+/*
+ * Shared Home-menu editorial hero grammar.
+ *
+ * About, Policy, Copyright & Licence and Privacy should feel like one family:
+ * open editorial mastheads on the page canvas, not unrelated bordered cards.
+ * Content below the masthead can retain the structure appropriate to each page.
+ */
+
+.home-menu-page {
+  background:
+    radial-gradient(circle at 76% 4%, hsl(var(--primary) / 0.055), transparent 30rem),
+    hsl(var(--background));
+}
+
+.home-menu-page.container,
+.home-menu-page > .container,
+.home-menu-page .public-reference-layout {
+  width: 100%;
+  max-width: 1280px !important;
+}
+
+.home-menu-page .home-menu-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 clamp(2.1rem, 4vw, 3.5rem) !important;
+  padding: clamp(1.35rem, 3vw, 2.5rem) 0 clamp(1.75rem, 3.8vw, 3.15rem) !important;
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.home-menu-page .home-menu-hero--text {
+  max-width: 72rem !important;
+}
+
+.home-menu-page .home-menu-hero .vigil-library-kicker,
+.home-menu-page .home-menu-hero .public-reference-kicker,
+.home-menu-page .home-menu-hero > p:first-child {
+  margin: 0 !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
+.home-menu-page .home-menu-hero h1 {
+  max-width: 13ch;
+  margin: 0.52rem 0 0 !important;
+  font-family: var(--app-font-serif) !important;
+  font-size: clamp(3rem, 5.8vw, 5.35rem) !important;
+  font-weight: 500 !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.035em;
+  color: hsl(var(--foreground)) !important;
+}
+
+.home-menu-page .home-menu-hero--text h1 {
+  max-width: 16ch;
+  font-size: clamp(2.85rem, 5vw, 4.75rem) !important;
+}
+
+.home-menu-page .home-menu-hero > p:not(.vigil-library-kicker):not(.public-reference-kicker):not(.public-reference-meta),
+.home-menu-page .home-menu-hero-copy > p:not(.vigil-library-kicker),
+.home-menu-page .home-menu-hero--text > p:not(:first-child):not(.public-reference-meta) {
+  max-width: 69rem;
+  margin: 1rem 0 0 !important;
+  font-size: clamp(1.05rem, 1.35vw, 1.18rem) !important;
+  line-height: 1.72 !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.home-menu-page .home-menu-hero .public-reference-meta {
+  margin: 1.15rem 0 0 !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Founder masthead ------------------------------------------------------- */
+
+.home-menu-page .home-menu-hero--founder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 282px);
+  gap: clamp(2rem, 6vw, 5.4rem);
+  align-items: center;
+}
+
+.home-menu-hero-copy {
+  min-width: 0;
+}
+
+.home-menu-page .home-menu-hero--founder h1 {
+  max-width: 11ch;
+}
+
+.home-menu-page .home-menu-hero--founder > .home-menu-hero-copy > p:not(.vigil-library-kicker) {
+  max-width: 52rem;
+}
+
+.home-menu-page .vigil-about-identity-summary {
+  max-width: 55rem;
+  margin-top: 1.45rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+}
+
+.home-menu-page .vigil-about-identity-summary p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.home-menu-page .vigil-about-identity-summary p + p {
+  margin-top: 0.72rem;
+}
+
+.home-menu-contact-chip {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.58rem;
+  margin-top: 1.35rem;
+  padding: 0.66rem 1rem 0.67rem;
+  border: 1px solid hsl(var(--primary) / 0.88);
+  border-radius: 999px;
+  background: hsl(var(--primary));
+  box-shadow:
+    0 0.18rem 0.42rem hsl(var(--primary) / 0.13),
+    inset 0 1px 0 hsl(46 70% 76% / 0.3);
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary-foreground));
+  text-decoration: none;
+  transition:
+    transform 160ms cubic-bezier(.22,1,.36,1),
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.home-menu-contact-chip svg {
+  width: 0.92rem;
+  height: 0.92rem;
+  stroke-width: 1.8;
+}
+
+.home-menu-contact-chip:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.035);
+  box-shadow:
+    0 0.28rem 0.7rem hsl(var(--primary) / 0.18),
+    inset 0 1px 0 hsl(46 70% 76% / 0.36);
+}
+
+.home-menu-contact-chip:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+.home-menu-founder-portrait {
+  position: relative;
+  width: min(100%, 282px);
+  margin: 0;
+  justify-self: end;
+}
+
+.home-menu-founder-portrait::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0.85rem -0.8rem -0.85rem 0.8rem;
+  border: 1px solid hsl(var(--primary) / 0.22);
+  border-radius: 0.4rem;
+  background: hsl(var(--primary) / 0.035);
+}
+
+.home-menu-founder-portrait img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 404 / 529;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border: 1px solid hsl(var(--foreground) / 0.13);
+  border-radius: 0.38rem;
+  background: hsl(var(--card));
+  box-shadow:
+    0 1.15rem 2.8rem hsl(var(--foreground) / 0.11),
+    0 0 0 1px hsl(var(--background) / 0.75);
+}
+
+.home-menu-founder-portrait figcaption {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 0.78rem;
+  padding-left: 0.1rem;
+}
+
+.home-menu-founder-portrait figcaption strong {
+  font-family: var(--app-font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: hsl(var(--foreground));
+}
+
+.home-menu-founder-portrait figcaption span {
+  font-family: var(--app-font-mono);
+  font-size: 0.66rem;
+  font-weight: 650;
+  line-height: 1.4;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+/* Remove the older boxed first-section grammar -------------------------- */
+
+.home-menu-page .vigil-about-hero,
+.home-menu-page .public-reference-hero {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.home-menu-page.public-reference-page--single-document .public-reference-document--single {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* The licensing page remains a continuous document, but now begins beneath
+   the open editorial masthead rather than inside a bordered outer card. */
+.home-menu-page.public-reference-page--single-document .public-reference-section:first-of-type {
+  border-top: 1px solid hsl(var(--border) / 0.76);
+}
+
+.home-menu-page .public-reference-policy-list,
+.home-menu-page .public-reference-document--single > .public-reference-section:first-of-type {
+  margin-top: 0;
+}
+
+html[data-theme="dark"] .home-menu-founder-portrait::before {
+  background: hsl(var(--primary) / 0.045);
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+html[data-theme="dark"] .home-menu-founder-portrait img {
+  border-color: hsl(var(--foreground) / 0.18);
+  box-shadow:
+    0 1.2rem 3rem hsl(0 0% 0% / 0.28),
+    0 0 0 1px hsl(var(--primary) / 0.07);
+}
+
+@media (max-width: 900px) {
+  .home-menu-page .home-menu-hero--founder {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 238px);
+    gap: 2rem;
+  }
+
+  .home-menu-founder-portrait {
+    width: min(100%, 238px);
+  }
+}
+
+@media (max-width: 720px) {
+  .home-menu-page .home-menu-hero {
+    padding-top: 0.75rem !important;
+  }
+
+  .home-menu-page .home-menu-hero--founder {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .home-menu-page .home-menu-hero h1,
+  .home-menu-page .home-menu-hero--text h1 {
+    max-width: none;
+    font-size: clamp(2.7rem, 13vw, 4rem) !important;
+  }
+
+  .home-menu-founder-portrait {
+    width: min(72vw, 260px);
+    justify-self: start;
+  }
+
+  .home-menu-founder-portrait::before {
+    inset: 0.7rem -0.65rem -0.7rem 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-menu-contact-chip {
+    transition: none;
+  }
+}
