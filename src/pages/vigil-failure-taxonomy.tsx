@@ -110,7 +110,7 @@ function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
     <div className="vigil-taxonomy-supporting-evidence-head">
       <div>
         <h4>Supporting evidence <span>{references.length}</span></h4>
-        <p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p>
+        <p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p>
       </div>
     </div>
     <ul>
@@ -138,7 +138,7 @@ function SearchControl({ value, onChange }: { value: string; onChange: (value: s
       type="search"
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      placeholder="Find a family or failure class…"
+      placeholder="Find a family or fidelity class…"
     />
     {value ? <button type="button" onClick={() => onChange("")} aria-label="Clear taxonomy search"><X /></button> : null}
   </label>;
@@ -291,7 +291,7 @@ function ClassManualCard({
     <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
       <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
       {!caseFileExamplesAvailable
-        ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Failure Class definition remains current.</p>
+        ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Fidelity Class definition remains current.</p>
         : linkedCases.length ? <ul>
           {linkedCases.map((example) => <li key={example.incident_id}>
             <Link href={`/observatory/cases/${example.incident_id}/`}>
@@ -358,7 +358,7 @@ function ClassManualSection({
 }) {
   return <section className="vigil-taxonomy-single-class-view" aria-labelledby={`${item.class_id.toLowerCase()}-view-heading`}>
     <div className="vigil-taxonomy-single-class-context">
-      <p>Failure class</p>
+      <p>Fidelity class</p>
       <Link href={`/observatory/knowledge-base/failure-taxonomy/${parent.family.family_id}/`}>
         View whole family · {parent.family.name}
       </Link>
@@ -421,7 +421,7 @@ function FamilyManualSection({
 
     </header>
 
-    <h2 className="vigil-taxonomy-manual-classes-heading">Failure classes</h2>
+    <h2 className="vigil-taxonomy-manual-classes-heading">Fidelity classes</h2>
     <div className="vigil-taxonomy-manual-class-list">
       {document.classes.map((item) => <ClassManualCard
         key={item.class_id}
@@ -502,9 +502,9 @@ export default function VigilFailureTaxonomy() {
               <h1 id="taxonomy-heading">VIGIL Observatory Alignment Taxonomy</h1>
               <span className="cam-beta-chip">Beta</span>
             </div>
-            <p className="vigil-library-description">The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Failure Families and Failure Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants.</p>
+            <p className="vigil-library-description">The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants.</p>
             {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
-              Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} failure classes
+              Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} fidelity classes
             </p> : null}
           </div>
         </header>
