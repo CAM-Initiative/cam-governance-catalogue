@@ -241,19 +241,19 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
     }
     familyGroups.set(key, {
       familyId,
-      familyName: family?.name ?? (familyId ? "Unresolved failure family" : "Failure family not assigned"),
+      familyName: family?.name ?? (familyId ? "Unresolved fidelity family" : "Fidelity family not assigned"),
       rows: [row],
     });
   });
 
   return <>
-    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
+    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory fidelity classifications" tabIndex={0}>
       <table className="vigil-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings grouped by Failure Family. Invariant-held and unresolved-boundary mappings are not failure evidence.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings grouped by Fidelity Family. Invariant-held and unresolved-boundary mappings are not failure evidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
-            <th scope="col">Failure class</th>
+            <th scope="col">Fidelity class</th>
             <th scope="col">Classification basis</th>
           </tr>
         </thead>
@@ -270,8 +270,8 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
               const classId = classificationClass?.class_id ?? item.classId;
               return <tr key={`${groupKey}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
                 <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
-                <td data-label="Failure class">
-                  <strong>{classificationClass?.name ?? (classId ? "Unresolved failure class" : "No canonical class assigned")}</strong>
+                <td data-label="Fidelity class">
+                  <strong>{classificationClass?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned")}</strong>
                   {classId && <span className="vigil-classification-id">{classId}</span>}
                 </td>
                 <td data-label="Classification basis" className="vigil-classification-basis">
@@ -284,7 +284,7 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
       </table>
     </div>
     {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Failure classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
     <VigilAlignmentLegend />
   </>;
@@ -343,10 +343,10 @@ function ClassificationCard({
           <Meta label="Relationship" value={exemplar ? "Successful invariant exemplar" : relationship} />
           <Meta label="Confidence" value={item.confidence} />
           <Meta label="Taxonomy version" value={taxonomyVersion} mono />
-          <Meta label="Failure family" value={family?.name} />
+          <Meta label="Fidelity family" value={family?.name} />
           <Meta label="Family ID" value={family?.family_id ?? item.familyId} mono />
           <Meta label="Family code" value={family?.family_code} mono />
-          <Meta label="Failure class" value={classificationClass?.name} />
+          <Meta label="Fidelity class" value={classificationClass?.name} />
           <Meta label="Class ID" value={classificationClass?.class_id ?? item.classId} mono />
           <Meta label="Class code" value={classificationClass?.class_code} mono />
         </dl>
@@ -374,17 +374,17 @@ function ExplicitClassificationState({
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
-        label="Primary failure family"
+        label="Primary fidelity family"
         status={parsed.status}
         taxonomyVersion={parsed.taxonomyVersion}
         relationship="Family only"
       />
     </div>
-    <p className="vigil-case-empty">This Incident is classified to a canonical VIGIL Observatory failure family, but no canonical failure class has been assigned.</p>
+    <p className="vigil-case-empty">This Incident is classified to a canonical VIGIL Observatory fidelity family, but no canonical fidelity class has been assigned.</p>
   </>;
-  if (parsed.status === "candidate-new-class") return <p className="vigil-case-empty">A new failure class has been identified as a candidate, but no immutable VIGIL Observatory class ID has been allocated. The Case File therefore does not present a provisional class as canonical.{familyDefinition ? ` The current family context is: ${familyDefinition}` : ""}</p>;
+  if (parsed.status === "candidate-new-class") return <p className="vigil-case-empty">A new fidelity class has been identified as a candidate, but no immutable VIGIL Observatory class ID has been allocated. The Case File therefore does not present a provisional class as canonical.{familyDefinition ? ` The current family context is: ${familyDefinition}` : ""}</p>;
   if (parsed.status === "unmapped") return <p className="vigil-case-empty">No canonical VIGIL Observatory taxonomy mapping currently exists for this Incident. The record remains explicitly unmapped rather than being forced into a legacy or approximate class.</p>;
-  if (parsed.status === "deferred") return <p className="vigil-case-empty">Alignment classification is explicitly deferred in the VIGIL Observatory record. No class is rendered until the structural classification review is completed.</p>;
+  if (parsed.status === "deferred") return <p className="vigil-case-empty">Fidelity classification is explicitly deferred in the VIGIL Observatory record. No class is rendered until the structural classification review is completed.</p>;
   if (parsed.status === "requires-human-review") return <p className="vigil-case-empty">The Incident requires human taxonomy review. No canonical mechanism is presented until that review resolves the classification state.</p>;
   return <p className="vigil-case-empty">No VIGIL Observatory Alignment Taxonomy classification is recorded for this Incident. Section 03 will populate when the Incident receives a canonical family/class mapping.</p>;
 }
@@ -394,7 +394,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <ExplicitClassificationState parsed={parsed} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving VIGIL Observatory alignment classification…</p>;
+  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving VIGIL Observatory fidelity classification…</p>;
   if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the canonical definition cannot be resolved. {taxonomy.message}</p>;
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
@@ -486,7 +486,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
-  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical alignment classification.</p>;
+  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical fidelity classification.</p>;
   if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Observatory Alignment Taxonomy…</p>;
   if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the class invariant cannot be resolved. {taxonomy.message}</p>;
 
@@ -502,19 +502,19 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
         <thead>
           <tr>
             <th scope="col">Alignment</th>
-            <th scope="col">Failure class</th>
+            <th scope="col">Fidelity class</th>
             <th scope="col">Governing invariant</th>
           </tr>
         </thead>
         <tbody>
           {invariants.map(({ class: classificationClass, role }) => <tr key={classificationClass.class_id}>
             <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
-            <td data-label="Failure class">
+            <td data-label="Fidelity class">
               <strong>{classificationClass.name}</strong>
               <span className="vigil-classification-id">{classificationClass.class_id}</span>
             </td>
             <td data-label="Governing invariant" className="vigil-repair-invariant-cell">
-              {classificationClass.invariant ?? "A class-level invariant has not yet been published for this failure class. The broader family invariant is not substituted here."}
+              {classificationClass.invariant ?? "A class-level invariant has not yet been published for this fidelity class. The broader family invariant is not substituted here."}
             </td>
           </tr>)}
         </tbody>
