@@ -133,8 +133,8 @@ export default function About() {
               <h2 id="vigil-method-heading">One evidence-to-conclusion structure for every Incident</h2>
             </div>
             <div className="document-reading">
-              <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. Real-world harm assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour.</p>
-              <p>A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
+              <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity; <strong>Classification</strong> asks which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged and what happened at each boundary.</p>
+              <p>Real-world harm assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
             </div>
             <ol className="about-method-list" aria-label="VIGIL Observatory six-stage Incident Case File model">
               {ABOUT_CASE_FILE_STAGES.map((stage) => <li key={stage.number}>
@@ -195,6 +195,7 @@ export default function About() {
             <div className="cam-action-row">
               <Link className="cam-action cam-action-secondary" href="/licensing/">Copyright &amp; Licence <ArrowRight aria-hidden="true" /></Link>
               <Link className="cam-action cam-action-secondary" href="/privacy/">Privacy <ArrowRight aria-hidden="true" /></Link>
+              <a className="cam-action cam-action-secondary" href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer">VIGIL Observatory repository <ArrowRight aria-hidden="true" /></a>
             </div>
           </section>
 
