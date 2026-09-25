@@ -843,9 +843,9 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
   assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
   assert.match(menuCss, /cam-action:not\(\.cam-action-compact\)[\s\S]*border-radius: 999px/);
-  assert.match(gearCss, /Outer-wheel inner-edge correction/);
-  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 2\.85/);
-  assert.match(gearCss, /hsl\(28 18% 7% \/ 0\.97\)[\s\S]*hsl\(0 0% 100% \/ 0\.995\)/);
+  assert.doesNotMatch(gearCss, /Outer-wheel inner-edge correction|Outer-wheel surface correction/);
+  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 2\.75/);
+  assert.match(gearCss, /hsl\(0 0% 100% \/ 0\.99\) 81% 84\.5%/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
