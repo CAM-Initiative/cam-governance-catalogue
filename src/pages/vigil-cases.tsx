@@ -199,19 +199,22 @@ export default function VigilCases() {
       <VigilObservatoryNav />
       <main className="vigil-library-page vigil-case-library-page">
         <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
-          <section className="vigil-library-shell" aria-labelledby="case-files-heading">
-            <header className="vigil-library-header">
-              <div>
-                <p className="vigil-library-kicker">VIGIL Observatory Incident investigations</p>
+          <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="case-files-heading">
+            <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-case-library-ticket">
+              <div className="vigil-taxonomy-ticket-title">
+                <p className="vigil-library-kicker">VIGIL Observatory · Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
+                <p className="vigil-library-description">A public AI incident database organised through a consistent evidence-to-conclusion method so incidents can be inspected, compared and re-adjudicated as the corpus evolves.</p>
               </div>
-              {state.status === "ready" && (
-                <div className="vigil-library-stats" aria-live="polite">
-                  <span><strong>{records.length}</strong> case files</span>
-                  <span><strong>{classificationStates.length}</strong> classification states</span>
-                  {updated && <span>Updated <strong>{updated}</strong></span>}
-                </div>
-              )}
+              <aside className="vigil-taxonomy-ticket-meta" aria-label="Case File collection context">
+                <p className="vigil-case-context-label">Collection context</p>
+                <dl aria-live="polite">
+                  <div><dt>Status</dt><dd>Beta</dd></div>
+                  <div><dt>Case Files</dt><dd>{state.status === "ready" ? records.length : "—"}</dd></div>
+                  <div><dt>Classification states</dt><dd>{state.status === "ready" ? classificationStates.length : "—"}</dd></div>
+                  <div><dt>Last updated</dt><dd>{updated ?? "Loading"}</dd></div>
+                </dl>
+              </aside>
             </header>
 
             <div role="status" className="vigil-refactor-notice">
