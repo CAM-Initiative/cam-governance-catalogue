@@ -361,8 +361,11 @@ test("Long-form public pages share the document rail and editorial hero grammar"
   for (const page of [about, policy, licensing, privacy]) {
     assert.match(page, /DocumentRail/);
     assert.match(page, /document-content/);
+  }
+  for (const page of [about, licensing, privacy]) {
     assert.match(page, /document-hero/);
   }
+  assert.match(policy, /vigil-taxonomy-ticket policy-ticket/);
   assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
   assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
   assert.match(about, /cam-action cam-action-primary[\s\S]*>Contact<\/a>/);
@@ -734,17 +737,15 @@ test("Case File search, classification and severity filters share one desktop ro
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
 });
 
-test("Case File ticket owns the report action and keeps section tabs analytical", async () => {
-  const [caseFile, polish] = await Promise.all([
+test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {
+  const [caseFile, dossier] = await Promise.all([
     read("src/pages/vigil-case-file.tsx"),
-    read("src/vigil-case-file-polish.css"),
+    read("src/vigil-case-file-dossier.css"),
   ]);
-  assert.match(caseFile, /className="vigil-case-ticket-footer/);
-  assert.match(caseFile, /vigil-case-ticket-footer-meta[\s\S]*Field label="Severity"[\s\S]*Field label="Classification"/);
-  assert.match(caseFile, /vigil-case-ticket-report-button/);
-  assert.doesNotMatch(caseFile, /vigil-case-report-tab|>\s*Full report\s*</);
-  assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-footer \{[\s\S]*display: grid;[\s\S]*grid-template-columns: minmax\(0, 1fr\) auto;[\s\S]*align-items: end/);
-  assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-report-button \{[\s\S]*margin-top: 0 !important/);
+  assert.match(caseFile, /vigil-case-context-grid[\s\S]*Field label="Jurisdiction"[\s\S]*Field label="Environment"[\s\S]*Field label="Severity"[\s\S]*Field label="Classification"/);
+  assert.doesNotMatch(caseFile, /vigil-case-ticket-footer|vigil-case-ticket-footer-meta|vigil-case-ticket-report-button/);
+  assert.match(caseFile, /vigil-case-report-tab[\s\S]*Full report \/ PDF/);
+  assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
 });
 
 test("Case Files landing page uses the shared ticket masthead and stays concise", async () => {
@@ -752,6 +753,7 @@ test("Case Files landing page uses the shared ticket masthead and stays concise"
   assert.match(cases, /vigil-taxonomy-ticket vigil-case-library-ticket/);
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
   assert.match(cases, /Collection context/);
+  assert.doesNotMatch(cases, /Active corpus refactor|Records actively under construction|currently being re-adjudicated and rebuilt/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
 });
 
@@ -837,8 +839,10 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.doesNotMatch(shell, /const homeLinks = \[[\s\S]*?label: "Policy"/);
   assert.match(shell, /href="\/observatory\/cases\/"[\s\S]*VIGIL Observatory/);
 
-  assert.match(severity, /vigil-taxonomy-ticket vigil-harm-ticket/);
-  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-ticket[\s\S]*border-left-style: dashed/);
+  assert.match(severity, /document-hero vigil-harm-hero/);
+  assert.match(severity, /vigil-harm-hero-meta/);
+  assert.doesNotMatch(severity, /vigil-taxonomy-ticket vigil-harm-ticket/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*grid-template-columns: minmax\(11rem, 0\.34fr\) minmax\(0, 1fr\)/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
   assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
   assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
