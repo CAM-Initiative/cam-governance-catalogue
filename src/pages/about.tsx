@@ -2,6 +2,8 @@ import { ArrowRight, BookOpen, CircleCheckBig, CircleX, Coffee, ExternalLink, Gi
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 
+const founderPhotoHref = `${import.meta.env.BASE_URL}founder-photo.jpg`;
+
 const ABOUT_CASE_FILE_STAGES = [
   {
     number: "01",
@@ -66,14 +68,10 @@ export default function About() {
               <p><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
               <p>The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
             </div>
-            <a className="home-menu-contact-chip" href="mailto:ethics@cam-initiative.org">
-              <Mail aria-hidden="true" />
-              Contact CAM
-              <ArrowRight aria-hidden="true" />
-            </a>
+            <a className="home-menu-contact-chip" href="mailto:ethics@cam-initiative.org">Contact</a>
           </div>
           <figure className="home-menu-founder-portrait">
-            <img src="/founder-photo.jpg" alt="Dr Michelle Vivian O’Rourke, founder of CAM Initiative" />
+            <img src={founderPhotoHref} alt="Dr Michelle Vivian O’Rourke, founder of CAM Initiative" />
             <figcaption><strong>Dr Michelle Vivian O&apos;Rourke</strong><span>Founder · CAM Initiative</span></figcaption>
           </figure>
         </header>
@@ -119,11 +117,16 @@ export default function About() {
             <p className="vigil-about-record-intro"><strong>Repair</strong> then surfaces the governing class invariants relevant to mappings that failed or remain unresolved. Invariant-held mappings stay visible in Classification as evidence of governance that held and do not create a Repair requirement. <strong>Conclusion</strong> integrates those separate findings, while <strong>References</strong> preserve the evidence, taxonomy and methodology chain supporting the analysis.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
-                {ABOUT_CASE_FILE_STAGES.map((section) => <article key={section.number}>
-                  <span>Stage {section.number}</span>
-                  <h3>{section.label}</h3>
-                  <p>{section.description}</p>
-                </article>)}
+                {ABOUT_CASE_FILE_STAGES.map((section) => (
+                  <details className="vigil-about-stage-disclosure" key={section.number}>
+                    <summary>
+                      <span>Stage {section.number}</span>
+                      <h3>{section.label}</h3>
+                      <span className="vigil-about-stage-toggle" aria-hidden="true">+</span>
+                    </summary>
+                    <p>{section.description}</p>
+                  </details>
+                ))}
               </div>
             </div>
           </section>
