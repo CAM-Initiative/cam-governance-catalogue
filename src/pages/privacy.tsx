@@ -30,9 +30,8 @@ export default function Privacy() {
             <p className="public-reference-meta">Last updated · 13 July 2026</p>
           </header>
 
-          {sections.map((section, index) => <section id={section.id} key={section.id} className="document-section public-reference-policy-section">
+          {sections.map((section) => <section id={section.id} key={section.id} className="document-section public-reference-policy-section">
             <div className="document-section-heading">
-              <p>{String(index + 1).padStart(2, "0")}</p>
               <h2>{section.title}</h2>
             </div>
             <div className="document-reading">
