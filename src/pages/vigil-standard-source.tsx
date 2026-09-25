@@ -28,9 +28,7 @@ type DetailState =
       scopes: ExternalSourceScopeEntry[];
     };
 
-type SourceTab = "overview" | "relevance" | "clauses" | "review";
-
-const TABS: Array<{ id: SourceTab; number: string; label: string }> = [
+const TABS = [
   { id: "overview", number: "01", label: "Overview" },
   { id: "relevance", number: "02", label: "Governance Relevance" },
   { id: "clauses", number: "03", label: "Clauses" },
@@ -201,7 +199,6 @@ export default function VigilStandardSource() {
   const [, params] = useRoute("/observatory/knowledge-base/standards-sources/:sourceKey");
   const requestedKey = decodeURIComponent(params?.sourceKey ?? "");
   const [state, setState] = useState<DetailState>({ status: "loading" });
-  const [activeTab, setActiveTab] = useState<SourceTab>("overview");
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -245,86 +242,119 @@ export default function VigilStandardSource() {
   const reviewScope = reviewEvent?.review_scope?.trim() || scope?.extraction_scope_notes?.trim() || "A substantive source review is recorded, but the current public source record does not describe the analytical scope in greater detail.";
   const due = reviewIsDue(reviewDate);
   const reviewEvents = source.substantive_review_provenance?.review_events ?? [];
-  const activeDefinition = TABS.find((tab) => tab.id === activeTab) ?? TABS[0];
 
-  return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page vigil-standard-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
+  return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-standard-file-page vigil-standard-manual-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
     <Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link>
 
-    <header className="vigil-case-file-hero vigil-case-file-hero-v4">
-      <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">AI Governance Standards</p>
-        <h1>{source.title}</h1>
-        <p className="vigil-case-file-summary">{sourcePublicSummary(source)}</p>
-      </div>
-      <aside className="vigil-case-meta-panel" aria-label="Standard metadata">
-        <dl>
-          <CaseField label="Source" value={canonicalIdentifierLabel(source)} mono />
-          <CaseField label="Jurisdiction" value={source.jurisdiction} />
-          <CaseField label="Source type" value={clean(source.source_class)} />
-          <CaseField label="Version" value={source.source_version} mono />
-          <CaseField label="Clauses represented" value={String(clauses.length)} />
-          <CaseField label="Reviewed" value={formatReviewDate(reviewDate)} mono />
-        </dl>
-        {source.official_locator ? <a href={source.official_locator} className="vigil-case-print-button" target="_blank" rel="noreferrer">Official source <ExternalLink aria-hidden="true" /></a> : null}
-      </aside>
-    </header>
+    <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="standard-heading">
+      <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-standard-ticket">
+        <div className="vigil-taxonomy-ticket-title">
+          <p className="vigil-library-kicker">AI Governance Standards</p>
+          <h1 id="standard-heading">{source.title}</h1>
+          <p className="vigil-library-description">{sourcePublicSummary(source)}</p>
+        </div>
+        <aside className="vigil-taxonomy-ticket-meta vigil-standard-ticket-meta" aria-label="Standard context">
+          <p className="vigil-case-context-label">Source context</p>
+          <dl>
+            <CaseField label="Source" value={canonicalIdentifierLabel(source)} mono />
+            <CaseField label="Jurisdiction" value={source.jurisdiction} />
+            <CaseField label="Source type" value={clean(source.source_class)} />
+            <CaseField label="Version" value={source.source_version} mono />
+            <CaseField label="Clauses represented" value={String(clauses.length)} />
+            <CaseField label="Reviewed" value={formatReviewDate(reviewDate)} mono />
+          </dl>
+          {source.official_locator ? <a href={source.official_locator} className="cam-action cam-action-secondary vigil-standard-official-source" target="_blank" rel="noreferrer">Official source <ExternalLink aria-hidden="true" /></a> : null}
+        </aside>
+      </header>
 
-    <nav className="vigil-case-stage-nav" aria-label={`${source.title} sections`}>
-      <div className="vigil-case-stage-tabs vigil-standard-stage-tabs" role="tablist">
-        {TABS.map((tab) => <button key={tab.id} type="button" role="tab" aria-selected={activeTab === tab.id} className={activeTab === tab.id ? "is-active" : undefined} onClick={() => setActiveTab(tab.id)}><span>{tab.number}</span>{tab.label}</button>)}
-      </div>
-    </nav>
-
-    <div className="vigil-case-active-stage vigil-standard-active-stage" role="tabpanel" aria-label={`${activeDefinition.number} ${activeDefinition.label}`}>
-      <section className="vigil-case-section vigil-standard-detail-section">
-        <header className="vigil-standard-section-heading"><span>{activeDefinition.number}</span><div><p className="vigil-library-kicker">{activeDefinition.label}</p><h2>{activeDefinition.label}</h2></div></header>
-        <div className="vigil-standard-section-body">
-          {activeTab === "overview" && <div className="vigil-standards-reading">
-            <div className="vigil-standards-reading-main"><p className="vigil-library-kicker">What this source is</p>{summaryParagraphs(sourcePublicSummary(source)).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
-            <dl className="vigil-standards-facts">
-              <Fact label="Publisher" value={source.issuer} />
-              <Fact label="Jurisdiction" value={source.jurisdiction} />
-              <Fact label="Source type" value={clean(source.source_class)} />
-              <Fact label="Version" value={source.source_version} />
-              <Fact label="Lifecycle state" value={clean(source.source_lifecycle_state)} />
-              <Fact label="Publication date" value={source.publication_date ?? undefined} />
-              <Fact label="Effective date" value={source.effective_date ?? undefined} />
-            </dl>
-          </div>}
-
-          {activeTab === "relevance" && <div className="vigil-standards-reading vigil-standards-relevance">
-            <div className="vigil-standards-reading-main"><p className="vigil-library-kicker">Where it matters</p><p>{source.relevance_scope || "A separate relevance scope is not yet published for this source."}</p></div>
-            <dl className="vigil-standards-facts"><Fact label="AI governance relevance" value={listLabel(source.ai_governance_relevance)} /><Fact label="Relevant lifecycle stages" value={listLabel(source.applicable_lifecycle_stages)} /></dl>
-          </div>}
-
-          {activeTab === "clauses" && <div className="vigil-standards-clauses vigil-standard-file-clauses">
-            {clauses.length ? clauses.map((clause) => <details key={clause.requirement_id} className="vigil-standards-clause"><summary><span className="vigil-standards-clause-ref">{clause.clause_or_control}</span><span className="vigil-standards-clause-copy">{clause.requirement_summary}</span><span className="vigil-standards-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span></summary><ClauseDetail requirement={clause} source={source} /></details>) : <ClauseCoverageCard scope={scope} />}
-          </div>}
-
-          {activeTab === "review" && <div className="vigil-standards-review">
-            <div className="vigil-standards-reading">
-              <div className="vigil-standards-reading-main vigil-standards-review-main">
-                <div className="vigil-standards-review-heading"><div><p className="vigil-library-kicker">VIGIL review</p><p className="vigil-standards-review-date">{formatReviewDate(reviewDate)}</p></div>{due ? <span className="vigil-status-chip" data-tone="moderate">Review due</span> : null}</div>
-                <div className="vigil-standards-review-method"><p className="vigil-library-kicker">What the review establishes</p>{reviewEvent ? <p><strong>{reviewEvent.review_system.provider} {reviewEvent.review_system.model}</strong> performed the substantive analytical review through {reviewEvent.review_system.platform}. {reviewScope}</p> : <p>{reviewScope}</p>}{scope?.extraction_scope_notes && comparable(scope.extraction_scope_notes) !== comparable(reviewScope) ? <p className="vigil-standards-review-boundary"><strong>Coverage boundary:</strong> {scope.extraction_scope_notes}</p> : null}</div>
+      <div className="vigil-taxonomy-manual-layout vigil-standard-manual-layout">
+        <nav className="vigil-taxonomy-manual-contents vigil-standard-manual-contents" aria-label={`${source.title} contents`}>
+          <div className="vigil-taxonomy-manual-contents-head"><h2>Contents</h2></div>
+          <ol>
+            {TABS.map((tab) => <li key={tab.id}>
+              <div className="vigil-taxonomy-manual-family-link-row">
+                <span className="vigil-standard-manual-number">{tab.number}</span>
+                <a href={`#standard-${tab.id}`}>{tab.label}</a>
               </div>
+            </li>)}
+          </ol>
+        </nav>
+
+        <div className="vigil-taxonomy-manual-document vigil-standard-manual-document">
+          <section id="standard-overview" className="vigil-taxonomy-manual-family-hero vigil-standard-manual-section" aria-labelledby="standard-overview-heading">
+            <header className="vigil-standard-manual-section-heading">
+              <p className="vigil-library-kicker">01 · Overview</p>
+              <h2 id="standard-overview-heading">What this source is</h2>
+            </header>
+            <div className="vigil-standards-reading">
+              <div className="vigil-standards-reading-main">{summaryParagraphs(sourcePublicSummary(source)).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
               <dl className="vigil-standards-facts">
-                <Fact label="AI system" value={reviewSystemLabel(reviewEvent) ?? "Review provenance not yet published"} />
-                <Fact label="Model" value={reviewEvent?.review_system.model ?? "Review provenance not yet published"} />
-                <Fact label="Review role" value={clean(reviewEvent?.ai_role)} />
-                <Fact label="Review method" value={reviewMethodLabel(reviewEvent)} />
-                <Fact label="Production mode" value={clean(reviewEvent?.generation_mode)} />
-                <Fact label="Reviewed" value={formatReviewDate(reviewDate)} />
-                <Fact label="Next review" value={nextReviewDate(reviewDate)} />
-                <Fact label="Source access" value={clean(scope?.source_access_status)} />
-                <Fact label="Review coverage" value={clean(scope?.extraction_status)} />
-                <Fact label="Human review" value={clean(reviewEvent?.human_review_status)} />
+                <Fact label="Publisher" value={source.issuer} />
+                <Fact label="Jurisdiction" value={source.jurisdiction} />
+                <Fact label="Source type" value={clean(source.source_class)} />
+                <Fact label="Version" value={source.source_version} />
+                <Fact label="Lifecycle state" value={clean(source.source_lifecycle_state)} />
+                <Fact label="Publication date" value={source.publication_date ?? undefined} />
+                <Fact label="Effective date" value={source.effective_date ?? undefined} />
               </dl>
             </div>
-            <ReviewHistory events={reviewEvents} />
-            {previousVersions.length ? <section className="vigil-standards-versions"><p className="vigil-library-kicker">Previous versions</p><ul>{previousVersions.map((version) => <li key={externalSourceKey(version)}><span>{version.source_version}{version.source_lifecycle_state ? ` · ${clean(version.source_lifecycle_state)}` : ""}</span>{version.official_locator ? <a href={version.official_locator} target="_blank" rel="noreferrer" aria-label={`Open version ${version.source_version}`}><ExternalLink aria-hidden="true" /></a> : null}</li>)}</ul></section> : null}
-          </div>}
+          </section>
+
+          <section id="standard-relevance" className="vigil-taxonomy-manual-family-hero vigil-standard-manual-section" aria-labelledby="standard-relevance-heading">
+            <header className="vigil-standard-manual-section-heading">
+              <p className="vigil-library-kicker">02 · Governance Relevance</p>
+              <h2 id="standard-relevance-heading">Where it matters</h2>
+            </header>
+            <div className="vigil-standards-reading vigil-standards-relevance">
+              <div className="vigil-standards-reading-main"><p>{source.relevance_scope || "A separate relevance scope is not yet published for this source."}</p></div>
+              <dl className="vigil-standards-facts">
+                <Fact label="AI governance relevance" value={listLabel(source.ai_governance_relevance)} />
+                <Fact label="Relevant lifecycle stages" value={listLabel(source.applicable_lifecycle_stages)} />
+              </dl>
+            </div>
+          </section>
+
+          <section id="standard-clauses" className="vigil-taxonomy-manual-family-hero vigil-standard-manual-section" aria-labelledby="standard-clauses-heading">
+            <header className="vigil-standard-manual-section-heading">
+              <p className="vigil-library-kicker">03 · Clauses</p>
+              <h2 id="standard-clauses-heading">Represented governance requirements</h2>
+            </header>
+            <div className="vigil-standards-clauses vigil-standard-file-clauses">
+              {clauses.length ? clauses.map((clause) => <details key={clause.requirement_id} className="vigil-standards-clause"><summary><span className="vigil-standards-clause-ref">{clause.clause_or_control}</span><span className="vigil-standards-clause-copy">{clause.requirement_summary}</span><span className="vigil-standards-clause-type">{clean(clause.expectation_type) ?? clean(clause.requirement_posture) ?? "Clause"}</span></summary><ClauseDetail requirement={clause} source={source} /></details>) : <ClauseCoverageCard scope={scope} />}
+            </div>
+          </section>
+
+          <section id="standard-review" className="vigil-taxonomy-manual-family-hero vigil-standard-manual-section" aria-labelledby="standard-review-heading">
+            <header className="vigil-standard-manual-section-heading">
+              <p className="vigil-library-kicker">04 · Evidence &amp; Review</p>
+              <h2 id="standard-review-heading">Source review and provenance</h2>
+            </header>
+            <div className="vigil-standards-review">
+              <div className="vigil-standards-reading">
+                <div className="vigil-standards-reading-main vigil-standards-review-main">
+                  <div className="vigil-standards-review-heading"><div><p className="vigil-library-kicker">VIGIL review</p><p className="vigil-standards-review-date">{formatReviewDate(reviewDate)}</p></div>{due ? <span className="vigil-status-chip" data-tone="moderate">Review due</span> : null}</div>
+                  <div className="vigil-standards-review-method"><p className="vigil-library-kicker">What the review establishes</p>{reviewEvent ? <p><strong>{reviewEvent.review_system.provider} {reviewEvent.review_system.model}</strong> performed the substantive analytical review through {reviewEvent.review_system.platform}. {reviewScope}</p> : <p>{reviewScope}</p>}{scope?.extraction_scope_notes && comparable(scope.extraction_scope_notes) !== comparable(reviewScope) ? <p className="vigil-standards-review-boundary"><strong>Coverage boundary:</strong> {scope.extraction_scope_notes}</p> : null}</div>
+                </div>
+                <dl className="vigil-standards-facts">
+                  <Fact label="AI system" value={reviewSystemLabel(reviewEvent) ?? "Review provenance not yet published"} />
+                  <Fact label="Model" value={reviewEvent?.review_system.model ?? "Review provenance not yet published"} />
+                  <Fact label="Review role" value={clean(reviewEvent?.ai_role)} />
+                  <Fact label="Review method" value={reviewMethodLabel(reviewEvent)} />
+                  <Fact label="Production mode" value={clean(reviewEvent?.generation_mode)} />
+                  <Fact label="Reviewed" value={formatReviewDate(reviewDate)} />
+                  <Fact label="Next review" value={nextReviewDate(reviewDate)} />
+                  <Fact label="Source access" value={clean(scope?.source_access_status)} />
+                  <Fact label="Review coverage" value={clean(scope?.extraction_status)} />
+                  <Fact label="Human review" value={clean(reviewEvent?.human_review_status)} />
+                </dl>
+              </div>
+              <ReviewHistory events={reviewEvents} />
+              {previousVersions.length ? <section className="vigil-standards-versions"><p className="vigil-library-kicker">Previous versions</p><ul>{previousVersions.map((version) => <li key={externalSourceKey(version)}><span>{version.source_version}{version.source_lifecycle_state ? ` · ${clean(version.source_lifecycle_state)}` : ""}</span>{version.official_locator ? <a href={version.official_locator} target="_blank" rel="noreferrer" aria-label={`Open version ${version.source_version}`}><ExternalLink aria-hidden="true" /></a> : null}</li>)}</ul></section> : null}
+            </div>
+          </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </div></main></Shell>;
+
 }
