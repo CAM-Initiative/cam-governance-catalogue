@@ -300,7 +300,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <p className="report-exemplar-kicker">Alignment outcome · Failure evidenced</p>
         <h2 id="report-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
         <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
-        <p className="report-exemplar-boundary">Fidelity classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+        <p className="report-exemplar-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </section>}
 
       {isCombination && <section className="report-exemplar-callout is-combination" aria-labelledby="report-combination-heading">
