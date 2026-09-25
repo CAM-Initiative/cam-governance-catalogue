@@ -83,16 +83,21 @@ const harmImpactRail = [
 export default function VigilSeverityMethodology() {
   return <Shell>
     <main className="vigil-about-page vigil-severity-methodology-page home-menu-page document-page">
-      <header id="overview" className="document-hero vigil-harm-hero">
-            <p className="vigil-library-kicker">VIGIL Observatory · Harm Impact Assessment</p>
-            <h1>Harm Impact Assessment</h1>
-            <p>VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from alignment classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
-            <dl className="vigil-harm-hero-meta" aria-label="Harm methodology context">
-              <div><dt>Method</dt><dd>VIGIL-HIM</dd></div>
-              <div><dt>Version</dt><dd>1.0.0</dd></div>
-              <div><dt>Dimensions</dt><dd>11</dd></div>
-              <div><dt>Severity bands</dt><dd>S1–S5 · SU</dd></div>
-            </dl>
+      <header id="overview" className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket">
+        <div className="vigil-taxonomy-ticket-title">
+          <p className="vigil-library-kicker">VIGIL Observatory · Harm Impact Assessment</p>
+          <h1>Harm Impact Assessment</h1>
+          <p className="vigil-library-description">VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from alignment classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
+        </div>
+        <aside className="vigil-taxonomy-ticket-meta" aria-label="Harm methodology context">
+          <p className="vigil-case-context-label">Methodology context</p>
+          <dl>
+            <div><dt>Method</dt><dd>VIGIL-HIM</dd></div>
+            <div><dt>Version</dt><dd>1.0.0</dd></div>
+            <div><dt>Dimensions</dt><dd>11</dd></div>
+            <div><dt>Severity bands</dt><dd>S1–S5 · SU</dd></div>
+          </dl>
+        </aside>
       </header>
 
       <div className="document-layout document-layout--wide document-layout-below-header">
