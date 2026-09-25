@@ -155,7 +155,7 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-architecture-heading">Governance architecture for advanced AI systems.</h2>
               </div>
               <div className="document-reading">
-                <p>The public CAELESTIS architecture reference is undergoing a substantive refactor. It will return to the Knowledge Base when its structure, source material and presentation are ready for publication.</p>
+                <p>The CAELESTIS Architecture Model is CAM Initiative&apos;s public governance architecture for advanced AI systems, with its source material maintained in the CAELESTIS repository and versioned releases preserved through Zenodo.</p>
               </div>
             </section>
             <section id="standards" className="document-section vigil-about-section" aria-labelledby="knowledge-standards-heading">
