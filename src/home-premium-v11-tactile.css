@@ -2092,8 +2092,8 @@ html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i::
     inset -1px 0 0 hsl(var(--primary) / 0.08),
     0 0.08rem 0.14rem hsl(var(--foreground) / 0.045);
   clip-path: polygon(26% 0, 74% 0, 100% 100%, 0 100%);
-  -webkit-mask: linear-gradient(180deg, #000 0 42%, rgba(0, 0, 0, 0.82) 43%, transparent 46% 100%);
-  mask: linear-gradient(180deg, #000 0 42%, rgba(0, 0, 0, 0.82) 43%, transparent 46% 100%);
+  -webkit-mask: linear-gradient(180deg, #000 0 30%, rgba(0, 0, 0, 0.82) 31%, transparent 34% 100%);
+  mask: linear-gradient(180deg, #000 0 30%, rgba(0, 0, 0, 0.82) 31%, transparent 34% 100%);
   transform: translate(-50%, -100%) rotate(var(--spoke-angle));
   transform-origin: 50% 100%;
 }
