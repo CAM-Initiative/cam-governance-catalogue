@@ -38,7 +38,7 @@ export default function Policy() {
               transition={{ duration: 0.7 }}
             >
               <div className="vigil-taxonomy-ticket-title">
-                <p className="vigil-library-kicker">VIGIL Observatory · Public policy</p>
+                <p className="vigil-library-kicker">CAM Initiative · Public policy</p>
                 <h1>Policy Papers &amp; Submissions</h1>
                 <p className="vigil-library-description">
                   Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
