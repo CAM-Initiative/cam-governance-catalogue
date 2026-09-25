@@ -829,6 +829,10 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(css, /home-governance-note-1[\s\S]*top: 3px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
+  assert.match(css, /home-governance-section-label[\s\S]*clip-path: polygon/);
+  assert.match(css, /home-governance-note-2::after[\s\S]*opacity: 0\.7/);
+  assert.match(css, /home-governance-note-4::after[\s\S]*opacity: 0\.34/);
+  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.45deg/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
@@ -892,7 +896,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(gearCss, /\.diagnostic-gear-outer \.diagnostic-gear-spokes \{[\s\S]*opacity: 0/);
   assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 4\.8[\s\S]*inset: 8%/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*linear-gradient\(180deg, #000 0 42%, rgba\(0, 0, 0, 0\.82\) 43%, transparent 46% 100%\)/);
-  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*width: 1\.9rem[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.72\)/);
   assert.match(home, /diagnostic-outer-machined-ring/);
   assert.match(gearCss, /\.diagnostic-outer-machined-ring \{[\s\S]*z-index: 4\.2[\s\S]*inset: 15\.5%/);
