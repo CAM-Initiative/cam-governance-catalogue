@@ -1569,6 +1569,7 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 .policy-page,
 .vigil-severity-methodology-page {
   width: min(100%, 1500px);
+  /* Match the broader VIGIL catalogue canvas at desktop widths. */
 }
 
 
