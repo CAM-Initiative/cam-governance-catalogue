@@ -63,11 +63,12 @@
   width: 100% !important;
   max-width: none !important;
   margin: 0;
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.75rem;
-  background: hsl(var(--background)) !important;
+  border: 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 0;
+  background: transparent !important;
   box-shadow: none !important;
-  padding: 1.15rem 1.25rem;
+  padding: 0.35rem 0 1.35rem;
 }
 
 /* Case Files already lives inside its bordered library shell. Preserve that
@@ -88,7 +89,7 @@
 .vigil-app-shell + main.container:not(.report-page) > header .vigil-library-kicker {
   margin: 0 !important;
   font-family: var(--app-font-mono) !important;
-  font-size: 0.875rem !important;
+  font-size: 0.78rem !important;
   font-weight: 600 !important;
   line-height: 1.35 !important;
   letter-spacing: 0.2em !important;
@@ -105,8 +106,10 @@
   margin-top: 0.25rem;
   margin-bottom: 0.35rem;
   font-family: var(--app-font-serif);
-  font-size: clamp(2rem, 3vw, 2.45rem) !important;
-  line-height: 1.08 !important;
+  font-size: clamp(2.5rem, 4vw, 4rem) !important;
+  font-weight: 500;
+  line-height: 0.98 !important;
+  letter-spacing: -0.03em;
   color: hsl(var(--foreground));
 }
 
@@ -222,7 +225,7 @@
 
 .vigil-about-flow > article > span {
   display: block;
-  font-size: 0.875rem !important;
+  font-size: 0.78rem !important;
   line-height: 1.4;
 }
 
