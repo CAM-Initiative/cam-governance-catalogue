@@ -152,7 +152,7 @@ export default function VigilStandardsBaseline() {
     <section className="vigil-library-shell vigil-standards-shell vigil-taxonomy-shell" aria-labelledby="standards-heading">
       <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-standards-ticket">
         <div className="vigil-taxonomy-ticket-title">
-          <p className="vigil-library-kicker">VIGIL Observatory · Knowledge Base</p>
+          <p className="vigil-library-kicker">VIGIL Observatory</p>
           <h1 id="standards-heading">AI Governance Standards</h1>
           <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Search the library, open a source, then move through its overview, governance relevance, represented clauses and evidence review using the same reference-manual pattern as the Alignment Taxonomy.</p>
         </div>
