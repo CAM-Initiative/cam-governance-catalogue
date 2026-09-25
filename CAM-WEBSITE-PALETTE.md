@@ -42,6 +42,16 @@ Public CAM pages use an open editorial masthead rather than placing the page tit
 
 VIGIL evidence surfaces may remain dense and utilitarian. Case Files, taxonomy tables, standards tables and evidence matrices are outputs of the analytical instrument; they should not be made decorative merely to resemble the landing page.
 
+### Long-form document navigation
+
+Long-form public pages use one shared document-navigation vocabulary.
+
+- About, Policy, Privacy, Copyright & Licence and similar editorial/reference pages use the plain `DocumentRail`: a sticky left rail, quiet rule-separated links and an open document surface. Do not wrap the rail in a card or turn its links into pills.
+- Specialist manuals may extend this pattern when their information architecture genuinely requires it. The Alignment Taxonomy retains search, hierarchy expansion and collapse controls, but its rail should still read as the denser specialist form of the same navigation system.
+- On narrow screens, the plain rail becomes a horizontal section index above the document.
+- Page sections are separated by whitespace and fine horizontal rules. Avoid nesting the entire document, each section and each subsection inside separate bordered containers.
+- Reference and manual mastheads may use the Case File ticket grammar where operational metadata materially helps orientation: primary title/context on the left, compact metadata on the right.
+
 ### Action grammar
 
 Public pages use one primary action and one secondary action grammar. Primary actions use the CAM gold surface with readable primary foreground. Secondary actions are restrained outlined instrument controls. Page-local button vocabularies, oversized pills and decorative icon badges should not be added without a functional reason.
