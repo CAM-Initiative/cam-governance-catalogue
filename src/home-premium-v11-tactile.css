@@ -2056,7 +2056,7 @@ html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i::
 /* Foreground outer spokes ------------------------------------------------
  * The large wheel now gets the same sibling-surface treatment as the inner
  * wheel. Each spoke is clipped along its own radial length so the visible ribs
- * stay between the outer annulus and inner gear instead of disappearing behind a parent mask.
+ * stay between the outer annulus and inner gear while remaining visibly raised above the face.
  */
 .diagnostic-gear-outer .diagnostic-gear-spokes {
   opacity: 0;
