@@ -1844,3 +1844,22 @@ html:not([data-theme="dark"]) .diagnostic-gear-outer::before {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 4px;
 }
+
+
+/* Light-mode inner-gear bevel.
+   Mirror the outer mechanism's white light-catching treatment at the inner
+   gear's existing material transition, without adding new geometry. */
+html:not([data-theme="dark"]) .diagnostic-gear-inner::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 59.85%,
+      hsl(0 0% 100% / 0.34) 60.02% 60.18%,
+      hsl(0 0% 100% / 0.96) 60.24% 60.72%,
+      hsl(0 0% 100% / 0.42) 60.78% 60.96%,
+      hsl(var(--background) / 0.72) 61.08% 64%,
+      hsl(var(--primary) / 0.08) 64.5% 67%,
+      hsl(var(--primary) / 0.19) 67.5% 89%,
+      hsl(var(--primary) / 0.33) 89.5% 93.5%,
+      hsl(var(--background) / 0.5) 94% 96.5%,
+      hsl(var(--primary) / 0.21) 97% 100%);
+}
