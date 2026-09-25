@@ -1556,6 +1556,22 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
   background: hsl(var(--primary) / 0.06);
 }
 
+/* Full-width document masthead, then contents/navigation below it.
+ * This mirrors the hierarchy used by the Alignment Taxonomy: orient the reader
+ * first, then reveal the local contents rail and document body.
+ */
+.document-layout-below-header {
+  margin-top: 1.45rem;
+}
+
+.vigil-datasets-page > .vigil-datasets-ticket {
+  margin-bottom: 0;
+}
+
+.vigil-severity-methodology-page > .vigil-harm-hero {
+  margin-bottom: 0;
+}
+
 /* Dataset document ------------------------------------------------------- */
 .vigil-datasets-document .vigil-datasets-ticket {
   margin-bottom: 0;
