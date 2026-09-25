@@ -16,6 +16,22 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   assert.doesNotMatch(railCss, /repeating-linear-gradient\(13deg|repeating-linear-gradient\(103deg/);
 });
 
+test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
+  const [main, css] = await Promise.all([
+    read("src/main.tsx"),
+    read("src/vigil-observatory-instrument-experiment.css"),
+  ]);
+  assert.match(main, /vigil-observatory-instrument-experiment\.css/);
+  assert.match(css, /Taxonomy — field manual/);
+  assert.match(css, /Case Files \+ Standards — investigation\/reference ledgers/);
+  assert.match(css, /Harm — assessment ledger/);
+  assert.match(css, /Case File — dossier on the same workbench/);
+  assert.match(css, /Knowledge Base — open Observatory index/);
+  assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-manual-class \{[\s\S]*border: 0;[\s\S]*background: transparent/);
+  assert.match(css, /\.vigil-case-library-page \.vigil-case-table-row,[\s\S]*border-bottom: 1px solid/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-case-active-stage \.vigil-case-section \{[\s\S]*border: 0;[\s\S]*box-shadow: none/);
+});
+
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
   const [entrypoint, pages] = await Promise.all([
     read("src/index.html"),
