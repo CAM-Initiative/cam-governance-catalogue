@@ -16,19 +16,20 @@
   display: block;
   min-width: 0;
   padding: clamp(1.4rem, 2.8vw, 2rem);
-  border: 0.58rem solid hsl(29 24% 28%);
-  border-radius: 0.28rem;
+  border: 0.5rem solid hsl(31 31% 43%);
+  border-radius: 0.22rem;
   background:
-    radial-gradient(circle at 14% 20%, hsl(35 42% 48% / 0.22) 0 0.12rem, transparent 0.14rem),
-    radial-gradient(circle at 74% 68%, hsl(24 28% 26% / 0.16) 0 0.11rem, transparent 0.13rem),
-    radial-gradient(circle at 42% 80%, hsl(44 30% 66% / 0.16) 0 0.09rem, transparent 0.12rem),
-    linear-gradient(135deg, hsl(31 34% 55%), hsl(28 30% 47%) 52%, hsl(32 32% 52%));
+    radial-gradient(circle at 14% 20%, hsl(34 36% 46% / 0.12) 0 0.1rem, transparent 0.13rem),
+    radial-gradient(circle at 74% 68%, hsl(28 32% 42% / 0.09) 0 0.1rem, transparent 0.13rem),
+    radial-gradient(circle at 42% 80%, hsl(44 34% 72% / 0.16) 0 0.08rem, transparent 0.11rem),
+    linear-gradient(135deg, hsl(34 46% 69%), hsl(31 42% 62%) 52%, hsl(35 44% 67%));
   background-size: 2.4rem 2.4rem, 2.9rem 2.9rem, 2rem 2rem, auto;
   box-shadow:
-    0.12rem 0.18rem 0 hsl(24 18% 12% / 0.22),
-    0.85rem 1.15rem 2.1rem hsl(var(--foreground) / 0.16),
-    inset 0 0 0 1px hsl(42 26% 76% / 0.18),
-    inset 0 0 2.8rem hsl(25 24% 20% / 0.13);
+    0 0 0 0.12rem hsl(36 28% 72%),
+    0 0 0 0.22rem hsl(28 24% 34% / 0.72),
+    0.75rem 1rem 1.8rem hsl(var(--foreground) / 0.13),
+    inset 0 0 0 1px hsl(44 34% 84% / 0.32),
+    inset 0 0 2.2rem hsl(28 24% 30% / 0.08);
   transform: rotate(-0.42deg) translateX(-0.15rem);
   transform-origin: 50% 50%;
 }
@@ -50,9 +51,11 @@
 }
 
 .home-governance-board::after {
-  inset: 0.45rem;
-  border: 1px solid hsl(31 22% 22% / 0.24);
-  box-shadow: inset 0 0 0 1px hsl(42 34% 72% / 0.08);
+  inset: 0.42rem;
+  border: 1px solid hsl(31 28% 42% / 0.34);
+  box-shadow:
+    inset 0 0 0 1px hsl(45 40% 88% / 0.16),
+    0 0 0 1px hsl(26 20% 28% / 0.06);
 }
 
 .home-governance-board-heading,
@@ -64,14 +67,10 @@
 
 .home-governance-board-heading {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 0.8rem;
   margin: 0 0 1.35rem;
   color: hsl(36 24% 14%);
-}
-
-.home-governance-board-heading > div {
-  flex: 0 0 auto;
 }
 
 .home-governance-board .home-governance-section-label {
@@ -83,15 +82,6 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: hsl(30 26% 18%);
-}
-
-.home-governance-board-heading > div > span {
-  display: block;
-  margin-top: 0.18rem;
-  font-family: var(--app-font-serif);
-  font-size: 0.92rem;
-  font-style: italic;
-  color: hsl(28 20% 24% / 0.78);
 }
 
 .home-governance-board-rule {
@@ -235,10 +225,6 @@
 [data-theme="dark"] .home-governance-board-heading,
 [data-theme="dark"] .home-governance-board-caption {
   color: hsl(39 26% 86%);
-}
-
-[data-theme="dark"] .home-governance-board-heading > div > span {
-  color: hsl(40 18% 80% / 0.72);
 }
 
 [data-theme="dark"] .home-governance-board-rule {
