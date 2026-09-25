@@ -2064,11 +2064,13 @@ html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i::
 
 .diagnostic-outer-spokes-surface {
   position: absolute;
-  z-index: 3;
+  z-index: 4.4;
   inset: 8%;
   border-radius: 50%;
   pointer-events: none;
   transform-origin: 50% 50%;
+  -webkit-mask: radial-gradient(circle, transparent 0 56%, #000 58% 88%, transparent 90% 100%);
+  mask: radial-gradient(circle, transparent 0 56%, #000 58% 88%, transparent 90% 100%);
 }
 
 .diagnostic-outer-spokes-surface > i {
@@ -2096,9 +2098,31 @@ html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i::
   transform-origin: 50% 100%;
 }
 
+.diagnostic-outer-spokes-surface > i::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg,
+      hsl(0 0% 100% / 0.72) 0%,
+      hsl(0 0% 100% / 0.30) 18%,
+      hsl(0 0% 100% / 0.06) 42%,
+      transparent 56%,
+      hsl(0 0% 100% / 0.18) 76%,
+      hsl(0 0% 100% / 0.54) 100%);
+  box-shadow:
+    inset 0.08rem 0 0 hsl(0 0% 100% / 0.42),
+    inset -0.06rem 0 0 hsl(35 12% 34% / 0.14);
+  opacity: 0.86;
+  pointer-events: none;
+}
+
 .diagnostic-outer-spokes-surface > i::after {
   content: "";
   position: absolute;
+  z-index: 2;
   top: 0.22rem;
   left: 50%;
   width: 0.24rem;
@@ -2152,4 +2176,26 @@ html:not([data-theme="dark"]) .diagnostic-outer-spokes-surface > i::after {
     width: 0.2rem;
     height: 0.2rem;
   }
+}
+
+
+.diagnostic-outer-machined-ring {
+  position: absolute;
+  z-index: 4.2;
+  inset: 15.5%;
+  border: 0.11rem solid hsl(var(--foreground) / 0.18);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px hsl(var(--background) / 0.82),
+    inset 0 0 0 1px hsl(var(--foreground) / 0.045),
+    0 0.08rem 0.18rem hsl(var(--foreground) / 0.055);
+  pointer-events: none;
+}
+
+html:not([data-theme="dark"]) .diagnostic-outer-machined-ring {
+  border-color: hsl(34 7% 46% / 0.46);
+  box-shadow:
+    0 0 0 1px hsl(0 0% 100% / 0.92),
+    inset 0 0 0 1px hsl(35 8% 35% / 0.08),
+    0 0.08rem 0.18rem hsl(30 10% 24% / 0.07);
 }
