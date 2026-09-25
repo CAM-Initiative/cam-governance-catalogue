@@ -1857,3 +1857,48 @@ html:not([data-theme="dark"]) .diagnostic-gear-inner::before {
       hsl(0 0% 100% / 0.88) 94% 96.5%,
       hsl(var(--primary) / 0.21) 97% 100%);
 }
+
+
+/* Surface the light-mode machining lines.
+   The corresponding dark bands live inside each gear annulus. In light mode the
+   instrument web sits above the outer gear, so painting white into ::before left
+   the highlight physically underneath another pale layer. These two pointerless
+   rings preserve the exact dark-mode band geometry but live at the visible
+   surface: outer line above the web / below the inner wheel; inner line above
+   the inner wheel / below the centre dial. */
+.diagnostic-light-edge {
+  position: absolute;
+  display: none;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+html:not([data-theme="dark"]) .diagnostic-light-edge {
+  display: block;
+}
+
+html:not([data-theme="dark"]) .diagnostic-light-edge-outer {
+  z-index: 2.75;
+  inset: 8%;
+  background:
+    radial-gradient(circle,
+      transparent 0 68%,
+      hsl(0 0% 100% / 0.98) 68.5% 72%,
+      transparent 72.5% 91%,
+      hsl(0 0% 100% / 0.92) 91.5% 94%,
+      transparent 94.5% 100%);
+  filter: drop-shadow(0 0.055rem 0.055rem hsl(34 12% 38% / 0.11));
+}
+
+html:not([data-theme="dark"]) .diagnostic-light-edge-inner {
+  z-index: 4;
+  inset: 26%;
+  background:
+    radial-gradient(circle,
+      transparent 0 60%,
+      hsl(0 0% 100% / 0.98) 60.5% 64%,
+      transparent 64.5% 93.5%,
+      hsl(0 0% 100% / 0.92) 94% 96.5%,
+      transparent 97% 100%);
+  filter: drop-shadow(0 0.045rem 0.05rem hsl(34 12% 38% / 0.10));
+}
