@@ -33,15 +33,26 @@ export default function Policy() {
           <div className="document-content">
             <motion.header
               animate={{ opacity: 1, y: 0 }}
-              className="document-hero"
+              className="vigil-taxonomy-header vigil-taxonomy-ticket policy-ticket"
               initial={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.7 }}
             >
-              <p className="public-reference-kicker">CAM Initiative Public Policy</p>
-              <h1>Policy Papers &amp; Submissions</h1>
-              <p>
-                Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
-              </p>
+              <div className="vigil-taxonomy-ticket-title">
+                <p className="vigil-library-kicker">VIGIL Observatory · Public policy</p>
+                <h1>Policy Papers &amp; Submissions</h1>
+                <p className="vigil-library-description">
+                  Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
+                </p>
+              </div>
+              <aside className="vigil-taxonomy-ticket-meta" aria-label="Policy library context">
+                <p className="vigil-case-context-label">Library context</p>
+                <dl>
+                  <div><dt>Collection</dt><dd>Policy &amp; submissions</dd></div>
+                  <div><dt>Published</dt><dd>{policyRail.length}</dd></div>
+                  <div><dt>Publisher</dt><dd>CAM Initiative</dd></div>
+                  <div><dt>Access</dt><dd>Public</dd></div>
+                </dl>
+              </aside>
             </motion.header>
 
             <section className="policy-publications" aria-label="Policy publications">
