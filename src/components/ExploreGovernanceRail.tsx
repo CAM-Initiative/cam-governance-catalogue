@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { BookOpen, Database, ExternalLink, Scale } from "lucide-react";
 
 const externalResources = [
@@ -38,7 +39,7 @@ export function ExploreGovernanceRail() {
         <p className="home-governance-letterboard-title" aria-label="External References">
           {Array.from("EXTERNAL REFERENCES").map((letter, index) => letter === " "
             ? <span className="home-governance-letter-space" aria-hidden="true" key={`space-${index}`} />
-            : <span className="home-governance-letter" aria-hidden="true" key={`${letter}-${index}`} style={{ "--letter-index": index } as React.CSSProperties}>{letter}</span>
+            : <span className="home-governance-letter" aria-hidden="true" key={`${letter}-${index}`} style={{ "--letter-index": index } as CSSProperties}>{letter}</span>
           )}
         </p>
       </div>
