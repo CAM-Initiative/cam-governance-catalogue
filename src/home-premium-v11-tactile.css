@@ -2019,33 +2019,45 @@ html:not([data-theme="dark"]) .diagnostic-inner-spokes-surface > i::after {
 }
 
 
-/* Outer-wheel surface correction -----------------------------------------
- * The rear annulus is partly covered by the inter-gear web. Earlier dark and
- * white machining bands therefore read as grey because they were being viewed
- * through a pale layer. Paint the contact shadow + bright bevel on the existing
- * surface sibling so the physical edge is unambiguous without changing geometry.
+/* Outer-wheel inner-edge correction -------------------------------------
+ * The black contact shoulder belongs to the INNER edge of the large rear gear,
+ * immediately outside the foreground wheel. It must sit above the pale
+ * inter-gear web but below the foreground gear. Earlier attempts put the
+ * surface ring above the foreground wheel and too close to the outer teeth,
+ * which washed the treatment into grey instead of producing a crisp physical
+ * black-shadow -> white-bevel -> metal transition.
  */
 html:not([data-theme="dark"]) .diagnostic-light-edge-outer {
-  z-index: 4.25;
+  z-index: 2.85;
+  inset: 8%;
   background:
     radial-gradient(circle,
-      transparent 0 78.4%,
-      hsl(28 18% 9% / 0.96) 78.8% 81.8%,
-      hsl(0 0% 100% / 0.995) 82.15% 84.15%,
-      transparent 84.55% 90.7%,
-      hsl(28 16% 8% / 0.88) 91.05% 92.7%,
-      hsl(0 0% 100% / 0.97) 93.05% 94.45%,
-      transparent 94.85% 100%);
+      transparent 0 61.8%,
+      hsl(28 18% 7% / 0.97) 62.25% 66.9%,
+      hsl(24 15% 12% / 0.94) 67.15% 68.15%,
+      hsl(0 0% 100% / 0.995) 68.45% 70.35%,
+      hsl(42 18% 88% / 0.92) 70.7% 72.1%,
+      transparent 72.55% 100%);
   filter:
-    drop-shadow(0 0.08rem 0.08rem hsl(26 18% 10% / 0.2))
-    drop-shadow(0 -0.035rem 0.025rem hsl(0 0% 100% / 0.28));
+    drop-shadow(0 0.12rem 0.11rem hsl(27 18% 8% / 0.32))
+    drop-shadow(0 -0.035rem 0.03rem hsl(0 0% 100% / 0.36));
 }
 
-/* Keep the underlying annulus dark enough that any fractional anti-aliasing at
-   the overlay edge resolves toward black rather than the earlier mid-grey. */
+/* The rear wheel itself keeps a dark recessed shoulder underneath the surfaced
+   ring so fractional antialiasing resolves toward black rather than mid-grey. */
 html:not([data-theme="dark"]) .diagnostic-gear-outer::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 64.8%,
+      hsl(28 18% 8% / 0.92) 65.2% 69.2%,
+      hsl(0 0% 100% / 0.92) 69.55% 71.25%,
+      hsl(39 34% 42% / 0.18) 71.6% 76%,
+      hsl(40 56% 42% / 0.28) 76.5% 86%,
+      hsl(43 70% 55% / 0.38) 86.5% 91%,
+      hsl(35 16% 30% / 0.42) 91.5% 94%,
+      hsl(40 58% 40% / 0.36) 94.5% 100%);
   box-shadow:
     inset 0 0 0 1px hsl(28 18% 10% / 0.34),
-    inset 0 0 1.45rem hsl(27 20% 8% / 0.2),
+    inset 0 0 1.6rem hsl(27 20% 8% / 0.24),
     0 0 0 1px hsl(28 18% 10% / 0.18);
 }
