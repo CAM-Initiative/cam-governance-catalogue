@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Download, Library } from "lucide-react";
+import { Download } from "lucide-react";
+import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import {
   downloadExternalGovernanceDataset,
@@ -13,7 +14,6 @@ const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Failure-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
-// Public dataset card: expose the substantive severity methodology rather than the internal bibliography registry.
 const VIGIL_HARM_IMPACT_MATRIX_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v1.0.0.json";
 
 type DatasetState = {
@@ -25,58 +25,58 @@ type DatasetState = {
   loaded: boolean;
 };
 
-function DatasetCard({
-  title,
+const datasetRail = [
+  { href: "#overview", label: "Overview" },
+  { href: "#case-files", label: "01 Case Files" },
+  { href: "#harm-impact", label: "02 Harm Impact Matrix" },
+  { href: "#taxonomy", label: "03 Alignment Taxonomy" },
+  { href: "#standards", label: "04 AI Governance Standards" },
+  { href: "#caelestis", label: "05 CAELESTIS archive" },
+];
+
+function DatasetSection({
+  id,
+  number,
   eyebrow,
+  title,
   description,
   status,
   beta = false,
   onDownload,
   downloadHref,
   downloadLabel = "Download dataset",
-  secondaryHref,
-  secondaryLabel,
   downloading,
-  icon,
 }: {
+  id: string;
+  number: string;
+  eyebrow: string;
   title: string;
-  eyebrow?: string;
   description: string;
   status: string;
   beta?: boolean;
   onDownload?: () => void;
   downloadHref?: string;
   downloadLabel?: string;
-  secondaryHref?: string;
-  secondaryLabel?: string;
   downloading?: boolean;
-  icon: React.ReactNode;
 }) {
-  return <article className="vigil-knowledge-collection vigil-dataset-collection-wide">
-    <div className="vigil-knowledge-icon" aria-hidden="true">{icon}</div>
-    <div className="vigil-knowledge-copy">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
-          {eyebrow ? <p className="vigil-library-kicker">{eyebrow}</p> : null}
-          <div className="vigil-development-kicker-row">
-            <p className="vigil-library-kicker">{status}</p>
-            {beta ? <span className="cam-beta-chip">Beta</span> : null}
-          </div>
-          <h2>{title}</h2>
-        </div>
-        <div className="vigil-dataset-actions">{onDownload ? <button type="button" className="vigil-baseline-download shrink-0" onClick={onDownload} disabled={downloading}>
-          {downloading ? "Preparing download…" : downloadLabel}<Download aria-hidden="true" />
-        </button> : null}
-        {!onDownload && downloadHref ? <a className="vigil-baseline-download shrink-0" href={downloadHref} target="_blank" rel="noreferrer">
-          {downloadLabel}<Download aria-hidden="true" />
-        </a> : null}
-        {secondaryHref ? <a className="vigil-baseline-download shrink-0" href={secondaryHref} target="_blank" rel="noreferrer">
-          {secondaryLabel ?? "Alternative format"}<Download aria-hidden="true" />
-        </a> : null}</div>
-      </div>
-      <p>{description}</p>
+  return <section id={id} className="document-section vigil-about-section vigil-dataset-section" aria-labelledby={`${id}-heading`}>
+    <div className="document-section-heading">
+      <p>{number} · {eyebrow}</p>
+      <h2 id={`${id}-heading`}>{title}</h2>
     </div>
-  </article>;
+    <div className="document-reading">
+      <p>{description}</p>
+      <p className="vigil-dataset-status"><strong>{status}</strong>{beta ? <span className="cam-beta-chip">Beta</span> : null}</p>
+    </div>
+    <div className="cam-action-row">
+      {onDownload ? <button type="button" className="cam-action cam-action-secondary" onClick={onDownload} disabled={downloading}>
+        {downloading ? "Preparing download…" : downloadLabel}<Download aria-hidden="true" />
+      </button> : null}
+      {!onDownload && downloadHref ? <a className="cam-action cam-action-secondary" href={downloadHref} target="_blank" rel="noreferrer">
+        {downloadLabel}<Download aria-hidden="true" />
+      </a> : null}
+    </div>
+  </section>;
 }
 
 async function downloadRemoteFile(urls: string[], filename: string) {
@@ -169,72 +169,88 @@ export default function Datasets() {
   }
 
   return <Shell>
-    <main className="vigil-knowledge-hub-page vigil-datasets-page">
-      <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-        <header className="vigil-simple-hero">
-          <div className="vigil-development-kicker-row">
-            <p className="vigil-library-kicker">VIGIL Observatory</p>
-            <span className="cam-development-status">Beta datasets · active development</span>
-          </div>
-          <h1>Datasets</h1>
-          <p>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright & Licence</a> for the applicable terms.</p>
-        </header>
+    <main className="vigil-about-page vigil-datasets-page home-menu-page document-page">
+      <div className="document-layout document-layout--wide">
+        <DocumentRail title="Datasets" items={datasetRail} ariaLabel="CAM Initiative dataset sections" />
 
-        <section className="vigil-knowledge-grid vigil-dataset-grid" aria-label="Available public datasets">
-          <DatasetCard
+        <article className="document-content vigil-datasets-document">
+          <header id="overview" className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-datasets-ticket">
+            <div className="vigil-taxonomy-ticket-title">
+              <p className="vigil-library-kicker">CAM Initiative · Public datasets</p>
+              <h1>Datasets</h1>
+              <p className="vigil-library-description">Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright &amp; Licence</a> for the applicable terms.</p>
+            </div>
+            <aside className="vigil-taxonomy-ticket-meta" aria-label="Dataset collection context">
+              <p className="vigil-case-context-label">Collection context</p>
+              <dl>
+                <div><dt>Status</dt><dd>Beta</dd></div>
+                <div><dt>Public resources</dt><dd>5</dd></div>
+                <div><dt>Formats</dt><dd>JSON · PDF · Archive</dd></div>
+                <div><dt>Maintainer</dt><dd>CAM Initiative</dd></div>
+              </dl>
+            </aside>
+          </header>
+
+          <DatasetSection
+            id="case-files"
+            number="01"
             eyebrow="VIGIL Observatory"
             title="Case Files"
             description="The canonical machine-readable Incident index behind the public VIGIL Observatory Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL Observatory."
             status={caseFilesStatus}
             downloadHref={VIGIL_INCIDENT_REGISTRY_URL}
             downloadLabel="Open JSON index"
-            icon={<Library />}
           />
 
-          <DatasetCard
+          <DatasetSection
+            id="harm-impact"
+            number="02"
             eyebrow="VIGIL Observatory"
             title="Harm Impact Matrix"
             description="The machine-readable VIGIL-HIM 1.0.0 methodology used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm Impact Assessment page."
             status="VIGIL-HIM 1.0.0 · 11 harm dimensions"
             downloadHref={VIGIL_HARM_IMPACT_MATRIX_JSON}
             downloadLabel="Open JSON matrix"
-            icon={<Library />}
           />
 
-          <DatasetCard
+          <DatasetSection
+            id="taxonomy"
+            number="03"
+            eyebrow="VIGIL Observatory"
+            title="VIGIL Observatory Alignment Taxonomy"
+            description="Generated full-reference PDF for the canonical VIGIL Observatory Alignment Taxonomy, including the stable Fidelity Families and Fidelity Classes used to classify evidence against governing invariants, their recognition criteria, exclusions, relationships and linked classifications."
+            status={taxonomyStatus}
+            beta
+            onDownload={downloadTaxonomyPublication}
+            downloading={taxonomyDownloadState === "working"}
+            downloadLabel="Download PDF reference"
+          />
+          {taxonomyDownloadState === "error" ? <p className="vigil-baseline-download-error">The taxonomy reference PDF could not be downloaded. Please try again.</p> : null}
+
+          <DatasetSection
+            id="standards"
+            number="04"
+            eyebrow="Knowledge Base"
             title="AI Governance Standards"
             description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources."
             status={standardsStatus}
             beta
             onDownload={downloadDataset}
             downloading={downloadState === "working"}
-            icon={<Library />}
           />
           {downloadState === "error" ? <p className="vigil-baseline-download-error">The complete dataset could not be downloaded. Please try again.</p> : null}
 
-          <DatasetCard
-            eyebrow="VIGIL Observatory"
-            title="VIGIL Observatory Alignment Taxonomy"
-            description="Generated full-reference PDF for the canonical VIGIL Observatory Alignment Taxonomy, including the stable Fidelity Families and Fidelity Classes used to classify evidence against governing invariants, their recognition criteria, exclusions, relationships and linked classifications. The canonical machine-readable taxonomy remains maintained in VIGIL Observatory."
-            status={taxonomyStatus}
-            beta
-            onDownload={downloadTaxonomyPublication}
-            downloading={taxonomyDownloadState === "working"}
-            downloadLabel="Download PDF reference"
-            icon={<Library />}
-          />
-          {taxonomyDownloadState === "error" ? <p className="vigil-baseline-download-error">The taxonomy reference PDF could not be downloaded. Please try again.</p> : null}
-
-          <DatasetCard
+          <DatasetSection
+            id="caelestis"
+            number="05"
             eyebrow="CAELESTIS Architecture Model"
             title="Constitutional AI Runtime Safety Framework"
             description="Archived public release of the CAELESTIS Architecture Model governance corpus. The current downloadable release is version 1.1.0, preserved through Zenodo with a persistent DOI."
             status="Version 1.1.0 · Zenodo"
             downloadHref="https://doi.org/10.5281/zenodo.20686316"
             downloadLabel="Open Zenodo archive"
-            icon={<Library />}
           />
-        </section>
+        </article>
       </div>
     </main>
   </Shell>;
