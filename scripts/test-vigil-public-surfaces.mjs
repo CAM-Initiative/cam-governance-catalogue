@@ -295,7 +295,7 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
-test("About keeps dedicated six-stage explanatory copy in collapsible disclosure panels", async () => {
+test("About keeps dedicated six-stage explanatory copy as plain document rows", async () => {
   const [about, homeMenuCss, sections] = await Promise.all([
     read("src/pages/about.tsx"),
     read("src/home-menu-pages.css"),
@@ -309,14 +309,13 @@ test("About keeps dedicated six-stage explanatory copy in collapsible disclosure
   assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
   assert.match(about, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
-  assert.match(about, /<details className="vigil-about-stage-disclosure"/);
-  assert.match(about, /<summary>/);
-  assert.match(about, /vigil-about-stage-toggle/);
+  assert.match(about, /<ol className="about-method-list"/);
+  assert.match(about, /about-method-number/);
+  assert.doesNotMatch(about, /vigil-about-stage-disclosure|<details|vigil-about-stage-toggle/);
   assert.doesNotMatch(about, /VIGIL_INCIDENT_CASE_SECTIONS\.map/);
   assert.doesNotMatch(sections, /description:/);
-  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure \{/);
-  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure\[open\]/);
-  assert.match(homeMenuCss, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) !important/);
+  assert.match(homeMenuCss, /\.about-method-list \{/);
+  assert.match(homeMenuCss, /\.about-method-list li \{[\s\S]*border-bottom: 1px solid/);
 });
 
 test("About explains alignment exemplars without duplicating the Case File legend", async () => {
@@ -336,29 +335,30 @@ test("About explains alignment exemplars without duplicating the Case File legen
   assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
-test("Home-menu pages share the open editorial hero grammar", async () => {
-  const [about, policy, licensing, privacy, referenceCss, homeMenuCss, main] = await Promise.all([
+test("Long-form public pages share the document rail and editorial hero grammar", async () => {
+  const [about, policy, licensing, privacy, rail, indexCss, homeMenuCss, main] = await Promise.all([
     read("src/pages/about.tsx"),
     read("src/pages/policy.tsx"),
     read("src/pages/licensing.tsx"),
     read("src/pages/privacy.tsx"),
-    read("src/public-reference-pages.css"),
+    read("src/components/DocumentRail.tsx"),
+    read("src/index.css"),
     read("src/home-menu-pages.css"),
     read("src/main.tsx"),
   ]);
-  assert.match(about, /home-menu-hero home-menu-hero--founder/);
-  assert.match(about, /import\.meta\.env\.BASE_URL.*founder-photo\.jpg/);
-  assert.match(about, /home-menu-contact-chip[\s\S]*>Contact<\/a>/);
-  assert.match(policy, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
-  assert.match(licensing, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
-  assert.match(privacy, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
-  assert.match(homeMenuCss, /\.home-menu-page \.home-menu-hero[\s\S]*border: 0 !important[\s\S]*background: transparent !important/);
-  assert.match(homeMenuCss, /\.home-menu-contact-chip[\s\S]*background: hsl\(var\(--primary\)\)/);
-  assert.match(homeMenuCss, /\.home-menu-founder-portrait img[\s\S]*aspect-ratio: 404 \/ 529/);
+  for (const page of [about, policy, licensing, privacy]) {
+    assert.match(page, /DocumentRail/);
+    assert.match(page, /document-content/);
+    assert.match(page, /document-hero/);
+  }
+  assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
+  assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
+  assert.match(about, /cam-action cam-action-primary[\s\S]*>Contact<\/a>/);
+  assert.match(rail, /className="document-rail/);
+  assert.match(indexCss, /\.document-layout \{[\s\S]*grid-template-columns/);
+  assert.match(indexCss, /\.document-rail \{[\s\S]*position: sticky/);
+  assert.match(homeMenuCss, /\.about-founder-portrait img[\s\S]*aspect-ratio: 404 \/ 529/);
   assert.match(main, /import "\.\/home-menu-pages\.css";/);
-  assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
-  assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
-  assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
 });
 
 test("Case File harm assessment moves all non-assessed dimensions to assessment limits", async () => {
@@ -579,19 +579,21 @@ test("Stage 02 is presented publicly as Assessment", async () => {
 });
 
 
-test("About, licensing and severity methodology use continuous document containers", async () => {
-  const [about, licensing, severity, uxCss, referenceCss] = await Promise.all([
+test("About, Privacy and licensing use open rail documents while methodology keeps its specialist document", async () => {
+  const [about, privacy, licensing, severity, homeMenuCss] = await Promise.all([
     read("src/pages/about.tsx"),
+    read("src/pages/privacy.tsx"),
     read("src/pages/licensing.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
-    read("src/vigil-ux-v5.css"),
-    read("src/public-reference-pages.css"),
+    read("src/home-menu-pages.css"),
   ]);
-  assert.match(about, /vigil-about-document/);
-  assert.match(licensing, /public-reference-document--single/);
+  for (const page of [about, privacy, licensing]) {
+    assert.match(page, /DocumentRail/);
+    assert.match(page, /document-content/);
+  }
   assert.match(severity, /vigil-severity-methodology-document/);
-  assert.match(uxCss, /\.vigil-about-document[\s\S]*border: 1px solid hsl\(var\(--border\)\)/);
-  assert.match(referenceCss, /\.public-reference-document--single[\s\S]*border: 1px solid hsl\(var\(--border\)\)/);
+  assert.match(homeMenuCss, /\.document-content\.vigil-about-document,[\s\S]*border: 0 !important/);
+  assert.match(homeMenuCss, /\.document-content\.public-reference-document/);
 });
 
 test("severity methodology exposes the registered source trail after Case Files", async () => {
@@ -742,23 +744,21 @@ test("Case Files landing page stays deliberately terse", async () => {
 });
 
 
-test("About explains the VIGIL evidence-to-conclusion method and classification outcomes", async () => {
+test("About explains the VIGIL evidence-to-conclusion method and classification outcomes without card grids", async () => {
   const [about, homeMenuCss] = await Promise.all([
     read("src/pages/about.tsx"),
     read("src/home-menu-pages.css"),
   ]);
-  const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
+  const methodStart = about.indexOf("One evidence-to-conclusion structure for every Incident");
   const harmSeparation = about.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
-  const flow = about.indexOf("vigil-about-flow-scroll");
-  assert.ok(methodStart >= 0 && harmSeparation > methodStart && flow > harmSeparation);
+  const stageList = about.indexOf("about-method-list");
+  assert.ok(methodStart >= 0 && harmSeparation > methodStart && stageList > harmSeparation);
   assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
   assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(about, /Failure evidenced[\s\S]*Invariant held · exemplar[\s\S]*Mixed alignment outcome/);
-  assert.match(about, /vigil-about-outcome-visual is-failure[\s\S]*CircleX/);
-  assert.match(about, /vigil-about-outcome-visual is-exemplar[\s\S]*CircleCheckBig/);
-  assert.match(about, /vigil-about-outcome-visual is-combination[\s\S]*Info/);
+  assert.match(about, /about-outcome-list/);
+  assert.doesNotMatch(about, /vigil-about-case-outcome-grid|vigil-about-outcome-visual|CircleX|CircleCheckBig/);
   assert.match(about, /Mixed alignment outcome[\s\S]*Browse the taxonomy/);
-  assert.doesNotMatch(about, /<h3>Mapping role<\/h3>|<h3>Case File outcome<\/h3>/);
 
   const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
   const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
@@ -768,13 +768,13 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 
   const vigilIntro = about.indexOf("VIGIL Observatory is the CAM Initiative");
   const vigilBoundary = about.indexOf("VIGIL uses its own Incident model");
-  const vigilActions = about.indexOf('aria-label="Explore VIGIL Observatory"');
+  const vigilActions = about.indexOf('href="/observatory/cases/"');
   assert.ok(vigilIntro >= 0 && vigilBoundary > vigilIntro && vigilActions > vigilBoundary);
 
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
-  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
-  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure \{[\s\S]*border: 1px solid hsl\(var\(--border\) \/ 0\.86\)/);
-  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-case-outcome-grid/);
+  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright &amp; Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.match(homeMenuCss, /\.about-method-list \{/);
+  assert.match(homeMenuCss, /\.about-outcome-list \{/);
 });
 
 
@@ -809,18 +809,17 @@ test("dark appearance keeps native Case File classification menus legible", asyn
 });
 
 
-test("About section rules are attached only to section boundaries", async () => {
-  const [main, css] = await Promise.all([
+test("About uses open sections and line hierarchy rather than nested bordered cards", async () => {
+  const [main, css, about] = await Promise.all([
     read("src/main.tsx"),
     read("src/home-menu-pages.css"),
+    read("src/pages/about.tsx"),
   ]);
   assert.doesNotMatch(main, /about-page-polish\.css/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 1px solid hsl\(var\(--border\)\) !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-record-intro,[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
-  assert.doesNotMatch(css, /\.vigil-about-document \.vigil-about-flow > details \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(css, /\.document-content \.vigil-about-section \{[\s\S]*border-top: 1px solid/);
+  assert.match(css, /\.document-content\.vigil-about-document,[\s\S]*border: 0 !important/);
+  assert.match(css, /\.about-principle-list \{[\s\S]*border-top: 1px solid/);
+  assert.doesNotMatch(about, /vigil-about-stage-disclosure|vigil-about-case-outcome-grid/);
 });
 
 
