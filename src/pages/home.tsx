@@ -200,6 +200,7 @@ function PremiumHero() {
               <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
             ))}
           </motion.span>
+          <span className="diagnostic-outer-machined-ring" aria-hidden="true" />
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
           <span className="diagnostic-light-edge diagnostic-light-edge-inner" aria-hidden="true" />
           <motion.span
