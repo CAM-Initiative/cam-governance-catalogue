@@ -11,8 +11,8 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
   assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
   assert.match(railCss, /linear-gradient\(135deg, hsl\(33 55% 73%\), hsl\(30 48% 64%\)/);
-  assert.match(railCss, /repeating-linear-gradient\(13deg/);
-  assert.match(railCss, /repeating-linear-gradient\(103deg/);
+  assert.match(railCss, /background-repeat: no-repeat/);
+  assert.doesNotMatch(railCss, /repeating-linear-gradient\(13deg|repeating-linear-gradient\(103deg/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -828,8 +828,9 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /target="_blank"/);
   assert.match(rail, /External References/);
   assert.doesNotMatch(rail, /home-governance-board-rule/);
-  assert.match(css, /home-governance-board[\s\S]*border: 0\.62rem solid/);
-  assert.match(css, /border-image:[\s\S]*repeating-linear-gradient/);
+  assert.match(css, /home-governance-board[\s\S]*border: 0\.58rem solid/);
+  assert.match(css, /border-image:[\s\S]*linear-gradient\([\s\S]*hsl\(47 72% 68%\)/);
+  assert.doesNotMatch(css, /border-image:[\s\S]*repeating-linear-gradient/);
   assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
@@ -899,7 +900,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(gearCss, /Foreground outer spokes/);
   assert.match(gearCss, /\.diagnostic-gear-outer \.diagnostic-gear-spokes \{[\s\S]*opacity: 0/);
   assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 2\.9[\s\S]*inset: 8%/);
-  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*linear-gradient\(180deg, #000 0 42%, rgba\(0, 0, 0, 0\.82\) 43%, transparent 46% 100%\)/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*linear-gradient\(180deg, #000 0 30%, rgba\(0, 0, 0, 0\.82\) 31%, transparent 34% 100%\)/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*width: 1\.9rem[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.72\)/);
   assert.match(gearCss, /html:not\(\[data-theme="dark"\]\) \.diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.96\)/);
