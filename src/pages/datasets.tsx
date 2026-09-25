@@ -10,8 +10,9 @@ import {
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
 
-const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Failure-Taxonomy-Full-Reference.pdf";
+const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Alignment-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
+  "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.AlignmentTaxonomy.FullReference.pdf",
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
 const VIGIL_HARM_IMPACT_MATRIX_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v1.0.0.json";
@@ -169,7 +170,7 @@ export default function Datasets() {
     <main className="vigil-about-page vigil-datasets-page home-menu-page document-page">
       <header id="overview" className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-datasets-ticket">
             <div className="vigil-taxonomy-ticket-title">
-              <p className="vigil-library-kicker">CAM Initiative · Public datasets</p>
+              <p className="vigil-library-kicker">CAM Initiative</p>
               <h1>Datasets</h1>
               <p className="vigil-library-description">Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright &amp; Licence</a> for the applicable terms.</p>
             </div>
@@ -211,7 +212,7 @@ export default function Datasets() {
           <DatasetSection
             id="taxonomy"
             eyebrow="VIGIL Observatory"
-            title="VIGIL Observatory Alignment Taxonomy"
+            title="Alignment Taxonomy"
             description="Generated full-reference PDF for the canonical VIGIL Observatory Alignment Taxonomy, including the stable Fidelity Families and Fidelity Classes used to classify evidence against governing invariants, their recognition criteria, exclusions, relationships and linked classifications."
             status={taxonomyStatus}
             beta
