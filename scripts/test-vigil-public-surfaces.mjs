@@ -381,6 +381,8 @@ test("Long-form public pages share the document rail and editorial hero grammar"
   assert.match(indexCss, /\.document-rail \{[\s\S]*position: sticky/);
   assert.match(homeMenuCss, /\.about-founder-portrait img[\s\S]*aspect-ratio: 404 \/ 529/);
   assert.match(main, /import "\.\/home-menu-pages\.css";/);
+  assert.doesNotMatch(privacy, /String\(index \+ 1\)\.padStart|<p>\{String\(index \+ 1\)/);
+  assert.match(homeMenuCss, /\.document-content \.vigil-about-section:first-of-type[\s\S]*border-top: 0 !important/);
 });
 
 test("Case File harm assessment moves all non-assessed dimensions to assessment limits", async () => {
