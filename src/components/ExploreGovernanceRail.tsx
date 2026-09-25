@@ -35,7 +35,12 @@ export function ExploreGovernanceRail() {
   return (
     <aside aria-label="External AI governance references" className="home-governance-panel home-governance-board">
       <div className="home-governance-board-heading">
-        <p className="home-governance-section-label">External References</p>
+        <p className="home-governance-letterboard-title" aria-label="External References">
+          {Array.from("EXTERNAL REFERENCES").map((letter, index) => letter === " "
+            ? <span className="home-governance-letter-space" aria-hidden="true" key={`space-${index}`} />
+            : <span className="home-governance-letter" aria-hidden="true" key={`${letter}-${index}`} style={{ "--letter-index": index } as React.CSSProperties}>{letter}</span>
+          )}
+        </p>
       </div>
 
       <div className="home-governance-board-grid">
