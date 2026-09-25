@@ -300,7 +300,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <p className="report-exemplar-kicker">Alignment outcome · Failure evidenced</p>
         <h2 id="report-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
         <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
-        <p className="report-exemplar-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+        <p className="report-exemplar-boundary">Fidelity classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </section>}
 
       {isCombination && <section className="report-exemplar-callout is-combination" aria-labelledby="report-combination-heading">
@@ -466,7 +466,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. Invariant-held exemplar mappings remain attached to their Failure Class without being presented as failure evidence. Repair projects published class invariants for mappings where failure is evidenced or the boundary remains unresolved; unresolved boundaries remain explicitly unresolved, while invariant-held mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence. Repair projects published class invariants for mappings where failure is evidenced or the boundary remains unresolved; unresolved boundaries remain explicitly unresolved, while invariant-held mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;
