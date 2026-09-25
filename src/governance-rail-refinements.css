@@ -1,104 +1,276 @@
-/* Shared Explore AI Governance rail refinements.
-   Keep the internal/external section labels identical and preserve a clear
-   single visual gap before External Tools across Home, About and Privacy. */
-.home-governance-panel .home-governance-section-label {
-  margin: 0;
+/* Explore AI Governance: external reference noticeboard.
+   The homepage already owns the internal CAM/VIGIL navigation. This surface is
+   deliberately an outward-looking reference board with a tactile detective-file feel. */
+
+.governance-explorer-home-panel {
+  overflow: visible;
   padding: 0;
-  font-family: var(--app-font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.45;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground));
-}
-
-.home-governance-panel .home-governance-card-title {
-  font-size: 0.95rem !important;
-  line-height: 1.4 !important;
-}
-
-.home-governance-panel .home-governance-detail {
-  font-size: 0.875rem !important;
-  line-height: 1.58 !important;
-}
-
-.home-governance-panel .home-governance-detail > span:first-child:not(:last-child) {
-  font-size: 0.875rem !important;
-  line-height: 1.5 !important;
-}
-
-.home-governance-panel .home-governance-heading {
-  padding: 0.2rem 0.2rem 0.8rem;
-}
-
-.home-governance-panel .home-governance-external {
-  margin-top: 1rem;
-  padding-top: 0.95rem;
-}
-
-.home-governance-panel .home-governance-external > .home-governance-section-label {
-  padding-inline: 0.2rem;
-  margin-bottom: 0.2rem;
-}
-
-
-/* Explore rail hierarchy: quiet editorial navigation, not dashboard controls. */
-.home-governance-panel .home-governance-heading-rule {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.22rem 0.15rem 0.58rem;
   border: 0;
   border-radius: 0;
   background: transparent;
+  box-shadow: none;
 }
-.home-governance-panel .home-governance-heading-rule::after {
+
+.governance-explorer-home-panel .home-governance-board {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding: clamp(1.4rem, 2.8vw, 2rem);
+  border: 0.58rem solid hsl(29 24% 28%);
+  border-radius: 0.28rem;
+  background:
+    radial-gradient(circle at 14% 20%, hsl(35 42% 48% / 0.22) 0 0.12rem, transparent 0.14rem),
+    radial-gradient(circle at 74% 68%, hsl(24 28% 26% / 0.16) 0 0.11rem, transparent 0.13rem),
+    radial-gradient(circle at 42% 80%, hsl(44 30% 66% / 0.16) 0 0.09rem, transparent 0.12rem),
+    linear-gradient(135deg, hsl(31 34% 55%), hsl(28 30% 47%) 52%, hsl(32 32% 52%));
+  background-size: 2.4rem 2.4rem, 2.9rem 2.9rem, 2rem 2rem, auto;
+  box-shadow:
+    0.12rem 0.18rem 0 hsl(24 18% 12% / 0.22),
+    0.85rem 1.15rem 2.1rem hsl(var(--foreground) / 0.16),
+    inset 0 0 0 1px hsl(42 26% 76% / 0.18),
+    inset 0 0 2.8rem hsl(25 24% 20% / 0.13);
+  transform: rotate(-0.42deg) translateX(-0.15rem);
+  transform-origin: 50% 50%;
+}
+
+.home-governance-board::before,
+.home-governance-board::after {
   content: "";
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home-governance-board::before {
+  inset: 0;
+  background:
+    linear-gradient(102deg, transparent 0 18%, hsl(48 38% 84% / 0.07) 18.2% 18.6%, transparent 18.8% 100%),
+    linear-gradient(8deg, transparent 0 64%, hsl(22 24% 22% / 0.055) 64.2% 64.5%, transparent 64.7% 100%);
+  mix-blend-mode: multiply;
+}
+
+.home-governance-board::after {
+  inset: 0.45rem;
+  border: 1px solid hsl(31 22% 22% / 0.24);
+  box-shadow: inset 0 0 0 1px hsl(42 34% 72% / 0.08);
+}
+
+.home-governance-board-heading,
+.home-governance-board-grid,
+.home-governance-board-caption {
+  position: relative;
+  z-index: 1;
+}
+
+.home-governance-board-heading {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
+  margin: 0 0 1.35rem;
+  color: hsl(36 24% 14%);
+}
+
+.home-governance-board-heading > div {
+  flex: 0 0 auto;
+}
+
+.home-governance-board .home-governance-section-label {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  font-weight: 820;
+  line-height: 1.25;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(30 26% 18%);
+}
+
+.home-governance-board-heading > div > span {
+  display: block;
+  margin-top: 0.18rem;
+  font-family: var(--app-font-serif);
+  font-size: 0.92rem;
+  font-style: italic;
+  color: hsl(28 20% 24% / 0.78);
+}
+
+.home-governance-board-rule {
   height: 1px;
   flex: 1 1 auto;
-  background: hsl(var(--primary) / 0.26);
+  margin-bottom: 0.36rem;
+  background: hsl(26 24% 20% / 0.34);
 }
-.home-governance-panel .home-governance-heading-rule .home-governance-section-label {
-  flex: 0 0 auto;
-  padding: 0;
-  font-family: var(--app-font-sans);
-  font-size: 0.78rem;
-  font-weight: 560;
-  line-height: 1.35;
-  letter-spacing: 0.045em;
-  text-transform: none;
-  color: hsl(var(--primary) / 0.9);
+
+.home-governance-board-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.1rem, 2.4vw, 1.65rem);
+  align-items: start;
 }
-.home-governance-panel .home-governance-card-title {
-  font-family: var(--app-font-sans);
-  font-size: 0.92rem !important;
-  font-weight: 540;
-  line-height: 1.4 !important;
-  letter-spacing: 0;
-  text-transform: none;
+
+.home-governance-note {
+  position: relative;
+  display: block;
+  min-height: 10.5rem;
+  padding: 1.45rem 1.05rem 1.05rem;
+  border: 1px solid hsl(38 20% 68% / 0.82);
+  border-radius: 0.08rem;
+  background:
+    linear-gradient(180deg, hsl(44 38% 97%), hsl(42 31% 92%));
+  color: hsl(28 19% 18%);
+  text-decoration: none;
+  box-shadow:
+    0.08rem 0.1rem 0 hsl(28 16% 18% / 0.16),
+    0.32rem 0.48rem 0.72rem hsl(27 22% 14% / 0.17),
+    inset 0 0 1.2rem hsl(38 24% 70% / 0.09);
+  transform-origin: 50% 0.8rem;
+  transition: transform 170ms cubic-bezier(.22,1,.36,1), box-shadow 170ms ease;
 }
-.home-governance-panel .home-governance-card-label {
-  display: inline-flex;
-  min-width: 0;
-  align-items: center;
-  gap: 0.52rem;
+
+.home-governance-note-1 { transform: rotate(-1.3deg) translateY(0.18rem); }
+.home-governance-note-2 { transform: rotate(0.8deg) translateY(-0.18rem); }
+.home-governance-note-3 { transform: rotate(1.15deg) translateX(0.18rem); }
+.home-governance-note-4 { transform: rotate(-0.65deg) translate(-0.1rem, 0.2rem); }
+
+.home-governance-note:hover,
+.home-governance-note:focus-visible {
+  z-index: 3;
+  transform: rotate(0deg) translateY(-0.2rem) scale(1.015);
+  box-shadow:
+    0.1rem 0.14rem 0 hsl(28 16% 18% / 0.14),
+    0.5rem 0.72rem 1rem hsl(27 22% 14% / 0.22),
+    inset 0 0 1.2rem hsl(38 24% 70% / 0.08);
+  outline: none;
 }
-.home-governance-panel .home-governance-card-label > svg {
-  width: 0.95rem;
-  height: 0.95rem;
-  flex: 0 0 auto;
-  color: hsl(var(--primary) / 0.82);
-  opacity: 1;
+
+.home-governance-pin {
+  position: absolute;
+  top: 0.42rem;
+  left: 50%;
+  width: 0.62rem;
+  height: 0.62rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(4 34% 24% / 0.9);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, hsl(9 58% 70%) 0 16%, hsl(4 57% 43%) 30% 68%, hsl(2 45% 28%) 100%);
+  box-shadow:
+    0 0.13rem 0.16rem hsl(25 18% 10% / 0.32),
+    0 0 0 0.08rem hsl(42 34% 91% / 0.2);
 }
-.home-governance-panel .home-governance-card-label > span {
-  min-width: 0;
+
+.home-governance-note:nth-child(even) .home-governance-pin {
+  background:
+    radial-gradient(circle at 34% 28%, hsl(48 74% 78%) 0 16%, hsl(41 62% 48%) 32% 68%, hsl(33 42% 27%) 100%);
+  border-color: hsl(34 36% 25% / 0.82);
 }
-.home-governance-panel .home-governance-card-arrow {
-  flex: 0 0 auto;
-  opacity: 0.72;
+
+.home-governance-note-category {
+  display: block;
+  margin-bottom: 0.52rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(34 38% 35%);
 }
-.home-governance-panel .home-governance-external {
-  margin-top: 1.35rem;
-  padding-top: 0;
+
+.home-governance-note-title {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.48rem;
+  align-items: start;
+}
+
+.home-governance-note-title > svg:first-child {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.18rem;
+  color: hsl(34 44% 34%);
+}
+
+.home-governance-note-title > svg:last-child {
+  width: 0.78rem;
+  height: 0.78rem;
+  margin-top: 0.2rem;
+  opacity: 0.48;
+}
+
+.home-governance-note-title strong {
+  font-family: var(--app-font-serif);
+  font-size: 1.12rem;
+  font-weight: 620;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+}
+
+.home-governance-note-copy {
+  display: block;
+  margin-top: 0.72rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: hsl(28 14% 27% / 0.9);
+}
+
+.home-governance-board-caption {
+  margin: 1.3rem 0 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 620;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(29 22% 20% / 0.7);
+}
+
+[data-theme="dark"] .governance-explorer-home-panel .home-governance-board {
+  border-color: hsl(28 18% 16%);
+  background:
+    radial-gradient(circle at 14% 20%, hsl(36 34% 38% / 0.22) 0 0.12rem, transparent 0.14rem),
+    radial-gradient(circle at 74% 68%, hsl(20 28% 14% / 0.2) 0 0.11rem, transparent 0.13rem),
+    linear-gradient(135deg, hsl(29 28% 34%), hsl(25 25% 27%) 52%, hsl(30 26% 31%));
+}
+
+[data-theme="dark"] .home-governance-board .home-governance-section-label,
+[data-theme="dark"] .home-governance-board-heading,
+[data-theme="dark"] .home-governance-board-caption {
+  color: hsl(39 26% 86%);
+}
+
+[data-theme="dark"] .home-governance-board-heading > div > span {
+  color: hsl(40 18% 80% / 0.72);
+}
+
+[data-theme="dark"] .home-governance-board-rule {
+  background: hsl(42 26% 84% / 0.28);
+}
+
+[data-theme="dark"] .home-governance-note {
+  border-color: hsl(38 18% 53% / 0.42);
+  background:
+    linear-gradient(180deg, hsl(41 20% 91%), hsl(40 17% 84%));
+  color: hsl(27 18% 14%);
+}
+
+@media (max-width: 720px) {
+  .governance-explorer-home-panel .home-governance-board {
+    padding: 1.25rem;
+    border-width: 0.42rem;
+    transform: none;
+  }
+
+  .home-governance-board-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-governance-note:nth-child(n) {
+    min-height: auto;
+    transform: rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-governance-note {
+    transition: none;
+  }
 }
