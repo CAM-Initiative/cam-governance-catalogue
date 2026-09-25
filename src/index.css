@@ -761,3 +761,228 @@ html[data-theme="dark"] a:hover {
     transition: none;
   }
 }
+
+
+/* Shared document rail -------------------------------------------------
+ * Long-form public pages use one intentionally plain navigation vocabulary:
+ * a sticky left rail and an open document surface. Specialist manuals may
+ * extend this grammar with search/hierarchy, but should not invent a new shell.
+ */
+.document-page {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: clamp(1.75rem, 3.5vw, 3rem) clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.document-layout {
+  display: grid;
+  grid-template-columns: minmax(10.5rem, 13.5rem) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4.25rem);
+  align-items: start;
+}
+
+.document-layout--wide {
+  grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+}
+
+.document-rail {
+  position: sticky;
+  top: 5rem;
+  min-width: 0;
+  padding: 0.15rem 0 0;
+  border: 0;
+  background: transparent;
+}
+
+.document-rail-title {
+  margin: 0 0 0.8rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  font-weight: 750;
+  line-height: 1.35;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.document-rail-nav {
+  display: grid;
+  border-top: 1px solid hsl(var(--border) / 0.82);
+}
+
+.document-rail-link {
+  display: grid;
+  gap: 0.16rem;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  color: hsl(var(--foreground) / 0.72);
+  font-family: var(--app-font-sans);
+  font-size: 0.86rem;
+  font-weight: 580;
+  line-height: 1.38;
+  text-decoration: none;
+  transition: color 140ms ease, padding-left 140ms ease, border-color 140ms ease;
+}
+
+.document-rail-link:hover,
+.document-rail-link:focus-visible {
+  padding-left: 0.32rem;
+  border-color: hsl(var(--primary) / 0.44);
+  color: hsl(var(--primary));
+}
+
+.document-rail-meta {
+  font-family: var(--app-font-mono);
+  font-size: 0.61rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.document-content {
+  min-width: 0;
+}
+
+.document-content > :first-child {
+  margin-top: 0;
+}
+
+.document-section {
+  scroll-margin-top: 5.5rem;
+  padding: 2.15rem 0 2.35rem;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+}
+
+.document-section:first-of-type {
+  border-top: 0;
+}
+
+.document-section-heading {
+  margin: 0 0 1.15rem;
+}
+
+.document-section-heading h2 {
+  margin: 0.32rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(1.85rem, 3vw, 2.7rem);
+  font-weight: 520;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+}
+
+.document-section-heading p {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.69rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.document-reading {
+  max-width: 70rem;
+  color: hsl(var(--foreground) / 0.84);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.document-reading p {
+  margin: 0;
+}
+
+.document-reading p + p {
+  margin-top: 0.9rem;
+}
+
+.document-hero {
+  margin: 0 0 0.6rem;
+  padding: 0.4rem 0 2.4rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.78);
+}
+
+.document-hero .public-reference-kicker,
+.document-hero .vigil-library-kicker {
+  margin-bottom: 0.72rem;
+}
+
+.document-hero h1 {
+  margin: 0;
+  max-width: 65rem;
+  font-family: var(--app-font-serif);
+  font-size: clamp(3rem, 6.5vw, 6.1rem);
+  font-weight: 500;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
+  color: hsl(var(--foreground));
+  text-wrap: balance;
+}
+
+.document-hero > p:not(.public-reference-kicker):not(.vigil-library-kicker):not(.public-reference-meta) {
+  max-width: 65rem;
+  margin: 1rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.document-hero .public-reference-meta {
+  margin: 1rem 0 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 900px) {
+  .document-layout,
+  .document-layout--wide {
+    grid-template-columns: 1fr;
+    gap: 1.7rem;
+  }
+
+  .document-rail {
+    position: static;
+  }
+
+  .document-rail-nav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    border-bottom: 1px solid hsl(var(--border) / 0.78);
+    scrollbar-width: thin;
+  }
+
+  .document-rail-link {
+    flex: 0 0 auto;
+    min-width: max-content;
+    padding: 0.62rem 0.9rem 0.62rem 0;
+    margin-right: 0.9rem;
+    border-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .document-rail-link:hover,
+  .document-rail-link:focus-visible {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .document-page {
+    padding-inline: 1rem;
+  }
+
+  .document-hero h1 {
+    font-size: clamp(2.6rem, 13vw, 4rem);
+  }
+
+  .document-section {
+    padding-block: 1.65rem 1.85rem;
+  }
+}
