@@ -10,7 +10,7 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   const railCss = await read("src/governance-rail-refinements.css");
   assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
   assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
-  assert.match(railCss, /\.home-governance-board-heading > div > span \{[\s\S]*font-size: 0\.92rem;/);
+  assert.match(railCss, /linear-gradient\(135deg, hsl\(34 46% 69%\), hsl\(31 42% 62%\)/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -49,7 +49,8 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
 
 test("Explore AI Governance is an external-only pinned reference board", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /External reference board/);
+  assert.match(rail, /Explore AI Governance/);
+  assert.doesNotMatch(rail, /External reference board|Independent external resources/);
   assert.match(rail, /AI Regulations Tracker/);
   assert.match(rail, /AI Incident Database/);
   assert.match(rail, /OECD AI Incidents Monitor/);
@@ -737,7 +738,7 @@ test("Case File ticket owns the report action and keeps section tabs analytical"
   assert.match(caseFile, /vigil-case-ticket-footer-meta[\s\S]*Field label="Severity"[\s\S]*Field label="Classification"/);
   assert.match(caseFile, /vigil-case-ticket-report-button/);
   assert.doesNotMatch(caseFile, /vigil-case-report-tab|>\s*Full report\s*</);
-  assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-footer \{[\s\S]*display: flex;[\s\S]*align-items: end;[\s\S]*justify-content: flex-end/);
+  assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-footer \{[\s\S]*display: grid;[\s\S]*grid-template-columns: minmax\(0, 1fr\) auto;[\s\S]*align-items: end/);
   assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-report-button \{[\s\S]*margin-top: 0 !important/);
 });
 
@@ -816,15 +817,23 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(about, /label: "Case File method"/);
   assert.match(about, /label: "Alignment Taxonomy"/);
 
-  const caseFiles = shell.indexOf('navLabel: "Case Files"');
-  const knowledge = shell.indexOf('navLabel: "Knowledge Base"');
-  const policy = shell.indexOf('navLabel: "Policy"');
-  const standards = shell.indexOf('navLabel: "AI Governance Standards"');
-  const vigilMenuEnd = shell.indexOf("];", shell.indexOf("const vigilLinks"));
-  assert.ok(caseFiles >= 0 && knowledge > caseFiles && policy > knowledge && standards > policy && standards < vigilMenuEnd);
+  const homeStart = shell.indexOf("const homeLinks");
+  const homeEnd = shell.indexOf("];", homeStart);
+  const homeKnowledge = shell.indexOf('label: "Knowledge Base"', homeStart);
+  assert.ok(homeKnowledge > homeStart && homeKnowledge < homeEnd);
+
+  const vigilStart = shell.indexOf("const vigilLinks");
+  const vigilMenuEnd = shell.indexOf("];", vigilStart);
+  const caseFiles = shell.indexOf('navLabel: "Case Files"', vigilStart);
+  const policy = shell.indexOf('navLabel: "Policy"', vigilStart);
+  const standards = shell.indexOf('navLabel: "AI Governance Standards"', vigilStart);
+  assert.ok(caseFiles >= vigilStart && policy > caseFiles && standards > policy && standards < vigilMenuEnd);
+  assert.ok(shell.indexOf('navLabel: "Knowledge Base"', vigilStart) === -1 || shell.indexOf('navLabel: "Knowledge Base"', vigilStart) > vigilMenuEnd);
   assert.doesNotMatch(shell, /const homeLinks = \[[\s\S]*?label: "Policy"/);
+  assert.match(shell, /href="\/observatory\/cases\/"[\s\S]*VIGIL Observatory/);
 
   assert.match(severity, /vigil-taxonomy-ticket vigil-harm-ticket/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-ticket[\s\S]*border-left-style: dashed/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
   assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
   assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
@@ -836,6 +845,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
   assert.ok(hubCaseFiles >= 0 && hubStandards > hubCaseFiles);
+  assert.doesNotMatch(hub, /undergoing a substantive refactor/);
 });
 
 test("dark appearance keeps native Case File classification menus legible", async () => {
