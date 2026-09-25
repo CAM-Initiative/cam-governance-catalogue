@@ -890,7 +890,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(home, /diagnostic-outer-spokes-surface/);
   assert.match(gearCss, /Foreground outer spokes/);
   assert.match(gearCss, /\.diagnostic-gear-outer \.diagnostic-gear-spokes \{[\s\S]*opacity: 0/);
-  assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 4\.4[\s\S]*inset: 8%[\s\S]*radial-gradient\(circle, transparent 0 56%, #000 58% 88%, transparent 90% 100%\)/);
+  assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 4\.8[\s\S]*inset: 8%/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*linear-gradient\(180deg, #000 0 42%, rgba\(0, 0, 0, 0\.82\) 43%, transparent 46% 100%\)/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.72\)/);
   assert.match(home, /diagnostic-outer-machined-ring/);
