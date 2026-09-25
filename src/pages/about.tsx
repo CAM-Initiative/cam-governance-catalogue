@@ -121,7 +121,7 @@ export default function About() {
                   <details className="vigil-about-stage-disclosure" key={section.number}>
                     <summary>
                       <span>Stage {section.number}</span>
-                      <h3>{section.label}</h3>
+                      <span className="vigil-about-stage-name">{section.label}</span>
                       <span className="vigil-about-stage-toggle" aria-hidden="true">+</span>
                     </summary>
                     <p>{section.description}</p>
