@@ -1789,33 +1789,47 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 {
 }
 
 html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i {
-  border-color: var(--diagnostic-transition-highlight);
+  border-color: hsl(0 0% 100% / 0.94);
   box-shadow:
-    inset 1px 0 0 hsl(0 0% 100% / 0.72),
-    inset -1px 0 0 hsl(0 0% 100% / 0.38),
+    0 0 0 1px hsl(0 0% 100% / 0.36),
+    inset 1px 0 0 hsl(0 0% 100% / 0.92),
+    inset -1px 0 0 hsl(0 0% 100% / 0.62),
     0 0.08rem 0.14rem hsl(var(--foreground) / 0.03);
 }
 
 /* Restore the alternating machined blocks that the inherited dark treatment
-   already uses, while adding one crisp white bevel along the outer edge of the
-   recessed track. */
+   already uses. The visible white bevel belongs to the existing annulus face,
+   not to this masked pocket layer, otherwise the mask makes it almost vanish. */
 html:not([data-theme="dark"]) .diagnostic-gear-outer::after {
   background:
     repeating-conic-gradient(
       from 8deg,
-      hsl(38 24% 96% / 0.72) 0deg 7deg,
-      hsl(34 10% 58% / 0.22) 7deg 11deg,
+      hsl(38 24% 96% / 0.78) 0deg 7deg,
+      hsl(34 10% 58% / 0.24) 7deg 11deg,
       transparent 11deg 30deg
-    ),
-    radial-gradient(circle,
-      transparent 0 79.8%,
-      var(--diagnostic-transition-highlight-soft) 80.2% 80.7%,
-      var(--diagnostic-transition-highlight) 80.85% 81.6%,
-      transparent 81.95% 100%);
+    );
   -webkit-mask: radial-gradient(circle, transparent 0 67%, #000 68% 82%, transparent 83% 100%);
   mask: radial-gradient(circle, transparent 0 67%, #000 68% 82%, transparent 83% 100%);
   box-shadow:
-    inset 0 0 0 1px hsl(0 0% 100% / 0.38),
+    inset 0 0 0 1px hsl(0 0% 100% / 0.28),
     inset 0 0 1.35rem var(--diagnostic-track-shadow);
-  opacity: 0.92;
+  opacity: 0.94;
+}
+
+/* Crisp light-catching edge at the void transition. This is deliberately part
+   of the existing outer annulus gradient so it remains visible above the pale
+   parchment face instead of being clipped inside the recessed-pocket mask. */
+html:not([data-theme="dark"]) .diagnostic-gear-outer::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 66%,
+      hsl(0 0% 100% / 0.36) 66.2% 66.55%,
+      hsl(0 0% 100% / 0.96) 66.65% 67.35%,
+      hsl(0 0% 100% / 0.44) 67.45% 67.8%,
+      hsl(29 26% 24% / 0.42) 68.05% 70%,
+      hsl(39 46% 36% / 0.16) 70.5% 75%,
+      hsl(40 56% 42% / 0.28) 75.5% 87%,
+      hsl(43 70% 55% / 0.38) 87.5% 91.5%,
+      hsl(28 34% 23% / 0.54) 92% 95%,
+      hsl(40 58% 40% / 0.36) 95.5% 100%);
 }
