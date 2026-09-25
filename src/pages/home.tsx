@@ -190,6 +190,16 @@ function PremiumHero() {
             ))}
           </span>
           <span className="diagnostic-light-edge diagnostic-light-edge-outer" aria-hidden="true" />
+          <motion.span
+            className="diagnostic-outer-spokes-surface"
+            aria-hidden="true"
+            animate={{ rotate: gearTurn * 60 }}
+            transition={{ duration: reduceMotion ? 0 : 1.62, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {Array.from({ length: 6 }).map((_, index) => (
+              <i key={index} style={{ "--spoke-angle": `${index * 60}deg` } as CSSProperties} />
+            ))}
+          </motion.span>
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
           <span className="diagnostic-light-edge diagnostic-light-edge-inner" aria-hidden="true" />
           <motion.span
