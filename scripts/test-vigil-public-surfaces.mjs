@@ -161,6 +161,8 @@ test("retired standalone record surfaces and the unpublished draft tree are abse
     "src/pages/vigil-knowledge-base.tsx",
     "src/pages/vigil-reference-knowledge.tsx",
     "src/pages/evidence-chain-report.tsx",
+    "src/pages/transition-authority.tsx",
+    "src/pages/transition.tsx",
     "src/components/vigil/FailureModeCard.tsx",
     "src/components/vigil/FailureModeDetail.tsx",
   ];
