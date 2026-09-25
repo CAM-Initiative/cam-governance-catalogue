@@ -10,7 +10,7 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   const railCss = await read("src/governance-rail-refinements.css");
   assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
   assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
-  assert.match(railCss, /linear-gradient\(135deg, hsl\(34 54% 74%\), hsl\(31 47% 67%\)/);
+  assert.match(railCss, /linear-gradient\(135deg, hsl\(34 58% 76%\), hsl\(31 50% 69%\)/);
   assert.match(railCss, /repeating-linear-gradient\(14deg/);
   assert.match(railCss, /repeating-linear-gradient\(101deg/);
 });
@@ -833,7 +833,7 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
-  const [about, shell, severity, datasets, menuCss, gearCss, hub] = await Promise.all([
+  const [about, shell, severity, datasets, menuCss, gearCss, hub, home] = await Promise.all([
     read("src/pages/about.tsx"),
     read("src/components/layout/Shell.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
@@ -841,6 +841,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
     read("src/home-menu-pages.css"),
     read("src/home-premium-v11-tactile.css"),
     read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/home.tsx"),
   ]);
 
   assert.doesNotMatch(about, /01 · VIGIL Observatory|02 · Case File method|03 · VIGIL Observatory Alignment Taxonomy|04 · Publication model|05 · CAELESTIS Architecture Model|06 · Connect/);
