@@ -426,7 +426,7 @@ function GovernanceExplorerSection() {
       <motion.div className="governance-explorer-home-copy narrative-section-copy" {...reveal}>
         <p className="premium-eyebrow narrative-kicker">Explore the wider governance landscape</p>
         <h2 id="governance-explorer-heading">AI Governance Explorer</h2>
-        <p>Move from VIGIL evidence and taxonomy into the CAM Initiative&apos;s governance resources and the external tools that help situate incidents, regulation and standards in a wider ecosystem.</p>
+        <p>A pinned reference board for external tools that help situate VIGIL evidence alongside regulation, incident monitoring, standards and wider governance practice.</p>
       </motion.div>
       <motion.div className="governance-explorer-home-panel" {...reveal}>
         <ExploreGovernanceRail />
