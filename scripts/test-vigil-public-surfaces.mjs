@@ -119,7 +119,7 @@ test("Alignment Taxonomy remains available if the linked Case File projection ca
   assert.match(loader, /caseFileExamplesAvailable: boolean/);
   assert.match(loader, /\.catch\(\(\) => \(\{ data: \{ classes: \{\} \}, available: false \}\)\)/);
   assert.match(loader, /caseFileExamplesAvailable: caseFileProjection\.available/);
-  assert.match(taxonomy, /Case File links are temporarily unavailable\. The Failure Class definition remains current\./);
+  assert.match(taxonomy, /Case File links are temporarily unavailable\. The Fidelity Class definition remains current\./);
   assert.match(taxonomy, /caseFileExamplesAvailable=\{state\.data\.caseFileExamplesAvailable\}/);
 });
 
@@ -190,7 +190,7 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /Invariant held/);
   assert.match(classification, /Failure occurred/);
   assert.match(classification, /Boundary unresolved/);
-  assert.match(classification, /<th scope="col">Failure class<\/th>/);
+  assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.match(classification, /vigil-classification-family-row/);
   assert.match(classification, /colSpan=\{3\} scope="rowgroup"/);
@@ -243,7 +243,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   ]);
   assert.match(taxonomy, /"ambiguous-boundary"/);
   assert.match(taxonomy, /hasAmbiguousBoundary/);
-  assert.match(classification, /Secondary ambiguous boundary/);
+  assert.match(classification, /Secondary unresolved boundary/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
@@ -286,7 +286,7 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(classification, /No repair invariant is available for this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
-  assert.match(report, /Invariant-held exemplar mappings remain attached to their Failure Class without being presented as failure evidence/i);
+  assert.match(report, /Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
   assert.match(sync, /classification_role: record\.classification_role/);
   assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
@@ -473,8 +473,8 @@ test("Alignment Taxonomy substantive web copy keeps a readable typography floor"
 test("taxonomy and external-governance public systems remain intact", async () => {
   const [taxonomyPage, taxonomyLoader, datasets, standards, externalKnowledge] = await Promise.all([read("src/pages/vigil-failure-taxonomy.tsx"), read("src/lib/vigilFailureTaxonomy.ts"), read("src/pages/datasets.tsx"), read("src/pages/vigil-standards-baseline.tsx"), read("src/lib/vigilExternalKnowledge.ts")]);
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
-  assert.match(taxonomyPage, /failure famil/i);
-  assert.match(taxonomyPage, /failure class/i);
+  assert.match(taxonomyPage, /fidelity famil/i);
+  assert.match(taxonomyPage, /fidelity class/i);
   assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
   assert.match(standards, /AI Governance Standards/);
   assert.match(externalKnowledge, /external-governance/);
@@ -743,9 +743,8 @@ test("Case Files landing page stays deliberately terse", async () => {
 
 
 test("About explains the VIGIL evidence-to-conclusion method and classification outcomes", async () => {
-  const [about, css, homeMenuCss] = await Promise.all([
+  const [about, homeMenuCss] = await Promise.all([
     read("src/pages/about.tsx"),
-    read("src/vigil-ux-v5.css"),
     read("src/home-menu-pages.css"),
   ]);
   const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
@@ -774,9 +773,8 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
   assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
-  assert.match(css, /About final polish: one calm document/);
   assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure \{[\s\S]*border: 1px solid hsl\(var\(--border\) \/ 0\.86\)/);
-  assert.match(polish, /\.vigil-about-page \.vigil-about-case-outcome-grid/);
+  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-case-outcome-grid/);
 });
 
 
@@ -814,9 +812,9 @@ test("dark appearance keeps native Case File classification menus legible", asyn
 test("About section rules are attached only to section boundaries", async () => {
   const [main, css] = await Promise.all([
     read("src/main.tsx"),
-    read("src/about-page-polish.css"),
+    read("src/home-menu-pages.css"),
   ]);
-  assert.match(main, /import "\.\/about-page-polish\.css";/);
+  assert.doesNotMatch(main, /about-page-polish\.css/);
   assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 1px solid hsl\(var\(--border\)\) !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-record-intro,[\s\S]*border: 0 !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
