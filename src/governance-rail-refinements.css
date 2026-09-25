@@ -29,17 +29,19 @@
     ) 1;
   border-radius: 0.16rem;
   background:
-    radial-gradient(ellipse at 7% 18%, hsl(25 34% 25% / 0.30) 0 0.045rem, transparent 0.085rem),
-    radial-gradient(ellipse at 18% 72%, hsl(28 29% 33% / 0.24) 0 0.06rem, transparent 0.11rem),
-    radial-gradient(ellipse at 29% 31%, hsl(43 52% 89% / 0.24) 0 0.05rem, transparent 0.095rem),
-    radial-gradient(ellipse at 43% 83%, hsl(24 30% 26% / 0.22) 0 0.038rem, transparent 0.078rem),
-    radial-gradient(ellipse at 55% 14%, hsl(44 50% 90% / 0.20) 0 0.042rem, transparent 0.08rem),
-    radial-gradient(ellipse at 67% 57%, hsl(26 32% 29% / 0.26) 0 0.07rem, transparent 0.13rem),
-    radial-gradient(ellipse at 79% 24%, hsl(45 48% 92% / 0.19) 0 0.036rem, transparent 0.073rem),
-    radial-gradient(ellipse at 91% 68%, hsl(24 33% 24% / 0.25) 0 0.055rem, transparent 0.1rem),
-    linear-gradient(17deg, transparent 0 38%, hsl(27 26% 29% / 0.045) 39%, transparent 40% 100%),
-    linear-gradient(121deg, transparent 0 63%, hsl(47 46% 91% / 0.05) 64%, transparent 65% 100%),
-    linear-gradient(135deg, hsl(33 55% 73%), hsl(30 48% 64%) 49%, hsl(35 52% 70%));
+    radial-gradient(ellipse at 8% 17%, hsl(24 35% 23% / 0.28) 0 0.08rem, transparent 0.16rem),
+    radial-gradient(ellipse at 19% 74%, hsl(26 31% 30% / 0.22) 0 0.12rem, transparent 0.2rem),
+    radial-gradient(ellipse at 31% 28%, hsl(45 48% 91% / 0.20) 0 0.1rem, transparent 0.18rem),
+    radial-gradient(ellipse at 46% 86%, hsl(23 31% 25% / 0.20) 0 0.09rem, transparent 0.17rem),
+    radial-gradient(ellipse at 56% 12%, hsl(43 47% 89% / 0.18) 0 0.07rem, transparent 0.15rem),
+    radial-gradient(ellipse at 69% 54%, hsl(25 33% 27% / 0.24) 0 0.14rem, transparent 0.24rem),
+    radial-gradient(ellipse at 82% 23%, hsl(45 45% 91% / 0.16) 0 0.08rem, transparent 0.15rem),
+    radial-gradient(ellipse at 93% 71%, hsl(23 34% 23% / 0.22) 0 0.11rem, transparent 0.19rem),
+    radial-gradient(ellipse at 14% 49%, hsl(28 29% 35% / 0.15) 0 0.06rem, transparent 0.14rem),
+    radial-gradient(ellipse at 39% 58%, hsl(46 42% 92% / 0.13) 0 0.05rem, transparent 0.12rem),
+    radial-gradient(ellipse at 63% 31%, hsl(26 30% 29% / 0.16) 0 0.07rem, transparent 0.14rem),
+    radial-gradient(ellipse at 88% 45%, hsl(44 43% 90% / 0.12) 0 0.05rem, transparent 0.11rem),
+    linear-gradient(135deg, hsl(33 56% 72%), hsl(30 48% 63%) 48%, hsl(35 53% 69%));
   background-size: 100% 100%;
   background-repeat: no-repeat;
   box-shadow:
@@ -61,36 +63,34 @@
 
 .home-governance-board::before {
   inset: 0;
-  background:
-    radial-gradient(ellipse at 12% 44%, hsl(25 34% 20% / 0.15) 0 0.075rem, transparent 0.125rem),
-    radial-gradient(ellipse at 36% 19%, hsl(45 52% 94% / 0.14) 0 0.06rem, transparent 0.11rem),
-    radial-gradient(ellipse at 58% 76%, hsl(24 31% 22% / 0.14) 0 0.05rem, transparent 0.095rem),
-    radial-gradient(ellipse at 72% 37%, hsl(46 50% 93% / 0.13) 0 0.07rem, transparent 0.12rem),
-    radial-gradient(ellipse at 88% 16%, hsl(23 30% 21% / 0.13) 0 0.045rem, transparent 0.088rem),
-    linear-gradient(103deg, transparent 0 22%, hsl(47 42% 90% / 0.06) 23%, transparent 24% 100%),
-    linear-gradient(8deg, transparent 0 71%, hsl(21 25% 19% / 0.05) 72%, transparent 73% 100%);
-  background-size: 100% 100%;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='560' viewBox='0 0 900 560'%3E%3Cfilter id='cork-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .34' numOctaves='4' seed='23' stitchTiles='noStitch'/%3E%3CfeColorMatrix type='matrix' values='.45 0 0 0 .18 0 .32 0 0 .12 0 0 .18 0 .06 0 0 0 .78 0'/%3E%3C/filter%3E%3Crect width='900' height='560' filter='url(%23cork-noise)' opacity='.72'/%3E%3C/svg%3E"),
+    linear-gradient(103deg, transparent 0 22%, hsl(47 42% 90% / 0.055) 23%, transparent 24% 100%),
+    linear-gradient(8deg, transparent 0 71%, hsl(21 25% 19% / 0.048) 72%, transparent 73% 100%);
+  background-size: cover, 100% 100%, 100% 100%;
   background-repeat: no-repeat;
   mix-blend-mode: multiply;
-  opacity: 0.92;
+  opacity: 0.54;
 }
 
 .home-governance-board::after {
   inset: 0.42rem;
   border: 1px solid hsl(31 28% 42% / 0.34);
   background:
-    radial-gradient(ellipse at 9% 26%, hsl(24 32% 19% / 0.11) 0 0.1rem, transparent 0.17rem),
-    radial-gradient(ellipse at 27% 69%, hsl(45 48% 94% / 0.10) 0 0.08rem, transparent 0.15rem),
-    radial-gradient(ellipse at 52% 34%, hsl(23 29% 21% / 0.10) 0 0.06rem, transparent 0.13rem),
-    radial-gradient(ellipse at 74% 82%, hsl(44 44% 91% / 0.09) 0 0.055rem, transparent 0.12rem),
-    radial-gradient(ellipse at 93% 49%, hsl(25 31% 20% / 0.10) 0 0.075rem, transparent 0.145rem);
+    radial-gradient(ellipse at 5% 33%, hsl(23 31% 19% / 0.14) 0 0.15rem, transparent 0.25rem),
+    radial-gradient(ellipse at 22% 11%, hsl(45 48% 94% / 0.11) 0 0.12rem, transparent 0.2rem),
+    radial-gradient(ellipse at 37% 77%, hsl(24 30% 21% / 0.12) 0 0.18rem, transparent 0.28rem),
+    radial-gradient(ellipse at 53% 41%, hsl(44 44% 91% / 0.09) 0 0.1rem, transparent 0.19rem),
+    radial-gradient(ellipse at 71% 18%, hsl(25 31% 20% / 0.11) 0 0.13rem, transparent 0.23rem),
+    radial-gradient(ellipse at 84% 83%, hsl(45 45% 93% / 0.09) 0 0.1rem, transparent 0.18rem),
+    radial-gradient(ellipse at 96% 54%, hsl(23 30% 19% / 0.11) 0 0.14rem, transparent 0.22rem);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   box-shadow:
     inset 0 0 0 1px hsl(45 40% 88% / 0.16),
-    inset 0 0 1.6rem hsl(25 30% 22% / 0.045),
+    inset 0 0 1.8rem hsl(25 30% 22% / 0.07),
     0 0 0 1px hsl(26 20% 28% / 0.06);
-  opacity: 0.86;
+  opacity: 0.74;
 }
 
 .home-governance-board-heading,
