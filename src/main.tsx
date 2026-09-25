@@ -44,5 +44,6 @@ import "./home-premium-v8.css";
 import "./home-premium-v9.css";
 import "./home-premium-v10.css";
 import "./home-premium-v11-tactile.css";
+import "./home-menu-pages.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
