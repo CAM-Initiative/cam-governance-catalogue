@@ -870,7 +870,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /vigil-severity-methodology-document \{[\s\S]*border: 0 !important[\s\S]*background: transparent !important/);
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section \+ \.vigil-about-section[\s\S]*border-top: 1px solid/);
-  assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)/);
+  assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
@@ -890,8 +890,11 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(home, /diagnostic-outer-spokes-surface/);
   assert.match(gearCss, /Foreground outer spokes/);
   assert.match(gearCss, /\.diagnostic-gear-outer \.diagnostic-gear-spokes \{[\s\S]*opacity: 0/);
-  assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 3[\s\S]*inset: 8%/);
+  assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 4\.4[\s\S]*inset: 8%[\s\S]*radial-gradient\(circle, transparent 0 56%, #000 58% 88%, transparent 90% 100%\)/);
   assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.72\)/);
+  assert.match(home, /diagnostic-outer-machined-ring/);
+  assert.match(gearCss, /\.diagnostic-outer-machined-ring \{[\s\S]*z-index: 4\.2[\s\S]*inset: 15\.5%/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
