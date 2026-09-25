@@ -367,7 +367,7 @@ test("Long-form public pages share the document rail and editorial hero grammar"
     assert.match(page, /document-hero/);
   }
   assert.match(policy, /vigil-taxonomy-ticket policy-ticket/);
-  assert.ok(policy.indexOf('vigil-taxonomy-ticket policy-ticket') < policy.indexOf('DocumentRail'));
+  assert.ok(policy.indexOf('vigil-taxonomy-ticket policy-ticket') < policy.indexOf('<DocumentRail'));
   assert.match(policy, /document-layout document-layout--wide document-layout-below-header/);
   assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
   assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
