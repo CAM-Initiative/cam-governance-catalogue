@@ -624,7 +624,7 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
     read("src/components/ExploreGovernanceRail.tsx"),
   ]);
   assert.match(shell, />\s*VIGIL Observatory\s*<\/Link>/);
-  assert.match(shell, /VIGIL Observatory Knowledge Base/);
+  assert.match(shell, /href: "\/observatory\/knowledge-base\/", label: "Knowledge Base"/);
   assert.match(hub, /VIGIL Observatory Case Files/);
   assert.match(taxonomy, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(cases, /VIGIL Observatory · Incident investigations/);
@@ -795,7 +795,7 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /home-governance-board-grid/);
   assert.match(rail, /home-governance-pin/);
   assert.match(rail, /target="_blank"/);
-  assert.match(css, /home-governance-board[\s\S]*border: 0\.58rem solid/);
+  assert.match(css, /home-governance-board[\s\S]*border: 0\.5rem solid/);
   assert.match(css, /home-governance-note-1[\s\S]*rotate\(-1\.3deg\)/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*scale\(1\.015\)/);
