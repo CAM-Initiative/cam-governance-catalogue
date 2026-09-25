@@ -182,7 +182,11 @@ export default function VigilStandardsBaseline() {
             <label className="vigil-family-select"><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option key={value} value={value}>{clean(value) ?? value}</option>)}</select></label>
             <label className="vigil-family-select"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           </div>
-          <div className="vigil-result-summary"><span>{visibleSources.length} of {sourceCount} sources · {clauseCount.toLocaleString()} clauses represented</span>{(query || sourceType !== "all" || jurisdiction !== "all") ? <button type="button" onClick={() => { setQuery(""); setSourceType("all"); setJurisdiction("all"); }}>Clear filters</button> : null}</div>
+          <div className="vigil-result-summary vigil-standards-result-summary">
+            <span>{visibleSources.length} of {sourceCount} sources</span>
+            <span>{clauseCount.toLocaleString()} clauses represented</span>
+            {(query || sourceType !== "all" || jurisdiction !== "all") ? <button type="button" onClick={() => { setQuery(""); setSourceType("all"); setJurisdiction("all"); }}>Clear filters</button> : null}
+          </div>
         </section>
 
         <section className="vigil-case-table vigil-standards-case-table" aria-label="AI governance standards sources">
