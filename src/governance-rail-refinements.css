@@ -19,15 +19,16 @@
   border: 0.5rem solid hsl(31 31% 43%);
   border-radius: 0.22rem;
   background:
-    radial-gradient(ellipse at 18% 24%, hsl(27 34% 29% / 0.28) 0 0.04rem, transparent 0.065rem),
-    radial-gradient(ellipse at 72% 34%, hsl(42 54% 87% / 0.34) 0 0.055rem, transparent 0.085rem),
-    radial-gradient(ellipse at 81% 74%, hsl(26 30% 31% / 0.22) 0 0.035rem, transparent 0.065rem),
-    radial-gradient(ellipse at 37% 78%, hsl(44 48% 88% / 0.30) 0 0.045rem, transparent 0.075rem),
-    radial-gradient(ellipse at 54% 16%, hsl(31 36% 39% / 0.16) 0 0.025rem, transparent 0.05rem),
-    repeating-linear-gradient(14deg, transparent 0 0.24rem, hsl(27 28% 31% / 0.045) 0.255rem 0.275rem, transparent 0.29rem 0.56rem),
-    repeating-linear-gradient(101deg, transparent 0 0.56rem, hsl(45 50% 91% / 0.045) 0.58rem 0.6rem, transparent 0.62rem 1.08rem),
-    linear-gradient(135deg, hsl(34 58% 76%), hsl(31 50% 69%) 48%, hsl(36 55% 74%));
-  background-size: 0.72rem 0.66rem, 0.94rem 0.86rem, 0.8rem 0.76rem, 1.05rem 0.92rem, 0.62rem 0.58rem, auto, auto, auto;
+    radial-gradient(ellipse at 16% 21%, hsl(25 36% 24% / 0.34) 0 0.038rem, transparent 0.072rem),
+    radial-gradient(ellipse at 74% 29%, hsl(27 33% 31% / 0.28) 0 0.052rem, transparent 0.092rem),
+    radial-gradient(ellipse at 84% 76%, hsl(24 35% 27% / 0.30) 0 0.032rem, transparent 0.068rem),
+    radial-gradient(ellipse at 34% 81%, hsl(43 52% 90% / 0.28) 0 0.048rem, transparent 0.086rem),
+    radial-gradient(ellipse at 57% 18%, hsl(42 48% 88% / 0.22) 0 0.03rem, transparent 0.058rem),
+    radial-gradient(ellipse at 46% 52%, hsl(29 31% 35% / 0.18) 0 0.08rem, transparent 0.13rem),
+    repeating-linear-gradient(13deg, transparent 0 0.18rem, hsl(27 30% 28% / 0.052) 0.195rem 0.215rem, transparent 0.23rem 0.47rem),
+    repeating-linear-gradient(103deg, transparent 0 0.39rem, hsl(46 48% 92% / 0.052) 0.405rem 0.425rem, transparent 0.44rem 0.83rem),
+    linear-gradient(135deg, hsl(33 55% 73%), hsl(30 48% 64%) 49%, hsl(35 52% 70%));
+  background-size: 0.56rem 0.52rem, 0.82rem 0.72rem, 0.64rem 0.59rem, 0.93rem 0.81rem, 0.49rem 0.46rem, 1.18rem 1.06rem, auto, auto, auto;
   box-shadow:
     0 0 0 0.12rem hsl(36 28% 72%),
     0 0 0 0.22rem hsl(28 24% 34% / 0.72),
@@ -48,21 +49,31 @@
 .home-governance-board::before {
   inset: 0;
   background:
-    radial-gradient(ellipse at 22% 38%, hsl(26 32% 24% / 0.13) 0 0.06rem, transparent 0.095rem),
-    radial-gradient(ellipse at 61% 64%, hsl(46 48% 92% / 0.16) 0 0.07rem, transparent 0.11rem),
-    radial-gradient(ellipse at 78% 22%, hsl(25 28% 25% / 0.10) 0 0.04rem, transparent 0.075rem),
-    linear-gradient(102deg, transparent 0 18%, hsl(48 38% 84% / 0.07) 18.2% 18.6%, transparent 18.8% 100%),
-    linear-gradient(8deg, transparent 0 64%, hsl(22 24% 22% / 0.05) 64.2% 64.5%, transparent 64.7% 100%);
-  background-size: 1.35rem 1.1rem, 1.75rem 1.45rem, 1.1rem 0.95rem, auto, auto;
+    radial-gradient(ellipse at 18% 36%, hsl(25 34% 20% / 0.18) 0 0.07rem, transparent 0.11rem),
+    radial-gradient(ellipse at 63% 67%, hsl(25 31% 24% / 0.16) 0 0.055rem, transparent 0.095rem),
+    radial-gradient(ellipse at 81% 20%, hsl(45 54% 94% / 0.16) 0 0.065rem, transparent 0.105rem),
+    radial-gradient(ellipse at 39% 16%, hsl(23 30% 23% / 0.12) 0 0.035rem, transparent 0.075rem),
+    linear-gradient(101deg, transparent 0 18%, hsl(47 42% 90% / 0.085) 18.15% 18.48%, transparent 18.7% 100%),
+    linear-gradient(7deg, transparent 0 64%, hsl(21 25% 19% / 0.065) 64.15% 64.4%, transparent 64.65% 100%);
+  background-size: 0.98rem 0.84rem, 1.31rem 1.08rem, 1.58rem 1.34rem, 0.76rem 0.69rem, auto, auto;
   mix-blend-mode: multiply;
+  opacity: 0.92;
 }
 
 .home-governance-board::after {
   inset: 0.42rem;
   border: 1px solid hsl(31 28% 42% / 0.34);
+  background:
+    radial-gradient(ellipse at 12% 28%, hsl(24 32% 19% / 0.12) 0 0.11rem, transparent 0.16rem),
+    radial-gradient(ellipse at 68% 42%, hsl(45 48% 94% / 0.11) 0 0.09rem, transparent 0.14rem),
+    radial-gradient(ellipse at 88% 73%, hsl(23 29% 21% / 0.10) 0 0.07rem, transparent 0.13rem),
+    radial-gradient(ellipse at 43% 83%, hsl(44 44% 91% / 0.09) 0 0.06rem, transparent 0.12rem);
+  background-size: 2.7rem 2.15rem, 3.25rem 2.7rem, 2.35rem 1.95rem, 2.9rem 2.3rem;
   box-shadow:
     inset 0 0 0 1px hsl(45 40% 88% / 0.16),
+    inset 0 0 1.6rem hsl(25 30% 22% / 0.045),
     0 0 0 1px hsl(26 20% 28% / 0.06);
+  opacity: 0.86;
 }
 
 .home-governance-board-heading,
