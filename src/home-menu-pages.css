@@ -1628,6 +1628,12 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
     inset 0 1px 0 hsl(var(--background) / 0.8);
 }
 
+.policy-page > .policy-ticket {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 0;
+}
+
 /* Harm methodology -------------------------------------------------------
  * Full-width ticket masthead first; the contents rail and open sections then
  * follow the same document treatment used across the About-family pages.
