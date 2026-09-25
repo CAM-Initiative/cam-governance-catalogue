@@ -88,11 +88,10 @@ export default function Policy() {
           </p>
         </motion.header>
 
-        <div id="policy-library" className="document-layout policy-layout">
+        <div id="policy-library" className="document-layout">
           <DocumentRail
             title="Policy library"
             items={policyRail}
-            className="policy-index"
             ariaLabel="Policy papers and submissions"
           />
 
