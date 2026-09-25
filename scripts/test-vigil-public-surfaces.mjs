@@ -579,13 +579,12 @@ test("harm methodology renders canonical adaptation notes below the matrix", asy
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {
-  const [sections, cases, hub, report, printable, home, rail, pages, readme, contract] = await Promise.all([
+  const [sections, cases, hub, report, printable, rail, pages, readme, contract] = await Promise.all([
     read("src/lib/vigilCaseSections.ts"),
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("src/pages/evidence-chain-report-printable.tsx"),
-    read("src/pages/home.tsx"),
     read("src/components/ExploreGovernanceRail.tsx"),
     read("scripts/prepare-github-pages.js"),
     read("README.md"),
@@ -599,7 +598,6 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
   assert.match(hub, /Incident, Assessment, Classification, Repair, Conclusion and References/);
-  assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(pages, /evidence, assessment, alignment classification/);
   assert.match(readme, /\*\*Assessment:\*\*/);
   assert.match(contract, /severity as substantive assessment/);
@@ -653,7 +651,8 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
   assert.match(taxonomy, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(cases, /VIGIL Observatory · Incident investigations/);
   assert.match(datasets, /title="Alignment Taxonomy"/);
-  assert.match(home, /VIGIL Observatory Alignment Taxonomy · Classification/);
+  assert.match(home, /aria-label="VIGIL Fidelity Classes accumulating into the Alignment Taxonomy"/);
+  assert.match(home, /Explore the alignment taxonomy/);
   assert.doesNotMatch(rail, /href="\/observatory\//);
 });
 
