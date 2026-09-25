@@ -34,7 +34,6 @@ import "./governance-rail-refinements.css";
 import "./vigil-deterministic-report.css";
 import "./vigil-case-file-narrative-cards.css";
 import "./vigil-external-assessments.css";
-import "./about-page-polish.css";
 import "./public-surface-responsive-cleanup.css";
 import "./home-premium-v4.css";
 import "./home-premium-v5.css";
