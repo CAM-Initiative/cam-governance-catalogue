@@ -317,11 +317,11 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
   assert.match(aboutCss, /border: 1px solid hsl\(var\(--border\)\) !important/);
 });
 
-test("About explains alignment exemplars and the publication model", async () => {
+test("About explains alignment exemplars without duplicating the Case File legend", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /Invariant held · exemplar/i);
-  assert.match(about, /VigilAlignmentLegend detailed/);
-  assert.match(about, /Invariant held[\s\S]*Boundary unresolved/);
+  assert.doesNotMatch(about, /VigilAlignmentLegend detailed/);
+  assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(about, /do not create a Repair requirement/i);
   assert.match(about, /Mixed alignment outcome/);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
@@ -334,23 +334,26 @@ test("About explains alignment exemplars and the publication model", async () =>
   assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
-test("canonical About, licensing and Privacy keep readable public-page grammar", async () => {
-  const [about, licensing, privacy, referenceCss] = await Promise.all([
+test("Home-menu pages share the open editorial hero grammar", async () => {
+  const [about, policy, licensing, privacy, referenceCss, homeMenuCss, main] = await Promise.all([
     read("src/pages/about.tsx"),
+    read("src/pages/policy.tsx"),
     read("src/pages/licensing.tsx"),
     read("src/pages/privacy.tsx"),
     read("src/public-reference-pages.css"),
+    read("src/home-menu-pages.css"),
+    read("src/main.tsx"),
   ]);
-  assert.match(about, /About CAM Initiative/);
-  assert.match(about, /CAELESTIS Architecture Model/);
-  assert.doesNotMatch(about, /Public access without pretending everything is finished|How the public VIGIL surfaces fit together/);
-  assert.match(licensing, /Copyright & Licence/);
-  assert.match(licensing, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
-  assert.match(licensing, /Citation, reference and linking are permitted and encouraged/);
-  assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
-  assert.match(referenceCss, /max-width: 1220px/);
-  assert.match(referenceCss, /\.public-reference-hero[\s\S]*border: 1px solid hsl\(var\(--border\)\)[\s\S]*border-radius: 0\.75rem/);
-  assert.match(referenceCss, /\.public-reference-hero > p:not\([\s\S]*font-size: 1\.125rem/);
+  assert.match(about, /home-menu-hero home-menu-hero--founder/);
+  assert.match(about, /founder-photo\.jpg/);
+  assert.match(about, /home-menu-contact-chip[\s\S]*Contact CAM/);
+  assert.match(policy, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
+  assert.match(licensing, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
+  assert.match(privacy, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
+  assert.match(homeMenuCss, /\.home-menu-page \.home-menu-hero[\s\S]*border: 0 !important[\s\S]*background: transparent !important/);
+  assert.match(homeMenuCss, /\.home-menu-contact-chip[\s\S]*background: hsl\(var\(--primary\)\)/);
+  assert.match(homeMenuCss, /\.home-menu-founder-portrait img[\s\S]*aspect-ratio: 404 \/ 529/);
+  assert.match(main, /import "\.\/home-menu-pages\.css";/);
   assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
   assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
   assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
