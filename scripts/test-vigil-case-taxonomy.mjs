@@ -11,6 +11,7 @@ const [
   mainTs,
   shell,
   darkAppearanceCss,
+  indexCss,
 ] = await Promise.all([
   readFile(new URL("../src/pages/vigil-case-file.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/pages/evidence-chain-report-deterministic.tsx", import.meta.url), "utf8"),
@@ -21,6 +22,7 @@ const [
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/layout/Shell.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/dark-appearance.css", import.meta.url), "utf8"),
+  readFile(new URL("../src/index.css", import.meta.url), "utf8"),
 ]);
 
 // Canonical Case File retains taxonomy-derived Classification and Repair without
@@ -34,7 +36,7 @@ assert.match(caseFile, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessmen
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
-assert.match(caseFile, /Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair/);
+assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair/);
 
 // Deterministic report retains the same canonical projection.
 assert.match(report, /CaseTaxonomyClassification/);
@@ -63,8 +65,9 @@ assert.match(reportCss, /\.report-section p:not\([\s\S]*color: hsl\(var\(--repor
 assert.match(reportCss, /\.report-exemplar-callout \{[\s\S]*background: hsl\(var\(--report-success-panel\)\)/);
 assert.match(reportCss, /@media print \{[\s\S]*\.report-exemplar-callout \{[\s\S]*background: #edf6ef !important;/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.site-header,[\s\S]*display: none !important;/);
-assert.match(shell, /className="site-header sticky/);
-assert.match(darkAppearanceCss, /\.site-header \{[\s\S]*background-color: hsl\(var\(--background\)\) !important;/);
+assert.match(shell, /className="site-header"/);
+assert.match(indexCss, /\.site-header \{[\s\S]*background: hsl\(var\(--background\)\);/);
+assert.doesNotMatch(darkAppearanceCss, /\.site-header \{/);
 assert.doesNotMatch(darkAppearanceCss, /(?:^|\n)header \{/);
 assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
 assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
