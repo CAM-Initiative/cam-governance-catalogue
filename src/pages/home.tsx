@@ -3,6 +3,7 @@ import { Shell } from "@/components/layout/Shell";
 import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
 import { loadFailureTaxonomy, type FailureTaxonomyClass } from "@/lib/vigilFailureTaxonomy";
 import "@/home-premium.css";
@@ -189,10 +190,14 @@ function PremiumHero() {
             ))}
           </span>
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
-          <div className="diagnostic-core">
+          <Link
+            href="/observatory/cases/"
+            className="diagnostic-core diagnostic-core-link"
+            aria-label="Explore VIGIL Observatory Case Files"
+          >
             <span className="diagnostic-core-label">VIGIL ANALYSIS</span>
             <strong>What does this case show?</strong>
-          </div>
+          </Link>
 
           {diagnosticStages.map((stage, index) => {
             const expanded = index === expandedStage;
