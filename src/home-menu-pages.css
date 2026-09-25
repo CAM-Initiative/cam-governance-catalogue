@@ -309,3 +309,262 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
     transition: none;
   }
 }
+
+
+/* About-page interaction grammar --------------------------------------- */
+
+/* The six Case File stages are now compact disclosure panels. Closed state
+   shows the stage identity; opening reveals the explanatory sentence. */
+.vigil-about-page .vigil-about-flow {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0.78rem !important;
+  align-items: start;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / 0.86);
+  border-radius: 0.72rem;
+  background:
+    linear-gradient(180deg, hsl(var(--card) / 0.42), hsl(var(--background) / 0.82));
+  box-shadow:
+    0 0.2rem 0.55rem hsl(var(--foreground) / 0.025),
+    inset 0 1px 0 hsl(var(--background) / 0.82);
+  transition:
+    border-color 170ms ease,
+    box-shadow 170ms ease,
+    background 170ms ease;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure[open] {
+  border-color: hsl(var(--primary) / 0.38);
+  background:
+    linear-gradient(180deg, hsl(var(--primary) / 0.045), hsl(var(--background) / 0.96));
+  box-shadow:
+    0 0.32rem 0.9rem hsl(var(--foreground) / 0.045),
+    inset 0 1px 0 hsl(var(--background) / 0.9);
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.68rem;
+  align-items: center;
+  min-height: 4.2rem;
+  padding: 0.82rem 0.92rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary > span:first-child {
+  font-family: var(--app-font-mono);
+  font-size: 0.66rem;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary h3 {
+  margin: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  font-family: var(--app-font-serif);
+  font-size: 1.08rem;
+  font-weight: 560;
+  line-height: 1.2;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-stage-toggle {
+  display: inline-grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border: 1px solid hsl(var(--primary) / 0.28);
+  border-radius: 50%;
+  font-family: var(--app-font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  color: hsl(var(--primary));
+  transition: transform 180ms cubic-bezier(.22,1,.36,1), background 160ms ease;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure[open] .vigil-about-stage-toggle {
+  transform: rotate(45deg);
+  background: hsl(var(--primary) / 0.08);
+}
+
+.vigil-about-page .vigil-about-stage-disclosure > p {
+  margin: 0 !important;
+  padding: 0 0.92rem 0.95rem !important;
+  border: 0 !important;
+  font-size: 0.93rem !important;
+  line-height: 1.58 !important;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -3px;
+  border-radius: 0.68rem;
+}
+
+/* One CTA grammar for About. Contact is the primary gold action; all other
+   button-like navigation uses the same restrained outlined instrument chip. */
+.vigil-about-page .vigil-about-hero-actions,
+.vigil-about-page .vigil-about-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.62rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-page .vigil-about-hero-actions a,
+.vigil-about-page .vigil-about-link-row a,
+.vigil-about-page .vigil-about-action {
+  display: inline-flex !important;
+  width: fit-content;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.48rem;
+  margin: 1rem 0 0 !important;
+  padding: 0.64rem 0.92rem !important;
+  border: 1px solid hsl(var(--primary) / 0.34) !important;
+  border-radius: 999px !important;
+  background: hsl(var(--background) / 0.72) !important;
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.84);
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 750 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.095em !important;
+  text-transform: uppercase;
+  color: hsl(var(--primary)) !important;
+  text-decoration: none !important;
+  transition:
+    transform 160ms cubic-bezier(.22,1,.36,1),
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.vigil-about-page .vigil-about-hero-actions a:hover,
+.vigil-about-page .vigil-about-link-row a:hover,
+.vigil-about-page .vigil-about-action:hover,
+.vigil-about-page .vigil-about-hero-actions a:focus-visible,
+.vigil-about-page .vigil-about-link-row a:focus-visible,
+.vigil-about-page .vigil-about-action:focus-visible {
+  transform: translateY(-1px);
+  border-color: hsl(var(--primary) / 0.62) !important;
+  background: hsl(var(--primary) / 0.055) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.vigil-about-page .vigil-about-hero-actions a svg,
+.vigil-about-page .vigil-about-link-row a svg,
+.vigil-about-page .vigil-about-action svg {
+  width: 0.88rem;
+  height: 0.88rem;
+  stroke-width: 1.8;
+}
+
+.home-menu-page .home-menu-contact-chip {
+  gap: 0;
+  padding-inline: 1.12rem;
+}
+
+/* Connect stays information-rich, but now uses the same border radius, surface
+   and interaction language as the disclosure panels and CTA chips. */
+.vigil-about-page .home-connect-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.72rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-page .home-connect-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.72rem;
+  align-items: start;
+  min-height: 5rem;
+  padding: 0.82rem 0.9rem;
+  border: 1px solid hsl(var(--border) / 0.86);
+  border-radius: 0.72rem;
+  background:
+    linear-gradient(180deg, hsl(var(--card) / 0.38), hsl(var(--background) / 0.82));
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.8);
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  transition:
+    transform 160ms cubic-bezier(.22,1,.36,1),
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.vigil-about-page .home-connect-link:hover,
+.vigil-about-page .home-connect-link:focus-visible {
+  transform: translateY(-1px);
+  border-color: hsl(var(--primary) / 0.38);
+  background:
+    linear-gradient(180deg, hsl(var(--primary) / 0.045), hsl(var(--background) / 0.92));
+}
+
+.vigil-about-page .home-connect-icon {
+  display: inline-grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  place-items: center;
+  border: 1px solid hsl(var(--primary) / 0.24);
+  border-radius: 50%;
+  color: hsl(var(--primary));
+  background: transparent;
+}
+
+.vigil-about-page .home-connect-link-title {
+  font-family: var(--app-font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.vigil-about-page .home-connect-link-description {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 0.82rem;
+  line-height: 1.48;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 920px) {
+  .vigil-about-page .vigil-about-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .vigil-about-page .vigil-about-flow,
+  .vigil-about-page .home-connect-links {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vigil-about-page .vigil-about-stage-disclosure,
+  .vigil-about-page .vigil-about-stage-toggle,
+  .vigil-about-page .vigil-about-hero-actions a,
+  .vigil-about-page .vigil-about-link-row a,
+  .vigil-about-page .vigil-about-action,
+  .vigil-about-page .home-connect-link {
+    transition: none;
+  }
+}
