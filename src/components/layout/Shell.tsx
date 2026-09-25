@@ -6,11 +6,11 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about/", label: "About", internal: true },
-  { href: "/policy/", label: "Policy", internal: true },
   { href: "/observatory/cases/", label: "Case Files", internal: true },
   { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
   { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Alignment Taxonomy", internal: true },
   { href: "/observatory/severity-methodology/", label: "Harm Impact Assessment", internal: true },
+  { href: "/observatory/knowledge-base/policy/", label: "Policy", internal: true },
   { href: "/observatory/knowledge-base/standards-sources/", label: "AI Governance Standards", internal: true },
   { href: "/datasets/", label: "Datasets", internal: true },
   { href: "/licensing/", label: "Copyright & Licence", internal: true },
@@ -21,7 +21,6 @@ const mobileLinks = [
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about/", label: "About" },
-  { href: "/policy/", label: "Policy" },
   { href: "/licensing/", label: "Copyright & Licence" },
   { href: "/privacy/", label: "Privacy" },
 ];
@@ -31,6 +30,7 @@ const vigilLinks = [
   { href: "/observatory/knowledge-base/", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
   { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Alignment Taxonomy", navLabel: "Alignment Taxonomy" },
   { href: "/observatory/severity-methodology/", label: "Harm Impact Assessment", navLabel: "Harm Impact Assessment" },
+  { href: "/observatory/knowledge-base/policy/", label: "VIGIL Observatory Policy", navLabel: "Policy" },
   { href: "/observatory/knowledge-base/standards-sources/", label: "VIGIL Observatory AI Governance Standards", navLabel: "AI Governance Standards" },
 ];
 
@@ -41,7 +41,7 @@ function navActive(location: string, href: string) {
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about/" || location === "/policy/" || location === "/licensing/" || location === "/privacy/";
+  const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/";
   const isVigilActive = location === "/observatory/" || location.startsWith("/observatory/");
   const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");
 
