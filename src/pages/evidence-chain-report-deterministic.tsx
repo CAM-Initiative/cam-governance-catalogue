@@ -12,7 +12,7 @@ import {
   titleizeValue,
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
-import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 
@@ -254,8 +254,11 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const title = incident?.title ?? "VIGIL Observatory Case File";
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const isFailure = classification === "Classified";
+  const isCombination = classification === "Combination";
+  const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
@@ -285,7 +288,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <h1 className="report-title">{title}</h1>
         <dl className="report-hero-meta">
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : classification} />
+          <Field label="Classification" value={classificationDisplay} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
           <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
           <Field label="Updated" value={updated} />
@@ -294,20 +297,34 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       </header>
 
       {isFailure && <section className="report-exemplar-callout is-failure" aria-labelledby="report-failure-heading">
-        <p className="report-exemplar-kicker">Failure-classified Incident</p>
+        <p className="report-exemplar-kicker">Alignment outcome · Failure evidenced</p>
         <h2 id="report-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
-        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
-        <p className="report-exemplar-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+        <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="report-exemplar-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+      </section>}
+
+      {isCombination && <section className="report-exemplar-callout is-combination" aria-labelledby="report-combination-heading">
+        <p className="report-exemplar-kicker">Mixed alignment outcome</p>
+        <h2 id="report-combination-heading">The system is neither aligned nor misaligned.</h2>
+        <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary.</p>
+        <p className="report-exemplar-boundary">Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain visible as evidence of boundaries that held.</p>
+      </section>}
+
+      {isDisputed && <section className="report-exemplar-callout is-disputed" aria-labelledby="report-disputed-heading">
+        <p className="report-exemplar-kicker">Disputed evidence</p>
+        <h2 id="report-disputed-heading">The evidence is disputed.</h2>
+        <p>Material claims about this occurrence are contested, denied, or have not been independently adjudicated. The report preserves the current evidence state without presenting disputed claims as settled fact.</p>
+        <p className="report-exemplar-boundary">The taxonomy mapping describes the governance mechanism evidenced if the reported occurrence is supported; it does not convert disputed claims into established fact.</p>
       </section>}
 
       {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
-        <p className="report-exemplar-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
+        <p className="report-exemplar-kicker">{hasMixedExecution ? "Alignment exemplar · mixed execution" : "Alignment exemplar · Invariant held"}</p>
         <h2 id="report-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
-          ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          ? <p>This Case File is presented as an alignment exemplar overall. The relevant governance invariant held, while execution or human-facing expression was imperfect.</p>
+          : <p>This Case File documents an invariant-held governance outcome. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="report-exemplar-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not change the invariant-held alignment outcome."
           : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </section>}
 
@@ -364,11 +381,22 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             <p className="vigil-evidence-kicker">GOVERNANCE ASSESSMENT</p>
             <div className="report-assessment-details">
               <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
-              <section><h4 className="report-substantive-label">Governance significance</h4><p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p></section>
-              <CaseTaxonomyAssessment raw={incident.raw} />
-
             </div>
           </section>
+
+          <CaseTaxonomyAssessment raw={incident.raw} />
+
+          <section className="report-severity-assessment">
+            <p className="vigil-library-kicker report-peer-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT</p>
+            <HarmImpactMatrix
+              assessment={harmImpactAssessment}
+              compact
+              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+              methodologyReferenceNumber={harmMethodologyReferenceNumber}
+              methodologyReferenceHref="#vigil-harm-methodology-reference"
+            />
+          </section>
+
           {externalAssessments.length > 0 && <section className="report-external-assessments report-peer-assessment">
             <p className="vigil-library-kicker report-peer-assessment-heading">EXTERNAL ASSESSMENTS</p>
             <table className="report-external-assessment-table">
@@ -386,22 +414,11 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               })}</tbody>
             </table>
           </section>}
-          <section className="report-severity-assessment">
-            <p className="vigil-library-kicker report-peer-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
-            <HarmImpactMatrix
-              assessment={harmImpactAssessment}
-              compact
-              evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
-              methodologyReferenceNumber={harmMethodologyReferenceNumber}
-              methodologyReferenceHref="#vigil-harm-methodology-reference"
-            />
-          </section>
-
         </article> : <Empty>No structured assessment is available.</Empty>}
       </Stage>
 
         <Stage number="03" label="Classification">
-          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current taxonomy classification is linked.</Empty>}
+          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current Alignment Taxonomy classification is linked.</Empty>}
         </Stage>
 
         <Stage number="04" label="Repair">
@@ -409,9 +426,17 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         </Stage>
 
         <Stage number="05" label="Conclusion">
-          {governanceConclusion ? <section className="report-intro">
-            <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
-            <p className="report-intro-copy">{governanceConclusion}</p>
+          {(governanceConclusion || governanceSignificance) ? <section className="report-intro">
+            {governanceConclusion && <>
+              <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
+              <p className="report-intro-copy">{governanceConclusion}</p>
+            </>}
+            <div className="report-governance-significance">
+              <div className="vigil-case-subheading">
+                <h3>Governance significance</h3>
+              </div>
+              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+            </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
         </Stage>
 
@@ -441,7 +466,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and taxonomy relationship as the interactive Case File; successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence. The Repair section projects published class invariants for failure-occurrence and ambiguous-boundary mappings; ambiguous boundaries remain explicitly unresolved rather than being presented as failures, while successful-invariant exemplar mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence. Repair projects published class invariants for mappings where failure is evidenced or the boundary remains unresolved; unresolved boundaries remain explicitly unresolved, while invariant-held mappings remain visible in Classification and are not treated as conditions requiring repair. Broader family invariants are not substituted where a class invariant is not yet available.
       </footer>
     </main>
   </Shell>;

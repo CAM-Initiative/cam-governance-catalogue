@@ -149,13 +149,22 @@ export default function VigilStandardsBaseline() {
   const clauseCount = state.status === "ready" ? state.requirements.length : 0;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-case-library-page vigil-standards-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
-    <section className="vigil-library-shell vigil-standards-shell" aria-labelledby="standards-heading">
-      <header className="vigil-library-header vigil-standards-header">
-        <div>
+    <section className="vigil-library-shell vigil-standards-shell vigil-taxonomy-shell" aria-labelledby="standards-heading">
+      <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-standards-ticket">
+        <div className="vigil-taxonomy-ticket-title">
           <p className="vigil-library-kicker">VIGIL Observatory</p>
           <h1 id="standards-heading">AI Governance Standards</h1>
-          <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question.</p>
+          <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Search the library, open a source, then move through its overview, governance relevance, represented clauses and evidence review using the same reference-manual pattern as the Alignment Taxonomy.</p>
         </div>
+        <aside className="vigil-taxonomy-ticket-meta" aria-label="Standards library context">
+          <p className="vigil-case-context-label">Library context</p>
+          <dl>
+            <div><dt>Status</dt><dd>Beta</dd></div>
+            <div><dt>Sources</dt><dd>{state.status === "ready" ? sourceCount : "—"}</dd></div>
+            <div><dt>Clauses</dt><dd>{state.status === "ready" ? clauseCount.toLocaleString() : "—"}</dd></div>
+            <div><dt>Scope</dt><dd>AI governance</dd></div>
+          </dl>
+        </aside>
       </header>
 
       {state.status === "loading" && <div className="vigil-registry-notice">Loading AI Governance Standards…</div>}
@@ -173,7 +182,10 @@ export default function VigilStandardsBaseline() {
             <label className="vigil-family-select"><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option key={value} value={value}>{clean(value) ?? value}</option>)}</select></label>
             <label className="vigil-family-select"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           </div>
-          <div className="vigil-result-summary"><span>{visibleSources.length} of {sourceCount} sources · {clauseCount.toLocaleString()} clauses represented</span>{(query || sourceType !== "all" || jurisdiction !== "all") ? <button type="button" onClick={() => { setQuery(""); setSourceType("all"); setJurisdiction("all"); }}>Clear filters</button> : null}</div>
+          <div className="vigil-result-summary">
+            <span>{visibleSources.length} matching {visibleSources.length === 1 ? "source" : "sources"} · {clauseCount.toLocaleString()} clauses represented</span>
+            {(query || sourceType !== "all" || jurisdiction !== "all") ? <button type="button" onClick={() => { setQuery(""); setSourceType("all"); setJurisdiction("all"); }}>Clear filters</button> : null}
+          </div>
         </section>
 
         <section className="vigil-case-table vigil-standards-case-table" aria-label="AI governance standards sources">

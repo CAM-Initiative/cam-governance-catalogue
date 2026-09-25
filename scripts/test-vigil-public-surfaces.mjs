@@ -6,11 +6,14 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-test("Explore AI governance rail keeps a readable typography floor", async () => {
+test("Explore AI governance board keeps substantive note copy readable", async () => {
   const railCss = await read("src/governance-rail-refinements.css");
-  assert.match(railCss, /font-size: 0\.8rem;/);
-  assert.match(railCss, /\.home-governance-card-title \{[\s\S]*font-size: 0\.95rem !important;/);
-  assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
+  assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
+  assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
+  assert.match(railCss, /linear-gradient\(135deg, hsl\(33 56% 72%\), hsl\(30 48% 63%\)/);
+  assert.match(railCss, /feTurbulence/);
+  assert.match(railCss, /background-repeat: no-repeat/);
+  assert.doesNotMatch(railCss, /repeating-linear-gradient\(13deg|repeating-linear-gradient\(103deg/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -32,8 +35,8 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   const fallbackVigil = pages.indexOf("<h2>VIGIL Observatory</h2>");
   assert.ok(fallbackCaelestis >= 0 && fallbackVigil > fallbackCaelestis);
   assert.match(pages, /Every Incident moves through the same six-stage evidence-to-conclusion structure/);
-  assert.match(pages, /Real-world harm assessment and taxonomy classification are deliberately independent/);
-  assert.match(pages, /combination \/ mixed-alignment records/);
+  assert.match(pages, /Real-world harm assessment and alignment classification are deliberately independent/);
+  assert.match(pages, /mixed alignment outcome/);
   assert.doesNotMatch(pages, /VIGIL Observatory is distinct from CAELESTIS/);
   assert.match(pages, /const vigilAboutStructuredData = \{/);
   assert.match(pages, /"@type": "CreativeWork"/);
@@ -47,35 +50,70 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
-test("Explore AI Governance identifies Case Files as the VIGIL Observatory AI incident database", async () => {
-  const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /title: "Case Files"/);
-  assert.match(rail, /subtitle: "VIGIL Observatory AI incident database"/);
-  assert.match(rail, /Canonical VIGIL Observatory Incident investigations/);
-});
-
-test("VIGIL Observatory Knowledge Base exposes Case Files, Harm & Severity Methodology and Datasets", async () => {
-  const hub = await read("src/pages/vigil-knowledge-hub.tsx");
-  assert.match(hub, /title="VIGIL Observatory Case Files"/);
-  assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*title="Harm & Severity Methodology"/);
-  assert.match(hub, /VIGIL-HIM 1\.0\.0/);
-  assert.match(hub, /href="\/datasets\/"[\s\S]*title="Datasets"/);
-  assert.match(hub, /actionLabel="Open datasets"/);
-  assert.match(hub, /downloadable datasets/);
-});
-
-test("homepage presents the VIGIL Observatory Failure Taxonomy as a first-class classification surface", async () => {
+test("Governance Explorer situates the VIGIL Observatory in the external landscape", async () => {
   const home = await read("src/pages/home.tsx");
-  assert.match(home, /VIGIL Observatory · Evidence/);
-  assert.match(home, /VIGIL Observatory Failure Taxonomy · Classification/);
-  assert.match(home, /Evidence → Assessment → Runtime Governance/);
-  assert.match(home, /Explore the Taxonomy/);
-  assert.match(home, /Download the PDF/);
-  assert.match(home, /VIGIL Observatory → VIGIL Observatory Failure Taxonomy → CAELESTIS/);
+  assert.match(home, /help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice/);
+});
+
+test("External References is an external-only pinned reference board", async () => {
+  const rail = await read("src/components/ExploreGovernanceRail.tsx");
+  assert.match(rail, /External References/);
+  assert.match(rail, /aria-label="External AI governance references"/);
+  assert.doesNotMatch(rail, /External reference board|Independent external resources/);
+  assert.match(rail, /AI Regulations Tracker/);
+  assert.match(rail, /AI Incident Database/);
+  assert.match(rail, /OECD AI Incidents Monitor/);
+  assert.match(rail, /NIST AI Resource Center/);
+  assert.match(rail, /home-governance-note/);
+  assert.doesNotMatch(rail, /href="\/observatory\//);
+  assert.doesNotMatch(rail, /initiativeResources/);
+});
+
+test("VIGIL Observatory Knowledge Base exposes document navigation for its core references", async () => {
+  const hub = await read("src/pages/vigil-knowledge-hub.tsx");
+  assert.match(hub, /DocumentRail title="Knowledge Base"/);
+  assert.match(hub, /href="\/observatory\/cases\/"/);
+  assert.match(hub, /href="\/observatory\/knowledge-base\/standards-sources\/"/);
+  assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*Open Harm Impact Assessment/);
+  assert.match(hub, /VIGIL-HIM 1\.0\.0/);
+  assert.match(hub, /href="\/datasets\/"/);
+  assert.doesNotMatch(hub, /CollectionCard/);
+});
+
+test("homepage exposes the current evidence and Alignment Taxonomy surfaces without validator-only copy", async () => {
+  const home = await read("src/pages/home.tsx");
+  assert.match(home, /Explore the evidence/);
+  assert.match(home, /See the taxonomy/);
+  assert.match(home, /aria-label="VIGIL Fidelity Classes accumulating into the Alignment Taxonomy"/);
+  assert.match(home, /Explore the alignment taxonomy/);
+  assert.match(home, /Adjudication, not assumption/);
+  assert.doesNotMatch(home, /Public-surface validator markers/);
   assert.doesNotMatch(home, /VIGIL AI Governance Failure Taxonomy/);
 });
 
-test("public taxonomy naming uses VIGIL Observatory Failure Taxonomy", async () => {
+test("homepage refinement preserves the six-stage instrument and live Observatory feed", async () => {
+  const [home, styles] = await Promise.all([
+    read("src/pages/home.tsx"),
+    read("src/home-premium-v2.css"),
+  ]);
+  const evidence = home.indexOf('{ label: "Evidence"');
+  const environment = home.indexOf('{ label: "Environment"');
+  const harm = home.indexOf('{ label: "Harm"');
+  const governance = home.indexOf('{ label: "Governance"');
+  const classification = home.indexOf('{ label: "Classification"');
+  const compare = home.indexOf('{ label: "Compare"');
+  assert.ok(evidence < environment && environment < harm && harm < governance && governance < classification && classification < compare);
+  assert.doesNotMatch(home, /<p className="premium-eyebrow">CAM Initiative · VIGIL Observatory<\/p>/);
+  assert.match(home, /loadVigilIncidentRecords/);
+  assert.match(home, /aria-label="Recent VIGIL Case Files"/);
+  assert.doesNotMatch(home, /A connected governance architecture/);
+  assert.doesNotMatch(home, /VIGIL diagnoses the failure/);
+  assert.match(styles, /diagnostic-counter-rotation/);
+  assert.match(styles, /incident-ticker-travel 112s linear infinite/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.incident-ticker-track \{ animation: none; \}/);
+});
+
+test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async () => {
   const [taxonomy, aboutVigil, shell, hub, datasets] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/pages/about.tsx"),
@@ -84,12 +122,12 @@ test("public taxonomy naming uses VIGIL Observatory Failure Taxonomy", async () 
     read("src/pages/datasets.tsx"),
   ]);
   const publicSources = [taxonomy, aboutVigil, shell, hub, datasets].join("\n");
-  assert.match(taxonomy, /<h1 id="taxonomy-heading">VIGIL Observatory Failure Taxonomy<\/h1>/);
-  assert.match(shell, /label: "VIGIL Observatory Failure Taxonomy"/);
+  assert.match(taxonomy, /className="vigil-library-kicker">VIGIL Observatory<\/p>[\s\S]*<h1 id="taxonomy-heading">Alignment Taxonomy<\/h1>/);
+  assert.match(shell, /label: "VIGIL Observatory Alignment Taxonomy"/);
   assert.doesNotMatch(publicSources, /VIGIL AI Governance Failure Taxonomy/);
 });
 
-test("Failure Taxonomy remains available if the linked Case File projection cannot be fetched", async () => {
+test("Alignment Taxonomy remains available if the linked Case File projection cannot be fetched", async () => {
   const [loader, taxonomy] = await Promise.all([
     read("src/lib/vigilFailureTaxonomy.ts"),
     read("src/pages/vigil-failure-taxonomy.tsx"),
@@ -97,11 +135,11 @@ test("Failure Taxonomy remains available if the linked Case File projection cann
   assert.match(loader, /caseFileExamplesAvailable: boolean/);
   assert.match(loader, /\.catch\(\(\) => \(\{ data: \{ classes: \{\} \}, available: false \}\)\)/);
   assert.match(loader, /caseFileExamplesAvailable: caseFileProjection\.available/);
-  assert.match(taxonomy, /Case File links are temporarily unavailable\. The Failure Class definition remains current\./);
+  assert.match(taxonomy, /Case File links are temporarily unavailable\. The Fidelity Class definition remains current\./);
   assert.match(taxonomy, /caseFileExamplesAvailable=\{state\.data\.caseFileExamplesAvailable\}/);
 });
 
-test("failure taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
+test("alignment taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
   const [taxonomy, shellCss] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/vigil-page-shell.css"),
@@ -117,7 +155,7 @@ test("public VIGIL Observatory routes expose Incidents, taxonomy, standards and 
   for (const retired of ["failure-modes", "observatory/lessons", "observatory/repairs", "VigilKnowledgeBase"]) assert.doesNotMatch(`${app}\n${shell}\n${hub}`, new RegExp(retired, "i"));
 });
 
-test("retired standalone record pages and components are absent", async () => {
+test("retired standalone record surfaces and the unpublished draft tree are absent", async () => {
   const retiredFiles = [
     "src/pages/vigil.tsx",
     "src/pages/vigil-projection.tsx",
@@ -125,11 +163,13 @@ test("retired standalone record pages and components are absent", async () => {
     "src/pages/vigil-knowledge-base.tsx",
     "src/pages/vigil-reference-knowledge.tsx",
     "src/pages/evidence-chain-report.tsx",
+    "src/pages/transition-authority.tsx",
+    "src/pages/transition.tsx",
     "src/components/vigil/FailureModeCard.tsx",
     "src/components/vigil/FailureModeDetail.tsx",
-    "src/drafts/vigil-ledger.tsx",
   ];
   for (const file of retiredFiles) await assert.rejects(() => access(resolve(root, file)), undefined, `${file} should remain retired`);
+  await assert.rejects(() => access(resolve(root, "src/drafts")), undefined, "src/drafts should remain retired rather than becoming a stale holding area");
 });
 
 test("Case Files use one canonical Incident and retain the six substantive stages", async () => {
@@ -168,7 +208,7 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /Invariant held/);
   assert.match(classification, /Failure occurred/);
   assert.match(classification, /Boundary unresolved/);
-  assert.match(classification, /<th scope="col">Failure class<\/th>/);
+  assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
   assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.match(classification, /vigil-classification-family-row/);
   assert.match(classification, /colSpan=\{3\} scope="rowgroup"/);
@@ -221,19 +261,19 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   ]);
   assert.match(taxonomy, /"ambiguous-boundary"/);
   assert.match(taxonomy, /hasAmbiguousBoundary/);
-  assert.match(classification, /Secondary ambiguous boundary/);
+  assert.match(classification, /Secondary unresolved boundary/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
-  assert.match(caseFile, /Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair/);
+  assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /The evidence is disputed\./);
   assert.match(caseFile, /does not convert disputed claims into established fact/);
   assert.match(contract, /informational mixed-record affordance/);
 });
 
-test("Case Files make successful-invariant Exemplars unmistakable across public surfaces", async () => {
+test("Case Files make invariant-held alignment outcomes unmistakable across public surfaces", async () => {
   const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
@@ -252,20 +292,20 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
   assert.match(caseFile, /The system worked as intended\./);
   assert.match(caseFile, /const isFailure = classification === "Classified"/);
-  assert.match(caseFile, /Failure-classified Incident/);
+  assert.match(caseFile, /Alignment outcome · Failure evidenced/);
   assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
-  assert.match(caseFile, /Exemplar · successful invariant/);
-  assert.match(classification, /successful invariant exemplar/i);
+  assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
+  assert.match(classification, /alignment exemplar · invariant held/i);
   assert.match(classification, /not failure evidence/i);
-  assert.match(classification, /Primary successful invariant exemplar/);
-  assert.match(classification, /Secondary successful invariant exemplar/);
+  assert.match(classification, /Primary alignment exemplar · invariant held/);
+  assert.match(classification, /Secondary alignment exemplar · invariant held/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.match(classification, /No repair invariant is available for this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
-  assert.match(report, /successful-invariant exemplars remain attached to their Failure Class without being presented as failure evidence/i);
-  assert.match(pages, /classification_role === "successful-invariant" \? "Exemplar"/);
+  assert.match(report, /Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence/i);
+  assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
   assert.match(sync, /classification_role: record\.classification_role/);
   assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
   assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
@@ -273,65 +313,77 @@ test("Case Files make successful-invariant Exemplars unmistakable across public 
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
-test("About keeps dedicated six-stage explanatory copy and aligned stage-card contract", async () => {
-  const [about, aboutCss, sections] = await Promise.all([
+test("About keeps dedicated six-stage explanatory copy as plain document rows", async () => {
+  const [about, homeMenuCss, sections] = await Promise.all([
     read("src/pages/about.tsx"),
-    read("src/about-page-polish.css"),
+    read("src/home-menu-pages.css"),
     read("src/lib/vigilCaseSections.ts"),
   ]);
   assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
   assert.match(about, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
   assert.match(about, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM/);
-  assert.match(about, /Map the evidence to the VIGIL Failure Taxonomy and record whether each boundary failed, held or remains unresolved\./);
-  assert.match(about, /governing class invariants relevant to failure-occurrence and unresolved-boundary mappings/);
+  assert.match(about, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
+  assert.match(about, /governing class invariants for mappings where failure is evidenced or the boundary remains unresolved/);
   assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
   assert.match(about, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
+  assert.match(about, /<ol className="about-method-list"/);
+  assert.match(about, /about-method-number/);
+  assert.doesNotMatch(about, /vigil-about-stage-disclosure|<details|vigil-about-stage-toggle/);
   assert.doesNotMatch(about, /VIGIL_INCIDENT_CASE_SECTIONS\.map/);
   assert.doesNotMatch(sections, /description:/);
-  assert.match(aboutCss, /grid-template-rows: auto minmax\(3rem, auto\) 1fr/);
-  assert.match(aboutCss, /min-height: 3rem/);
-  assert.match(aboutCss, /padding: 0\.85rem 0\.95rem 0\.95rem !important/);
-  assert.match(aboutCss, /border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(homeMenuCss, /\.about-method-list \{/);
+  assert.match(homeMenuCss, /\.about-method-list li \{[\s\S]*border-bottom: 1px solid/);
 });
 
-test("About explains successful-invariant exemplars and the publication model", async () => {
+test("About explains alignment exemplars without duplicating the Case File legend", async () => {
   const about = await read("src/pages/about.tsx");
-  assert.match(about, /successful-invariant exemplar/i);
-  assert.match(about, /VigilAlignmentLegend detailed/);
-  assert.match(about, /Invariant held[\s\S]*Boundary unresolved/);
+  assert.match(about, /Invariant held · exemplar/i);
+  assert.doesNotMatch(about, /VigilAlignmentLegend detailed/);
+  assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(about, /do not create a Repair requirement/i);
-  assert.match(about, /Combination · mixed alignment/);
+  assert.match(about, /Mixed alignment outcome/);
   assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
   assert.match(about, /Keep evidence and judgment separate/);
   assert.match(about, /Open to scrutiny, not openly licensed/);
   assert.match(about, /It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine/);
-  assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Failure Taxonomy/);
+  assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Alignment Taxonomy/);
   assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
-  assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm &amp; Severity Methodology/);
+  assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm Impact Assessment/);
   assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
-test("canonical About, licensing and Privacy keep readable public-page grammar", async () => {
-  const [about, licensing, privacy, referenceCss] = await Promise.all([
+test("Long-form public pages share the document rail and editorial hero grammar", async () => {
+  const [about, policy, licensing, privacy, rail, indexCss, homeMenuCss, main] = await Promise.all([
     read("src/pages/about.tsx"),
+    read("src/pages/policy.tsx"),
     read("src/pages/licensing.tsx"),
     read("src/pages/privacy.tsx"),
-    read("src/public-reference-pages.css"),
+    read("src/components/DocumentRail.tsx"),
+    read("src/index.css"),
+    read("src/home-menu-pages.css"),
+    read("src/main.tsx"),
   ]);
-  assert.match(about, /About CAM Initiative/);
-  assert.match(about, /CAELESTIS Architecture Model/);
-  assert.doesNotMatch(about, /Public access without pretending everything is finished|How the public VIGIL surfaces fit together/);
-  assert.match(licensing, /Copyright & Licence/);
-  assert.match(licensing, /Phoenix Covenant Pty Ltd trading as CAM Initiative/);
-  assert.match(licensing, /Citation, reference and linking are permitted and encouraged/);
-  assert.doesNotMatch(privacy, /ExploreGovernanceRail|public-reference-governance-rail/);
-  assert.match(referenceCss, /max-width: 1220px/);
-  assert.match(referenceCss, /\.public-reference-hero[\s\S]*border: 1px solid hsl\(var\(--border\)\)[\s\S]*border-radius: 0\.75rem/);
-  assert.match(referenceCss, /\.public-reference-hero > p:not\([\s\S]*font-size: 1\.125rem/);
-  assert.match(referenceCss, /\.public-reference-reading p[\s\S]*font-size: 1\.0625rem/);
-  assert.match(referenceCss, /\.public-reference-policy-section > p[\s\S]*font-size: 1\.0625rem/);
-  assert.match(referenceCss, /\.public-reference-section-heading h2[\s\S]*font-size: 1\.75rem/);
+  for (const page of [about, policy, licensing, privacy]) {
+    assert.match(page, /DocumentRail/);
+    assert.match(page, /document-content/);
+  }
+  for (const page of [about, licensing, privacy]) {
+    assert.match(page, /document-hero/);
+  }
+  assert.match(policy, /vigil-taxonomy-ticket policy-ticket/);
+  assert.ok(policy.indexOf('vigil-taxonomy-ticket policy-ticket') < policy.indexOf('<DocumentRail'));
+  assert.match(policy, /document-layout document-layout--wide document-layout-below-header/);
+  assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
+  assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
+  assert.match(about, /cam-action cam-action-primary[\s\S]*>Contact<\/a>/);
+  assert.match(rail, /className="document-rail/);
+  assert.match(indexCss, /\.document-layout \{[\s\S]*grid-template-columns/);
+  assert.match(indexCss, /\.document-rail \{[\s\S]*position: sticky/);
+  assert.match(homeMenuCss, /\.about-founder-portrait img[\s\S]*aspect-ratio: 404 \/ 529/);
+  assert.match(main, /import "\.\/home-menu-pages\.css";/);
+  assert.doesNotMatch(privacy, /String\(index \+ 1\)\.padStart|<p>\{String\(index \+ 1\)/);
+  assert.match(homeMenuCss, /\.document-content \.vigil-about-section:first-of-type[\s\S]*border-top: 0 !important/);
 });
 
 test("Case File harm assessment moves all non-assessed dimensions to assessment limits", async () => {
@@ -369,7 +421,7 @@ test("historical identifiers do not become live retired-record links", async () 
   assert.doesNotMatch(combined, /VIGIL-(?:\d{4}-)?(?:FM|OBS|RESEARCH)-/);
 });
 
-test("Failure Taxonomy pages project canonical linked Case Files without conflating successful exemplars", async () => {
+test("Alignment Taxonomy pages project canonical linked Case Files without conflating successful exemplars", async () => {
   const [taxonomyPage, taxonomyLoader, taxonomyCss, pages] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/lib/vigilFailureTaxonomy.ts"),
@@ -379,15 +431,15 @@ test("Failure Taxonomy pages project canonical linked Case Files without conflat
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(taxonomyLoader, /caseFileExamples: FailureTaxonomyCaseFileExamples/);
   assert.match(taxonomyPage, /Linked Case Files/);
-  assert.match(taxonomyPage, /No classified failure Case Files are currently linked to this class/);
-  assert.match(taxonomyPage, /Successful invariant exemplars/);
+  assert.match(taxonomyPage, /No Case Files currently evidence failure for this class/);
+  assert.match(taxonomyPage, /Alignment exemplars/);
   assert.match(taxonomyPage, /item\.invariant_exemplars/);
   assert.match(taxonomyPage, /\/observatory\/cases\/\$\{example\.incident_id\}/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-linked-cases/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-invariant-exemplars/);
   assert.match(pages, /generated\/VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(pages, /taxonomyCaseExamplesForClass/);
-  assert.match(pages, /Successful invariant exemplars/);
+  assert.match(pages, /Alignment exemplars/);
   assert.doesNotMatch(taxonomyPage, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(pages, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
@@ -434,7 +486,7 @@ test("Failure Class views surface external supporting evidence without bloating 
   assert.match(pages, /reference\.evidence_note/);
 });
 
-test("Failure Taxonomy substantive web copy keeps a readable typography floor", async () => {
+test("Alignment Taxonomy substantive web copy keeps a readable typography floor", async () => {
   const css = await read("src/vigil-failure-taxonomy-refinements.css");
   assert.match(css, /\.vigil-taxonomy-header \.vigil-library-description \{[\s\S]*font-size: 1\.02rem/);
   assert.match(css, /\.vigil-taxonomy-manual-plain \{[\s\S]*font-size: 1\.08rem/);
@@ -443,12 +495,24 @@ test("Failure Taxonomy substantive web copy keeps a readable typography floor", 
   assert.match(css, /\.vigil-taxonomy-linked-cases li > p,[\s\S]*font-size: 0\.86rem/);
 });
 
+test("Standards search geometry matches Case Files", async () => {
+  const [standards, standardsCss, casesCss] = await Promise.all([
+    read("src/pages/vigil-standards-baseline.tsx"),
+    read("src/vigil-standards-dossier-refinements.css"),
+    read("src/vigil-ux-v4.css"),
+  ]);
+  assert.match(standards, /matching \{visibleSources\.length === 1 \? "source" : "sources"\} · \{clauseCount\.toLocaleString\(\)\} clauses represented/);
+  assert.match(standardsCss, /\.vigil-standards-page \.vigil-standards-toolbar \{[\s\S]*display: block/);
+  assert.match(standardsCss, /\.vigil-standards-search-row \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
+  assert.match(casesCss, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
+});
+
 test("taxonomy and external-governance public systems remain intact", async () => {
   const [taxonomyPage, taxonomyLoader, datasets, standards, externalKnowledge] = await Promise.all([read("src/pages/vigil-failure-taxonomy.tsx"), read("src/lib/vigilFailureTaxonomy.ts"), read("src/pages/datasets.tsx"), read("src/pages/vigil-standards-baseline.tsx"), read("src/lib/vigilExternalKnowledge.ts")]);
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
-  assert.match(taxonomyPage, /failure famil/i);
-  assert.match(taxonomyPage, /failure class/i);
-  assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
+  assert.match(taxonomyPage, /fidelity famil/i);
+  assert.match(taxonomyPage, /fidelity class/i);
+  assert.match(datasets, /VIGIL\.Observatory\.AlignmentTaxonomy\.FullReference\.pdf/);
   assert.match(standards, /AI Governance Standards/);
   assert.match(externalKnowledge, /external-governance/);
 });
@@ -475,7 +539,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
-  assert.match(shell, /Harm & Severity Methodology/);
+  assert.match(shell, /Harm Impact Assessment/);
   assert.match(about, /Publication model/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
@@ -521,13 +585,12 @@ test("harm methodology renders canonical adaptation notes below the matrix", asy
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {
-  const [sections, cases, hub, report, printable, home, rail, pages, readme, contract] = await Promise.all([
+  const [sections, cases, hub, report, printable, rail, pages, readme, contract] = await Promise.all([
     read("src/lib/vigilCaseSections.ts"),
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("src/pages/evidence-chain-report-printable.tsx"),
-    read("src/pages/home.tsx"),
     read("src/components/ExploreGovernanceRail.tsx"),
     read("scripts/prepare-github-pages.js"),
     read("README.md"),
@@ -540,10 +603,8 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(printable, /number: "01", label: "Incident"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /Incident, Assessment, Classification, Repair and References/);
-  assert.match(home, /Evidence → Assessment → Runtime Governance/);
-  assert.match(rail, /evidence, assessment, failure classification/);
-  assert.match(pages, /evidence, assessment, failure classification/);
+  assert.match(hub, /Incident, Assessment, Classification, Repair, Conclusion and References/);
+  assert.match(pages, /evidence, assessment, alignment classification/);
   assert.match(readme, /\*\*Assessment:\*\*/);
   assert.match(contract, /severity as substantive assessment/);
   for (const publicText of [sections, cases, hub, report, printable]) {
@@ -552,19 +613,21 @@ test("Stage 02 is presented publicly as Assessment", async () => {
 });
 
 
-test("About, licensing and severity methodology use continuous document containers", async () => {
-  const [about, licensing, severity, uxCss, referenceCss] = await Promise.all([
+test("About, Privacy and licensing use open rail documents while methodology keeps its specialist document", async () => {
+  const [about, privacy, licensing, severity, homeMenuCss] = await Promise.all([
     read("src/pages/about.tsx"),
+    read("src/pages/privacy.tsx"),
     read("src/pages/licensing.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
-    read("src/vigil-ux-v5.css"),
-    read("src/public-reference-pages.css"),
+    read("src/home-menu-pages.css"),
   ]);
-  assert.match(about, /vigil-about-document/);
-  assert.match(licensing, /public-reference-document--single/);
+  for (const page of [about, privacy, licensing]) {
+    assert.match(page, /DocumentRail/);
+    assert.match(page, /document-content/);
+  }
   assert.match(severity, /vigil-severity-methodology-document/);
-  assert.match(uxCss, /\.vigil-about-document[\s\S]*border: 1px solid hsl\(var\(--border\)\)/);
-  assert.match(referenceCss, /\.public-reference-document--single[\s\S]*border: 1px solid hsl\(var\(--border\)\)/);
+  assert.match(homeMenuCss, /\.document-content\.vigil-about-document,[\s\S]*border: 0 !important/);
+  assert.match(homeMenuCss, /\.document-content\.public-reference-document/);
 });
 
 test("severity methodology exposes the registered source trail after Case Files", async () => {
@@ -589,19 +652,26 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
     read("src/components/ExploreGovernanceRail.tsx"),
   ]);
   assert.match(shell, />\s*VIGIL Observatory\s*<\/Link>/);
-  assert.match(shell, /VIGIL Observatory Knowledge Base/);
+  assert.match(shell, /href: "\/observatory\/knowledge-base\/", label: "Knowledge Base"/);
   assert.match(hub, /VIGIL Observatory Case Files/);
-  assert.match(taxonomy, /VIGIL Observatory Failure Taxonomy/);
-  assert.match(cases, /VIGIL Observatory Incident investigations/);
-  assert.match(datasets, /title="VIGIL Observatory Failure Taxonomy"/);
-  assert.match(home, /VIGIL Observatory Failure Taxonomy · Classification/);
-  assert.match(rail, /VIGIL Observatory AI incident database/);
+  assert.match(taxonomy, /VIGIL Observatory Alignment Taxonomy/);
+  assert.match(cases, /VIGIL Observatory · Incident investigations/);
+  assert.match(datasets, /title="Alignment Taxonomy"/);
+  assert.match(home, /aria-label="VIGIL Fidelity Classes accumulating into the Alignment Taxonomy"/);
+  assert.match(home, /Explore the alignment taxonomy/);
+  assert.doesNotMatch(rail, /href="\/observatory\//);
 });
 
 
-test("Datasets prioritise the public Harm & Severity Matrix over the internal reference registry", async () => {
+test("Alignment Taxonomy PDF uses the canonical public naming", async () => {
   const datasets = await read("src/pages/datasets.tsx");
-  assert.match(datasets, /title="Harm & Severity Matrix"/);
+  assert.match(datasets, /VIGIL-Alignment-Taxonomy-Full-Reference\.pdf/);
+  assert.match(datasets, /VIGIL\.Observatory\.AlignmentTaxonomy\.FullReference\.pdf/);
+});
+
+test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
+  const datasets = await read("src/pages/datasets.tsx");
+  assert.match(datasets, /title="Harm Impact Matrix"/);
   assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.0\.json/);
   assert.match(datasets, /11 harm dimensions/);
   assert.match(datasets, /Open JSON matrix/);
@@ -694,72 +764,160 @@ test("Case File search, classification and severity filters share one desktop ro
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
 });
 
-test("Case Files landing page stays deliberately terse", async () => {
+test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {
+  const [caseFile, dossier] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/vigil-case-file-dossier.css"),
+  ]);
+  assert.match(caseFile, /vigil-case-context-grid[\s\S]*Field label="Jurisdiction"[\s\S]*Field label="Environment"[\s\S]*Field label="Severity"[\s\S]*Field label="Classification"/);
+  assert.doesNotMatch(caseFile, /vigil-case-ticket-footer|vigil-case-ticket-footer-meta|vigil-case-ticket-report-button/);
+  assert.match(caseFile, /vigil-case-report-tab[\s\S]*Full report \/ PDF/);
+  assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
+});
+
+test("Case Files landing page uses the shared ticket masthead and stays concise", async () => {
   const cases = await read("src/pages/vigil-cases.tsx");
+  assert.match(cases, /vigil-taxonomy-ticket vigil-case-library-ticket/);
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
-  assert.doesNotMatch(cases, /VIGIL Observatory provides a public AI incident database through its Case File registry/);
+  assert.match(cases, /Collection context/);
+  assert.doesNotMatch(cases, /Active corpus refactor|Records actively under construction|currently being re-adjudicated and rebuilt/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
 });
 
 
-test("About explains the VIGIL evidence-to-conclusion method and classification outcomes", async () => {
-  const [about, css, polish] = await Promise.all([
+test("About explains the VIGIL evidence-to-conclusion method and classification outcomes without card grids", async () => {
+  const [about, homeMenuCss] = await Promise.all([
     read("src/pages/about.tsx"),
-    read("src/vigil-ux-v5.css"),
-    read("src/about-page-polish.css"),
+    read("src/home-menu-pages.css"),
   ]);
-  const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
-  const harmSeparation = about.indexOf("Real-world harm assessment and taxonomy classification are deliberately independent");
-  const flow = about.indexOf("vigil-about-flow-scroll");
-  assert.ok(methodStart >= 0 && harmSeparation > methodStart && flow > harmSeparation);
-  assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Failure Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
+  const methodStart = about.indexOf("One evidence-to-conclusion structure for every Incident");
+  const harmSeparation = about.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
+  const stageList = about.indexOf("about-method-list");
+  assert.ok(methodStart >= 0 && harmSeparation > methodStart && stageList > harmSeparation);
+  assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
   assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
-  assert.match(about, /Failure-classified Incident[\s\S]*Successful-invariant exemplar[\s\S]*Combination · mixed alignment/);
-  assert.match(about, /vigil-about-outcome-visual is-failure[\s\S]*CircleX/);
-  assert.match(about, /vigil-about-outcome-visual is-exemplar[\s\S]*CircleCheckBig/);
-  assert.match(about, /vigil-about-outcome-visual is-combination[\s\S]*Info/);
-  assert.match(about, /Combination · mixed alignment[\s\S]*Browse the taxonomy/);
-  assert.doesNotMatch(about, /<h3>Mapping role<\/h3>|<h3>Case File outcome<\/h3>/);
+  assert.match(about, /Failure evidenced[\s\S]*Invariant held · exemplar[\s\S]*Mixed alignment outcome/);
+  assert.match(about, /about-outcome-list/);
+  assert.doesNotMatch(about, /vigil-about-case-outcome-grid|vigil-about-outcome-visual|CircleX|CircleCheckBig/);
+  assert.match(about, /Mixed alignment outcome[\s\S]*Browse the taxonomy/);
 
   const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
-  const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
   const vigilStart = about.indexOf('id="vigil-observatory-heading"');
-  const citationStart = about.indexOf('id="vigil-citation-heading"');
-  assert.ok(aboutStart >= 0 && caelestisStart > aboutStart && vigilStart > caelestisStart && citationStart > vigilStart);
+  const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
+  const connectStart = about.indexOf('id="connect-heading"');
+  assert.ok(aboutStart >= 0 && vigilStart > aboutStart && caelestisStart > vigilStart && connectStart > caelestisStart);
 
   const vigilIntro = about.indexOf("VIGIL Observatory is the CAM Initiative");
   const vigilBoundary = about.indexOf("VIGIL uses its own Incident model");
-  const vigilActions = about.indexOf('aria-label="Explore VIGIL Observatory"');
+  const vigilActions = about.indexOf('href="/observatory/cases/"');
   assert.ok(vigilIntro >= 0 && vigilBoundary > vigilIntro && vigilActions > vigilBoundary);
 
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
-  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
-  assert.match(css, /About final polish: one calm document/);
-  assert.match(polish, /\.vigil-about-document \.vigil-about-flow > article \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
-  assert.match(polish, /\.vigil-about-page \.vigil-about-case-outcome-grid/);
+  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine/);
+  assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
+  assert.match(about, /Copyright &amp; Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.match(homeMenuCss, /\.about-method-list \{/);
+  assert.match(homeMenuCss, /\.about-outcome-list \{/);
 });
 
 
-test("Explore AI governance prioritises Case Files, Knowledge Base and Datasets with icon affordances", async () => {
+test("Explore AI governance uses a tactile corkboard with pinned external notes", async () => {
   const [rail, css] = await Promise.all([
     read("src/components/ExploreGovernanceRail.tsx"),
     read("src/governance-rail-refinements.css"),
   ]);
-  const caseFiles = rail.indexOf('title: "Case Files"');
-  const knowledgeBase = rail.indexOf('title: "Knowledge Base"');
-  const datasets = rail.indexOf('title: "Datasets"');
-  assert.ok(caseFiles >= 0 && knowledgeBase > caseFiles && datasets > knowledgeBase);
-  assert.match(rail, /icon: FileText/);
-  assert.match(rail, /icon: Library/);
-  assert.match(rail, /icon: Database/);
-  assert.doesNotMatch(rail, /title: "VIGIL Observatory"/);
-  assert.match(rail, /home-governance-heading-rule/);
-  assert.doesNotMatch(rail, /home-governance-heading-panel/);
-  assert.match(css, /home-governance-heading-rule[\s\S]*background: transparent/);
-  assert.match(css, /home-governance-heading-rule::after[\s\S]*background: hsl\(var\(--primary\) \/ 0\.26\)/);
-  assert.doesNotMatch(css, /home-governance-heading-panel[\s\S]*status-success-surface/);
-  assert.match(css, /home-governance-card-title[\s\S]*font-weight: 540[\s\S]*text-transform: none/);
-  assert.match(css, /home-governance-card-label[\s\S]*display: inline-flex/);
+  assert.match(rail, /home-governance-board-grid/);
+  assert.match(rail, /home-governance-pin/);
+  assert.match(rail, /target="_blank"/);
+  assert.match(rail, /aria-label="External References"/);
+  assert.match(rail, /home-governance-letter/);
+  assert.match(rail, /home-governance-letter-space/);
+  assert.doesNotMatch(rail, /home-governance-board-rule|home-governance-section-label/);
+  assert.match(css, /home-governance-board[\s\S]*border: 0\.58rem solid/);
+  assert.match(css, /border-image:[\s\S]*linear-gradient\([\s\S]*hsl\(47 72% 68%\)/);
+  assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
+  assert.match(css, /home-governance-letter[\s\S]*font-size: clamp\(1\.15rem, 1\.8vw, 1\.7rem\)[\s\S]*font-family: var\(--app-font-mono\)[\s\S]*text-shadow:/);
+  assert.match(css, /home-governance-letter::before[\s\S]*bottom: -0\.11em[\s\S]*height: 0\.15em/);
+  assert.doesNotMatch(css, /home-governance-letter::after/);
+  assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
+  assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
+  assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
+  assert.doesNotMatch(css, /home-governance-note-2::after|home-governance-note-4::after/);
+  assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
+  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.45deg/);
+});
+
+test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
+  const [about, shell, severity, datasets, menuCss, gearCss, hub, home] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/components/layout/Shell.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/datasets.tsx"),
+    read("src/home-menu-pages.css"),
+    read("src/home-premium-v11-tactile.css"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/home.tsx"),
+  ]);
+
+  assert.doesNotMatch(about, /01 · VIGIL Observatory|02 · Case File method|03 · VIGIL Observatory Alignment Taxonomy|04 · Publication model|05 · CAELESTIS Architecture Model|06 · Connect/);
+  assert.match(about, /label: "VIGIL Observatory"/);
+  assert.match(about, /label: "Case File method"/);
+  assert.match(about, /label: "Alignment Taxonomy"/);
+
+  const homeStart = shell.indexOf("const homeLinks");
+  const homeEnd = shell.indexOf("];", homeStart);
+  const homeKnowledge = shell.indexOf('label: "Knowledge Base"', homeStart);
+  assert.ok(homeKnowledge > homeStart && homeKnowledge < homeEnd);
+
+  const vigilStart = shell.indexOf("const vigilLinks");
+  const vigilMenuEnd = shell.indexOf("];", vigilStart);
+  const caseFiles = shell.indexOf('navLabel: "Case Files"', vigilStart);
+  const policy = shell.indexOf('navLabel: "Policy"', vigilStart);
+  const standards = shell.indexOf('navLabel: "AI Governance Standards"', vigilStart);
+  assert.ok(caseFiles >= vigilStart && policy > caseFiles && standards > policy && standards < vigilMenuEnd);
+  assert.ok(shell.indexOf('navLabel: "Knowledge Base"', vigilStart) === -1 || shell.indexOf('navLabel: "Knowledge Base"', vigilStart) > vigilMenuEnd);
+  assert.doesNotMatch(shell, /const homeLinks = \[[\s\S]*?label: "Policy"/);
+  assert.match(shell, /href="\/observatory\/cases\/"[\s\S]*VIGIL Observatory/);
+
+  assert.match(severity, /vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket/);
+  assert.match(severity, /Methodology context/);
+  assert.ok(severity.indexOf('vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
+  assert.doesNotMatch(severity, /href: "#overview", label: "Overview"/);
+  assert.match(menuCss, /vigil-severity-methodology-document \{[\s\S]*border: 0 !important[\s\S]*background: transparent !important/);
+  assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
+  assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section \+ \.vigil-about-section[\s\S]*border-top: 1px solid/);
+  assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)[\s\S]*border: 0/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table th,[\s\S]*border: 0 !important/);
+  assert.match(datasets, /DocumentRail title="Datasets"/);
+  assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
+  assert.ok(datasets.indexOf('vigil-taxonomy-ticket vigil-datasets-ticket') < datasets.indexOf('DocumentRail title="Datasets"'));
+  assert.doesNotMatch(datasets, /label: "0[1-5] |<p>0[1-5] ·/);
+  assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
+  assert.match(menuCss, /cam-action:not\(\.cam-action-compact\)[\s\S]*border-radius: 999px/);
+  assert.doesNotMatch(gearCss, /Outer-wheel inner-edge correction|Outer-wheel surface correction/);
+  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 2\.75/);
+  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
+  assert.match(gearCss, /diagnostic-light-edge-inner[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
+  assert.match(gearCss, /\.diagnostic-instrument-web \{[\s\S]*z-index: 0;/);
+  assert.match(gearCss, /diagnostic-gear-outer \.diagnostic-gear-tooth::before[\s\S]*hsl\(38 5% 47% \/ 0\.96\)[\s\S]*hsl\(43 7% 68% \/ 0\.99\)/);
+  assert.match(home, /diagnostic-outer-spokes-surface/);
+  assert.match(gearCss, /Foreground outer spokes/);
+  assert.match(gearCss, /\.diagnostic-gear-outer \.diagnostic-gear-spokes \{[\s\S]*opacity: 0/);
+  assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 2\.9[\s\S]*inset: 8%/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*linear-gradient\(180deg, #000 0 30%, rgba\(0, 0, 0, 0\.82\) 31%, transparent 34% 100%\)/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*width: 1\.9rem[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.72\)/);
+  assert.match(gearCss, /html:not\(\[data-theme="dark"\]\) \.diagnostic-outer-spokes-surface > i::before[\s\S]*hsl\(0 0% 100% \/ 0\.96\)/);
+  assert.match(home, /diagnostic-outer-machined-ring/);
+  assert.match(gearCss, /\.diagnostic-outer-machined-ring \{[\s\S]*z-index: 2\.8[\s\S]*inset: 15\.5%/);
+
+  const hubCaseFiles = hub.indexOf('id="cases"');
+  const hubStandards = hub.indexOf('id="standards"');
+  assert.ok(hubCaseFiles >= 0 && hubStandards > hubCaseFiles);
+  assert.doesNotMatch(hub, /undergoing a substantive refactor/);
 });
 
 test("dark appearance keeps native Case File classification menus legible", async () => {
@@ -771,18 +929,17 @@ test("dark appearance keeps native Case File classification menus legible", asyn
 });
 
 
-test("About section rules are attached only to section boundaries", async () => {
-  const [main, css] = await Promise.all([
+test("About uses open sections and line hierarchy rather than nested bordered cards", async () => {
+  const [main, css, about] = await Promise.all([
     read("src/main.tsx"),
-    read("src/about-page-polish.css"),
+    read("src/home-menu-pages.css"),
+    read("src/pages/about.tsx"),
   ]);
-  assert.match(main, /import "\.\/about-page-polish\.css";/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-section \+ \.vigil-about-section \{[\s\S]*border-top: 1px solid hsl\(var\(--border\)\) !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-record-intro,[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-flow > article \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.doesNotMatch(main, /about-page-polish\.css/);
+  assert.match(css, /\.document-content \.vigil-about-section \{[\s\S]*border-top: 1px solid/);
+  assert.match(css, /\.document-content\.vigil-about-document,[\s\S]*border: 0 !important/);
+  assert.match(css, /\.about-principle-list \{[\s\S]*border-top: 1px solid/);
+  assert.doesNotMatch(about, /vigil-about-stage-disclosure|vigil-about-case-outcome-grid/);
 });
 
 
@@ -825,12 +982,16 @@ test("Case File Incident stage renders optional source artefact images inside Wh
   assert.match(caseFile, /incident_artefacts/);
   assert.match(caseFile, /vigil-incident-artefacts/);
   assert.match(caseFile, /<img src=\{artefact\.renderUrl\}/);
+  assert.match(caseFile, /isVideoArtefact\(artefact\)/);
+  assert.match(caseFile, /<video[\s\S]*controls[\s\S]*preload="metadata"[\s\S]*playsInline/);
+  assert.match(caseFile, /<source src=\{artefact\.renderUrl\} type=\{artefact\.mediaType\}/);
   assert.match(caseFile, /vigil-incident-artefact-reference/);
   assert.match(caseFile, /#vigil-evidence-reference-/);
   assert.doesNotMatch(caseFile, /View originating source/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact \{[\s\S]*text-align: center/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact-link \{[\s\S]*max-width: min\(100%, 54rem\)/);
   assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact img \{[\s\S]*margin: 0 auto/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-incident-artefact-video \{[\s\S]*width: min\(100%, 54rem\)[\s\S]*margin: 0 auto/);
 });
 
 
@@ -844,10 +1005,10 @@ test("Case File stage tabs keep six stages on one desktop row while mobile may w
   assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
 
-test("Assessment wording keeps harm assessment distinct from taxonomy classification", async () => {
+test("Assessment wording keeps harm assessment distinct from alignment classification", async () => {
   const about = await read("src/pages/about.tsx");
   assert.match(about, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
   assert.match(about, /VIGIL-HIM assesses materialised consequence and derives severity/);
-  assert.match(about, /Real-world harm assessment and taxonomy classification are deliberately independent/);
+  assert.match(about, /Real-world harm assessment and alignment classification are deliberately independent/);
   assert.doesNotMatch(about, /classify materialised harm/);
 });

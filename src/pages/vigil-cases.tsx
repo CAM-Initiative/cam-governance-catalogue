@@ -7,7 +7,7 @@ import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
-import { taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
   | { status: "loading" }
@@ -41,8 +41,9 @@ function classificationStatusLabel(record: VigilIndexRecord) {
 function classificationStatusCounts(records: VigilIndexRecord[]): ClassificationStatusCount[] {
   const counts = new Map<string, ClassificationStatusCount>();
   for (const record of records) {
-    const label = classificationStatusLabel(record);
-    const key = canonicalComparisonKey(label);
+    const status = classificationStatusLabel(record);
+    const label = taxonomyAlignmentOutcomeLabel(record.raw);
+    const key = canonicalComparisonKey(status);
     const existing = counts.get(key);
     if (existing) existing.count += 1;
     else counts.set(key, { key, label, count: 1 });
@@ -198,33 +199,23 @@ export default function VigilCases() {
       <VigilObservatoryNav />
       <main className="vigil-library-page vigil-case-library-page">
         <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
-          <section className="vigil-library-shell" aria-labelledby="case-files-heading">
-            <header className="vigil-library-header">
-              <div>
-                <p className="vigil-library-kicker">VIGIL Observatory Incident investigations</p>
+          <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="case-files-heading">
+            <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-case-library-ticket">
+              <div className="vigil-taxonomy-ticket-title">
+                <p className="vigil-library-kicker">VIGIL Observatory · Incident investigations</p>
                 <h1 id="case-files-heading">Case Files</h1>
+                <p className="vigil-library-description">A public AI incident database organised through a consistent evidence-to-conclusion method so incidents can be inspected, compared and re-adjudicated as the corpus evolves.</p>
               </div>
-              {state.status === "ready" && (
-                <div className="vigil-library-stats" aria-live="polite">
-                  <span><strong>{records.length}</strong> case files</span>
-                  <span><strong>{classificationStates.length}</strong> classification states</span>
-                  {updated && <span>Updated <strong>{updated}</strong></span>}
-                </div>
-              )}
+              <aside className="vigil-taxonomy-ticket-meta" aria-label="Case File collection context">
+                <p className="vigil-case-context-label">Collection context</p>
+                <dl aria-live="polite">
+                  <div><dt>Status</dt><dd>Beta</dd></div>
+                  <div><dt>Case Files</dt><dd>{state.status === "ready" ? records.length : "—"}</dd></div>
+                  <div><dt>Classification states</dt><dd>{state.status === "ready" ? classificationStates.length : "—"}</dd></div>
+                  <div><dt>Last updated</dt><dd>{updated ?? "Loading"}</dd></div>
+                </dl>
+              </aside>
             </header>
-
-            <div
-              role="status"
-              className="mb-6 flex flex-col gap-1 rounded-2xl border border-primary/45 bg-primary/10 px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:gap-4"
-            >
-              <span className="inline-flex w-fit items-center rounded-full bg-primary px-3 py-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-primary-foreground">
-                Active corpus refactor
-              </span>
-              <div>
-                <strong className="block text-base font-semibold text-foreground sm:text-lg">Records actively under construction &amp; refactoring</strong>
-                <span className="text-sm leading-relaxed text-muted-foreground">VIGIL Case Files are currently being re-adjudicated and rebuilt. Individual records may change as evidence, harm, governance and taxonomy assessments are reconciled.</span>
-              </div>
-            </div>
 
             <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
               <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
@@ -277,8 +268,9 @@ export default function VigilCases() {
               <div className="vigil-case-table-body">
                 {pageRecords.map((record) => {
                   const href = `/observatory/cases/${encodeURIComponent(record.id)}/`;
-                  const classificationLabel = classificationStatusLabel(record);
-                  const exemplar = classificationLabel === "Exemplar";
+                  const classificationStatus = classificationStatusLabel(record);
+                  const classificationLabel = taxonomyAlignmentOutcomeLabel(record.raw);
+                  const exemplar = classificationStatus === "Exemplar";
                   return (
                     <article key={record.id} className={`vigil-case-table-row${exemplar ? " is-exemplar" : ""}`}>
                       <Link href={href} className="vigil-case-table-row-link" aria-label={`Open case file ${record.title}`}>

@@ -1,0 +1,252 @@
+/* Fifth-pass homepage instrument refinement.
+   Preserve the indexed gear interaction, but make the assembly read as machined hardware rather than decorated rings. */
+
+.diagnostic-gear {
+  isolation: isolate;
+  filter: drop-shadow(0 0.55rem 1.15rem hsl(var(--foreground) / 0.035));
+}
+
+/* Machined annulus: bevel, recessed inner shoulder and engraved track. */
+.diagnostic-gear::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -0.08rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      transparent 0 73%,
+      hsl(var(--background) / 0.7) 73.5% 76%,
+      hsl(var(--primary) / 0.08) 76.5% 79%,
+      hsl(var(--primary) / 0.18) 79.5% 92%,
+      hsl(var(--primary) / 0.32) 92.5% 95%,
+      hsl(var(--background) / 0.55) 95.5% 97%,
+      hsl(var(--primary) / 0.2) 97.5% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.16),
+    inset 0 0 1.8rem hsl(var(--primary) / 0.035),
+    0 0 0 1px hsl(var(--primary) / 0.16);
+}
+
+.diagnostic-gear-inner::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 61%,
+      hsl(var(--background) / 0.72) 61.5% 65%,
+      hsl(var(--primary) / 0.07) 65.5% 68%,
+      hsl(var(--primary) / 0.2) 68.5% 90%,
+      hsl(var(--primary) / 0.34) 90.5% 94%,
+      hsl(var(--background) / 0.52) 94.5% 97%,
+      hsl(var(--primary) / 0.22) 97.5% 100%);
+}
+
+/* The rear / outer gear gets six recessed machining pockets so it no longer reads as a bare ring. */
+.diagnostic-gear-outer::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 13.5%;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from -10deg,
+      hsl(var(--background) / 0.7) 0deg 12deg,
+      hsl(var(--primary) / 0.07) 12deg 18deg,
+      transparent 18deg 60deg
+    );
+  -webkit-mask: radial-gradient(circle, transparent 0 61%, #000 62% 88%, transparent 89%);
+  mask: radial-gradient(circle, transparent 0 61%, #000 62% 88%, transparent 89%);
+  box-shadow: inset 0 0 0 1px hsl(var(--primary) / 0.08);
+  opacity: 0.78;
+}
+
+/* Replace hairline spokes with six recessed machined ribs. */
+.diagnostic-gear-spokes {
+  z-index: 1;
+  opacity: 1;
+}
+
+.diagnostic-gear-spokes i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.92rem;
+  height: 37%;
+  border: 1px solid hsl(var(--primary) / 0.09);
+  border-radius: 0.2rem 0.2rem 0.08rem 0.08rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.62),
+      hsl(var(--primary) / 0.09) 42%,
+      hsl(var(--primary) / 0.16) 50%,
+      hsl(var(--primary) / 0.07) 58%,
+      hsl(var(--background) / 0.62));
+  box-shadow:
+    inset 1px 0 0 hsl(var(--primary) / 0.08),
+    inset -1px 0 0 hsl(var(--foreground) / 0.03);
+  clip-path: polygon(32% 0, 68% 0, 100% 100%, 0 100%);
+  transform: translate(-50%, -100%) rotate(var(--spoke-angle));
+  transform-origin: 50% 100%;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-spokes i {
+  width: 0.82rem;
+  height: 34%;
+  opacity: 0.62;
+  border-color: hsl(var(--primary) / 0.12);
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.68),
+      hsl(var(--primary) / 0.08) 38%,
+      hsl(var(--primary) / 0.19) 50%,
+      hsl(var(--primary) / 0.07) 62%,
+      hsl(var(--background) / 0.68));
+}
+
+.diagnostic-gear-inner .diagnostic-gear-spokes i {
+  width: 1.05rem;
+  height: 44%;
+  opacity: 0.72;
+}
+
+/* Small fastener heads at the rib roots. */
+.diagnostic-gear-spokes i::after {
+  content: "";
+  position: absolute;
+  top: -0.16rem;
+  left: 50%;
+  width: 0.3rem;
+  height: 0.3rem;
+  border: 1px solid hsl(var(--primary) / 0.26);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 32%, hsl(var(--primary) / 0.38), hsl(var(--background) / 0.74) 58%, hsl(var(--primary) / 0.16));
+  box-shadow: 0 0 0 1px hsl(var(--background) / 0.2);
+  transform: translateX(-50%);
+}
+
+.diagnostic-gear-inner .diagnostic-gear-spokes i::after {
+  width: 0.34rem;
+  height: 0.34rem;
+  border-color: hsl(var(--primary) / 0.33);
+}
+
+/* Teeth now have a darker root/shoulder plus a narrower crown so they read as cut gear teeth. */
+.diagnostic-gear-tooth {
+  z-index: 3;
+}
+
+.diagnostic-gear-tooth::after {
+  content: "";
+  position: absolute;
+  top: -0.24rem;
+  left: 50%;
+  width: 1.28rem;
+  height: 0.42rem;
+  border: 1px solid hsl(var(--primary) / 0.22);
+  border-radius: 0.1rem;
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.2), hsl(var(--background) / 0.58));
+  clip-path: polygon(11% 0, 89% 0, 100% 100%, 0 100%);
+  transform: translateX(-50%);
+}
+
+.diagnostic-gear-tooth::before {
+  top: -0.94rem;
+  width: 0.96rem;
+  height: 1.05rem;
+  border-radius: 0.1rem 0.1rem 0.18rem 0.18rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--primary) / 0.3),
+      hsl(var(--primary) / 0.63) 38%,
+      hsl(var(--primary) / 0.68) 60%,
+      hsl(var(--primary) / 0.26));
+  clip-path: polygon(24% 0, 76% 0, 94% 100%, 6% 100%);
+  box-shadow:
+    inset 0 -0.18rem 0 hsl(var(--background) / 0.12),
+    0 0 0.5rem hsl(var(--primary) / 0.06);
+}
+
+.diagnostic-gear-inner .diagnostic-gear-tooth::after {
+  top: -0.18rem;
+  width: 0.98rem;
+  height: 0.34rem;
+}
+
+.diagnostic-gear-inner .diagnostic-gear-tooth::before {
+  top: -0.72rem;
+  width: 0.7rem;
+  height: 0.78rem;
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::after {
+  border-color: hsl(var(--primary) / 0.46);
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.42), hsl(var(--primary) / 0.14));
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth.is-index-tooth::before {
+  width: 1.04rem;
+  height: 1.14rem;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--primary) / 0.68),
+      hsl(var(--primary)) 40%,
+      hsl(var(--primary)) 60%,
+      hsl(var(--primary) / 0.68));
+  box-shadow:
+    0 0 0 0.18rem hsl(var(--primary) / 0.07),
+    0 0 1rem hsl(var(--primary) / 0.32);
+}
+
+/* Keep the right-hand analytical labels comfortably inside the instrument / viewport.
+   These are intentionally pulled in farther than the original orbit geometry. */
+.diagnostic-orbit-v2 .diagnostic-node-2 {
+  right: 7.5%;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-3 {
+  right: 8.5%;
+}
+
+/* Slightly tighten long chips without making the text cramped. */
+.diagnostic-orbit-v2 .diagnostic-node {
+  max-width: 10rem;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active {
+  width: min(11.35rem, 35vw);
+  max-width: 11.35rem;
+}
+
+@media (max-width: 1100px) {
+  .diagnostic-orbit-v2 .diagnostic-node-2 { right: 5%; }
+  .diagnostic-orbit-v2 .diagnostic-node-3 { right: 6%; }
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-spokes i { width: 0.62rem; }
+  .diagnostic-gear-outer .diagnostic-gear-spokes i { width: 0.56rem; }
+  .diagnostic-gear-inner .diagnostic-gear-spokes i { width: 0.74rem; }
+  .diagnostic-gear-spokes i::after { width: 0.24rem; height: 0.24rem; }
+  .diagnostic-gear-inner .diagnostic-gear-spokes i::after { width: 0.26rem; height: 0.26rem; }
+
+  .diagnostic-gear-tooth::after {
+    width: 0.9rem;
+    height: 0.3rem;
+  }
+
+  .diagnostic-gear-tooth::before {
+    top: -0.66rem;
+    width: 0.66rem;
+    height: 0.74rem;
+  }
+
+  .diagnostic-gear-inner .diagnostic-gear-tooth::before {
+    top: -0.52rem;
+    width: 0.5rem;
+    height: 0.58rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node-2 { right: 4%; }
+  .diagnostic-orbit-v2 .diagnostic-node-3 { right: 5%; }
+}

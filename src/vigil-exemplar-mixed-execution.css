@@ -162,3 +162,154 @@
     color: #7c3f3f !important;
   }
 }
+
+
+/* Deterministic report status-banner parity.
+   Match the interactive Case File's compact outcome hierarchy instead of the
+   older oversized report callout treatment. */
+.vigil-deterministic-report-host .report-exemplar-callout,
+.report-document .report-exemplar-callout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.7rem minmax(0, 1fr);
+  column-gap: 0.9rem;
+  padding: 1rem 1.15rem !important;
+  border-radius: 0.9rem !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout::before,
+.report-document .report-exemplar-callout::before {
+  content: "✓";
+  grid-column: 1;
+  grid-row: 1 / span 4;
+  display: grid;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  align-self: start;
+  border: 1px solid hsl(var(--status-success) / 0.48);
+  border-radius: 50%;
+  background: hsl(var(--background) / 0.82);
+  color: hsl(var(--status-success));
+  font-family: var(--app-font-mono);
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 0 0 4px hsl(var(--status-success) / 0.06);
+}
+
+.vigil-deterministic-report-host .report-exemplar-kicker,
+.vigil-deterministic-report-host .report-exemplar-callout h2,
+.vigil-deterministic-report-host .report-exemplar-callout > p,
+.report-document .report-exemplar-kicker,
+.report-document .report-exemplar-callout h2,
+.report-document .report-exemplar-callout > p {
+  grid-column: 2;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout h2,
+.report-document .report-exemplar-callout h2 {
+  margin-top: 0.12rem !important;
+  font-size: clamp(1.2rem, 1.7vw, 1.48rem) !important;
+  line-height: 1.16 !important;
+  font-weight: 600 !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout > p:not(.report-exemplar-kicker),
+.report-document .report-exemplar-callout > p:not(.report-exemplar-kicker) {
+  margin-top: 0.48rem !important;
+  font-size: 0.94rem !important;
+  line-height: 1.52 !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-failure::before,
+.report-document .report-exemplar-callout.is-failure::before {
+  content: "×";
+  border-color: hsl(var(--destructive) / 0.46);
+  color: hsl(var(--destructive));
+  box-shadow: 0 0 0 4px hsl(var(--destructive) / 0.055);
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-combination,
+.report-document .report-exemplar-callout.is-combination {
+  border-color: hsl(var(--status-mixed) / 0.66) !important;
+  background: hsl(var(--status-mixed-surface)) !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-combination::before,
+.report-document .report-exemplar-callout.is-combination::before {
+  content: "◇";
+  border-color: hsl(var(--status-mixed) / 0.48);
+  color: hsl(var(--status-mixed));
+  box-shadow: 0 0 0 4px hsl(var(--status-mixed) / 0.06);
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-combination .report-exemplar-kicker,
+.vigil-deterministic-report-host .report-exemplar-callout.is-combination .report-exemplar-boundary,
+.report-document .report-exemplar-callout.is-combination .report-exemplar-kicker,
+.report-document .report-exemplar-callout.is-combination .report-exemplar-boundary {
+  color: hsl(var(--status-mixed)) !important;
+  border-top-color: hsl(var(--status-mixed) / 0.26) !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-disputed,
+.report-document .report-exemplar-callout.is-disputed {
+  border-color: hsl(var(--status-neutral) / 0.58) !important;
+  background: hsl(var(--status-neutral-surface)) !important;
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-disputed::before,
+.report-document .report-exemplar-callout.is-disputed::before {
+  content: "i";
+  border-color: hsl(var(--status-neutral) / 0.44);
+  color: hsl(var(--status-neutral));
+  box-shadow: 0 0 0 4px hsl(var(--status-neutral) / 0.055);
+}
+
+.vigil-deterministic-report-host .report-exemplar-callout.is-disputed .report-exemplar-kicker,
+.vigil-deterministic-report-host .report-exemplar-callout.is-disputed .report-exemplar-boundary,
+.report-document .report-exemplar-callout.is-disputed .report-exemplar-kicker,
+.report-document .report-exemplar-callout.is-disputed .report-exemplar-boundary {
+  color: hsl(var(--status-neutral)) !important;
+  border-top-color: hsl(var(--status-neutral) / 0.24) !important;
+}
+
+@media print {
+  .report-document .report-exemplar-callout {
+    grid-template-columns: 9mm minmax(0, 1fr) !important;
+    column-gap: 3mm !important;
+  }
+
+  .report-document .report-exemplar-callout::before {
+    width: 7mm !important;
+    height: 7mm !important;
+    box-shadow: none !important;
+  }
+
+  .report-document .report-exemplar-callout h2 {
+    font-size: 15pt !important;
+  }
+
+  .report-document .report-exemplar-callout.is-combination {
+    border-color: #b27a22 !important;
+    background: #fff6e8 !important;
+  }
+
+  .report-document .report-exemplar-callout.is-combination::before,
+  .report-document .report-exemplar-callout.is-combination .report-exemplar-kicker,
+  .report-document .report-exemplar-callout.is-combination .report-exemplar-boundary {
+    color: #7a5314 !important;
+    border-color: #b27a22 !important;
+  }
+
+  .report-document .report-exemplar-callout.is-disputed {
+    border-color: #777 !important;
+    background: #f3f3f1 !important;
+  }
+
+  .report-document .report-exemplar-callout.is-disputed::before,
+  .report-document .report-exemplar-callout.is-disputed .report-exemplar-kicker,
+  .report-document .report-exemplar-callout.is-disputed .report-exemplar-boundary {
+    color: #555 !important;
+    border-color: #888 !important;
+  }
+}

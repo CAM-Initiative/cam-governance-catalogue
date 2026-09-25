@@ -40,12 +40,12 @@ type TaxonomyEvidenceReference = {
 const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "01": ["No structured evidence is available in the current public projection."],
   "02": ["No structured diagnosis is available."],
-  "03": ["No current taxonomy classification is linked."],
+  "03": ["No current Alignment Taxonomy classification is linked."],
   "04": [
     "No class invariant can be resolved from a canonical classification for this Incident.",
-    "No failure class can be resolved from the canonical classification for this Incident, so no class invariant can be shown.",
-    "No repair invariant is shown because this Case File has no resolved failure-occurrence class mapping.",
-    "No repair invariant is shown because this Case File has no resolved failure-classified mapping.",
+    "No Fidelity Class can be resolved from the canonical alignment classification for this Incident, so no class invariant can be shown.",
+    "No repair invariant is shown because this Case File has no resolved mapping where failure is evidenced.",
+    "No repair invariant is shown because this Case File has no resolved alignment mapping that requires repair.",
   ],
   "05": ["No integrated governance conclusion is currently published for this Incident."],
   "06": ["No references are currently available."],
@@ -67,12 +67,12 @@ function compactIncidentId(id: string) {
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
   const relationship = reference.relationship === "primary"
-    ? "Primary taxonomy classification"
+    ? "Primary alignment classification"
     : reference.relationship === "secondary"
-      ? "Secondary taxonomy classification"
-      : "Family-only taxonomy classification";
+      ? "Secondary alignment classification"
+      : "Family-only alignment classification";
   return reference.role === "successful-invariant"
-    ? `${relationship} · successful-invariant exemplar`
+    ? `${relationship} · invariant held · exemplar`
     : relationship;
 }
 
@@ -253,7 +253,7 @@ export default function EvidenceChainReportPrintable() {
       {(reportIncident?.taxonomyReferences.length ?? 0) > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy" className="report-reference-item report-taxonomy-reference">
         <span className="report-reference-number" aria-hidden="true" />
         <span className="report-reference-copy">
-          <strong>VIGIL Observatory Failure Taxonomy</strong>
+          <strong>VIGIL Observatory Alignment Taxonomy</strong>
           <span className="report-reference-meta"> — {["CAM Initiative", "Public taxonomy reference", reportIncident?.taxonomyReferences[0]?.referenceVersion ? `Version ${reportIncident.taxonomyReferences[0].referenceVersion}` : reportIncident?.taxonomyReferences[0]?.taxonomyVersion ? `Version ${reportIncident.taxonomyReferences[0].taxonomyVersion}` : undefined, reportIncident?.taxonomyReferences[0]?.referencePublicationDate ? `Revised ${reportIncident.taxonomyReferences[0].referencePublicationDate}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
           <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>

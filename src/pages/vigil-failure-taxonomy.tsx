@@ -110,7 +110,7 @@ function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
     <div className="vigil-taxonomy-supporting-evidence-head">
       <div>
         <h4>Supporting evidence <span>{references.length}</span></h4>
-        <p>External sources supporting this Failure Class definition, boundary or recognition criteria.</p>
+        <p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p>
       </div>
     </div>
     <ul>
@@ -133,12 +133,12 @@ function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
 function SearchControl({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return <label className="vigil-search-control vigil-taxonomy-manual-search">
     <Search aria-hidden="true" />
-    <span className="sr-only">Search the VIGIL Observatory Failure Taxonomy contents</span>
+    <span className="sr-only">Search the VIGIL Observatory Alignment Taxonomy contents</span>
     <input
       type="search"
       value={value}
       onChange={(event) => onChange(event.target.value)}
-      placeholder="Find a family or failure class…"
+      placeholder="Find a family or fidelity class…"
     />
     {value ? <button type="button" onClick={() => onChange("")} aria-label="Clear taxonomy search"><X /></button> : null}
   </label>;
@@ -193,7 +193,7 @@ function ManualContents({
   return <nav
     id="taxonomy-contents"
     className={`vigil-taxonomy-manual-contents${collapsed ? " is-collapsed" : ""}`}
-    aria-label="VIGIL Observatory Failure Taxonomy contents"
+    aria-label="VIGIL Observatory Alignment Taxonomy contents"
   >
     <div className="vigil-taxonomy-manual-contents-head">
       {!collapsed ? <h2>Contents</h2> : null}
@@ -291,7 +291,7 @@ function ClassManualCard({
     <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
       <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
       {!caseFileExamplesAvailable
-        ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Failure Class definition remains current.</p>
+        ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Fidelity Class definition remains current.</p>
         : linkedCases.length ? <ul>
           {linkedCases.map((example) => <li key={example.incident_id}>
             <Link href={`/observatory/cases/${example.incident_id}/`}>
@@ -300,11 +300,11 @@ function ClassManualCard({
             </Link>
             <p>{caseMeta(example)}</p>
           </li>)}
-        </ul> : <p className="vigil-taxonomy-linked-cases-empty">No classified failure Case Files are currently linked to this class.</p>}
+        </ul> : <p className="vigil-taxonomy-linked-cases-empty">No Case Files currently evidence failure for this class.</p>}
     </section>
 
-    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Successful invariant exemplars for ${item.name}`}>
-      <h4>Successful invariant exemplars <span>{invariantExemplars.length}</span></h4>
+    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Alignment exemplars for ${item.name}`}>
+      <h4>Alignment exemplars <span>{invariantExemplars.length}</span></h4>
       <ul>
         {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
           <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
@@ -358,7 +358,7 @@ function ClassManualSection({
 }) {
   return <section className="vigil-taxonomy-single-class-view" aria-labelledby={`${item.class_id.toLowerCase()}-view-heading`}>
     <div className="vigil-taxonomy-single-class-context">
-      <p>Failure class</p>
+      <p>Fidelity class</p>
       <Link href={`/observatory/knowledge-base/failure-taxonomy/${parent.family.family_id}/`}>
         View whole family · {parent.family.name}
       </Link>
@@ -421,7 +421,7 @@ function FamilyManualSection({
 
     </header>
 
-    <h2 className="vigil-taxonomy-manual-classes-heading">Failure classes</h2>
+    <h2 className="vigil-taxonomy-manual-classes-heading">Fidelity classes</h2>
     <div className="vigil-taxonomy-manual-class-list">
       {document.classes.map((item) => <ClassManualCard
         key={item.class_id}
@@ -495,22 +495,25 @@ export default function VigilFailureTaxonomy() {
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-taxonomy-manual-page">
     <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
       <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="taxonomy-heading">
-        <header className="vigil-library-header vigil-taxonomy-header">
-          <div>
+        <header className="vigil-taxonomy-header vigil-taxonomy-ticket">
+          <div className="vigil-taxonomy-ticket-title">
             <p className="vigil-library-kicker">VIGIL Observatory</p>
-            <div className="vigil-taxonomy-header-title-row">
-              <h1 id="taxonomy-heading">VIGIL Observatory Failure Taxonomy</h1>
-              <span className="cam-beta-chip">Beta</span>
-            </div>
-            <p className="vigil-library-description">The maintained VIGIL Observatory Failure Taxonomy for recurring AI governance and control-failure mechanisms, organised into versioned failure families and failure classes with explicit recognition criteria, exclusions and classification boundaries.</p>
-            {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
-              Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} failure classes
-            </p> : null}
+            <h1 id="taxonomy-heading">Alignment Taxonomy</h1>
+            <p className="vigil-library-description">The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants.</p>
           </div>
+          {state.status === "ready" ? <aside className="vigil-taxonomy-ticket-meta" aria-label="Taxonomy context">
+            <p className="vigil-case-context-label">Taxonomy context</p>
+            <dl>
+              <div><dt>Version</dt><dd>{state.data.index.standard.version}</dd></div>
+              <div><dt>Status</dt><dd>Beta</dd></div>
+              <div><dt>Families</dt><dd>{state.data.index.families.length}</dd></div>
+              <div><dt>Fidelity classes</dt><dd>{classCount}</dd></div>
+            </dl>
+          </aside> : null}
         </header>
 
-        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Observatory Failure Taxonomy…</div> : null}
-        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Observatory Failure Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
+        {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Observatory Alignment Taxonomy…</div> : null}
+        {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Observatory Alignment Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
 
         {state.status === "ready" && selectedFamily ? <div className={`vigil-taxonomy-manual-layout${contentsCollapsed ? " is-contents-collapsed" : ""}`}>
           <ManualContents

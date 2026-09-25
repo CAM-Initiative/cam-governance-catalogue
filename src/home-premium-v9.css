@@ -1,0 +1,82 @@
+/* Ninth-pass mechanical polish.
+   Preserve the current cog composition and motion; refine tooth roots, fasteners and contact depth only. */
+
+/* Sharper foreground tooth roots make the inner wheel read as a machined gear rather than a decorated ring. */
+.diagnostic-gear-inner .diagnostic-gear-tooth::after {
+  top: -0.2rem;
+  width: 0.86rem;
+  height: 0.3rem;
+  border-color: hsl(var(--primary) / 0.34);
+  border-radius: 0.06rem;
+  background:
+    linear-gradient(180deg,
+      hsl(var(--primary) / 0.24),
+      hsl(var(--background) / 0.7));
+  clip-path: polygon(15% 0, 85% 0, 100% 100%, 0 100%);
+  box-shadow:
+    inset 0 1px 0 hsl(var(--primary) / 0.1),
+    0 0.12rem 0.22rem hsl(var(--foreground) / 0.055);
+}
+
+.diagnostic-gear-inner .diagnostic-gear-tooth::before {
+  top: -0.74rem;
+  width: 0.68rem;
+  height: 0.82rem;
+  clip-path: polygon(27% 0, 73% 0, 91% 100%, 9% 100%);
+}
+
+/* The rear wheel stays softer so the two planes remain visually separated. */
+.diagnostic-gear-outer .diagnostic-gear-tooth::after {
+  opacity: 0.68;
+}
+
+/* Break the perfect symmetry with a few brighter fasteners, as on a real instrument face. */
+.diagnostic-gear-inner .diagnostic-gear-spokes i::after {
+  opacity: 0.46;
+}
+
+.diagnostic-gear-inner .diagnostic-gear-spokes i:nth-child(1)::after,
+.diagnostic-gear-inner .diagnostic-gear-spokes i:nth-child(3)::after,
+.diagnostic-gear-inner .diagnostic-gear-spokes i:nth-child(5)::after {
+  opacity: 0.9;
+  border-color: hsl(var(--primary) / 0.48);
+  box-shadow:
+    0 0 0 1px hsl(var(--background) / 0.22),
+    0 0 0.38rem hsl(var(--primary) / 0.09);
+}
+
+/* Slightly stronger physical contact shadow below the foreground wheel. */
+.diagnostic-gear-inner {
+  filter:
+    saturate(1.07)
+    brightness(1.04)
+    drop-shadow(0 0.64rem 0.78rem hsl(var(--foreground) / 0.13))
+    drop-shadow(0 0 0.5rem hsl(var(--primary) / 0.075));
+}
+
+.diagnostic-gear-inner::after {
+  opacity: 0.94;
+  box-shadow:
+    0 0.3rem 0.62rem hsl(var(--foreground) / 0.095),
+    inset 0 0 0 1px hsl(var(--primary) / 0.1);
+}
+
+@media (max-width: 720px) {
+  .diagnostic-gear-inner .diagnostic-gear-tooth::after {
+    width: 0.62rem;
+    height: 0.24rem;
+  }
+
+  .diagnostic-gear-inner .diagnostic-gear-tooth::before {
+    top: -0.54rem;
+    width: 0.48rem;
+    height: 0.6rem;
+  }
+
+  .diagnostic-gear-inner {
+    filter:
+      saturate(1.04)
+      brightness(1.03)
+      drop-shadow(0 0.4rem 0.52rem hsl(var(--foreground) / 0.1));
+  }
+}

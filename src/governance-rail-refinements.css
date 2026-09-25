@@ -1,104 +1,373 @@
-/* Shared Explore AI Governance rail refinements.
-   Keep the internal/external section labels identical and preserve a clear
-   single visual gap before External Tools across Home, About and Privacy. */
-.home-governance-panel .home-governance-section-label {
-  margin: 0;
+/* Explore AI Governance: external reference noticeboard.
+   The homepage already owns the internal CAM/VIGIL navigation. This surface is
+   deliberately an outward-looking, inhabited corkboard with a tactile game-world feel. */
+
+.governance-explorer-home-panel {
+  overflow: visible;
   padding: 0;
-  font-family: var(--app-font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.45;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground));
-}
-
-.home-governance-panel .home-governance-card-title {
-  font-size: 0.95rem !important;
-  line-height: 1.4 !important;
-}
-
-.home-governance-panel .home-governance-detail {
-  font-size: 0.875rem !important;
-  line-height: 1.58 !important;
-}
-
-.home-governance-panel .home-governance-detail > span:first-child:not(:last-child) {
-  font-size: 0.875rem !important;
-  line-height: 1.5 !important;
-}
-
-.home-governance-panel .home-governance-heading {
-  padding: 0.2rem 0.2rem 0.8rem;
-}
-
-.home-governance-panel .home-governance-external {
-  margin-top: 1rem;
-  padding-top: 0.95rem;
-}
-
-.home-governance-panel .home-governance-external > .home-governance-section-label {
-  padding-inline: 0.2rem;
-  margin-bottom: 0.2rem;
-}
-
-
-/* Explore rail hierarchy: quiet editorial navigation, not dashboard controls. */
-.home-governance-panel .home-governance-heading-rule {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.22rem 0.15rem 0.58rem;
   border: 0;
   border-radius: 0;
   background: transparent;
+  box-shadow: none;
 }
-.home-governance-panel .home-governance-heading-rule::after {
+
+.governance-explorer-home-panel .home-governance-board {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding: clamp(1.4rem, 2.8vw, 2rem);
+  border: 0.58rem solid hsl(41 48% 48%);
+  border-image:
+    linear-gradient(
+      112deg,
+      hsl(37 39% 26%),
+      hsl(43 58% 48%) 18%,
+      hsl(47 72% 68%) 34%,
+      hsl(42 55% 42%) 52%,
+      hsl(48 68% 72%) 70%,
+      hsl(38 42% 30%)
+    ) 1;
+  border-radius: 0.16rem;
+  background:
+    radial-gradient(ellipse at 8% 17%, hsl(24 35% 23% / 0.28) 0 0.08rem, transparent 0.16rem),
+    radial-gradient(ellipse at 19% 74%, hsl(26 31% 30% / 0.22) 0 0.12rem, transparent 0.2rem),
+    radial-gradient(ellipse at 31% 28%, hsl(45 48% 91% / 0.20) 0 0.1rem, transparent 0.18rem),
+    radial-gradient(ellipse at 46% 86%, hsl(23 31% 25% / 0.20) 0 0.09rem, transparent 0.17rem),
+    radial-gradient(ellipse at 56% 12%, hsl(43 47% 89% / 0.18) 0 0.07rem, transparent 0.15rem),
+    radial-gradient(ellipse at 69% 54%, hsl(25 33% 27% / 0.24) 0 0.14rem, transparent 0.24rem),
+    radial-gradient(ellipse at 82% 23%, hsl(45 45% 91% / 0.16) 0 0.08rem, transparent 0.15rem),
+    radial-gradient(ellipse at 93% 71%, hsl(23 34% 23% / 0.22) 0 0.11rem, transparent 0.19rem),
+    radial-gradient(ellipse at 14% 49%, hsl(28 29% 35% / 0.15) 0 0.06rem, transparent 0.14rem),
+    radial-gradient(ellipse at 39% 58%, hsl(46 42% 92% / 0.13) 0 0.05rem, transparent 0.12rem),
+    radial-gradient(ellipse at 63% 31%, hsl(26 30% 29% / 0.16) 0 0.07rem, transparent 0.14rem),
+    radial-gradient(ellipse at 88% 45%, hsl(44 43% 90% / 0.12) 0 0.05rem, transparent 0.11rem),
+    linear-gradient(135deg, hsl(33 56% 72%), hsl(30 48% 63%) 48%, hsl(35 53% 69%));
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  box-shadow:
+    0 0 0 0.12rem hsl(36 28% 72%),
+    0 0 0 0.22rem hsl(28 24% 34% / 0.72),
+    0.75rem 1rem 1.8rem hsl(var(--foreground) / 0.13),
+    inset 0 0 0 1px hsl(44 34% 84% / 0.32),
+    inset 0 0 2.2rem hsl(28 24% 30% / 0.08);
+  margin-left: -2px;
+}
+
+.home-governance-board::before,
+.home-governance-board::after {
   content: "";
-  height: 1px;
-  flex: 1 1 auto;
-  background: hsl(var(--primary) / 0.26);
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
 }
-.home-governance-panel .home-governance-heading-rule .home-governance-section-label {
-  flex: 0 0 auto;
-  padding: 0;
-  font-family: var(--app-font-sans);
-  font-size: 0.78rem;
-  font-weight: 560;
-  line-height: 1.35;
-  letter-spacing: 0.045em;
-  text-transform: none;
-  color: hsl(var(--primary) / 0.9);
+
+.home-governance-board::before {
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='560' viewBox='0 0 900 560'%3E%3Cfilter id='cork-noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .34' numOctaves='4' seed='23' stitchTiles='noStitch'/%3E%3CfeColorMatrix type='matrix' values='.45 0 0 0 .18 0 .32 0 0 .12 0 0 .18 0 .06 0 0 0 .78 0'/%3E%3C/filter%3E%3Crect width='900' height='560' filter='url(%23cork-noise)' opacity='.72'/%3E%3C/svg%3E"),
+    linear-gradient(103deg, transparent 0 22%, hsl(47 42% 90% / 0.055) 23%, transparent 24% 100%),
+    linear-gradient(8deg, transparent 0 71%, hsl(21 25% 19% / 0.048) 72%, transparent 73% 100%);
+  background-size: cover, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.54;
 }
-.home-governance-panel .home-governance-card-title {
-  font-family: var(--app-font-sans);
-  font-size: 0.92rem !important;
-  font-weight: 540;
-  line-height: 1.4 !important;
-  letter-spacing: 0;
-  text-transform: none;
+
+.home-governance-board::after {
+  inset: 0.42rem;
+  border: 1px solid hsl(31 28% 42% / 0.34);
+  background:
+    radial-gradient(ellipse at 5% 33%, hsl(23 31% 19% / 0.14) 0 0.15rem, transparent 0.25rem),
+    radial-gradient(ellipse at 22% 11%, hsl(45 48% 94% / 0.11) 0 0.12rem, transparent 0.2rem),
+    radial-gradient(ellipse at 37% 77%, hsl(24 30% 21% / 0.12) 0 0.18rem, transparent 0.28rem),
+    radial-gradient(ellipse at 53% 41%, hsl(44 44% 91% / 0.09) 0 0.1rem, transparent 0.19rem),
+    radial-gradient(ellipse at 71% 18%, hsl(25 31% 20% / 0.11) 0 0.13rem, transparent 0.23rem),
+    radial-gradient(ellipse at 84% 83%, hsl(45 45% 93% / 0.09) 0 0.1rem, transparent 0.18rem),
+    radial-gradient(ellipse at 96% 54%, hsl(23 30% 19% / 0.11) 0 0.14rem, transparent 0.22rem);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  box-shadow:
+    inset 0 0 0 1px hsl(45 40% 88% / 0.16),
+    inset 0 0 1.8rem hsl(25 30% 22% / 0.07),
+    0 0 0 1px hsl(26 20% 28% / 0.06);
+  opacity: 0.74;
 }
-.home-governance-panel .home-governance-card-label {
-  display: inline-flex;
-  min-width: 0;
+
+.home-governance-board-heading,
+.home-governance-board-grid,
+.home-governance-board-caption {
+  position: relative;
+  z-index: 1;
+}
+
+.home-governance-board-heading {
+  display: flex;
+  z-index: 3;
   align-items: center;
-  gap: 0.52rem;
+  gap: 0.8rem;
+  margin: 0 0 1.45rem;
+  color: hsl(36 24% 14%);
 }
-.home-governance-panel .home-governance-card-label > svg {
-  width: 0.95rem;
-  height: 0.95rem;
-  flex: 0 0 auto;
-  color: hsl(var(--primary) / 0.82);
-  opacity: 1;
+
+.home-governance-letterboard-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: clamp(0.02rem, 0.12vw, 0.09rem);
+  margin: 0;
+  padding: 0.08rem 0.08rem 0.3rem;
+  line-height: 1;
 }
-.home-governance-panel .home-governance-card-label > span {
-  min-width: 0;
+
+.home-governance-letter {
+  --letter-index: 0;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 0.62em;
+  height: 1.06em;
+  color: hsl(43 18% 97%);
+  -webkit-text-stroke: 0.018em hsl(30 8% 72% / 0.65);
+  font-family: var(--app-font-mono);
+  font-size: clamp(1.15rem, 1.8vw, 1.7rem);
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  text-shadow:
+    0.025em 0.03em 0 hsl(30 7% 29%),
+    0.055em 0.06em 0 hsl(28 8% 18%),
+    0.08em 0.09em 0 hsl(28 9% 11% / 0.86),
+    0 0.08em 0.14em hsl(26 18% 10% / 0.2);
+  filter: drop-shadow(0 0.055em 0.055em hsl(28 20% 12% / 0.18));
+  transform:
+    translateY(calc((var(--letter-index) % 4) * 0.012em))
+    rotate(calc((var(--letter-index) % 5 - 2) * 0.24deg));
+  transform-origin: 50% 100%;
 }
-.home-governance-panel .home-governance-card-arrow {
-  flex: 0 0 auto;
+
+.home-governance-letter::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -0.11em;
+  width: 0.075em;
+  height: 0.15em;
+  transform: translateX(-50%);
+  border-radius: 0 0 0.04em 0.04em;
+  background:
+    linear-gradient(90deg,
+      hsl(28 9% 12%),
+      hsl(0 0% 42%) 42%,
+      hsl(0 0% 16%) 74%);
+  box-shadow:
+    0.018em 0.02em 0 hsl(25 18% 12% / 0.26),
+    0 0.04em 0.06em hsl(25 20% 10% / 0.16);
   opacity: 0.72;
 }
-.home-governance-panel .home-governance-external {
-  margin-top: 1.35rem;
-  padding-top: 0;
+
+.home-governance-letter:nth-child(3n) {
+  color: hsl(40 16% 94%);
+}
+
+.home-governance-letter-space {
+  flex: 0 0 clamp(0.55rem, 1vw, 0.9rem);
+  height: 1px;
+}
+
+.home-governance-board-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.1rem, 2.4vw, 1.65rem);
+  align-items: start;
+}
+
+.home-governance-note {
+  --note-tilt: 0deg;
+  position: relative;
+  isolation: isolate;
+  display: block;
+  min-height: 10.5rem;
+  padding: 1.45rem 1.05rem 1.05rem;
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(0.8% 1.5%, 14% 0.4%, 31% 1.2%, 47% 0.3%, 63% 1.1%, 81% 0.2%, 99.2% 1.4%, 100% 18%, 99.1% 34%, 100% 52%, 99.2% 70%, 100% 88%, 98.6% 99%, 81% 99.3%, 64% 98.7%, 47% 100%, 29% 99.1%, 12% 100%, 0.5% 98.4%, 0 80%, 0.7% 61%, 0 43%, 0.8% 24%);
+  background:
+    linear-gradient(180deg, hsl(44 38% 97%), hsl(42 31% 91%));
+  color: hsl(28 19% 18%);
+  text-decoration: none;
+  filter:
+    drop-shadow(0.08rem 0.1rem 0 hsl(28 16% 18% / 0.14))
+    drop-shadow(0.32rem 0.48rem 0.52rem hsl(27 22% 14% / 0.16));
+  top: 0;
+  left: 0;
+  transform: rotate(var(--note-tilt));
+  transform-origin: 50% 24%;
+  transition:
+    top 170ms cubic-bezier(.22,1,.36,1),
+    transform 170ms cubic-bezier(.22,1,.36,1),
+    filter 170ms ease;
+}
+
+.home-governance-note::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 21% 28%, hsl(31 24% 38% / 0.055) 0 0.055rem, transparent 0.08rem),
+    radial-gradient(ellipse at 74% 62%, hsl(28 22% 35% / 0.045) 0 0.04rem, transparent 0.07rem),
+    repeating-linear-gradient(6deg, transparent 0 0.38rem, hsl(31 20% 36% / 0.026) 0.4rem 0.415rem, transparent 0.43rem 0.8rem);
+  background-size: 1.9rem 1.45rem, 1.55rem 1.75rem, auto;
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+.home-governance-note > span {
+  position: relative;
+  z-index: 1;
+}
+
+.home-governance-note-1 {
+  --note-tilt: -0.45deg;
+  top: 4px;
+  clip-path: polygon(0.5% 2%, 17% 0.4%, 38% 1.2%, 59% 0.2%, 78% 1.1%, 99% 0.4%, 100% 24%, 99.2% 49%, 100% 73%, 98.8% 99%, 72% 98.9%, 49% 100%, 26% 99%, 1% 100%, 0 73%, 0.8% 51%, 0 29%);
+}
+
+.home-governance-note-2 {
+  --note-tilt: 0.62deg;
+  top: -4px;
+  clip-path: polygon(1% 0.8%, 24% 1.5%, 43% 0.2%, 68% 1.1%, 99% 0.5%, 100% 29%, 99.1% 54%, 100% 78%, 98.4% 99%, 76% 100%, 53% 98.7%, 31% 100%, 0.7% 98.8%, 0 68%, 0.9% 44%, 0 18%);
+}
+
+.home-governance-note-3 {
+  --note-tilt: 0.35deg;
+  left: 4px;
+  clip-path: polygon(0.7% 1.2%, 20% 0.3%, 42% 1.1%, 64% 0.3%, 83% 1.3%, 99.5% 0.6%, 100% 20%, 99.1% 42%, 100% 65%, 98.8% 99%, 74% 98.8%, 55% 100%, 33% 98.9%, 1% 100%, 0 76%, 0.7% 53%, 0 31%);
+}
+
+.home-governance-note-4 {
+  --note-tilt: -0.72deg;
+  top: 5px;
+  left: -3px;
+  clip-path: polygon(1% 0.5%, 22% 1.2%, 45% 0.2%, 66% 1.2%, 86% 0.2%, 99% 1%, 100% 26%, 99.2% 51%, 100% 82%, 98.8% 99%, 79% 98.7%, 58% 100%, 38% 98.8%, 18% 100%, 0.5% 98.5%, 0 71%, 0.8% 48%, 0 23%);
+}
+
+.home-governance-note:hover,
+.home-governance-note:focus-visible {
+  z-index: 3;
+  top: -3px;
+  transform: rotate(0deg) scale(1.012);
+  filter:
+    drop-shadow(0.1rem 0.14rem 0 hsl(28 16% 18% / 0.12))
+    drop-shadow(0.5rem 0.72rem 0.75rem hsl(27 22% 14% / 0.22));
+  outline: none;
+}
+
+.home-governance-pin {
+  position: absolute !important;
+  z-index: 3 !important;
+  top: 0.42rem;
+  left: 50%;
+  width: 0.62rem;
+  height: 0.62rem;
+  transform: translateX(-50%);
+  border: 1px solid hsl(4 34% 24% / 0.9);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, hsl(9 58% 70%) 0 16%, hsl(4 57% 43%) 30% 68%, hsl(2 45% 28%) 100%);
+  box-shadow:
+    0 0.13rem 0.16rem hsl(25 18% 10% / 0.32),
+    0 0 0 0.08rem hsl(42 34% 91% / 0.2);
+}
+
+.home-governance-note:nth-child(even) .home-governance-pin {
+  background:
+    radial-gradient(circle at 34% 28%, hsl(48 74% 78%) 0 16%, hsl(41 62% 48%) 32% 68%, hsl(33 42% 27%) 100%);
+  border-color: hsl(34 36% 25% / 0.82);
+}
+
+.home-governance-note-category {
+  display: block;
+  margin-bottom: 0.52rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(34 38% 35%);
+}
+
+.home-governance-note-title {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.48rem;
+  align-items: start;
+}
+
+.home-governance-note-title > svg:first-child {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.18rem;
+  color: hsl(34 44% 34%);
+}
+
+.home-governance-note-title > svg:last-child {
+  width: 0.78rem;
+  height: 0.78rem;
+  margin-top: 0.2rem;
+  opacity: 0.48;
+}
+
+.home-governance-note-title strong {
+  font-family: var(--app-font-serif);
+  font-size: 1.12rem;
+  font-weight: 620;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+}
+
+.home-governance-note-copy {
+  display: block;
+  margin-top: 0.72rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: hsl(28 14% 27% / 0.9);
+}
+
+.home-governance-board-caption {
+  margin: 1.3rem 0 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 620;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(29 22% 20% / 0.7);
+}
+
+/* The corkboard, frame and pinned paper remain materially identical in dark mode. */
+
+@media (max-width: 720px) {
+  .governance-explorer-home-panel .home-governance-board {
+    padding: 1.25rem;
+    border-width: 0.42rem;
+    transform: none;
+  }
+
+  .home-governance-board-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-governance-note:nth-child(n) {
+    min-height: auto;
+    top: 0;
+    left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-governance-note {
+    transition: none;
+  }
 }

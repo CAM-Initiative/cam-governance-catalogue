@@ -7,18 +7,22 @@ const [
   reportCss,
   printableReport,
   polishCss,
+  assessmentLayoutCss,
   mainTs,
   shell,
   darkAppearanceCss,
+  indexCss,
 ] = await Promise.all([
   readFile(new URL("../src/pages/vigil-case-file.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/pages/evidence-chain-report-deterministic.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/vigil-deterministic-report.css", import.meta.url), "utf8"),
   readFile(new URL("../src/pages/evidence-chain-report-printable.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/vigil-case-file-polish.css", import.meta.url), "utf8"),
+  readFile(new URL("../src/vigil-assessment-layout-v2.css", import.meta.url), "utf8"),
   readFile(new URL("../src/main.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/components/layout/Shell.tsx", import.meta.url), "utf8"),
   readFile(new URL("../src/dark-appearance.css", import.meta.url), "utf8"),
+  readFile(new URL("../src/index.css", import.meta.url), "utf8"),
 ]);
 
 // Canonical Case File retains taxonomy-derived Classification and Repair without
@@ -32,7 +36,7 @@ assert.match(caseFile, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessmen
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
-assert.match(caseFile, /Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair/);
+assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair/);
 
 // Deterministic report retains the same canonical projection.
 assert.match(report, /CaseTaxonomyClassification/);
@@ -61,8 +65,9 @@ assert.match(reportCss, /\.report-section p:not\([\s\S]*color: hsl\(var\(--repor
 assert.match(reportCss, /\.report-exemplar-callout \{[\s\S]*background: hsl\(var\(--report-success-panel\)\)/);
 assert.match(reportCss, /@media print \{[\s\S]*\.report-exemplar-callout \{[\s\S]*background: #edf6ef !important;/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.site-header,[\s\S]*display: none !important;/);
-assert.match(shell, /className="site-header sticky/);
-assert.match(darkAppearanceCss, /\.site-header \{[\s\S]*background-color: hsl\(var\(--background\)\) !important;/);
+assert.match(shell, /className="site-header"/);
+assert.match(indexCss, /\.site-header \{[\s\S]*background: hsl\(var\(--background\)\);/);
+assert.doesNotMatch(darkAppearanceCss, /\.site-header \{/);
 assert.doesNotMatch(darkAppearanceCss, /(?:^|\n)header \{/);
 assert.doesNotMatch(reportCss, /font-size: 9\.6pt !important/);
 assert.doesNotMatch(reportCss, /font-size: 7\.2pt !important/);
@@ -80,8 +85,8 @@ assert.match(report, /const isFailure = classification === "Classified"/);
 assert.match(report, /className=\{`report-exemplar-callout\$\{hasMixedExecution \? " is-mixed-execution" : ""\}`\}/);
 assert.match(report, /The system worked as intended\./);
 assert.match(report, /The governing invariants assessed did not demonstrate alignment\./);
-assert.match(report, /Failure-classified Incident/);
-assert.match(report, /successful governance outcome, not a failure-classified Incident/);
+assert.match(report, /Alignment outcome · Failure evidenced/);
+assert.match(report, /invariant-held governance outcome/);
 assert.match(report, /className="report-section-header"/);
 assert.match(report, /<Stage number="01" label="Incident">/);
 assert.match(report, /className="report-occurrence-card"/);
@@ -114,9 +119,10 @@ assert.doesNotMatch(report, /className="report-substantive-label">EXTERNAL ASSES
 assert.match(reportCss, /\.report-external-assessments > \.vigil-library-kicker \{[\s\S]*margin: 0 0 0\.55rem/);
 assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
-assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*Governance significance[\s\S]*REAL-WORLD HARM ASSESSMENT/);
-assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-substantive-label \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
-assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-substantive-label \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT[\s\S]*EXTERNAL ASSESSMENTS/);
+assert.match(report, /<Stage number="05" label="Conclusion">[\s\S]*Governance significance/);
+assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-library-kicker \{[\s\S]*font-size: 1\.05rem !important;[\s\S]*font-weight: 700 !important;/);
+assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-library-kicker \{[\s\S]*font-size: 11\.5pt !important;[\s\S]*font-weight: 700 !important;/);
 assert.doesNotMatch(report, /report-harm-classification-intro/);
 assert.match(report, /report-assessment-details/);
 assert.match(printableReport, /nonAssessedHarmDimensionLimitItems/);
@@ -156,7 +162,7 @@ assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /Limits of the assessment/);
 assert.match(printableReport, /report-postscript/);
-assert.match(printableReport, /no resolved failure-classified mapping/);
+assert.match(printableReport, /no resolved alignment mapping that requires repair/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
 assert.match(printableReport, /© 2026 CAM Initiative\. All rights reserved\./);
@@ -165,11 +171,10 @@ assert.match(printableReport, /All rights reserved/);
 assert.doesNotMatch(printableReport, /requires permission/);
 assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/);
 
-
 const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url), "utf8");
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
-assert.match(taxonomyAssessment, /VIGIL taxonomy assessment/);
+assert.match(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
 assert.match(taxonomyAssessment, /Recovered governance principle/);
 assert.match(taxonomyAssessment, /Taxonomy assessment/);
 assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
@@ -180,8 +185,10 @@ assert.match(taxonomyAssessment, /Clause-level interpretation showing how the in
 assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
 assert.doesNotMatch(taxonomyAssessment, /class_id/);
 assert.doesNotMatch(taxonomyAssessment, /VIGIL-FC-/);
-assert.match(caseFile, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*REAL-WORLD HARM ASSESSMENT/);
-assert.match(report, /Governance significance[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+assert.match(caseFile, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT[\s\S]*EXTERNAL ASSESSMENTS/);
+assert.match(caseFile, /if \(stageId === "conclusion"\)[\s\S]*Governance significance/);
+assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT[\s\S]*EXTERNAL ASSESSMENTS/);
+assert.match(report, /<Stage number="05" label="Conclusion">[\s\S]*Governance significance/);
 assert.match(polishCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
 assert.match(reportCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
 
@@ -189,25 +196,28 @@ assert.match(taxonomyAssessment, /vigil-external-assessment-table vigil-taxonomy
 assert.doesNotMatch(taxonomyAssessment, /report-external-assessment-table/);
 assert.doesNotMatch(taxonomyAssessment, />\\\\n/);
 assert.doesNotMatch(taxonomyAssessment, /vigil-taxonomy-assessment-row/);
-assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*<\/section>[\s\S]*vigil-external-assessment-section[\s\S]*EXTERNAL ASSESSMENTS[\s\S]*REAL-WORLD HARM ASSESSMENT/);
-assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*EXTERNAL ASSESSMENTS[\s\S]*REAL-WORLD HARM ASSESSMENT/);
+assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT[\s\S]*vigil-external-assessment-section[\s\S]*EXTERNAL ASSESSMENTS/);
+assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT[\s\S]*EXTERNAL ASSESSMENTS/);
 
 assert.match(caseFile, /GOVERNANCE ASSESSMENT/);
 assert.match(caseFile, /EXTERNAL ASSESSMENTS/);
-assert.match(caseFile, /REAL-WORLD HARM ASSESSMENT/);
+assert.match(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 assert.doesNotMatch(caseFile, />Harm classification<\/p>/);
 assert.match(report, /GOVERNANCE ASSESSMENT/);
 assert.match(report, /EXTERNAL ASSESSMENTS/);
-assert.match(report, /REAL-WORLD HARM ASSESSMENT/);
+assert.match(report, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 assert.match(reportCss, /Peer assessment headings share one deterministic report contract/);
 
-assert.match(taxonomyAssessment, /className="vigil-substantive-label" id="vigil-taxonomy-assessment-heading">VIGIL taxonomy assessment<\/h4>/);
+assert.match(taxonomyAssessment, /className="vigil-library-kicker" id="vigil-taxonomy-assessment-heading">VIGIL OBSERVATORY TAXONOMY ASSESSMENT<\/p>/);
+assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-taxonomy-assessment \{[\s\S]*border: 1px solid/);
+assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-conclusion-governance-significance \{/);
+assert.match(assessmentLayoutCss, /\.report-document \.report-governance-significance \{/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
 assert.match(reportCss, /Taxonomy assessment table mirrors the External assessments table/);
 
 assert.match(report, /report-peer-assessment-heading">EXTERNAL ASSESSMENTS/);
-assert.match(report, /report-peer-assessment-heading">REAL-WORLD HARM ASSESSMENT/);
+assert.match(report, /report-peer-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 assert.doesNotMatch(report, />Harm Impact Assessment<\/h4>/);
 assert.doesNotMatch(caseFile, />Harm Impact Assessment<\/h3>/);
 assert.match(reportCss, /\.report-peer-assessment-heading \{[\s\S]*margin: 0 0 0\.55rem !important;[\s\S]*padding: 0 !important;/);

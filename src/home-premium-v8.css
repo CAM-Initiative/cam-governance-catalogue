@@ -1,0 +1,95 @@
+/* Eighth-pass homepage refinement.
+   Establish mechanical depth between the two cog planes and place the AI Governance Explorer last. */
+
+/* Narrative order: hero -> taxonomy reveal -> VIGIL/CAM bridge -> explorer. */
+.premium-home {
+  display: flex;
+  flex-direction: column;
+}
+
+.premium-home > .premium-hero { order: 1; }
+.premium-home > .taxonomy-reveal-section { order: 2; }
+.premium-home > .identity-bridge { order: 3; }
+.premium-home > .governance-explorer-home-section { order: 4; }
+
+/* Mechanical depth: the rear gear should feel recessed and the inner gear should sit physically above it. */
+.diagnostic-gear-outer {
+  z-index: 1;
+  filter:
+    saturate(0.82)
+    brightness(0.94)
+    drop-shadow(0 0.42rem 0.72rem hsl(var(--foreground) / 0.035));
+}
+
+.diagnostic-gear-inner {
+  z-index: 3;
+  filter:
+    saturate(1.06)
+    brightness(1.035)
+    drop-shadow(0 0.52rem 0.7rem hsl(var(--foreground) / 0.11))
+    drop-shadow(0 0 0.55rem hsl(var(--primary) / 0.07));
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.34),
+    inset 0 0 1.25rem hsl(var(--primary) / 0.045),
+    0 0 0 1px hsl(var(--primary) / 0.31),
+    0 0.42rem 0.82rem hsl(var(--foreground) / 0.105),
+    0 0 1.15rem hsl(var(--primary) / 0.055);
+}
+
+/* A narrow contact-shadow/metal shoulder gives the foreground wheel a distinct physical edge without reintroducing the busy calibration overlay. */
+.diagnostic-gear-inner::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute;
+  z-index: 0;
+  inset: -0.34rem;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle,
+      transparent 0 84%,
+      hsl(var(--foreground) / 0.075) 84.5% 86.5%,
+      hsl(var(--primary) / 0.12) 87% 89%,
+      transparent 89.5% 100%);
+  opacity: 0.86;
+  box-shadow:
+    0 0.22rem 0.5rem hsl(var(--foreground) / 0.08),
+    inset 0 0 0 1px hsl(var(--primary) / 0.08);
+}
+
+/* Foreground teeth should read brighter/crisper than the rear wheel teeth. */
+.diagnostic-gear-inner .diagnostic-gear-tooth::before {
+  border-color: hsl(var(--primary) / 0.55);
+  background:
+    linear-gradient(90deg,
+      hsl(var(--primary) / 0.34),
+      hsl(var(--primary) / 0.7) 38%,
+      hsl(var(--primary) / 0.76) 60%,
+      hsl(var(--primary) / 0.3));
+  box-shadow:
+    inset 0 -0.16rem 0 hsl(var(--background) / 0.12),
+    0 0.18rem 0.36rem hsl(var(--foreground) / 0.08),
+    0 0 0.48rem hsl(var(--primary) / 0.07);
+}
+
+.diagnostic-gear-outer .diagnostic-gear-tooth::before {
+  opacity: 0.82;
+}
+
+/* Keep stage chips above both mechanical planes. */
+.diagnostic-orbit-v2 .diagnostic-node { z-index: 7; }
+.diagnostic-orbit-v2 .diagnostic-node.is-active { z-index: 10; }
+.diagnostic-core { z-index: 6; }
+
+@media (max-width: 720px) {
+  .diagnostic-gear-inner {
+    filter:
+      saturate(1.03)
+      brightness(1.025)
+      drop-shadow(0 0.34rem 0.5rem hsl(var(--foreground) / 0.09));
+  }
+
+  .diagnostic-gear-inner::after {
+    inset: -0.22rem;
+  }
+}

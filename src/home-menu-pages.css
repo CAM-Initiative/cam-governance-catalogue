@@ -1,0 +1,1820 @@
+/*
+ * Shared Home-menu editorial hero grammar.
+ *
+ * About, Policy, Copyright & Licence and Privacy should feel like one family:
+ * open editorial mastheads on the page canvas, not unrelated bordered cards.
+ * Content below the masthead can retain the structure appropriate to each page.
+ */
+
+.home-menu-page {
+  background:
+    radial-gradient(circle at 76% 4%, hsl(var(--primary) / 0.055), transparent 30rem),
+    hsl(var(--background));
+}
+
+.home-menu-page.container,
+.home-menu-page > .container,
+.home-menu-page .public-reference-layout {
+  width: 100%;
+  max-width: 1280px !important;
+}
+
+.home-menu-page .home-menu-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 0 clamp(2.1rem, 4vw, 3.5rem) !important;
+  padding: clamp(1.35rem, 3vw, 2.5rem) 0 clamp(1.75rem, 3.8vw, 3.15rem) !important;
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.home-menu-page .home-menu-hero--text {
+  max-width: 72rem !important;
+}
+
+.home-menu-page .home-menu-hero .vigil-library-kicker,
+.home-menu-page .home-menu-hero .public-reference-kicker,
+.home-menu-page .home-menu-hero > p:first-child {
+  margin: 0 !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
+.home-menu-page .home-menu-hero h1 {
+  max-width: 13ch;
+  margin: 0.52rem 0 0 !important;
+  font-family: var(--app-font-serif) !important;
+  font-size: clamp(3rem, 5.8vw, 5.35rem) !important;
+  font-weight: 500 !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.035em;
+  color: hsl(var(--foreground)) !important;
+}
+
+.home-menu-page .home-menu-hero--text h1 {
+  max-width: 16ch;
+  font-size: clamp(2.85rem, 5vw, 4.75rem) !important;
+}
+
+.home-menu-page .home-menu-hero > p:not(.vigil-library-kicker):not(.public-reference-kicker):not(.public-reference-meta),
+.home-menu-page .home-menu-hero-copy > p:not(.vigil-library-kicker),
+.home-menu-page .home-menu-hero--text > p:not(:first-child):not(.public-reference-meta) {
+  max-width: 69rem;
+  margin: 1rem 0 0 !important;
+  font-size: clamp(1.05rem, 1.35vw, 1.18rem) !important;
+  line-height: 1.72 !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.home-menu-page .home-menu-hero .public-reference-meta {
+  margin: 1.15rem 0 0 !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Founder masthead ------------------------------------------------------- */
+
+.home-menu-page .home-menu-hero--founder {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 282px);
+  gap: clamp(2rem, 6vw, 5.4rem);
+  align-items: center;
+}
+
+.home-menu-hero-copy {
+  min-width: 0;
+}
+
+.home-menu-page .home-menu-hero--founder h1 {
+  max-width: 11ch;
+}
+
+.home-menu-page .home-menu-hero--founder > .home-menu-hero-copy > p:not(.vigil-library-kicker) {
+  max-width: 52rem;
+}
+
+.home-menu-page .vigil-about-identity-summary {
+  max-width: 55rem;
+  margin-top: 1.45rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid hsl(var(--border) / 0.62);
+}
+
+.home-menu-page .vigil-about-identity-summary p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.home-menu-page .vigil-about-identity-summary p + p {
+  margin-top: 0.72rem;
+}
+
+.home-menu-contact-chip {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.58rem;
+  margin-top: 1.35rem;
+  padding: 0.66rem 1rem 0.67rem;
+  border: 1px solid hsl(var(--primary) / 0.88);
+  border-radius: var(--cam-radius-control);
+  background: hsl(var(--primary));
+  box-shadow:
+    0 0.18rem 0.42rem hsl(var(--primary) / 0.13),
+    inset 0 1px 0 hsl(46 70% 76% / 0.3);
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary-foreground));
+  text-decoration: none;
+  transition:
+    transform 160ms cubic-bezier(.22,1,.36,1),
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.home-menu-contact-chip svg {
+  width: 0.92rem;
+  height: 0.92rem;
+  stroke-width: 1.8;
+}
+
+.home-menu-contact-chip:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.035);
+  box-shadow:
+    0 0.28rem 0.7rem hsl(var(--primary) / 0.18),
+    inset 0 1px 0 hsl(46 70% 76% / 0.36);
+}
+
+.home-menu-contact-chip:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+.home-menu-founder-portrait {
+  position: relative;
+  width: min(100%, 282px);
+  margin: 0;
+  justify-self: end;
+}
+
+.home-menu-founder-portrait::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0.85rem -0.8rem -0.85rem 0.8rem;
+  border: 1px solid hsl(var(--primary) / 0.22);
+  border-radius: 0.4rem;
+  background: hsl(var(--primary) / 0.035);
+}
+
+.home-menu-founder-portrait img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 404 / 529;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border: 1px solid hsl(var(--foreground) / 0.13);
+  border-radius: 0.38rem;
+  background: hsl(var(--card));
+  box-shadow:
+    0 1.15rem 2.8rem hsl(var(--foreground) / 0.11),
+    0 0 0 1px hsl(var(--background) / 0.75);
+}
+
+.home-menu-founder-portrait figcaption {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 0.78rem;
+  padding-left: 0.1rem;
+}
+
+.home-menu-founder-portrait figcaption strong {
+  font-family: var(--app-font-sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: hsl(var(--foreground));
+}
+
+.home-menu-founder-portrait figcaption span {
+  font-family: var(--app-font-mono);
+  font-size: 0.66rem;
+  font-weight: 650;
+  line-height: 1.4;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+/* Remove the older boxed first-section grammar -------------------------- */
+
+.home-menu-page .vigil-about-hero,
+.home-menu-page .public-reference-hero {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.home-menu-page.public-reference-page--single-document .public-reference-document--single {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+/* The licensing page remains a continuous document, but now begins beneath
+   the open editorial masthead rather than inside a bordered outer card. */
+.home-menu-page.public-reference-page--single-document .public-reference-section:first-of-type {
+  border-top: 1px solid hsl(var(--border) / 0.76);
+}
+
+.home-menu-page .public-reference-policy-list,
+.home-menu-page .public-reference-document--single > .public-reference-section:first-of-type {
+  margin-top: 0;
+}
+
+html[data-theme="dark"] .home-menu-founder-portrait::before {
+  background: hsl(var(--primary) / 0.045);
+  border-color: hsl(var(--primary) / 0.28);
+}
+
+html[data-theme="dark"] .home-menu-founder-portrait img {
+  border-color: hsl(var(--foreground) / 0.18);
+  box-shadow:
+    0 1.2rem 3rem hsl(0 0% 0% / 0.28),
+    0 0 0 1px hsl(var(--primary) / 0.07);
+}
+
+@media (max-width: 900px) {
+  .home-menu-page .home-menu-hero--founder {
+    grid-template-columns: minmax(0, 1fr) minmax(190px, 238px);
+    gap: 2rem;
+  }
+
+  .home-menu-founder-portrait {
+    width: min(100%, 238px);
+  }
+}
+
+@media (max-width: 720px) {
+  .home-menu-page .home-menu-hero {
+    padding-top: 0.75rem !important;
+  }
+
+  .home-menu-page .home-menu-hero--founder {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .home-menu-page .home-menu-hero h1,
+  .home-menu-page .home-menu-hero--text h1 {
+    max-width: none;
+    font-size: clamp(2.7rem, 13vw, 4rem) !important;
+  }
+
+  .home-menu-founder-portrait {
+    width: min(72vw, 260px);
+    justify-self: start;
+  }
+
+  .home-menu-founder-portrait::before {
+    inset: 0.7rem -0.65rem -0.7rem 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-menu-contact-chip {
+    transition: none;
+  }
+}
+
+
+/* About-page interaction grammar --------------------------------------- */
+
+/* The six Case File stages are now compact disclosure panels. Closed state
+   shows the stage identity; opening reveals the explanatory sentence. */
+.vigil-about-page .vigil-about-flow {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0.78rem !important;
+  align-items: start;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border) / 0.86);
+  border-radius: var(--cam-radius-panel);
+  background:
+    linear-gradient(180deg, hsl(var(--card) / 0.42), hsl(var(--background) / 0.82));
+  box-shadow:
+    0 0.2rem 0.55rem hsl(var(--foreground) / 0.025),
+    inset 0 1px 0 hsl(var(--background) / 0.82);
+  transition:
+    border-color 170ms ease,
+    box-shadow 170ms ease,
+    background 170ms ease;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure[open] {
+  border-color: hsl(var(--primary) / 0.38);
+  background:
+    linear-gradient(180deg, hsl(var(--primary) / 0.045), hsl(var(--background) / 0.96));
+  box-shadow:
+    0 0.32rem 0.9rem hsl(var(--foreground) / 0.045),
+    inset 0 1px 0 hsl(var(--background) / 0.9);
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.68rem;
+  align-items: center;
+  min-height: 4.2rem;
+  padding: 0.82rem 0.92rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary > span:first-child {
+  font-family: var(--app-font-mono);
+  font-size: 0.66rem;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-about-page .vigil-about-stage-name {
+  min-width: 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.08rem;
+  font-weight: 560;
+  line-height: 1.2;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-stage-toggle {
+  display: inline-grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border: 1px solid hsl(var(--primary) / 0.28);
+  border-radius: 50%;
+  font-family: var(--app-font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+  color: hsl(var(--primary));
+  transition: transform 180ms cubic-bezier(.22,1,.36,1), background 160ms ease;
+}
+
+.vigil-about-page .vigil-about-stage-disclosure[open] .vigil-about-stage-toggle {
+  transform: rotate(45deg);
+  background: hsl(var(--primary) / 0.08);
+}
+
+.vigil-about-page .vigil-about-stage-disclosure > p {
+  margin: 0 !important;
+  padding: 0 0.92rem 0.95rem !important;
+  border: 0 !important;
+  font-size: 0.93rem !important;
+  line-height: 1.58 !important;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-page .vigil-about-stage-disclosure summary:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: -3px;
+  border-radius: var(--cam-radius-panel);
+}
+
+/* One CTA grammar for About. Contact is the primary gold action; all other
+   button-like navigation uses the same restrained outlined instrument chip. */
+.vigil-about-page .vigil-about-hero-actions,
+.vigil-about-page .vigil-about-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.62rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-page .vigil-about-hero-actions a,
+.vigil-about-page .vigil-about-link-row a,
+.vigil-about-page .vigil-about-action {
+  display: inline-flex !important;
+  width: fit-content;
+  min-height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.48rem;
+  margin: 1rem 0 0 !important;
+  padding: 0.64rem 0.92rem !important;
+  border: 1px solid hsl(var(--primary) / 0.34) !important;
+  border-radius: 999px !important;
+  background: hsl(var(--background) / 0.72) !important;
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.84);
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 750 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.095em !important;
+  text-transform: uppercase;
+  color: hsl(var(--primary)) !important;
+  text-decoration: none !important;
+  transition:
+    transform 160ms cubic-bezier(.22,1,.36,1),
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.vigil-about-page .vigil-about-hero-actions a:hover,
+.vigil-about-page .vigil-about-link-row a:hover,
+.vigil-about-page .vigil-about-action:hover,
+.vigil-about-page .vigil-about-hero-actions a:focus-visible,
+.vigil-about-page .vigil-about-link-row a:focus-visible,
+.vigil-about-page .vigil-about-action:focus-visible {
+  transform: translateY(-1px);
+  border-color: hsl(var(--primary) / 0.62) !important;
+  background: hsl(var(--primary) / 0.055) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.vigil-about-page .vigil-about-hero-actions a svg,
+.vigil-about-page .vigil-about-link-row a svg,
+.vigil-about-page .vigil-about-action svg {
+  width: 0.88rem;
+  height: 0.88rem;
+  stroke-width: 1.8;
+}
+
+.home-menu-page .home-menu-contact-chip {
+  gap: 0;
+  padding-inline: 1.12rem;
+}
+
+/* Connect stays information-rich, but now uses the same border radius, surface
+   and interaction language as the disclosure panels and CTA chips. */
+.vigil-about-page .home-connect-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.72rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-page .home-connect-link {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.72rem;
+  align-items: start;
+  min-height: 5rem;
+  padding: 0.82rem 0.9rem;
+  border: 1px solid hsl(var(--border) / 0.86);
+  border-radius: var(--cam-radius-panel);
+  background:
+    linear-gradient(180deg, hsl(var(--card) / 0.38), hsl(var(--background) / 0.82));
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.8);
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  transition:
+    transform 160ms cubic-bezier(.22,1,.36,1),
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.vigil-about-page .home-connect-link:hover,
+.vigil-about-page .home-connect-link:focus-visible {
+  transform: translateY(-1px);
+  border-color: hsl(var(--primary) / 0.38);
+  background:
+    linear-gradient(180deg, hsl(var(--primary) / 0.045), hsl(var(--background) / 0.92));
+}
+
+.vigil-about-page .home-connect-icon {
+  display: inline-grid;
+  width: 1.85rem;
+  height: 1.85rem;
+  place-items: center;
+  border: 1px solid hsl(var(--primary) / 0.24);
+  border-radius: 50%;
+  color: hsl(var(--primary));
+  background: transparent;
+}
+
+.vigil-about-page .home-connect-link-title {
+  font-family: var(--app-font-sans);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.vigil-about-page .home-connect-link-description {
+  display: block;
+  margin-top: 0.18rem;
+  font-size: 0.82rem;
+  line-height: 1.48;
+  color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 920px) {
+  .vigil-about-page .vigil-about-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .vigil-about-page .vigil-about-flow,
+  .vigil-about-page .home-connect-links {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vigil-about-page .vigil-about-stage-disclosure,
+  .vigil-about-page .vigil-about-stage-toggle,
+  .vigil-about-page .vigil-about-hero-actions a,
+  .vigil-about-page .vigil-about-link-row a,
+  .vigil-about-page .vigil-about-action,
+  .vigil-about-page .home-connect-link {
+    transition: none;
+  }
+}
+
+
+/* Shared public action grammar ------------------------------------------ */
+.cam-action {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 2.65rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.64rem 0.9rem;
+  border: 1px solid hsl(var(--primary) / 0.34);
+  border-radius: var(--cam-radius-control);
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 150ms cubic-bezier(.22,1,.36,1), border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.cam-action svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  stroke-width: 1.8;
+}
+
+.cam-action-primary {
+  border-color: hsl(var(--primary) / 0.9);
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  box-shadow: inset 0 1px 0 hsl(46 70% 76% / 0.24);
+}
+
+.cam-action-secondary {
+  background: hsl(var(--background));
+  color: hsl(var(--primary));
+}
+
+.cam-action-compact {
+  min-height: 2rem;
+  padding: 0.38rem 0.56rem;
+  font-size: 0.65rem;
+}
+
+.cam-action:hover,
+.cam-action:focus-visible {
+  transform: translateY(-1px);
+  border-color: hsl(var(--primary) / 0.68);
+}
+
+.cam-action-secondary:hover,
+.cam-action-secondary:focus-visible {
+  background: hsl(var(--primary) / 0.055);
+  color: hsl(var(--foreground));
+}
+
+.cam-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.62rem;
+  margin-top: 1.7rem;
+}
+
+/* Policy library consolidation ----------------------------------------- */
+.policy-page {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.policy-page .policy-hero {
+  margin-bottom: clamp(2rem, 4vw, 3.25rem) !important;
+}
+
+.policy-hero-deck {
+  max-width: 69rem;
+}
+
+.policy-layout {
+  display: grid;
+  grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.6rem);
+  align-items: start;
+}
+
+.policy-index {
+  position: sticky;
+  top: 4.65rem;
+  padding: 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--card) / 0.28);
+}
+
+.policy-index-intro {
+  margin-bottom: 1.15rem;
+}
+
+.policy-index-kicker,
+.policy-index-year,
+.policy-index-code,
+.policy-kicker,
+.policy-publication-date,
+.policy-detail-label,
+.policy-document-frame-label {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.policy-index-kicker,
+.policy-index-code,
+.policy-kicker,
+.policy-publication-date,
+.policy-document-frame-label {
+  color: hsl(var(--primary));
+}
+
+.policy-index-copy {
+  margin: 0.55rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.policy-index-nav,
+.policy-index-items {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.policy-index-year {
+  margin: 1rem 0 0.45rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.policy-index-link {
+  display: block;
+  padding: 0.68rem 0.72rem;
+  border: 1px solid hsl(var(--border) / 0.88);
+  border-radius: var(--cam-radius-control);
+  background: hsl(var(--background) / 0.66);
+  color: hsl(var(--foreground));
+  text-decoration: none;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.policy-index-link:hover,
+.policy-index-link:focus-visible {
+  border-color: hsl(var(--primary) / 0.48);
+  background: hsl(var(--primary) / 0.045);
+}
+
+.policy-index-link--all {
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.policy-index-title {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--app-font-serif);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.policy-publications {
+  min-width: 0;
+  display: grid;
+  gap: 2rem;
+}
+
+.policy-publication {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-large);
+  background: hsl(var(--background));
+  box-shadow: 0 0.55rem 1.65rem hsl(var(--foreground) / 0.055);
+}
+
+.policy-publication-banner,
+.policy-publication-meta,
+.policy-document-frame-head {
+  background: hsl(var(--card) / 0.48);
+}
+
+.policy-publication-banner {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.policy-publication-banner-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.policy-publication-status,
+.policy-theme-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-label);
+  background: hsl(var(--background) / 0.72);
+  color: hsl(var(--muted-foreground));
+}
+
+.policy-publication-status {
+  padding: 0.3rem 0.5rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.policy-publication-body,
+.policy-publication-meta {
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.policy-publication-date {
+  margin-bottom: 0.65rem;
+}
+
+.policy-publication-title {
+  margin: 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: hsl(var(--foreground));
+}
+
+.policy-publication-subtitle {
+  margin: 0.8rem 0 0;
+  max-width: 55rem;
+  color: hsl(var(--foreground) / 0.75);
+  font-size: 1rem;
+  font-weight: 550;
+  line-height: 1.58;
+}
+
+.policy-publication-copy {
+  max-width: 63rem;
+  margin-top: 1.45rem;
+  color: hsl(var(--foreground) / 0.84);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.policy-publication-copy p {
+  margin: 0;
+}
+
+.policy-publication-copy p + p {
+  margin-top: 0.9rem;
+}
+
+.policy-publication-meta {
+  border-top: 1px solid hsl(var(--border));
+}
+
+.policy-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.policy-detail {
+  min-width: 0;
+  padding: 0.82rem 0.86rem;
+  border: 1px solid hsl(var(--border) / 0.9);
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--background) / 0.68);
+}
+
+.policy-detail--wide {
+  grid-column: 1 / -1;
+}
+
+.policy-detail-label {
+  color: hsl(var(--muted-foreground));
+}
+
+.policy-detail-label-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.policy-detail-value {
+  margin: 0.28rem 0 0;
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.policy-theme-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+  margin-top: 0.45rem;
+}
+
+.policy-theme-tag {
+  padding: 0.28rem 0.46rem;
+  color: hsl(var(--foreground) / 0.76);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.policy-citation {
+  margin: 0.5rem 0 0;
+  font-family: var(--app-font-mono);
+  color: hsl(var(--foreground) / 0.78);
+  font-size: 0.8rem;
+  line-height: 1.58;
+}
+
+.policy-document-frame {
+  margin-top: 2rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--card));
+}
+
+.policy-document-frame-head,
+.policy-document-frame-note {
+  padding: 0.72rem 0.85rem;
+}
+
+.policy-document-frame-head {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.policy-document-frame-viewer {
+  display: block;
+  width: 100%;
+  height: 72vh;
+  min-height: 38rem;
+  border: 0;
+  background: white;
+}
+
+.policy-document-frame-note {
+  margin: 0;
+  border-top: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .policy-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .policy-index {
+    position: static;
+  }
+
+  .policy-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .policy-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .policy-publication-banner-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .policy-document-frame-viewer {
+    min-height: 30rem;
+  }
+}
+
+
+/* About document consolidation ----------------------------------------- */
+.vigil-about-document .vigil-about-section {
+  margin: 0 !important;
+  padding: 1.45rem 0 1.6rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.vigil-about-document .vigil-about-section + .vigil-about-section {
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.vigil-about-document .vigil-about-section-heading {
+  margin: 0 0 0.75rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-record-intro,
+.vigil-about-document .vigil-about-affiliation-note {
+  margin: 0.72rem 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-about-document .vigil-about-flow-scroll,
+.vigil-about-document .vigil-about-boundary-grid,
+.vigil-about-document .vigil-about-citation-card {
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-boundary-grid > article,
+.vigil-about-document .vigil-about-boundary-grid > article:nth-child(odd),
+.vigil-about-document .vigil-about-boundary-grid > article:nth-child(even) {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-about-page .vigil-about-outcome-explainer {
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-about-page .vigil-about-outcome-explainer > h3 {
+  margin: 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-outcome-explainer > p {
+  max-width: 72rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid > article {
+  min-width: 0;
+}
+
+.vigil-about-page .vigil-about-outcome-visual {
+  display: flex;
+  min-height: 5.6rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--background));
+}
+
+.vigil-about-page .vigil-about-outcome-visual svg {
+  width: 2.1rem;
+  height: 2.1rem;
+  stroke-width: 1.9;
+}
+
+.vigil-about-page .vigil-about-outcome-visual.is-failure {
+  border-color: hsl(var(--destructive) / 0.52);
+  background: hsl(var(--destructive) / 0.035);
+  color: hsl(var(--destructive));
+}
+
+.vigil-about-page .vigil-about-outcome-visual.is-exemplar {
+  border-color: hsl(var(--status-success) / 0.62);
+  background: hsl(var(--status-success-surface) / 0.58);
+  color: hsl(var(--status-success));
+}
+
+.vigil-about-page .vigil-about-outcome-visual.is-combination {
+  border-color: hsl(var(--status-mixed) / 0.58);
+  background: hsl(var(--status-mixed-surface) / 0.58);
+  color: hsl(var(--status-mixed));
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid h3 {
+  margin: 0.62rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid p {
+  margin: 0.34rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.56;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-page .vigil-alignment-legend.is-detailed {
+  margin-bottom: 0;
+}
+
+.vigil-about-page .vigil-about-identity-boundary {
+  margin: 0.85rem 0 0;
+  padding: 0.64rem 0 0.64rem 0.86rem;
+  border-left: 2px solid hsl(var(--primary) / 0.62);
+  background: transparent;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-about-page .vigil-about-identity-boundary strong {
+  color: hsl(var(--foreground));
+}
+
+@media (max-width: 860px) {
+  .vigil-about-page .vigil-about-case-outcome-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-about-page .vigil-about-outcome-visual {
+    min-height: 4.8rem;
+  }
+}
+
+
+/* About migrated legacy utilities --------------------------------------
+ * These remaining live About helpers formerly sat in vigil-ux-v5.css.
+ * Keeping them here completes the move to one public-page stylesheet.
+ */
+.vigil-about-document .vigil-about-record-intro {
+  max-width: 76rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: hsl(var(--foreground) / 0.84);
+}
+
+.vigil-about-document .vigil-about-flow-scroll {
+  margin-top: 1rem;
+}
+
+.vigil-about-document .vigil-about-boundary-grid {
+  gap: 0.9rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-grid-action {
+  display: flex;
+  min-height: 4.75rem;
+  align-items: center;
+}
+
+.vigil-about-grid-action > a,
+.vigil-about-resource-links > a {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  color: hsl(var(--primary));
+  font-family: var(--app-font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.045em;
+  text-decoration: none;
+}
+
+.vigil-about-grid-action > a {
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid hsl(var(--primary) / 0.38);
+}
+
+.vigil-about-grid-action > a:hover,
+.vigil-about-grid-action > a:focus-visible,
+.vigil-about-resource-links > a:hover,
+.vigil-about-resource-links > a:focus-visible {
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--foreground) / 0.55);
+  outline: none;
+}
+
+.vigil-about-grid-action svg,
+.vigil-about-resource-links svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.vigil-about-resource-links {
+  display: grid;
+  align-content: center;
+  gap: 0.62rem;
+}
+
+.vigil-about-resource-links > a {
+  padding: 0;
+  border: 0;
+}
+
+.vigil-about-document .vigil-about-citation-card {
+  margin-top: 0.9rem;
+  padding: 0;
+}
+
+.vigil-about-affiliation-note {
+  margin-top: 1rem !important;
+}
+
+@media (max-width: 900px) {
+  .vigil-about-document .vigil-about-flow {
+    gap: 0.85rem;
+  }
+
+  .vigil-about-document .vigil-about-grid-action {
+    min-height: 0;
+    padding-top: 0.25rem;
+  }
+}
+
+
+/* Relaunch document-page consolidation ---------------------------------
+ * About, Policy, Privacy and Copyright use the same plain rail + open document
+ * vocabulary. This intentionally neutralises older card/container treatments.
+ */
+.document-content.vigil-about-document,
+.document-content.public-reference-document,
+.document-content.public-reference-document--single {
+  margin-top: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.document-content .public-reference-hero,
+.document-content .public-reference-page--single-document .public-reference-hero {
+  padding: 0.4rem 0 2.4rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.78) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.document-content .public-reference-section,
+.document-content .public-reference-policy-section,
+.document-content .vigil-about-section {
+  margin: 0 !important;
+  padding: 2.15rem 0 2.35rem !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-top: 1px solid hsl(var(--border) / 0.78) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.document-content .public-reference-section:first-of-type,
+.document-content .public-reference-policy-section:first-of-type,
+.document-content .vigil-about-section:first-of-type {
+  border-top: 0 !important;
+}
+
+.document-content .public-reference-section-body,
+.document-content .public-reference-policy-section > p {
+  padding: 0 !important;
+}
+
+.document-content .public-reference-policy-section header,
+.document-content .public-reference-section-heading {
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* About hero ----------------------------------------------------------- */
+.about-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(11rem, 15.5rem);
+  gap: clamp(2rem, 4vw, 3.8rem);
+  align-items: start;
+}
+
+.about-hero-copy {
+  min-width: 0;
+}
+
+.about-hero-copy > p:not(.vigil-library-kicker) {
+  max-width: 55rem;
+  margin: 1rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: clamp(1rem, 1.5vw, 1.14rem);
+  line-height: 1.64;
+}
+
+.about-identity-summary {
+  max-width: 58rem;
+  margin-top: 1.35rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid hsl(var(--border) / 0.74);
+}
+
+.about-identity-summary p {
+  margin: 0;
+  color: hsl(var(--foreground) / 0.82);
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
+.about-identity-summary p + p {
+  margin-top: 0.65rem;
+}
+
+.about-hero .cam-action {
+  margin-top: 1.3rem;
+}
+
+.about-founder-portrait {
+  width: 100%;
+  margin: 0;
+}
+
+.about-founder-portrait img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 404 / 529;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--card));
+  box-shadow: 0 0.8rem 2rem hsl(var(--foreground) / 0.08);
+}
+
+.about-founder-portrait figcaption {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 0.65rem;
+}
+
+.about-founder-portrait figcaption strong {
+  font-family: var(--app-font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.about-founder-portrait figcaption span {
+  font-family: var(--app-font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+/* About method: rows, not boxes. */
+.about-method-list {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+  list-style: none;
+}
+
+.about-method-list li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.about-method-number {
+  padding-top: 0.12rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  color: hsl(var(--primary));
+}
+
+.about-method-list h3,
+.about-principle-list h3,
+.about-outcome-list dt {
+  margin: 0;
+  font-family: var(--app-font-sans);
+  font-size: 1rem;
+  font-weight: 720;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+}
+
+.about-method-list p,
+.about-principle-list p,
+.about-outcome-list dd {
+  margin: 0.28rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
+.about-outcome-list {
+  margin: 1.45rem 0 0;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+}
+
+.about-outcome-list > div {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.34fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.about-outcome-list dd {
+  margin: 0;
+}
+
+.about-principle-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 1.45rem 0 1.2rem;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+}
+
+.about-principle-list section {
+  padding: 1rem 1.4rem 1rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+}
+
+.about-principle-list section:nth-child(odd) {
+  border-right: 1px solid hsl(var(--border) / 0.72);
+}
+
+.about-principle-list section:nth-child(even) {
+  padding-left: 1.4rem;
+}
+
+.about-link-list {
+  margin-top: 1.35rem;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+}
+
+.about-link-list > a {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.82rem 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.72);
+  color: hsl(var(--foreground));
+  text-decoration: none;
+}
+
+.about-link-list > a:hover strong,
+.about-link-list > a:focus-visible strong {
+  color: hsl(var(--primary));
+}
+
+.about-link-list > a > svg,
+.about-link-icon svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.about-link-icon {
+  display: inline-grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  color: hsl(var(--primary));
+}
+
+.about-link-x {
+  font-family: var(--app-font-serif);
+}
+
+.about-link-list strong {
+  display: block;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.about-link-list small {
+  display: block;
+  margin-top: 0.14rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+/* Policy now uses the same rail; publication objects remain document artefacts. */
+.document-content .policy-publications {
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .about-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(9rem, 12rem);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .about-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .about-founder-portrait {
+    width: min(12rem, 58vw);
+  }
+
+  .about-outcome-list > div,
+  .about-principle-list {
+    grid-template-columns: 1fr;
+  }
+
+  .about-principle-list section:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .about-principle-list section:nth-child(even) {
+    padding-left: 0;
+  }
+}
+
+
+/* Shared action pills -----------------------------------------------------
+ * Homepage established the interaction grammar: one filled primary action and
+ * an outlined secondary action, both with the same rounded instrument-chip shape.
+ * Apply that geometry to public actions across About, Policy, Knowledge Base,
+ * standards, methodology and datasets.
+ */
+.cam-action:not(.cam-action-compact) {
+  min-height: 3rem;
+  padding: 0.82rem 1.15rem;
+  border-radius: 999px;
+}
+
+.cam-action-primary {
+  box-shadow:
+    0 10px 34px hsl(var(--primary) / 0.16),
+    inset 0 1px 0 hsl(46 70% 76% / 0.24);
+}
+
+.cam-action-secondary {
+  border-color: hsl(var(--primary) / 0.36);
+  background: hsl(var(--background) / 0.35);
+  color: hsl(var(--foreground));
+  backdrop-filter: blur(14px);
+}
+
+.cam-action-primary:hover,
+.cam-action-primary:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 15px 42px hsl(var(--primary) / 0.25),
+    inset 0 1px 0 hsl(46 70% 76% / 0.24);
+}
+
+.cam-action-secondary:hover,
+.cam-action-secondary:focus-visible {
+  transform: translateY(-2px);
+  border-color: hsl(var(--primary) / 0.7);
+  background: hsl(var(--primary) / 0.06);
+}
+
+/* Full-width document masthead, then contents/navigation below it.
+ * This mirrors the hierarchy used by the Alignment Taxonomy: orient the reader
+ * first, then reveal the local contents rail and document body.
+ */
+.document-layout-below-header {
+  margin-top: 1.5rem;
+}
+
+/* Policy and Harm use the same broad page canvas as the VIGIL catalogue pages,
+ * rather than inheriting the narrower 1280px long-form document frame. */
+.policy-page,
+.vigil-severity-methodology-page {
+  width: min(100%, 1500px);
+  padding-top: 1.5rem;
+  /* Match the broader VIGIL catalogue canvas and the taxonomy ticket's top alignment. */
+}
+
+
+.vigil-datasets-page > .vigil-datasets-ticket {
+  margin-bottom: 0;
+}
+
+.vigil-severity-methodology-page > .vigil-harm-hero {
+  margin-bottom: 0;
+}
+
+/* Dataset document ------------------------------------------------------- */
+.vigil-datasets-document .vigil-datasets-ticket {
+  margin-bottom: 0;
+}
+
+.vigil-datasets-ticket .vigil-library-description a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.36);
+  text-underline-offset: 0.2em;
+}
+
+.vigil-dataset-section {
+  scroll-margin-top: 1rem;
+}
+
+.vigil-dataset-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.8rem !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem !important;
+  letter-spacing: 0.035em;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.vigil-dataset-status strong {
+  font-weight: 680;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-dataset-section .cam-action[disabled] {
+  cursor: progress;
+  opacity: 0.64;
+  transform: none;
+}
+
+.vigil-datasets-document > .vigil-baseline-download-error {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid hsl(var(--border));
+  font-size: 0.9rem;
+}
+
+/* Shared ticket mastheads on document pages ----------------------------- */
+.vigil-case-library-ticket,
+.vigil-datasets-ticket,
+.policy-ticket,
+.vigil-harm-ticket {
+  box-shadow:
+    0 0.45rem 1.2rem hsl(var(--foreground) / 0.045),
+    inset 0 1px 0 hsl(var(--background) / 0.8);
+}
+
+.policy-page > .policy-ticket {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 0;
+}
+
+/* Harm methodology -------------------------------------------------------
+ * Full-width ticket masthead first; the contents rail and open sections then
+ * follow the same document treatment used across the About-family pages.
+ */
+.vigil-severity-methodology-page > .vigil-harm-ticket {
+  margin-bottom: 0;
+}
+
+.vigil-severity-methodology-document {
+  margin-top: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-severity-methodology-document .vigil-about-section {
+  margin: 0 !important;
+  padding: 2.15rem 0 2.35rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.vigil-severity-methodology-document .vigil-about-section + .vigil-about-section {
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.vigil-severity-methodology-document .document-section-heading {
+  margin: 0 0 1.15rem;
+  padding: 0;
+  border: 0;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+  margin-top: 1.25rem;
+  border: 0;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles > div {
+  display: block;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.62;
+}
+
+@media (max-width: 900px) {
+  .vigil-severity-methodology-page .vigil-severity-principles {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+
+
+/* Methodology matrix: readable reference ledger rather than a boxed spreadsheet. */
+.vigil-severity-methodology-page .vigil-about-section .vigil-harm-matrix {
+  margin-top: 1.35rem;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-severity-methodology-page .vigil-harm-matrix-scroll {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  scrollbar-gutter: stable;
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table {
+  min-width: 1420px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table th,
+.vigil-severity-methodology-page .vigil-harm-methodology-table td {
+  border: 0 !important;
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead th {
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.9) !important;
+  background: hsl(var(--background));
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead th:first-child,
+.vigil-severity-methodology-page .vigil-harm-methodology-table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead th:first-child {
+  z-index: 4;
+  width: 17%;
+  background: hsl(var(--background));
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table tbody th,
+.vigil-severity-methodology-page .vigil-harm-methodology-table tbody td {
+  padding: 0.9rem 0.95rem 1rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.56) !important;
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table tbody th {
+  background: hsl(var(--background));
+  box-shadow: 0.7rem 0 1rem -1rem hsl(var(--foreground) / 0.28);
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table tbody tr:last-child th,
+.vigil-severity-methodology-page .vigil-harm-methodology-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table .band-s1 { background: hsl(var(--him-s1) / 0.055); }
+.vigil-severity-methodology-page .vigil-harm-methodology-table .band-s2 { background: hsl(var(--him-s2) / 0.06); }
+.vigil-severity-methodology-page .vigil-harm-methodology-table .band-s3 { background: hsl(var(--him-s3) / 0.065); }
+.vigil-severity-methodology-page .vigil-harm-methodology-table .band-s4 { background: hsl(var(--him-s4) / 0.06); }
+.vigil-severity-methodology-page .vigil-harm-methodology-table .band-s5 { background: hsl(var(--him-s5) / 0.065); }
+
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead .band-s1,
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead .band-s2,
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead .band-s3,
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead .band-s4,
+.vigil-severity-methodology-page .vigil-harm-methodology-table thead .band-s5 {
+  background: hsl(var(--card) / 0.72);
+}
+
+.vigil-severity-methodology-page .vigil-harm-interpretive-notes,
+.vigil-severity-methodology-page .vigil-harm-method-note {
+  border-left: 0;
+  background: transparent;
+  padding-inline: 0;
+}
+
+.vigil-severity-methodology-page .vigil-harm-evidence-key {
+  gap: 0.8rem 1.5rem;
+}
+
+.vigil-severity-methodology-page .vigil-harm-evidence-key > div {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+@media (max-width: 620px) {
+  .cam-action:not(.cam-action-compact) {
+    width: 100%;
+  }
+}

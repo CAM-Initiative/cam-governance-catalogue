@@ -21,6 +21,7 @@ import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 import {
   loadTaxonomyReferenceTargets,
+  taxonomyAlignmentOutcomeLabel,
   taxonomyFailureTypeLabel,
   type TaxonomyReferenceTarget,
 } from "@/lib/vigilTaxonomyClassification";
@@ -50,6 +51,10 @@ type IncidentArtefact = {
   altText?: string;
   caption?: string;
 };
+
+function isVideoArtefact(artefact: IncidentArtefact) {
+  return artefact.mediaType?.toLowerCase().startsWith("video/") ?? false;
+}
 
 type TaxonomyEvidenceReference = {
   key: string;
@@ -251,10 +256,34 @@ function severityDisplay(value?: string) {
   return labels[code] ? `${code} · ${labels[code]}` : titleizeValue(raw);
 }
 
-function formatGeneratedAt(value: string) {
-  const date = new Date(value);
+function formatCalendarDate(value?: string, precision: "day" | "month" | "year" = "day") {
+  if (!value) return undefined;
+  const match = value.match(/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/);
+  if (!match) return value;
+  const year = Number(match[1]);
+  const month = Number(match[2] ?? "1");
+  const day = Number(match[3] ?? "1");
+  const date = new Date(Date.UTC(year, month - 1, day));
   if (Number.isNaN(date.getTime())) return value;
-  return date.toISOString().replace("T", " ").replace(/\.\d{3}Z$/, " UTC");
+  if (precision === "year") return String(year);
+  if (precision === "month") return new Intl.DateTimeFormat("en-AU", { month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+  return new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(date);
+}
+
+function incidentTimingLabel(raw?: UnknownRecord) {
+  if (!raw) return "Not established";
+  const occurredFrom = firstText(raw, ["incident_identity.occurred_from", "occurred_from"]);
+  const occurredTo = firstText(raw, ["incident_identity.occurred_to", "occurred_to"]);
+  const precision = firstText(raw, ["incident_identity.date_precision", "date_precision"])?.toLowerCase();
+
+  if (!occurredFrom) return "Not established";
+  if (precision === "year") return formatCalendarDate(occurredFrom, "year") ?? occurredFrom;
+  if (precision === "month") return formatCalendarDate(occurredFrom, "month") ?? occurredFrom;
+
+  const from = formatCalendarDate(occurredFrom) ?? occurredFrom;
+  const to = occurredTo ? formatCalendarDate(occurredTo) ?? occurredTo : undefined;
+  const value = to && to !== from ? `${from} – ${to}` : from;
+  return precision === "reported-date" ? `Reported ${value}` : value;
 }
 
 function Field({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
@@ -309,12 +338,12 @@ function exemplarExecutionStatus(record?: VigilIndexRecord) {
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
   const relationship = reference.relationship === "primary"
-    ? "Primary taxonomy classification"
+    ? "Primary alignment classification"
     : reference.relationship === "secondary"
-      ? "Secondary taxonomy classification"
-      : "Family-only taxonomy classification";
+      ? "Secondary alignment classification"
+      : "Family-only alignment classification";
   return reference.role === "successful-invariant"
-    ? `${relationship} · successful-invariant exemplar`
+    ? `${relationship} · invariant held · exemplar`
     : relationship;
 }
 
@@ -419,7 +448,6 @@ export default function VigilCaseFile() {
   const incident = state.status === "ready" ? state.records[0] : undefined;
   const incidentDetail = useMemo(() => incident ? deriveIncidentPublicDetail(incident.raw) : undefined, [incident]);
   const externalSources = useMemo(() => incident ? dedupeEvidence(externalEvidenceFor(incident)) : [], [incident]);
-  // Resolve canonical row-local source_records[N] provenance against the final numbered, deduplicated Evidence sources list.
   const harmEvidenceReferenceNumbers = useMemo(() => Object.fromEntries(
     externalSources.flatMap((source, index) => source.sourceRecordRefs.map((ref) => [ref, index + 1])),
   ), [externalSources]);
@@ -464,15 +492,21 @@ export default function VigilCaseFile() {
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
+  const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
   const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
-  const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const diagnostic = diagnosticProvenance(incident);
   const reportId = incident?.id ?? state.sourceId;
+  const occurred = incidentTimingLabel(incident?.raw);
+  const jurisdiction = incident ? firstText(incident.raw, ["jurisdictional_context.primary_jurisdiction"]) ?? "Not established" : "Not established";
+  const environment = incident
+    ? firstText(incident.raw, ["system_context.occurrence_environment.operational_setting"])
+    : undefined;
+  const environmentLabel = environment ? titleizeValue(environment) : "Not established";
 
   const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
@@ -498,9 +532,20 @@ export default function VigilCaseFile() {
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
         {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
           {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
-            <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
-              <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
-            </a>
+            {isVideoArtefact(artefact)
+              ? <video
+                  className="vigil-incident-artefact-video"
+                  controls
+                  preload="metadata"
+                  playsInline
+                  aria-label={artefact.altText ?? artefact.title ?? "Incident source video"}
+                >
+                  <source src={artefact.renderUrl} type={artefact.mediaType} />
+                  Your browser cannot play this video. <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer">Open the incident source video.</a>
+                </video>
+              : <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
+                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
+                </a>}
             {(artefact.title || artefact.sourceUrl) && <figcaption>
               {artefact.title && <strong>{artefact.title}</strong>}
               {(() => {
@@ -539,7 +584,7 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory taxonomy classification can be rendered.</p>}
+      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory alignment classification can be rendered.</p>}
     </>;
 
     if (stageId === "repair") return <>
@@ -556,11 +601,6 @@ export default function VigilCaseFile() {
               <h4 className="vigil-substantive-label">Factual basis</h4>
               <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
             </section>
-            <section>
-              <h4 className="vigil-substantive-label">Governance significance</h4>
-              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
-            </section>
-            <CaseTaxonomyAssessment raw={incident.raw} />
           </div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
             <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
@@ -575,6 +615,20 @@ export default function VigilCaseFile() {
               <Field label="Model attribution" value={diagnostic?.attributionBasis} />
             </dl>
           </aside>
+        </section>
+
+        <CaseTaxonomyAssessment raw={incident.raw} />
+
+        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
+          <div className="vigil-case-subheading">
+            <p className="vigil-library-kicker" id="severity-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT</p>
+          </div>
+          <HarmImpactMatrix
+            assessment={harmImpactAssessment}
+            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
+            methodologyReferenceNumber={harmMethodologyReferenceNumber}
+            methodologyReferenceHref="#vigil-harm-methodology-reference"
+          />
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
@@ -605,28 +659,22 @@ export default function VigilCaseFile() {
             </table>
           </div>
         </section>}
-
-        <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
-          <div className="vigil-case-subheading">
-            <p className="vigil-library-kicker" id="severity-assessment-heading">REAL-WORLD HARM ASSESSMENT</p>
-          </div>
-          <HarmImpactMatrix
-            assessment={harmImpactAssessment}
-            evidenceReferenceNumbers={harmEvidenceReferenceNumbers}
-            methodologyReferenceNumber={harmMethodologyReferenceNumber}
-            methodologyReferenceHref="#vigil-harm-methodology-reference"
-          />
-        </section>
-
-
       </div>}
     </article> : <p className="vigil-case-empty">No structured governance assessment is linked yet. The investigation may still be in evidence gathering or assessment.</p>}
   </>;
 
-    if (stageId === "conclusion") return governanceConclusion ? <article className="vigil-diagnosis-view">
-      <section className="vigil-diagnosis-definition">
-        <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
-        <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
+    if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
+      <section className="vigil-diagnosis-definition vigil-conclusion-content">
+        {governanceConclusion && <>
+          <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
+          <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
+        </>}
+        <div className="vigil-conclusion-governance-significance">
+          <div className="vigil-case-subheading">
+            <h3>Governance significance</h3>
+          </div>
+          <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+        </div>
       </section>
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
 
@@ -669,7 +717,7 @@ export default function VigilCaseFile() {
         {taxonomyReferences.length > 0 && <li id="vigil-failure-taxonomy-reference" key="vigil-failure-taxonomy">
           <span>[1]</span>
           <div>
-            <strong>VIGIL Observatory Failure Taxonomy</strong>
+            <strong>VIGIL Observatory Alignment Taxonomy</strong>
             <p>{["CAM Initiative", "Public taxonomy reference", taxonomyReferenceVersion ? `Version ${taxonomyReferenceVersion}` : undefined, taxonomyReferenceDate ? `Revised ${taxonomyReferenceDate}` : undefined].filter(Boolean).join(" · ")}</p>
             <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
           </div>
@@ -704,6 +752,13 @@ export default function VigilCaseFile() {
           <span>[{index + 1}]</span>
           <div>
             <strong>{record.id} — {record.title}</strong>
+            {(record.record_version || record.record_last_updated || record.date_recorded) && <p className="vigil-reference-record-meta">
+              {[
+                record.record_version ? `Version ${record.record_version}` : undefined,
+                record.record_last_updated ? `Updated ${record.record_last_updated}` : undefined,
+                record.date_recorded ? `Recorded ${record.date_recorded}` : undefined,
+              ].filter(Boolean).join(" · ")}
+            </p>}
             {recordLink(record) && <a href={recordLink(record)} target="_blank" rel="noreferrer">{recordLink(record)}</a>}
           </div>
         </li>)}
@@ -731,19 +786,20 @@ export default function VigilCaseFile() {
 
     <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
       <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Successful invariant exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed classification" : isFailure ? "VIGIL Observatory Case File · Failure-classified Incident" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
+        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Alignment exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
         <h1>{title}</h1>
       </div>
-      <aside className="vigil-case-meta-panel" aria-label="Case File metadata">
-        <dl>
+      <aside className="vigil-case-meta-panel" aria-label="Incident context">
+        <p className="vigil-case-context-label">Incident context</p>
+        <dl className="vigil-case-context-grid">
           <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Classification" value={isExemplar ? "Exemplar · successful invariant" : isCombination ? "Mixed alignment outcome" : classification} />
-          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
+          <Field label="Occurred" value={occurred} />
+          <Field label="Jurisdiction" value={jurisdiction} />
+          <Field label="Environment" value={environmentLabel} />
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
-          <Field label="Updated" value={updated} mono />
-          <Field label="Generated at (UTC)" value={formatGeneratedAt(state.generatedAt)} mono />
+          <Field label="Classification" value={classificationDisplay} />
+          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
         </dl>
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
       </aside>
     </header>
 
@@ -753,19 +809,17 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Failure-occurrence and ambiguous-boundary mappings contribute their governing invariants to Repair. Ambiguous boundaries remain explicitly unresolved rather than being presented as failures; successful-invariant mappings remain in Classification as evidence of boundaries that held.</p>
+        <p className="vigil-exemplar-callout-boundary">Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair. Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain in Classification as evidence of boundaries that held.</p>
       </div>
     </section>}
-
-
 
     {isFailure && <section className="vigil-exemplar-callout is-failure" aria-labelledby="vigil-failure-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleX /></div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">Failure-classified Incident</p>
+        <p className="vigil-exemplar-callout-kicker">Alignment outcome · Failure evidenced</p>
         <h2 id="vigil-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
-        <p>This Case File contains one or more failure-occurrence mappings under the VIGIL Observatory Failure Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
-        <p className="vigil-exemplar-callout-boundary">Failure classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
+        <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
+        <p className="vigil-exemplar-callout-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </div>
     </section>}
 
@@ -782,13 +836,13 @@ export default function VigilCaseFile() {
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <Blend /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Successful invariant exemplar · mixed execution" : "Successful invariant exemplar"}</p>
+        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment exemplar · mixed execution" : "Alignment exemplar · Invariant held"}</p>
         <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
         {hasMixedExecution
-          ? <p>This Case File is classified as a successful invariant exemplar overall. The relevant alignment or governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents a successful governance outcome, not a failure-classified Incident. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          ? <p>This Case File is presented as an alignment exemplar overall. The relevant governance invariant held, while execution or human-facing expression was imperfect.</p>
+          : <p>This Case File documents an invariant-held governance outcome. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not convert the Incident into a failure classification."
+          ? "Mixed execution qualifies how the exemplar was expressed; it does not change the invariant-held alignment outcome."
           : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
       </div>
     </section>}
@@ -804,6 +858,7 @@ export default function VigilCaseFile() {
           className={activeStage === stage.id ? "is-active" : undefined}
           onClick={() => setActiveStage(stage.id)}
         ><span>{stage.number}</span>{stage.label}</button>)}
+        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab"><FileText aria-hidden="true" /> Full report / PDF</Link>
       </div>
     </nav>
 

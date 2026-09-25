@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
@@ -18,39 +19,16 @@ type HubState = {
   taxonomyAvailable?: boolean;
 };
 
-function CollectionCard({
-  href,
-  title,
-  description,
-  meta,
-  chip,
-  actionLabel = "Browse collection",
-}: {
-  href?: string;
-  title: string;
-  description: string;
-  meta: string;
-  chip?: string;
-  actionLabel?: string;
-}) {
-  return (
-    <article className="vigil-knowledge-collection">
-      <div className="vigil-knowledge-copy">
-        <div className="vigil-knowledge-title-row">
-          <h2>{title}</h2>
-          {chip ? <span className="cam-beta-chip">{chip}</span> : null}
-        </div>
-        <p>{description}</p>
-        <div className="vigil-knowledge-card-footer">
-          <p className="vigil-knowledge-meta">{meta}</p>
-          {href ? <div className="vigil-knowledge-actions">
-            <Link href={href}>{actionLabel} <ArrowRight aria-hidden="true" /></Link>
-          </div> : null}
-        </div>
-      </div>
-    </article>
-  );
-}
+const knowledgeRail = [
+  { href: "#overview", label: "Overview" },
+  { href: "#cases", label: "Case Files" },
+  { href: "#taxonomy", label: "Alignment Taxonomy" },
+  { href: "#harm-impact", label: "Harm Impact Assessment" },
+  { href: "#datasets", label: "Datasets" },
+  { href: "#policy", label: "Policy" },
+  { href: "#architecture", label: "CAELESTIS Architecture Model" },
+  { href: "#standards", label: "AI Governance Standards" },
+];
 
 export default function VigilKnowledgeHub() {
   const [state, setState] = useState<HubState>({});
@@ -78,80 +56,123 @@ export default function VigilKnowledgeHub() {
   }, []);
 
   const baselineMeta = state.sourcesAvailable
-    ? `${state.sources ?? 0} sources${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses` : ""}`
-    : "Dataset unavailable";
+    ? `${state.sources ?? 0} sources${state.clausesAvailable ? ` · ${(state.clauses ?? 0).toLocaleString()} clauses represented` : ""}`
+    : "Source and clause counts unavailable";
 
   const caseFilesMeta = state.caseFiles === undefined
     ? "AI Incident investigations"
     : `${state.caseFiles} case ${state.caseFiles === 1 ? "file" : "files"}`;
 
   const taxonomyMeta = state.taxonomyAvailable
-    ? `${state.taxonomyFamilies ?? 0} families · ${state.taxonomyClasses ?? 0} failure classes`
-    : "Internal standard";
+    ? `${state.taxonomyFamilies ?? 0} families · ${state.taxonomyClasses ?? 0} fidelity classes`
+    : "Taxonomy counts unavailable";
 
   return (
     <Shell>
       <VigilObservatoryNav />
-      <main className="vigil-knowledge-hub-page">
-        <div className="container mx-auto max-w-[1280px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-          <header className="vigil-simple-hero">
-            <p className="vigil-library-kicker">VIGIL Observatory</p>
-            <h1>Knowledge Base</h1>
-            <p>Browse AI governance standards, VIGIL Observatory Case Files, the VIGIL Observatory Failure Taxonomy, the Harm & Severity Methodology, downloadable datasets, policy materials, and the CAELESTIS Architecture Model as it returns from refactoring.</p>
-          </header>
+      <main className="vigil-about-page vigil-knowledge-hub-page home-menu-page document-page">
+        <div className="document-layout document-layout--wide">
+          <DocumentRail title="Knowledge Base" items={knowledgeRail} ariaLabel="VIGIL Observatory Knowledge Base sections" />
 
-          <section className="vigil-knowledge-grid" aria-label="Knowledge Base collections">
-            <CollectionCard
-              href="/observatory/knowledge-base/standards-sources/"
-              title="AI Governance Standards"
-              description="A curated reference set of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Browse the sources, then open the clauses represented from each one."
-              meta={baselineMeta}
-              chip="Beta"
-              actionLabel="Browse sources & clauses"
-            />
-            <CollectionCard
-              href="/observatory/cases/"
-              title="VIGIL Observatory Case Files"
-              description="Documented AI Incident investigations organised through Incident, Assessment, Classification, Repair and References, with record-local evidence and incident-level governance analysis."
-              meta={caseFilesMeta}
-              actionLabel="Browse case files"
-            />
-            <CollectionCard
-              href="/observatory/severity-methodology/"
-              title="Harm & Severity Methodology"
-              description="The VIGIL-HIM 1.0.0 reference for harm dimensions, evidence states and S1–S5 severity thresholds used to assess materialised consequence in Case Files."
-              meta="VIGIL-HIM 1.0.0 · methodology reference"
-              actionLabel="Open methodology"
-            />
-            <CollectionCard
-              href="/observatory/knowledge-base/failure-taxonomy/"
-              title="VIGIL Observatory Failure Taxonomy"
-              description="A structured reference for recurring AI governance failure mechanisms, organised into failure families and failure classes with recognition criteria, exclusions, examples and relationships."
-              meta={taxonomyMeta}
-              chip="Beta"
-              actionLabel="Browse taxonomy"
-            />
-            <CollectionCard
-              href="/datasets/"
-              title="Datasets"
-              description="Downloadable VIGIL Observatory and CAM reference datasets, including the Case File index, AI Governance Standards data and the VIGIL Observatory Failure Taxonomy publication."
-              meta="Machine-readable data and publication downloads"
-              actionLabel="Open datasets"
-            />
-            <CollectionCard
-              href="/observatory/knowledge-base/policy/"
-              title="Policy"
-              description="CAM Initiative policy papers, submissions and public-interest governance proposals translating evidence and governance analysis into practical institutional and regulatory recommendations."
-              meta="Public policy papers and submissions"
-              actionLabel="Browse policy"
-            />
-            <CollectionCard
-              title="CAELESTIS Architecture Model"
-              description="The public architecture reference is undergoing a substantive refactor. It will return here when the structure, source material and presentation are ready for publication."
-              meta="Coming Soon"
-              chip="Refactoring"
-            />
-          </section>
+          <article className="document-content vigil-knowledge-document">
+            <header id="overview" className="document-hero">
+              <p className="vigil-library-kicker">VIGIL Observatory</p>
+              <h1>Knowledge Base</h1>
+              <p>Reference material supporting the Observatory: AI governance standards, Case Files, the VIGIL Observatory Alignment Taxonomy, the Harm Impact Assessment methodology, public datasets and policy material.</p>
+            </header>
+
+            <section id="cases" className="document-section vigil-about-section" aria-labelledby="knowledge-cases-heading">
+              <div className="document-section-heading">
+                <p>Case Files</p>
+                <h2 id="knowledge-cases-heading">Incident evidence organised into a repeatable public assessment structure.</h2>
+              </div>
+              <div className="document-reading">
+                <p>VIGIL Observatory Case Files document AI Incidents through Incident, Assessment, Classification, Repair, Conclusion and References, keeping factual evidence distinct from VIGIL&apos;s analytical judgment.</p>
+                <p className="vigil-knowledge-meta">{caseFilesMeta}</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
+            <section id="taxonomy" className="document-section vigil-about-section" aria-labelledby="knowledge-taxonomy-heading">
+              <div className="document-section-heading">
+                <p>VIGIL Observatory Alignment Taxonomy <span className="cam-beta-chip">Beta</span></p>
+                <h2 id="knowledge-taxonomy-heading">A maintained reference for recurring AI governance boundaries.</h2>
+              </div>
+              <div className="document-reading">
+                <p>The taxonomy classifies evidence against governing invariants and records whether each mapped boundary failed, held or remains unresolved. Stable Fidelity Family and Fidelity Class identifiers preserve continuity as the reference evolves.</p>
+                <p className="vigil-knowledge-meta">{taxonomyMeta}</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/failure-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
+            <section id="harm-impact" className="document-section vigil-about-section" aria-labelledby="knowledge-harm-heading">
+              <div className="document-section-heading">
+                <p>Harm Impact Assessment</p>
+                <h2 id="knowledge-harm-heading">The VIGIL-HIM reference for materialised consequence and severity.</h2>
+              </div>
+              <div className="document-reading">
+                <p>VIGIL-HIM defines the harm dimensions, evidence states and S1–S5 thresholds used in Case Files. Harm assessment is deliberately separate from alignment classification: one describes materialised consequence; the other describes governance-boundary behaviour.</p>
+                <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.0 · methodology reference</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
+            <section id="datasets" className="document-section vigil-about-section" aria-labelledby="knowledge-datasets-heading">
+              <div className="document-section-heading">
+                <p>Datasets</p>
+                <h2 id="knowledge-datasets-heading">Machine-readable publications for independent analysis and reuse.</h2>
+              </div>
+              <div className="document-reading">
+                <p>Download the public Case File index, AI Governance Standards data, VIGIL-HIM matrix and Alignment Taxonomy publication in machine-readable formats.</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/datasets/">Open datasets <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
+            <section id="policy" className="document-section vigil-about-section" aria-labelledby="knowledge-policy-heading">
+              <div className="document-section-heading">
+                <p>Policy</p>
+                <h2 id="knowledge-policy-heading">Public-interest proposals and submissions informed by CAM governance work.</h2>
+              </div>
+              <div className="document-reading">
+                <p>CAM Initiative policy papers and consultation submissions translate governance analysis into practical institutional, legal and regulatory proposals.</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
+            <section id="architecture" className="document-section vigil-about-section" aria-labelledby="knowledge-architecture-heading">
+              <div className="document-section-heading">
+                <p>CAELESTIS Architecture Model</p>
+                <h2 id="knowledge-architecture-heading">Governance architecture for advanced AI systems.</h2>
+              </div>
+              <div className="document-reading">
+                <p>The CAELESTIS Architecture Model is CAM Initiative&apos;s public governance architecture for advanced AI systems, with its source material maintained in the CAELESTIS repository and versioned releases preserved through Zenodo.</p>
+              </div>
+            </section>
+            <section id="standards" className="document-section vigil-about-section" aria-labelledby="knowledge-standards-heading">
+              <div className="document-section-heading">
+                <p>AI Governance Standards <span className="cam-beta-chip">Beta</span></p>
+                <h2 id="knowledge-standards-heading">Browse the external governance sources VIGIL uses as reference material.</h2>
+              </div>
+              <div className="document-reading">
+                <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Open a source to review its governance relevance, represented clauses and review provenance.</p>
+                <p className="vigil-knowledge-meta">{baselineMeta}</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/standards-sources/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
+          </article>
         </div>
       </main>
     </Shell>
