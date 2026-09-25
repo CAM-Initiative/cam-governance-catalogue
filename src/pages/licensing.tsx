@@ -28,8 +28,8 @@ function CopyCitation() {
 }
 
 export default function Licensing() {
-  return <Shell><main className="public-reference-page public-reference-page--single-document"><div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-11"><article className="public-reference-document public-reference-document--single">
-    <header className="public-reference-hero"><p className="public-reference-kicker">CAM Initiative</p><h1>Copyright & Licence</h1><p>Public access supports inspection, citation, research reference and public-interest discussion. It does not make VIGIL Observatory or other CAM Initiative materials open-licensed.</p><p className="public-reference-meta">© 2026 CAM Initiative. All rights reserved.</p></header>
+  return <Shell><main className="public-reference-page public-reference-page--single-document home-menu-page"><div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-11"><article className="public-reference-document public-reference-document--single">
+    <header className="public-reference-hero home-menu-hero home-menu-hero--text"><p className="public-reference-kicker">CAM Initiative</p><h1>Copyright & Licence</h1><p>Public access supports inspection, citation, research reference and public-interest discussion. It does not make VIGIL Observatory or other CAM Initiative materials open-licensed.</p><p className="public-reference-meta">© 2026 CAM Initiative. All rights reserved.</p></header>
 
     <ReferenceSection number="01" eyebrow="Ownership" title="Publisher, author and licensor"><div className="public-reference-list">
       <article><div><p>Publisher / licensor</p><h3>Phoenix Covenant Pty Ltd trading as CAM Initiative</h3></div><p>Copyright ownership and licensing authority for VIGIL Observatory and other CAM Initiative materials sit with the company to the extent those rights subsist.</p></article>
