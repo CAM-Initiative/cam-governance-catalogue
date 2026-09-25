@@ -485,6 +485,17 @@ test("Alignment Taxonomy substantive web copy keeps a readable typography floor"
   assert.match(css, /\.vigil-taxonomy-linked-cases li > p,[\s\S]*font-size: 0\.86rem/);
 });
 
+test("Standards search geometry matches Case Files", async () => {
+  const [standards, standardsCss, casesCss] = await Promise.all([
+    read("src/pages/vigil-standards-baseline.tsx"),
+    read("src/vigil-standards-dossier-refinements.css"),
+    read("src/vigil-ux-v4.css"),
+  ]);
+  assert.match(standards, /matching \{visibleSources\.length === 1 \? "source" : "sources"\} · \{clauseCount\.toLocaleString\(\)\} clauses represented/);
+  assert.match(standardsCss, /\.vigil-standards-search-row \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
+  assert.match(casesCss, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
+});
+
 test("taxonomy and external-governance public systems remain intact", async () => {
   const [taxonomyPage, taxonomyLoader, datasets, standards, externalKnowledge] = await Promise.all([read("src/pages/vigil-failure-taxonomy.tsx"), read("src/lib/vigilFailureTaxonomy.ts"), read("src/pages/datasets.tsx"), read("src/pages/vigil-standards-baseline.tsx"), read("src/lib/vigilExternalKnowledge.ts")]);
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
