@@ -74,20 +74,7 @@ const policyRail = [
 export default function Policy() {
   return (
     <Shell>
-      <main className="home-menu-page policy-page">
-        <motion.header
-          animate={{ opacity: 1, y: 0 }}
-          className="home-menu-hero home-menu-hero--text policy-hero"
-          initial={{ opacity: 0, y: 16 }}
-          transition={{ duration: 0.7 }}
-        >
-          <p className="public-reference-kicker">CAM Initiative Public Policy</p>
-          <h1 >Policy Papers &amp; Submissions</h1>
-          <p className="policy-hero-deck">
-            Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
-          </p>
-        </motion.header>
-
+      <main className="home-menu-page document-page">
         <div id="policy-library" className="document-layout">
           <DocumentRail
             title="Policy library"
@@ -95,7 +82,21 @@ export default function Policy() {
             ariaLabel="Policy papers and submissions"
           />
 
-          <section className="policy-publications" aria-label="Policy publications">
+          <div className="document-content">
+            <motion.header
+              animate={{ opacity: 1, y: 0 }}
+              className="document-hero"
+              initial={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.7 }}
+            >
+              <p className="public-reference-kicker">CAM Initiative Public Policy</p>
+              <h1>Policy Papers &amp; Submissions</h1>
+              <p>
+                Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
+              </p>
+            </motion.header>
+
+            <section className="policy-publications" aria-label="Policy publications">
             <motion.article
               className="policy-publication"
               id="parliamentary-submission-ai-prosperity-2026"
@@ -406,7 +407,8 @@ export default function Policy() {
                 </dl>
               </aside>
             </motion.article>
-          </section>
+            </section>
+          </div>
         </div>
       </main>
     </Shell>
