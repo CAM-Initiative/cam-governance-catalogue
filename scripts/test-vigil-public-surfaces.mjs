@@ -10,9 +10,9 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   const railCss = await read("src/governance-rail-refinements.css");
   assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
   assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
-  assert.match(railCss, /linear-gradient\(135deg, hsl\(34 58% 76%\), hsl\(31 50% 69%\)/);
-  assert.match(railCss, /repeating-linear-gradient\(14deg/);
-  assert.match(railCss, /repeating-linear-gradient\(101deg/);
+  assert.match(railCss, /linear-gradient\(135deg, hsl\(33 55% 73%\), hsl\(30 48% 64%\)/);
+  assert.match(railCss, /repeating-linear-gradient\(13deg/);
+  assert.match(railCss, /repeating-linear-gradient\(103deg/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -826,7 +826,7 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /home-governance-pin/);
   assert.match(rail, /target="_blank"/);
   assert.match(css, /home-governance-board[\s\S]*border: 0\.5rem solid/);
-  assert.match(css, /home-governance-note-1[\s\S]*top: 3px/);
+  assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
   assert.match(css, /home-governance-section-label[\s\S]*clip-path: polygon/);
