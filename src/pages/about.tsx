@@ -40,11 +40,11 @@ const ABOUT_CASE_FILE_STAGES = [
 
 const aboutRail = [
   { href: "#overview", label: "Overview" },
-  { href: "#architecture", label: "CAELESTIS Architecture Model" },
   { href: "#observatory", label: "VIGIL Observatory" },
   { href: "#method", label: "Case File method" },
   { href: "#taxonomy", label: "Alignment Taxonomy" },
   { href: "#publication", label: "Publication model" },
+  { href: "#architecture", label: "CAELESTIS Architecture Model" },
   { href: "#connect", label: "Connect" },
 ];
 
@@ -94,23 +94,6 @@ export default function About() {
             </figure>
           </header>
 
-          <section id="architecture" className="document-section vigil-about-section" aria-labelledby="caelestis-architecture-heading">
-            <div className="document-section-heading">
-              <p>CAELESTIS Architecture Model</p>
-              <h2 id="caelestis-architecture-heading">Governance architecture for advanced AI systems</h2>
-            </div>
-            <div className="document-reading">
-              <p>The CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. It sets out constitutional architecture, charters, laws, schedules, registries, symbolic structures and supporting validation infrastructure for CAM-governed contexts.</p>
-              <p>The public architecture reference is undergoing a substantive refactor. Its archived public release remains available as version 1.1.0 through Zenodo; the revised architecture will return when its structure, source material and presentation are ready for publication.</p>
-              <p>CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
-              <p>The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
-            </div>
-            <div className="cam-action-row">
-              <a className="cam-action cam-action-secondary" href="https://doi.org/10.5281/zenodo.20686316" target="_blank" rel="noreferrer">Open archived release <ArrowRight aria-hidden="true" /></a>
-              <a className="cam-action cam-action-secondary" href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noreferrer">CAELESTIS repository <ArrowRight aria-hidden="true" /></a>
-            </div>
-          </section>
-
           <section id="observatory" className="document-section vigil-about-section" aria-labelledby="vigil-observatory-heading">
             <div className="document-section-heading">
               <p>VIGIL Observatory</p>
@@ -123,7 +106,7 @@ export default function About() {
             <div className="cam-action-row">
               <Link className="cam-action cam-action-secondary" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
               <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/failure-taxonomy/">Explore the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
-              <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Harm &amp; Severity Methodology <ArrowRight aria-hidden="true" /></Link>
+              <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
             </div>
           </section>
 
@@ -196,6 +179,23 @@ export default function About() {
               <Link className="cam-action cam-action-secondary" href="/licensing/">Copyright &amp; Licence <ArrowRight aria-hidden="true" /></Link>
               <Link className="cam-action cam-action-secondary" href="/privacy/">Privacy <ArrowRight aria-hidden="true" /></Link>
               <a className="cam-action cam-action-secondary" href="https://github.com/CAM-Initiative/Vigil" target="_blank" rel="noreferrer">VIGIL Observatory repository <ArrowRight aria-hidden="true" /></a>
+            </div>
+          </section>
+
+          <section id="architecture" className="document-section vigil-about-section" aria-labelledby="caelestis-architecture-heading">
+            <div className="document-section-heading">
+              <p>CAELESTIS Architecture Model</p>
+              <h2 id="caelestis-architecture-heading">Governance architecture for advanced AI systems</h2>
+            </div>
+            <div className="document-reading">
+              <p>The CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. It sets out constitutional architecture, charters, laws, schedules, registries, symbolic structures and supporting validation infrastructure for CAM-governed contexts.</p>
+              <p>The public architecture reference is undergoing a substantive refactor. Its archived public release remains available as version 1.1.0 through Zenodo; the revised architecture will return when its structure, source material and presentation are ready for publication.</p>
+              <p>CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
+              <p>The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+            </div>
+            <div className="cam-action-row">
+              <a className="cam-action cam-action-secondary" href="https://doi.org/10.5281/zenodo.20686316" target="_blank" rel="noreferrer">Open archived release <ArrowRight aria-hidden="true" /></a>
+              <a className="cam-action cam-action-secondary" href="https://github.com/CAM-Initiative/Caelestis" target="_blank" rel="noreferrer">CAELESTIS repository <ArrowRight aria-hidden="true" /></a>
             </div>
           </section>
 
