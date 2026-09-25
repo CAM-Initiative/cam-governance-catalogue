@@ -395,7 +395,7 @@ function AdjudicationFrameworkSection() {
           initial={{ opacity: 0, y: -220, scale: 1.28, rotate: -16 }}
           whileInView={{ opacity: 0.86, y: 0, scale: 1, rotate: -7.5 }}
           viewport={{ once: true, amount: 0.55 }}
-          transition={{ delay: 0.35, type: "spring", stiffness: 230, damping: 15, mass: 0.8 }}
+          transition={{ delay: 1.2, type: "spring", stiffness: 230, damping: 15, mass: 0.8 }}
         >
           <span>NOT A DOOM CATALOGUE</span>
         </motion.div>
