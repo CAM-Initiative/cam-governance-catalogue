@@ -1776,3 +1776,37 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded 
     min-height: 5.45rem;
   }
 }
+
+
+/* Light-mode material-edge transition.
+   Depth comes from the solid metal ending into the void, not from drawing the
+   void itself. Reuse one restrained steel-grey edge on the long outer spokes
+   and on the existing rear-wheel shadow layer. */
+html:not([data-theme="dark"]) .diagnostic-orbit-v2 {
+  --diagnostic-transition-edge: hsl(34 7% 42% / 0.38);
+  --diagnostic-transition-edge-soft: hsl(34 7% 42% / 0.16);
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i {
+  border-color: var(--diagnostic-transition-edge);
+  box-shadow:
+    inset 1px 0 0 var(--diagnostic-transition-edge-soft),
+    inset -1px 0 0 var(--diagnostic-transition-edge-soft),
+    0 0.08rem 0.14rem hsl(var(--foreground) / 0.035);
+}
+
+/* The outer gear already owns this recessed circular layer. In light mode,
+   reduce it to a narrow contact edge beside the existing pale shadow rather
+   than introducing another ring, band or overlay geometry. */
+html:not([data-theme="dark"]) .diagnostic-gear-outer::after {
+  background:
+    radial-gradient(circle,
+      transparent 0 80.7%,
+      var(--diagnostic-transition-edge-soft) 81.05% 81.35%,
+      var(--diagnostic-transition-edge) 81.45% 82.05%,
+      transparent 82.45% 100%);
+  -webkit-mask: none;
+  mask: none;
+  box-shadow: none;
+  opacity: 1;
+}
