@@ -86,7 +86,7 @@ export default function VigilKnowledgeHub() {
     : `${state.caseFiles} case ${state.caseFiles === 1 ? "file" : "files"}`;
 
   const taxonomyMeta = state.taxonomyAvailable
-    ? `${state.taxonomyFamilies ?? 0} families · ${state.taxonomyClasses ?? 0} failure classes`
+    ? `${state.taxonomyFamilies ?? 0} families · ${state.taxonomyClasses ?? 0} fidelity classes`
     : "Internal standard";
 
   return (
@@ -126,7 +126,7 @@ export default function VigilKnowledgeHub() {
             <CollectionCard
               href="/observatory/knowledge-base/failure-taxonomy/"
               title="VIGIL Observatory Alignment Taxonomy"
-              description="The reference used to classify evidence against recurring AI governance boundaries and record whether the relevant invariant failed, held, or remains unresolved. Stable Failure Family and Failure Class identifiers are retained."
+              description="The reference used to classify evidence against recurring AI governance boundaries and record whether the relevant invariant failed, held, or remains unresolved. Stable Fidelity Family and Fidelity Class identifiers are retained."
               meta={taxonomyMeta}
               chip="Beta"
               actionLabel="Browse taxonomy"
