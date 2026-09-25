@@ -7,11 +7,11 @@ const mobileLinks = [
   { href: "/", label: "Home", internal: true },
   { href: "/about/", label: "About", internal: true },
   { href: "/policy/", label: "Policy", internal: true },
-  { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
-  { href: "/observatory/knowledge-base/standards-sources/", label: "AI Governance Standards", internal: true },
   { href: "/observatory/cases/", label: "Case Files", internal: true },
+  { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
   { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Alignment Taxonomy", internal: true },
   { href: "/observatory/severity-methodology/", label: "Harm Impact Assessment", internal: true },
+  { href: "/observatory/knowledge-base/standards-sources/", label: "AI Governance Standards", internal: true },
   { href: "/datasets/", label: "Datasets", internal: true },
   { href: "/licensing/", label: "Copyright & Licence", internal: true },
   { href: "/privacy/", label: "Privacy", internal: true },
@@ -27,11 +27,11 @@ const homeLinks = [
 ];
 
 const vigilLinks = [
-  { href: "/observatory/knowledge-base/", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
-  { href: "/observatory/knowledge-base/standards-sources/", label: "VIGIL Observatory AI Governance Standards", navLabel: "AI Governance Standards" },
   { href: "/observatory/cases/", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
+  { href: "/observatory/knowledge-base/", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
   { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Alignment Taxonomy", navLabel: "Alignment Taxonomy" },
   { href: "/observatory/severity-methodology/", label: "Harm Impact Assessment", navLabel: "Harm Impact Assessment" },
+  { href: "/observatory/knowledge-base/standards-sources/", label: "VIGIL Observatory AI Governance Standards", navLabel: "AI Governance Standards" },
 ];
 
 function navActive(location: string, href: string) {
