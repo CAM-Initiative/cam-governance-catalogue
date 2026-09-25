@@ -11,7 +11,8 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
   assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
   assert.match(railCss, /linear-gradient\(135deg, hsl\(34 54% 74%\), hsl\(31 47% 67%\)/);
-  assert.match(railCss, /repeating-linear-gradient\(18deg/);
+  assert.match(railCss, /repeating-linear-gradient\(14deg/);
+  assert.match(railCss, /repeating-linear-gradient\(101deg/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -119,7 +120,7 @@ test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async (
     read("src/pages/datasets.tsx"),
   ]);
   const publicSources = [taxonomy, aboutVigil, shell, hub, datasets].join("\n");
-  assert.match(taxonomy, /<h1 id="taxonomy-heading">VIGIL Observatory Alignment Taxonomy<\/h1>/);
+  assert.match(taxonomy, /className="vigil-library-kicker">VIGIL Observatory<\/p>[\s\S]*<h1 id="taxonomy-heading">Alignment Taxonomy<\/h1>/);
   assert.match(shell, /label: "VIGIL Observatory Alignment Taxonomy"/);
   assert.doesNotMatch(publicSources, /VIGIL AI Governance Failure Taxonomy/);
 });
@@ -651,11 +652,19 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
   assert.match(hub, /VIGIL Observatory Case Files/);
   assert.match(taxonomy, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(cases, /VIGIL Observatory · Incident investigations/);
-  assert.match(datasets, /title="VIGIL Observatory Alignment Taxonomy"/);
+  assert.match(datasets, /title="Alignment Taxonomy"/);
   assert.match(home, /VIGIL Observatory Alignment Taxonomy · Classification/);
   assert.doesNotMatch(rail, /href="\/observatory\//);
 });
 
+
+test("Alignment Taxonomy PDF uses the canonical public filename with legacy fallback", async () => {
+  const datasets = await read("src/pages/datasets.tsx");
+  assert.match(datasets, /VIGIL-Alignment-Taxonomy-Full-Reference\.pdf/);
+  assert.match(datasets, /VIGIL\.Observatory\.AlignmentTaxonomy\.FullReference\.pdf/);
+  assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
+  assert.ok(datasets.indexOf("VIGIL.Observatory.AlignmentTaxonomy.FullReference.pdf") < datasets.indexOf("VIGIL.Observatory.FailureTaxonomy.FullReference.pdf"));
+});
 
 test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
   const datasets = await read("src/pages/datasets.tsx");
@@ -858,7 +867,10 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(severity, /Methodology context/);
   assert.ok(severity.indexOf('vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
   assert.doesNotMatch(severity, /href: "#overview", label: "Overview"/);
+  assert.match(menuCss, /vigil-severity-methodology-document \{[\s\S]*border: 0 !important[\s\S]*background: transparent !important/);
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
+  assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section \+ \.vigil-about-section[\s\S]*border-top: 1px solid/);
+  assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
@@ -875,8 +887,11 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(gearCss, /diagnostic-light-edge-inner[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
   assert.match(gearCss, /\.diagnostic-instrument-web \{[\s\S]*z-index: 0;/);
   assert.match(gearCss, /diagnostic-gear-outer \.diagnostic-gear-tooth::before[\s\S]*hsl\(38 5% 47% \/ 0\.96\)[\s\S]*hsl\(43 7% 68% \/ 0\.99\)/);
-  assert.match(gearCss, /Outer spoke finish/);
-  assert.match(gearCss, /diagnostic-gear-outer \.diagnostic-gear-spokes i \{[\s\S]*opacity: 0\.9[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
+  assert.match(home, /diagnostic-outer-spokes-surface/);
+  assert.match(gearCss, /Foreground outer spokes/);
+  assert.match(gearCss, /\.diagnostic-gear-outer \.diagnostic-gear-spokes \{[\s\S]*opacity: 0/);
+  assert.match(gearCss, /\.diagnostic-outer-spokes-surface \{[\s\S]*z-index: 3[\s\S]*inset: 8%/);
+  assert.match(gearCss, /diagnostic-outer-spokes-surface > i \{[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
