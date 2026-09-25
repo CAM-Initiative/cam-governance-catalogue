@@ -1779,34 +1779,43 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded 
 
 
 /* Light-mode material-edge transition.
-   Depth comes from the solid metal ending into the void, not from drawing the
-   void itself. Reuse one restrained steel-grey edge on the long outer spokes
-   and on the existing rear-wheel shadow layer. */
+   Keep the dark-mode machining rhythm in the rear track, but use a bright
+   bevel highlight at the material edge in light mode. The small alternating
+   blocks are part of the existing gear layer rather than a new overlay. */
 html:not([data-theme="dark"]) .diagnostic-orbit-v2 {
-  --diagnostic-transition-edge: hsl(34 7% 42% / 0.38);
-  --diagnostic-transition-edge-soft: hsl(34 7% 42% / 0.16);
+  --diagnostic-transition-highlight: hsl(0 0% 100% / 0.88);
+  --diagnostic-transition-highlight-soft: hsl(0 0% 100% / 0.44);
+  --diagnostic-track-shadow: hsl(34 8% 38% / 0.16);
 }
 
 html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i {
-  border-color: var(--diagnostic-transition-edge);
+  border-color: var(--diagnostic-transition-highlight);
   box-shadow:
-    inset 1px 0 0 var(--diagnostic-transition-edge-soft),
-    inset -1px 0 0 var(--diagnostic-transition-edge-soft),
-    0 0.08rem 0.14rem hsl(var(--foreground) / 0.035);
+    inset 1px 0 0 hsl(0 0% 100% / 0.72),
+    inset -1px 0 0 hsl(0 0% 100% / 0.38),
+    0 0.08rem 0.14rem hsl(var(--foreground) / 0.03);
 }
 
-/* The outer gear already owns this recessed circular layer. In light mode,
-   reduce it to a narrow contact edge beside the existing pale shadow rather
-   than introducing another ring, band or overlay geometry. */
+/* Restore the alternating machined blocks that the inherited dark treatment
+   already uses, while adding one crisp white bevel along the outer edge of the
+   recessed track. */
 html:not([data-theme="dark"]) .diagnostic-gear-outer::after {
   background:
+    repeating-conic-gradient(
+      from 8deg,
+      hsl(38 24% 96% / 0.72) 0deg 7deg,
+      hsl(34 10% 58% / 0.22) 7deg 11deg,
+      transparent 11deg 30deg
+    ),
     radial-gradient(circle,
-      transparent 0 80.7%,
-      var(--diagnostic-transition-edge-soft) 81.05% 81.35%,
-      var(--diagnostic-transition-edge) 81.45% 82.05%,
-      transparent 82.45% 100%);
-  -webkit-mask: none;
-  mask: none;
-  box-shadow: none;
-  opacity: 1;
+      transparent 0 79.8%,
+      var(--diagnostic-transition-highlight-soft) 80.2% 80.7%,
+      var(--diagnostic-transition-highlight) 80.85% 81.6%,
+      transparent 81.95% 100%);
+  -webkit-mask: radial-gradient(circle, transparent 0 67%, #000 68% 82%, transparent 83% 100%);
+  mask: radial-gradient(circle, transparent 0 67%, #000 68% 82%, transparent 83% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(0 0% 100% / 0.38),
+    inset 0 0 1.35rem var(--diagnostic-track-shadow);
+  opacity: 0.92;
 }
