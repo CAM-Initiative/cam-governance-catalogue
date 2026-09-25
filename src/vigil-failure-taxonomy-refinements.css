@@ -424,3 +424,170 @@
     max-height: none;
   }
 }
+
+
+/* Taxonomy ticket masthead ------------------------------------------------
+ * The manual header shares the plain ticket grammar of an open Case File:
+ * title/evidence context on the left, compact operational metadata on the right.
+ */
+.vigil-taxonomy-ticket {
+  display: grid;
+  grid-template-columns: minmax(0, 1.48fr) minmax(15rem, 0.62fr);
+  gap: clamp(1.5rem, 3vw, 2.4rem);
+  align-items: start;
+  margin-bottom: 1.5rem;
+  padding: 1.45rem 1.55rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-large);
+  background: hsl(var(--background));
+  box-shadow: 0 0.45rem 1.2rem hsl(var(--foreground) / 0.045);
+}
+
+.vigil-taxonomy-ticket-title {
+  min-width: 0;
+}
+
+.vigil-taxonomy-ticket .vigil-library-kicker {
+  margin: 0;
+}
+
+.vigil-taxonomy-ticket h1 {
+  margin: 0.72rem 0 0;
+  font-family: var(--app-font-serif);
+  font-size: clamp(2.35rem, 4.5vw, 4.25rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: hsl(var(--foreground));
+  text-wrap: balance;
+}
+
+.vigil-taxonomy-ticket .vigil-library-description {
+  max-width: 62rem;
+  margin: 1rem 0 0;
+  color: hsl(var(--foreground) / 0.8);
+  font-size: 1rem;
+  line-height: 1.66;
+}
+
+.vigil-taxonomy-ticket-meta {
+  padding: 0.25rem 0 0.25rem 1.35rem;
+  border-left: 1px solid hsl(var(--border) / 0.78);
+}
+
+.vigil-taxonomy-ticket-meta .vigil-case-context-label {
+  margin: 0 0 0.8rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-taxonomy-ticket-meta dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem 1rem;
+  margin: 0;
+}
+
+.vigil-taxonomy-ticket-meta dl > div {
+  min-width: 0;
+}
+
+.vigil-taxonomy-ticket-meta dt {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-ticket-meta dd {
+  margin: 0.24rem 0 0;
+  font-size: 0.92rem;
+  font-weight: 650;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+}
+
+/* Specialist document rail: same visual family as the plain site rail, with
+ * search and family expansion retained because the taxonomy genuinely needs it.
+ */
+.vigil-taxonomy-manual-layout {
+  gap: clamp(2rem, 3.5vw, 3.3rem);
+}
+
+.vigil-taxonomy-manual-contents:not(.is-collapsed) {
+  padding: 0 1.15rem 0 0 !important;
+  border: 0 !important;
+  border-right: 1px solid hsl(var(--border) / 0.8) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-taxonomy-manual-contents-head {
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.78);
+}
+
+.vigil-taxonomy-manual-contents-head h2 {
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 750;
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-manual-search {
+  margin: 0.75rem 0 0.45rem;
+  border-radius: var(--cam-radius-control);
+  background: hsl(var(--background));
+}
+
+.vigil-taxonomy-manual-contents > ol {
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-taxonomy-manual-family-link-row {
+  border-bottom: 1px solid hsl(var(--border) / 0.68);
+}
+
+.vigil-taxonomy-manual-contents li.is-active > .vigil-taxonomy-manual-family-link-row,
+.vigil-taxonomy-manual-contents ul li.is-active-class > a {
+  background: hsl(var(--primary) / 0.055);
+}
+
+.vigil-taxonomy-manual-document {
+  min-width: 0;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-taxonomy-manual-family-hero,
+.vigil-taxonomy-manual-class {
+  border-radius: var(--cam-radius-panel);
+}
+
+@media (max-width: 900px) {
+  .vigil-taxonomy-ticket {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-taxonomy-ticket-meta {
+    padding: 1rem 0 0;
+    border-left: 0;
+    border-top: 1px solid hsl(var(--border) / 0.72);
+  }
+}
