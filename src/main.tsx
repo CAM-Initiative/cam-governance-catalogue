@@ -44,5 +44,6 @@ import "./home-premium-v10.css";
 import "./home-premium-v11-tactile.css";
 import "./home-menu-pages.css";
 import "./governance-rail-refinements.css";
+import "./vigil-observatory-instrument-experiment.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
