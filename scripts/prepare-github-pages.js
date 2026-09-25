@@ -129,7 +129,7 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
 
   <h2>VIGIL Case File method</h2>
-  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Real-world harm assessment and fidelity classification are deliberately independent: harm assessment describes materialised consequence and derives severity, while fidelity classification describes governance mechanism and boundary behaviour.</p>
+  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Real-world harm assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity, while alignment classification describes governance mechanism and boundary behaviour.</p>
   <p>Alignment Taxonomy mappings record whether a boundary failed, held or remains unresolved. Case File outcomes may therefore show failure evidenced, an invariant-held exemplar, or a mixed alignment outcome where different boundaries produced different evidentiary roles.</p>
   <nav aria-label="Explore VIGIL Observatory">
     <ul>
@@ -173,7 +173,7 @@ const staticRoutes = [
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
   ["/observatory/about", "About CAM Initiative", aboutDescription],
   ["/observatory/severity-methodology", "VIGIL Observatory Harm & Severity Methodology", "VIGIL-HIM 1.0.0 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
-  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, fidelity classification, repair and references."],
+  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
   ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
@@ -477,7 +477,7 @@ if (incidentRecords.length) {
     pageHtml({
       route: "/observatory/cases",
       title: "VIGIL Observatory Case Files — AI Incident Database | CAM Initiative",
-      description: "Browse the VIGIL Observatory AI incident database: documented Case Files with source evidence, assessment, fidelity classification, repair analysis and references.",
+      description: "Browse the VIGIL Observatory AI incident database: documented Case Files with source evidence, assessment, alignment classification, repair analysis and references.",
       body: caseIndexBody,
     }),
   );
