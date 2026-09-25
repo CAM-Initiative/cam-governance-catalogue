@@ -78,14 +78,14 @@ test("VIGIL Observatory Knowledge Base exposes document navigation for its core 
   assert.doesNotMatch(hub, /CollectionCard/);
 });
 
-test("homepage presents the VIGIL Observatory Alignment Taxonomy as a first-class classification surface", async () => {
+test("homepage exposes the current evidence and Alignment Taxonomy surfaces without validator-only copy", async () => {
   const home = await read("src/pages/home.tsx");
-  assert.match(home, /VIGIL Observatory · Evidence/);
-  assert.match(home, /VIGIL Observatory Alignment Taxonomy · Classification/);
-  assert.match(home, /Evidence → Assessment → Runtime Governance/);
-  assert.match(home, /Explore the Taxonomy/);
-  assert.match(home, /Download the PDF/);
-  assert.match(home, /VIGIL Observatory → VIGIL Observatory Alignment Taxonomy → CAELESTIS/);
+  assert.match(home, /Explore the evidence/);
+  assert.match(home, /See the taxonomy/);
+  assert.match(home, /aria-label="VIGIL Fidelity Classes accumulating into the Alignment Taxonomy"/);
+  assert.match(home, /Explore the alignment taxonomy/);
+  assert.match(home, /Adjudication, not assumption/);
+  assert.doesNotMatch(home, /Public-surface validator markers/);
   assert.doesNotMatch(home, /VIGIL AI Governance Failure Taxonomy/);
 });
 
@@ -153,7 +153,7 @@ test("public VIGIL Observatory routes expose Incidents, taxonomy, standards and 
   for (const retired of ["failure-modes", "observatory/lessons", "observatory/repairs", "VigilKnowledgeBase"]) assert.doesNotMatch(`${app}\n${shell}\n${hub}`, new RegExp(retired, "i"));
 });
 
-test("retired standalone record pages and components are absent", async () => {
+test("retired standalone record surfaces and the unpublished draft tree are absent", async () => {
   const retiredFiles = [
     "src/pages/vigil.tsx",
     "src/pages/vigil-projection.tsx",
@@ -163,9 +163,9 @@ test("retired standalone record pages and components are absent", async () => {
     "src/pages/evidence-chain-report.tsx",
     "src/components/vigil/FailureModeCard.tsx",
     "src/components/vigil/FailureModeDetail.tsx",
-    "src/drafts/vigil-ledger.tsx",
   ];
   for (const file of retiredFiles) await assert.rejects(() => access(resolve(root, file)), undefined, `${file} should remain retired`);
+  await assert.rejects(() => access(resolve(root, "src/drafts")), undefined, "src/drafts should remain retired rather than becoming a stale holding area");
 });
 
 test("Case Files use one canonical Incident and retain the six substantive stages", async () => {
@@ -506,7 +506,7 @@ test("taxonomy and external-governance public systems remain intact", async () =
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.Index\.json/);
   assert.match(taxonomyPage, /fidelity famil/i);
   assert.match(taxonomyPage, /fidelity class/i);
-  assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
+  assert.match(datasets, /VIGIL\.Observatory\.AlignmentTaxonomy\.FullReference\.pdf/);
   assert.match(standards, /AI Governance Standards/);
   assert.match(externalKnowledge, /external-governance/);
 });
@@ -658,12 +658,10 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
 });
 
 
-test("Alignment Taxonomy PDF uses the canonical public filename with legacy fallback", async () => {
+test("Alignment Taxonomy PDF uses the canonical public naming", async () => {
   const datasets = await read("src/pages/datasets.tsx");
   assert.match(datasets, /VIGIL-Alignment-Taxonomy-Full-Reference\.pdf/);
   assert.match(datasets, /VIGIL\.Observatory\.AlignmentTaxonomy\.FullReference\.pdf/);
-  assert.match(datasets, /VIGIL\.Observatory\.FailureTaxonomy\.FullReference\.pdf/);
-  assert.ok(datasets.indexOf("VIGIL.Observatory.AlignmentTaxonomy.FullReference.pdf") < datasets.indexOf("VIGIL.Observatory.FailureTaxonomy.FullReference.pdf"));
 });
 
 test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
