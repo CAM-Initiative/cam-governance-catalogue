@@ -33,10 +33,9 @@ const externalResources = [
 
 export function ExploreGovernanceRail() {
   return (
-    <aside aria-label="Explore AI governance" className="home-governance-panel home-governance-board">
+    <aside aria-label="External AI governance references" className="home-governance-panel home-governance-board">
       <div className="home-governance-board-heading">
-        <p className="home-governance-section-label">Explore AI Governance</p>
-        <span className="home-governance-board-rule" aria-hidden="true" />
+        <p className="home-governance-section-label">External References</p>
       </div>
 
       <div className="home-governance-board-grid">
