@@ -290,7 +290,7 @@ function TaxonomyReveal() {
   const visible = useMemo(() => pool.slice(0, visibleCount), [pool, visibleCount]);
 
   return (
-    <div className="taxonomy-sticker-stage" aria-label="VIGIL Failure Classes accumulating into the Alignment Taxonomy">
+    <div className="taxonomy-sticker-stage" aria-label="VIGIL Fidelity Classes accumulating into the Alignment Taxonomy">
       <div className="taxonomy-sticker-board">
         {visible.map((item, index) => (
           <a
