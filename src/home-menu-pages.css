@@ -965,3 +965,157 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
     min-height: 30rem;
   }
 }
+
+
+/* About document consolidation ----------------------------------------- */
+.vigil-about-document .vigil-about-section {
+  margin: 0 !important;
+  padding: 1.45rem 0 1.6rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+.vigil-about-document .vigil-about-section + .vigil-about-section {
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.vigil-about-document .vigil-about-section-heading {
+  margin: 0 0 0.75rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-record-intro,
+.vigil-about-document .vigil-about-affiliation-note {
+  margin: 0.72rem 0 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-about-document .vigil-about-flow-scroll,
+.vigil-about-document .vigil-about-boundary-grid,
+.vigil-about-document .vigil-about-citation-card {
+  border: 0 !important;
+}
+
+.vigil-about-document .vigil-about-boundary-grid > article,
+.vigil-about-document .vigil-about-boundary-grid > article:nth-child(odd),
+.vigil-about-document .vigil-about-boundary-grid > article:nth-child(even) {
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-about-page .vigil-about-outcome-explainer {
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-about-page .vigil-about-outcome-explainer > h3 {
+  margin: 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-outcome-explainer > p {
+  max-width: 72rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.98rem;
+  line-height: 1.62;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid > article {
+  min-width: 0;
+}
+
+.vigil-about-page .vigil-about-outcome-visual {
+  display: flex;
+  min-height: 5.6rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--cam-radius-panel);
+  background: hsl(var(--background));
+}
+
+.vigil-about-page .vigil-about-outcome-visual svg {
+  width: 2.1rem;
+  height: 2.1rem;
+  stroke-width: 1.9;
+}
+
+.vigil-about-page .vigil-about-outcome-visual.is-failure {
+  border-color: hsl(var(--destructive) / 0.52);
+  background: hsl(var(--destructive) / 0.035);
+  color: hsl(var(--destructive));
+}
+
+.vigil-about-page .vigil-about-outcome-visual.is-exemplar {
+  border-color: hsl(var(--status-success) / 0.62);
+  background: hsl(var(--status-success-surface) / 0.58);
+  color: hsl(var(--status-success));
+}
+
+.vigil-about-page .vigil-about-outcome-visual.is-combination {
+  border-color: hsl(var(--status-mixed) / 0.58);
+  background: hsl(var(--status-mixed-surface) / 0.58);
+  color: hsl(var(--status-mixed));
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid h3 {
+  margin: 0.62rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+}
+
+.vigil-about-page .vigil-about-case-outcome-grid p {
+  margin: 0.34rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.56;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-about-page .vigil-alignment-legend.is-detailed {
+  margin-bottom: 0;
+}
+
+.vigil-about-page .vigil-about-identity-boundary {
+  margin: 0.85rem 0 0;
+  padding: 0.64rem 0 0.64rem 0.86rem;
+  border-left: 2px solid hsl(var(--primary) / 0.62);
+  background: transparent;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-about-page .vigil-about-identity-boundary strong {
+  color: hsl(var(--foreground));
+}
+
+@media (max-width: 860px) {
+  .vigil-about-page .vigil-about-case-outcome-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-about-page .vigil-about-outcome-visual {
+    min-height: 4.8rem;
+  }
+}
