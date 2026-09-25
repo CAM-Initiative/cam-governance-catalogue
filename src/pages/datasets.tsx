@@ -193,8 +193,8 @@ export default function Datasets() {
 
           <DatasetCard
             eyebrow="VIGIL Observatory"
-            title="Harm & Severity Matrix"
-            description="The machine-readable VIGIL-HIM 1.0.0 methodology used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm & Severity Methodology page."
+            title="Harm Impact Matrix"
+            description="The machine-readable VIGIL-HIM 1.0.0 methodology used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm Impact Assessment page."
             status="VIGIL-HIM 1.0.0 · 11 harm dimensions"
             downloadHref={VIGIL_HARM_IMPACT_MATRIX_JSON}
             downloadLabel="Open JSON matrix"
