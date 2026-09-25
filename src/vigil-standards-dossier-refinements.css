@@ -35,6 +35,7 @@
 
 /* No divider between description and search. Whitespace does the separation. */
 .vigil-standards-page .vigil-standards-toolbar {
+  display: block;
   margin: 0;
   padding: 0.95rem 1.35rem 0.9rem;
   border: 0 !important;
