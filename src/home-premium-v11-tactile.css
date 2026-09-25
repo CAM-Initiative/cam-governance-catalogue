@@ -2017,3 +2017,35 @@ html:not([data-theme="dark"]) .diagnostic-inner-spokes-surface > i::after {
     width: 0.68rem;
   }
 }
+
+
+/* Outer-wheel surface correction -----------------------------------------
+ * The rear annulus is partly covered by the inter-gear web. Earlier dark and
+ * white machining bands therefore read as grey because they were being viewed
+ * through a pale layer. Paint the contact shadow + bright bevel on the existing
+ * surface sibling so the physical edge is unambiguous without changing geometry.
+ */
+html:not([data-theme="dark"]) .diagnostic-light-edge-outer {
+  z-index: 4.25;
+  background:
+    radial-gradient(circle,
+      transparent 0 78.4%,
+      hsl(28 18% 9% / 0.96) 78.8% 81.8%,
+      hsl(0 0% 100% / 0.995) 82.15% 84.15%,
+      transparent 84.55% 90.7%,
+      hsl(28 16% 8% / 0.88) 91.05% 92.7%,
+      hsl(0 0% 100% / 0.97) 93.05% 94.45%,
+      transparent 94.85% 100%);
+  filter:
+    drop-shadow(0 0.08rem 0.08rem hsl(26 18% 10% / 0.2))
+    drop-shadow(0 -0.035rem 0.025rem hsl(0 0% 100% / 0.28));
+}
+
+/* Keep the underlying annulus dark enough that any fractional anti-aliasing at
+   the overlay edge resolves toward black rather than the earlier mid-grey. */
+html:not([data-theme="dark"]) .diagnostic-gear-outer::before {
+  box-shadow:
+    inset 0 0 0 1px hsl(28 18% 10% / 0.34),
+    inset 0 0 1.45rem hsl(27 20% 8% / 0.2),
+    0 0 0 1px hsl(28 18% 10% / 0.18);
+}
