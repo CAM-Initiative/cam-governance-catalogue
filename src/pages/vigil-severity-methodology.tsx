@@ -84,11 +84,7 @@ const harmImpactRail = [
 export default function VigilSeverityMethodology() {
   return <Shell>
     <main className="vigil-about-page vigil-severity-methodology-page home-menu-page document-page">
-      <div className="document-layout document-layout--wide">
-        <DocumentRail title="Harm Impact Assessment" items={harmImpactRail} ariaLabel="Harm Impact Assessment sections" />
-
-        <article className="document-content vigil-severity-methodology-document">
-          <header id="overview" className="document-hero vigil-harm-hero">
+      <header id="overview" className="document-hero vigil-harm-hero">
             <p className="vigil-library-kicker">VIGIL Observatory · Harm Impact Assessment</p>
             <h1>Harm Impact Assessment</h1>
             <p>VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from alignment classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
@@ -98,8 +94,12 @@ export default function VigilSeverityMethodology() {
               <div><dt>Dimensions</dt><dd>11</dd></div>
               <div><dt>Severity bands</dt><dd>S1–S5 · SU</dd></div>
             </dl>
-          </header>
+      </header>
 
+      <div className="document-layout document-layout--wide document-layout-below-header">
+        <DocumentRail title="Harm Impact Assessment" items={harmImpactRail} ariaLabel="Harm Impact Assessment sections" />
+
+        <article className="document-content vigil-severity-methodology-document">
           <section id="method" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-principles-heading">
             <div className="document-section-heading">
               <p>Method</p>
