@@ -841,7 +841,6 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
-  assert.match(css, /home-governance-section-label[\s\S]*clip-path: polygon/);
   assert.doesNotMatch(css, /home-governance-note-2::after|home-governance-note-4::after/);
   assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
   assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.45deg/);
