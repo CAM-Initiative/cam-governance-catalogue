@@ -458,14 +458,3 @@ export default function Home() {
   );
 }
 
-/*
- * Public-surface validator markers retained while the homepage presentation moves
- * these concepts into the interactive hero and pattern narrative rather than
- * rendering the former explanatory blocks verbatim:
- * VIGIL Observatory · Evidence
- * VIGIL Observatory Alignment Taxonomy · Classification
- * Evidence → Assessment → Runtime Governance
- * Explore the Taxonomy
- * Download the PDF
- * VIGIL Observatory → VIGIL Observatory Alignment Taxonomy → CAELESTIS
- */
