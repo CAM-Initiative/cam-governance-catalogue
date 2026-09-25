@@ -10,7 +10,8 @@ test("Explore AI governance board keeps substantive note copy readable", async (
   const railCss = await read("src/governance-rail-refinements.css");
   assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
   assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
-  assert.match(railCss, /linear-gradient\(135deg, hsl\(34 46% 69%\), hsl\(31 42% 62%\)/);
+  assert.match(railCss, /linear-gradient\(135deg, hsl\(34 54% 74%\), hsl\(31 47% 67%\)/);
+  assert.match(railCss, /repeating-linear-gradient\(18deg/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -366,6 +367,8 @@ test("Long-form public pages share the document rail and editorial hero grammar"
     assert.match(page, /document-hero/);
   }
   assert.match(policy, /vigil-taxonomy-ticket policy-ticket/);
+  assert.ok(policy.indexOf('vigil-taxonomy-ticket policy-ticket') < policy.indexOf('DocumentRail'));
+  assert.match(policy, /document-layout document-layout--wide document-layout-below-header/);
   assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
   assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
   assert.match(about, /cam-action cam-action-primary[\s\S]*>Contact<\/a>/);
@@ -492,6 +495,7 @@ test("Standards search geometry matches Case Files", async () => {
     read("src/vigil-ux-v4.css"),
   ]);
   assert.match(standards, /matching \{visibleSources\.length === 1 \? "source" : "sources"\} · \{clauseCount\.toLocaleString\(\)\} clauses represented/);
+  assert.match(standardsCss, /\.vigil-standards-page \.vigil-standards-toolbar \{[\s\S]*display: block/);
   assert.match(standardsCss, /\.vigil-standards-search-row \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
   assert.match(casesCss, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
 });
@@ -855,7 +859,10 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.ok(severity.indexOf('vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
   assert.doesNotMatch(severity, /href: "#overview", label: "Overview"/);
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
-  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*grid-template-columns: minmax\(11rem, 0\.34fr\) minmax\(0, 1fr\)/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)[\s\S]*border: 0/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table th,[\s\S]*border: 0 !important/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
   assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
   assert.ok(datasets.indexOf('vigil-taxonomy-ticket vigil-datasets-ticket') < datasets.indexOf('DocumentRail title="Datasets"'));
@@ -868,6 +875,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(gearCss, /diagnostic-light-edge-inner[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
   assert.match(gearCss, /\.diagnostic-instrument-web \{[\s\S]*z-index: 0;/);
   assert.match(gearCss, /diagnostic-gear-outer \.diagnostic-gear-tooth::before[\s\S]*hsl\(38 5% 47% \/ 0\.96\)[\s\S]*hsl\(43 7% 68% \/ 0\.99\)/);
+  assert.match(gearCss, /Outer spoke finish/);
+  assert.match(gearCss, /diagnostic-gear-outer \.diagnostic-gear-spokes i \{[\s\S]*opacity: 0\.9[\s\S]*hsl\(42 20% 96% \/ 0\.98\)/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
