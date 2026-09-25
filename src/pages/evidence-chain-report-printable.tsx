@@ -43,7 +43,7 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "03": ["No current Alignment Taxonomy classification is linked."],
   "04": [
     "No class invariant can be resolved from a canonical classification for this Incident.",
-    "No Fidelity Class can be resolved from the canonical fidelity classification for this Incident, so no class invariant can be shown.",
+    "No Fidelity Class can be resolved from the canonical alignment classification for this Incident, so no class invariant can be shown.",
     "No repair invariant is shown because this Case File has no resolved mapping where failure is evidenced.",
     "No repair invariant is shown because this Case File has no resolved alignment mapping that requires repair.",
   ],
@@ -67,10 +67,10 @@ function compactIncidentId(id: string) {
 
 function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
   const relationship = reference.relationship === "primary"
-    ? "Primary fidelity classification"
+    ? "Primary alignment classification"
     : reference.relationship === "secondary"
-      ? "Secondary fidelity classification"
-      : "Family-only fidelity classification";
+      ? "Secondary alignment classification"
+      : "Family-only alignment classification";
   return reference.role === "successful-invariant"
     ? `${relationship} · invariant held · exemplar`
     : relationship;
