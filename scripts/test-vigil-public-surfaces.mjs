@@ -47,11 +47,16 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
-test("Explore AI Governance identifies Case Files as the VIGIL Observatory AI incident database", async () => {
+test("Explore AI Governance is an external-only pinned reference board", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /title: "Case Files"/);
-  assert.match(rail, /subtitle: "VIGIL Observatory AI incident database"/);
-  assert.match(rail, /Canonical VIGIL Observatory Incident investigations/);
+  assert.match(rail, /External reference board/);
+  assert.match(rail, /AI Regulations Tracker/);
+  assert.match(rail, /AI Incident Database/);
+  assert.match(rail, /OECD AI Incidents Monitor/);
+  assert.match(rail, /NIST AI Resource Center/);
+  assert.match(rail, /home-governance-note/);
+  assert.doesNotMatch(rail, /href="\/observatory\//);
+  assert.doesNotMatch(rail, /initiativeResources/);
 });
 
 test("VIGIL Observatory Knowledge Base exposes document navigation for its core references", async () => {
@@ -622,10 +627,10 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
   assert.match(shell, /VIGIL Observatory Knowledge Base/);
   assert.match(hub, /VIGIL Observatory Case Files/);
   assert.match(taxonomy, /VIGIL Observatory Alignment Taxonomy/);
-  assert.match(cases, /VIGIL Observatory Incident investigations/);
+  assert.match(cases, /VIGIL Observatory · Incident investigations/);
   assert.match(datasets, /title="VIGIL Observatory Alignment Taxonomy"/);
   assert.match(home, /VIGIL Observatory Alignment Taxonomy · Classification/);
-  assert.match(rail, /VIGIL Observatory AI incident database/);
+  assert.doesNotMatch(rail, /href="\/observatory\//);
 });
 
 
@@ -737,10 +742,11 @@ test("Case File ticket owns the report action and keeps section tabs analytical"
   assert.match(polish, /\.vigil-case-file-page \.vigil-case-ticket-report-button \{[\s\S]*margin-top: 0 !important/);
 });
 
-test("Case Files landing page stays deliberately terse", async () => {
+test("Case Files landing page uses the shared ticket masthead and stays concise", async () => {
   const cases = await read("src/pages/vigil-cases.tsx");
+  assert.match(cases, /vigil-taxonomy-ticket vigil-case-library-ticket/);
   assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
-  assert.doesNotMatch(cases, /VIGIL Observatory provides a public AI incident database through its Case File registry/);
+  assert.match(cases, /Collection context/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
 });
 
@@ -781,26 +787,18 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 });
 
 
-test("Explore AI governance prioritises Case Files, Knowledge Base and Datasets with icon affordances", async () => {
+test("Explore AI governance uses a tactile corkboard with pinned external notes", async () => {
   const [rail, css] = await Promise.all([
     read("src/components/ExploreGovernanceRail.tsx"),
     read("src/governance-rail-refinements.css"),
   ]);
-  const caseFiles = rail.indexOf('title: "Case Files"');
-  const knowledgeBase = rail.indexOf('title: "Knowledge Base"');
-  const datasets = rail.indexOf('title: "Datasets"');
-  assert.ok(caseFiles >= 0 && knowledgeBase > caseFiles && datasets > knowledgeBase);
-  assert.match(rail, /icon: FileText/);
-  assert.match(rail, /icon: Library/);
-  assert.match(rail, /icon: Database/);
-  assert.doesNotMatch(rail, /title: "VIGIL Observatory"/);
-  assert.match(rail, /home-governance-heading-rule/);
-  assert.doesNotMatch(rail, /home-governance-heading-panel/);
-  assert.match(css, /home-governance-heading-rule[\s\S]*background: transparent/);
-  assert.match(css, /home-governance-heading-rule::after[\s\S]*background: hsl\(var\(--primary\) \/ 0\.26\)/);
-  assert.doesNotMatch(css, /home-governance-heading-panel[\s\S]*status-success-surface/);
-  assert.match(css, /home-governance-card-title[\s\S]*font-weight: 540[\s\S]*text-transform: none/);
-  assert.match(css, /home-governance-card-label[\s\S]*display: inline-flex/);
+  assert.match(rail, /home-governance-board-grid/);
+  assert.match(rail, /home-governance-pin/);
+  assert.match(rail, /target="_blank"/);
+  assert.match(css, /home-governance-board[\s\S]*border: 0\.58rem solid/);
+  assert.match(css, /home-governance-note-1[\s\S]*rotate\(-1\.3deg\)/);
+  assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
+  assert.match(css, /home-governance-note:hover[\s\S]*scale\(1\.015\)/);
 });
 
 test("dark appearance keeps native Case File classification menus legible", async () => {
