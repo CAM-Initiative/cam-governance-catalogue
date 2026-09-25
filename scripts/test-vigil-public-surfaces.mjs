@@ -801,6 +801,43 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(css, /home-governance-note:hover[\s\S]*scale\(1\.015\)/);
 });
 
+test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
+  const [about, shell, severity, datasets, menuCss, gearCss, hub] = await Promise.all([
+    read("src/pages/about.tsx"),
+    read("src/components/layout/Shell.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/datasets.tsx"),
+    read("src/home-menu-pages.css"),
+    read("src/home-premium-v11-tactile.css"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+  ]);
+
+  assert.match(about, /01 · VIGIL Observatory/);
+  assert.match(about, /02 · Case File method/);
+  assert.match(about, /03 · VIGIL Observatory Alignment Taxonomy/);
+  assert.match(about, /04 · Publication model/);
+  assert.match(about, /05 · CAELESTIS Architecture Model/);
+  assert.match(about, /06 · Connect/);
+
+  const caseFiles = shell.indexOf('navLabel: "Case Files"');
+  const knowledge = shell.indexOf('navLabel: "Knowledge Base"');
+  const standards = shell.indexOf('navLabel: "AI Governance Standards"');
+  const vigilMenuEnd = shell.indexOf("];", shell.indexOf("const vigilLinks"));
+  assert.ok(caseFiles >= 0 && knowledge > caseFiles && standards > knowledge && standards < vigilMenuEnd);
+
+  assert.match(severity, /vigil-taxonomy-ticket vigil-harm-ticket/);
+  assert.match(datasets, /DocumentRail title="Datasets"/);
+  assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
+  assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
+  assert.match(menuCss, /cam-action:not\(\.cam-action-compact\)[\s\S]*border-radius: 999px/);
+  assert.match(gearCss, /Outer-wheel surface correction/);
+  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 4\.25/);
+
+  const hubCaseFiles = hub.indexOf('id="cases"');
+  const hubStandards = hub.indexOf('id="standards"');
+  assert.ok(hubCaseFiles >= 0 && hubStandards > hubCaseFiles);
+});
+
 test("dark appearance keeps native Case File classification menus legible", async () => {
   const dark = await read("src/dark-appearance.css");
   assert.match(dark, /html\[data-theme="dark"\] \.vigil-family-select select \{/);
