@@ -796,16 +796,11 @@ export default function VigilCaseFile() {
           <Field label="Occurred" value={occurred} />
           <Field label="Jurisdiction" value={jurisdiction} />
           <Field label="Environment" value={environmentLabel} />
-        </dl>
-      </aside>
-      <div className={`vigil-case-ticket-footer${hasMixedExecution ? " has-execution" : ""}`}>
-        <dl className="vigil-case-ticket-footer-meta">
           <Field label="Severity" value={severityDisplay(incident?.severity)} />
           <Field label="Classification" value={classificationDisplay} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
         </dl>
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-print-button vigil-case-ticket-report-button"><FileText aria-hidden="true" /> Generate report / PDF</Link>
-      </div>
+      </aside>
     </header>
 
     {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">
@@ -863,6 +858,7 @@ export default function VigilCaseFile() {
           className={activeStage === stage.id ? "is-active" : undefined}
           onClick={() => setActiveStage(stage.id)}
         ><span>{stage.number}</span>{stage.label}</button>)}
+        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab"><FileText aria-hidden="true" /> Full report / PDF</Link>
       </div>
     </nav>
 
