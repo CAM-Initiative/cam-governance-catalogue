@@ -74,7 +74,6 @@ const methodologyReferences = [
 ] as const;
 
 const harmImpactRail = [
-  { href: "#overview", label: "Overview" },
   { href: "#method", label: "Method" },
   { href: "#matrix", label: "Reference matrix" },
   { href: "#case-files", label: "Case Files" },
