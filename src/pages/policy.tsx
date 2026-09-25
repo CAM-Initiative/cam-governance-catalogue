@@ -48,7 +48,7 @@ function CitationCopyButton({ citation, label }: { citation: string; label: stri
   return (
     <button
       aria-label={`Copy ${label} citation`}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-primary/20 bg-card px-2.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold transition hover:border-primary/45 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="cam-action cam-action-secondary cam-action-compact"
       onClick={copyCitation}
       type="button"
     >
@@ -59,102 +59,102 @@ function CitationCopyButton({ citation, label }: { citation: string; label: stri
 }
 
 const primaryButtonClass =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cam-gold/70 bg-cam-gold/20 px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-cam-gold/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "cam-action cam-action-primary";
 
 const secondaryButtonClass =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-card/70 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/55 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  "cam-action cam-action-secondary";
 
 export default function Policy() {
   return (
     <Shell>
-      <main className="home-menu-page container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+      <main className="home-menu-page policy-page">
         <motion.header
           animate={{ opacity: 1, y: 0 }}
-          className="home-menu-hero home-menu-hero--text mb-12 max-w-3xl"
+          className="home-menu-hero home-menu-hero--text policy-hero"
           initial={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.7 }}
         >
-          <p className="mb-3 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">CAM Initiative Public Policy</p>
-          <h1 className="mb-3 font-serif text-4xl text-foreground md:text-5xl">Policy Papers &amp; Submissions</h1>
-          <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
+          <p className="public-reference-kicker">CAM Initiative Public Policy</p>
+          <h1 >Policy Papers &amp; Submissions</h1>
+          <p className="policy-hero-deck">
             Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
           </p>
         </motion.header>
 
-        <div id="policy-library" className="grid gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
-          <aside className="cam-parchment-card rounded-2xl p-4 shadow-sm lg:sticky lg:top-20" aria-label="Policy library navigation">
-            <div className="mb-5">
-              <p className="font-mono text-xs uppercase tracking-[0.18em] text-cam-gold">Policy library</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        <div id="policy-library" className="policy-layout">
+          <aside className="policy-index" aria-label="Policy library navigation">
+            <div className="policy-index-intro">
+              <p className="policy-index-kicker">Policy library</p>
+              <p className="policy-index-copy">
                 Browse CAM Initiative policy proposals and public consultation submissions by year and subject.
               </p>
             </div>
 
-            <nav aria-label="Policy papers and submissions" className="space-y-5">
+            <nav aria-label="Policy papers and submissions" className="policy-index-nav">
               <a
-                className="block rounded-xl border border-cam-gold/30 bg-card px-3 py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-cam-gold transition hover:border-cam-gold/50 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="policy-index-link policy-index-link--all"
                 href="#policy-library"
               >
                 All publications
               </a>
 
               <div>
-                <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground/65">2026</p>
-                <div className="space-y-2.5">
+                <p className="policy-index-year">2026</p>
+                <div className="policy-index-items">
                   <a
-                    className="block rounded-xl border border-cam-gold/30 bg-card/70 px-3 py-3 transition hover:border-cam-gold/55 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="policy-index-link"
                     href="#parliamentary-submission-ai-prosperity-2026"
                   >
-                    <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">PS 01/2026</span>
-                    <span className="mt-1.5 block font-serif text-base leading-snug text-foreground">Artificial Intelligence and Australian Prosperity</span>
+                    <span className="policy-index-code">PS 01/2026</span>
+                    <span className="policy-index-title">Artificial Intelligence and Australian Prosperity</span>
                   </a>
                   <a
-                    className="block rounded-xl border border-cam-gold/30 bg-card/70 px-3 py-3 transition hover:border-cam-gold/55 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="policy-index-link"
                     href="#consultation-submission-01-2026"
                   >
-                    <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">CS 01/2026</span>
-                    <span className="mt-1.5 block font-serif text-base leading-snug text-foreground">SOCI Act Consultation Submission</span>
+                    <span className="policy-index-code">CS 01/2026</span>
+                    <span className="policy-index-title">SOCI Act Consultation Submission</span>
                   </a>
                   <a
-                    className="block rounded-xl border border-cam-gold/30 bg-card/70 px-3 py-3 transition hover:border-cam-gold/55 hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="policy-index-link"
                     href="#policy-proposal-01-2026"
                   >
-                    <span className="block font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">PP 01/2026</span>
-                    <span className="mt-1.5 block font-serif text-base leading-snug text-foreground">AI Training, Contribution &amp; Copyright Scheme</span>
+                    <span className="policy-index-code">PP 01/2026</span>
+                    <span className="policy-index-title">AI Training, Contribution &amp; Copyright Scheme</span>
                   </a>
                 </div>
               </div>
             </nav>
           </aside>
 
-          <section className="min-w-0 space-y-8" aria-label="Policy publications">
+          <section className="policy-publications" aria-label="Policy publications">
             <motion.article
-              className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/35 shadow-xl"
+              className="policy-publication"
               id="parliamentary-submission-ai-prosperity-2026"
               initial={{ opacity: 0, y: 14 }}
               transition={{ duration: 0.65 }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <div className="border-b border-cam-gold/30 bg-[hsl(36_48%_96%)] px-6 py-5 md:px-8">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Parliamentary Submission · 2026</p>
-                  <span className="rounded-full border border-primary/20 bg-card/70 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-foreground/65">
+              <div className="policy-publication-banner">
+                <div className="policy-publication-banner-row">
+                  <p className="policy-kicker">Parliamentary Submission · 2026</p>
+                  <span className="policy-publication-status">
                     Published by the Parliament of Australia
                   </span>
                 </div>
               </div>
 
-              <div className="p-6 md:p-8">
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">13 September 2026</p>
-                <h2 className="font-serif text-3xl leading-tight text-foreground md:text-4xl">
+              <div className="policy-publication-body">
+                <p className="policy-publication-date">13 September 2026</p>
+                <h2 className="policy-publication-title">
                   Artificial Intelligence and Australian Prosperity
                 </h2>
-                <p className="mt-3 text-base font-medium leading-relaxed text-foreground/75">
+                <p className="policy-publication-subtitle">
                   Submission to the Joint Select Committee on Artificial Intelligence
                 </p>
 
-                <div className="mt-6 space-y-4 text-base leading-relaxed text-foreground/78">
+                <div className="policy-publication-copy">
                   <p>
                     This submission proposes a national prosperity framework for retaining Australian productive capacity, knowledge, value and capability through the AI transition.
                   </p>
@@ -166,7 +166,7 @@ export default function Policy() {
                   </p>
                 </div>
 
-                <div className="mt-7 flex flex-wrap gap-3">
+                <div className="cam-action-row">
                   <a className={primaryButtonClass} href={aiProsperityParliamentHref} rel="noreferrer" target="_blank">
                     View official parliamentary submission
                     <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -174,76 +174,76 @@ export default function Policy() {
                 </div>
               </div>
 
-              <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Parliamentary submission details">
-                <div className="mb-5">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Submission details</p>
+              <aside className="policy-publication-meta" aria-label="Parliamentary submission details">
+                <div className="policy-index-intro">
+                  <p className="policy-kicker">Submission details</p>
                 </div>
 
-                <dl className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Submitted</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">13 September 2026</dd>
+                <dl className="policy-detail-grid">
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Submitted</dt>
+                    <dd className="policy-detail-value">13 September 2026</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Status</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Public · published by the Parliament of Australia</dd>
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Status</dt>
+                    <dd className="policy-detail-value">Public · published by the Parliament of Australia</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Inquiry</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Joint Select Committee on Artificial Intelligence</dd>
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Inquiry</dt>
+                    <dd className="policy-detail-value">Joint Select Committee on Artificial Intelligence</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Themes</dt>
-                    <dd className="mt-2 flex flex-wrap gap-2">
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label">Themes</dt>
+                    <dd className="policy-theme-list">
                       {[
-                        ["Sovereign capability", "border-amber-300 bg-amber-50 text-amber-950"],
-                        ["Strategic capital", "border-blue-300 bg-blue-50 text-blue-950"],
-                        ["Australian ownership", "border-emerald-300 bg-emerald-50 text-emerald-950"],
-                        ["Automation & labour", "border-violet-300 bg-violet-50 text-violet-950"],
-                        ["Copyright & creator value", "border-rose-300 bg-rose-50 text-rose-950"],
-                      ].map(([theme, tone]) => (
-                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${tone}`} key={theme}>{theme}</span>
+                        "Sovereign capability",
+                        "Strategic capital",
+                        "Australian ownership",
+                        "Automation & labour",
+                        "Copyright & creator value",
+                      ].map((theme) => (
+                        <span className="policy-theme-tag" key={theme}>{theme}</span>
                       ))}
                     </dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="flex flex-wrap items-start justify-between gap-3">
-                      <span className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</span>
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label-row">
+                      <span className="policy-detail-label">Suggested citation</span>
                       <CitationCopyButton citation={aiProsperitySuggestedCitation} label="AI prosperity parliamentary submission" />
                     </dt>
-                    <dd className="mt-2 font-mono text-sm leading-relaxed text-foreground/80">{aiProsperitySuggestedCitation}</dd>
+                    <dd className="policy-citation">{aiProsperitySuggestedCitation}</dd>
                   </div>
                 </dl>
               </aside>
             </motion.article>
 
             <motion.article
-              className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/35 shadow-xl"
+              className="policy-publication"
               id="consultation-submission-01-2026"
               initial={{ opacity: 0, y: 14 }}
               transition={{ duration: 0.65 }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <div className="border-b border-cam-gold/30 bg-[hsl(36_48%_96%)] px-6 py-5 md:px-8">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Consultation Submission 01/2026</p>
-                  <span className="rounded-full border border-primary/20 bg-card/70 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-foreground/65">
+              <div className="policy-publication-banner">
+                <div className="policy-publication-banner-row">
+                  <p className="policy-kicker">Consultation Submission 01/2026</p>
+                  <span className="policy-publication-status">
                     Independent public-interest submission
                   </span>
                 </div>
               </div>
 
-              <div className="p-6 md:p-8">
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">29 July 2026</p>
-                <h2 className="font-serif text-3xl leading-tight text-foreground md:text-4xl">
+              <div className="policy-publication-body">
+                <p className="policy-publication-date">29 July 2026</p>
+                <h2 className="policy-publication-title">
                   Proposed Amendments to the Security of Critical Infrastructure Act 2018
                 </h2>
-                <p className="mt-3 text-base font-medium leading-relaxed text-foreground/75">
+                <p className="policy-publication-subtitle">
                   Automated systems, material digital dependencies, assurance, evidence integrity and foreign-control continuity
                 </p>
 
-                <div className="mt-6 space-y-4 text-base leading-relaxed text-foreground/78">
+                <div className="policy-publication-copy">
                   <p>
                     This targeted submission responds to the Department of Home Affairs consultation where CAM governance architecture offers a specific operational contribution. It addresses material dependency information, automated-system incidents, preliminary good-faith reporting, CIRMP assurance, relevant operators, supplier assurance and specified risk information.
                   </p>
@@ -255,7 +255,7 @@ export default function Policy() {
                   </p>
                 </div>
 
-                <div className="mt-7 flex flex-wrap gap-3">
+                <div className="cam-action-row">
                   <a className={primaryButtonClass} download href={sociSubmissionPdfHref}>
                     <Download className="h-4 w-4" aria-hidden="true" />
                     Download PDF
@@ -266,99 +266,99 @@ export default function Policy() {
                   </a>
                 </div>
 
-                <div className="mt-8 overflow-hidden rounded-2xl border border-cam-gold/35 bg-card shadow-inner">
-                  <div className="border-b border-cam-gold/25 bg-[hsl(36_48%_96%)] px-4 py-3">
-                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-cam-gold">Read the submission</p>
+                <div className="policy-document-frame">
+                  <div className="policy-document-frame-head">
+                    <p className="policy-document-frame-label">Read the submission</p>
                   </div>
                   <iframe
-                    className="h-[72vh] min-h-[38rem] w-full bg-white"
+                    className="policy-document-frame-viewer"
                     loading="lazy"
                     src={sociSubmissionPdfHref}
                     title="CAM Initiative submission on proposed amendments to the Security of Critical Infrastructure Act 2018"
                   />
-                  <p className="border-t border-cam-gold/25 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+                  <p className="policy-document-frame-note">
                     The embedded viewer depends on browser PDF support. Use “Open PDF in browser” or “Download PDF” where the preview is unavailable.
                   </p>
                 </div>
               </div>
 
-              <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Consultation submission details">
-                <div className="mb-5">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Submission details</p>
+              <aside className="policy-publication-meta" aria-label="Consultation submission details">
+                <div className="policy-index-intro">
+                  <p className="policy-kicker">Submission details</p>
                 </div>
 
-                <dl className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Publication</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Consultation Submission 01/2026 · 23 pages</dd>
+                <dl className="policy-detail-grid">
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Publication</dt>
+                    <dd className="policy-detail-value">Consultation Submission 01/2026 · 23 pages</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Submitted</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">29 July 2026</dd>
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Submitted</dt>
+                    <dd className="policy-detail-value">29 July 2026</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Status</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Public · lodged through the consultation portal</dd>
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Status</dt>
+                    <dd className="policy-detail-value">Public · lodged through the consultation portal</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Submitted to</dt>
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label">Submitted to</dt>
                     <dd className="mt-2 text-sm leading-relaxed text-foreground">
                       <span className="font-medium">Australian Department of Home Affairs — Critical Infrastructure Reforms</span>
                       <span className="block break-all text-muted-foreground">CI.REFORMS@homeaffairs.gov.au</span>
                     </dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Themes</dt>
-                    <dd className="mt-2 flex flex-wrap gap-2">
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label">Themes</dt>
+                    <dd className="policy-theme-list">
                       {[
-                        ["Critical infrastructure", "border-amber-300 bg-amber-50 text-amber-950"],
-                        ["Automated systems", "border-blue-300 bg-blue-50 text-blue-950"],
-                        ["Supplier assurance", "border-emerald-300 bg-emerald-50 text-emerald-950"],
-                        ["Evidence integrity", "border-violet-300 bg-violet-50 text-violet-950"],
-                        ["Sovereign continuity", "border-rose-300 bg-rose-50 text-rose-950"],
-                      ].map(([theme, tone]) => (
-                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${tone}`} key={theme}>{theme}</span>
+                        "Critical infrastructure",
+                        "Automated systems",
+                        "Supplier assurance",
+                        "Evidence integrity",
+                        "Sovereign continuity",
+                      ].map((theme) => (
+                        <span className="policy-theme-tag" key={theme}>{theme}</span>
                       ))}
                     </dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="flex flex-wrap items-start justify-between gap-3">
-                      <span className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</span>
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label-row">
+                      <span className="policy-detail-label">Suggested citation</span>
                       <CitationCopyButton citation={sociSuggestedCitation} label="consultation submission" />
                     </dt>
-                    <dd className="mt-2 font-mono text-sm leading-relaxed text-foreground/80">{sociSuggestedCitation}</dd>
+                    <dd className="policy-citation">{sociSuggestedCitation}</dd>
                   </div>
                 </dl>
               </aside>
             </motion.article>
 
             <motion.article
-              className="cam-parchment-card overflow-hidden rounded-3xl border border-cam-gold/35 shadow-xl"
+              className="policy-publication"
               id="policy-proposal-01-2026"
               initial={{ opacity: 0, y: 14 }}
               transition={{ duration: 0.65 }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
-              <div className="border-b border-cam-gold/30 bg-[hsl(36_48%_96%)] px-6 py-5 md:px-8">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Policy Proposal 01/2026</p>
-                  <span className="rounded-full border border-primary/20 bg-card/70 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.1em] text-foreground/65">
+              <div className="policy-publication-banner">
+                <div className="policy-publication-banner-row">
+                  <p className="policy-kicker">Policy Proposal 01/2026</p>
+                  <span className="policy-publication-status">
                     Independent public policy proposal
                   </span>
                 </div>
               </div>
 
-              <div className="p-6 md:p-8">
-                <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">20 July 2026</p>
-                <h2 className="font-serif text-3xl leading-tight text-foreground md:text-4xl">
+              <div className="policy-publication-body">
+                <p className="policy-publication-date">20 July 2026</p>
+                <h2 className="policy-publication-title">
                   AI Training, Contribution &amp; Copyright Scheme
                 </h2>
-                <p className="mt-3 text-base font-medium leading-relaxed text-foreground/75">
+                <p className="policy-publication-subtitle">
                   Copyright permission, contribution valuation and sovereign value return
                 </p>
 
-                <div className="mt-6 space-y-4 text-base leading-relaxed text-foreground/78">
+                <div className="policy-publication-copy">
                   <p>
                     This paper explores a two-sided Australian AI training and contribution scheme. One side would address lawful permission and proportionate contributions from covered AI providers; the other would allocate value to verified rights holders and accredited corpus stewards according to contribution, utility, dependency, and continuing stewardship.
                   </p>
@@ -370,7 +370,7 @@ export default function Policy() {
                   </p>
                 </div>
 
-                <div className="mt-7 flex flex-wrap gap-3">
+                <div className="cam-action-row">
                   <a className={primaryButtonClass} download href={trainingPolicyPdfHref}>
                     <Download className="h-4 w-4" aria-hidden="true" />
                     Download PDF
@@ -382,26 +382,26 @@ export default function Policy() {
                 </div>
               </div>
 
-              <aside className="border-t border-cam-gold/30 bg-[hsl(36_48%_96%)] p-6 md:p-8" aria-label="Publication details">
-                <div className="mb-5">
-                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.14em] text-cam-gold">Publication details</p>
+              <aside className="policy-publication-meta" aria-label="Publication details">
+                <div className="policy-index-intro">
+                  <p className="policy-kicker">Publication details</p>
                 </div>
 
-                <dl className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Publication</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Policy Proposal 01/2026 · 13 pages</dd>
+                <dl className="policy-detail-grid">
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Publication</dt>
+                    <dd className="policy-detail-value">Policy Proposal 01/2026 · 13 pages</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Published</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">20 July 2026</dd>
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Published</dt>
+                    <dd className="policy-detail-value">20 July 2026</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Status</dt>
-                    <dd className="mt-1 text-sm leading-relaxed text-foreground">Public · submitted for policy consideration</dd>
+                  <div className="policy-detail">
+                    <dt className="policy-detail-label">Status</dt>
+                    <dd className="policy-detail-value">Public · submitted for policy consideration</dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Submitted to</dt>
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label">Submitted to</dt>
                     <dd className="mt-3">
                       <ul className="space-y-3 text-sm leading-relaxed text-foreground">
                         {trainingSubmissionRecipients.map((recipient) => (
@@ -414,26 +414,26 @@ export default function Policy() {
                       </ul>
                     </dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Themes</dt>
-                    <dd className="mt-2 flex flex-wrap gap-2">
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label">Themes</dt>
+                    <dd className="policy-theme-list">
                       {[
-                        ["Copyright", "border-amber-300 bg-amber-50 text-amber-950"],
-                        ["AI training", "border-blue-300 bg-blue-50 text-blue-950"],
-                        ["Market access", "border-emerald-300 bg-emerald-50 text-emerald-950"],
-                        ["Contribution valuation", "border-violet-300 bg-violet-50 text-violet-950"],
-                        ["Living corpora", "border-rose-300 bg-rose-50 text-rose-950"],
-                      ].map(([theme, tone]) => (
-                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${tone}`} key={theme}>{theme}</span>
+                        "Copyright",
+                        "AI training",
+                        "Market access",
+                        "Contribution valuation",
+                        "Living corpora",
+                      ].map((theme) => (
+                        <span className="policy-theme-tag" key={theme}>{theme}</span>
                       ))}
                     </dd>
                   </div>
-                  <div className="rounded-xl border border-border/80 bg-card/70 p-4 md:col-span-2 xl:col-span-3">
-                    <dt className="flex flex-wrap items-start justify-between gap-3">
-                      <span className="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-foreground/50">Suggested citation</span>
+                  <div className="policy-detail policy-detail--wide">
+                    <dt className="policy-detail-label-row">
+                      <span className="policy-detail-label">Suggested citation</span>
                       <CitationCopyButton citation={trainingSuggestedCitation} label="policy proposal" />
                     </dt>
-                    <dd className="mt-2 font-mono text-sm leading-relaxed text-foreground/80">{trainingSuggestedCitation}</dd>
+                    <dd className="policy-citation">{trainingSuggestedCitation}</dd>
                   </div>
                 </dl>
               </aside>
