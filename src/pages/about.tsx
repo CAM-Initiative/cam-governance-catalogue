@@ -40,12 +40,12 @@ const ABOUT_CASE_FILE_STAGES = [
 
 const aboutRail = [
   { href: "#overview", label: "Overview" },
-  { href: "#observatory", label: "01 VIGIL Observatory" },
-  { href: "#method", label: "02 Case File method" },
-  { href: "#taxonomy", label: "03 Alignment Taxonomy" },
-  { href: "#publication", label: "04 Publication model" },
-  { href: "#architecture", label: "05 CAELESTIS Architecture Model" },
-  { href: "#connect", label: "06 Connect" },
+  { href: "#observatory", label: "VIGIL Observatory" },
+  { href: "#method", label: "Case File method" },
+  { href: "#taxonomy", label: "Alignment Taxonomy" },
+  { href: "#publication", label: "Publication model" },
+  { href: "#architecture", label: "CAELESTIS Architecture Model" },
+  { href: "#connect", label: "Connect" },
 ];
 
 const connectionLinks = [
@@ -96,7 +96,7 @@ export default function About() {
 
           <section id="observatory" className="document-section vigil-about-section" aria-labelledby="vigil-observatory-heading">
             <div className="document-section-heading">
-              <p>01 · VIGIL Observatory</p>
+              <p>VIGIL Observatory</p>
               <h2 id="vigil-observatory-heading">Public Incident evidence, classification and repair analysis</h2>
             </div>
             <div className="document-reading">
@@ -112,7 +112,7 @@ export default function About() {
 
           <section id="method" className="document-section vigil-about-section" aria-labelledby="vigil-method-heading">
             <div className="document-section-heading">
-              <p>02 · Case File method</p>
+              <p>Case File method</p>
               <h2 id="vigil-method-heading">One evidence-to-conclusion structure for every Incident</h2>
             </div>
             <div className="document-reading">
@@ -132,7 +132,7 @@ export default function About() {
 
           <section id="taxonomy" className="document-section vigil-about-section" aria-labelledby="vigil-taxonomy-heading">
             <div className="document-section-heading">
-              <p>03 · VIGIL Observatory Alignment Taxonomy</p>
+              <p>VIGIL Observatory Alignment Taxonomy</p>
               <h2 id="vigil-taxonomy-heading">Mappings classify individual boundaries. The Case File summarises the combined outcome.</h2>
             </div>
             <div className="document-reading">
@@ -160,7 +160,7 @@ export default function About() {
 
           <section id="publication" className="document-section vigil-about-section" aria-labelledby="vigil-publication-heading">
             <div className="document-section-heading">
-              <p>04 · Publication model</p>
+              <p>Publication model</p>
               <h2 id="vigil-publication-heading">Traceable findings, visible judgment and clear boundaries</h2>
             </div>
             <div className="document-reading">
@@ -184,7 +184,7 @@ export default function About() {
 
           <section id="architecture" className="document-section vigil-about-section" aria-labelledby="caelestis-architecture-heading">
             <div className="document-section-heading">
-              <p>05 · CAELESTIS Architecture Model</p>
+              <p>CAELESTIS Architecture Model</p>
               <h2 id="caelestis-architecture-heading">Governance architecture for advanced AI systems</h2>
             </div>
             <div className="document-reading">
@@ -201,7 +201,7 @@ export default function About() {
 
           <section id="connect" className="document-section vigil-about-section" aria-labelledby="connect-heading">
             <div className="document-section-heading">
-              <p>06 · Connect</p>
+              <p>Connect</p>
               <h2 id="connect-heading">Build, inspect, challenge or support the work.</h2>
             </div>
             <div className="document-reading">
