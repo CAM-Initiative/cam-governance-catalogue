@@ -845,7 +845,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /cam-action:not\(\.cam-action-compact\)[\s\S]*border-radius: 999px/);
   assert.doesNotMatch(gearCss, /Outer-wheel inner-edge correction|Outer-wheel surface correction/);
   assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 2\.75/);
-  assert.match(gearCss, /hsl\(0 0% 100% \/ 0\.99\) 81% 84\.5%/);
+  assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
+  assert.match(gearCss, /diagnostic-light-edge-inner[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
   const hubStandards = hub.indexOf('id="standards"');
