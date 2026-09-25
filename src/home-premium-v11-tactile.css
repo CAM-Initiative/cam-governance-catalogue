@@ -1902,3 +1902,31 @@ html:not([data-theme="dark"]) .diagnostic-light-edge-inner {
       transparent 97% 100%);
   filter: drop-shadow(0 0.045rem 0.05rem hsl(34 12% 38% / 0.10));
 }
+
+
+/* Light-mode inner root-block rhythm.
+   Dark mode gets its mechanical cadence from bright root rectangles against the
+   dark annulus. In light mode those pieces previously collapsed into one silver
+   value, so alternate restrained steel tones without changing the tooth geometry. */
+html:not([data-theme="dark"]) .diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(odd)::after {
+  border-color: hsl(34 8% 48% / 0.36);
+  background:
+    linear-gradient(180deg,
+      hsl(38 9% 76% / 0.82),
+      hsl(34 8% 58% / 0.66));
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(even)::after {
+  border-color: hsl(40 11% 62% / 0.34);
+  background:
+    linear-gradient(180deg,
+      hsl(44 13% 89% / 0.9),
+      hsl(39 10% 70% / 0.7));
+}
+
+html:not([data-theme="dark"]) .diagnostic-gear-inner .diagnostic-gear-tooth:nth-child(4n + 1)::after {
+  background:
+    linear-gradient(180deg,
+      hsl(41 12% 82% / 0.9),
+      hsl(36 9% 62% / 0.72));
+}
