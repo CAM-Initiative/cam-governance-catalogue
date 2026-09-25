@@ -1514,3 +1514,109 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
     padding-left: 0;
   }
 }
+
+
+/* Shared action pills -----------------------------------------------------
+ * Homepage established the interaction grammar: one filled primary action and
+ * an outlined secondary action, both with the same rounded instrument-chip shape.
+ * Apply that geometry to public actions across About, Policy, Knowledge Base,
+ * standards, methodology and datasets.
+ */
+.cam-action:not(.cam-action-compact) {
+  min-height: 3rem;
+  padding: 0.82rem 1.15rem;
+  border-radius: 999px;
+}
+
+.cam-action-primary {
+  box-shadow:
+    0 10px 34px hsl(var(--primary) / 0.16),
+    inset 0 1px 0 hsl(46 70% 76% / 0.24);
+}
+
+.cam-action-secondary {
+  border-color: hsl(var(--primary) / 0.36);
+  background: hsl(var(--background) / 0.35);
+  color: hsl(var(--foreground));
+  backdrop-filter: blur(14px);
+}
+
+.cam-action-primary:hover,
+.cam-action-primary:focus-visible {
+  transform: translateY(-2px);
+  box-shadow:
+    0 15px 42px hsl(var(--primary) / 0.25),
+    inset 0 1px 0 hsl(46 70% 76% / 0.24);
+}
+
+.cam-action-secondary:hover,
+.cam-action-secondary:focus-visible {
+  transform: translateY(-2px);
+  border-color: hsl(var(--primary) / 0.7);
+  background: hsl(var(--primary) / 0.06);
+}
+
+/* Dataset document ------------------------------------------------------- */
+.vigil-datasets-document .vigil-datasets-ticket {
+  margin-bottom: 0;
+}
+
+.vigil-datasets-ticket .vigil-library-description a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.36);
+  text-underline-offset: 0.2em;
+}
+
+.vigil-dataset-section {
+  scroll-margin-top: 1rem;
+}
+
+.vigil-dataset-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.8rem !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem !important;
+  letter-spacing: 0.035em;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.vigil-dataset-status strong {
+  font-weight: 680;
+  color: hsl(var(--foreground) / 0.82);
+}
+
+.vigil-dataset-section .cam-action[disabled] {
+  cursor: progress;
+  opacity: 0.64;
+  transform: none;
+}
+
+.vigil-datasets-document > .vigil-baseline-download-error {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid hsl(var(--border));
+  font-size: 0.9rem;
+}
+
+/* Shared ticket mastheads on document pages ----------------------------- */
+.vigil-case-library-ticket,
+.vigil-harm-ticket,
+.vigil-datasets-ticket {
+  box-shadow:
+    0 0.45rem 1.2rem hsl(var(--foreground) / 0.045),
+    inset 0 1px 0 hsl(var(--background) / 0.8);
+}
+
+.vigil-harm-ticket {
+  margin-bottom: 0;
+}
+
+@media (max-width: 620px) {
+  .cam-action:not(.cam-action-compact) {
+    width: 100%;
+  }
+}
