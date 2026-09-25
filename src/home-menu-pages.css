@@ -1250,7 +1250,8 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 .document-content .public-reference-section:first-of-type,
-.document-content .public-reference-policy-section:first-of-type {
+.document-content .public-reference-policy-section:first-of-type,
+.document-content .vigil-about-section:first-of-type {
   border-top: 0 !important;
 }
 
