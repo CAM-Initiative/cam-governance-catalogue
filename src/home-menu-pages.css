@@ -1621,57 +1621,38 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 /* Shared ticket mastheads on document pages ----------------------------- */
 .vigil-case-library-ticket,
 .vigil-datasets-ticket,
-.policy-ticket {
+.policy-ticket,
+.vigil-harm-ticket {
   box-shadow:
     0 0.45rem 1.2rem hsl(var(--foreground) / 0.045),
     inset 0 1px 0 hsl(var(--background) / 0.8);
 }
 
-/* Harm methodology: same open-document rhythm as About/Knowledge Base.
- * Keep the methodology facts visible, but as a restrained information strip
- * rather than another card nested inside the page.
+/* Harm methodology -------------------------------------------------------
+ * Full-width ticket masthead, followed by the same open section treatment
+ * used across the About-family documents.
  */
-.vigil-severity-methodology-page .vigil-harm-hero {
-  padding-bottom: 1.8rem;
+.vigil-severity-methodology-page > .vigil-harm-ticket {
+  margin-bottom: 0;
 }
 
-.vigil-severity-methodology-page .vigil-harm-hero h1 {
-  max-width: 48rem;
+.vigil-severity-methodology-document .vigil-about-section {
+  margin: 0 !important;
+  padding: 2.15rem 0 2.35rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
 }
 
-.vigil-severity-methodology-page .vigil-harm-hero > p:not(.vigil-library-kicker) {
-  max-width: 58rem;
+.vigil-severity-methodology-document .vigil-about-section + .vigil-about-section {
+  border-top: 1px solid hsl(var(--border) / 0.78) !important;
 }
 
-.vigil-harm-hero-meta {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem 1.6rem;
-  margin: 1.35rem 0 0;
-  padding: 1rem 0 0;
-  border-top: 1px solid hsl(var(--border) / 0.74);
-}
-
-.vigil-harm-hero-meta > div {
-  min-width: 0;
-}
-
-.vigil-harm-hero-meta dt {
-  margin: 0;
-  font-family: var(--app-font-mono);
-  font-size: 0.66rem;
-  font-weight: 720;
-  letter-spacing: 0.085em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground));
-}
-
-.vigil-harm-hero-meta dd {
-  margin: 0.25rem 0 0;
-  font-size: 0.94rem;
-  font-weight: 650;
-  line-height: 1.4;
-  color: hsl(var(--foreground));
+.vigil-severity-methodology-document .document-section-heading {
+  margin: 0 0 1.15rem;
+  padding: 0;
+  border: 0;
 }
 
 .vigil-severity-methodology-page .vigil-severity-principles {
@@ -1703,10 +1684,6 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 @media (max-width: 760px) {
-  .vigil-harm-hero-meta {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .vigil-severity-methodology-page .vigil-severity-principles > div {
     grid-template-columns: 1fr;
     gap: 0.35rem;
