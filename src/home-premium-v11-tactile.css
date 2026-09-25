@@ -4,7 +4,7 @@
 
 .diagnostic-instrument-web {
   position: absolute;
-  z-index: 2;
+  z-index: 0;
   inset: 12%;
   border-radius: 50%;
   pointer-events: none;
