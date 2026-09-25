@@ -1,0 +1,547 @@
+/*
+ * VIGIL Observatory — instrument/workbench experiment
+ * ---------------------------------------------------
+ * Experimental branch only.
+ *
+ * The Observatory should feel like one investigative instrument family rather
+ * than a collection of unrelated application panels. Tickets orient the reader;
+ * everything beneath them is an open manual, ledger or dossier. Boxes are kept
+ * for things that are semantically physical objects (evidence, source artefacts,
+ * discrete callouts), not used as generic layout chrome.
+ */
+
+/* Shared Observatory canvas -------------------------------------------- */
+
+.vigil-taxonomy-manual-page,
+.vigil-case-library-page,
+.vigil-severity-methodology-page,
+.vigil-case-file-page,
+.vigil-knowledge-hub-page,
+.vigil-standard-file-page {
+  --vigil-workbench-rule: hsl(var(--border) / 0.76);
+  --vigil-workbench-rule-strong: hsl(var(--foreground) / 0.2);
+  --vigil-workbench-gold: hsl(var(--primary));
+  --vigil-workbench-soft: hsl(var(--card) / 0.22);
+}
+
+/* The ticket is the common orientation object across Observatory surfaces. */
+.vigil-taxonomy-manual-page .vigil-taxonomy-ticket,
+.vigil-case-library-page .vigil-case-library-ticket,
+.vigil-standards-page .vigil-standards-ticket,
+.vigil-severity-methodology-page .vigil-harm-ticket {
+  border-radius: 0.18rem;
+  box-shadow:
+    0 0.46rem 1.1rem hsl(var(--foreground) / 0.035),
+    inset 0 1px 0 hsl(var(--background) / 0.86);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-ticket h1,
+.vigil-case-library-page .vigil-case-library-ticket h1,
+.vigil-standards-page .vigil-standards-ticket h1,
+.vigil-severity-methodology-page .vigil-harm-ticket h1 {
+  letter-spacing: -0.038em;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-ticket-meta,
+.vigil-case-library-page .vigil-taxonomy-ticket-meta,
+.vigil-standards-page .vigil-taxonomy-ticket-meta,
+.vigil-severity-methodology-page .vigil-taxonomy-ticket-meta {
+  border-left-style: dashed;
+}
+
+/* Taxonomy — field manual ---------------------------------------------- */
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-shell {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-layout {
+  grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4.5rem);
+  padding: 1.7rem 1.35rem 2.5rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents {
+  top: 5rem;
+  max-height: calc(100vh - 6rem);
+  padding: 0.18rem 1.2rem 0.5rem 0;
+  border: 0;
+  border-right: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents-head {
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents-head h2 {
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-search {
+  margin: 0.85rem 0 1rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-family-link-row > a,
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents ul a {
+  border-radius: 0;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents > ol > li + li {
+  margin-top: 0;
+  padding-top: 0.52rem;
+  border-top: 1px solid hsl(var(--border) / 0.5);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents > ol > li.is-active .vigil-taxonomy-manual-family-link-row > a,
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents ul li.is-active-class > a {
+  background: transparent;
+  color: hsl(var(--primary));
+  box-shadow: inset 2px 0 0 hsl(var(--primary));
+  padding-left: 0.62rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-expand {
+  border-radius: 0;
+  border-color: hsl(var(--border) / 0.72);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-family-hero,
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-class {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-family-hero {
+  padding: 0 0 2.5rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule-strong);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-family-hero > h2 {
+  margin-top: 0;
+  font-size: clamp(2.55rem, 4.8vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-plain {
+  margin-top: 1.25rem;
+  padding: 0.15rem 0 0.15rem 1.05rem;
+  border-left: 2px solid hsl(var(--primary) / 0.72);
+  border-radius: 0;
+  background: transparent;
+  font-size: 1.1rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-family-hero blockquote {
+  padding: 0.3rem 0 0.3rem 1.15rem;
+  border-left-width: 2px;
+  border-left-color: hsl(var(--primary) / 0.72);
+  background: transparent;
+  font-size: 1.15rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-grid {
+  gap: clamp(1.4rem, 3vw, 2.8rem);
+  margin-top: 0.8rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-grid section {
+  padding: 0.9rem 0 0;
+  border-top: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-classes-heading {
+  margin: 2.1rem 0 0;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule-strong);
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-class-list {
+  display: block;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-class {
+  padding: 2rem 0 2.25rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-class:first-child {
+  border-top: 0;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-class-top h3 {
+  font-size: clamp(1.65rem, 2.6vw, 2.35rem);
+  line-height: 1.06;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-manual-pill {
+  border-radius: 0;
+  background: transparent;
+  padding-inline: 0;
+  font-family: var(--app-font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-linked-cases,
+.vigil-taxonomy-manual-page .vigil-taxonomy-invariant-exemplars,
+.vigil-taxonomy-manual-page .vigil-taxonomy-supporting-evidence {
+  margin-top: 1.5rem;
+  padding: 1.15rem 0 0;
+  border: 0;
+  border-top: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-linked-cases li,
+.vigil-taxonomy-manual-page .vigil-taxonomy-invariant-exemplars li,
+.vigil-taxonomy-manual-page .vigil-taxonomy-supporting-evidence li {
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Case Files + Standards — investigation/reference ledgers ------------- */
+
+.vigil-case-library-page .vigil-library-shell,
+.vigil-standards-page .vigil-standards-shell {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-case-library-page .vigil-library-toolbar,
+.vigil-standards-page .vigil-standards-toolbar {
+  margin: 1.15rem 0 0;
+  padding: 1.15rem 0 1.05rem;
+  border-top: 1px solid var(--vigil-workbench-rule);
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+  background: transparent;
+}
+
+.vigil-case-library-page .vigil-search-control,
+.vigil-case-library-page .vigil-family-select,
+.vigil-standards-page .vigil-search-control,
+.vigil-standards-page .vigil-family-select {
+  border-radius: 0.18rem;
+  background: hsl(var(--background) / 0.62);
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.82);
+}
+
+.vigil-case-library-page .vigil-case-table,
+.vigil-standards-page .vigil-case-table {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-case-library-page .vigil-case-table-head,
+.vigil-standards-page .vigil-case-table-head {
+  min-height: 2.7rem;
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+  background: transparent !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-library-page .vigil-case-table-row,
+.vigil-standards-page .vigil-case-table-row {
+  border: 0;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-case-library-page .vigil-case-table-row-link,
+.vigil-standards-page .vigil-case-table-row-link {
+  background: transparent;
+  transition: background 150ms ease, box-shadow 150ms ease;
+}
+
+.vigil-case-library-page .vigil-case-table-row-link:hover,
+.vigil-case-library-page .vigil-case-table-row-link:focus-visible,
+.vigil-standards-page .vigil-case-table-row-link:hover,
+.vigil-standards-page .vigil-case-table-row-link:focus-visible {
+  background: hsl(var(--primary) / 0.035);
+  box-shadow: inset 3px 0 0 hsl(var(--primary) / 0.68);
+}
+
+.vigil-case-library-page .vigil-case-table-copy h2,
+.vigil-standards-page .vigil-case-table-copy h2 {
+  font-family: var(--app-font-serif);
+  font-weight: 560;
+  letter-spacing: -0.015em;
+}
+
+.vigil-case-library-page .vigil-pagination {
+  margin-top: 0.35rem;
+  border: 0;
+  border-top: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+}
+
+/* Standards detail — reference catalogue, not another card stack. */
+.vigil-standard-file-page .vigil-standard-detail-section {
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-standard-file-page .vigil-standard-section-heading {
+  padding: 1.2rem 0 0.95rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+  background: transparent;
+}
+
+.vigil-standard-file-page .vigil-standard-section-body {
+  padding: 1.2rem 0 1.8rem;
+}
+
+.vigil-standard-file-page .vigil-standards-facts {
+  border-left-style: solid;
+  border-left-color: hsl(var(--primary) / 0.34);
+}
+
+/* Harm — assessment ledger --------------------------------------------- */
+
+.vigil-severity-methodology-page .vigil-severity-methodology-document {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-severity-methodology-page .vigil-severity-methodology-section,
+.vigil-severity-methodology-page .document-section {
+  padding: 2.25rem 0 2.55rem;
+  border-top: 1px solid var(--vigil-workbench-rule) !important;
+  background: transparent !important;
+}
+
+.vigil-severity-methodology-page .vigil-severity-methodology-section:first-child,
+.vigil-severity-methodology-page .document-section:first-child {
+  border-top: 0 !important;
+}
+
+.vigil-severity-methodology-page .vigil-severity-principles > div {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-severity-methodology-page .vigil-harm-matrix-scroll {
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+  border-bottom: 1px solid var(--vigil-workbench-rule-strong);
+}
+
+/* Case File — dossier on the same workbench ---------------------------- */
+
+.vigil-case-file-page .vigil-case-file-hero-v4 {
+  border-radius: 0.18rem;
+  box-shadow:
+    0 0.46rem 1.1rem hsl(var(--foreground) / 0.035),
+    inset 0 1px 0 hsl(var(--background) / 0.86);
+}
+
+.vigil-case-file-page .vigil-case-stage-nav {
+  margin-top: 1.45rem;
+  border-top: 1px solid var(--vigil-workbench-rule);
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs {
+  gap: 0;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button {
+  min-height: 3.35rem;
+  padding: 0.72rem 0.65rem 0.62rem;
+  border: 0;
+  border-right: 1px solid hsl(var(--border) / 0.52);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--app-font-sans);
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button:last-child {
+  border-right: 0;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+  min-height: 3.35rem;
+  padding: 0.72rem 0.65rem 0.62rem;
+  border: 0;
+  border-bottom: 3px solid hsl(var(--primary));
+  background: hsl(var(--primary) / 0.045);
+  color: hsl(var(--foreground));
+  box-shadow: none;
+  font-size: 0.9rem;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button.is-active span {
+  color: hsl(var(--primary));
+}
+
+.vigil-case-file-page .vigil-case-active-stage {
+  margin-top: 1.6rem;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
+  padding: 0;
+  gap: 1.9rem;
+}
+
+.vigil-case-file-page .vigil-observation-summary,
+.vigil-case-file-page .vigil-affected-systems,
+.vigil-case-file-page .vigil-severity-assessment,
+.vigil-case-file-page .vigil-diagnosis-mechanism {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-case-file-page .vigil-observation-summary,
+.vigil-case-file-page .vigil-affected-systems,
+.vigil-case-file-page .vigil-severity-assessment {
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-case-file-page .vigil-observation-summary .vigil-case-subheading,
+.vigil-case-file-page .vigil-affected-systems .vigil-case-subheading,
+.vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading {
+  padding-inline: 0;
+}
+
+.vigil-case-file-page .vigil-affected-system-grid > article {
+  padding-inline: 0;
+}
+
+.vigil-case-file-page .vigil-evidence-card {
+  border-radius: 0.18rem;
+  box-shadow: 0 0.45rem 1rem hsl(var(--foreground) / 0.04);
+}
+
+.vigil-case-file-page .vigil-evidence-source-meta .vigil-evidence-meta-field {
+  border-radius: 0;
+  border-top: 1px solid hsl(var(--border) / 0.52);
+  background: transparent;
+}
+
+/* Knowledge Base — open Observatory index ------------------------------ */
+
+.vigil-knowledge-hub-page .vigil-knowledge-grid {
+  display: block;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-collection {
+  min-height: 0;
+  padding: 1.5rem 0 1.65rem;
+  border: 0;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-collection:first-child {
+  border-top: 1px solid var(--vigil-workbench-rule-strong);
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-copy h2 {
+  font-size: clamp(1.45rem, 2.3vw, 2.05rem);
+}
+
+.vigil-knowledge-hub-page .vigil-knowledge-card-footer {
+  padding-top: 0.8rem;
+}
+
+/* Responsive ----------------------------------------------------------- */
+
+@media (max-width: 1050px) {
+  .vigil-taxonomy-manual-page .vigil-taxonomy-manual-layout {
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+  }
+
+  .vigil-taxonomy-manual-page .vigil-taxonomy-manual-contents {
+    position: static;
+    max-height: none;
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--vigil-workbench-rule);
+  }
+}
+
+@media (max-width: 820px) {
+  .vigil-case-file-page .vigil-case-stage-nav {
+    border-inline: 0;
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs button {
+    border-bottom: 1px solid hsl(var(--border) / 0.52);
+  }
+}
+
+@media (max-width: 620px) {
+  .vigil-taxonomy-manual-page .vigil-taxonomy-manual-layout {
+    padding-inline: 0.2rem;
+  }
+
+  .vigil-taxonomy-manual-page .vigil-taxonomy-manual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-taxonomy-manual-page .vigil-taxonomy-manual-family-hero > h2 {
+    font-size: clamp(2.35rem, 12vw, 3.4rem);
+  }
+}
