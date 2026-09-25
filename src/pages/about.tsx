@@ -1,7 +1,6 @@
 import { ArrowRight, BookOpen, CircleCheckBig, CircleX, Coffee, ExternalLink, Github, Info, Mail, Newspaper } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassification";
 
 const ABOUT_CASE_FILE_STAGES = [
   {
@@ -56,16 +55,27 @@ function ConnectionIcon({ icon }: { icon: string }) {
 
 export default function About() {
   return <Shell>
-    <main className="vigil-about-page" data-about-entity="cam-initiative">
+    <main className="vigil-about-page home-menu-page" data-about-entity="cam-initiative">
       <div className="container mx-auto max-w-[1220px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-        <header className="vigil-about-hero">
-          <p className="vigil-library-kicker">CAM Initiative · Public-interest AI governance</p>
-          <h1>About CAM Initiative</h1>
-          <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change. It brings together governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics and public-interest governance for emerging systems.</p>
-          <div className="vigil-about-identity-summary" aria-label="CAM Initiative organisation and founder">
-            <p><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
-            <p>The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
+        <header className="vigil-about-hero home-menu-hero home-menu-hero--founder">
+          <div className="home-menu-hero-copy">
+            <p className="vigil-library-kicker">CAM Initiative · Public-interest AI governance</p>
+            <h1>About CAM Initiative</h1>
+            <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change. It brings together governance architecture, regulatory and standards alignment, relational safeguards, technology-failure diagnostics and public-interest governance for emerging systems.</p>
+            <div className="vigil-about-identity-summary" aria-label="CAM Initiative organisation and founder">
+              <p><strong>CAM Initiative is operated by Phoenix Covenant Pty Ltd trading as CAM Initiative (ABN 14 692 195 529)</strong>, an Australian private company active from <strong>27 October 2025</strong> and based in Western Australia.</p>
+              <p>The CAM Initiative was founded by <strong>Dr Michelle Vivian O&apos;Rourke</strong>. Dr O&apos;Rourke completed a PhD in analytical chemistry at La Trobe University in Melbourne, Victoria. She is a mother of two and works professionally in environmental health and contaminated-land practice.</p>
+            </div>
+            <a className="home-menu-contact-chip" href="mailto:ethics@cam-initiative.org">
+              <Mail aria-hidden="true" />
+              Contact CAM
+              <ArrowRight aria-hidden="true" />
+            </a>
           </div>
+          <figure className="home-menu-founder-portrait">
+            <img src="/founder-photo.jpg" alt="Dr Michelle Vivian O’Rourke, founder of CAM Initiative" />
+            <figcaption><strong>Dr Michelle Vivian O&apos;Rourke</strong><span>Founder · CAM Initiative</span></figcaption>
+          </figure>
         </header>
 
         <article className="vigil-about-document">
@@ -124,8 +134,7 @@ export default function About() {
               <h2 id="vigil-taxonomy-heading">Mappings classify individual boundaries. The Case File summarises the combined outcome.</h2>
             </div>
             <p className="vigil-about-record-intro">The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Alignment is assessed against the governing invariant at each mapped boundary: it may fail, hold, or remain unresolved. Broad <strong>Fidelity Families</strong> and individual <strong>Fidelity Classes</strong> retain their established FF/FC identifiers and define the repeatable mechanisms, recognition criteria and exclusions used in that assessment.</p>
-            <p className="vigil-about-record-intro">Classification happens at the <strong>mapping level</strong>. One Incident may engage several Fidelity Classes, and each relationship is recorded separately as <strong>Failure occurred</strong>, <strong>Invariant held</strong> or <strong>Boundary unresolved</strong>. The legend below is the visual key used throughout VIGIL Case Files.</p>
-            <VigilAlignmentLegend detailed />
+            <p className="vigil-about-record-intro">Classification happens at the <strong>mapping level</strong>. One Incident may engage several Fidelity Classes, and each relationship is recorded separately as <strong>Failure occurred</strong>, <strong>Invariant held</strong> or <strong>Boundary unresolved</strong>. The outcome treatments below show how those mapping-level findings are summarised at Case File level.</p>
 
             <div className="vigil-about-outcome-explainer">
               <h3>From mapping roles to the Case File outcome</h3>
