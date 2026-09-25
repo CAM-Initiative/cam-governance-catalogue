@@ -89,7 +89,7 @@
 .vigil-app-shell + main.container:not(.report-page) > header .vigil-library-kicker {
   margin: 0 !important;
   font-family: var(--app-font-mono) !important;
-  font-size: 0.78rem !important;
+  font-size: 0.875rem !important;
   font-weight: 600 !important;
   line-height: 1.35 !important;
   letter-spacing: 0.2em !important;
