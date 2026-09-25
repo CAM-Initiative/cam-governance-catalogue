@@ -312,7 +312,7 @@ test("Classification and Repair cite the single numbered VIGIL Alignment Taxonom
   ]);
 
   assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
-  assert.match(component, /Failure classes and their governing invariants are defined in the/);
+  assert.match(component, /Fidelity classes and their governing invariants are defined in the/);
   assert.match(component, /The governing invariants shown here are defined in the/);
   assert.match(component, /VIGIL Observatory Alignment Taxonomy \[\{taxonomyReferenceNumber\}\]/);
   assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
