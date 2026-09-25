@@ -189,7 +189,9 @@ function PremiumHero() {
               <i key={index} style={{ "--web-angle": `${index * 45 + (index % 3 === 0 ? 0.8 : index % 3 === 1 ? -0.45 : 0.2)}deg` } as CSSProperties} />
             ))}
           </span>
+          <span className="diagnostic-light-edge diagnostic-light-edge-outer" aria-hidden="true" />
           <MechanicalGear size="inner" teeth={48} rotation={gearTurn * -30} reduceMotion={Boolean(reduceMotion)} />
+          <span className="diagnostic-light-edge diagnostic-light-edge-inner" aria-hidden="true" />
           <Link
             href="/observatory/cases/"
             className="diagnostic-core diagnostic-core-link"
