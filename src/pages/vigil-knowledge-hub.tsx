@@ -21,13 +21,13 @@ type HubState = {
 
 const knowledgeRail = [
   { href: "#overview", label: "Overview" },
-  { href: "#standards", label: "AI Governance Standards" },
   { href: "#cases", label: "Case Files" },
   { href: "#taxonomy", label: "Alignment Taxonomy" },
   { href: "#harm-impact", label: "Harm Impact Assessment" },
   { href: "#datasets", label: "Datasets" },
   { href: "#policy", label: "Policy" },
   { href: "#architecture", label: "CAELESTIS Architecture Model" },
+  { href: "#standards", label: "AI Governance Standards" },
 ];
 
 export default function VigilKnowledgeHub() {
@@ -80,20 +80,6 @@ export default function VigilKnowledgeHub() {
               <h1>Knowledge Base</h1>
               <p>Reference material supporting the Observatory: AI governance standards, Case Files, the VIGIL Observatory Alignment Taxonomy, the Harm Impact Assessment methodology, public datasets and policy material.</p>
             </header>
-
-            <section id="standards" className="document-section vigil-about-section" aria-labelledby="knowledge-standards-heading">
-              <div className="document-section-heading">
-                <p>AI Governance Standards <span className="cam-beta-chip">Beta</span></p>
-                <h2 id="knowledge-standards-heading">Browse the external governance sources VIGIL uses as reference material.</h2>
-              </div>
-              <div className="document-reading">
-                <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Open a source to review its governance relevance, represented clauses and review provenance.</p>
-                <p className="vigil-knowledge-meta">{baselineMeta}</p>
-              </div>
-              <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/standards-sources/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
-              </div>
-            </section>
 
             <section id="cases" className="document-section vigil-about-section" aria-labelledby="knowledge-cases-heading">
               <div className="document-section-heading">
@@ -172,6 +158,20 @@ export default function VigilKnowledgeHub() {
                 <p>The public CAELESTIS architecture reference is undergoing a substantive refactor. It will return to the Knowledge Base when its structure, source material and presentation are ready for publication.</p>
               </div>
             </section>
+            <section id="standards" className="document-section vigil-about-section" aria-labelledby="knowledge-standards-heading">
+              <div className="document-section-heading">
+                <p>AI Governance Standards <span className="cam-beta-chip">Beta</span></p>
+                <h2 id="knowledge-standards-heading">Browse the external governance sources VIGIL uses as reference material.</h2>
+              </div>
+              <div className="document-reading">
+                <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Open a source to review its governance relevance, represented clauses and review provenance.</p>
+                <p className="vigil-knowledge-meta">{baselineMeta}</p>
+              </div>
+              <div className="cam-action-row">
+                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/standards-sources/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
+              </div>
+            </section>
+
           </article>
         </div>
       </main>
