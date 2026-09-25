@@ -19,11 +19,13 @@
   border: 0.5rem solid hsl(31 31% 43%);
   border-radius: 0.22rem;
   background:
-    radial-gradient(circle at 14% 20%, hsl(34 36% 46% / 0.12) 0 0.1rem, transparent 0.13rem),
-    radial-gradient(circle at 74% 68%, hsl(28 32% 42% / 0.09) 0 0.1rem, transparent 0.13rem),
-    radial-gradient(circle at 42% 80%, hsl(44 34% 72% / 0.16) 0 0.08rem, transparent 0.11rem),
-    linear-gradient(135deg, hsl(34 46% 69%), hsl(31 42% 62%) 52%, hsl(35 44% 67%));
-  background-size: 2.4rem 2.4rem, 2.9rem 2.9rem, 2rem 2rem, auto;
+    radial-gradient(ellipse at 16% 22%, hsl(28 34% 34% / 0.22) 0 0.055rem, transparent 0.075rem),
+    radial-gradient(ellipse at 68% 31%, hsl(39 52% 82% / 0.30) 0 0.07rem, transparent 0.095rem),
+    radial-gradient(ellipse at 78% 72%, hsl(27 28% 38% / 0.17) 0 0.045rem, transparent 0.075rem),
+    radial-gradient(ellipse at 36% 76%, hsl(42 45% 84% / 0.24) 0 0.06rem, transparent 0.09rem),
+    repeating-linear-gradient(18deg, transparent 0 0.42rem, hsl(29 24% 35% / 0.035) 0.44rem 0.47rem, transparent 0.49rem 0.92rem),
+    linear-gradient(135deg, hsl(34 54% 74%), hsl(31 47% 67%) 50%, hsl(36 52% 72%));
+  background-size: 1.15rem 1.05rem, 1.55rem 1.4rem, 1.3rem 1.2rem, 1.7rem 1.55rem, auto, auto;
   box-shadow:
     0 0 0 0.12rem hsl(36 28% 72%),
     0 0 0 0.22rem hsl(28 24% 34% / 0.72),
@@ -44,8 +46,11 @@
 .home-governance-board::before {
   inset: 0;
   background:
-    linear-gradient(102deg, transparent 0 18%, hsl(48 38% 84% / 0.07) 18.2% 18.6%, transparent 18.8% 100%),
-    linear-gradient(8deg, transparent 0 64%, hsl(22 24% 22% / 0.055) 64.2% 64.5%, transparent 64.7% 100%);
+    radial-gradient(ellipse at 22% 38%, hsl(27 26% 27% / 0.09) 0 0.08rem, transparent 0.11rem),
+    radial-gradient(ellipse at 61% 64%, hsl(45 42% 88% / 0.13) 0 0.09rem, transparent 0.12rem),
+    linear-gradient(102deg, transparent 0 18%, hsl(48 38% 84% / 0.08) 18.2% 18.6%, transparent 18.8% 100%),
+    linear-gradient(8deg, transparent 0 64%, hsl(22 24% 22% / 0.045) 64.2% 64.5%, transparent 64.7% 100%);
+  background-size: 2.2rem 1.8rem, 2.7rem 2.3rem, auto, auto;
   mix-blend-mode: multiply;
 }
 
