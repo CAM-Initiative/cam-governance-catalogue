@@ -105,7 +105,7 @@ export default function About() {
               <h2 id="vigil-method-heading">Every Incident moves through the same six-stage evidence-to-conclusion structure</h2>
             </div>
             <p className="vigil-about-record-intro">The Case File structure keeps distinct questions separate and then reconnects them at the conclusion. <strong>Incident</strong> establishes what happened and the evidence available. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity. <strong>Classification</strong> asks a different question: which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged, and what happened at each boundary.</p>
-            <p className="vigil-about-record-intro">Real-world harm assessment and alignment classification are deliberately independent. Harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Failure Class applies.</p>
+            <p className="vigil-about-record-intro">Real-world harm assessment and fidelity classification are deliberately independent. Harm assessment describes materialised consequence and derives severity; fidelity classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
             <p className="vigil-about-record-intro"><strong>Repair</strong> then surfaces the governing class invariants relevant to mappings that failed or remain unresolved. Invariant-held mappings stay visible in Classification as evidence of governance that held and do not create a Repair requirement. <strong>Conclusion</strong> integrates those separate findings, while <strong>References</strong> preserve the evidence, taxonomy and methodology chain supporting the analysis.</p>
             <div className="vigil-about-flow-scroll" role="region" aria-label="VIGIL Observatory six-stage Incident Case File model" tabIndex={0}>
               <div className="vigil-about-flow">
@@ -123,8 +123,8 @@ export default function About() {
               <p className="vigil-library-kicker">VIGIL Observatory Alignment Taxonomy</p>
               <h2 id="vigil-taxonomy-heading">Mappings classify individual boundaries. The Case File summarises the combined outcome.</h2>
             </div>
-            <p className="vigil-about-record-intro">The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Alignment is assessed against the governing invariant at each mapped boundary: it may fail, hold, or remain unresolved. Broad <strong>Failure Families</strong> and individual <strong>Failure Classes</strong> retain their established FF/FC identifiers and define the repeatable mechanisms, recognition criteria and exclusions used in that assessment.</p>
-            <p className="vigil-about-record-intro">Classification happens at the <strong>mapping level</strong>. One Incident may engage several Failure Classes, and each relationship is recorded separately as <strong>Failure occurred</strong>, <strong>Invariant held</strong> or <strong>Boundary unresolved</strong>. The legend below is the visual key used throughout VIGIL Case Files.</p>
+            <p className="vigil-about-record-intro">The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Alignment is assessed against the governing invariant at each mapped boundary: it may fail, hold, or remain unresolved. Broad <strong>Fidelity Families</strong> and individual <strong>Fidelity Classes</strong> retain their established FF/FC identifiers and define the repeatable mechanisms, recognition criteria and exclusions used in that assessment.</p>
+            <p className="vigil-about-record-intro">Classification happens at the <strong>mapping level</strong>. One Incident may engage several Fidelity Classes, and each relationship is recorded separately as <strong>Failure occurred</strong>, <strong>Invariant held</strong> or <strong>Boundary unresolved</strong>. The legend below is the visual key used throughout VIGIL Case Files.</p>
             <VigilAlignmentLegend detailed />
 
             <div className="vigil-about-outcome-explainer">
@@ -139,7 +139,7 @@ export default function About() {
                 <article>
                   <div className="vigil-about-outcome-visual is-exemplar" aria-hidden="true"><CircleCheckBig /></div>
                   <h3>Invariant held · exemplar</h3>
-                  <p>The tested governance boundary or boundaries held under pressure. The mappings remain attached to their Failure Classes as successful evidence and do not create a Repair requirement.</p>
+                  <p>The tested governance boundary or boundaries held under pressure. The mappings remain attached to their Fidelity Classes as successful evidence and do not create a Repair requirement.</p>
                 </article>
                 <article>
                   <div className="vigil-about-outcome-visual is-combination" aria-hidden="true"><Info /></div>
@@ -157,7 +157,7 @@ export default function About() {
               <p className="vigil-library-kicker">Publication model</p>
               <h2 id="vigil-publication-heading">Traceable findings, visible judgment and clear boundaries</h2>
             </div>
-            <p className="vigil-about-record-intro">Published by <strong>CAM Initiative</strong>, a VIGIL Observatory Case File is a published chain of reasoning, not a claim that inclusion in a database makes an allegation true. Readers should be able to move from the cited source material to the Incident assessment, alignment classification and, where a failure is evidenced, the governing invariant relevant to repair.</p>
+            <p className="vigil-about-record-intro">Published by <strong>CAM Initiative</strong>, a VIGIL Observatory Case File is a published chain of reasoning, not a claim that inclusion in a database makes an allegation true. Readers should be able to move from the cited source material to the Incident assessment, fidelity classification and, where a failure is evidenced, the governing invariant relevant to repair.</p>
             <div className="vigil-about-boundary-grid vigil-about-publication-grid">
               <article><h3>Trace the conclusion</h3><p>Sources remain identifiable and the basis for assessment stays attached to the Case File, so a reader can inspect what supports a conclusion rather than relying on the conclusion alone.</p></article>
               <article><h3>Keep evidence and judgment separate</h3><p>What happened, what the evidence supports, how VIGIL assesses the Incident and how it is classified are presented as distinct steps. Interpretation is not disguised as raw evidence.</p></article>
