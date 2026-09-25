@@ -44,7 +44,7 @@
 }
 
 .vigil-standards-search-row {
-  grid-template-columns: minmax(320px, 1fr) minmax(190px, 240px) minmax(190px, 240px);
+  grid-template-columns: minmax(320px, 1fr) minmax(220px, 300px) minmax(190px, 260px);
 }
 
 .vigil-standards-search-row .vigil-family-select {
@@ -58,6 +58,21 @@
   background: transparent;
   font-size: 0.72rem;
   letter-spacing: 0.045em;
+}
+
+.vigil-standards-result-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem 0.9rem;
+}
+
+.vigil-standards-result-summary > span + span {
+  padding-left: 0.9rem;
+  border-left: 1px solid hsl(var(--border) / 0.9);
+}
+
+.vigil-standards-result-summary button {
+  margin-left: auto;
 }
 
 /* Standards list: the Case Files table itself, with source-specific columns. */
