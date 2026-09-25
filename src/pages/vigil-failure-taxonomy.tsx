@@ -495,18 +495,21 @@ export default function VigilFailureTaxonomy() {
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-taxonomy-manual-page">
     <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
       <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="taxonomy-heading">
-        <header className="vigil-library-header vigil-taxonomy-header">
-          <div>
-            <p className="vigil-library-kicker">VIGIL Observatory</p>
-            <div className="vigil-taxonomy-header-title-row">
-              <h1 id="taxonomy-heading">VIGIL Observatory Alignment Taxonomy</h1>
-              <span className="cam-beta-chip">Beta</span>
-            </div>
+        <header className="vigil-taxonomy-header vigil-taxonomy-ticket">
+          <div className="vigil-taxonomy-ticket-title">
+            <p className="vigil-library-kicker">VIGIL Observatory · Alignment Taxonomy</p>
+            <h1 id="taxonomy-heading">VIGIL Observatory Alignment Taxonomy</h1>
             <p className="vigil-library-description">The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants.</p>
-            {state.status === "ready" ? <p className="vigil-taxonomy-header-meta">
-              Version {state.data.index.standard.version} · {state.data.index.families.length} families · {classCount} fidelity classes
-            </p> : null}
           </div>
+          {state.status === "ready" ? <aside className="vigil-taxonomy-ticket-meta" aria-label="Taxonomy context">
+            <p className="vigil-case-context-label">Taxonomy context</p>
+            <dl>
+              <div><dt>Version</dt><dd>{state.data.index.standard.version}</dd></div>
+              <div><dt>Status</dt><dd>Beta</dd></div>
+              <div><dt>Families</dt><dd>{state.data.index.families.length}</dd></div>
+              <div><dt>Fidelity classes</dt><dd>{classCount}</dd></div>
+            </dl>
+          </aside> : null}
         </header>
 
         {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Observatory Alignment Taxonomy…</div> : null}
