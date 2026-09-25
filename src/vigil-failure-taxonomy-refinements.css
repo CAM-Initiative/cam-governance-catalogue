@@ -591,3 +591,14 @@
     border-top: 1px solid hsl(var(--border) / 0.72);
   }
 }
+
+
+/* The taxonomy page itself is an open reference surface; the ticket and manual
+ * own their own hierarchy without a third enclosing card around both. */
+.vigil-taxonomy-shell {
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
