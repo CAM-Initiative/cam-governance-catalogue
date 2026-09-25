@@ -26,17 +26,15 @@ type DatasetState = {
 };
 
 const datasetRail = [
-  { href: "#overview", label: "Overview" },
-  { href: "#case-files", label: "01 Case Files" },
-  { href: "#harm-impact", label: "02 Harm Impact Matrix" },
-  { href: "#taxonomy", label: "03 Alignment Taxonomy" },
-  { href: "#standards", label: "04 AI Governance Standards" },
-  { href: "#caelestis", label: "05 CAELESTIS archive" },
+  { href: "#case-files", label: "Case Files" },
+  { href: "#harm-impact", label: "Harm Impact Matrix" },
+  { href: "#taxonomy", label: "Alignment Taxonomy" },
+  { href: "#standards", label: "AI Governance Standards" },
+  { href: "#caelestis", label: "CAELESTIS archive" },
 ];
 
 function DatasetSection({
   id,
-  number,
   eyebrow,
   title,
   description,
@@ -48,7 +46,6 @@ function DatasetSection({
   downloading,
 }: {
   id: string;
-  number: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -61,7 +58,7 @@ function DatasetSection({
 }) {
   return <section id={id} className="document-section vigil-about-section vigil-dataset-section" aria-labelledby={`${id}-heading`}>
     <div className="document-section-heading">
-      <p>{number} · {eyebrow}</p>
+      <p>{eyebrow}</p>
       <h2 id={`${id}-heading`}>{title}</h2>
     </div>
     <div className="document-reading">
@@ -170,11 +167,7 @@ export default function Datasets() {
 
   return <Shell>
     <main className="vigil-about-page vigil-datasets-page home-menu-page document-page">
-      <div className="document-layout document-layout--wide">
-        <DocumentRail title="Datasets" items={datasetRail} ariaLabel="CAM Initiative dataset sections" />
-
-        <article className="document-content vigil-datasets-document">
-          <header id="overview" className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-datasets-ticket">
+      <header id="overview" className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-datasets-ticket">
             <div className="vigil-taxonomy-ticket-title">
               <p className="vigil-library-kicker">CAM Initiative · Public datasets</p>
               <h1>Datasets</h1>
@@ -189,11 +182,14 @@ export default function Datasets() {
                 <div><dt>Maintainer</dt><dd>CAM Initiative</dd></div>
               </dl>
             </aside>
-          </header>
+      </header>
 
+      <div className="document-layout document-layout--wide document-layout-below-header">
+        <DocumentRail title="Datasets" items={datasetRail} ariaLabel="CAM Initiative dataset sections" />
+
+        <article className="document-content vigil-datasets-document">
           <DatasetSection
             id="case-files"
-            number="01"
             eyebrow="VIGIL Observatory"
             title="Case Files"
             description="The canonical machine-readable Incident index behind the public VIGIL Observatory Case Files, including current incident metadata and pointers to the individual Incident records maintained in VIGIL Observatory."
@@ -204,7 +200,6 @@ export default function Datasets() {
 
           <DatasetSection
             id="harm-impact"
-            number="02"
             eyebrow="VIGIL Observatory"
             title="Harm Impact Matrix"
             description="The machine-readable VIGIL-HIM 1.0.0 methodology used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm Impact Assessment page."
@@ -215,7 +210,6 @@ export default function Datasets() {
 
           <DatasetSection
             id="taxonomy"
-            number="03"
             eyebrow="VIGIL Observatory"
             title="VIGIL Observatory Alignment Taxonomy"
             description="Generated full-reference PDF for the canonical VIGIL Observatory Alignment Taxonomy, including the stable Fidelity Families and Fidelity Classes used to classify evidence against governing invariants, their recognition criteria, exclusions, relationships and linked classifications."
@@ -229,7 +223,6 @@ export default function Datasets() {
 
           <DatasetSection
             id="standards"
-            number="04"
             eyebrow="Knowledge Base"
             title="AI Governance Standards"
             description="The machine-readable version of the curated AI-governance standards library: the selected source register plus the clause-level records represented from those sources."
@@ -242,7 +235,6 @@ export default function Datasets() {
 
           <DatasetSection
             id="caelestis"
-            number="05"
             eyebrow="CAELESTIS Architecture Model"
             title="Constitutional AI Runtime Safety Framework"
             description="Archived public release of the CAELESTIS Architecture Model governance corpus. The current downloadable release is version 1.1.0, preserved through Zenodo with a persistent DOI."
