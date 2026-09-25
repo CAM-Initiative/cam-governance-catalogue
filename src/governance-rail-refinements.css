@@ -30,8 +30,7 @@
     0.75rem 1rem 1.8rem hsl(var(--foreground) / 0.13),
     inset 0 0 0 1px hsl(44 34% 84% / 0.32),
     inset 0 0 2.2rem hsl(28 24% 30% / 0.08);
-  transform: rotate(-0.42deg) translateX(-0.15rem);
-  transform-origin: 50% 50%;
+  margin-left: -2px;
 }
 
 .home-governance-board::before,
@@ -113,19 +112,20 @@
     0.08rem 0.1rem 0 hsl(28 16% 18% / 0.16),
     0.32rem 0.48rem 0.72rem hsl(27 22% 14% / 0.17),
     inset 0 0 1.2rem hsl(38 24% 70% / 0.09);
-  transform-origin: 50% 0.8rem;
-  transition: transform 170ms cubic-bezier(.22,1,.36,1), box-shadow 170ms ease;
+  top: 0;
+  left: 0;
+  transition: top 170ms cubic-bezier(.22,1,.36,1), box-shadow 170ms ease;
 }
 
-.home-governance-note-1 { transform: rotate(-1.3deg) translateY(0.18rem); }
-.home-governance-note-2 { transform: rotate(0.8deg) translateY(-0.18rem); }
-.home-governance-note-3 { transform: rotate(1.15deg) translateX(0.18rem); }
-.home-governance-note-4 { transform: rotate(-0.65deg) translate(-0.1rem, 0.2rem); }
+.home-governance-note-1 { top: 3px; }
+.home-governance-note-2 { top: -3px; }
+.home-governance-note-3 { left: 3px; }
+.home-governance-note-4 { top: 3px; left: -2px; }
 
 .home-governance-note:hover,
 .home-governance-note:focus-visible {
   z-index: 3;
-  transform: rotate(0deg) translateY(-0.2rem) scale(1.015);
+  top: -3px;
   box-shadow:
     0.1rem 0.14rem 0 hsl(28 16% 18% / 0.14),
     0.5rem 0.72rem 1rem hsl(27 22% 14% / 0.22),
@@ -251,7 +251,8 @@
 
   .home-governance-note:nth-child(n) {
     min-height: auto;
-    transform: rotate(0deg);
+    top: 0;
+    left: 0;
   }
 }
 
