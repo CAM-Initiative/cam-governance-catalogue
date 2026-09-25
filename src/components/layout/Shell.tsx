@@ -94,7 +94,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
             <div className="site-nav-group">
               <Link
-                href="/observatory/knowledge-base/"
+                href="/observatory/cases/"
                 className={isVigilActive ? "site-nav-root is-active" : "site-nav-root"}
               >
                 VIGIL Observatory
