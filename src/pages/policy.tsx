@@ -1,63 +1,11 @@
-import { useState } from "react";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
-import { Check, Copy, Download, ExternalLink } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 
 const trainingPolicyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf`;
 const sociSubmissionPdfHref = `${import.meta.env.BASE_URL}publications/CAM_SOCI_Targeted_Submission_FINAL.pdf`;
 const aiProsperityParliamentHref = "https://www.aph.gov.au/DocumentStore.ashx?id=40eca803-9218-4238-93e6-6798859ef784&subId=802190";
-
-const trainingSuggestedCitation =
-  "CAM Initiative. (2026). AI Training, Contribution & Copyright Scheme: Copyright permission, contribution valuation and sovereign value return (Policy Proposal 01/2026). Dr Michelle Vivian O’Rourke; AI Agent: ChatGPT, Sol 5.6";
-
-const sociSuggestedCitation =
-  "CAM Initiative. (2026). Targeted submission on proposed amendments to the Security of Critical Infrastructure Act 2018 (Consultation Submission 01/2026). Submitted to the Australian Department of Home Affairs. Dr Michelle Vivian O’Rourke; AI Agent: ChatGPT, Sol 5.6.";
-
-const aiProsperitySuggestedCitation =
-  "CAM Initiative. (2026). Artificial Intelligence and Australian Prosperity. Submission to the Joint Select Committee on Artificial Intelligence. Dr Michelle O’Rourke.";
-
-const trainingSubmissionRecipients = [
-  {
-    organisation: "Australian Government Office of AI",
-    email: "artificial.intelligence@industry.gov.au",
-  },
-  {
-    organisation: "Attorney-General’s Department — Copyright and Artificial Intelligence Reference Group",
-    email: "cairg@ag.gov.au",
-  },
-  {
-    organisation: "Good Ancestors",
-    email: "contact@goodancestors.org.au",
-    note: "Adapted variation supplied for policy consideration.",
-  },
-];
-
-function CitationCopyButton({ citation, label }: { citation: string; label: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const copyCitation = async () => {
-    try {
-      await navigator.clipboard.writeText(citation);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  };
-
-  return (
-    <button
-      aria-label={`Copy ${label} citation`}
-      className="cam-action cam-action-secondary cam-action-compact"
-      onClick={copyCitation}
-      type="button"
-    >
-      {copied ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : <Copy className="h-3.5 w-3.5" aria-hidden="true" />}
-      {copied ? "Copied" : "Copy"}
-    </button>
-  );
-}
 
 const primaryButtonClass =
   "cam-action cam-action-primary";
@@ -142,48 +90,6 @@ export default function Policy() {
                   </a>
                 </div>
               </div>
-
-              <aside className="policy-publication-meta" aria-label="Parliamentary submission details">
-                <div className="policy-index-intro">
-                  <p className="policy-kicker">Submission details</p>
-                </div>
-
-                <dl className="policy-detail-grid">
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Submitted</dt>
-                    <dd className="policy-detail-value">13 September 2026</dd>
-                  </div>
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Status</dt>
-                    <dd className="policy-detail-value">Public · published by the Parliament of Australia</dd>
-                  </div>
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Inquiry</dt>
-                    <dd className="policy-detail-value">Joint Select Committee on Artificial Intelligence</dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label">Themes</dt>
-                    <dd className="policy-theme-list">
-                      {[
-                        "Sovereign capability",
-                        "Strategic capital",
-                        "Australian ownership",
-                        "Automation & labour",
-                        "Copyright & creator value",
-                      ].map((theme) => (
-                        <span className="policy-theme-tag" key={theme}>{theme}</span>
-                      ))}
-                    </dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label-row">
-                      <span className="policy-detail-label">Suggested citation</span>
-                      <CitationCopyButton citation={aiProsperitySuggestedCitation} label="AI prosperity parliamentary submission" />
-                    </dt>
-                    <dd className="policy-citation">{aiProsperitySuggestedCitation}</dd>
-                  </div>
-                </dl>
-              </aside>
             </motion.article>
 
             <motion.article
@@ -250,55 +156,6 @@ export default function Policy() {
                   </p>
                 </div>
               </div>
-
-              <aside className="policy-publication-meta" aria-label="Consultation submission details">
-                <div className="policy-index-intro">
-                  <p className="policy-kicker">Submission details</p>
-                </div>
-
-                <dl className="policy-detail-grid">
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Publication</dt>
-                    <dd className="policy-detail-value">Consultation Submission 01/2026 · 23 pages</dd>
-                  </div>
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Submitted</dt>
-                    <dd className="policy-detail-value">29 July 2026</dd>
-                  </div>
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Status</dt>
-                    <dd className="policy-detail-value">Public · lodged through the consultation portal</dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label">Submitted to</dt>
-                    <dd className="mt-2 text-sm leading-relaxed text-foreground">
-                      <span className="font-medium">Australian Department of Home Affairs — Critical Infrastructure Reforms</span>
-                      <span className="block break-all text-muted-foreground">CI.REFORMS@homeaffairs.gov.au</span>
-                    </dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label">Themes</dt>
-                    <dd className="policy-theme-list">
-                      {[
-                        "Critical infrastructure",
-                        "Automated systems",
-                        "Supplier assurance",
-                        "Evidence integrity",
-                        "Sovereign continuity",
-                      ].map((theme) => (
-                        <span className="policy-theme-tag" key={theme}>{theme}</span>
-                      ))}
-                    </dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label-row">
-                      <span className="policy-detail-label">Suggested citation</span>
-                      <CitationCopyButton citation={sociSuggestedCitation} label="consultation submission" />
-                    </dt>
-                    <dd className="policy-citation">{sociSuggestedCitation}</dd>
-                  </div>
-                </dl>
-              </aside>
             </motion.article>
 
             <motion.article
@@ -350,62 +207,6 @@ export default function Policy() {
                   </a>
                 </div>
               </div>
-
-              <aside className="policy-publication-meta" aria-label="Publication details">
-                <div className="policy-index-intro">
-                  <p className="policy-kicker">Publication details</p>
-                </div>
-
-                <dl className="policy-detail-grid">
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Publication</dt>
-                    <dd className="policy-detail-value">Policy Proposal 01/2026 · 13 pages</dd>
-                  </div>
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Published</dt>
-                    <dd className="policy-detail-value">20 July 2026</dd>
-                  </div>
-                  <div className="policy-detail">
-                    <dt className="policy-detail-label">Status</dt>
-                    <dd className="policy-detail-value">Public · submitted for policy consideration</dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label">Submitted to</dt>
-                    <dd className="mt-3">
-                      <ul className="space-y-3 text-sm leading-relaxed text-foreground">
-                        {trainingSubmissionRecipients.map((recipient) => (
-                          <li className="border-l-2 border-cam-gold/30 pl-3" key={recipient.email}>
-                            <span className="font-medium">{recipient.organisation}</span>
-                            <span className="block break-all text-muted-foreground">{recipient.email}</span>
-                            {recipient.note ? <span className="mt-1 block text-muted-foreground">{recipient.note}</span> : null}
-                          </li>
-                        ))}
-                      </ul>
-                    </dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label">Themes</dt>
-                    <dd className="policy-theme-list">
-                      {[
-                        "Copyright",
-                        "AI training",
-                        "Market access",
-                        "Contribution valuation",
-                        "Living corpora",
-                      ].map((theme) => (
-                        <span className="policy-theme-tag" key={theme}>{theme}</span>
-                      ))}
-                    </dd>
-                  </div>
-                  <div className="policy-detail policy-detail--wide">
-                    <dt className="policy-detail-label-row">
-                      <span className="policy-detail-label">Suggested citation</span>
-                      <CitationCopyButton citation={trainingSuggestedCitation} label="policy proposal" />
-                    </dt>
-                    <dd className="policy-citation">{trainingSuggestedCitation}</dd>
-                  </div>
-                </dl>
-              </aside>
             </motion.article>
             </section>
           </div>
