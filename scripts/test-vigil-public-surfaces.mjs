@@ -332,7 +332,7 @@ test("About explains alignment exemplars without duplicating the Case File legen
   assert.match(about, /It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine/);
   assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Alignment Taxonomy/);
   assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
-  assert.match(about, /href="\\/observatory\\/severity-methodology\\/"[\\s\\S]*Harm Impact Assessment/);
+  assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm Impact Assessment/);
   assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
@@ -773,7 +773,9 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
   assert.ok(vigilIntro >= 0 && vigilBoundary > vigilIntro && vigilActions > vigilBoundary);
 
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
-  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\\s\\S]*Any CAM or CAELESTIS applicability is assessed separately[\\s\\S]*Copyright &amp; Licence[\\s\\S]*Privacy[\\s\\S]*VIGIL Observatory repository/);
+  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine/);
+  assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
+  assert.match(about, /Copyright &amp; Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   assert.match(homeMenuCss, /\.about-method-list \{/);
   assert.match(homeMenuCss, /\.about-outcome-list \{/);
 });
