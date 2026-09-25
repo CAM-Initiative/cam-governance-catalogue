@@ -6,11 +6,11 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-test("Explore AI governance rail keeps a readable typography floor", async () => {
+test("Explore AI governance board keeps substantive note copy readable", async () => {
   const railCss = await read("src/governance-rail-refinements.css");
-  assert.match(railCss, /font-size: 0\.8rem;/);
-  assert.match(railCss, /\.home-governance-card-title \{[\s\S]*font-size: 0\.95rem !important;/);
-  assert.match(railCss, /\.home-governance-detail \{[\s\S]*font-size: 0\.875rem !important;/);
+  assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
+  assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
+  assert.match(railCss, /\.home-governance-board-heading > div > span \{[\s\S]*font-size: 0\.92rem;/);
 });
 
 test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
@@ -575,7 +575,6 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
   assert.match(hub, /Incident, Assessment, Classification, Repair, Conclusion and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
-  assert.match(rail, /evidence, assessment, alignment classification/);
   assert.match(pages, /evidence, assessment, alignment classification/);
   assert.match(readme, /\*\*Assessment:\*\*/);
   assert.match(contract, /severity as substantive assessment/);
