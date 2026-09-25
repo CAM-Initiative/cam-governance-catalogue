@@ -67,16 +67,15 @@ const secondaryButtonClass =
 export default function Policy() {
   return (
     <Shell>
-      <main className="container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
+      <main className="home-menu-page container mx-auto max-w-6xl px-6 py-12 md:px-10 md:py-16">
         <motion.header
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12 max-w-3xl"
+          className="home-menu-hero home-menu-hero--text mb-12 max-w-3xl"
           initial={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.7 }}
         >
           <p className="mb-3 font-mono text-sm uppercase tracking-[0.22em] text-cam-gold">CAM Initiative Public Policy</p>
           <h1 className="mb-3 font-serif text-4xl text-foreground md:text-5xl">Policy Papers &amp; Submissions</h1>
-          <hr className="gold-rule mb-4 w-24" />
           <p className="max-w-3xl text-base leading-relaxed text-muted-foreground md:text-lg">
             Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
           </p>
