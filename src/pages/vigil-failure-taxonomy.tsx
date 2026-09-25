@@ -497,8 +497,8 @@ export default function VigilFailureTaxonomy() {
       <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="taxonomy-heading">
         <header className="vigil-taxonomy-header vigil-taxonomy-ticket">
           <div className="vigil-taxonomy-ticket-title">
-            <p className="vigil-library-kicker">VIGIL Observatory · Alignment Taxonomy</p>
-            <h1 id="taxonomy-heading">VIGIL Observatory Alignment Taxonomy</h1>
+            <p className="vigil-library-kicker">VIGIL Observatory</p>
+            <h1 id="taxonomy-heading">Alignment Taxonomy</h1>
             <p className="vigil-library-description">The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants.</p>
           </div>
           {state.status === "ready" ? <aside className="vigil-taxonomy-ticket-meta" aria-label="Taxonomy context">
