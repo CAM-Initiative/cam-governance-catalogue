@@ -177,7 +177,7 @@ const staticRoutes = [
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
   ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
-  ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory Standards Sources", "External governance standards and source material used by VIGIL Observatory."],
+  ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
   ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],
   ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
 ];
