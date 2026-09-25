@@ -15,10 +15,10 @@ const sections = [
 
 export default function Privacy() {
   return <Shell>
-    <main className="public-reference-page">
+    <main className="public-reference-page home-menu-page">
       <div className="public-reference-layout container mx-auto px-4 py-8 sm:px-6 md:px-10 md:py-11">
         <article className="public-reference-document">
-          <header className="public-reference-hero">
+          <header className="public-reference-hero home-menu-hero home-menu-hero--text">
             <p className="public-reference-kicker">CAM Initiative</p>
             <h1>Privacy Policy</h1>
             <p>Plain-language privacy information for the CAM Initiative public website and email correspondence. It describes current site behaviour and does not claim legal certification or regulatory compliance.</p>
