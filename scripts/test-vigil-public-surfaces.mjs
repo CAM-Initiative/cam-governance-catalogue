@@ -295,10 +295,10 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
-test("About keeps dedicated six-stage explanatory copy and aligned stage-card contract", async () => {
-  const [about, aboutCss, sections] = await Promise.all([
+test("About keeps dedicated six-stage explanatory copy in collapsible disclosure panels", async () => {
+  const [about, homeMenuCss, sections] = await Promise.all([
     read("src/pages/about.tsx"),
-    read("src/about-page-polish.css"),
+    read("src/home-menu-pages.css"),
     read("src/lib/vigilCaseSections.ts"),
   ]);
   assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
@@ -309,12 +309,14 @@ test("About keeps dedicated six-stage explanatory copy and aligned stage-card co
   assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
   assert.match(about, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
+  assert.match(about, /<details className="vigil-about-stage-disclosure"/);
+  assert.match(about, /<summary>/);
+  assert.match(about, /vigil-about-stage-toggle/);
   assert.doesNotMatch(about, /VIGIL_INCIDENT_CASE_SECTIONS\.map/);
   assert.doesNotMatch(sections, /description:/);
-  assert.match(aboutCss, /grid-template-rows: auto minmax\(3rem, auto\) 1fr/);
-  assert.match(aboutCss, /min-height: 3rem/);
-  assert.match(aboutCss, /padding: 0\.85rem 0\.95rem 0\.95rem !important/);
-  assert.match(aboutCss, /border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure \{/);
+  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure\[open\]/);
+  assert.match(homeMenuCss, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) !important/);
 });
 
 test("About explains alignment exemplars without duplicating the Case File legend", async () => {
@@ -345,8 +347,8 @@ test("Home-menu pages share the open editorial hero grammar", async () => {
     read("src/main.tsx"),
   ]);
   assert.match(about, /home-menu-hero home-menu-hero--founder/);
-  assert.match(about, /founder-photo\.jpg/);
-  assert.match(about, /home-menu-contact-chip[\s\S]*Contact CAM/);
+  assert.match(about, /import\.meta\.env\.BASE_URL.*founder-photo\.jpg/);
+  assert.match(about, /home-menu-contact-chip[\s\S]*>Contact<\/a>/);
   assert.match(policy, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
   assert.match(licensing, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
   assert.match(privacy, /home-menu-page[\s\S]*home-menu-hero home-menu-hero--text/);
@@ -741,10 +743,10 @@ test("Case Files landing page stays deliberately terse", async () => {
 
 
 test("About explains the VIGIL evidence-to-conclusion method and classification outcomes", async () => {
-  const [about, css, polish] = await Promise.all([
+  const [about, css, homeMenuCss] = await Promise.all([
     read("src/pages/about.tsx"),
     read("src/vigil-ux-v5.css"),
-    read("src/about-page-polish.css"),
+    read("src/home-menu-pages.css"),
   ]);
   const methodStart = about.indexOf("Every Incident moves through the same six-stage evidence-to-conclusion structure");
   const harmSeparation = about.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
@@ -773,7 +775,7 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
   assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright & Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
   assert.match(css, /About final polish: one calm document/);
-  assert.match(polish, /\.vigil-about-document \.vigil-about-flow > article \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.match(homeMenuCss, /\.vigil-about-page \.vigil-about-stage-disclosure \{[\s\S]*border: 1px solid hsl\(var\(--border\) \/ 0\.86\)/);
   assert.match(polish, /\.vigil-about-page \.vigil-about-case-outcome-grid/);
 });
 
@@ -820,7 +822,7 @@ test("About section rules are attached only to section boundaries", async () => 
   assert.match(css, /\.vigil-about-document \.vigil-about-section-heading \{[\s\S]*border: 0 !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-boundary-grid > article,[\s\S]*border: 0 !important/);
   assert.match(css, /\.vigil-about-document \.vigil-about-citation-card \{[\s\S]*border: 0 !important/);
-  assert.match(css, /\.vigil-about-document \.vigil-about-flow > article \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
+  assert.doesNotMatch(css, /\.vigil-about-document \.vigil-about-flow > details \{[\s\S]*border: 1px solid hsl\(var\(--border\)\) !important/);
 });
 
 
