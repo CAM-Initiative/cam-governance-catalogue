@@ -291,7 +291,7 @@
   color: hsl(29 22% 20% / 0.7);
 }
 
-/* The corkboard and pinned paper remain materially identical in dark mode. */
+/* The corkboard, frame and pinned paper remain materially identical in dark mode. */
 
 @media (max-width: 720px) {
   .governance-explorer-home-panel .home-governance-board {
