@@ -1564,6 +1564,14 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
   margin-top: 1.5rem;
 }
 
+/* Policy and Harm use the same broad page canvas as the VIGIL catalogue pages,
+ * rather than inheriting the narrower 1280px long-form document frame. */
+.policy-page,
+.vigil-severity-methodology-page {
+  width: min(100%, 1500px);
+}
+
+
 .vigil-datasets-page > .vigil-datasets-ticket {
   margin-bottom: 0;
 }
@@ -1642,6 +1650,15 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
   margin-bottom: 0;
 }
 
+.vigil-severity-methodology-document {
+  margin-top: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
 .vigil-severity-methodology-document .vigil-about-section {
   margin: 0 !important;
   padding: 2.15rem 0 2.35rem !important;
@@ -1652,7 +1669,7 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 .vigil-severity-methodology-document .vigil-about-section + .vigil-about-section {
-  border-top: 0 !important;
+  border-top: 1px solid hsl(var(--border)) !important;
 }
 
 .vigil-severity-methodology-document .document-section-heading {
