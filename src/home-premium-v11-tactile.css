@@ -2055,8 +2055,8 @@ html:not([data-theme="dark"]) .diagnostic-gear-outer .diagnostic-gear-spokes i::
 
 /* Foreground outer spokes ------------------------------------------------
  * The large wheel now gets the same sibling-surface treatment as the inner
- * wheel. This escapes the outer gear's stacking context, which was preventing
- * its ribs from ever reading as a true foreground machined layer.
+ * wheel. The annular mask keeps that raised surface out of the inner mechanism
+ * while allowing the visible outer ribs to sit on top of the large gear face.
  */
 .diagnostic-gear-outer .diagnostic-gear-spokes {
   opacity: 0;
