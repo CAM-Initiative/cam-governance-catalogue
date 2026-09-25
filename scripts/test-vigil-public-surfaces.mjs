@@ -839,11 +839,11 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.doesNotMatch(shell, /const homeLinks = \[[\s\S]*?label: "Policy"/);
   assert.match(shell, /href="\/observatory\/cases\/"[\s\S]*VIGIL Observatory/);
 
-  assert.match(severity, /document-hero vigil-harm-hero/);
-  assert.match(severity, /vigil-harm-hero-meta/);
-  assert.doesNotMatch(severity, /vigil-taxonomy-ticket vigil-harm-ticket/);
-  assert.ok(severity.indexOf('document-hero vigil-harm-hero') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
+  assert.match(severity, /vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket/);
+  assert.match(severity, /Methodology context/);
+  assert.ok(severity.indexOf('vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
   assert.doesNotMatch(severity, /href: "#overview", label: "Overview"/);
+  assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*grid-template-columns: minmax\(11rem, 0\.34fr\) minmax\(0, 1fr\)/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
   assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
@@ -855,6 +855,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*z-index: 2\.75/);
   assert.match(gearCss, /diagnostic-light-edge-outer[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
   assert.match(gearCss, /diagnostic-light-edge-inner[\s\S]*hsl\(0 0% 100% \/ 0\.98\) 60\.5% 64%/);
+  assert.match(gearCss, /\.diagnostic-instrument-web \{[\s\S]*z-index: 0;/);
   assert.match(gearCss, /diagnostic-gear-outer \.diagnostic-gear-tooth::before[\s\S]*hsl\(38 5% 47% \/ 0\.96\)[\s\S]*hsl\(43 7% 68% \/ 0\.99\)/);
 
   const hubCaseFiles = hub.indexOf('id="cases"');
