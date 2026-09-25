@@ -109,23 +109,80 @@
   color: hsl(36 24% 14%);
 }
 
-.home-governance-board .home-governance-section-label {
-  position: relative;
-  display: inline-block;
+.home-governance-letterboard-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: clamp(0.08rem, 0.22vw, 0.18rem);
   margin: 0;
-  padding: 0.54rem 0.82rem 0.5rem 0.88rem;
-  clip-path: polygon(1% 8%, 98% 2%, 100% 87%, 94% 100%, 3% 96%, 0 18%);
-  background:
-    linear-gradient(178deg, hsl(44 36% 96%), hsl(40 28% 89%));
-  filter: drop-shadow(0.12rem 0.18rem 0.12rem hsl(27 22% 14% / 0.18));
-  transform: rotate(-0.55deg);
+  padding: 0.15rem 0.15rem 0.42rem;
+  line-height: 1;
+}
+
+.home-governance-letter {
+  --letter-index: 0;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 0.72em;
+  height: 1.18em;
+  color: hsl(43 18% 96%);
   font-family: var(--app-font-mono);
-  font-size: 0.76rem;
-  font-weight: 820;
-  line-height: 1.25;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: hsl(30 26% 18%);
+  font-size: clamp(1.85rem, 3.1vw, 3.05rem);
+  font-weight: 850;
+  line-height: 1;
+  letter-spacing: -0.08em;
+  text-shadow:
+    0.035em 0.04em 0 hsl(28 8% 19%),
+    0.07em 0.08em 0 hsl(28 9% 13%),
+    0.11em 0.13em 0 hsl(28 10% 10% / 0.88),
+    0 0.12em 0.2em hsl(26 18% 10% / 0.28);
+  filter: drop-shadow(0 0.08em 0.08em hsl(28 20% 12% / 0.26));
+  transform:
+    translateY(calc((var(--letter-index) % 4) * 0.018em))
+    rotate(calc((var(--letter-index) % 5 - 2) * 0.42deg));
+  transform-origin: 50% 100%;
+}
+
+.home-governance-letter::before,
+.home-governance-letter::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  bottom: -0.28em;
+  width: 0.11em;
+  height: 0.34em;
+  border-radius: 0 0 0.06em 0.06em;
+  background:
+    linear-gradient(90deg,
+      hsl(28 9% 10%),
+      hsl(0 0% 35%) 38%,
+      hsl(0 0% 12%) 72%);
+  box-shadow:
+    0.025em 0.035em 0 hsl(25 18% 12% / 0.34),
+    0 0.08em 0.12em hsl(25 20% 10% / 0.24);
+}
+
+.home-governance-letter::before {
+  left: 24%;
+}
+
+.home-governance-letter::after {
+  right: 18%;
+}
+
+.home-governance-letter:nth-child(3n) {
+  color: hsl(40 16% 93%);
+  text-shadow:
+    0.04em 0.045em 0 hsl(28 8% 18%),
+    0.08em 0.09em 0 hsl(28 9% 12%),
+    0.12em 0.135em 0 hsl(28 10% 9% / 0.9),
+    0 0.12em 0.2em hsl(26 18% 10% / 0.3);
+}
+
+.home-governance-letter-space {
+  flex: 0 0 clamp(0.85rem, 1.5vw, 1.45rem);
+  height: 1px;
 }
 
 .home-governance-board-grid {
