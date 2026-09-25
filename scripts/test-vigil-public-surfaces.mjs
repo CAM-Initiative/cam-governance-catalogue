@@ -332,7 +332,7 @@ test("About explains alignment exemplars without duplicating the Case File legen
   assert.match(about, /It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine/);
   assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Alignment Taxonomy/);
   assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
-  assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm &amp; Severity Methodology/);
+  assert.match(about, /href="\\/observatory\\/severity-methodology\\/"[\\s\\S]*Harm Impact Assessment/);
   assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
@@ -568,7 +568,7 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(printable, /number: "01", label: "Incident"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /Incident, Assessment, Classification, Repair and References/);
+  assert.match(hub, /Incident, Assessment, Classification, Repair, Conclusion and References/);
   assert.match(home, /Evidence → Assessment → Runtime Governance/);
   assert.match(rail, /evidence, assessment, alignment classification/);
   assert.match(pages, /evidence, assessment, alignment classification/);
@@ -629,9 +629,9 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
 });
 
 
-test("Datasets prioritise the public Harm & Severity Matrix over the internal reference registry", async () => {
+test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
   const datasets = await read("src/pages/datasets.tsx");
-  assert.match(datasets, /title="Harm & Severity Matrix"/);
+  assert.match(datasets, /title="Harm Impact Matrix"/);
   assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.0\.json/);
   assert.match(datasets, /11 harm dimensions/);
   assert.match(datasets, /Open JSON matrix/);
@@ -762,10 +762,10 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
   assert.match(about, /Mixed alignment outcome[\s\S]*Browse the taxonomy/);
 
   const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
-  const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
   const vigilStart = about.indexOf('id="vigil-observatory-heading"');
-  const citationStart = about.indexOf('id="vigil-citation-heading"');
-  assert.ok(aboutStart >= 0 && caelestisStart > aboutStart && vigilStart > caelestisStart && citationStart > vigilStart);
+  const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
+  const connectStart = about.indexOf('id="connect-heading"');
+  assert.ok(aboutStart >= 0 && vigilStart > aboutStart && caelestisStart > vigilStart && connectStart > caelestisStart);
 
   const vigilIntro = about.indexOf("VIGIL Observatory is the CAM Initiative");
   const vigilBoundary = about.indexOf("VIGIL uses its own Incident model");
@@ -773,7 +773,7 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
   assert.ok(vigilIntro >= 0 && vigilBoundary > vigilIntro && vigilActions > vigilBoundary);
 
   assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
-  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\s\S]*Any CAM or CAELESTIS applicability is assessed separately[\s\S]*Copyright &amp; Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine[\\s\\S]*Any CAM or CAELESTIS applicability is assessed separately[\\s\\S]*Copyright &amp; Licence[\\s\\S]*Privacy[\\s\\S]*VIGIL Observatory repository/);
   assert.match(homeMenuCss, /\.about-method-list \{/);
   assert.match(homeMenuCss, /\.about-outcome-list \{/);
 });
