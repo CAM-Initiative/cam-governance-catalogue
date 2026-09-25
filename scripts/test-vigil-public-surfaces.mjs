@@ -54,14 +54,15 @@ test("Explore AI Governance identifies Case Files as the VIGIL Observatory AI in
   assert.match(rail, /Canonical VIGIL Observatory Incident investigations/);
 });
 
-test("VIGIL Observatory Knowledge Base exposes Case Files, Harm & Severity Methodology and Datasets", async () => {
+test("VIGIL Observatory Knowledge Base exposes document navigation for its core references", async () => {
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
-  assert.match(hub, /title="VIGIL Observatory Case Files"/);
-  assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*title="Harm & Severity Methodology"/);
+  assert.match(hub, /DocumentRail title="Knowledge Base"/);
+  assert.match(hub, /href="\/observatory\/cases\/"/);
+  assert.match(hub, /href="\/observatory\/knowledge-base\/standards-sources\/"/);
+  assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*Open Harm Impact Assessment/);
   assert.match(hub, /VIGIL-HIM 1\.0\.0/);
-  assert.match(hub, /href="\/datasets\/"[\s\S]*title="Datasets"/);
-  assert.match(hub, /actionLabel="Open datasets"/);
-  assert.match(hub, /downloadable datasets/);
+  assert.match(hub, /href="\/datasets\/"/);
+  assert.doesNotMatch(hub, /CollectionCard/);
 });
 
 test("homepage presents the VIGIL Observatory Alignment Taxonomy as a first-class classification surface", async () => {
@@ -502,7 +503,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
-  assert.match(shell, /Harm & Severity Methodology/);
+  assert.match(shell, /Harm Impact Assessment/);
   assert.match(about, /Publication model/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
