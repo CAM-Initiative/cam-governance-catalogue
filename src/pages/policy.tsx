@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { motion } from "framer-motion";
 import { Check, Copy, Download, ExternalLink } from "lucide-react";
@@ -64,6 +65,12 @@ const primaryButtonClass =
 const secondaryButtonClass =
   "cam-action cam-action-secondary";
 
+const policyRail = [
+  { href: "#parliamentary-submission-ai-prosperity-2026", label: "Artificial Intelligence and Australian Prosperity", meta: "PS 01/2026" },
+  { href: "#consultation-submission-01-2026", label: "SOCI Act Consultation Submission", meta: "CS 01/2026" },
+  { href: "#policy-proposal-01-2026", label: "AI Training, Contribution & Copyright Scheme", meta: "PP 01/2026" },
+];
+
 export default function Policy() {
   return (
     <Shell>
@@ -81,51 +88,13 @@ export default function Policy() {
           </p>
         </motion.header>
 
-        <div id="policy-library" className="policy-layout">
-          <aside className="policy-index" aria-label="Policy library navigation">
-            <div className="policy-index-intro">
-              <p className="policy-index-kicker">Policy library</p>
-              <p className="policy-index-copy">
-                Browse CAM Initiative policy proposals and public consultation submissions by year and subject.
-              </p>
-            </div>
-
-            <nav aria-label="Policy papers and submissions" className="policy-index-nav">
-              <a
-                className="policy-index-link policy-index-link--all"
-                href="#policy-library"
-              >
-                All publications
-              </a>
-
-              <div>
-                <p className="policy-index-year">2026</p>
-                <div className="policy-index-items">
-                  <a
-                    className="policy-index-link"
-                    href="#parliamentary-submission-ai-prosperity-2026"
-                  >
-                    <span className="policy-index-code">PS 01/2026</span>
-                    <span className="policy-index-title">Artificial Intelligence and Australian Prosperity</span>
-                  </a>
-                  <a
-                    className="policy-index-link"
-                    href="#consultation-submission-01-2026"
-                  >
-                    <span className="policy-index-code">CS 01/2026</span>
-                    <span className="policy-index-title">SOCI Act Consultation Submission</span>
-                  </a>
-                  <a
-                    className="policy-index-link"
-                    href="#policy-proposal-01-2026"
-                  >
-                    <span className="policy-index-code">PP 01/2026</span>
-                    <span className="policy-index-title">AI Training, Contribution &amp; Copyright Scheme</span>
-                  </a>
-                </div>
-              </div>
-            </nav>
-          </aside>
+        <div id="policy-library" className="document-layout policy-layout">
+          <DocumentRail
+            title="Policy library"
+            items={policyRail}
+            className="policy-index"
+            ariaLabel="Policy papers and submissions"
+          />
 
           <section className="policy-publications" aria-label="Policy publications">
             <motion.article
