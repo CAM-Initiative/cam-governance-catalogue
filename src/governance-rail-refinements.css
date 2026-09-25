@@ -16,8 +16,17 @@
   display: block;
   min-width: 0;
   padding: clamp(1.4rem, 2.8vw, 2rem);
-  border: 0.5rem solid hsl(31 31% 43%);
-  border-radius: 0.22rem;
+  border: 0.62rem solid hsl(29 34% 31%);
+  border-image:
+    repeating-linear-gradient(
+      92deg,
+      hsl(27 34% 22%) 0 7%,
+      hsl(31 43% 34%) 7% 15%,
+      hsl(35 39% 43%) 15% 21%,
+      hsl(28 36% 27%) 21% 31%,
+      hsl(33 42% 37%) 31% 43%
+    ) 12 stretch;
+  border-radius: 0.16rem;
   background:
     radial-gradient(ellipse at 16% 21%, hsl(25 36% 24% / 0.34) 0 0.038rem, transparent 0.072rem),
     radial-gradient(ellipse at 74% 29%, hsl(27 33% 31% / 0.28) 0 0.052rem, transparent 0.092rem),
@@ -111,13 +120,6 @@
   color: hsl(30 26% 18%);
 }
 
-.home-governance-board-rule {
-  height: 1px;
-  flex: 1 1 auto;
-  margin-bottom: 0.36rem;
-  background: hsl(26 24% 20% / 0.34);
-}
-
 .home-governance-board-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -152,14 +154,10 @@
     filter 170ms ease;
 }
 
-.home-governance-note::before,
-.home-governance-note::after {
+.home-governance-note::before {
   content: "";
   position: absolute;
   pointer-events: none;
-}
-
-.home-governance-note::before {
   z-index: 0;
   inset: 0;
   background:
@@ -169,21 +167,6 @@
   background-size: 1.9rem 1.45rem, 1.55rem 1.75rem, auto;
   mix-blend-mode: multiply;
   opacity: 0.85;
-}
-
-.home-governance-note::after {
-  z-index: 0;
-  width: 4.8rem;
-  height: 4.8rem;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle,
-      transparent 0 39%,
-      hsl(27 39% 32% / 0.15) 40% 45%,
-      hsl(30 44% 39% / 0.08) 46% 49%,
-      transparent 50% 100%);
-  mix-blend-mode: multiply;
-  opacity: 0;
 }
 
 .home-governance-note > span {
@@ -203,12 +186,6 @@
   clip-path: polygon(1% 0.8%, 24% 1.5%, 43% 0.2%, 68% 1.1%, 99% 0.5%, 100% 29%, 99.1% 54%, 100% 78%, 98.4% 99%, 76% 100%, 53% 98.7%, 31% 100%, 0.7% 98.8%, 0 68%, 0.9% 44%, 0 18%);
 }
 
-.home-governance-note-2::after {
-  right: 0.55rem;
-  bottom: -0.7rem;
-  opacity: 0.7;
-}
-
 .home-governance-note-3 {
   --note-tilt: 0.35deg;
   left: 4px;
@@ -220,14 +197,6 @@
   top: 5px;
   left: -3px;
   clip-path: polygon(1% 0.5%, 22% 1.2%, 45% 0.2%, 66% 1.2%, 86% 0.2%, 99% 1%, 100% 26%, 99.2% 51%, 100% 82%, 98.8% 99%, 79% 98.7%, 58% 100%, 38% 98.8%, 18% 100%, 0.5% 98.5%, 0 71%, 0.8% 48%, 0 23%);
-}
-
-.home-governance-note-4::after {
-  right: -1.15rem;
-  top: 1.05rem;
-  width: 5.8rem;
-  height: 5.8rem;
-  opacity: 0.34;
 }
 
 .home-governance-note:hover,
@@ -322,30 +291,7 @@
   color: hsl(29 22% 20% / 0.7);
 }
 
-[data-theme="dark"] .governance-explorer-home-panel .home-governance-board {
-  border-color: hsl(28 18% 16%);
-  background:
-    radial-gradient(circle at 14% 20%, hsl(36 34% 38% / 0.22) 0 0.12rem, transparent 0.14rem),
-    radial-gradient(circle at 74% 68%, hsl(20 28% 14% / 0.2) 0 0.11rem, transparent 0.13rem),
-    linear-gradient(135deg, hsl(29 28% 34%), hsl(25 25% 27%) 52%, hsl(30 26% 31%));
-}
-
-[data-theme="dark"] .home-governance-board .home-governance-section-label,
-[data-theme="dark"] .home-governance-board-heading,
-[data-theme="dark"] .home-governance-board-caption {
-  color: hsl(39 26% 86%);
-}
-
-[data-theme="dark"] .home-governance-board-rule {
-  background: hsl(42 26% 84% / 0.28);
-}
-
-[data-theme="dark"] .home-governance-note {
-  border-color: hsl(38 18% 53% / 0.42);
-  background:
-    linear-gradient(180deg, hsl(41 20% 91%), hsl(40 17% 84%));
-  color: hsl(27 18% 14%);
-}
+/* The corkboard and pinned paper remain materially identical in dark mode. */
 
 @media (max-width: 720px) {
   .governance-explorer-home-panel .home-governance-board {
