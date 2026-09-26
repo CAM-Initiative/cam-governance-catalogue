@@ -92,6 +92,7 @@ export default function VigilSeverityMethodology() {
         description="VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from alignment classification, source prestige, workflow priority and hypothetical worst-case harm."
         contextLabel="Methodology context"
         mode="reference"
+        visual="harm"
         metadata={[
           { label: "Method", value: "VIGIL-HIM", mono: true },
           { label: "Version", value: "1.0.0", mono: true },

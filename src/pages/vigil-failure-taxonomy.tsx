@@ -503,6 +503,7 @@ export default function VigilFailureTaxonomy() {
           description="The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants."
           contextLabel="Taxonomy context"
           mode="reference"
+          visual="taxonomy"
           metadata={[
             { label: "Version", value: state.status === "ready" ? state.data.index.standard.version : "—" },
             { label: "Status", value: "Beta" },

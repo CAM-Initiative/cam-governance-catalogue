@@ -251,6 +251,7 @@ export default function VigilStandardSource() {
         description={sourcePublicSummary(source)}
         contextLabel="Source context"
         mode="record"
+        visual="standards"
         metadata={[
           { label: "Source", value: canonicalIdentifierLabel(source), mono: true },
           { label: "Jurisdiction", value: source.jurisdiction },

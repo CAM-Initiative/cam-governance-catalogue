@@ -31,6 +31,7 @@ export default function Policy() {
           description="Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition."
           contextLabel="Library context"
           mode="collection"
+          visual="policy"
           metadata={[
             { label: "Collection", value: "Policy & submissions" },
             { label: "Published", value: policyRail.length },
