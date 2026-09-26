@@ -985,3 +985,6 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
     font-size: clamp(2rem, 10vw, 2.8rem) !important;
   }
 }
+
+
+/* Preview refresh: Case File hierarchy, taxonomy balance, and table geometry validated together. */
