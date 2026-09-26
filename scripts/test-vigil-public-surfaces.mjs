@@ -128,10 +128,13 @@ test("Alignment Taxonomy remains available if the linked Case File projection ca
   assert.match(taxonomy, /caseFileExamplesAvailable=\{state\.data\.caseFileExamplesAvailable\}/);
 });
 
-test("Case Files and Alignment Taxonomy share the canonical Observatory masthead", async () => {
-  const [cases, taxonomy, masthead, mastheadCss, main] = await Promise.all([
+test("Observatory index pages share the canonical illustrated masthead", async () => {
+  const [cases, taxonomy, harm, policy, standards, masthead, mastheadCss, main] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/policy.tsx"),
+    read("src/pages/vigil-standards-baseline.tsx"),
     read("src/components/vigil/VigilObservatoryMasthead.tsx"),
     read("src/vigil-observatory-masthead.css"),
     read("src/main.tsx"),
@@ -150,6 +153,10 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.match(masthead, /artworkSrc/);
   assert.match(masthead, /vigil-observatory-masthead-artwork/);
   assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomy\.png"/);
+  assert.match(cases, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-case-files\.png"/);
+  assert.match(harm, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-harm-impact\.png"/);
+  assert.match(policy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-policy\.png"/);
+  assert.match(standards, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-standards\.png"/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
@@ -161,6 +168,10 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.match(mastheadCss, /padding:[\s\S]*clamp\(20rem, 31vw, 28rem\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead-description[\s\S]*font-family: var\(--app-font-sans\)/);
   assert.match(taxonomy, /description="Governance boundaries for AI systems, organised into Fidelity Families and Fidelity Classes\."/);
+  assert.match(cases, /description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and re-adjudication\."/);
+  assert.match(harm, /description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology\."/);
+  assert.match(policy, /description="Public policy proposals and consultation submissions translating CAM governance architecture into institutional, legal and administrative design\."/);
+  assert.match(standards, /description="A curated library of AI governance laws, standards, frameworks and technical guidance used to support VIGIL analysis\."/);
   assert.doesNotMatch(masthead, /Archive|LibraryBig|Landmark|ShieldCheck|<Visual/);
   assert.match(mastheadCss, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(mastheadCss, /html\[data-theme="dark"\] \.vigil-observatory-masthead/);
