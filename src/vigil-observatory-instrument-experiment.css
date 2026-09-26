@@ -552,6 +552,10 @@
 /* The Observatory menu pages share one full-width dossier banner. The blush
    surface is intentionally restrained; square edges keep the banner feeling
    like a page header rather than another floating card. */
+.policy-page {
+  --vigil-workbench-rule: hsl(var(--border) / 0.76);
+  --vigil-workbench-rule-strong: hsl(var(--foreground) / 0.2);
+}
 .vigil-case-library-page .vigil-case-library-ticket,
 .vigil-taxonomy-manual-page .vigil-taxonomy-ticket,
 .vigil-standards-page .vigil-standards-ticket,
