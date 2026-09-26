@@ -208,6 +208,7 @@ export default function VigilCases() {
               description="A public AI incident database organised through a consistent evidence-to-conclusion method so incidents can be inspected, compared and re-adjudicated as the corpus evolves."
               contextLabel="Collection context"
               mode="collection"
+              visual="cases"
               ariaLive="polite"
               metadata={[
                 { label: "Status", value: "Beta" },

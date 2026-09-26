@@ -791,6 +791,7 @@ export default function VigilCaseFile() {
       title={title}
       contextLabel="Incident context"
       mode="record"
+      visual="cases"
       className={`vigil-case-file-masthead${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}
       metadata={[
         { label: "Incident", value: incident ? compactId(incident.id) : compactId(state.sourceId), mono: true },

@@ -177,6 +177,7 @@ export default function Datasets() {
         description={<>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright &amp; Licence</a> for the applicable terms.</>}
         contextLabel="Collection context"
         mode="collection"
+        visual="datasets"
         metadata={[
           { label: "Status", value: "Beta" },
           { label: "Public resources", value: "5" },

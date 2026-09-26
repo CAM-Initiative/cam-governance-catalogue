@@ -170,9 +170,11 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.doesNotMatch(cases, /vigil-case-library-ticket/);
   assert.doesNotMatch(taxonomy, /<header className="vigil-taxonomy-header vigil-taxonomy-ticket"/);
   assert.match(masthead, /data-mode=\{mode\}/);
-  assert.match(mastheadCss, /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 29%\)/);
-  assert.match(mastheadCss, /border-left: 1px dashed/);
-  assert.match(mastheadCss, /font-size: 0\.875rem !important;/);
+  assert.match(masthead, /data-visual=\{visual\}/);
+  assert.match(mastheadCss, /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 27%\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-art/);
+  assert.match(mastheadCss, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(mastheadCss, /html\[data-theme="dark"\] \.vigil-observatory-masthead/);
   assert.match(main, /vigil-observatory-masthead\.css/);
 });
 

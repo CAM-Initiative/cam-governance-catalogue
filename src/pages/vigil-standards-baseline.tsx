@@ -158,6 +158,7 @@ export default function VigilStandardsBaseline() {
         description="A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Search the library, open a source, then move through its overview, governance relevance, represented clauses and evidence review using the same reference-manual pattern as the Alignment Taxonomy."
         contextLabel="Library context"
         mode="collection"
+        visual="standards"
         metadata={[
           { label: "Status", value: "Beta" },
           { label: "Release status", value: "0.1.0", mono: true },

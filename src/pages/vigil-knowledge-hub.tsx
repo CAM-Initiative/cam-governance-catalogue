@@ -80,6 +80,7 @@ export default function VigilKnowledgeHub() {
           description="Reference material supporting the Observatory: AI governance standards, Case Files, the VIGIL Observatory Alignment Taxonomy, the Harm Impact Assessment methodology, public datasets and policy material."
           contextLabel="Knowledge base context"
           mode="reference"
+          visual="knowledge"
           ariaLive="polite"
           metadata={[
             { label: "Case Files", value: state.caseFiles === undefined ? "—" : state.caseFiles },
