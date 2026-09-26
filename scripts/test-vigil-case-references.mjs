@@ -76,17 +76,17 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
-test("Case File Section 02 orders factual basis, taxonomy assessment, harm and external assessments", async () => {
+test("Case File Section 02 orders factual basis, taxonomy assessment, harm and external assessments without duplicate headings", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
-  const governanceIndex = assessmentRenderer.indexOf("GOVERNANCE ASSESSMENT");
-  const factualIndex = assessmentRenderer.indexOf("Factual basis");
+  const factualIndex = assessmentRenderer.indexOf("vigil-diagnosis-factual-basis");
   const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
-  const harmIndex = assessmentRenderer.indexOf("VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT");
-  const externalIndex = assessmentRenderer.indexOf("EXTERNAL ASSESSMENTS");
+  const harmIndex = assessmentRenderer.indexOf("Real-world harm assessment");
+  const externalIndex = assessmentRenderer.indexOf("External assessments");
 
-  assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && taxonomyIndex > factualIndex && harmIndex > taxonomyIndex && externalIndex > harmIndex);
-  assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
+  assert.ok(factualIndex >= 0 && taxonomyIndex > factualIndex && harmIndex > taxonomyIndex && externalIndex > harmIndex);
+  assert.doesNotMatch(assessmentRenderer, />GOVERNANCE ASSESSMENT</);
+  assert.doesNotMatch(assessmentRenderer, />Factual basis</);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-assessment-summary|\{governanceConclusion\}/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
@@ -96,8 +96,8 @@ test("Governance significance is integrated under Conclusion while taxonomy asse
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
-  assert.match(assessmentRenderer, /GOVERNANCE ASSESSMENT/);
-  assert.match(assessmentRenderer, /Factual basis/);
+  assert.doesNotMatch(assessmentRenderer, />GOVERNANCE ASSESSMENT</);
+  assert.doesNotMatch(assessmentRenderer, />Factual basis</);
   assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
@@ -175,8 +175,8 @@ test("Incident Case File retains evidence context and moves governance interpret
   assert.ok(observationRenderer, "Observation renderer must remain present");
   assert.match(source, /vigil_assessment\.factual_basis/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
-  assert.match(source, /GOVERNANCE ASSESSMENT/);
-  assert.match(conclusionRenderer, /VIGIL Observatory conclusion/);
+  assert.match(source, /vigil-diagnosis-factual-basis/);
+  assert.doesNotMatch(conclusionRenderer, /VIGIL Observatory conclusion/);
   assert.match(conclusionRenderer, /\{governanceConclusion\}/);
 });
 

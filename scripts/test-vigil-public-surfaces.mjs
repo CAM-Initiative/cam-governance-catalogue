@@ -234,8 +234,8 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /colSpan=\{3\} scope="rowgroup"/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
   assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(1\) \{ width: 8%; \}/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 62%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(1\) \{ width: 16%; \}/);
+  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 56%; \}/);
   assert.doesNotMatch(classification, /vigil-repair-role-key/);
   assert.match(classification, /VigilAlignmentLegend/);
   assert.match(css, /\.vigil-alignment-legend/);
@@ -853,8 +853,8 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /home-governance-letter/);
   assert.match(rail, /home-governance-letter-space/);
   assert.doesNotMatch(rail, /home-governance-board-rule|home-governance-section-label/);
-  assert.match(css, /home-governance-board[\s\S]*border: 0\.34rem solid/);
-  assert.match(css, /border-image:[\s\S]*linear-gradient\([\s\S]*hsl\(38 33% 39%\)/);
+  assert.match(css, /home-governance-board[\s\S]*border: 0;[\s\S]*border-radius: 1\.15rem/);
+  assert.match(css, /home-governance-board::after[\s\S]*border: 0;/);
   assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
   assert.match(css, /home-governance-letter[\s\S]*font-family: ui-rounded,[\s\S]*Arial Rounded MT Bold[\s\S]*font-size: clamp\(1\.15rem, 1\.8vw, 1\.7rem\)[\s\S]*text-shadow:/);
   assert.match(css, /home-governance-letter::before\s*\{[\s\S]*display: none;/);

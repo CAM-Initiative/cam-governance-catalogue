@@ -539,8 +539,7 @@ export default function VigilCaseFile() {
 
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
-      {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-labelledby="what-happened-heading">
-        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Incident summary</p><h3 id="what-happened-heading">What happened</h3></div>
+      {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-label="Incident summary">
         <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
         {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
           {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
@@ -573,7 +572,7 @@ export default function VigilCaseFile() {
         </div>}
       </section>}
       {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
-        <div className="vigil-case-subheading"><p className="vigil-library-kicker">Affected systems</p><h3 id="affected-systems-heading">Platforms, products and runtimes named in the evidence</h3></div>
+        <div className="vigil-case-subheading"><h3 className="vigil-case-editorial-subheading" id="affected-systems-heading">Affected systems — Platforms, products and runtimes named in the evidence</h3></div>
         <div className="vigil-affected-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
           <span>{compactId(system.recordId)}</span>
           <dl>
@@ -606,14 +605,8 @@ export default function VigilCaseFile() {
     if (stageId === "diagnose") return <>
     {(incident || governanceConclusion) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
-        <section className="vigil-diagnosis-definition">
-          <p className="vigil-library-kicker">GOVERNANCE ASSESSMENT</p>
-          <div className="vigil-diagnosis-assessment-details">
-            <section>
-              <h4 className="vigil-substantive-label">Factual basis</h4>
-              <p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
-            </section>
-          </div>
+        <section className="vigil-diagnosis-definition" aria-label="Factual basis">
+          <p className="vigil-diagnosis-factual-basis">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
             <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
             <dl className="vigil-evidence-review-meta">
@@ -633,7 +626,7 @@ export default function VigilCaseFile() {
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
-            <p className="vigil-library-kicker" id="severity-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT</p>
+            <h3 className="vigil-case-editorial-subheading" id="severity-assessment-heading">Real-world harm assessment</h3>
           </div>
           <HarmImpactMatrix
             assessment={harmImpactAssessment}
@@ -644,7 +637,7 @@ export default function VigilCaseFile() {
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
-          <div className="vigil-case-subheading"><p className="vigil-library-kicker" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</p></div>
+          <div className="vigil-case-subheading"><h3 className="vigil-case-editorial-subheading" id="assessment-external-assessments-heading">External assessments</h3></div>
           <div className="vigil-external-assessment-table-wrap">
             <table className="vigil-external-assessment-table">
               <thead>
@@ -677,13 +670,10 @@ export default function VigilCaseFile() {
 
     if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
       <section className="vigil-diagnosis-definition vigil-conclusion-content">
-        {governanceConclusion && <>
-          <p className="vigil-library-kicker">VIGIL Observatory conclusion</p>
-          <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>
-        </>}
+        {governanceConclusion && <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>}
         <div className="vigil-conclusion-governance-significance">
           <div className="vigil-case-subheading">
-            <h3>Governance significance</h3>
+            <h3 className="vigil-case-editorial-subheading">Governance significance</h3>
           </div>
           <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
         </div>
@@ -691,9 +681,7 @@ export default function VigilCaseFile() {
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
 
     if (stageId === "references") return referenceCount > 0 ? <div className="vigil-case-citations vigil-case-bibliography">
-      {externalSources.length > 0 && <section className="vigil-reference-subsection" aria-labelledby="evidence-sources-heading">
-        <h3 id="evidence-sources-heading">Evidence sources</h3>
-        <p>Sources supporting what happened and any materialised harm.</p>
+      {externalSources.length > 0 && <section className="vigil-reference-subsection" aria-label="Evidence sources">
         <ol>
         {externalSources.map((source, index) => <li id={`vigil-evidence-reference-${index + 1}`} key={`${source.title}-${source.url}-${index}`}>
           <span>[{index + 1}]</span>
