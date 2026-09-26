@@ -1,14 +1,4 @@
 import type { ReactNode } from "react";
-import {
-  Archive,
-  BookOpen,
-  Database,
-  FileSearch,
-  Landmark,
-  LibraryBig,
-  Scale,
-  ShieldCheck,
-} from "lucide-react";
 
 export type VigilObservatoryMastheadMode = "collection" | "reference" | "record";
 export type VigilObservatoryMastheadVisual = "cases" | "taxonomy" | "harm" | "policy" | "standards" | "knowledge" | "datasets";
@@ -50,21 +40,17 @@ export function VigilObservatoryMasthead({
 }: VigilObservatoryMastheadProps) {
   const classes = ["vigil-observatory-masthead", className].filter(Boolean).join(" ");
   const showContext = Boolean(contextLabel && metadata.length);
-  const Visual = {
-    cases: Archive,
-    taxonomy: LibraryBig,
-    harm: Scale,
-    policy: Landmark,
-    standards: ShieldCheck,
-    knowledge: BookOpen,
-    datasets: Database,
-  }[visual] ?? FileSearch;
 
   return <header id={id} className={classes} data-mode={mode} data-visual={visual} aria-labelledby={titleId}>
-    <div className="vigil-observatory-masthead-art" aria-hidden="true">
-      <span className="vigil-observatory-masthead-orbit" />
-      <Visual />
+    <div className="vigil-observatory-masthead-instrument" aria-hidden="true">
+      <span className="vigil-observatory-masthead-instrument-arc" />
+      <span className="vigil-observatory-masthead-instrument-axis vigil-observatory-masthead-instrument-axis-x" />
+      <span className="vigil-observatory-masthead-instrument-axis vigil-observatory-masthead-instrument-axis-y" />
+      <span className="vigil-observatory-masthead-instrument-index" />
+      <span className="vigil-observatory-masthead-instrument-node" />
     </div>
+    <span className="vigil-observatory-masthead-calibration-accent" aria-hidden="true" />
+
     <div className="vigil-observatory-masthead-title">
       <p className="vigil-library-kicker vigil-observatory-masthead-kicker">{kicker}</p>
       <h1 id={titleId}>{title}</h1>
