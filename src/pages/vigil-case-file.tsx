@@ -793,6 +793,7 @@ export default function VigilCaseFile() {
       contextLabel="Incident context"
       mode="record"
       visual="cases"
+      artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-incidents.png"
       className={`vigil-case-file-masthead${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}
       metadata={[
         { label: "Incident", value: incident ? compactId(incident.id) : compactId(state.sourceId), mono: true },

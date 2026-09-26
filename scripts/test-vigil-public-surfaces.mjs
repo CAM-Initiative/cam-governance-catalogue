@@ -821,7 +821,7 @@ test("Case File ticket keeps severity and classification in Incident context and
     read("src/pages/vigil-case-file.tsx"),
     read("src/vigil-case-file-dossier.css"),
   ]);
-  assert.match(caseFile, /<VigilObservatoryMasthead[\s\S]*contextLabel="Incident context"[\s\S]*label: "Jurisdiction"[\s\S]*label: "Environment"[\s\S]*label: "Severity"[\s\S]*label: "Classification"/);
+  assert.match(caseFile, /<VigilObservatoryMasthead[\s\S]*contextLabel="Incident context"[\s\S]*artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-incidents\.png"[\s\S]*label: "Jurisdiction"[\s\S]*label: "Environment"[\s\S]*label: "Severity"[\s\S]*label: "Classification"/);
   assert.doesNotMatch(caseFile, /vigil-case-ticket-footer|vigil-case-ticket-footer-meta|vigil-case-ticket-report-button/);
   assert.match(caseFile, /vigil-case-report-tab[\s\S]*Full report \/ PDF/);
   assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
