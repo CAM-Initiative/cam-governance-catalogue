@@ -1,4 +1,5 @@
 import type { UnknownRecord } from "@/lib/vigilRegistry";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
 const BANDS = ["S1", "S2", "S3", "S4", "S5"] as const;
 type Band = typeof BANDS[number];
@@ -342,7 +343,11 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
                 <span>{dimensionLabel(row.dimension_id)}</span>
                 {isControlling ? <strong className="vigil-harm-controlling-badge">Controls overall severity</strong> : null}
               </th>
-              <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
+              <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}>
+                {row.severity
+                  ? <span className="vigil-harm-result-chip"><VigilStatusChip value={row.severity} /><span>{BAND_LABELS[row.severity] ?? row.severity}</span></span>
+                  : <strong>{resultLabel(row)}</strong>}
+              </td>
               {/* evidence_refs are canonical row-local provenance; citation numbers are resolved against the final deduplicated Evidence sources list. */}
               <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}{row.evidence_refs?.length ? <span className="vigil-harm-inline-references"> {row.evidence_refs.flatMap((ref) => evidenceReferenceNumbers?.[ref] ? [<a key={ref} href={`#vigil-evidence-reference-${evidenceReferenceNumbers[ref]}`} aria-label={`Evidence reference ${evidenceReferenceNumbers[ref]}`}>[{evidenceReferenceNumbers[ref]}]</a>] : [])}</span> : null}</p> : null}</td>
             </tr>;

@@ -8,6 +8,7 @@ import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessmen
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -798,7 +799,7 @@ export default function VigilCaseFile() {
         { label: "Occurred", value: occurred },
         { label: "Jurisdiction", value: jurisdiction },
         { label: "Environment", value: environmentLabel },
-        { label: "Severity", value: severityDisplay(incident?.severity) },
+        { label: "Severity", value: <VigilStatusChip value={incident?.severity} /> },
         { label: "Classification", value: classificationDisplay },
         ...(hasMixedExecution ? [{ label: "Execution", value: "Mixed" }] : []),
       ]}

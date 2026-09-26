@@ -45,5 +45,6 @@ import "./home-premium-v11-tactile.css";
 import "./home-menu-pages.css";
 import "./vigil-observatory-instrument-experiment.css";
 import "./vigil-observatory-masthead.css";
+import "./vigil-severity-chip.css";
 
 createRoot(document.getElementById("root")!).render(<App />);

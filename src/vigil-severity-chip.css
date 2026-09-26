@@ -1,0 +1,39 @@
+/* Canonical VIGIL severity chip.
+   S1-S5 intentionally share one flat CAM yellow treatment: severity meaning is
+   carried by the code and methodology, not by a traffic-light colour ramp. */
+.vigil-status-chip[data-severity] {
+  border: 1px solid hsl(36 72% 43% / 0.66) !important;
+  border-radius: 999px !important;
+  background: hsl(40 92% 61%) !important;
+  color: hsl(28 28% 13%) !important;
+  box-shadow: none !important;
+  font-weight: 760 !important;
+}
+
+html[data-theme="dark"] .vigil-status-chip[data-severity] {
+  border-color: hsl(36 72% 43% / 0.72) !important;
+  background: hsl(40 92% 61%) !important;
+  color: hsl(28 28% 13%) !important;
+}
+
+.vigil-harm-result-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.48rem;
+}
+
+.vigil-harm-result-chip > span:last-child {
+  font-family: var(--app-font-sans);
+  font-size: 0.86rem;
+  color: hsl(var(--foreground) / 0.78);
+}
+
+@media print {
+  .vigil-status-chip[data-severity] {
+    border-color: hsl(36 72% 43% / 0.66) !important;
+    background: hsl(40 92% 61%) !important;
+    color: hsl(28 28% 13%) !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

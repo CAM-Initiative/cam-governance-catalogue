@@ -5,6 +5,7 @@ import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vig
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
   normalizeRecords,
@@ -191,7 +192,7 @@ function exemplarExecutionStatus(record?: VigilIndexRecord) {
   ])?.trim().toLowerCase().replace(/[_\s]+/g, "-");
 }
 
-function Field({ label, value }: { label: string; value?: string }) {
+function Field({ label, value }: { label: string; value?: ReactNode }) {
   if (!value) return null;
   return <div className="report-field"><dt className="report-label">{label}</dt><dd className="report-value">{value}</dd></div>;
 }
@@ -290,7 +291,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           <Field label="Incident" value={incident?.id ?? state.sourceId} />
           <Field label="Classification" value={classificationDisplay} />
           {hasMixedExecution && <Field label="Execution" value="Mixed" />}
-          <Field label="Severity" value={incident ? severityDisplay(incident.severity) : undefined} />
+          <Field label="Severity" value={incident ? <VigilStatusChip value={incident.severity} /> : undefined} />
           <Field label="Updated" value={updated} />
           <Field label="Generated" value={state.generatedAt.replace("T", " ").replace(/\.\d{3}Z$/, " UTC")} />
         </dl>

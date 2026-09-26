@@ -432,13 +432,15 @@ test("Case File harm assessment moves all non-assessed dimensions to assessment 
 });
 
 test("Case File severity presentation uses ascending S1-to-S5 semantics", async () => {
-  const [cases, caseFile, report, about, severity, chip] = await Promise.all([
+  const [cases, caseFile, report, about, severity, chip, chipCss, harm] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("src/pages/about.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
     read("src/components/vigil/VigilStatusChip.tsx"),
+    read("src/vigil-severity-chip.css"),
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
   ]);
   assert.match(cases, /S1: 1[\s\S]*S5: 5[\s\S]*SU: 6/);
   assert.match(caseFile, /S1: "Minimal \/ no downstream harm"/);
@@ -449,7 +451,13 @@ test("Case File severity presentation uses ascending S1-to-S5 semantics", async 
   assert.match(severity, /highest defensible materialised-harm threshold/);
   assert.match(severity, /MIT AI Incident Tracker harm-severity scale/);
   assert.match(severity, /CSET AI Harm Framework/);
-  assert.match(chip, /\\bs5\\b\|critical\|catastrophic/);
+  assert.match(chip, /\\^S\[1-5\]\$\/\.test\(code\)/);
+  assert.match(chip, /data-severity=\{severity\}/);
+  assert.match(chipCss, /\.vigil-status-chip\[data-severity\][\s\S]*background: hsl\(40 92% 61%\)[\s\S]*color: hsl\(28 28% 13%\)/);
+  assert.doesNotMatch(chipCss, /data-severity="S1"|data-severity="S2"|data-severity="S3"|data-severity="S4"|data-severity="S5"/);
+  assert.match(caseFile, /label: "Severity", value: <VigilStatusChip value=\{incident\?\.severity\} \/>/);
+  assert.match(report, /<Field label="Severity" value=\{incident \? <VigilStatusChip value=\{incident\.severity\} \/> : undefined\} \/>/);
+  assert.match(harm, /vigil-harm-result-chip[\s\S]*<VigilStatusChip value=\{row\.severity\}/);
 });
 
 test("historical identifiers do not become live retired-record links", async () => {
