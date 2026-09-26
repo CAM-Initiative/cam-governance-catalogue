@@ -130,15 +130,17 @@ test("homepage refinement preserves the six-stage instrument and live Observator
 });
 
 test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async () => {
-  const [taxonomy, aboutVigil, shell, hub, datasets] = await Promise.all([
+  const [taxonomy, masthead, aboutVigil, shell, hub, datasets] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/components/vigil/VigilObservatoryMasthead.tsx"),
     read("src/pages/about.tsx"),
     read("src/components/layout/Shell.tsx"),
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/datasets.tsx"),
   ]);
-  const publicSources = [taxonomy, aboutVigil, shell, hub, datasets].join("\n");
-  assert.match(taxonomy, /className="vigil-library-kicker">VIGIL Observatory<\/p>[\s\S]*<h1 id="taxonomy-heading">Alignment Taxonomy<\/h1>/);
+  const publicSources = [taxonomy, masthead, aboutVigil, shell, hub, datasets].join("\n");
+  assert.match(taxonomy, /<VigilObservatoryMasthead[\s\S]*kicker="VIGIL Observatory"[\s\S]*title="Alignment Taxonomy"/);
+  assert.match(masthead, /vigil-library-kicker vigil-observatory-masthead-kicker/);
   assert.match(shell, /label: "VIGIL Observatory Alignment Taxonomy"/);
   assert.doesNotMatch(publicSources, /VIGIL AI Governance Failure Taxonomy/);
 });
@@ -155,14 +157,23 @@ test("Alignment Taxonomy remains available if the linked Case File projection ca
   assert.match(taxonomy, /caseFileExamplesAvailable=\{state\.data\.caseFileExamplesAvailable\}/);
 });
 
-test("alignment taxonomy hero uses the shared VIGIL Observatory kicker treatment", async () => {
-  const [taxonomy, shellCss] = await Promise.all([
+test("Case Files and Alignment Taxonomy share the canonical Observatory masthead", async () => {
+  const [cases, taxonomy, masthead, mastheadCss, main] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-failure-taxonomy.tsx"),
-    read("src/vigil-page-shell.css"),
+    read("src/components/vigil/VigilObservatoryMasthead.tsx"),
+    read("src/vigil-observatory-masthead.css"),
+    read("src/main.tsx"),
   ]);
-  assert.match(taxonomy, /className="vigil-library-kicker">VIGIL Observatory/);
-  assert.match(shellCss, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-header \.vigil-library-kicker,/);
-  assert.match(shellCss, /font-size: 0\.875rem !important;/);
+  assert.match(cases, /<VigilObservatoryMasthead[\s\S]*title="Case Files"/);
+  assert.match(taxonomy, /<VigilObservatoryMasthead[\s\S]*title="Alignment Taxonomy"/);
+  assert.doesNotMatch(cases, /vigil-case-library-ticket/);
+  assert.doesNotMatch(taxonomy, /<header className="vigil-taxonomy-header vigil-taxonomy-ticket"/);
+  assert.match(masthead, /data-mode=\{mode\}/);
+  assert.match(mastheadCss, /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 29%\)/);
+  assert.match(mastheadCss, /border-left: 1px dashed/);
+  assert.match(mastheadCss, /font-size: 0\.875rem !important;/);
+  assert.match(main, /vigil-observatory-masthead\.css/);
 });
 
 test("public VIGIL Observatory routes expose Incidents, taxonomy, standards and policy only", async () => {

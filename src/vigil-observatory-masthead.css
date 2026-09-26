@@ -1,0 +1,158 @@
+/*
+ * Canonical VIGIL Observatory masthead.
+ *
+ * The Alignment Taxonomy banner on the instrument-design branch is the visual
+ * reference: warm square-edged orientation strip, editorial title block and a
+ * compact dashed-off context readout. Page content remains open beneath it.
+ */
+
+.vigil-observatory-masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 29%);
+  gap: clamp(1.35rem, 2.5vw, 2.4rem);
+  align-items: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  padding: clamp(1.35rem, 2.2vw, 1.7rem) clamp(1.35rem, 2.4vw, 1.75rem);
+  border: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 0;
+  background: hsl(350 42% 96% / 0.78);
+  box-shadow:
+    0 0.34rem 0.95rem hsl(var(--foreground) / 0.028),
+    inset 0 1px 0 hsl(0 0% 100% / 0.55);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead {
+  background: hsl(345 16% 15% / 0.92);
+  box-shadow:
+    0 0.4rem 1.1rem hsl(0 0% 0% / 0.16),
+    inset 0 1px 0 hsl(var(--foreground) / 0.035);
+}
+
+.vigil-observatory-masthead-title {
+  min-width: 0;
+}
+
+.vigil-observatory-masthead .vigil-observatory-masthead-kicker {
+  margin: 0 !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.875rem !important;
+  font-weight: 650 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
+.vigil-observatory-masthead h1 {
+  margin: 0.48rem 0 0;
+  max-width: 62rem;
+  font-family: var(--app-font-serif);
+  font-size: clamp(2.65rem, 4.6vw, 4.35rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  color: hsl(var(--foreground));
+}
+
+.vigil-observatory-masthead-description {
+  max-width: 66rem;
+  margin: 0.72rem 0 0;
+  font-size: 1rem !important;
+  line-height: 1.62 !important;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-observatory-masthead-context {
+  min-width: 0;
+  padding-left: clamp(1.1rem, 2vw, 1.45rem);
+  border-left: 1px dashed hsl(var(--border) / 0.9);
+}
+
+.vigil-observatory-masthead-context-label {
+  margin: 0 0 0.9rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 760;
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-observatory-masthead-context dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.35rem;
+  margin: 0;
+}
+
+.vigil-observatory-masthead-context dl > div {
+  min-width: 0;
+}
+
+.vigil-observatory-masthead-context dt {
+  margin: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-observatory-masthead-context dd {
+  margin: 0.18rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: hsl(var(--foreground));
+}
+
+.vigil-observatory-masthead-context dd.is-mono {
+  font-family: var(--app-font-mono);
+  font-size: 0.9rem;
+}
+
+.vigil-observatory-masthead[data-mode="record"] {
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 34%);
+}
+
+@media (max-width: 900px) {
+  .vigil-observatory-masthead,
+  .vigil-observatory-masthead[data-mode="record"] {
+    grid-template-columns: 1fr;
+  }
+
+  .vigil-observatory-masthead-context {
+    padding: 1rem 0 0;
+    border-top: 1px dashed hsl(var(--border) / 0.9);
+    border-left: 0;
+  }
+
+  .vigil-observatory-masthead-context-label {
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .vigil-observatory-masthead {
+    padding: 1.15rem 1rem 1.2rem;
+  }
+
+  .vigil-observatory-masthead h1 {
+    font-size: clamp(2.2rem, 12vw, 3.15rem);
+  }
+
+  .vigil-observatory-masthead-context dl {
+    gap: 0.85rem 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .vigil-observatory-masthead-context dl {
+    grid-template-columns: 1fr;
+  }
+}

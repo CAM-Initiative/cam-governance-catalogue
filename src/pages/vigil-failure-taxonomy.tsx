@@ -3,6 +3,7 @@ import { ChevronsLeft, ChevronsRight, ExternalLink, Search, X } from "lucide-rea
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import {
   loadFailureTaxonomy,
   type FailureTaxonomyCaseFileExample,
@@ -495,22 +496,20 @@ export default function VigilFailureTaxonomy() {
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-taxonomy-manual-page">
     <div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
       <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="taxonomy-heading">
-        <header className="vigil-taxonomy-header vigil-taxonomy-ticket">
-          <div className="vigil-taxonomy-ticket-title">
-            <p className="vigil-library-kicker">VIGIL Observatory</p>
-            <h1 id="taxonomy-heading">Alignment Taxonomy</h1>
-            <p className="vigil-library-description">The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants.</p>
-          </div>
-          {state.status === "ready" ? <aside className="vigil-taxonomy-ticket-meta" aria-label="Taxonomy context">
-            <p className="vigil-case-context-label">Taxonomy context</p>
-            <dl>
-              <div><dt>Version</dt><dd>{state.data.index.standard.version}</dd></div>
-              <div><dt>Status</dt><dd>Beta</dd></div>
-              <div><dt>Families</dt><dd>{state.data.index.families.length}</dd></div>
-              <div><dt>Fidelity classes</dt><dd>{classCount}</dd></div>
-            </dl>
-          </aside> : null}
-        </header>
+        <VigilObservatoryMasthead
+          titleId="taxonomy-heading"
+          kicker="VIGIL Observatory"
+          title="Alignment Taxonomy"
+          description="The maintained VIGIL Observatory Alignment Taxonomy provides governance boundaries against which Case File evidence is classified. In VIGIL, alignment is evidence-relative to a governing invariant: a mapping can record failure, invariant held, or an unresolved boundary. Established Fidelity Families and Fidelity Classes retain their stable FF/FC identifiers, recognition criteria, exclusions and governing invariants."
+          contextLabel="Taxonomy context"
+          mode="reference"
+          metadata={[
+            { label: "Version", value: state.status === "ready" ? state.data.index.standard.version : "—" },
+            { label: "Status", value: "Beta" },
+            { label: "Families", value: state.status === "ready" ? state.data.index.families.length : "—" },
+            { label: "Fidelity classes", value: state.status === "ready" ? classCount : "—" },
+          ]}
+        />
 
         {state.status === "loading" ? <div className="vigil-reference-state">Loading VIGIL Observatory Alignment Taxonomy…</div> : null}
         {state.status === "unavailable" ? <div className="vigil-reference-state"><h2>VIGIL Observatory Alignment Taxonomy unavailable</h2><p>{state.message}</p></div> : null}
