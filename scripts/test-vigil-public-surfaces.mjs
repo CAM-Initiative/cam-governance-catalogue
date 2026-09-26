@@ -71,9 +71,9 @@ test("Governance Explorer situates the VIGIL Observatory in the external landsca
   assert.match(home, /help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice/);
 });
 
-test("External References is an external-only pinned reference board", async () => {
+test("External Governance References is an external-only pinned reference board", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /External References/);
+  assert.match(rail, /External Governance References/);
   assert.match(rail, /aria-label="External AI governance references"/);
   assert.doesNotMatch(rail, /External reference board|Independent external resources/);
   assert.match(rail, /AI Regulations Tracker/);
@@ -171,8 +171,13 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.doesNotMatch(taxonomy, /<header className="vigil-taxonomy-header vigil-taxonomy-ticket"/);
   assert.match(masthead, /data-mode=\{mode\}/);
   assert.match(masthead, /data-visual=\{visual\}/);
-  assert.match(mastheadCss, /grid-template-columns: minmax\(0, 1fr\) minmax\(18rem, 27%\)/);
-  assert.match(mastheadCss, /vigil-observatory-masthead-art/);
+  assert.match(mastheadCss, /grid-template-columns: minmax\(0, 1fr\) minmax\(16rem, 26%\)/);
+  assert.match(mastheadCss, /min-height: clamp\(15rem, 19vw, 17\.5rem\)/);
+  assert.match(mastheadCss, /font-size: clamp\(3\.2rem, 4\.25vw, 4\.15rem\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-instrument/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-calibration-accent/);
+  assert.doesNotMatch(mastheadCss, /vigil-observatory-masthead-art/);
+  assert.doesNotMatch(masthead, /Archive|LibraryBig|Landmark|ShieldCheck|<Visual/);
   assert.match(mastheadCss, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(mastheadCss, /html\[data-theme="dark"\] \.vigil-observatory-masthead/);
   assert.match(main, /vigil-observatory-masthead\.css/);
@@ -894,7 +899,7 @@ test("Explore AI governance keeps the restrained corkboard and a small corner ca
   assert.match(rail, /home-governance-board-grid/);
   assert.match(rail, /home-governance-pin/);
   assert.match(rail, /target="_blank"/);
-  assert.match(rail, /aria-label="External References"/);
+  assert.match(rail, /aria-label="External Governance References"/);
   assert.match(rail, /home-governance-letter/);
   assert.match(rail, /home-governance-letter-space/);
   assert.doesNotMatch(rail, /home-governance-board-rule|home-governance-section-label/);
@@ -902,9 +907,13 @@ test("Explore AI governance keeps the restrained corkboard and a small corner ca
   assert.match(css, /home-governance-board::after[\s\S]*border: 0;/);
   assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
   assert.match(css, /home-governance-letter[\s\S]*font-family: ui-rounded,[\s\S]*Arial Rounded MT Bold[\s\S]*font-size: clamp\(1\.15rem, 1\.8vw, 1\.7rem\)[\s\S]*text-shadow:/);
-  assert.match(css, /home-governance-letter::before\s*\{[\s\S]*display: none;/);
-  assert.doesNotMatch(css, /home-governance-letter::before[\s\S]*bottom: -0\.11em|home-governance-letter::after/);
-  assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
+  assert.match(css, /home-governance-letter::before\s*\{[\s\S]*bottom: -0\.16em;[\s\S]*height: 0\.22em;/);
+  assert.match(css, /home-governance-letter:nth-child\(6n \+ 1\)[\s\S]*rotate\(-0\.9deg\)/);
+  assert.match(css, /home-governance-note-1[\s\S]*top: 7px/);
+  assert.match(css, /home-governance-note-2::after[\s\S]*clip-path: polygon/);
+  assert.match(css, /home-governance-note-4 \.home-governance-note-category[\s\S]*border: 1px solid/);
+  assert.match(css, /home-governance-note-1 \.home-governance-pin \{ left: 31%; \}/);
+  assert.match(css, /home-governance-note-2 \.home-governance-pin \{ left: 69%; \}/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
   assert.match(css, /home-governance-note:hover \.home-governance-pin[\s\S]*translate\(-50%, -0\.34rem\)/);
