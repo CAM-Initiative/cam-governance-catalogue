@@ -910,7 +910,8 @@ test("Explore AI governance keeps the restrained corkboard and a small corner ca
   assert.match(css, /home-governance-board::after[\s\S]*border: 0;/);
   assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
   assert.match(css, /home-governance-letter[\s\S]*font-family: ui-rounded,[\s\S]*Arial Rounded MT Bold[\s\S]*font-size: clamp\(1\.15rem, 1\.8vw, 1\.7rem\)[\s\S]*text-shadow:/);
-  assert.match(css, /home-governance-letter::before\s*\{[\s\S]*bottom: -0\.16em;[\s\S]*height: 0\.22em;/);
+  assert.doesNotMatch(css, /home-governance-letter::before/);
+  assert.match(css, /No insertion pegs or "feet"/);
   assert.match(css, /home-governance-letter:nth-child\(6n \+ 1\)[\s\S]*rotate\(-0\.9deg\)/);
   assert.match(css, /home-governance-note-1[\s\S]*top: 7px/);
   assert.match(css, /home-governance-note-2::after[\s\S]*clip-path: polygon/);

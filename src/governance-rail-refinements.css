@@ -137,21 +137,8 @@
   transform-origin: 50% 100%;
 }
 
-.home-governance-letter::before {
-  position: absolute;
-  z-index: -1;
-  bottom: -0.16em;
-  left: 50%;
-  display: block;
-  width: 0.075em;
-  height: 0.22em;
-  content: "";
-  transform: translateX(-50%);
-  border-radius: 0 0 999px 999px;
-  background: hsl(30 7% 28% / 0.78);
-  box-shadow: 0.035em 0.04em 0 hsl(28 16% 14% / 0.18);
-}
-
+/* Individual plastic letters sit proud of the cork through bevel/shadow only.
+   No insertion pegs or "feet" are drawn below the glyphs. */
 .home-governance-letter:nth-child(6n + 1) {
   transform: translateY(0.045em) rotate(-0.9deg);
 }
