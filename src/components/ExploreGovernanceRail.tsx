@@ -62,8 +62,8 @@ export function ExploreGovernanceRail() {
     <aside aria-label="External AI governance references" className="home-governance-panel home-governance-board">
       <CalendarNote />
       <div className="home-governance-board-heading">
-        <p className="home-governance-letterboard-title" aria-label="External References">
-          {Array.from("EXTERNAL REFERENCES").map((letter, index) => letter === " "
+        <p className="home-governance-letterboard-title" aria-label="External Governance References">
+          {Array.from("EXTERNAL GOVERNANCE REFERENCES").map((letter, index) => letter === " "
             ? <span className="home-governance-letter-space" aria-hidden="true" key={`space-${index}`} />
             : <span className="home-governance-letter" aria-hidden="true" key={`${letter}-${index}`} style={{ "--letter-index": index } as CSSProperties}>{letter}</span>
           )}
