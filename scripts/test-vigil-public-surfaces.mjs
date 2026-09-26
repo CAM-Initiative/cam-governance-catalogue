@@ -179,9 +179,11 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.match(masthead, /artworkSrc/);
   assert.match(masthead, /vigil-observatory-masthead-artwork/);
   assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL\/vigil-fascia-taxonomy\.png"/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(14rem, 29%\) minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
-  assert.match(mastheadCss, /grid-template-areas: "art title context"/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*grid-area: art[\s\S]*object-fit: cover/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
+  assert.match(mastheadCss, /mask-image: linear-gradient\(90deg, #000 0 79%/);
+  assert.doesNotMatch(mastheadCss, /grid-template-areas: "art title context"/);
+  assert.doesNotMatch(mastheadCss, /border-right: 1px solid hsl\(34 28% 73%/);
   assert.match(mastheadCss, /vigil-observatory-masthead-description[\s\S]*font-family: var\(--app-font-sans\)/);
   assert.match(taxonomy, /description="Governance boundaries for AI systems, organised into Fidelity Families and Fidelity Classes\."/);
   assert.doesNotMatch(masthead, /Archive|LibraryBig|Landmark|ShieldCheck|<Visual/);
