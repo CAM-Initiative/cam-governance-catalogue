@@ -545,3 +545,225 @@
     font-size: clamp(2.35rem, 12vw, 3.4rem);
   }
 }
+
+
+/* Observatory banner + section-rail consolidation ------------------------ */
+
+/* The Observatory menu pages share one full-width dossier banner. The blush
+   surface is intentionally restrained; square edges keep the banner feeling
+   like a page header rather than another floating card. */
+.vigil-case-library-page .vigil-case-library-ticket,
+.vigil-taxonomy-manual-page .vigil-taxonomy-ticket,
+.vigil-standards-page .vigil-standards-ticket,
+.vigil-standard-file-page .vigil-standard-ticket,
+.vigil-severity-methodology-page .vigil-harm-ticket,
+.policy-page .policy-ticket,
+.vigil-case-file-page .vigil-case-file-hero-v4 {
+  border: 1px solid hsl(var(--border) / 0.82) !important;
+  border-radius: 0 !important;
+  background: hsl(350 42% 96% / 0.78) !important;
+  box-shadow:
+    0 0.34rem 0.95rem hsl(var(--foreground) / 0.028),
+    inset 0 1px 0 hsl(0 0% 100% / 0.55) !important;
+}
+
+html[data-theme="dark"] .vigil-case-library-page .vigil-case-library-ticket,
+html[data-theme="dark"] .vigil-taxonomy-manual-page .vigil-taxonomy-ticket,
+html[data-theme="dark"] .vigil-standards-page .vigil-standards-ticket,
+html[data-theme="dark"] .vigil-standard-file-page .vigil-standard-ticket,
+html[data-theme="dark"] .vigil-severity-methodology-page .vigil-harm-ticket,
+html[data-theme="dark"] .policy-page .policy-ticket,
+html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
+  background: hsl(345 16% 15% / 0.92) !important;
+  box-shadow:
+    0 0.4rem 1.1rem hsl(0 0% 0% / 0.16),
+    inset 0 1px 0 hsl(var(--foreground) / 0.035) !important;
+}
+
+/* Policy, Harm, Standards and opened Case Files now use the same quiet
+   contents-rail vocabulary: sticky left navigation, right rule, open document. */
+.policy-page .document-layout-below-header,
+.vigil-severity-methodology-page .document-layout-below-header,
+.vigil-case-file-page .vigil-case-manual-layout {
+  margin-top: 1.45rem;
+}
+
+.policy-page .document-rail,
+.vigil-severity-methodology-page .document-rail,
+.vigil-standard-manual-page .vigil-standard-manual-contents,
+.vigil-case-file-page .vigil-case-stage-nav {
+  top: 5rem;
+  padding: 0.18rem 1.2rem 0.5rem 0;
+  border: 0;
+  border-right: 1px solid var(--vigil-workbench-rule);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.policy-page .document-rail-title,
+.vigil-severity-methodology-page .document-rail-title,
+.vigil-case-file-page .vigil-case-section-rail-title {
+  margin: 0;
+  padding: 0 0 0.8rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule);
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.policy-page .document-rail-nav,
+.vigil-severity-methodology-page .document-rail-nav {
+  border-top: 0;
+}
+
+.policy-page .document-rail-link,
+.vigil-severity-methodology-page .document-rail-link {
+  padding: 0.72rem 0;
+  border-radius: 0;
+}
+
+/* Opened Case File: the six numbered stages are a persistent document rail,
+   mirroring the opened standards-source reference manual. */
+.vigil-case-file-page .vigil-case-manual-layout {
+  display: grid;
+  grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.vigil-case-file-page .vigil-case-stage-nav {
+  position: sticky;
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: center;
+  width: 100%;
+  min-height: 2.9rem !important;
+  padding: 0.68rem 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.62) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 0.88rem !important;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal !important;
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button span {
+  margin: 0 !important;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem !important;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button:hover,
+.vigil-case-file-page .vigil-case-stage-tabs button:focus-visible {
+  padding-left: 0.32rem !important;
+  color: hsl(var(--primary));
+}
+
+.vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+  padding-left: 0.62rem !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.62) !important;
+  background: transparent !important;
+  color: hsl(var(--foreground));
+  box-shadow: inset 2px 0 0 hsl(var(--primary)) !important;
+}
+
+.vigil-case-file-page .vigil-case-report-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+  min-height: 2.9rem;
+  padding: 0.72rem 0;
+  border: 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.62);
+  border-radius: 0;
+  background: transparent;
+  color: hsl(var(--primary));
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.vigil-case-file-page .vigil-case-report-tab svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.vigil-case-file-page .vigil-case-manual-document {
+  min-width: 0;
+}
+
+.vigil-case-file-page .vigil-case-active-stage {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 900px) {
+  .vigil-case-file-page .vigil-case-manual-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .policy-page .document-rail,
+  .vigil-severity-methodology-page .document-rail,
+  .vigil-standard-manual-page .vigil-standard-manual-contents,
+  .vigil-case-file-page .vigil-case-stage-nav {
+    position: static;
+    max-height: none;
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--vigil-workbench-rule);
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    scrollbar-width: thin;
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs button,
+  .vigil-case-file-page .vigil-case-report-tab {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: max-content;
+    padding: 0.66rem 0.9rem 0.66rem 0 !important;
+    margin-right: 0.9rem;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+    white-space: nowrap !important;
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+    padding-left: 0 !important;
+    border-bottom: 2px solid hsl(var(--primary)) !important;
+  }
+}

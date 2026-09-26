@@ -847,25 +847,30 @@ export default function VigilCaseFile() {
       </div>
     </section>}
 
-    <nav className="vigil-case-stage-nav" aria-label="Incident Case File sections">
-      <div className="vigil-case-stage-tabs" role="tablist">
-        {CASE_VIEWS.map((stage) => <button
-          key={stage.id}
-          type="button"
-          role="tab"
-          aria-selected={activeStage === stage.id}
-          aria-controls={`case-panel-${stage.id}`}
-          className={activeStage === stage.id ? "is-active" : undefined}
-          onClick={() => setActiveStage(stage.id)}
-        ><span>{stage.number}</span>{stage.label}</button>)}
-        <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab"><FileText aria-hidden="true" /> Full report / PDF</Link>
-      </div>
-    </nav>
+    <div className="vigil-case-manual-layout">
+      <nav className="vigil-case-stage-nav" aria-label="Incident Case File sections">
+        <p className="vigil-case-section-rail-title">Contents</p>
+        <div className="vigil-case-stage-tabs" role="tablist">
+          {CASE_VIEWS.map((stage) => <button
+            key={stage.id}
+            type="button"
+            role="tab"
+            aria-selected={activeStage === stage.id}
+            aria-controls={`case-panel-${stage.id}`}
+            className={activeStage === stage.id ? "is-active" : undefined}
+            onClick={() => setActiveStage(stage.id)}
+          ><span>{stage.number}</span>{stage.label}</button>)}
+          <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab"><FileText aria-hidden="true" /> Full report / PDF</Link>
+        </div>
+      </nav>
 
-    <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel} onClick={handleCaseReferenceClick}>
-      <Section id={`case-${activeStage}`} title={activeDefinition.label}>
-        {renderStageContent(activeStage)}
-      </Section>
+      <div className="vigil-case-manual-document">
+        <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel} onClick={handleCaseReferenceClick}>
+          <Section id={`case-${activeStage}`} title={activeDefinition.label}>
+            {renderStageContent(activeStage)}
+          </Section>
+        </div>
+      </div>
     </div>
   </div></main></Shell>;
 }
