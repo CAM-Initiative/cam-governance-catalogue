@@ -8,6 +8,7 @@ export type VigilObservatoryMastheadMetadata = {
   mono?: boolean;
 };
 
+// Phase 1 adopts this component on Case Files and Alignment Taxonomy before the remaining Observatory surfaces migrate.
 type VigilObservatoryMastheadProps = {
   kicker: string;
   title: ReactNode;

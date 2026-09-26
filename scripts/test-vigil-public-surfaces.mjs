@@ -815,11 +815,13 @@ test("Case File ticket keeps severity and classification in Incident context and
   assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
 });
 
-test("Case Files landing page uses the shared ticket masthead and stays concise", async () => {
+test("Case Files landing page uses the shared Observatory masthead and stays concise", async () => {
   const cases = await read("src/pages/vigil-cases.tsx");
-  assert.match(cases, /vigil-taxonomy-ticket vigil-case-library-ticket/);
-  assert.match(cases, /<h1 id="case-files-heading">Case Files<\/h1>/);
-  assert.match(cases, /Collection context/);
+  assert.match(cases, /<VigilObservatoryMasthead/);
+  assert.match(cases, /titleId="case-files-heading"/);
+  assert.match(cases, /title="Case Files"/);
+  assert.match(cases, /contextLabel="Collection context"/);
+  assert.doesNotMatch(cases, /vigil-taxonomy-ticket vigil-case-library-ticket/);
   assert.doesNotMatch(cases, /Active corpus refactor|Records actively under construction|currently being re-adjudicated and rebuilt/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
 });
