@@ -605,8 +605,10 @@ test("harm methodology keeps interpretive notes under the matrix and evidence de
   assert.match(matrix, /export function HarmEvidenceStateDefinitions/);
   assert.match(matrix, /<h3 id="vigil-harm-definitions-heading">Definitions<\/h3>/);
   assert.match(matrix, /Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
-  assert.match(severity, /id="case-files"[\s\S]*<HarmEvidenceStateDefinitions \/>/);
-  assert.doesNotMatch(severity, /id="matrix"[\s\S]*<HarmEvidenceStateDefinitions \/>/);
+  const matrixSection = severity.match(/<section id="matrix"[\s\S]*?<\/section>/)?.[0] ?? "";
+  const caseFilesSection = severity.match(/<section id="case-files"[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.match(caseFilesSection, /<HarmEvidenceStateDefinitions \/>/);
+  assert.doesNotMatch(matrixSection, /<HarmEvidenceStateDefinitions \/>/);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
   assert.match(css, /\.vigil-harm-definitions[\s\S]*\.vigil-harm-definitions h3/);
 });
