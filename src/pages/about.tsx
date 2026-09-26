@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 
-const founderPhotoHref = "/founder-photo.jpg";
+const founderPhotoHref = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/founder-photo.jpg";
 
 const ABOUT_CASE_FILE_STAGES = [
   {
