@@ -59,7 +59,7 @@ function CalendarNote() {
 
 export function ExploreGovernanceRail() {
   return (
-    <aside aria-label="External AI governance references" className="home-governance-panel home-governance-board">
+    <aside aria-label="External governance references" className="home-governance-panel home-governance-board">
       <CalendarNote />
       <div className="home-governance-board-heading">
         <p className="home-governance-letterboard-title" aria-label="External Governance References">
