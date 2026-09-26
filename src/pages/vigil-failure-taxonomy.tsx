@@ -504,7 +504,7 @@ export default function VigilFailureTaxonomy() {
           contextLabel="Taxonomy context"
           mode="reference"
           visual="taxonomy"
-          artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/vigil-fascia-taxonomyV2.png"
+          artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/vigil-fascia-taxonomy.png"
           metadata={[
             { label: "Version", value: state.status === "ready" ? state.data.index.standard.version : "—" },
             { label: "Status", value: "Beta" },

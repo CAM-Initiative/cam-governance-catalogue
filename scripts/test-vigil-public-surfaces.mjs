@@ -178,7 +178,7 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.match(mastheadCss, /vigil-observatory-masthead-calibration-accent/);
   assert.match(masthead, /artworkSrc/);
   assert.match(masthead, /vigil-observatory-masthead-artwork/);
-  assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomyV2\.png"/);
+  assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomy\.png"/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
@@ -186,9 +186,7 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.doesNotMatch(mastheadCss, /mask-image: linear-gradient\(90deg, #000 0 79%/);
   assert.doesNotMatch(mastheadCss, /grid-template-areas: "art title context"/);
   assert.doesNotMatch(mastheadCss, /border-right: 1px solid hsl\(34 28% 73%/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-visual="taxonomy"\] \.vigil-observatory-masthead-title::before[\s\S]*radial-gradient/);
-  assert.match(mastheadCss, /hsl\(38 45% 97% \/ 0\.92\)[\s\S]*transparent 86%/);
-  assert.match(mastheadCss, /html\[data-theme="dark"\] \.vigil-observatory-masthead\.has-artwork\[data-visual="taxonomy"\] \.vigil-observatory-masthead-title::before/);
+  assert.doesNotMatch(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-visual="taxonomy"\] \.vigil-observatory-masthead-title::before/);
   assert.match(mastheadCss, /padding:[\s\S]*clamp\(20rem, 31vw, 28rem\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead-description[\s\S]*font-family: var\(--app-font-sans\)/);
   assert.match(taxonomy, /description="Governance boundaries for AI systems, organised into Fidelity Families and Fidelity Classes\."/);
