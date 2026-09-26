@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { ExploreGovernanceRail } from "@/components/ExploreGovernanceRail";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
@@ -431,21 +430,6 @@ function AdjudicationFrameworkSection() {
   );
 }
 
-function GovernanceExplorerSection() {
-  return (
-    <section className="governance-explorer-home-section" aria-labelledby="governance-explorer-heading">
-      <motion.div className="governance-explorer-home-copy narrative-section-copy" {...reveal}>
-        <p className="premium-eyebrow narrative-kicker">Explore the wider governance landscape</p>
-        <h2 id="governance-explorer-heading">AI Governance Explorer</h2>
-        <p>A rotary reference index for external tools that help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice.</p>
-      </motion.div>
-      <motion.div className="governance-explorer-home-panel" {...reveal}>
-        <ExploreGovernanceRail />
-      </motion.div>
-    </section>
-  );
-}
-
 export default function Home() {
   return (
     <Shell>
@@ -453,7 +437,6 @@ export default function Home() {
         <PremiumHero />
         <PatternField />
         <AdjudicationFrameworkSection />
-        <GovernanceExplorerSection />
       </main>
     </Shell>
   );

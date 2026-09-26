@@ -904,29 +904,15 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 });
 
 
-test("Explore AI governance uses a physical 360-degree rotary card index", async () => {
-  const [rail, css, home] = await Promise.all([
-    read("src/components/ExploreGovernanceRail.tsx"),
-    read("src/governance-rail-refinements.css"),
+test("homepage temporarily omits the external governance explorer experiment", async () => {
+  const [home, main, rail] = await Promise.all([
     read("src/pages/home.tsx"),
+    read("src/main.tsx"),
+    read("src/components/ExploreGovernanceRail.tsx"),
   ]);
-  assert.match(rail, /wheelTurn/);
-  assert.match(rail, /const advance = \(\) =>/);
-  assert.match(rail, /setActiveIndex\(\(value\) => \(value \+ 1\) % externalResources\.length\)/);
-  assert.match(rail, /home-governance-rotary-wheel-right/);
-  assert.doesNotMatch(rail, /home-governance-rotary-wheel-left|Show previous external governance reference|ChevronLeft/);
-  assert.match(rail, /home-governance-rotary-rear-stack/);
-  assert.match(rail, /dividerLabels = \["A", "B–M", "N", "O–Z"\]/);
-  assert.match(rail, /className="home-governance-rotary-card is-next"/);
-  assert.match(rail, /home-governance-rotary-spindle/);
-  assert.match(css, /home-governance-rotary-machine[\s\S]*rotateZ\(-4\.2deg\)[\s\S]*rotateX\(1\.8deg\)/);
-  assert.match(css, /home-governance-rotary-wheel::before[\s\S]*rotate\(var\(--wheel-turn\)\)/);
-  assert.match(css, /@keyframes home-governance-rotary-forward/);
-  assert.doesNotMatch(css, /home-governance-rotary-wheel-left|@keyframes home-governance-rotary-backward/);
-  assert.match(css, /home-governance-rotary-card[\s\S]*repeating-linear-gradient/);
-  assert.match(home, /A rotary reference index for external tools/);
-  assert.doesNotMatch(rail, /home-governance-rolodex-tabs|home-governance-rolodex-controls/);
-  assert.doesNotMatch(css, /home-governance-rolodex-tabs|home-governance-rolodex-controls/);
+  assert.doesNotMatch(home, /ExploreGovernanceRail|GovernanceExplorerSection|AI Governance Explorer|rotary reference index/);
+  assert.doesNotMatch(main, /governance-rail-refinements\.css/);
+  assert.match(rail, /External Governance References/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
