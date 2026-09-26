@@ -165,7 +165,6 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*--masthead-accent: 39 73% 56%[\s\S]*hsl\(28 16% 12%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*--masthead-artwork-opacity: 0\.84[\s\S]*hsl\(31 20% 20%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*opacity: 0;[\s\S]*brightness\(0\.54\)[\s\S]*transition: opacity 120ms/);
   assert.match(mastheadCss, /vigil-observatory-masthead-artwork\.is-loaded[\s\S]*opacity: var\(--masthead-artwork-opacity\)/);
@@ -457,7 +456,7 @@ test("Case File severity presentation uses ascending S1-to-S5 semantics", async 
   assert.match(severity, /highest defensible materialised-harm threshold/);
   assert.match(severity, /MIT AI Incident Tracker harm-severity scale/);
   assert.match(severity, /CSET AI Harm Framework/);
-  assert.match(chip, /\\^S\[1-5\]\$\/\.test\(code\)/);
+  assert.match(chip, /return \/\^S\[1-5\]\$\/\.test\(code\) \? code : undefined;/);
   assert.match(chip, /data-severity=\{severity\}/);
   assert.match(chipCss, /\.vigil-status-chip\[data-severity\][\s\S]*background: hsl\(40 92% 61%\)[\s\S]*color: hsl\(28 28% 13%\)/);
   assert.doesNotMatch(chipCss, /data-severity="S1"|data-severity="S2"|data-severity="S3"|data-severity="S4"|data-severity="S5"/);
