@@ -6,12 +6,12 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-test("Explore AI governance rolodex keeps substantive reference copy readable", async () => {
+test("Explore AI governance rotary index keeps substantive reference copy readable", async () => {
   const railCss = await read("src/governance-rail-refinements.css");
-  assert.match(railCss, /\.home-governance-rolodex-card-title h3 \{[\s\S]*font-size: clamp\(1\.45rem, 2\.3vw, 2rem\)/);
-  assert.match(railCss, /\.home-governance-rolodex-copy \{[\s\S]*font-size: 0\.88rem;/);
+  assert.match(railCss, /\.home-governance-rotary-card-title h3 \{[\s\S]*font-size: clamp\(1\.45rem, 2\.25vw, 1\.95rem\)/);
+  assert.match(railCss, /\.home-governance-rotary-copy \{[\s\S]*font-size: 0\.86rem;/);
   assert.match(railCss, /repeating-linear-gradient\([\s\S]*180deg,[\s\S]*hsl\(43 39% 97%\)/);
-  assert.match(railCss, /home-governance-rolodex-spindle/);
+  assert.match(railCss, /home-governance-rotary-spindle/);
 });
 
 test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
@@ -69,7 +69,7 @@ test("Governance Explorer situates the VIGIL Observatory in the external landsca
   assert.match(home, /help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice/);
 });
 
-test("External Governance References is an external-only rolodex", async () => {
+test("External Governance References is an external-only rotary card index", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
   assert.match(rail, /External Governance References/);
   assert.match(rail, /aria-label="External governance references"/);
@@ -77,8 +77,9 @@ test("External Governance References is an external-only rolodex", async () => {
   assert.match(rail, /AI Incident Database/);
   assert.match(rail, /OECD AI Incidents Monitor/);
   assert.match(rail, /NIST AI Resource Center/);
-  assert.match(rail, /home-governance-rolodex-card/);
-  assert.match(rail, /role="tablist"/);
+  assert.match(rail, /home-governance-rotary-card/);
+  assert.match(rail, /Show previous external governance reference/);
+  assert.match(rail, /Show next external governance reference/);
   assert.match(rail, /Open reference/);
   assert.doesNotMatch(rail, /href="\/observatory\//);
   assert.doesNotMatch(rail, /initiativeResources/);
@@ -905,26 +906,29 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 });
 
 
-test("Explore AI governance uses a scalable lined-paper rolodex", async () => {
-  const [rail, css] = await Promise.all([
+test("Explore AI governance uses a physical 360-degree rotary card index", async () => {
+  const [rail, css, home] = await Promise.all([
     read("src/components/ExploreGovernanceRail.tsx"),
     read("src/governance-rail-refinements.css"),
+    read("src/pages/home.tsx"),
   ]);
-  assert.match(rail, /useState\(0\)/);
-  assert.match(rail, /home-governance-rolodex-tabs/);
-  assert.match(rail, /home-governance-rolodex-stack/);
-  assert.match(rail, /home-governance-rolodex-card/);
-  assert.match(rail, /home-governance-rolodex-hole/);
-  assert.match(rail, /home-governance-rolodex-spindle/);
-  assert.match(rail, /Previous/);
-  assert.match(rail, /Next/);
-  assert.match(css, /home-governance-rolodex-machine[\s\S]*linear-gradient\(180deg, hsl\(31 22% 33%\)/);
-  assert.match(css, /home-governance-rolodex-card[\s\S]*repeating-linear-gradient/);
-  assert.match(css, /home-governance-rolodex-card-in/);
-  assert.match(css, /home-governance-rolodex-tabs button\.is-active/);
-  assert.match(css, /home-governance-rolodex-spindle::before,[\s\S]*home-governance-rolodex-spindle::after/);
-  assert.doesNotMatch(rail, /CalendarNote|home-governance-pin|home-governance-letter/);
-  assert.doesNotMatch(css, /corkboard|feTurbulence|home-governance-calendar-note/);
+  assert.match(rail, /wheelTurn/);
+  assert.match(rail, /rotate\(-1\)/);
+  assert.match(rail, /rotate\(1\)/);
+  assert.match(rail, /home-governance-rotary-wheel-left/);
+  assert.match(rail, /home-governance-rotary-wheel-right/);
+  assert.match(rail, /home-governance-rotary-rear-stack/);
+  assert.match(rail, /dividerLabels = \["A", "B–M", "N", "O–Z"\]/);
+  assert.match(rail, /home-governance-rotary-card is-\$\{direction\}/);
+  assert.match(rail, /home-governance-rotary-spindle/);
+  assert.match(css, /home-governance-rotary-machine[\s\S]*rotateZ\(-4\.2deg\)[\s\S]*rotateX\(1\.8deg\)/);
+  assert.match(css, /home-governance-rotary-wheel::before[\s\S]*rotate\(var\(--wheel-turn\)\)/);
+  assert.match(css, /@keyframes home-governance-rotary-forward/);
+  assert.match(css, /@keyframes home-governance-rotary-backward/);
+  assert.match(css, /home-governance-rotary-card[\s\S]*repeating-linear-gradient/);
+  assert.match(home, /A rotary reference index for external tools/);
+  assert.doesNotMatch(rail, /home-governance-rolodex-tabs|home-governance-rolodex-controls/);
+  assert.doesNotMatch(css, /home-governance-rolodex-tabs|home-governance-rolodex-controls/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
