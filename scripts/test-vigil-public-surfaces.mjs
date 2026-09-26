@@ -74,7 +74,7 @@ test("Governance Explorer situates the VIGIL Observatory in the external landsca
 test("External Governance References is an external-only pinned reference board", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
   assert.match(rail, /External Governance References/);
-  assert.match(rail, /aria-label="External AI governance references"/);
+  assert.match(rail, /aria-label="External governance references"/);
   assert.doesNotMatch(rail, /External reference board|Independent external resources/);
   assert.match(rail, /AI Regulations Tracker/);
   assert.match(rail, /AI Incident Database/);
