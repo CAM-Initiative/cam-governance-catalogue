@@ -128,12 +128,10 @@
   opacity: 0.58;
 }
 
-.home-governance-rotary-wheel-left {
-  left: 0;
-}
-
 .home-governance-rotary-wheel-right {
-  right: -2.5%;
+  right: -3.2%;
+  width: 5.8rem;
+  height: 5.8rem;
 }
 
 .home-governance-rotary-wheel:hover,
@@ -250,25 +248,10 @@
   animation: home-governance-rotary-forward 300ms cubic-bezier(.22,1,.36,1);
 }
 
-.home-governance-rotary-card.is-previous {
-  animation: home-governance-rotary-backward 300ms cubic-bezier(.22,1,.36,1);
-}
-
 @keyframes home-governance-rotary-forward {
   from {
     opacity: 0.45;
     transform: translateY(-5.4rem) rotateX(36deg) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) rotateX(0) scale(1);
-  }
-}
-
-@keyframes home-governance-rotary-backward {
-  from {
-    opacity: 0.45;
-    transform: translateY(3.2rem) rotateX(-34deg) scale(0.94);
   }
   to {
     opacity: 1;
@@ -480,6 +463,8 @@
 
   .home-governance-rotary-wheel-right {
     right: -0.4rem;
+    width: 4.2rem;
+    height: 4.2rem;
   }
 
   .home-governance-rotary-deck {
@@ -548,8 +533,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-governance-rotary-card.is-next,
-  .home-governance-rotary-card.is-previous {
+  .home-governance-rotary-card.is-next {
     animation: none;
   }
 

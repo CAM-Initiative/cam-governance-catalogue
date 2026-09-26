@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { BookOpen, ChevronLeft, ChevronRight, Database, ExternalLink, Scale } from "lucide-react";
+import { BookOpen, ChevronRight, Database, ExternalLink, Scale } from "lucide-react";
 
 const externalResources = [
   {
@@ -36,15 +36,13 @@ const dividerLabels = ["A", "B–M", "N", "O–Z"] as const;
 
 export function ExploreGovernanceRail() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState<"next" | "previous">("next");
   const [wheelTurn, setWheelTurn] = useState(0);
   const active = externalResources[activeIndex];
   const ActiveIcon = active.icon;
 
-  const rotate = (delta: number) => {
-    setDirection(delta > 0 ? "next" : "previous");
-    setWheelTurn((value) => value + delta * 42);
-    setActiveIndex((value) => (value + delta + externalResources.length) % externalResources.length);
+  const advance = () => {
+    setWheelTurn((value) => value + 42);
+    setActiveIndex((value) => (value + 1) % externalResources.length);
   };
 
   const machineStyle = {
@@ -60,18 +58,9 @@ export function ExploreGovernanceRail() {
           <span className="home-governance-rotary-arm home-governance-rotary-arm-right" aria-hidden="true" />
 
           <button
-            aria-label="Show previous external governance reference"
-            className="home-governance-rotary-wheel home-governance-rotary-wheel-left"
-            onClick={() => rotate(-1)}
-            type="button"
-          >
-            <ChevronLeft aria-hidden="true" />
-          </button>
-
-          <button
-            aria-label="Show next external governance reference"
+            aria-label="Rotate to next external governance reference"
             className="home-governance-rotary-wheel home-governance-rotary-wheel-right"
-            onClick={() => rotate(1)}
+            onClick={advance}
             type="button"
           >
             <ChevronRight aria-hidden="true" />
@@ -101,7 +90,7 @@ export function ExploreGovernanceRail() {
             </div>
 
             <article
-              className={`home-governance-rotary-card is-${direction}`}
+              className="home-governance-rotary-card is-next"
               key={`${active.label}-${wheelTurn}`}
             >
               <div className="home-governance-rotary-card-meta">
