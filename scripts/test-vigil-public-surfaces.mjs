@@ -849,8 +849,8 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(rail, /home-governance-letter/);
   assert.match(rail, /home-governance-letter-space/);
   assert.doesNotMatch(rail, /home-governance-board-rule|home-governance-section-label/);
-  assert.match(css, /home-governance-board[\s\S]*border: 0\.58rem solid/);
-  assert.match(css, /border-image:[\s\S]*linear-gradient\([\s\S]*hsl\(47 72% 68%\)/);
+  assert.match(css, /home-governance-board[\s\S]*border: 0\.34rem solid/);
+  assert.match(css, /border-image:[\s\S]*linear-gradient\([\s\S]*hsl\(38 33% 39%\)/);
   assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
   assert.match(css, /home-governance-letter[\s\S]*font-family: ui-rounded,[\s\S]*Arial Rounded MT Bold[\s\S]*font-size: clamp\(1\.15rem, 1\.8vw, 1\.7rem\)[\s\S]*text-shadow:/);
   assert.match(css, /home-governance-letter::before\s*\{[\s\S]*display: none;/);
@@ -860,7 +860,7 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
   assert.doesNotMatch(css, /home-governance-note-2::after|home-governance-note-4::after/);
   assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
-  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.45deg/);
+  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.6deg/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {

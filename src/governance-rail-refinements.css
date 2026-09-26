@@ -4,6 +4,7 @@
 
 .governance-explorer-home-panel {
   overflow: visible;
+  margin-top: clamp(2.8rem, 4.2vw, 4.2rem);
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -15,19 +16,18 @@
   position: relative;
   display: block;
   min-width: 0;
-  padding: clamp(1.4rem, 2.8vw, 2rem);
-  border: 0.58rem solid hsl(41 48% 48%);
+  padding: clamp(2rem, 3.25vw, 2.75rem);
+  border: 0.34rem solid hsl(31 27% 29%);
   border-image:
     linear-gradient(
       112deg,
-      hsl(37 39% 26%),
-      hsl(43 58% 48%) 18%,
-      hsl(47 72% 68%) 34%,
-      hsl(42 55% 42%) 52%,
-      hsl(48 68% 72%) 70%,
-      hsl(38 42% 30%)
+      hsl(29 27% 21%),
+      hsl(34 30% 31%) 22%,
+      hsl(38 33% 39%) 49%,
+      hsl(33 29% 30%) 76%,
+      hsl(28 25% 21%)
     ) 1;
-  border-radius: 0.16rem;
+  border-radius: 0.12rem;
   background:
     radial-gradient(ellipse at 8% 17%, hsl(24 35% 23% / 0.28) 0 0.08rem, transparent 0.16rem),
     radial-gradient(ellipse at 19% 74%, hsl(26 31% 30% / 0.22) 0 0.12rem, transparent 0.2rem),
@@ -41,15 +41,15 @@
     radial-gradient(ellipse at 39% 58%, hsl(46 42% 92% / 0.13) 0 0.05rem, transparent 0.12rem),
     radial-gradient(ellipse at 63% 31%, hsl(26 30% 29% / 0.16) 0 0.07rem, transparent 0.14rem),
     radial-gradient(ellipse at 88% 45%, hsl(44 43% 90% / 0.12) 0 0.05rem, transparent 0.11rem),
-    linear-gradient(135deg, hsl(33 56% 72%), hsl(30 48% 63%) 48%, hsl(35 53% 69%));
+    linear-gradient(135deg, hsl(33 54% 70%), hsl(30 46% 62%) 48%, hsl(35 50% 67%));
   background-size: 100% 100%;
   background-repeat: no-repeat;
   box-shadow:
-    0 0 0 0.12rem hsl(36 28% 72%),
-    0 0 0 0.22rem hsl(28 24% 34% / 0.72),
-    0.75rem 1rem 1.8rem hsl(var(--foreground) / 0.13),
-    inset 0 0 0 1px hsl(44 34% 84% / 0.32),
-    inset 0 0 2.2rem hsl(28 24% 30% / 0.08);
+    0 0 0 0.08rem hsl(38 24% 58% / 0.5),
+    0 0 0 0.14rem hsl(28 20% 26% / 0.46),
+    0.45rem 0.68rem 1.35rem hsl(var(--foreground) / 0.10),
+    inset 0 0 0 1px hsl(43 26% 80% / 0.18),
+    inset 0 0 1.65rem hsl(28 24% 28% / 0.075);
   margin-left: -2px;
 }
 
@@ -70,7 +70,7 @@
   background-size: cover, 100% 100%, 100% 100%;
   background-repeat: no-repeat;
   mix-blend-mode: multiply;
-  opacity: 0.54;
+  opacity: 0.64;
 }
 
 .home-governance-board::after {
@@ -105,7 +105,7 @@
   z-index: 3;
   align-items: center;
   gap: 0.8rem;
-  margin: 0 0 1.45rem;
+  margin: 0 0 1.65rem;
   color: hsl(36 24% 14%);
 }
 
@@ -124,28 +124,25 @@
   position: relative;
   display: inline-grid;
   place-items: center;
-  min-width: 0.62em;
-  height: 1.06em;
+  min-width: 0.61em;
+  height: 1.04em;
   color: hsl(43 18% 97%);
-  -webkit-text-stroke: 0.012em hsl(34 9% 76% / 0.58);
+  -webkit-text-stroke: 0.01em hsl(34 9% 76% / 0.52);
   font-family: ui-rounded, "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif;
   font-size: clamp(1.15rem, 1.8vw, 1.7rem);
   font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
   text-shadow:
-    0 0.018em 0 hsl(45 24% 100% / 0.8),
-    0.028em 0.035em 0 hsl(32 7% 38% / 0.9),
-    0.058em 0.066em 0 hsl(28 8% 18% / 0.88),
-    0 0.07em 0.13em hsl(26 18% 10% / 0.18);
+    0 0.015em 0 hsl(45 24% 100% / 0.76),
+    0.025em 0.028em 0 hsl(32 7% 38% / 0.84),
+    0.043em 0.047em 0 hsl(28 8% 18% / 0.82);
   filter:
-    blur(0.08px)
-    drop-shadow(0 0.05em 0.05em hsl(28 20% 12% / 0.16));
-  transform:
-    translateY(calc((var(--letter-index) % 4) * 0.012em))
-    rotate(calc((var(--letter-index) % 5 - 2) * 0.24deg));
+    blur(0.06px)
+    drop-shadow(0 0.03em 0.035em hsl(28 20% 12% / 0.14));
+  transform: translateY(0) rotate(0);
   transform-origin: 50% 100%;
 }
 
@@ -153,8 +150,21 @@
   display: none;
 }
 
-.home-governance-letter:nth-child(3n) {
+.home-governance-letter:nth-child(4n + 1) {
+  transform: translateY(0.012em) rotate(-0.32deg);
+}
+
+.home-governance-letter:nth-child(4n + 2) {
+  transform: translateY(-0.008em) rotate(0.22deg);
+}
+
+.home-governance-letter:nth-child(4n + 3) {
   color: hsl(40 16% 94%);
+  transform: translateY(0.018em) rotate(-0.12deg);
+}
+
+.home-governance-letter:nth-child(4n) {
+  transform: translateY(-0.004em) rotate(0.28deg);
 }
 
 .home-governance-letter-space {
@@ -165,7 +175,7 @@
 .home-governance-board-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.1rem, 2.4vw, 1.65rem);
+  gap: clamp(1.65rem, 2.8vw, 2.15rem) clamp(1.35rem, 2.4vw, 1.9rem);
   align-items: start;
 }
 
@@ -174,18 +184,19 @@
   position: relative;
   isolation: isolate;
   display: block;
-  min-height: 10.5rem;
-  padding: 1.45rem 1.05rem 1.05rem;
+  width: 94%;
+  min-height: 9.35rem;
+  padding: 1.28rem 0.95rem 0.9rem;
   border: 0;
   border-radius: 0;
   clip-path: polygon(0.8% 1.5%, 14% 0.4%, 31% 1.2%, 47% 0.3%, 63% 1.1%, 81% 0.2%, 99.2% 1.4%, 100% 18%, 99.1% 34%, 100% 52%, 99.2% 70%, 100% 88%, 98.6% 99%, 81% 99.3%, 64% 98.7%, 47% 100%, 29% 99.1%, 12% 100%, 0.5% 98.4%, 0 80%, 0.7% 61%, 0 43%, 0.8% 24%);
   background:
-    linear-gradient(180deg, hsl(44 38% 97%), hsl(42 31% 91%));
+    linear-gradient(180deg, hsl(43 34% 95%), hsl(41 27% 92%));
   color: hsl(28 19% 18%);
   text-decoration: none;
   filter:
-    drop-shadow(0.08rem 0.1rem 0 hsl(28 16% 18% / 0.14))
-    drop-shadow(0.32rem 0.48rem 0.52rem hsl(27 22% 14% / 0.16));
+    drop-shadow(0.05rem 0.07rem 0 hsl(28 16% 18% / 0.10))
+    drop-shadow(0.22rem 0.32rem 0.38rem hsl(27 22% 14% / 0.13));
   top: 0;
   left: 0;
   transform: rotate(var(--note-tilt));
@@ -217,27 +228,34 @@
 }
 
 .home-governance-note-1 {
-  --note-tilt: -0.45deg;
+  --note-tilt: -0.6deg;
+  width: 94%;
   top: 4px;
   clip-path: polygon(0.5% 2%, 17% 0.4%, 38% 1.2%, 59% 0.2%, 78% 1.1%, 99% 0.4%, 100% 24%, 99.2% 49%, 100% 73%, 98.8% 99%, 72% 98.9%, 49% 100%, 26% 99%, 1% 100%, 0 73%, 0.8% 51%, 0 29%);
 }
 
 .home-governance-note-2 {
-  --note-tilt: 0.62deg;
-  top: -4px;
+  --note-tilt: 0.72deg;
+  width: 90%;
+  top: -7px;
+  justify-self: end;
   clip-path: polygon(1% 0.8%, 24% 1.5%, 43% 0.2%, 68% 1.1%, 99% 0.5%, 100% 29%, 99.1% 54%, 100% 78%, 98.4% 99%, 76% 100%, 53% 98.7%, 31% 100%, 0.7% 98.8%, 0 68%, 0.9% 44%, 0 18%);
 }
 
 .home-governance-note-3 {
-  --note-tilt: 0.35deg;
-  left: 4px;
+  --note-tilt: 0.42deg;
+  width: 91%;
+  top: 9px;
+  left: 5px;
   clip-path: polygon(0.7% 1.2%, 20% 0.3%, 42% 1.1%, 64% 0.3%, 83% 1.3%, 99.5% 0.6%, 100% 20%, 99.1% 42%, 100% 65%, 98.8% 99%, 74% 98.8%, 55% 100%, 33% 98.9%, 1% 100%, 0 76%, 0.7% 53%, 0 31%);
 }
 
 .home-governance-note-4 {
-  --note-tilt: -0.72deg;
-  top: 5px;
-  left: -3px;
+  --note-tilt: -0.58deg;
+  width: 95%;
+  top: 1px;
+  left: -2px;
+  justify-self: end;
   clip-path: polygon(1% 0.5%, 22% 1.2%, 45% 0.2%, 66% 1.2%, 86% 0.2%, 99% 1%, 100% 26%, 99.2% 51%, 100% 82%, 98.8% 99%, 79% 98.7%, 58% 100%, 38% 98.8%, 18% 100%, 0.5% 98.5%, 0 71%, 0.8% 48%, 0 23%);
 }
 
@@ -255,10 +273,10 @@
 .home-governance-pin {
   position: absolute !important;
   z-index: 3 !important;
-  top: 0.42rem;
+  top: 0.4rem;
   left: 50%;
-  width: 0.62rem;
-  height: 0.62rem;
+  width: 0.54rem;
+  height: 0.54rem;
   transform: translateX(-50%);
   border: 1px solid hsl(4 34% 24% / 0.9);
   border-radius: 50%;
@@ -269,6 +287,12 @@
     0 0 0 0.08rem hsl(42 34% 91% / 0.2);
 }
 
+
+.home-governance-note-1 .home-governance-pin { left: 51%; }
+.home-governance-note-2 .home-governance-pin { left: 47%; }
+.home-governance-note-3 .home-governance-pin { left: 52%; }
+.home-governance-note-4 .home-governance-pin { left: 49%; }
+
 .home-governance-note:nth-child(even) .home-governance-pin {
   background:
     radial-gradient(circle at 34% 28%, hsl(48 74% 78%) 0 16%, hsl(41 62% 48%) 32% 68%, hsl(33 42% 27%) 100%);
@@ -277,13 +301,13 @@
 
 .home-governance-note-category {
   display: block;
-  margin-bottom: 0.52rem;
+  margin-bottom: 0.48rem;
   font-family: var(--app-font-mono);
-  font-size: 0.64rem;
-  font-weight: 780;
-  letter-spacing: 0.12em;
+  font-size: 0.59rem;
+  font-weight: 720;
+  letter-spacing: 0.115em;
   text-transform: uppercase;
-  color: hsl(34 38% 35%);
+  color: hsl(34 27% 40%);
 }
 
 .home-governance-note-title {
@@ -294,33 +318,33 @@
 }
 
 .home-governance-note-title > svg:first-child {
-  width: 1rem;
-  height: 1rem;
-  margin-top: 0.18rem;
-  color: hsl(34 44% 34%);
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-top: 0.16rem;
+  color: hsl(34 32% 38% / 0.74);
 }
 
 .home-governance-note-title > svg:last-child {
-  width: 0.78rem;
-  height: 0.78rem;
+  width: 0.7rem;
+  height: 0.7rem;
   margin-top: 0.2rem;
-  opacity: 0.48;
+  opacity: 0.34;
 }
 
 .home-governance-note-title strong {
   font-family: var(--app-font-serif);
-  font-size: 1.12rem;
-  font-weight: 620;
+  font-size: 1.04rem;
+  font-weight: 600;
   line-height: 1.18;
   letter-spacing: -0.012em;
 }
 
 .home-governance-note-copy {
   display: block;
-  margin-top: 0.72rem;
-  font-size: 0.88rem;
-  line-height: 1.55;
-  color: hsl(28 14% 27% / 0.9);
+  margin-top: 0.66rem;
+  font-size: 0.83rem;
+  line-height: 1.52;
+  color: hsl(28 12% 30% / 0.86);
 }
 
 .home-governance-board-caption {
@@ -335,6 +359,12 @@
 
 /* The corkboard, frame and pinned paper remain materially identical in dark mode. */
 
+@media (max-width: 980px) {
+  .governance-explorer-home-panel {
+    margin-top: 0.8rem;
+  }
+}
+
 @media (max-width: 720px) {
   .governance-explorer-home-panel .home-governance-board {
     padding: 1.25rem;
@@ -347,9 +377,11 @@
   }
 
   .home-governance-note:nth-child(n) {
+    width: 100%;
     min-height: auto;
     top: 0;
     left: 0;
+    justify-self: stretch;
   }
 }
 
