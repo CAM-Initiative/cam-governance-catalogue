@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmEvidenceStateDefinitions, HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 
 const methodologyReferences = [
   {
@@ -136,6 +136,7 @@ export default function VigilSeverityMethodology() {
             <div className="document-reading">
               <p>Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
             </div>
+            <HarmEvidenceStateDefinitions />
             <div className="cam-action-row">
               <Link className="cam-action cam-action-secondary" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
             </div>

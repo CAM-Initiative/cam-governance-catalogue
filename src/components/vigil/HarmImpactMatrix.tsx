@@ -283,22 +283,26 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
     </div>
 
     {/* Canonical methodology adaptation notes sit outside the threshold cells so they remain readable and citable. */}
-    <div className="vigil-harm-interpretive-notes" aria-label="Harm matrix interpretive notes">
-      <h3>Interpretive notes</h3>
+    <section className="vigil-harm-interpretive-notes" aria-labelledby="vigil-harm-interpretive-notes-heading">
+      <h3 id="vigil-harm-interpretive-notes-heading">Interpretive notes</h3>
       {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
         ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
         : [])}
-    </div>
-
-    <div className="vigil-harm-evidence-key" aria-label="Harm assessment evidence states">
-      <div><strong>Assessed</strong><span>Evidence supports a materialised impact and a specific threshold band.</span></div>
-      <div><strong>Unreported</strong><span>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</span></div>
-      <div><strong>Insufficient evidence</strong><span>Some impact evidence exists, but it cannot distinguish a defensible severity band.</span></div>
-      <div><strong>Not applicable</strong><span>Affirmative context places the dimension outside the Incident’s bounded scope.</span></div>
-    </div>
-
-    <p className="vigil-harm-method-note"><strong>SU — Unassessed:</strong> no defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</p>
+    </section>
   </div>;
+}
+
+export function HarmEvidenceStateDefinitions() {
+  return <section className="vigil-harm-definitions" aria-labelledby="vigil-harm-definitions-heading">
+    <h3 id="vigil-harm-definitions-heading">Definitions</h3>
+    <dl>
+      <div><dt>Assessed</dt><dd>Evidence supports a materialised impact and a specific threshold band.</dd></div>
+      <div><dt>Unreported</dt><dd>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</dd></div>
+      <div><dt>Insufficient evidence</dt><dd>Some impact evidence exists, but it cannot distinguish a defensible severity band.</dd></div>
+      <div><dt>Not applicable</dt><dd>Affirmative context places the dimension outside the Incident’s bounded scope.</dd></div>
+      <div><dt>SU — Unassessed</dt><dd>No defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</dd></div>
+    </dl>
+  </section>;
 }
 
 function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, methodologyReferenceNumber, methodologyReferenceHref }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number>; methodologyReferenceNumber?: number; methodologyReferenceHref?: string }) {

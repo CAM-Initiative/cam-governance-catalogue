@@ -592,16 +592,23 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype outs
 
 
 
-test("harm methodology renders canonical adaptation notes below the matrix", async () => {
-  const [matrix, css] = await Promise.all([
+test("harm methodology keeps interpretive notes under the matrix and evidence definitions under Case Files", async () => {
+  const [matrix, severity, css] = await Promise.all([
     read("src/components/vigil/HarmImpactMatrix.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
     read("src/vigil-incident-severity-refinement.css"),
   ]);
   assert.match(matrix, /Interpretive notes/);
   assert.match(matrix, /adaptation_note/);
   assert.match(matrix, /must be wiped and rebuilt or reconstructed from a known-clean state/);
   assert.match(matrix, /Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5/);
-  assert.match(css, /\.vigil-harm-interpretive-notes/);
+  assert.match(matrix, /export function HarmEvidenceStateDefinitions/);
+  assert.match(matrix, /<h3 id="vigil-harm-definitions-heading">Definitions<\/h3>/);
+  assert.match(matrix, /Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
+  assert.match(severity, /id="case-files"[\s\S]*<HarmEvidenceStateDefinitions \/>/);
+  assert.doesNotMatch(severity, /id="matrix"[\s\S]*<HarmEvidenceStateDefinitions \/>/);
+  assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
+  assert.match(css, /\.vigil-harm-definitions[\s\S]*\.vigil-harm-definitions h3/);
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {

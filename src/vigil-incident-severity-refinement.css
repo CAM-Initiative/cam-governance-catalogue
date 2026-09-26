@@ -129,23 +129,72 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   color: hsl(var(--foreground) / 0.78);
 }
 .vigil-harm-interpretive-notes {
-  margin-top: 0.85rem;
-  padding: 0.78rem 0.9rem;
-  border-left: 3px solid hsl(var(--cam-gold) / 0.55);
-  background: hsl(var(--muted) / 0.16);
+  margin-top: 1.6rem;
+  padding: 1.35rem 0 0;
+  border: 0;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+  background: transparent;
 }
 .vigil-harm-interpretive-notes h3 {
-  margin: 0 0 0.5rem;
-  font-size: 0.92rem;
+  margin: 0 0 0.72rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.55rem;
+  font-weight: 560;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
 }
 .vigil-harm-interpretive-notes p {
-  margin: 0.38rem 0 0;
-  font-size: 0.84rem;
-  line-height: 1.55;
+  margin: 0.48rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.62;
   color: hsl(var(--foreground) / 0.84);
 }
 .vigil-harm-interpretive-notes p:first-of-type {
   margin-top: 0;
+}
+
+.vigil-harm-definitions {
+  margin-top: 1.65rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid hsl(var(--border) / 0.78);
+}
+
+.vigil-harm-definitions h3 {
+  margin: 0 0 0.75rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.55rem;
+  font-weight: 560;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
+}
+
+.vigil-harm-definitions dl {
+  margin: 0;
+}
+
+.vigil-harm-definitions dl > div {
+  display: grid;
+  grid-template-columns: minmax(10.5rem, 0.28fr) minmax(0, 1fr);
+  gap: 1.1rem;
+  padding: 0.78rem 0;
+  border-top: 1px solid hsl(var(--border) / 0.58);
+}
+
+.vigil-harm-definitions dl > div:first-child {
+  border-top: 0;
+}
+
+.vigil-harm-definitions dt {
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.vigil-harm-definitions dd {
+  margin: 0;
+  line-height: 1.58;
+  color: hsl(var(--foreground) / 0.82);
 }
 
 .vigil-harm-method-note {
@@ -448,4 +497,11 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   font-size: 0.76rem;
   line-height: 1.48;
   color: hsl(var(--muted-foreground));
+}
+
+@media (max-width: 700px) {
+  .vigil-harm-definitions dl > div {
+    grid-template-columns: 1fr;
+    gap: 0.28rem;
+  }
 }
