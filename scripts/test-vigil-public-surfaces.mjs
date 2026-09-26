@@ -824,6 +824,21 @@ test("Case File search, classification and severity filters share one desktop ro
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
 });
 
+test("Case File stage and subsection headings share one editorial scale", async () => {
+  const [caseFile, instrumentCss, taxonomyAssessment] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/vigil-observatory-instrument-experiment.css"),
+    read("src/components/vigil/CaseTaxonomyAssessment.tsx"),
+  ]);
+  assert.match(instrumentCss, /vigil-case-editorial-heading h2[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
+  assert.match(instrumentCss, /vigil-case-editorial-subheading[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
+  assert.match(taxonomyAssessment, />Taxonomy assessment<\/h3>/);
+  assert.doesNotMatch(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
+  assert.match(caseFile, />Real-world harm assessment<\/h3>/);
+  assert.match(caseFile, />External assessments<\/h3>/);
+  assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
+});
+
 test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {
   const [caseFile, dossier] = await Promise.all([
     read("src/pages/vigil-case-file.tsx"),
@@ -954,6 +969,9 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
+  assert.match(severity, /vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5"\][\s\S]*VigilStatusChip/);
+  assert.match(severity, /The band label carries the severity level; colour is not an ordinal scale/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key[\s\S]*border-top: 1px solid[\s\S]*border-bottom: 1px solid/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table th,[\s\S]*border: 0 !important/);
   assert.match(datasets, /DocumentRail title="Datasets"/);

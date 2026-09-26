@@ -628,7 +628,7 @@ export default function VigilCaseFile() {
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
-            <h3 className="vigil-case-editorial-subheading" id="severity-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT</h3>
+            <h3 className="vigil-case-editorial-subheading" id="severity-assessment-heading">Real-world harm assessment</h3>
           </div>
           <HarmImpactMatrix
             assessment={harmImpactAssessment}
@@ -639,7 +639,7 @@ export default function VigilCaseFile() {
         </section>
 
         {externalAssessments.length > 0 && <section className="vigil-severity-assessment vigil-external-assessment-section" aria-labelledby="assessment-external-assessments-heading">
-          <div className="vigil-case-subheading"><h3 className="vigil-case-editorial-subheading" id="assessment-external-assessments-heading">EXTERNAL ASSESSMENTS</h3></div>
+          <div className="vigil-case-subheading"><h3 className="vigil-case-editorial-subheading" id="assessment-external-assessments-heading">External assessments</h3></div>
           <div className="vigil-external-assessment-table-wrap">
             <table className="vigil-external-assessment-table">
               <thead>

@@ -1709,10 +1709,44 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
   line-height: 1.62;
 }
 
+.vigil-severity-methodology-page .vigil-severity-chip-key {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem 1.35rem;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-severity-methodology-page .vigil-severity-chip-key-bands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.vigil-severity-methodology-page .vigil-severity-chip-key p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.58;
+}
+
+.vigil-severity-methodology-page .vigil-severity-chip-key p strong {
+  color: hsl(var(--foreground));
+  font-weight: 680;
+}
+
 @media (max-width: 900px) {
   .vigil-severity-methodology-page .vigil-severity-principles {
     grid-template-columns: 1fr;
     gap: 1.25rem;
+  }
+
+  .vigil-severity-methodology-page .vigil-severity-chip-key {
+    grid-template-columns: 1fr;
   }
 }
 

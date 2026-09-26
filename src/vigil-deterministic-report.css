@@ -333,7 +333,7 @@
 }
 
 .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
-.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-library-kicker {
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-case-editorial-subheading {
   font-size: 1.05rem !important;
   font-weight: 700 !important;
   line-height: 1.3 !important;
@@ -1129,7 +1129,7 @@
   }
 
   .vigil-deterministic-report-host .report-assessment-details > section > .report-substantive-label,
-.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-library-kicker {
+.vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-case-editorial-subheading {
     font-size: 11.5pt !important;
     font-weight: 700 !important;
     line-height: 1.3 !important;
@@ -2272,8 +2272,15 @@
 
 
 /* Stage 02 taxonomy reasoning uses the same table grammar as External assessments. */
-.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-substantive-label {
+.vigil-deterministic-report-host .vigil-taxonomy-assessment > .vigil-case-editorial-subheading {
   margin: 0 0 0.55rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: hsl(var(--report-ink)) !important;
 }
 
 .vigil-deterministic-report-host .vigil-taxonomy-assessment-intro {
@@ -2363,6 +2370,13 @@
 .vigil-deterministic-report-host .report-peer-assessment-heading {
   margin: 0 0 0.55rem !important;
   padding: 0 !important;
+  font-family: var(--app-font-serif) !important;
+  font-size: 1.05rem !important;
+  font-weight: 400 !important;
+  line-height: 1.28 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: hsl(var(--report-ink)) !important;
 }
 
 .vigil-deterministic-report-host .report-severity-assessment > .vigil-harm-matrix {
@@ -2375,7 +2389,7 @@
 @media print {
   /* Keep Stage 02 assessment headings attached to the analysis they introduce. */
   .vigil-deterministic-report-host .report-peer-assessment-heading,
-  .vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-library-kicker {
+  .vigil-deterministic-report-host .report-assessment-details > .vigil-taxonomy-assessment > .vigil-case-editorial-subheading {
     break-after: avoid-page !important;
     page-break-after: avoid !important;
   }

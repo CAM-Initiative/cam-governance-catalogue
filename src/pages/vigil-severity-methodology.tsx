@@ -4,6 +4,7 @@ import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { HarmEvidenceStateDefinitions, HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
 const methodologyReferences = [
   {
@@ -115,6 +116,12 @@ export default function VigilSeverityMethodology() {
               <div><h3>Evidence state first</h3><p>Each harm dimension is recorded as assessed, unreported, insufficient evidence or not applicable. Missing publication evidence is not converted into S1.</p></div>
               <div><h3>Highest supported harm</h3><p>The highest defensible materialised-harm threshold controls the overall severity. Dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p></div>
               <div><h3>SU remains unassessed</h3><p>SU is used when the evidence cannot support a defensible overall band. It is an evidence state, not a sixth severity band.</p></div>
+            </div>
+            <div className="vigil-severity-chip-key" aria-label="Severity chip display">
+              <div className="vigil-severity-chip-key-bands">
+                {(["S1", "S2", "S3", "S4", "S5"] as const).map((band) => <VigilStatusChip key={band} value={band} />)}
+              </div>
+              <p><strong>Severity display.</strong> S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU remains visually neutral because it is an unassessed evidence state, not a sixth severity band.</p>
             </div>
           </section>
 
