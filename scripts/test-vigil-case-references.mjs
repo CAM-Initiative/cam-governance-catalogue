@@ -81,8 +81,8 @@ test("Case File Section 02 orders factual basis, taxonomy assessment, harm and e
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const factualIndex = assessmentRenderer.indexOf("vigil-diagnosis-factual-basis");
   const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
-  const harmIndex = assessmentRenderer.indexOf("Real-world harm assessment");
-  const externalIndex = assessmentRenderer.indexOf("External assessments");
+  const harmIndex = assessmentRenderer.indexOf("VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT");
+  const externalIndex = assessmentRenderer.indexOf("EXTERNAL ASSESSMENTS");
 
   assert.ok(factualIndex >= 0 && taxonomyIndex > factualIndex && harmIndex > taxonomyIndex && externalIndex > harmIndex);
   assert.doesNotMatch(assessmentRenderer, />GOVERNANCE ASSESSMENT</);
@@ -101,7 +101,7 @@ test("Governance significance is integrated under Conclusion while taxonomy asse
   assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
-  assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3>Governance significance<\/h3>/);
+  assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3 className="vigil-case-editorial-subheading">Governance significance<\/h3>/);
   assert.doesNotMatch(conclusionRenderer, /vigil-governance-significance-card/);
 });
 
