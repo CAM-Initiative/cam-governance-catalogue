@@ -1,8 +1,9 @@
-import { useEffect, useState, type CSSProperties } from "react";
-import { BookOpen, Database, ExternalLink, Scale } from "lucide-react";
+import { useState } from "react";
+import { BookOpen, ChevronLeft, ChevronRight, Database, ExternalLink, Scale } from "lucide-react";
 
 const externalResources = [
   {
+    tab: "REG",
     label: "AI Regulations Tracker",
     category: "Regulation",
     description: "Compare AI laws, regulatory proposals and policy developments across jurisdictions.",
@@ -10,6 +11,7 @@ const externalResources = [
     icon: Scale,
   },
   {
+    tab: "INC",
     label: "AI Incident Database",
     category: "Incident evidence",
     description: "Search reported AI incidents and harms documented across systems, sectors and jurisdictions.",
@@ -17,6 +19,7 @@ const externalResources = [
     icon: Database,
   },
   {
+    tab: "OECD",
     label: "OECD AI Incidents Monitor",
     category: "International monitoring",
     description: "Review internationally monitored AI incidents, hazards and emerging risk patterns.",
@@ -24,6 +27,7 @@ const externalResources = [
     icon: Database,
   },
   {
+    tab: "NIST",
     label: "NIST AI Resource Center",
     category: "Risk & standards",
     description: "Access NIST AI risk-management frameworks, profiles, guidance and supporting resources.",
@@ -32,66 +36,87 @@ const externalResources = [
   },
 ] as const;
 
-function nextLocalMidnightDelay(now: Date) {
-  const next = new Date(now);
-  next.setHours(24, 0, 1, 0);
-  return Math.max(1_000, next.getTime() - now.getTime());
-}
-
-function CalendarNote() {
-  const [today, setToday] = useState(() => new Date());
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setToday(new Date()), nextLocalMidnightDelay(today));
-    return () => window.clearTimeout(timeout);
-  }, [today]);
-
-  const month = new Intl.DateTimeFormat(undefined, { month: "short" }).format(today).toUpperCase();
-  const weekday = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(today).toUpperCase();
-  const year = new Intl.DateTimeFormat(undefined, { year: "numeric" }).format(today);
-
-  return <div className="home-governance-calendar-note" aria-label={`Today: ${weekday}, ${month} ${today.getDate()}, ${year}`}>
-    <span>{month}</span>
-    <strong>{today.getDate()}</strong>
-    <small>{weekday}</small>
-  </div>;
-}
-
 export function ExploreGovernanceRail() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const active = externalResources[activeIndex];
+  const ActiveIcon = active.icon;
+  const showCard = (index: number) => {
+    const count = externalResources.length;
+    setActiveIndex((index + count) % count);
+  };
+
   return (
-    <aside aria-label="External governance references" className="home-governance-panel home-governance-board">
-      <CalendarNote />
-      <div className="home-governance-board-heading">
-        <p className="home-governance-letterboard-title" aria-label="External Governance References">
-          {Array.from("EXTERNAL GOVERNANCE REFERENCES").map((letter, index) => letter === " "
-            ? <span className="home-governance-letter-space" aria-hidden="true" key={`space-${index}`} />
-            : <span className="home-governance-letter" aria-hidden="true" key={`${letter}-${index}`} style={{ "--letter-index": index } as CSSProperties}>{letter}</span>
-          )}
-        </p>
+    <aside aria-label="External governance references" className="home-governance-panel home-governance-rolodex">
+      <div className="home-governance-rolodex-heading">
+        <div>
+          <p className="home-governance-rolodex-eyebrow">Reference index</p>
+          <h2>External Governance References</h2>
+          <p className="home-governance-rolodex-intro">A growing card index of external governance tools, incident monitors, standards and regulatory references.</p>
+        </div>
+        <span className="home-governance-rolodex-count" aria-label={`Reference ${activeIndex + 1} of ${externalResources.length}`}>
+          {String(activeIndex + 1).padStart(2, "0")} / {String(externalResources.length).padStart(2, "0")}
+        </span>
       </div>
 
-      <div className="home-governance-board-grid">
-        {externalResources.map((resource, index) => {
-          const Icon = resource.icon;
-          return <a
-            className={`home-governance-note home-governance-note-${index + 1}`}
-            href={resource.href}
-            key={resource.label}
-            rel="noreferrer"
-            target="_blank"
+      <div className="home-governance-rolodex-machine">
+        <div className="home-governance-rolodex-tabs" role="tablist" aria-label="External governance reference cards">
+          {externalResources.map((resource, index) => (
+            <button
+              aria-controls="home-governance-rolodex-card"
+              aria-selected={activeIndex === index}
+              className={activeIndex === index ? "is-active" : undefined}
+              id={`home-governance-rolodex-tab-${index}`}
+              key={resource.label}
+              onClick={() => showCard(index)}
+              role="tab"
+              title={resource.label}
+              type="button"
+            >
+              {resource.tab}
+            </button>
+          ))}
+        </div>
+
+        <div className="home-governance-rolodex-stack">
+          <span className="home-governance-rolodex-stack-sheet home-governance-rolodex-stack-sheet-back" aria-hidden="true" />
+          <span className="home-governance-rolodex-stack-sheet home-governance-rolodex-stack-sheet-middle" aria-hidden="true" />
+
+          <article
+            aria-labelledby={`home-governance-rolodex-tab-${activeIndex}`}
+            className="home-governance-rolodex-card"
+            id="home-governance-rolodex-card"
+            key={active.label}
+            role="tabpanel"
           >
-            <span className="home-governance-pin" aria-hidden="true" />
-            <span className="home-governance-note-category">{resource.category}</span>
-            <span className="home-governance-note-title">
-              <Icon aria-hidden="true" />
-              <strong>{resource.label}</strong>
-              <ExternalLink aria-hidden="true" />
-            </span>
-            <span className="home-governance-note-copy">{resource.description}</span>
-          </a>;
-        })}
+            <span className="home-governance-rolodex-hole home-governance-rolodex-hole-left" aria-hidden="true" />
+            <span className="home-governance-rolodex-hole home-governance-rolodex-hole-right" aria-hidden="true" />
+
+            <p className="home-governance-rolodex-category">{active.category}</p>
+            <div className="home-governance-rolodex-card-title">
+              <ActiveIcon aria-hidden="true" />
+              <h3>{active.label}</h3>
+            </div>
+            <p className="home-governance-rolodex-copy">{active.description}</p>
+            <a className="home-governance-rolodex-link" href={active.href} rel="noreferrer" target="_blank">
+              Open reference <ExternalLink aria-hidden="true" />
+            </a>
+          </article>
+        </div>
+
+        <span className="home-governance-rolodex-spindle" aria-hidden="true" />
       </div>
 
+      <div className="home-governance-rolodex-controls">
+        <button onClick={() => showCard(activeIndex - 1)} type="button">
+          <ChevronLeft aria-hidden="true" />
+          Previous
+        </button>
+        <span>{active.category}</span>
+        <button onClick={() => showCard(activeIndex + 1)} type="button">
+          Next
+          <ChevronRight aria-hidden="true" />
+        </button>
+      </div>
     </aside>
   );
 }

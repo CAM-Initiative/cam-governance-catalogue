@@ -6,14 +6,12 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-test("Explore AI governance board keeps substantive note copy readable", async () => {
+test("Explore AI governance rolodex keeps substantive reference copy readable", async () => {
   const railCss = await read("src/governance-rail-refinements.css");
-  assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.04rem;/);
-  assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.83rem;/);
-  assert.match(railCss, /linear-gradient\(135deg, hsl\(33 54% 70%\), hsl\(30 46% 62%\)/);
-  assert.match(railCss, /feTurbulence/);
-  assert.match(railCss, /background-repeat: no-repeat/);
-  assert.doesNotMatch(railCss, /repeating-linear-gradient\(13deg|repeating-linear-gradient\(103deg/);
+  assert.match(railCss, /\.home-governance-rolodex-card-title h3 \{[\s\S]*font-size: clamp\(1\.45rem, 2\.3vw, 2rem\)/);
+  assert.match(railCss, /\.home-governance-rolodex-copy \{[\s\S]*font-size: 0\.88rem;/);
+  assert.match(railCss, /repeating-linear-gradient\([\s\S]*180deg,[\s\S]*hsl\(43 39% 97%\)/);
+  assert.match(railCss, /home-governance-rolodex-spindle/);
 });
 
 test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
@@ -71,16 +69,17 @@ test("Governance Explorer situates the VIGIL Observatory in the external landsca
   assert.match(home, /help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice/);
 });
 
-test("External Governance References is an external-only pinned reference board", async () => {
+test("External Governance References is an external-only rolodex", async () => {
   const rail = await read("src/components/ExploreGovernanceRail.tsx");
   assert.match(rail, /External Governance References/);
   assert.match(rail, /aria-label="External governance references"/);
-  assert.doesNotMatch(rail, /External reference board|Independent external resources/);
   assert.match(rail, /AI Regulations Tracker/);
   assert.match(rail, /AI Incident Database/);
   assert.match(rail, /OECD AI Incidents Monitor/);
   assert.match(rail, /NIST AI Resource Center/);
-  assert.match(rail, /home-governance-note/);
+  assert.match(rail, /home-governance-rolodex-card/);
+  assert.match(rail, /role="tablist"/);
+  assert.match(rail, /Open reference/);
   assert.doesNotMatch(rail, /href="\/observatory\//);
   assert.doesNotMatch(rail, /initiativeResources/);
 });
@@ -906,52 +905,26 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 });
 
 
-test("Explore AI governance keeps the restrained corkboard and a small corner calendar note", async () => {
+test("Explore AI governance uses a scalable lined-paper rolodex", async () => {
   const [rail, css] = await Promise.all([
     read("src/components/ExploreGovernanceRail.tsx"),
     read("src/governance-rail-refinements.css"),
   ]);
-  assert.match(rail, /home-governance-board-grid/);
-  assert.match(rail, /home-governance-pin/);
-  assert.match(rail, /target="_blank"/);
-  assert.match(rail, /aria-label="External Governance References"/);
-  assert.match(rail, /home-governance-letter/);
-  assert.match(rail, /home-governance-letter-space/);
-  assert.doesNotMatch(rail, /home-governance-board-rule|home-governance-section-label/);
-  assert.match(css, /home-governance-board[\s\S]*border: 0;[\s\S]*border-radius: 1\.15rem/);
-  assert.match(css, /home-governance-board::after[\s\S]*border: 0;/);
-  assert.doesNotMatch(css, /border-image:\s*repeating-linear-gradient/);
-  assert.match(css, /home-governance-letter[\s\S]*font-family: ui-rounded,[\s\S]*Arial Rounded MT Bold[\s\S]*font-size: clamp\(1\.15rem, 1\.8vw, 1\.7rem\)[\s\S]*text-shadow:/);
-  assert.doesNotMatch(css, /home-governance-letter::before/);
-  assert.match(css, /No insertion pegs or "feet"/);
-  assert.match(css, /home-governance-letter:nth-child\(6n \+ 1\)[\s\S]*rotate\(-0\.9deg\)/);
-  assert.match(css, /Final corkboard composition experiment/);
-  assert.match(css, /home-governance-board-grid[\s\S]*grid-template-columns: repeat\(12, minmax\(0, 1fr\)\)[\s\S]*grid-template-rows: repeat\(11, 2rem\)/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-1[\s\S]*grid-column: 1 \/ 7[\s\S]*grid-row: 1 \/ 6/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-3[\s\S]*grid-column: 2 \/ 10[\s\S]*clip-path: none[\s\S]*repeating-linear-gradient/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-4[\s\S]*grid-column: 8 \/ 13[\s\S]*grid-row: 8 \/ 12/);
-  assert.match(css, /home-governance-note-2::after[\s\S]*clip-path: polygon/);
-  assert.match(css, /home-governance-note-4 \.home-governance-note-category[\s\S]*border: 1px solid/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-1 \.home-governance-pin \{ left: 28%; \}/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-2 \.home-governance-pin \{ left: 73%; \}/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-3 \.home-governance-pin \{ left: 19%; \}/);
-  assert.match(css, /home-governance-board-grid \.home-governance-note-4 \.home-governance-pin \{ left: 66%; \}/);
-  assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
-  assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
-  assert.match(css, /home-governance-note:hover \.home-governance-pin[\s\S]*translate\(-50%, -0\.34rem\)/);
-  assert.match(css, /home-governance-pin::after[\s\S]*scaleY\(0\.18\)[\s\S]*linear-gradient\(90deg,/);
-  assert.match(css, /home-governance-note:hover \.home-governance-pin::after[\s\S]*scaleY\(1\)[\s\S]*opacity: 1/);
-  assert.match(rail, /function CalendarNote\(\)/);
-  assert.match(rail, /nextLocalMidnightDelay/);
-  assert.match(rail, /home-governance-calendar-note/);
-  assert.doesNotMatch(rail, /home-governance-calendar-pages|home-governance-calendar-pin|TearOffCalendar/);
-  assert.match(css, /home-governance-calendar-note[\s\S]*position: absolute;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*background: linear-gradient/);
-  assert.match(css, /home-governance-calendar-note::before[\s\S]*height: 0\.38rem;[\s\S]*repeating-linear-gradient[\s\S]*hsl\(30 4% 11%\)/);
-  assert.match(css, /home-governance-calendar-note::after[\s\S]*border-top: 1px dashed/);
-  assert.doesNotMatch(css, /home-governance-calendar-pages|home-governance-calendar-pin/);
-  assert.doesNotMatch(css, /home-governance-note-4::after/);
-  assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
-  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.9deg/);
+  assert.match(rail, /useState\(0\)/);
+  assert.match(rail, /home-governance-rolodex-tabs/);
+  assert.match(rail, /home-governance-rolodex-stack/);
+  assert.match(rail, /home-governance-rolodex-card/);
+  assert.match(rail, /home-governance-rolodex-hole/);
+  assert.match(rail, /home-governance-rolodex-spindle/);
+  assert.match(rail, /Previous/);
+  assert.match(rail, /Next/);
+  assert.match(css, /home-governance-rolodex-machine[\s\S]*linear-gradient\(180deg, hsl\(31 22% 33%\)/);
+  assert.match(css, /home-governance-rolodex-card[\s\S]*repeating-linear-gradient/);
+  assert.match(css, /home-governance-rolodex-card-in/);
+  assert.match(css, /home-governance-rolodex-tabs button\.is-active/);
+  assert.match(css, /home-governance-rolodex-spindle::before,[\s\S]*home-governance-rolodex-spindle::after/);
+  assert.doesNotMatch(rail, /CalendarNote|home-governance-pin|home-governance-letter/);
+  assert.doesNotMatch(css, /corkboard|feTurbulence|home-governance-calendar-note/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
