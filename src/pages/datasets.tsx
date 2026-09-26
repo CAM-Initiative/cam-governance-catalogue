@@ -178,6 +178,7 @@ export default function Datasets() {
         contextLabel="Collection context"
         mode="collection"
         visual="datasets"
+        artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-datasets.png"
         metadata={[
           { label: "Status", value: "Beta" },
           { label: "Public resources", value: "5" },
