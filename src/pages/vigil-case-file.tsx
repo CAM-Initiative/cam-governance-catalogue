@@ -7,6 +7,7 @@ import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vig
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
 import {
@@ -784,24 +785,23 @@ export default function VigilCaseFile() {
   return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10">
     <Link href="/observatory/cases/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> Case Files</Link>
 
-    <header className={`vigil-case-file-hero vigil-case-file-hero-v4${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}>
-      <div className="vigil-case-file-title-block">
-        <p className="vigil-library-kicker">{isExemplar ? "VIGIL Observatory Case File · Alignment exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}</p>
-        <h1>{title}</h1>
-      </div>
-      <aside className="vigil-case-meta-panel" aria-label="Incident context">
-        <p className="vigil-case-context-label">Incident context</p>
-        <dl className="vigil-case-context-grid">
-          <Field label="Incident" value={incident ? compactId(incident.id) : compactId(state.sourceId)} mono />
-          <Field label="Occurred" value={occurred} />
-          <Field label="Jurisdiction" value={jurisdiction} />
-          <Field label="Environment" value={environmentLabel} />
-          <Field label="Severity" value={severityDisplay(incident?.severity)} />
-          <Field label="Classification" value={classificationDisplay} />
-          {hasMixedExecution && <Field label="Execution" value="Mixed" />}
-        </dl>
-      </aside>
-    </header>
+    <VigilObservatoryMasthead
+      titleId="case-file-heading"
+      kicker={isExemplar ? "VIGIL Observatory Case File · Alignment exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
+      title={title}
+      contextLabel="Incident context"
+      mode="record"
+      className={`vigil-case-file-masthead${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}
+      metadata={[
+        { label: "Incident", value: incident ? compactId(incident.id) : compactId(state.sourceId), mono: true },
+        { label: "Occurred", value: occurred },
+        { label: "Jurisdiction", value: jurisdiction },
+        { label: "Environment", value: environmentLabel },
+        { label: "Severity", value: severityDisplay(incident?.severity) },
+        { label: "Classification", value: classificationDisplay },
+        ...(hasMixedExecution ? [{ label: "Execution", value: "Mixed" }] : []),
+      ]}
+    />
 
     {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>

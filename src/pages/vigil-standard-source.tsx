@@ -3,6 +3,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import {
   canonicalIdentifierLabel,
   externalSourceKey,
@@ -112,10 +113,6 @@ function reviewSystemLabel(event?: ExternalReviewEvent) {
 
 function Fact({ label, value }: { label: string; value?: string }) {
   return <div><dt>{label}</dt><dd>{value || "Not specified"}</dd></div>;
-}
-
-function CaseField({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
-  return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value || "Not specified"}</dd></div>;
 }
 
 function ClauseDetail({ requirement, source }: { requirement: ExternalRequirementDetail; source: ExternalSourceEntry }) {
@@ -247,25 +244,25 @@ export default function VigilStandardSource() {
     <Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link>
 
     <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="standard-heading">
-      <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-standard-ticket">
-        <div className="vigil-taxonomy-ticket-title">
-          <p className="vigil-library-kicker">AI Governance Standards</p>
-          <h1 id="standard-heading">{source.title}</h1>
-          <p className="vigil-library-description">{sourcePublicSummary(source)}</p>
-        </div>
-        <aside className="vigil-taxonomy-ticket-meta vigil-standard-ticket-meta" aria-label="Standard context">
-          <p className="vigil-case-context-label">Source context</p>
-          <dl>
-            <CaseField label="Source" value={canonicalIdentifierLabel(source)} mono />
-            <CaseField label="Jurisdiction" value={source.jurisdiction} />
-            <CaseField label="Source type" value={clean(source.source_class)} />
-            <CaseField label="Version" value={source.source_version} mono />
-            <CaseField label="Clauses represented" value={String(clauses.length)} />
-            <CaseField label="Reviewed" value={formatReviewDate(reviewDate)} mono />
-          </dl>
-          {source.official_locator ? <a href={source.official_locator} className="cam-action cam-action-secondary vigil-standard-official-source" target="_blank" rel="noreferrer">Official source <ExternalLink aria-hidden="true" /></a> : null}
-        </aside>
-      </header>
+      <VigilObservatoryMasthead
+        titleId="standard-heading"
+        kicker="AI Governance Standards"
+        title={source.title}
+        description={sourcePublicSummary(source)}
+        contextLabel="Source context"
+        mode="record"
+        metadata={[
+          { label: "Source", value: canonicalIdentifierLabel(source), mono: true },
+          { label: "Jurisdiction", value: source.jurisdiction },
+          { label: "Source type", value: clean(source.source_class) },
+          { label: "Version", value: source.source_version, mono: true },
+          { label: "Clauses represented", value: String(clauses.length) },
+          { label: "Reviewed", value: formatReviewDate(reviewDate), mono: true },
+        ]}
+        contextFooter={source.official_locator
+          ? <a href={source.official_locator} className="cam-action cam-action-secondary vigil-standard-official-source" target="_blank" rel="noreferrer">Official source <ExternalLink aria-hidden="true" /></a>
+          : null}
+      />
 
       <div className="vigil-taxonomy-manual-layout vigil-standard-manual-layout">
         <nav className="vigil-taxonomy-manual-contents vigil-standard-manual-contents" aria-label={`${source.title} contents`}>

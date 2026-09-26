@@ -3,6 +3,7 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import {
   canonicalIdentifierLabel,
   externalSourceKey,
@@ -150,22 +151,20 @@ export default function VigilStandardsBaseline() {
 
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-case-library-page vigil-standards-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
     <section className="vigil-library-shell vigil-standards-shell vigil-taxonomy-shell" aria-labelledby="standards-heading">
-      <header className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-standards-ticket">
-        <div className="vigil-taxonomy-ticket-title">
-          <p className="vigil-library-kicker">VIGIL Observatory</p>
-          <h1 id="standards-heading">AI Governance Standards</h1>
-          <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Search the library, open a source, then move through its overview, governance relevance, represented clauses and evidence review using the same reference-manual pattern as the Alignment Taxonomy.</p>
-        </div>
-        <aside className="vigil-taxonomy-ticket-meta" aria-label="Standards library context">
-          <p className="vigil-case-context-label">Library context</p>
-          <dl>
-            <div><dt>Status</dt><dd>Beta</dd></div>
-            <div><dt>Release status</dt><dd>0.1.0</dd></div>
-            <div><dt>Sources</dt><dd>{state.status === "ready" ? sourceCount : "—"}</dd></div>
-            <div><dt>Clauses</dt><dd>{state.status === "ready" ? clauseCount.toLocaleString() : "—"}</dd></div>
-          </dl>
-        </aside>
-      </header>
+      <VigilObservatoryMasthead
+        titleId="standards-heading"
+        kicker="VIGIL Observatory"
+        title="AI Governance Standards"
+        description="A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Search the library, open a source, then move through its overview, governance relevance, represented clauses and evidence review using the same reference-manual pattern as the Alignment Taxonomy."
+        contextLabel="Library context"
+        mode="collection"
+        metadata={[
+          { label: "Status", value: "Beta" },
+          { label: "Release status", value: "0.1.0", mono: true },
+          { label: "Sources", value: state.status === "ready" ? sourceCount : "—" },
+          { label: "Clauses", value: state.status === "ready" ? clauseCount.toLocaleString() : "—" },
+        ]}
+      />
 
       {state.status === "loading" && <div className="vigil-registry-notice">Loading AI Governance Standards…</div>}
       {state.status === "unavailable" && <div className="vigil-registry-notice is-error"><strong>AI Governance Standards unavailable.</strong> {state.message}</div>}

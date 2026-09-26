@@ -402,8 +402,8 @@ test("Long-form public pages share the document rail and editorial hero grammar"
   for (const page of [about, licensing, privacy]) {
     assert.match(page, /document-hero/);
   }
-  assert.match(policy, /vigil-taxonomy-ticket policy-ticket/);
-  assert.ok(policy.indexOf('vigil-taxonomy-ticket policy-ticket') < policy.indexOf('<DocumentRail'));
+  assert.match(policy, /<VigilObservatoryMasthead[\s\S]*title="Policy Papers & Submissions"/);
+  assert.ok(policy.indexOf('<VigilObservatoryMasthead') < policy.indexOf('<DocumentRail'));
   assert.match(policy, /document-layout document-layout--wide document-layout-below-header/);
   assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
   assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
@@ -809,10 +809,31 @@ test("Case File ticket keeps severity and classification in Incident context and
     read("src/pages/vigil-case-file.tsx"),
     read("src/vigil-case-file-dossier.css"),
   ]);
-  assert.match(caseFile, /vigil-case-context-grid[\s\S]*Field label="Jurisdiction"[\s\S]*Field label="Environment"[\s\S]*Field label="Severity"[\s\S]*Field label="Classification"/);
+  assert.match(caseFile, /<VigilObservatoryMasthead[\s\S]*contextLabel="Incident context"[\s\S]*label: "Jurisdiction"[\s\S]*label: "Environment"[\s\S]*label: "Severity"[\s\S]*label: "Classification"/);
   assert.doesNotMatch(caseFile, /vigil-case-ticket-footer|vigil-case-ticket-footer-meta|vigil-case-ticket-report-button/);
   assert.match(caseFile, /vigil-case-report-tab[\s\S]*Full report \/ PDF/);
   assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
+});
+
+test("principal Observatory surfaces use the shared masthead component", async () => {
+  const [severity, standards, standardSource, policy, hub, caseFile, datasets] = await Promise.all([
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/vigil-standards-baseline.tsx"),
+    read("src/pages/vigil-standard-source.tsx"),
+    read("src/pages/policy.tsx"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/datasets.tsx"),
+  ]);
+  for (const page of [severity, standards, standardSource, policy, hub, caseFile, datasets]) {
+    assert.match(page, /VigilObservatoryMasthead/);
+  }
+  for (const page of [severity, standards, standardSource, policy, caseFile, datasets]) {
+    assert.doesNotMatch(page, /vigil-taxonomy-ticket|vigil-case-file-hero-v4/);
+  }
+  assert.ok(hub.indexOf("<VigilObservatoryMasthead") < hub.indexOf("<DocumentRail"));
+  assert.match(standardSource, /mode="record"/);
+  assert.match(caseFile, /mode="record"/);
 });
 
 test("Case Files landing page uses the shared Observatory masthead and stays concise", async () => {
@@ -928,9 +949,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.doesNotMatch(shell, /const homeLinks = \[[\s\S]*?label: "Policy"/);
   assert.match(shell, /href="\/observatory\/cases\/"[\s\S]*VIGIL Observatory/);
 
-  assert.match(severity, /vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket/);
-  assert.match(severity, /Methodology context/);
-  assert.ok(severity.indexOf('vigil-taxonomy-header vigil-taxonomy-ticket vigil-harm-ticket') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
+  assert.match(severity, /<VigilObservatoryMasthead[\s\S]*title="Harm Impact Assessment"[\s\S]*contextLabel="Methodology context"/);
+  assert.ok(severity.indexOf('<VigilObservatoryMasthead') < severity.indexOf('DocumentRail title="Harm Impact Assessment"'));
   assert.doesNotMatch(severity, /href: "#overview", label: "Overview"/);
   assert.match(menuCss, /vigil-severity-methodology-document \{[\s\S]*border: 0 !important[\s\S]*background: transparent !important/);
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
@@ -941,8 +961,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table th,[\s\S]*border: 0 !important/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
-  assert.match(datasets, /vigil-taxonomy-ticket vigil-datasets-ticket/);
-  assert.ok(datasets.indexOf('vigil-taxonomy-ticket vigil-datasets-ticket') < datasets.indexOf('DocumentRail title="Datasets"'));
+  assert.match(datasets, /<VigilObservatoryMasthead[\s\S]*title="Datasets"[\s\S]*contextLabel="Collection context"/);
+  assert.ok(datasets.indexOf('<VigilObservatoryMasthead') < datasets.indexOf('DocumentRail title="Datasets"'));
   assert.doesNotMatch(datasets, /label: "0[1-5] |<p>0[1-5] ·/);
   assert.doesNotMatch(datasets, /vigil-knowledge-grid vigil-dataset-grid/);
   assert.match(menuCss, /cam-action:not\(\.cam-action-compact\)[\s\S]*border-radius: 999px/);

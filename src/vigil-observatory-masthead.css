@@ -156,3 +156,34 @@ html[data-theme="dark"] .vigil-observatory-masthead {
     grid-template-columns: 1fr;
   }
 }
+
+
+.vigil-observatory-masthead-context-footer {
+  margin-top: 1.1rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid hsl(var(--border) / 0.56);
+}
+
+.vigil-observatory-masthead-context-footer .cam-action {
+  min-height: 2.35rem;
+  padding: 0.52rem 0.78rem;
+  font-size: 0.68rem;
+}
+
+.vigil-case-file-page .vigil-observatory-masthead.is-exemplar {
+  border-color: hsl(var(--status-success) / 0.58);
+  box-shadow:
+    0 0 0 1px hsl(var(--status-success) / 0.08),
+    0 0.34rem 0.95rem hsl(var(--foreground) / 0.028),
+    inset 0 1px 0 hsl(0 0% 100% / 0.55);
+}
+
+.vigil-case-file-page .vigil-observatory-masthead.is-exemplar.is-mixed-execution {
+  border-color: hsl(var(--primary) / 0.62);
+}
+
+.vigil-knowledge-hub-page.document-page,
+.vigil-datasets-page.document-page {
+  width: min(100%, 1500px);
+  padding-top: 1.5rem;
+}

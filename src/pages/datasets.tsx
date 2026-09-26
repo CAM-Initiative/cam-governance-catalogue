@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import {
   downloadExternalGovernanceDataset,
   loadExternalRequirements,
@@ -168,22 +169,21 @@ export default function Datasets() {
 
   return <Shell>
     <main className="vigil-about-page vigil-datasets-page home-menu-page document-page">
-      <header id="overview" className="vigil-taxonomy-header vigil-taxonomy-ticket vigil-datasets-ticket">
-            <div className="vigil-taxonomy-ticket-title">
-              <p className="vigil-library-kicker">CAM Initiative</p>
-              <h1>Datasets</h1>
-              <p className="vigil-library-description">Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright &amp; Licence</a> for the applicable terms.</p>
-            </div>
-            <aside className="vigil-taxonomy-ticket-meta" aria-label="Dataset collection context">
-              <p className="vigil-case-context-label">Collection context</p>
-              <dl>
-                <div><dt>Status</dt><dd>Beta</dd></div>
-                <div><dt>Public resources</dt><dd>5</dd></div>
-                <div><dt>Formats</dt><dd>JSON · PDF · Archive</dd></div>
-                <div><dt>Maintainer</dt><dd>CAM Initiative</dd></div>
-              </dl>
-            </aside>
-      </header>
+      <VigilObservatoryMasthead
+        id="overview"
+        titleId="datasets-heading"
+        kicker="CAM Initiative"
+        title="Datasets"
+        description={<>Downloadable governance reference datasets and archival releases maintained by the CAM Initiative. Access and download do not imply unrestricted reuse; see <a href="/licensing/">Copyright &amp; Licence</a> for the applicable terms.</>}
+        contextLabel="Collection context"
+        mode="collection"
+        metadata={[
+          { label: "Status", value: "Beta" },
+          { label: "Public resources", value: "5" },
+          { label: "Formats", value: "JSON · PDF · Archive", mono: true },
+          { label: "Maintainer", value: "CAM Initiative" },
+        ]}
+      />
 
       <div className="document-layout document-layout--wide document-layout-below-header">
         <DocumentRail title="Datasets" items={datasetRail} ariaLabel="CAM Initiative dataset sections" />

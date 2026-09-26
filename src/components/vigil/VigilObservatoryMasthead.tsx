@@ -10,11 +10,13 @@ export type VigilObservatoryMastheadMetadata = {
 
 // Phase 1 adopts this component on Case Files and Alignment Taxonomy before the remaining Observatory surfaces migrate.
 type VigilObservatoryMastheadProps = {
+  id?: string;
   kicker: string;
   title: ReactNode;
   description?: ReactNode;
   contextLabel?: string;
   metadata?: VigilObservatoryMastheadMetadata[];
+  contextFooter?: ReactNode;
   titleId?: string;
   mode?: VigilObservatoryMastheadMode;
   ariaLive?: "off" | "polite" | "assertive";
@@ -22,11 +24,13 @@ type VigilObservatoryMastheadProps = {
 };
 
 export function VigilObservatoryMasthead({
+  id,
   kicker,
   title,
   description,
   contextLabel,
   metadata = [],
+  contextFooter,
   titleId,
   mode = "reference",
   ariaLive = "off",
@@ -35,7 +39,7 @@ export function VigilObservatoryMasthead({
   const classes = ["vigil-observatory-masthead", className].filter(Boolean).join(" ");
   const showContext = Boolean(contextLabel && metadata.length);
 
-  return <header className={classes} data-mode={mode} aria-labelledby={titleId}>
+  return <header id={id} className={classes} data-mode={mode} aria-labelledby={titleId}>
     <div className="vigil-observatory-masthead-title">
       <p className="vigil-library-kicker vigil-observatory-masthead-kicker">{kicker}</p>
       <h1 id={titleId}>{title}</h1>
@@ -50,6 +54,7 @@ export function VigilObservatoryMasthead({
           <dd className={item.mono ? "is-mono" : undefined}>{item.value}</dd>
         </div>)}
       </dl>
+      {contextFooter ? <div className="vigil-observatory-masthead-context-footer">{contextFooter}</div> : null}
     </aside> : null}
   </header>;
 }

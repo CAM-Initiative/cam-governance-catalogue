@@ -1,5 +1,6 @@
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { motion } from "framer-motion";
 import { Download, ExternalLink } from "lucide-react";
 
@@ -23,29 +24,20 @@ export default function Policy() {
   return (
     <Shell>
       <main className="home-menu-page document-page policy-page">
-        <motion.header
-          animate={{ opacity: 1, y: 0 }}
-          className="vigil-taxonomy-header vigil-taxonomy-ticket policy-ticket"
-          initial={{ opacity: 0, y: 16 }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="vigil-taxonomy-ticket-title">
-            <p className="vigil-library-kicker">CAM Initiative · Public policy</p>
-            <h1>Policy Papers &amp; Submissions</h1>
-            <p className="vigil-library-description">
-              Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition.
-            </p>
-          </div>
-          <aside className="vigil-taxonomy-ticket-meta" aria-label="Policy library context">
-            <p className="vigil-case-context-label">Library context</p>
-            <dl>
-              <div><dt>Collection</dt><dd>Policy &amp; submissions</dd></div>
-              <div><dt>Published</dt><dd>{policyRail.length}</dd></div>
-              <div><dt>Publisher</dt><dd>CAM Initiative</dd></div>
-              <div><dt>Access</dt><dd>Public</dd></div>
-            </dl>
-          </aside>
-        </motion.header>
+        <VigilObservatoryMasthead
+          titleId="policy-heading"
+          kicker="CAM Initiative · Public policy"
+          title="Policy Papers & Submissions"
+          description="Public policy proposals and consultation submissions translating CAM governance architecture into implementable institutional design, legal mechanisms, public administration, and accountable technology transition."
+          contextLabel="Library context"
+          mode="collection"
+          metadata={[
+            { label: "Collection", value: "Policy & submissions" },
+            { label: "Published", value: policyRail.length },
+            { label: "Publisher", value: "CAM Initiative" },
+            { label: "Access", value: "Public" },
+          ]}
+        />
 
         <div id="policy-library" className="document-layout document-layout--wide document-layout-below-header">
           <DocumentRail
