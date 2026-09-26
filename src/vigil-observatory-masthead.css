@@ -494,7 +494,37 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
     clamp(1.35rem, 2vw, 1.85rem)
     clamp(1.35rem, 2.25vw, 2.25rem)
     clamp(1.8rem, 2.4vw, 2.2rem)
-    clamp(19rem, 30vw, 27rem);
+    clamp(20rem, 31vw, 28rem);
+  isolation: isolate;
+}
+
+.vigil-observatory-masthead.has-artwork[data-visual="taxonomy"] .vigil-observatory-masthead-title::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2.15rem -3rem -2.35rem -2.5rem;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse at 52% 50%,
+      hsl(38 45% 97% / 0.92) 0%,
+      hsl(38 44% 96% / 0.82) 38%,
+      hsl(38 42% 95% / 0.58) 58%,
+      hsl(38 40% 94% / 0.18) 73%,
+      transparent 86%
+    );
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead.has-artwork[data-visual="taxonomy"] .vigil-observatory-masthead-title::before {
+  background:
+    radial-gradient(
+      ellipse at 52% 50%,
+      hsl(29 16% 12% / 0.9) 0%,
+      hsl(29 16% 12% / 0.8) 38%,
+      hsl(29 15% 11% / 0.56) 58%,
+      hsl(29 14% 10% / 0.18) 73%,
+      transparent 86%
+    );
 }
 
 .vigil-observatory-masthead.has-artwork h1 {
@@ -544,7 +574,7 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
   }
 
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
-    padding-left: clamp(15.5rem, 27vw, 20rem);
+    padding-left: clamp(16.25rem, 28vw, 21rem);
   }
 
   .vigil-observatory-masthead.has-artwork h1 {
@@ -573,6 +603,11 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
     max-width: none;
     padding-left: clamp(1.35rem, 4vw, 2rem);
+    isolation: auto;
+  }
+
+  .vigil-observatory-masthead.has-artwork[data-visual="taxonomy"] .vigil-observatory-masthead-title::before {
+    display: none;
   }
 
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
