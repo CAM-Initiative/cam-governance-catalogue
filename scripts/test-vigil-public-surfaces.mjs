@@ -202,14 +202,18 @@ test("Case Files use one canonical Incident and retain the six substantive stage
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
-test("Case File tabs do not repeat editorial stage descriptions inside the active panel", async () => {
-  const [sections, caseFile] = await Promise.all([
+test("Case File stages use visible editorial headings without duplicate descriptions", async () => {
+  const [sections, caseFile, css] = await Promise.all([
     read("src/lib/vigilCaseSections.ts"),
     read("src/pages/vigil-case-file.tsx"),
+    read("src/vigil-observatory-instrument-experiment.css"),
   ]);
   assert.doesNotMatch(sections, /description:/);
   assert.doesNotMatch(caseFile, /<p>\{description\}<\/p>/);
-  assert.match(caseFile, /className="sr-only">\{title\}<\/h2>/);
+  assert.match(caseFile, /className="vigil-case-editorial-heading"/);
+  assert.match(caseFile, /"case-classify": "Alignment classification"/);
+  assert.match(caseFile, /"case-repair": "Governing invariants and repair"/);
+  assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
 test("Repair uses the same public table grammar as Classification", async () => {

@@ -771,3 +771,133 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
     border-bottom: 2px solid hsl(var(--primary)) !important;
   }
 }
+
+
+/* Case File editorial section treatment ----------------------------------- */
+
+/* Match the About page hierarchy: thin section rules, a gold mono eyebrow and
+   a large serif heading on the open page canvas. */
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > .vigil-case-editorial-heading {
+  display: block !important;
+  margin: 0 0 1.35rem !important;
+  padding: 1.65rem 0 1.25rem !important;
+  border: 0 !important;
+  border-top: 1px solid var(--vigil-workbench-rule-strong) !important;
+  border-bottom: 1px solid var(--vigil-workbench-rule) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-editorial-heading .vigil-library-kicker {
+  display: block !important;
+  margin: 0 0 0.52rem !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 760 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-editorial-heading h2 {
+  display: block !important;
+  margin: 0 !important;
+  max-width: 64rem;
+  font-family: var(--app-font-serif) !important;
+  font-size: clamp(2rem, 3.8vw, 3.45rem) !important;
+  font-weight: 520 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.035em !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
+  padding: 0 !important;
+}
+
+/* Section 02 governance assessment is an editorial section, not a floating
+   rounded card. Preserve its internal evidence hierarchy with rules instead. */
+.vigil-case-file-page .vigil-diagnosis-definition {
+  margin: 0 !important;
+  padding: 0 0 1.8rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vigil-workbench-rule) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.vigil-case-file-page .vigil-diagnosis-definition > .vigil-library-kicker {
+  margin: 0 0 0.5rem !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.72rem !important;
+  font-weight: 760 !important;
+  letter-spacing: 0.14em !important;
+  line-height: 1.35 !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--primary)) !important;
+}
+
+.vigil-case-file-page .vigil-diagnosis-assessment-details {
+  margin-top: 0 !important;
+}
+
+.vigil-case-file-page .vigil-diagnosis-assessment-details > section {
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.vigil-case-file-page .vigil-diagnosis-assessment-details .vigil-substantive-label {
+  margin: 0 !important;
+  font-family: var(--app-font-serif) !important;
+  font-size: clamp(1.7rem, 2.8vw, 2.45rem) !important;
+  font-weight: 540 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.025em !important;
+  text-transform: none !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.vigil-case-file-page .vigil-diagnosis-assessment-details p {
+  margin-top: 0.72rem !important;
+}
+
+/* Keep the remaining substantive blocks in Assessment separated by lines
+   rather than rounded containers. */
+.vigil-case-file-page .vigil-taxonomy-assessment,
+.vigil-case-file-page .vigil-severity-assessment,
+.vigil-case-file-page .vigil-external-assessment-section {
+  margin: 0 !important;
+  padding: 1.75rem 0 1.85rem !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vigil-workbench-rule) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.vigil-case-file-page .vigil-external-assessment-section:last-child,
+.vigil-case-file-page .vigil-severity-assessment:last-child {
+  border-bottom-color: var(--vigil-workbench-rule) !important;
+}
+
+@media (max-width: 900px) {
+  .vigil-case-file-page .vigil-case-active-stage .vigil-case-section > .vigil-case-editorial-heading {
+    padding-top: 1.25rem !important;
+  }
+
+  .vigil-case-file-page .vigil-case-active-stage .vigil-case-editorial-heading h2 {
+    font-size: clamp(1.9rem, 8vw, 2.7rem) !important;
+  }
+}

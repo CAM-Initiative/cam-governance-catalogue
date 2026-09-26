@@ -291,9 +291,21 @@ function Field({ label, value, mono = false }: { label: string; value?: string; 
   return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
 }
 
-function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+const CASE_STAGE_HEADINGS: Record<string, string> = {
+  "case-observe": "Incident evidence and affected systems",
+  "case-diagnose": "Governance, external and real-world harm assessment",
+  "case-classify": "Alignment classification",
+  "case-repair": "Governing invariants and repair",
+  "case-conclusion": "Integrated conclusion",
+  "case-references": "Evidence and reference trail",
+};
+
+function Section({ id, number, title, children }: { id: string; number: string; title: string; children: ReactNode }) {
   return <section id={id} className="vigil-case-section" aria-labelledby={`${id}-heading`}>
-    <h2 id={`${id}-heading`} className="sr-only">{title}</h2>
+    <header className="vigil-case-editorial-heading">
+      <p className="vigil-library-kicker">{number} · {title}</p>
+      <h2 id={`${id}-heading`}>{CASE_STAGE_HEADINGS[id] ?? title}</h2>
+    </header>
     <div className="vigil-case-section-body">{children}</div>
   </section>;
 }
@@ -866,7 +878,7 @@ export default function VigilCaseFile() {
 
       <div className="vigil-case-manual-document">
         <div className="vigil-case-active-stage" role="tabpanel" id={`case-panel-${activeStage}`} aria-label={activeAriaLabel} onClick={handleCaseReferenceClick}>
-          <Section id={`case-${activeStage}`} title={activeDefinition.label}>
+          <Section id={`case-${activeStage}`} number={activeDefinition.number} title={activeDefinition.label}>
             {renderStageContent(activeStage)}
           </Section>
         </div>
