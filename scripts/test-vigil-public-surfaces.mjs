@@ -8,9 +8,9 @@ const read = (path) => readFile(resolve(root, path), "utf8");
 
 test("Explore AI governance board keeps substantive note copy readable", async () => {
   const railCss = await read("src/governance-rail-refinements.css");
-  assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.12rem;/);
-  assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.88rem;/);
-  assert.match(railCss, /linear-gradient\(135deg, hsl\(33 56% 72%\), hsl\(30 48% 63%\)/);
+  assert.match(railCss, /\.home-governance-note-title strong \{[\s\S]*font-size: 1\.04rem;/);
+  assert.match(railCss, /\.home-governance-note-copy \{[\s\S]*font-size: 0\.83rem;/);
+  assert.match(railCss, /linear-gradient\(135deg, hsl\(33 54% 70%\), hsl\(30 46% 62%\)/);
   assert.match(railCss, /feTurbulence/);
   assert.match(railCss, /background-repeat: no-repeat/);
   assert.doesNotMatch(railCss, /repeating-linear-gradient\(13deg|repeating-linear-gradient\(103deg/);
