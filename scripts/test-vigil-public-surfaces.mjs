@@ -863,7 +863,7 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 });
 
 
-test("Explore AI governance uses a tactile corkboard with pinned external notes", async () => {
+test("Explore AI governance keeps the restrained corkboard and a small corner calendar note", async () => {
   const [rail, css] = await Promise.all([
     read("src/components/ExploreGovernanceRail.tsx"),
     read("src/governance-rail-refinements.css"),
@@ -883,12 +883,14 @@ test("Explore AI governance uses a tactile corkboard with pinned external notes"
   assert.doesNotMatch(css, /home-governance-letter::before[\s\S]*bottom: -0\.11em|home-governance-letter::after/);
   assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
-  assert.match(css, /home-governance-note:hover[\s\S]*top: -5px/);
-  assert.match(css, /home-governance-note:hover \.home-governance-pin[\s\S]*translateY\(-0\.42rem\)[\s\S]*scale\(1\.22\)/);
-  assert.match(rail, /function TearOffCalendar\(\)/);
+  assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
+  assert.doesNotMatch(css, /home-governance-note:hover \.home-governance-pin/);
+  assert.match(rail, /function CalendarNote\(\)/);
   assert.match(rail, /nextLocalMidnightDelay/);
-  assert.match(rail, /home-governance-calendar-day/);
-  assert.match(css, /home-governance-calendar[\s\S]*clip-path:[\s\S]*home-governance-calendar-pages/);
+  assert.match(rail, /home-governance-calendar-note/);
+  assert.doesNotMatch(rail, /home-governance-calendar-pages|home-governance-calendar-pin|TearOffCalendar/);
+  assert.match(css, /home-governance-calendar-note[\s\S]*position: absolute;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*background: linear-gradient/);
+  assert.doesNotMatch(css, /home-governance-calendar-pages|home-governance-calendar-pin/);
   assert.doesNotMatch(css, /home-governance-note-2::after|home-governance-note-4::after/);
   assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
   assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.6deg/);

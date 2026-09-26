@@ -86,102 +86,6 @@
 
 .home-governance-board-heading,
 .home-governance-board-grid,
-
-/* Tear-off desk-calendar scrap: browser-local date, with a visible paper stack
-   so the board feels inhabited rather than purely navigational. */
-.home-governance-calendar {
-  position: relative;
-  isolation: isolate;
-  flex: 0 0 6.4rem;
-  width: 6.4rem;
-  min-height: 6.95rem;
-  margin: -0.35rem 0.15rem 0 0;
-  padding: 1.1rem 0.55rem 0.72rem;
-  transform: rotate(1.35deg);
-  transform-origin: 50% 12%;
-  background:
-    linear-gradient(180deg, hsl(46 36% 97%), hsl(42 27% 92%));
-  color: hsl(28 20% 17%);
-  clip-path: polygon(
-    0.8% 1.2%, 18% 0.4%, 37% 1%, 56% 0.2%, 75% 1.1%, 99% 0.5%,
-    100% 83%, 96% 84.4%, 91% 83.4%, 86% 85%, 81% 83.5%, 76% 84.8%,
-    71% 83.6%, 66% 85.1%, 61% 83.5%, 56% 84.8%, 51% 83.6%, 46% 85%,
-    41% 83.6%, 36% 84.8%, 31% 83.5%, 26% 85%, 21% 83.6%, 16% 84.8%,
-    11% 83.4%, 6% 84.8%, 0 83%
-  );
-  box-shadow: 0.24rem 0.34rem 0.42rem hsl(27 22% 14% / 0.15);
-  text-align: center;
-}
-
-.home-governance-calendar-pages {
-  position: absolute;
-  z-index: -1;
-  inset: 0.2rem -0.18rem -0.18rem 0.18rem;
-  transform: rotate(-1.2deg);
-  background: hsl(42 21% 87%);
-  box-shadow:
-    0.12rem 0.14rem 0 hsl(41 17% 81%),
-    0.22rem 0.25rem 0 hsl(40 15% 76% / 0.8);
-}
-
-.home-governance-calendar-pin {
-  position: absolute;
-  z-index: 3;
-  top: 0.35rem;
-  left: 50%;
-  width: 0.48rem;
-  height: 0.48rem;
-  transform: translateX(-50%);
-  border: 1px solid hsl(34 36% 25% / 0.82);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 28%, hsl(48 74% 78%) 0 16%, hsl(41 62% 48%) 32% 68%, hsl(33 42% 27%) 100%);
-  box-shadow:
-    0 0.12rem 0.15rem hsl(25 18% 10% / 0.3),
-    0 0 0 0.07rem hsl(42 34% 91% / 0.2);
-}
-
-.home-governance-calendar-month,
-.home-governance-calendar-weekday,
-.home-governance-calendar-year {
-  display: block;
-  font-family: var(--app-font-mono);
-  text-transform: uppercase;
-}
-
-.home-governance-calendar-month {
-  margin-top: 0.08rem;
-  font-size: 0.67rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: hsl(4 43% 39%);
-}
-
-.home-governance-calendar-day {
-  display: block;
-  margin: 0.2rem 0 0.12rem;
-  font-family: var(--app-font-serif);
-  font-size: 2.75rem;
-  font-weight: 600;
-  line-height: 0.95;
-  letter-spacing: -0.055em;
-}
-
-.home-governance-calendar-weekday {
-  font-size: 0.58rem;
-  font-weight: 740;
-  letter-spacing: 0.07em;
-  color: hsl(29 19% 28% / 0.86);
-}
-
-.home-governance-calendar-year {
-  margin-top: 0.24rem;
-  font-size: 0.5rem;
-  font-weight: 650;
-  letter-spacing: 0.12em;
-  color: hsl(29 16% 36% / 0.68);
-}
-
 .home-governance-board-caption {
   position: relative;
   z-index: 1;
@@ -190,16 +94,14 @@
 .home-governance-board-heading {
   display: flex;
   z-index: 3;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.2rem;
+  align-items: center;
+  gap: 0.8rem;
   margin: 0 0 1.65rem;
   color: hsl(36 24% 14%);
 }
 
 .home-governance-letterboard-title {
   display: flex;
-  min-width: 0;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: clamp(0.02rem, 0.12vw, 0.09rem);
@@ -351,21 +253,12 @@
 .home-governance-note:hover,
 .home-governance-note:focus-visible {
   z-index: 3;
-  top: -5px;
-  transform: rotate(0deg) scale(1.014);
+  top: -3px;
+  transform: rotate(0deg) scale(1.012);
   filter:
     drop-shadow(0.1rem 0.14rem 0 hsl(28 16% 18% / 0.12))
-    drop-shadow(0.56rem 0.82rem 0.88rem hsl(27 22% 14% / 0.24));
+    drop-shadow(0.5rem 0.72rem 0.75rem hsl(27 22% 14% / 0.22));
   outline: none;
-}
-
-.home-governance-note:hover .home-governance-pin,
-.home-governance-note:focus-visible .home-governance-pin {
-  top: 0.05rem;
-  transform: translateX(-50%) translateY(-0.42rem) scale(1.22);
-  box-shadow:
-    0 0.34rem 0.3rem hsl(25 18% 10% / 0.28),
-    0 0 0 0.09rem hsl(42 34% 91% / 0.28);
 }
 
 .home-governance-pin {
@@ -383,10 +276,6 @@
   box-shadow:
     0 0.13rem 0.16rem hsl(25 18% 10% / 0.32),
     0 0 0 0.08rem hsl(42 34% 91% / 0.2);
-  transition:
-    top 175ms cubic-bezier(.22,1,.36,1),
-    transform 175ms cubic-bezier(.22,1,.36,1),
-    box-shadow 175ms ease;
 }
 
 
@@ -468,21 +357,6 @@
 }
 
 @media (max-width: 720px) {
-  .home-governance-board-heading {
-    align-items: flex-start;
-  }
-
-  .home-governance-calendar {
-    flex-basis: 5.25rem;
-    width: 5.25rem;
-    min-height: 5.9rem;
-    padding-inline: 0.4rem;
-  }
-
-  .home-governance-calendar-day {
-    font-size: 2.2rem;
-  }
-
   .governance-explorer-home-panel .home-governance-board {
     padding: 1.25rem;
     border-radius: 0.9rem;
@@ -503,8 +377,75 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-governance-note,
-  .home-governance-pin {
+  .home-governance-note {
     transition: none;
+  }
+}
+
+
+/* Small date scrap: deliberately independent of the board layout so it never
+   displaces the corkboard title or pinned reference notes. */
+.home-governance-calendar-note {
+  position: absolute;
+  z-index: 4;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 4.15rem;
+  min-height: 4.35rem;
+  padding: 0.5rem 0.4rem 0.42rem;
+  transform: rotate(1deg);
+  border: 1px solid hsl(30 8% 46% / 0.28);
+  background: linear-gradient(180deg, hsl(30 5% 91%), hsl(30 4% 84%));
+  box-shadow: 0.16rem 0.22rem 0.34rem hsl(27 20% 14% / 0.14);
+  color: hsl(30 10% 22%);
+  text-align: center;
+}
+
+.home-governance-calendar-note span,
+.home-governance-calendar-note small {
+  font-family: var(--app-font-mono);
+  font-weight: 720;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.home-governance-calendar-note span {
+  font-size: 0.56rem;
+}
+
+.home-governance-calendar-note strong {
+  margin: 0.12rem 0 0.08rem;
+  font-family: var(--app-font-serif);
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 0.95;
+}
+
+.home-governance-calendar-note small {
+  font-size: 0.48rem;
+  color: hsl(30 8% 32% / 0.78);
+}
+
+.home-governance-letterboard-title {
+  max-width: calc(100% - 5.25rem);
+}
+
+@media (max-width: 720px) {
+  .home-governance-calendar-note {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 3.65rem;
+    min-height: 3.85rem;
+  }
+
+  .home-governance-calendar-note strong {
+    font-size: 1.55rem;
+  }
+
+  .home-governance-letterboard-title {
+    max-width: calc(100% - 4.5rem);
   }
 }

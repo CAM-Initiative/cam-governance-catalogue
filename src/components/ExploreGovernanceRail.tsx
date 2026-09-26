@@ -38,7 +38,7 @@ function nextLocalMidnightDelay(now: Date) {
   return Math.max(1_000, next.getTime() - now.getTime());
 }
 
-function TearOffCalendar() {
+function CalendarNote() {
   const [today, setToday] = useState(() => new Date());
 
   useEffect(() => {
@@ -47,22 +47,20 @@ function TearOffCalendar() {
   }, [today]);
 
   const month = new Intl.DateTimeFormat(undefined, { month: "short" }).format(today).toUpperCase();
-  const weekday = new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(today);
+  const weekday = new Intl.DateTimeFormat(undefined, { weekday: "short" }).format(today).toUpperCase();
   const year = new Intl.DateTimeFormat(undefined, { year: "numeric" }).format(today);
 
-  return <div className="home-governance-calendar" aria-label={`Today: ${weekday}, ${month} ${today.getDate()}, ${year}`}>
-    <span className="home-governance-calendar-pin" aria-hidden="true" />
-    <span className="home-governance-calendar-pages" aria-hidden="true" />
-    <span className="home-governance-calendar-month">{month}</span>
-    <strong className="home-governance-calendar-day">{today.getDate()}</strong>
-    <span className="home-governance-calendar-weekday">{weekday}</span>
-    <span className="home-governance-calendar-year">{year}</span>
+  return <div className="home-governance-calendar-note" aria-label={`Today: ${weekday}, ${month} ${today.getDate()}, ${year}`}>
+    <span>{month}</span>
+    <strong>{today.getDate()}</strong>
+    <small>{weekday}</small>
   </div>;
 }
 
 export function ExploreGovernanceRail() {
   return (
     <aside aria-label="External AI governance references" className="home-governance-panel home-governance-board">
+      <CalendarNote />
       <div className="home-governance-board-heading">
         <p className="home-governance-letterboard-title" aria-label="External References">
           {Array.from("EXTERNAL REFERENCES").map((letter, index) => letter === " "
@@ -70,7 +68,6 @@ export function ExploreGovernanceRail() {
             : <span className="home-governance-letter" aria-hidden="true" key={`${letter}-${index}`} style={{ "--letter-index": index } as CSSProperties}>{letter}</span>
           )}
         </p>
-        <TearOffCalendar />
       </div>
 
       <div className="home-governance-board-grid">
