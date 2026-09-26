@@ -129,7 +129,7 @@ test("Alignment Taxonomy remains available if the linked Case File projection ca
 });
 
 test("Observatory index pages share the canonical illustrated masthead", async () => {
-  const [cases, taxonomy, harm, policy, standards, datasets, masthead, mastheadCss, main] = await Promise.all([
+  const [cases, taxonomy, harm, policy, standards, datasets, masthead, mastheadCss, main, indexHtml] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
@@ -139,6 +139,7 @@ test("Observatory index pages share the canonical illustrated masthead", async (
     read("src/components/vigil/VigilObservatoryMasthead.tsx"),
     read("src/vigil-observatory-masthead.css"),
     read("src/main.tsx"),
+    read("src/index.html"),
   ]);
   assert.match(cases, /<VigilObservatoryMasthead[\s\S]*title="Case Files"/);
   assert.match(taxonomy, /<VigilObservatoryMasthead[\s\S]*title="Alignment Taxonomy"/);
@@ -153,6 +154,8 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /vigil-observatory-masthead-calibration-accent/);
   assert.match(masthead, /artworkSrc/);
   assert.match(masthead, /vigil-observatory-masthead-artwork/);
+  assert.match(masthead, /loading="eager"[\s\S]*decoding="async"[\s\S]*fetchPriority="high"/);
+  assert.match(masthead, /onLoad=\{\(event\) => event\.currentTarget\.classList\.add\("is-loaded"\)\}/);
   assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomyV2\.png"/);
   assert.match(cases, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-case-files\.png"/);
   assert.match(harm, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-harm-impact\.png"/);
@@ -163,7 +166,10 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*--masthead-accent: 39 73% 56%[\s\S]*hsl\(28 16% 12%\)/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*opacity: 0\.84[\s\S]*brightness\(0\.54\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*--masthead-artwork-opacity: 0\.84[\s\S]*hsl\(31 20% 20%\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*opacity: 0;[\s\S]*brightness\(0\.54\)[\s\S]*transition: opacity 120ms/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-artwork\.is-loaded[\s\S]*opacity: var\(--masthead-artwork-opacity\)/);
+  assert.match(indexHtml, /rel="preconnect" href="https:\/\/raw\.githubusercontent\.com" crossorigin/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork h1[\s\S]*color: hsl\(38 35% 95%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context[\s\S]*margin-left: -2\.4rem[\s\S]*hsl\(28 14% 13% \/ 0\)[\s\S]*hsl\(27 14% 11% \/ 0\.94\)/);
   assert.doesNotMatch(mastheadCss, /mask-image: linear-gradient\(90deg, #000 0 79%/);

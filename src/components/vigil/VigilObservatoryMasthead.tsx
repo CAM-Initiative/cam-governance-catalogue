@@ -44,7 +44,17 @@ export function VigilObservatoryMasthead({
   const showContext = Boolean(contextLabel && metadata.length);
 
   return <header id={id} className={classes} data-mode={mode} data-visual={visual} aria-labelledby={titleId}>
-    {artworkSrc ? <img className="vigil-observatory-masthead-artwork" src={artworkSrc} alt="" aria-hidden="true" /> : null}
+    {artworkSrc ? <img
+      className="vigil-observatory-masthead-artwork"
+      src={artworkSrc}
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+      fetchPriority="high"
+      onLoad={(event) => event.currentTarget.classList.add("is-loaded")}
+      onError={(event) => { event.currentTarget.hidden = true; }}
+    /> : null}
     <div className="vigil-observatory-masthead-instrument" aria-hidden="true">
       <span className="vigil-observatory-masthead-instrument-arc" />
       <span className="vigil-observatory-masthead-instrument-axis vigil-observatory-masthead-instrument-axis-x" />
