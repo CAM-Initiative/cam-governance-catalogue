@@ -176,7 +176,10 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.match(mastheadCss, /font-size: clamp\(3\.2rem, 4\.25vw, 4\.15rem\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead-instrument/);
   assert.match(mastheadCss, /vigil-observatory-masthead-calibration-accent/);
-  assert.doesNotMatch(mastheadCss, /vigil-observatory-masthead-art/);
+  assert.match(masthead, /artworkSrc/);
+  assert.match(masthead, /vigil-observatory-masthead-artwork/);
+  assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL\/vigil-fascia-taxonomy\.png"/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork/);
   assert.doesNotMatch(masthead, /Archive|LibraryBig|Landmark|ShieldCheck|<Visual/);
   assert.match(mastheadCss, /grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(mastheadCss, /html\[data-theme="dark"\] \.vigil-observatory-masthead/);

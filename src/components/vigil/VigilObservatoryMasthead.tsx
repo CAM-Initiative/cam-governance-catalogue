@@ -20,6 +20,7 @@ type VigilObservatoryMastheadProps = {
   titleId?: string;
   mode?: VigilObservatoryMastheadMode;
   visual?: VigilObservatoryMastheadVisual;
+  artworkSrc?: string;
   ariaLive?: "off" | "polite" | "assertive";
   className?: string;
 };
@@ -35,13 +36,15 @@ export function VigilObservatoryMasthead({
   titleId,
   mode = "reference",
   visual = "knowledge",
+  artworkSrc,
   ariaLive = "off",
   className,
 }: VigilObservatoryMastheadProps) {
-  const classes = ["vigil-observatory-masthead", className].filter(Boolean).join(" ");
+  const classes = ["vigil-observatory-masthead", artworkSrc ? "has-artwork" : "", className].filter(Boolean).join(" ");
   const showContext = Boolean(contextLabel && metadata.length);
 
   return <header id={id} className={classes} data-mode={mode} data-visual={visual} aria-labelledby={titleId}>
+    {artworkSrc ? <img className="vigil-observatory-masthead-artwork" src={artworkSrc} alt="" aria-hidden="true" /> : null}
     <div className="vigil-observatory-masthead-instrument" aria-hidden="true">
       <span className="vigil-observatory-masthead-instrument-arc" />
       <span className="vigil-observatory-masthead-instrument-axis vigil-observatory-masthead-instrument-axis-x" />
