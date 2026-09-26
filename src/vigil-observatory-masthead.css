@@ -473,14 +473,12 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
 .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
   position: absolute;
   z-index: 1;
-  inset: 0 22% 0 0;
-  width: auto;
+  inset: 0;
+  width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: left center;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(90deg, #000 0 79%, rgb(0 0 0 / 0.94) 86%, rgb(0 0 0 / 0.38) 94%, transparent 100%);
-  mask-image: linear-gradient(90deg, #000 0 79%, rgb(0 0 0 / 0.94) 86%, rgb(0 0 0 / 0.38) 94%, transparent 100%);
 }
 
 .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-instrument {
@@ -512,8 +510,15 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
 .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
   position: relative;
   z-index: 3;
+  border-left: 0;
   background:
-    linear-gradient(135deg, hsl(38 39% 97% / 0.97), hsl(32 28% 93% / 0.96));
+    linear-gradient(
+      90deg,
+      hsl(38 39% 97% / 0.18) 0%,
+      hsl(38 39% 97% / 0.72) 12%,
+      hsl(37 36% 96% / 0.94) 34%,
+      hsl(32 28% 93% / 0.97) 100%
+    );
 }
 
 html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
@@ -522,17 +527,20 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
 }
 
 html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+  border-left: 0;
   background:
-    linear-gradient(145deg, hsl(29 17% 15% / 0.97), hsl(25 15% 11% / 0.98));
+    linear-gradient(
+      90deg,
+      hsl(29 17% 15% / 0.18) 0%,
+      hsl(29 17% 15% / 0.74) 12%,
+      hsl(28 16% 13% / 0.94) 34%,
+      hsl(25 15% 11% / 0.98) 100%
+    );
 }
 
 @media (max-width: 1120px) {
   .vigil-observatory-masthead.has-artwork {
     grid-template-columns: minmax(0, 1fr) minmax(14rem, 27%);
-  }
-
-  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
-    right: 25%;
   }
 
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
@@ -553,13 +561,11 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
 
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
     position: absolute;
-    inset: 0 0 auto auto;
-    width: min(72%, 34rem);
+    inset: 0;
+    width: 100%;
     height: 14rem;
     object-position: left center;
     opacity: 0.28;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.42) 18%, #000 58% 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.42) 18%, #000 58% 100%);
   }
 
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
