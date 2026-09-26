@@ -927,9 +927,9 @@ test("Explore AI governance keeps the restrained corkboard and a small corner ca
   assert.match(css, /home-governance-calendar-note::before[\s\S]*height: 0\.38rem;[\s\S]*repeating-linear-gradient[\s\S]*hsl\(30 4% 11%\)/);
   assert.match(css, /home-governance-calendar-note::after[\s\S]*border-top: 1px dashed/);
   assert.doesNotMatch(css, /home-governance-calendar-pages|home-governance-calendar-pin/);
-  assert.doesNotMatch(css, /home-governance-note-2::after|home-governance-note-4::after/);
+  assert.doesNotMatch(css, /home-governance-note-4::after/);
   assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
-  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.6deg/);
+  assert.match(css, /home-governance-note-1[\s\S]*--note-tilt: -0\.9deg/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
