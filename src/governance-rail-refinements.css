@@ -276,8 +276,43 @@
   box-shadow:
     0 0.13rem 0.16rem hsl(25 18% 10% / 0.32),
     0 0 0 0.08rem hsl(42 34% 91% / 0.2);
+  transition:
+    transform 170ms cubic-bezier(.22,1,.36,1),
+    box-shadow 170ms ease;
 }
 
+.home-governance-pin::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(100% - 0.02rem);
+  left: 50%;
+  width: 0.11rem;
+  height: 0.62rem;
+  transform: translateX(-50%) scaleY(0.18);
+  transform-origin: 50% 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, hsl(210 5% 52%), hsl(210 8% 88%) 48%, hsl(210 4% 48%));
+  box-shadow: 0 0 0 1px hsl(210 6% 24% / 0.16);
+  opacity: 0;
+  transition:
+    transform 170ms cubic-bezier(.22,1,.36,1),
+    opacity 120ms ease;
+}
+
+.home-governance-note:hover .home-governance-pin,
+.home-governance-note:focus-visible .home-governance-pin {
+  transform: translate(-50%, -0.34rem) scale(1.08);
+  box-shadow:
+    0 0.2rem 0.24rem hsl(25 18% 10% / 0.34),
+    0 0 0 0.08rem hsl(42 34% 91% / 0.24);
+}
+
+.home-governance-note:hover .home-governance-pin::after,
+.home-governance-note:focus-visible .home-governance-pin::after {
+  transform: translateX(-50%) scaleY(1);
+  opacity: 1;
+}
 
 .home-governance-note-1 .home-governance-pin { left: 51%; }
 .home-governance-note-2 .home-governance-pin { left: 47%; }
@@ -390,17 +425,43 @@
   z-index: 4;
   top: 1rem;
   right: 1rem;
+  isolation: isolate;
   display: grid;
   place-items: center;
   width: 4.15rem;
   min-height: 4.35rem;
-  padding: 0.5rem 0.4rem 0.42rem;
+  padding: 0.78rem 0.4rem 0.42rem;
+  overflow: hidden;
   transform: rotate(1deg);
   border: 1px solid hsl(30 8% 46% / 0.28);
   background: linear-gradient(180deg, hsl(30 5% 91%), hsl(30 4% 84%));
   box-shadow: 0.16rem 0.22rem 0.34rem hsl(27 20% 14% / 0.14);
   color: hsl(30 10% 22%);
   text-align: center;
+}
+
+.home-governance-calendar-note::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.38rem;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 0.38rem, hsl(0 0% 100% / 0.14) 0.38rem 0.43rem),
+    linear-gradient(180deg, hsl(30 5% 19%), hsl(30 4% 11%));
+  box-shadow: 0 1px 0 hsl(0 0% 100% / 0.2), 0 2px 0 hsl(30 6% 36% / 0.24);
+}
+
+.home-governance-calendar-note::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0.48rem;
+  left: 0.42rem;
+  right: 0.42rem;
+  border-top: 1px dashed hsl(30 7% 40% / 0.35);
 }
 
 .home-governance-calendar-note span,

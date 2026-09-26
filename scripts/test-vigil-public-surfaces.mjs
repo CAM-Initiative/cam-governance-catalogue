@@ -905,12 +905,16 @@ test("Explore AI governance keeps the restrained corkboard and a small corner ca
   assert.match(css, /home-governance-note-1[\s\S]*top: 4px/);
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
-  assert.doesNotMatch(css, /home-governance-note:hover \.home-governance-pin/);
+  assert.match(css, /home-governance-note:hover \.home-governance-pin[\s\S]*translate\(-50%, -0\.34rem\)/);
+  assert.match(css, /home-governance-pin::after[\s\S]*linear-gradient\(90deg,[\s\S]*scaleY\(0\.18\)/);
+  assert.match(css, /home-governance-note:hover \.home-governance-pin::after[\s\S]*scaleY\(1\)[\s\S]*opacity: 1/);
   assert.match(rail, /function CalendarNote\(\)/);
   assert.match(rail, /nextLocalMidnightDelay/);
   assert.match(rail, /home-governance-calendar-note/);
   assert.doesNotMatch(rail, /home-governance-calendar-pages|home-governance-calendar-pin|TearOffCalendar/);
   assert.match(css, /home-governance-calendar-note[\s\S]*position: absolute;[\s\S]*top: 1rem;[\s\S]*right: 1rem;[\s\S]*background: linear-gradient/);
+  assert.match(css, /home-governance-calendar-note::before[\s\S]*height: 0\.38rem;[\s\S]*repeating-linear-gradient[\s\S]*hsl\(30 4% 11%\)/);
+  assert.match(css, /home-governance-calendar-note::after[\s\S]*border-top: 1px dashed/);
   assert.doesNotMatch(css, /home-governance-calendar-pages|home-governance-calendar-pin/);
   assert.doesNotMatch(css, /home-governance-note-2::after|home-governance-note-4::after/);
   assert.doesNotMatch(css, /\[data-theme="dark"\] \.governance-explorer-home-panel \.home-governance-board/);
