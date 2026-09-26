@@ -6,14 +6,6 @@ import test from "node:test";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-test("Explore AI governance rotary index keeps substantive reference copy readable", async () => {
-  const railCss = await read("src/governance-rail-refinements.css");
-  assert.match(railCss, /\.home-governance-rotary-card-title h3 \{[\s\S]*font-size: clamp\(1\.45rem, 2\.25vw, 1\.95rem\)/);
-  assert.match(railCss, /\.home-governance-rotary-copy \{[\s\S]*font-size: 0\.86rem;/);
-  assert.match(railCss, /repeating-linear-gradient\([\s\S]*180deg,[\s\S]*hsl\(43 39% 97%\)/);
-  assert.match(railCss, /home-governance-rotary-spindle/);
-});
-
 test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
   const [main, css] = await Promise.all([
     read("src/main.tsx"),
@@ -62,27 +54,6 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /External classification \/ rating/);
   assert.match(pages, /VIGIL relationship/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
-});
-
-test("Governance Explorer situates the VIGIL Observatory in the external landscape", async () => {
-  const home = await read("src/pages/home.tsx");
-  assert.match(home, /help situate the VIGIL Observatory alongside regulation, incident monitoring, standards and wider governance practice/);
-});
-
-test("External Governance References is an external-only rotary card index", async () => {
-  const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /External Governance References/);
-  assert.match(rail, /aria-label="External governance references"/);
-  assert.match(rail, /AI Regulations Tracker/);
-  assert.match(rail, /AI Incident Database/);
-  assert.match(rail, /OECD AI Incidents Monitor/);
-  assert.match(rail, /NIST AI Resource Center/);
-  assert.match(rail, /home-governance-rotary-card/);
-  assert.match(rail, /Show previous external governance reference/);
-  assert.match(rail, /Show next external governance reference/);
-  assert.match(rail, /Open reference/);
-  assert.doesNotMatch(rail, /href="\/observatory\//);
-  assert.doesNotMatch(rail, /initiativeResources/);
 });
 
 test("VIGIL Observatory Knowledge Base exposes document navigation for its core references", async () => {
@@ -182,7 +153,7 @@ test("Case Files and Alignment Taxonomy share the canonical Observatory masthead
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context[\s\S]*border-left: 0;[\s\S]*linear-gradient/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context[\s\S]*margin-left: -2\.4rem[\s\S]*hsl\(40 28% 97% \/ 0\)[\s\S]*hsl\(38 24% 95% \/ 0\.94\)/);
   assert.doesNotMatch(mastheadCss, /mask-image: linear-gradient\(90deg, #000 0 79%/);
   assert.doesNotMatch(mastheadCss, /grid-template-areas: "art title context"/);
   assert.doesNotMatch(mastheadCss, /border-right: 1px solid hsl\(34 28% 73%/);
@@ -645,13 +616,12 @@ test("harm methodology keeps interpretive notes under the matrix and evidence de
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {
-  const [sections, cases, hub, report, printable, rail, pages, readme, contract] = await Promise.all([
+  const [sections, cases, hub, report, printable, pages, readme, contract] = await Promise.all([
     read("src/lib/vigilCaseSections.ts"),
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("src/pages/evidence-chain-report-printable.tsx"),
-    read("src/components/ExploreGovernanceRail.tsx"),
     read("scripts/prepare-github-pages.js"),
     read("README.md"),
     read("VIGIL-PUBLIC-DISPLAY-CONTRACT.md"),
@@ -702,14 +672,13 @@ test("severity methodology exposes the registered source trail after Case Files"
 });
 
 test("public brand names prefer VIGIL Observatory over standalone VIGIL labels", async () => {
-  const [shell, hub, taxonomy, cases, datasets, home, rail] = await Promise.all([
+  const [shell, hub, taxonomy, cases, datasets, home] = await Promise.all([
     read("src/components/layout/Shell.tsx"),
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/datasets.tsx"),
     read("src/pages/home.tsx"),
-    read("src/components/ExploreGovernanceRail.tsx"),
   ]);
   assert.match(shell, />\s*VIGIL Observatory\s*<\/Link>/);
   assert.match(shell, /href: "\/observatory\/knowledge-base\/", label: "Knowledge Base"/);
@@ -719,7 +688,6 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
   assert.match(datasets, /title="Alignment Taxonomy"/);
   assert.match(home, /aria-label="VIGIL Fidelity Classes accumulating into the Alignment Taxonomy"/);
   assert.match(home, /Explore the alignment taxonomy/);
-  assert.doesNotMatch(rail, /href="\/observatory\//);
 });
 
 
@@ -904,15 +872,13 @@ test("About explains the VIGIL evidence-to-conclusion method and classification 
 });
 
 
-test("homepage temporarily omits the external governance explorer experiment", async () => {
-  const [home, main, rail] = await Promise.all([
+test("homepage omits the retired external governance explorer", async () => {
+  const [home, main] = await Promise.all([
     read("src/pages/home.tsx"),
     read("src/main.tsx"),
-    read("src/components/ExploreGovernanceRail.tsx"),
   ]);
   assert.doesNotMatch(home, /ExploreGovernanceRail|GovernanceExplorerSection|AI Governance Explorer|rotary reference index/);
   assert.doesNotMatch(main, /governance-rail-refinements\.css/);
-  assert.match(rail, /External Governance References/);
 });
 
 test("About, VIGIL navigation, methodology and datasets share the aligned navigation grammar", async () => {
@@ -1031,15 +997,6 @@ test("Publication copy names CAM Initiative without repeating the maintainer", a
   assert.match(about, /Published by <strong>CAM Initiative<\/strong>, a VIGIL Observatory Case File/);
   assert.doesNotMatch(about, /published by <strong>CAM Initiative<\/strong> and maintained by/);
 });
-
-test("External governance tools use subtle source-type icons", async () => {
-  const rail = await read("src/components/ExploreGovernanceRail.tsx");
-  assert.match(rail, /label: "AI Regulations Tracker"[\s\S]*icon: Scale/);
-  assert.match(rail, /label: "AI Incident Database"[\s\S]*icon: Database/);
-  assert.match(rail, /label: "OECD AI Incidents Monitor"[\s\S]*icon: Database/);
-  assert.match(rail, /label: "NIST AI Resource Center"[\s\S]*icon: BookOpen/);
-});
-
 
 test("Case File Incident stage renders optional source artefact images inside What happened", async () => {
   const [caseFile, css] = await Promise.all([

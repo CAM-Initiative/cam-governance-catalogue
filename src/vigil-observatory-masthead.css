@@ -510,14 +510,17 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
 .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
   position: relative;
   z-index: 3;
+  margin-left: -2.4rem;
+  padding-left: calc(clamp(1.05rem, 1.8vw, 1.55rem) + 2.4rem);
   border-left: 0;
   background:
     linear-gradient(
       90deg,
-      hsl(38 39% 97% / 0.18) 0%,
-      hsl(38 39% 97% / 0.72) 12%,
-      hsl(37 36% 96% / 0.94) 34%,
-      hsl(32 28% 93% / 0.97) 100%
+      hsl(40 28% 97% / 0) 0%,
+      hsl(40 28% 97% / 0.16) 18%,
+      hsl(39 27% 96% / 0.48) 42%,
+      hsl(38 26% 96% / 0.78) 68%,
+      hsl(38 24% 95% / 0.94) 100%
     );
 }
 
@@ -531,10 +534,11 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
   background:
     linear-gradient(
       90deg,
-      hsl(29 17% 15% / 0.18) 0%,
-      hsl(29 17% 15% / 0.74) 12%,
-      hsl(28 16% 13% / 0.94) 34%,
-      hsl(25 15% 11% / 0.98) 100%
+      hsl(28 14% 12% / 0) 0%,
+      hsl(28 14% 12% / 0.2) 18%,
+      hsl(28 14% 12% / 0.52) 42%,
+      hsl(27 14% 11% / 0.82) 68%,
+      hsl(27 14% 10% / 0.96) 100%
     );
 }
 
@@ -576,6 +580,8 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
   }
 
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+    margin-left: 0;
+    padding-left: clamp(1.05rem, 1.8vw, 1.55rem);
     border-top: 1px solid hsl(33 24% 58% / 0.38);
     border-left: 0;
   }
