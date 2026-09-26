@@ -1660,8 +1660,8 @@
   margin-top: 0.85rem;
 }
 
-/* External assessments mirrors the Web UX kicker treatment rather than a substantive subsection heading. */
-.vigil-deterministic-report-host .report-external-assessments > .vigil-library-kicker {
+/* External assessments uses the same serif peer-assessment heading as taxonomy and harm. */
+.vigil-deterministic-report-host .report-external-assessments > .report-peer-assessment-heading {
   margin: 0 0 0.55rem;
 }
 
