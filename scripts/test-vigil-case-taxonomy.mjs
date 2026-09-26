@@ -214,7 +214,7 @@ assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-conclusion-gov
 assert.match(assessmentLayoutCss, /\.report-document \.report-governance-significance \{/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
-assert.match(reportCss, /Taxonomy assessment table mirrors the EXTERNAL ASSESSMENTS table/);
+assert.match(reportCss, /Taxonomy assessment table mirrors the External assessments table/);
 
 assert.match(report, /report-peer-assessment-heading">EXTERNAL ASSESSMENTS/);
 assert.match(report, /report-peer-assessment-heading">VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
