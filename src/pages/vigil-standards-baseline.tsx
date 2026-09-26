@@ -160,7 +160,7 @@ export default function VigilStandardsBaseline() {
           <p className="vigil-case-context-label">Library context</p>
           <dl>
             <div><dt>Status</dt><dd>Beta</dd></div>
-            <div><dt>Release</dt><dd>0.1.0</dd></div>
+            <div><dt>Release status</dt><dd>0.1.0</dd></div>
             <div><dt>Sources</dt><dd>{state.status === "ready" ? sourceCount : "—"}</dd></div>
             <div><dt>Clauses</dt><dd>{state.status === "ready" ? clauseCount.toLocaleString() : "—"}</dd></div>
           </dl>
