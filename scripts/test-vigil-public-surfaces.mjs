@@ -407,7 +407,7 @@ test("Long-form public pages share the document rail and editorial hero grammar"
   assert.match(policy, /<VigilObservatoryMasthead[\s\S]*title="Policy Papers & Submissions"/);
   assert.ok(policy.indexOf('<VigilObservatoryMasthead') < policy.indexOf('<DocumentRail'));
   assert.match(policy, /document-layout document-layout--wide document-layout-below-header/);
-  assert.match(about, /const founderPhotoHref = "\/founder-photo\.jpg"/);
+  assert.match(about, /const founderPhotoHref = "https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/founder-photo\.jpg"/);
   assert.match(about, /about-founder-portrait[\s\S]*<img src=\{founderPhotoHref\}/);
   assert.match(about, /cam-action cam-action-primary[\s\S]*>Contact<\/a>/);
   assert.match(rail, /className="document-rail/);
@@ -908,7 +908,7 @@ test("Explore AI governance keeps the restrained corkboard and a small corner ca
   assert.match(css, /home-governance-pin[\s\S]*radial-gradient/);
   assert.match(css, /home-governance-note:hover[\s\S]*top: -3px/);
   assert.match(css, /home-governance-note:hover \.home-governance-pin[\s\S]*translate\(-50%, -0\.34rem\)/);
-  assert.match(css, /home-governance-pin::after[\s\S]*linear-gradient\(90deg,[\s\S]*scaleY\(0\.18\)/);
+  assert.match(css, /home-governance-pin::after[\s\S]*scaleY\(0\.18\)[\s\S]*linear-gradient\(90deg,/);
   assert.match(css, /home-governance-note:hover \.home-governance-pin::after[\s\S]*scaleY\(1\)[\s\S]*opacity: 1/);
   assert.match(rail, /function CalendarNote\(\)/);
   assert.match(rail, /nextLocalMidnightDelay/);
