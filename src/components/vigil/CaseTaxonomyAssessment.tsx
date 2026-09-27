@@ -167,7 +167,7 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
           <tr>
             <th scope="col">Source clause</th>
             <th scope="col">Recovered governance principle</th>
-            <th scope="col">Incident analysis</th>
+            <th scope="col">Taxonomy boundary &amp; incident analysis</th>
           </tr>
         </thead>
         <tbody>
