@@ -342,7 +342,7 @@ def validate_published_vigil_ui_contract() -> list[str]:
         "Recovered governance principle(s)",
         "Mapped external requirements",
         "Canonical mapping",
-        "Source clauses, recovered governance principles and Incident analysis are repeated here from the Section 02 Incident breakdown",
+        "Source clauses and Incident analysis are repeated here from the Section 02 Incident breakdown; recovered governance principles are surfaced here as part of the evidence-to-classification bridge.",
         "These external requirement mappings are maintained with the relevant Fidelity Classes in the",
     )
     for required in required_strings:
