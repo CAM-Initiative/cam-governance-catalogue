@@ -780,45 +780,40 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
   }
 
   .vigil-case-file-page .vigil-case-stage-tabs {
-    display: flex !important;
-    grid-template-columns: none !important;
-    gap: 0.35rem !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.4rem !important;
     width: 100%;
     min-width: 0;
     margin: 0 !important;
-    padding: 0 0 0.55rem !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+    padding: 0 0 0.65rem !important;
+    overflow: visible !important;
     border: 0 !important;
-    scroll-padding-inline: 0.15rem;
-    scrollbar-width: thin;
   }
 
-  .vigil-case-file-page .vigil-case-stage-tabs button,
-  .vigil-case-file-page .vigil-case-report-tab {
+  .vigil-case-file-page .vigil-case-stage-tabs button {
     display: inline-flex !important;
-    flex: 0 0 auto !important;
-    width: auto !important;
-    min-width: max-content !important;
-    min-height: 2.75rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 2.9rem !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 0.38rem !important;
-    padding: 0.62rem 0.78rem !important;
-    margin-right: 0 !important;
+    padding: 0.66rem 0.58rem !important;
     border: 1px solid hsl(var(--border) / 0.78) !important;
-    border-radius: 999px !important;
+    border-radius: 0.6rem !important;
     background: hsl(var(--background)) !important;
     box-shadow: none !important;
-    font-size: 0.78rem !important;
-    line-height: 1 !important;
-    white-space: nowrap !important;
+    font-size: 0.8rem !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+    white-space: normal !important;
   }
 
   .vigil-case-file-page .vigil-case-stage-tabs button:hover,
   .vigil-case-file-page .vigil-case-stage-tabs button:focus-visible,
   .vigil-case-file-page .vigil-case-stage-tabs button.is-active {
-    padding-left: 0.78rem !important;
+    padding-left: 0.58rem !important;
     border-color: hsl(var(--primary) / 0.58) !important;
     background: hsl(var(--primary) / 0.08) !important;
     color: hsl(var(--foreground)) !important;
@@ -832,6 +827,25 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
   .vigil-case-file-page .vigil-case-stage-tabs button span {
     margin: 0 !important;
     font-size: 0.67rem !important;
+  }
+
+  .vigil-case-file-page .vigil-case-report-tab {
+    grid-column: 1 / -1;
+    display: inline-flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 2.75rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.42rem !important;
+    padding: 0.62rem 0.78rem !important;
+    border: 1px solid hsl(var(--primary) / 0.46) !important;
+    border-radius: 0.6rem !important;
+    background: hsl(var(--primary) / 0.045) !important;
+    box-shadow: none !important;
+    font-size: 0.72rem !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
   }
 
   .vigil-case-file-page .vigil-case-manual-document,
@@ -857,6 +871,12 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
     width: 100%;
     max-width: 100%;
     min-width: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .vigil-case-file-page .vigil-case-stage-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
