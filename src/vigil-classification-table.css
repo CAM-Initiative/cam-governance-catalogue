@@ -179,23 +179,6 @@
   color: hsl(var(--foreground) / 0.88) !important;
 }
 
-.vigil-case-file-page .vigil-classification-invariant {
-  display: block;
-  margin-top: 0.58rem;
-  padding-top: 0.52rem;
-  border-top: 1px solid hsl(var(--border) / 0.48);
-  color: hsl(var(--muted-foreground) / 0.96);
-  font-size: 0.9rem;
-  line-height: 1.55;
-}
-
-.vigil-case-file-page .vigil-classification-invariant strong {
-  display: inline;
-  font-size: inherit;
-  font-weight: 700;
-  color: hsl(var(--foreground) / 0.86);
-}
-
 @media (max-width: 760px) {
   .vigil-case-file-page .vigil-classification-web-table {
     overflow: visible;
