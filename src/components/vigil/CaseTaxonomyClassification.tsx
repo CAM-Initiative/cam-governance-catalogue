@@ -45,7 +45,8 @@ type ResolvedClassification = ClassificationRef & {
 };
 
 type ClassificationEvidence = {
-  sourceClause?: string;
+  sourceAnchor?: string;
+  sourceParaphrase?: string;
   recoveredInvariant?: string;
   relationship?: string;
   canonical: boolean;
@@ -141,7 +142,8 @@ function classificationEvidenceByClass(raw: UnknownRecord) {
 
   for (const clause of clauses) {
     if (!isObject(clause)) continue;
-    const sourceClause = text(clause.source_anchor) ?? text(clause.source_paraphrase);
+    const sourceAnchor = text(clause.source_anchor);
+    const sourceParaphrase = text(clause.source_paraphrase);
     const recoveredInvariant = text(clause.recovered_invariant_interpretation);
     const relationships = Array.isArray(clause.taxonomy_relationships) ? clause.taxonomy_relationships : [];
 
@@ -150,7 +152,8 @@ function classificationEvidenceByClass(raw: UnknownRecord) {
       const classId = text(value.class_id);
       if (!classId) continue;
       const evidence: ClassificationEvidence = {
-        sourceClause,
+        sourceAnchor,
+        sourceParaphrase,
         recoveredInvariant,
         relationship: text(value.relationship),
         canonical: value.canonical_taxonomy_mapping === true,
@@ -325,6 +328,30 @@ function ClassificationEvidenceStack({
   </div>;
 }
 
+function classificationEvidenceSource(entry: ClassificationEvidence) {
+  if (entry.sourceAnchor && entry.sourceParaphrase) return `${entry.sourceAnchor} — ${entry.sourceParaphrase}`;
+  return entry.sourceAnchor ?? entry.sourceParaphrase;
+}
+
+function classificationEvidenceRelationshipLabel(relationship?: string) {
+  switch (relationship) {
+    case "failure-occurrence":
+    case "failure-occurrence contribution":
+      return "Failure occurred";
+    case "successful-invariant":
+      return "Invariant held";
+    case "ambiguous-boundary":
+    case "ambiguous-boundary exemplar":
+    case "candidate boundary":
+      return "Boundary unresolved";
+    default:
+      return relationship
+        ? relationship.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")
+        : undefined;
+  }
+}
+
+
 function ClassificationTable({
   rows,
   status,
@@ -357,6 +384,8 @@ function ClassificationTable({
             <th scope="col">Source clause(s)</th>
             <th scope="col">Recovered governance principle(s)</th>
             <th scope="col">Incident analysis</th>
+            <th scope="col">Relationship(s)</th>
+            <th scope="col">Mapping state(s)</th>
             <th scope="col">Classification basis</th>
             <th scope="col">Confidence</th>
           </tr>
@@ -367,9 +396,11 @@ function ClassificationTable({
             const classificationClass = item.class;
             const classId = classificationClass?.class_id ?? item.classId;
             const outcome = mappingOutcome(item.role);
-            const sourceClauses = evidence.map((entry) => entry.sourceClause);
+            const sourceClauses = evidence.map(classificationEvidenceSource);
             const recoveredPrinciples = evidence.map((entry) => entry.recoveredInvariant);
             const incidentAnalysis = evidence.map((entry) => entry.rationale);
+            const relationships = evidence.map((entry) => classificationEvidenceRelationshipLabel(entry.relationship));
+            const mappingStates = evidence.map((entry) => entry.canonical ? "Canonical mapping" : "Non-canonical relationship");
 
             return <tr key={`${mapping}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
               <td data-label="Mapping"><strong>{mapping}</strong></td>
@@ -397,6 +428,12 @@ function ClassificationTable({
               </td>
               <td data-label="Incident analysis" className="vigil-classification-incident-analysis">
                 <ClassificationEvidenceStack values={incidentAnalysis} empty={item.basis ?? "No separate occurrence-specific incident analysis is linked to this mapping."} />
+              </td>
+              <td data-label="Relationship(s)">
+                <ClassificationEvidenceStack values={relationships} empty="No clause-level relationship is linked to this mapping." />
+              </td>
+              <td data-label="Mapping state(s)">
+                <ClassificationEvidenceStack values={mappingStates} empty="No clause-level mapping state is linked to this mapping." />
               </td>
               <td data-label="Classification basis" className="vigil-classification-basis">
                 {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
