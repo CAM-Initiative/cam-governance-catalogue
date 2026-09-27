@@ -339,8 +339,8 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(classification, /<th scope="col">Classification basis<\/th>/);
   assert.match(classification, /<th scope="col">Confidence<\/th>/);
   assert.match(classification, /classificationEvidenceByClass/);
-  assert.match(classification, /sourceClause: text\(clause\.source_anchor\) \?\? text\(clause\.source_paraphrase\)/);
-  assert.match(classification, /recoveredInvariant: text\(clause\.recovered_invariant_interpretation\)/);
+  assert.match(classification, /const sourceClause = text\(clause\.source_anchor\) \?\? text\(clause\.source_paraphrase\)/);
+  assert.match(classification, /const recoveredInvariant = text\(clause\.recovered_invariant_interpretation\)/);
   assert.match(classification, /rationale: text\(value\.rationale\)/);
   assert.match(classification, /evidenceByClass\.get\(primary\.classId\)/);
   assert.match(classification, /evidenceByClass\.get\(item\.classId\)/);
