@@ -352,8 +352,8 @@
   gap: 1rem;
 }
 
-/* Repair is a deterministic projection of the governing family invariant, not a new repair record. */
-.vigil-case-file-page .vigil-taxonomy-repair-view {
+/* Compliance is a deterministic projection from classified Fidelity Classes to maintained external requirement cross-references. */
+.vigil-case-file-page .vigil-taxonomy-compliance-view {
   display: grid;
   gap: 1rem;
 }
