@@ -212,7 +212,7 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadArtwork, /VIGIL-fascia-harm-impact\.png/);
   assert.match(mastheadArtwork, /%20VIGIL-fascia-policy\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-standards\.png/);
-  assert.match(mastheadArtwork, /VIGIL-fascia-datasetsV2\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-datasets\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-incidentsV2\.png/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
