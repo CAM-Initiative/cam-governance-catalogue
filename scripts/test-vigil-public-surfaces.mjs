@@ -1191,9 +1191,10 @@ test("Case File stage navigation has one workbench owner and preserves wrapped m
 });
 
 test("Knowledge Base introduces Harm Impact Assessment plainly and defines Disputed conservatively", async () => {
-  const [hub, caseFile] = await Promise.all([
+  const [hub, caseFile, report] = await Promise.all([
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
   ]);
   assert.match(hub, /Assessment<\/strong> contains the incident breakdown, external assessments and the <strong>Harm Impact Assessment<\/strong>/);
   assert.match(hub, /VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
@@ -1204,5 +1205,7 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and defines Dispu
   assert.match(hub, /VIGIL takes a legally conservative approach/);
   assert.match(caseFile, /<strong>Disputed<\/strong> does not mean that litigation or a formal legal dispute exists/);
   assert.match(caseFile, /A denial does not itself establish that an allegation is false/);
+  assert.match(report, /Material facts remain contested\./);
+  assert.match(report, /VIGIL takes a legally conservative approach/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });
