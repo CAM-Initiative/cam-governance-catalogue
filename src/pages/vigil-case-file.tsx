@@ -8,6 +8,7 @@ import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessmen
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { VIGIL_INCIDENT_CASE_SECTIONS } from "@/lib/vigilCaseSections";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -807,7 +808,7 @@ export default function VigilCaseFile() {
       contextLabel="Incident context"
       mode="record"
       visual="cases"
-      artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-incidentsV2.png"
+      artworkSrc={VIGIL_MASTHEAD_ARTWORK.incidentRecord}
       className={`vigil-case-file-masthead${isExemplar ? " is-exemplar" : ""}${hasMixedExecution ? " is-mixed-execution" : ""}`}
       metadata={[
         { label: "Incident", value: incident ? compactId(incident.id) : compactId(state.sourceId), mono: true },
