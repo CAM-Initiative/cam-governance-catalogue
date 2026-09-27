@@ -471,7 +471,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence. Compliance projects failed or unresolved Fidelity Classes through the maintained taxonomy crosswalk to their published external standards, regulatory requirements and authoritative governance guidance. Unresolved boundaries remain explicitly unresolved, while invariant-held mappings remain visible in Classification.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence. Compliance projects mapped Fidelity Classes through the maintained taxonomy crosswalk to their published external standards, regulatory requirements and authoritative governance guidance. Exact duplicate requirements are rolled up to the most conservative supported alignment state, while distinct clauses or controls remain separate.
       </footer>
     </main>
   </Shell>;
