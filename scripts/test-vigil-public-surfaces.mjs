@@ -327,19 +327,19 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Mapping<\/th>/);
   assert.match(classification, /<th scope="col">Alignment<\/th>/);
-  assert.match(classification, /<th scope="col">Status<\/th>/);
-  assert.match(classification, /<th scope="col">Taxonomy version<\/th>/);
   assert.match(classification, /<th scope="col">Fidelity family<\/th>/);
   assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
   assert.match(classification, /<th scope="col">Source clause\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Incident analysis<\/th>/);
-  assert.match(classification, /<th scope="col">Relationship\(s\)<\/th>/);
-  assert.match(classification, /<th scope="col">Mapping state\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Classification basis<\/th>/);
   assert.match(classification, /<th scope="col">Confidence<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Mapping<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Status<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Taxonomy version<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Relationship\(s\)<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Mapping state\(s\)<\/th>/);
   assert.match(classification, /classificationEvidenceByClass/);
   assert.match(classification, /const sourceAnchor = text\(clause\.source_anchor\)/);
   assert.match(classification, /const sourceParaphrase = text\(clause\.source_paraphrase\)/);
@@ -366,7 +366,7 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 14%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 60%; \}/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 176rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 153rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
