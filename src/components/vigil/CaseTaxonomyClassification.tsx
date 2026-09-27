@@ -311,9 +311,9 @@ export function ExternalAlignmentClassification({ assessments }: { assessments: 
   </section>;
 }
 
-// Section 03 keeps the Incident observation visible beside the mapped Fidelity
-// Class and occurrence-specific adjudication. Primary/secondary ordering remains
-// in canonical data and report metadata.
+// Section 03 presents the mapped Fidelity Class, recognition criteria and
+// occurrence-specific adjudication. Primary/secondary ordering remains in
+// canonical data and report metadata.
 function ClassificationEvidenceStack({
   values,
   empty,
