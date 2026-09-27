@@ -177,7 +177,7 @@ assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
 assert.match(taxonomyAssessment, /Incident breakdown/);
 assert.match(taxonomyAssessment, /Recovered governance principle/);
-assert.match(taxonomyAssessment, /Incident analysis/);
+assert.match(taxonomyAssessment, /Taxonomy boundary &amp; incident analysis/);
 assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
 assert.match(taxonomyAssessment, /taxonomyAssessmentRationales/);
 assert.match(taxonomyAssessment, /item\.rationale/);
