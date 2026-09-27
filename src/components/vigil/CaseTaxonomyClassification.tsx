@@ -362,16 +362,13 @@ function ClassificationTable({
   return <>
     <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table vigil-primary-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings traced from Incident observations through Fidelity Classes and occurrence-specific adjudication.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with class meaning, recognition criteria and occurrence-specific analysis.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
-            <th scope="col">Incident observation</th>
             <th scope="col">Fidelity class</th>
-            <th scope="col">Technical definition</th>
             <th scope="col">Recognition criteria</th>
             <th scope="col">Incident analysis</th>
-            <th scope="col">Classification basis</th>
             <th scope="col">Confidence</th>
           </tr>
         </thead>
@@ -381,7 +378,6 @@ function ClassificationTable({
             const classificationClass = item.class;
             const classId = classificationClass?.class_id ?? item.classId;
             const outcome = mappingOutcome(item.role);
-            const incidentObservations = evidence.map(classificationEvidenceSource);
             const incidentAnalysis = evidence.map((entry) => entry.rationale);
             const classTitle = classificationClass?.name ?? family?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned");
             const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
@@ -393,16 +389,10 @@ function ClassificationTable({
                   <strong>{outcome.label}</strong>
                 </span>
               </td>
-              <td data-label="Incident observation">
-                <ClassificationEvidenceStack values={incidentObservations} empty="No incident observation is linked to this mapping." />
-              </td>
               <td data-label="Fidelity class" className="vigil-classification-class-cell">
                 {classId ? <span className="vigil-classification-class-chip">{classId}</span> : null}
                 <strong className="vigil-classification-class-title">{classTitle}</strong>
                 {plainEnglish ? <p className="vigil-classification-class-explanation">{plainEnglish}</p> : null}
-              </td>
-              <td data-label="Technical definition" className="vigil-classification-taxonomy-copy">
-                {classificationClass?.definition ?? family?.definition ?? "No technical definition is currently published for this mapping."}
               </td>
               <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
                 <TaxonomyList
@@ -413,9 +403,6 @@ function ClassificationTable({
               <td data-label="Incident analysis" className="vigil-classification-incident-analysis">
                 <ClassificationEvidenceStack values={incidentAnalysis} empty={item.basis ?? "No separate occurrence-specific incident analysis is linked to this mapping."} />
               </td>
-              <td data-label="Classification basis" className="vigil-classification-basis">
-                {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
-              </td>
               <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
             </tr>;
           })}
@@ -423,7 +410,7 @@ function ClassificationTable({
       </table>
     </div>
     <VigilAlignmentLegend />
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity Classes are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Incident observations and Incident analysis carry the occurrence-specific evidence from Section 02 into the classification decision.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity Classes and their recognition criteria are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
 }
@@ -593,11 +580,17 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
 
 type ComplianceReference = NonNullable<FailureTaxonomyClass["external_references"]>[number];
 
-type ComplianceMapping = {
-  class: FailureTaxonomyClass;
-  role: "failure-occurrence" | "ambiguous-boundary";
+type ComplianceContribution = {
+  role: ClassificationRole;
   classificationBasis?: string;
-  references: ComplianceReference[];
+  reference: ComplianceReference;
+};
+
+type ComplianceRollup = {
+  role: ClassificationRole;
+  reference: ComplianceReference;
+  explanations: string[];
+  classificationBases: string[];
 };
 
 function complianceReference(reference: ComplianceReference) {
@@ -608,21 +601,35 @@ function complianceReference(reference: ComplianceReference) {
     || role === "authoritative-guidance";
 }
 
-function complianceMappings(primary: ResolvedClassification, secondaries: ResolvedClassification[]): ComplianceMapping[] {
-  const result: ComplianceMapping[] = [];
-  const seen = new Set<string>();
+function complianceReferenceKey(reference: ComplianceReference) {
+  const clause = (reference.clause_or_control ?? "").trim().toLowerCase();
+  if (reference.requirement_id?.trim()) {
+    return `requirement:${reference.requirement_id.trim().toLowerCase()}|clause:${clause}`;
+  }
+  if (reference.url?.trim()) {
+    return `url:${reference.url.trim().replace(/\/$/, "").toLowerCase()}|clause:${clause}`;
+  }
+  return `title:${reference.title.trim().toLowerCase()}|publisher:${reference.publisher.trim().toLowerCase()}|clause:${clause}`;
+}
 
+function complianceRolePriority(role: ClassificationRole) {
+  if (role === "failure-occurrence") return 3;
+  if (role === "ambiguous-boundary") return 2;
+  return 1;
+}
+
+function complianceContributions(primary: ResolvedClassification, secondaries: ResolvedClassification[]) {
+  const result: ComplianceContribution[] = [];
   const add = (item: ResolvedClassification) => {
-    if (item.role !== "failure-occurrence" && item.role !== "ambiguous-boundary") return;
     const classificationClass = item.class;
-    if (!classificationClass || seen.has(classificationClass.class_id)) return;
-    seen.add(classificationClass.class_id);
-    result.push({
-      class: classificationClass,
-      role: item.role,
-      classificationBasis: item.basis,
-      references: (classificationClass.external_references ?? []).filter(complianceReference),
-    });
+    if (!classificationClass || !item.role) return;
+    for (const reference of (classificationClass.external_references ?? []).filter(complianceReference)) {
+      result.push({
+        role: item.role,
+        classificationBasis: item.basis,
+        reference,
+      });
+    }
   };
 
   add(primary);
@@ -630,9 +637,31 @@ function complianceMappings(primary: ResolvedClassification, secondaries: Resolv
   return result;
 }
 
+function rollupComplianceRequirements(contributions: ComplianceContribution[]): ComplianceRollup[] {
+  const grouped = new Map<string, ComplianceContribution[]>();
+  for (const contribution of contributions) {
+    const key = complianceReferenceKey(contribution.reference);
+    const existing = grouped.get(key);
+    if (existing) existing.push(contribution);
+    else grouped.set(key, [contribution]);
+  }
+
+  return [...grouped.values()].map((group) => {
+    const highestPriority = Math.max(...group.map((item) => complianceRolePriority(item.role)));
+    const controlling = group.filter((item) => complianceRolePriority(item.role) === highestPriority);
+    const representative = controlling[0] ?? group[0];
+
+    return {
+      role: representative.role,
+      reference: representative.reference,
+      explanations: [...new Set(controlling.flatMap((item) => item.reference.evidence_note ? [item.reference.evidence_note] : []))],
+      classificationBases: [...new Set(controlling.flatMap((item) => item.classificationBasis ? [item.classificationBasis] : []))],
+    };
+  });
+}
+
 export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
-  const evidenceByClass = useMemo(() => classificationEvidenceByClass(raw), [raw]);
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <p className="vigil-case-empty">No compliance crosswalk can be resolved because this Incident has no canonical alignment classification.</p>;
@@ -641,57 +670,45 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
-  const mappings = complianceMappings(primary, secondaries);
+  const requirements = rollupComplianceRequirements(complianceContributions(primary, secondaries));
 
-  if (!mappings.length) return <p className="vigil-case-empty">No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File.</p>;
+  if (!requirements.length) return <p className="vigil-case-empty">No mapped external requirement is available for compliance cross-reference in this Case File.</p>;
 
   return <div className="vigil-taxonomy-compliance-view">
-    <p className="vigil-compliance-intro">The mappings below carry the same Incident observations from Classification into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy.</p>
+    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported alignment state: failure, then unresolved boundary, then invariant held.</p>
     <div className="vigil-classification-web-table vigil-compliance-web-table" role="region" aria-label="External compliance crosswalk" tabIndex={0}>
       <table className="vigil-classification-table vigil-compliance-table">
-        <caption className="sr-only">Incident observations cross-referenced to external standards, regulatory requirements and authoritative guidance.</caption>
+        <caption className="sr-only">External requirements rolled up from the Incident's VIGIL alignment classifications.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
-            <th scope="col">Incident observation</th>
             <th scope="col">External requirement</th>
             <th scope="col">Requirement explanation</th>
             <th scope="col">Classification basis</th>
           </tr>
         </thead>
         <tbody>
-          {mappings.flatMap(({ class: classificationClass, role, classificationBasis, references }) => {
-            const incidentObservations = (evidenceByClass.get(classificationClass.class_id) ?? [])
-              .map(classificationEvidenceSource);
-            const rowReferences: Array<ComplianceReference | undefined> = references.length ? references : [undefined];
-
-            return rowReferences.map((reference, index) => <tr key={reference?.requirement_id ?? `${classificationClass.class_id}-${reference?.title ?? "unmapped"}-${index}`}>
-              <td data-label="Alignment" className="vigil-classification-outcome-cell">
-                <MappingOutcome role={role} />
-              </td>
-              <td data-label="Incident observation">
-                <ClassificationEvidenceStack values={incidentObservations} empty="No incident observation is linked to this classification." />
-              </td>
-              <td data-label="External requirement" className="vigil-compliance-requirement-title">
-                {reference ? <>
-                  <strong>
-                    {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}
-                  </strong>
-                  {reference.requirement_id ? <span className="vigil-compliance-requirement-id">{reference.requirement_id}</span> : null}
-                  {reference.clause_or_control ? <span className="vigil-compliance-clause">{reference.clause_or_control}</span> : null}
-                </> : <span className="vigil-compliance-gap">No structured external requirement is currently published for this Fidelity Class.</span>}
-              </td>
-              <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
-                {reference?.evidence_note ?? "No separate requirement explanation is currently published for this external requirement."}
-              </td>
-              <td data-label="Classification basis" className="vigil-classification-basis">
-                {classificationBasis ?? "No separate alignment-classification basis is published for this mapping."}
-              </td>
-            </tr>);
-          })}
+          {requirements.map(({ role, reference, explanations, classificationBases }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
+            <td data-label="Alignment" className="vigil-classification-outcome-cell">
+              <MappingOutcome role={role} />
+            </td>
+            <td data-label="External requirement" className="vigil-compliance-requirement-title">
+              <strong>
+                {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}
+              </strong>
+              {reference.requirement_id ? <span className="vigil-compliance-requirement-id">{reference.requirement_id}</span> : null}
+              {reference.clause_or_control ? <span className="vigil-compliance-clause">{reference.clause_or_control}</span> : null}
+            </td>
+            <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
+              <ClassificationEvidenceStack values={explanations} empty="No separate requirement explanation is currently published for this external requirement." />
+            </td>
+            <td data-label="Classification basis" className="vigil-classification-basis">
+              <ClassificationEvidenceStack values={classificationBases} empty="No separate alignment-classification basis is published for the controlling compliance mapping." />
+            </td>
+          </tr>)}
         </tbody>
       </table>
     </div>
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">These external requirement mappings are maintained with the relevant Fidelity Classes in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Section 04 repeats the Incident observation and classification basis so the path from occurrence to VIGIL classification to external requirement remains visible.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">These external requirement mappings are maintained with the relevant Fidelity Classes in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.</p> : null}
   </div>;
 }
