@@ -154,7 +154,7 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
     <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown</h3>
     <p className="vigil-taxonomy-assessment-intro">
-      Clause-level breakdown of the incident into source wording, recovered governance principles, occurrence-specific incident analysis, and the taxonomy relationships considered or carried into formal alignment classification.
+      Clause-level breakdown of the incident into source wording, occurrence-specific incident analysis, and the taxonomy relationships considered or carried into formal alignment classification.
     </p>
     <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
@@ -162,7 +162,6 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
         <thead>
           <tr>
             <th scope="col">Source clause</th>
-            <th scope="col">Recovered governance principle</th>
             <th scope="col">Incident analysis</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Relationship</th>
@@ -172,7 +171,6 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
         <tbody>
           {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
             <td data-label="Source clause"><SourceClause clause={clause} /></td>
-            <td data-label="Recovered governance principle">{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</td>
             <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
               <RelationshipStack
                 relationships={clause.relationships}
