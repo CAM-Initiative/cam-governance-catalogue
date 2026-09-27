@@ -433,7 +433,7 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
   assert.match(classification, /alignment exemplar · invariant held/i);
-  assert.match(classification, /not failure evidence/i);
+  assert.match(classification, /The relevant governance boundary was tested and held/);
   assert.match(classification, /Primary alignment exemplar · invariant held/);
   assert.match(classification, /Secondary alignment exemplar · invariant held/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
