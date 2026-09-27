@@ -131,25 +131,25 @@ export default function VigilSeverityMethodology() {
                   <div><dt>Unreported</dt><dd>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</dd></div>
                   <div><dt>Insufficient evidence</dt><dd>Some impact evidence exists, but it cannot distinguish a defensible severity band.</dd></div>
                   <div><dt>Not applicable</dt><dd>Affirmative context places the dimension outside the Incident’s bounded scope.</dd></div>
-                  <div><dt>SU — Unassessed</dt><dd>No defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</dd></div>
                 </dl>
               </div>
             </div>
 
             <div className="vigil-severity-derivation-rows">
-              <div className="vigil-severity-chip-key" aria-label="Severity chip display">
-                <div className="vigil-severity-chip-key-bands">
-                  {(["S1", "S2", "S3", "S4", "S5"] as const).map((band) => <VigilStatusChip key={band} value={band} />)}
+              <div className="vigil-severity-method-row">
+                <h3>Severity display</h3>
+                <div className="vigil-severity-method-copy">
+                  <p>S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU — Unassessed remains visually neutral and is used when no defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm; SU is an evidence state, not a sixth severity band.</p>
+                  <div className="vigil-severity-chip-key" aria-label="Severity band display examples">
+                    {(["S1", "S2", "S3", "S4", "S5", "SU"] as const).map((band) => <VigilStatusChip key={band} value={band} />)}
+                  </div>
                 </div>
-                <p><strong>Severity display.</strong> S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU remains visually neutral because it is an unassessed evidence state, not a sixth severity band.</p>
               </div>
 
-              <div className="vigil-severity-overall-rule">
+              <div className="vigil-severity-method-row">
                 <h3>Overall severity</h3>
-                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p>
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
               </div>
-
-              <p className="vigil-severity-case-file-note">Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
             </div>
           </section>
 

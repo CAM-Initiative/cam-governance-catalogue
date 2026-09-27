@@ -312,10 +312,10 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       </section>}
 
       {isDisputed && <section className="report-exemplar-callout is-disputed" aria-labelledby="report-disputed-heading">
-        <p className="report-exemplar-kicker">Disputed evidence</p>
-        <h2 id="report-disputed-heading">The evidence is disputed.</h2>
-        <p>Material claims about this occurrence are contested, denied, or have not been independently adjudicated. The report preserves the current evidence state without presenting disputed claims as settled fact.</p>
-        <p className="report-exemplar-boundary">The taxonomy mapping describes the governance mechanism evidenced if the reported occurrence is supported; it does not convert disputed claims into established fact.</p>
+        <p className="report-exemplar-kicker">Disputed evidence state</p>
+        <h2 id="report-disputed-heading">Material facts remain contested.</h2>
+        <p><strong>Disputed</strong> does not mean that litigation or a formal legal dispute exists. It means that material facts needed to establish the occurrence or its taxonomy classification are contested—for example, an affected party expressly denies the alleged conduct, involved parties give materially incompatible accounts, or the available evidence does not independently resolve the conflict.</p>
+        <p className="report-exemplar-boundary">VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported. A denial does not itself establish that an allegation is false, and a taxonomy mapping does not convert a disputed allegation into settled fact.</p>
       </section>}
 
       {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">

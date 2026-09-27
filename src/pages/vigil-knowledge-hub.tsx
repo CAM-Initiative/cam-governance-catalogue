@@ -28,7 +28,7 @@ const CASE_FILE_STAGES = [
   {
     number: "02",
     label: "Assessment",
-    description: "Assess governance significance, interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM.",
+    description: "Assess governance significance, interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology (VIGIL-HIM).",
   },
   {
     number: "03",
@@ -71,7 +71,7 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "disputed",
     label: "Disputed",
-    description: "The taxonomy classification is explicitly disputed. The public index preserves that state rather than forcing a settled outcome.",
+    description: "Material facts needed to establish the occurrence or its taxonomy classification are contested. This can include an affected party expressly denying the alleged conduct, materially incompatible accounts from involved parties, or evidence that does not independently resolve the conflict. It does not require litigation or a formal legal dispute. VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported.",
   },
   {
     key: "unclassified",
@@ -147,7 +147,7 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-cases-heading">One evidence-to-conclusion structure for every Incident</h2>
               </div>
               <div className="document-reading">
-                <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. <strong>Assessment</strong> contains the incident breakdown, external assessments and Harm Impact Assessment. VIGIL-HIM assesses materialised consequence and derives severity; <strong>Classification</strong> asks which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged and what happened at each boundary.</p>
+                <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. <strong>Assessment</strong> contains the incident breakdown, external assessments and the <strong>Harm Impact Assessment</strong>. The Harm Impact Assessment applies the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong> to evidence of materialised consequence and derives severity; <strong>Classification</strong> asks which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged and what happened at each boundary.</p>
                 <p>Harm Impact Assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
                 <p className="vigil-knowledge-meta">{caseFilesMeta}</p>
               </div>
@@ -201,10 +201,11 @@ export default function VigilKnowledgeHub() {
             <section id="harm-impact" className="document-section vigil-about-section" aria-labelledby="knowledge-harm-heading">
               <div className="document-section-heading">
                 <p>Harm Impact Assessment</p>
-                <h2 id="knowledge-harm-heading">The VIGIL-HIM reference for materialised consequence and severity.</h2>
+                <h2 id="knowledge-harm-heading">How VIGIL assesses materialised harm and severity.</h2>
               </div>
               <div className="document-reading">
-                <p>VIGIL-HIM defines the harm dimensions, evidence states and S1–S5 thresholds used in Case Files. Harm assessment is deliberately separate from alignment classification: one describes materialised consequence; the other describes governance-boundary behaviour.</p>
+                <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews eleven harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
+                <p>Harm assessment is deliberately separate from alignment classification: the Harm Impact Assessment describes materialised consequence and severity; alignment classification describes governance-boundary behaviour.</p>
                 <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
               </div>
               <div className="cam-action-row">

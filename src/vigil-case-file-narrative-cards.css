@@ -12,14 +12,14 @@
 }
 
 .vigil-case-file-page .vigil-observation-summary .vigil-case-subheading {
-  padding: 1.15rem var(--vigil-case-card-pad) 0.85rem;
+  padding: 1.15rem 0 0.85rem;
   border: 0 !important;
   background: transparent !important;
 }
 
 .vigil-case-file-page .vigil-observation-summary > p {
   margin: 0;
-  padding: 0.65rem var(--vigil-case-card-pad) 1.4rem;
+  padding: 0.65rem 0 1.4rem;
   font-family: var(--app-font-sans);
   font-size: 0.98rem;
   line-height: 1.66;

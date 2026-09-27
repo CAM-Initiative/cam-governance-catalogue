@@ -1552,9 +1552,9 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
    dark precision panel with restrained gold only as an accent — never a solid
    mustard block. */
 .diagnostic-orbit-v2 .diagnostic-node {
-  min-height: 2.15rem;
-  max-width: 10rem;
-  padding: 0.52rem 0.82rem;
+  min-height: 2.4rem;
+  max-width: 11.5rem;
+  padding: 0.58rem 0.96rem;
   border-radius: 0.52rem;
   border: 1px solid hsl(var(--foreground) / 0.17);
   background:
@@ -1590,7 +1590,7 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
 }
 
 .diagnostic-orbit-v2 .diagnostic-node-label {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 760;
   line-height: 1;
   letter-spacing: 0.16em;
@@ -1617,10 +1617,10 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
 
 .diagnostic-orbit-v2 .diagnostic-node.is-active,
 .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
-  width: min(14rem, 38vw);
-  max-width: 14rem;
-  min-height: 5.9rem;
-  padding: 0.82rem 1rem 0.88rem 1.06rem;
+  width: min(16rem, 42vw);
+  max-width: 16rem;
+  min-height: 6.5rem;
+  padding: 0.9rem 1.08rem 0.96rem 1.16rem;
   border-radius: 0.72rem;
   border-color: hsl(var(--primary) / 0.52);
   background:
@@ -1658,29 +1658,29 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
 
 .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-label,
 .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-label {
-  font-size: 0.68rem;
+  font-size: 0.76rem;
   color: hsl(42 62% 62%);
 }
 
 .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy strong,
 .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy strong {
-  max-height: 3rem;
-  margin-top: 0.34rem;
+  max-height: 5.5rem;
+  margin-top: 0.38rem;
   opacity: 1;
   transform: translateY(0);
-  font-size: 1.08rem;
-  line-height: 1.12;
+  font-size: 1.16rem;
+  line-height: 1.16;
   color: hsl(42 24% 96%);
 }
 
 .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-detail,
 .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-detail {
-  max-height: 4.8rem;
-  margin-top: 0.48rem;
-  opacity: 0.7;
+  max-height: 8rem;
+  margin-top: 0.52rem;
+  opacity: 0.76;
   transform: translateY(0);
-  font-size: 0.78rem;
-  line-height: 1.42;
+  font-size: 0.84rem;
+  line-height: 1.46;
   color: hsl(40 10% 82%);
 }
 
@@ -1712,31 +1712,31 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded 
 
 @media (max-width: 720px) {
   .diagnostic-orbit-v2 .diagnostic-node {
-    min-height: 1.95rem;
-    max-width: 8.2rem;
-    padding: 0.45rem 0.64rem;
+    min-height: 2.1rem;
+    max-width: 8.9rem;
+    padding: 0.48rem 0.68rem;
   }
 
   .diagnostic-orbit-v2 .diagnostic-node-label {
-    font-size: 0.61rem;
+    font-size: 0.66rem;
   }
 
   .diagnostic-orbit-v2 .diagnostic-node.is-active,
   .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
-    width: min(11.5rem, 58vw);
-    max-width: 11.5rem;
-    min-height: 5.15rem;
-    padding: 0.7rem 0.78rem 0.74rem 0.86rem;
+    width: min(12.8rem, 64vw);
+    max-width: 12.8rem;
+    min-height: 5.6rem;
+    padding: 0.76rem 0.86rem 0.82rem 0.94rem;
   }
 
   .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-copy strong,
   .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy strong {
-    font-size: 0.94rem;
+    font-size: 1rem;
   }
 
   .diagnostic-orbit-v2 .diagnostic-node.is-active .diagnostic-node-detail,
   .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-detail {
-    font-size: 0.7rem;
+    font-size: 0.76rem;
   }
 }
 
@@ -1744,10 +1744,10 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded 
 /* Separate the automatic stage focus from the explicit click expansion.
    Auto-focus reveals the question; only a click opens the explanatory copy. */
 .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) {
-  width: min(12.4rem, 35vw);
-  max-width: 12.4rem;
-  min-height: 4.35rem;
-  padding: 0.76rem 0.94rem 0.8rem 1rem;
+  width: min(14.2rem, 40vw);
+  max-width: 14.2rem;
+  min-height: 4.8rem;
+  padding: 0.8rem 1rem 0.86rem 1.06rem;
 }
 
 .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) .diagnostic-node-detail {
@@ -1758,22 +1758,22 @@ html:not([data-theme="dark"]) .diagnostic-orbit-v2 .diagnostic-node.is-expanded 
 }
 
 .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
-  width: min(14.6rem, 40vw);
-  max-width: 14.6rem;
-  min-height: 6.25rem;
+  width: min(17rem, 44vw);
+  max-width: 17rem;
+  min-height: 7.2rem;
 }
 
 @media (max-width: 720px) {
   .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) {
-    width: min(10.4rem, 52vw);
-    max-width: 10.4rem;
-    min-height: 3.8rem;
+    width: min(11.4rem, 56vw);
+    max-width: 11.4rem;
+    min-height: 4.1rem;
   }
 
   .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
-    width: min(11.8rem, 60vw);
-    max-width: 11.8rem;
-    min-height: 5.45rem;
+    width: min(13.8rem, 68vw);
+    max-width: 13.8rem;
+    min-height: 6.2rem;
   }
 }
 

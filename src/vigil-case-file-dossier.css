@@ -92,7 +92,7 @@
 }
 
 .vigil-case-file-page .vigil-affected-systems .vigil-case-subheading {
-  padding: 1.15rem var(--vigil-case-card-pad) 0.85rem;
+  padding: 1.15rem 0 0.85rem;
   border: 0;
   background: transparent;
 }
@@ -103,7 +103,7 @@
 }
 
 .vigil-case-file-page .vigil-affected-system-grid > article {
-  padding: 0.65rem var(--vigil-case-card-pad) 1.4rem;
+  padding: 0.65rem 0 1.4rem;
   border: 0;
 }
 

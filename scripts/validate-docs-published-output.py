@@ -315,6 +315,49 @@ def validate_vigil_publication_integrity() -> list[str]:
     return errors
 
 
+
+def validate_published_vigil_ui_contract() -> list[str]:
+    """Verify that the generated application bundle carries key public Case File labels."""
+    errors: list[str] = []
+    index_path = Path("docs/index.html")
+    if not index_path.exists():
+        return [f"Required generated entrypoint is missing: {index_path}"]
+
+    index_html = index_path.read_text()
+    import re
+    match = re.search(r'<script\b[^>]*\bsrc="/assets/(index-[^"]+\.js)"[^>]*></script>', index_html)
+    if not match:
+        return ["docs/index.html does not reference the generated application JavaScript bundle."]
+
+    bundle_path = Path("docs/assets") / match.group(1)
+    if not bundle_path.exists():
+        return [f"Generated application bundle referenced by docs/index.html is missing: {bundle_path}"]
+
+    bundle = bundle_path.read_text()
+    required_strings = (
+        "Incident breakdown",
+        "Harm Impact Assessment",
+        "Fidelity classes and their governing invariants are defined in the",
+        "The governing invariants shown here are defined in the",
+    )
+    for required in required_strings:
+        if required not in bundle:
+            errors.append(
+                f"Generated application bundle {bundle_path} is missing required Case File UI text: {required!r}"
+            )
+
+    if "Taxonomy assessment" in bundle:
+        errors.append(
+            f"Generated application bundle {bundle_path} still contains the retired public heading 'Taxonomy assessment'."
+        )
+    if "Real-world harm assessment" in bundle:
+        errors.append(
+            f"Generated application bundle {bundle_path} still contains the retired public heading 'Real-world harm assessment'."
+        )
+
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Fail when website source changed but published docs/ output did not."
@@ -353,6 +396,7 @@ def main() -> int:
 
     errors: list[str] = []
     errors.extend(validate_vigil_publication_integrity())
+    errors.extend(validate_published_vigil_ui_contract())
 
     if website_source_changes and not docs_changes:
         errors.append(
