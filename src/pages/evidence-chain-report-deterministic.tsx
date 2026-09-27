@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyRepair, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -392,7 +392,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           <CaseTaxonomyAssessment raw={incident.raw} />
 
           <section className="report-severity-assessment">
-            <h3 className="vigil-case-editorial-subheading report-peer-assessment-heading">Real-world harm assessment</h3>
+            <h3 className="vigil-case-editorial-subheading report-peer-assessment-heading">Harm Impact Assessment</h3>
             <HarmImpactMatrix
               assessment={harmImpactAssessment}
               compact
@@ -405,16 +405,13 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           {externalAssessments.length > 0 && <section className="report-external-assessments report-peer-assessment">
             <h3 className="vigil-case-editorial-subheading report-peer-assessment-heading">External assessments</h3>
             <table className="report-external-assessment-table">
-              <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th><th>Classification / scheme</th></tr></thead>
+              <thead><tr><th>Assessor</th><th>Date</th><th>Conclusion</th></tr></thead>
               <tbody>{externalAssessments.map((assessment) => {
                 const evidenceReferenceNumber = externalAssessmentEvidenceReferenceNumber(assessment, externalSources, harmEvidenceReferenceNumbers);
                 return <tr key={assessment.id}>
                   <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="report-inline-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
                   <td>{externalAssessmentDate(assessment.date)}</td>
                   <td>{assessment.summary}</td>
-                  <td>{assessment.classificationOrRating
-                    ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
-                    : "—"}</td>
                 </tr>;
               })}</tbody>
             </table>
@@ -423,7 +420,10 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       </Stage>
 
         <Stage number="03" label="Classification">
-          {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No current Alignment Taxonomy classification is linked.</Empty>}
+          {incident ? <>
+            <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />
+            <ExternalAlignmentClassification assessments={externalAssessments} />
+          </> : <Empty>No current Alignment Taxonomy classification is linked.</Empty>}
         </Stage>
 
         <Stage number="04" label="Repair">
