@@ -2371,11 +2371,8 @@
   color: hsl(var(--report-muted)) !important;
 }
 
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(1) { width: 18%; }
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(2) { width: 38%; }
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(3) { width: 16%; }
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(4) { width: 14%; }
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(5) { width: 14%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(1) { width: 24%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(2) { width: 76%; }
 
 .vigil-deterministic-report-host .vigil-taxonomy-assessment-table q {
   font-weight: 650;
