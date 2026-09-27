@@ -297,12 +297,12 @@ test("Case Files use one canonical Incident and retain the six substantive stage
   assert.match(caseFile, /loadVigilIncidentRecords/);
   assert.match(caseFile, /records: \[incident\]/);
   assert.doesNotMatch(caseFile, /const observations|deriveFailureModePublicDetail|failureId=/);
-  for (const label of ["Incident", "Assessment", "Classification", "Repair", "Conclusion", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
+  for (const label of ["Incident", "Assessment", "Classification", "Compliance", "Conclusion", "References"]) assert.match(sections, new RegExp(`label: "${label}"`));
   assert.match(sections, /id: "conclusion",[\s\S]*number: "05"/);
   assert.match(sections, /id: "references",[\s\S]*number: "06"/);
   assert.doesNotMatch(sections, /label: "Learn"/);
   assert.match(report, /<CaseTaxonomyClassification raw=\{incident\.raw\}/);
-  assert.match(report, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
+  assert.match(report, /<CaseTaxonomyCompliance raw=\{incident\.raw\}/);
   assert.doesNotMatch(report, /adjacent Failure Mode|deriveFailureModePublicDetail|const observations/);
 });
 
@@ -316,36 +316,42 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.doesNotMatch(caseFile, /<p>\{description\}<\/p>/);
   assert.match(caseFile, /className="vigil-case-editorial-heading"/);
   assert.match(caseFile, /"case-classify": "Alignment classification"/);
-  assert.match(caseFile, /"case-repair": "Governing invariants and repair"/);
+  assert.match(caseFile, /"case-compliance": "External standards and requirement crosswalk"/);
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
-test("Repair uses the same public table grammar as Classification", async () => {
-  const [classification, css] = await Promise.all([
+test("Classification explains each Fidelity Class and Compliance projects maintained external requirement cross-references", async () => {
+  const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/vigil-classification-table.css"),
+    read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
-  assert.match(classification, /vigil-classification-web-table vigil-repair-web-table/);
-  assert.match(classification, /vigil-classification-table vigil-repair-table/);
-  assert.doesNotMatch(classification, /<th scope="col">Relationship<\/th>/);
-  assert.match(classification, /<th scope="col">Alignment<\/th>/);
-  assert.match(classification, /Invariant held/);
-  assert.match(classification, /Failure occurred/);
-  assert.match(classification, /Boundary unresolved/);
-  assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
-  assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
-  assert.match(classification, /vigil-classification-family-row/);
-  assert.match(classification, /colSpan=\{3\} scope="rowgroup"/);
+
+  assert.match(classification, /<th scope="col">What this class means<\/th>/);
+  assert.match(classification, /classificationClass\?\.plain_english/);
+  assert.match(classification, /vigil-classification-invariant/);
+  assert.match(classification, /<th scope="col">Classification basis<\/th>/);
+  assert.match(classification, /colSpan=\{4\} scope="rowgroup"/);
+
+  assert.match(classification, /export function CaseTaxonomyCompliance/);
+  assert.match(classification, /vigil-classification-web-table vigil-compliance-web-table/);
+  assert.match(classification, /vigil-classification-table vigil-compliance-table/);
+  assert.match(classification, /<th scope="col">Mapped external requirements<\/th>/);
+  assert.match(classification, /classificationClass\.external_references/);
+  assert.match(classification, /reference\.requirement_id/);
+  assert.match(classification, /reference\.clause_or_control/);
+  assert.match(classification, /reference\.evidence_note/);
+  assert.match(classification, /role === "regulatory-evidence"/);
+  assert.match(classification, /role === "standards-evidence"/);
+  assert.match(classification, /role === "authoritative-guidance"/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
-  assert.doesNotMatch(classification, /className="vigil-repair-invariant-card"/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(1\) \{ width: 16%; \}/);
-  assert.match(css, /\.vigil-repair-table thead th:nth-child\(3\) \{ width: 56%; \}/);
-  assert.doesNotMatch(classification, /vigil-repair-role-key/);
-  assert.match(classification, /VigilAlignmentLegend/);
-  assert.match(css, /\.vigil-alignment-legend/);
-  assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>/);
-  assert.match(classification, /ClassificationTable[\s\S]*<VigilAlignmentLegend \/>[\s\S]*Fidelity classes and their governing invariants are defined/);
-  assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>[\s\S]*The governing invariants shown here are defined/);
+  assert.match(classification, /This section is a cross-reference of the Classification findings above, not a second Incident adjudication/);
+
+  assert.match(taxonomyLoader, /requirement_id\?: string/);
+  assert.match(taxonomyLoader, /clause_or_control\?: string/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 14%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 60%; \}/);
+  assert.match(css, /\.vigil-classification-invariant/);
   assert.match(classification, /External Alignment Classification/);
   assert.match(classification, /not VIGIL taxonomy mappings/);
 });
@@ -394,7 +400,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
-  assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair/);
+  assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved can be projected through the maintained taxonomy crosswalk in Compliance/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /Material facts remain contested\./);
   assert.match(caseFile, /does not mean that litigation or a formal legal dispute exists/);
@@ -431,7 +437,7 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /Primary alignment exemplar · invariant held/);
   assert.match(classification, /Secondary alignment exemplar · invariant held/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
-  assert.match(classification, /No repair invariant is available for this Case File\./);
+  assert.match(classification, /No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File\./);
   assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
   assert.match(report, /Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
@@ -454,8 +460,8 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
   assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
-  assert.match(hub, /governing class invariants for mappings where failure is evidenced or the boundary remains unresolved/);
-  assert.match(hub, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
+  assert.match(hub, /Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy/);
+  assert.match(hub, /Integrate the evidence, harm assessment, taxonomy relationships and external requirement crosswalk into a bounded VIGIL interpretation\./);
   assert.match(hub, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(hub, /CASE_FILE_STAGES\.map/);
   assert.match(hub, /<ol className="about-method-list"/);
@@ -762,7 +768,7 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(printable, /number: "01", label: "Incident"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /const CASE_FILE_STAGES = \[[\s\S]*number: "01"[\s\S]*label: "Incident"[\s\S]*number: "02"[\s\S]*label: "Assessment"[\s\S]*number: "03"[\s\S]*label: "Classification"[\s\S]*number: "04"[\s\S]*label: "Repair"[\s\S]*number: "05"[\s\S]*label: "Conclusion"[\s\S]*number: "06"[\s\S]*label: "References"/);
+  assert.match(hub, /const CASE_FILE_STAGES = \[[\s\S]*number: "01"[\s\S]*label: "Incident"[\s\S]*number: "02"[\s\S]*label: "Assessment"[\s\S]*number: "03"[\s\S]*label: "Classification"[\s\S]*number: "04"[\s\S]*label: "Compliance"[\s\S]*number: "05"[\s\S]*label: "Conclusion"[\s\S]*number: "06"[\s\S]*label: "References"/);
   assert.match(pages, /evidence, assessment, alignment classification/);
   assert.match(readme, /\*\*Assessment:\*\*/);
   assert.match(contract, /severity as substantive assessment/);
@@ -1009,7 +1015,7 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
   const architectureStart = hub.indexOf("CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus");
   assert.ok(methodStart >= 0 && harmSeparation > methodStart && stageList > harmSeparation);
   assert.ok(classificationStart > stageList && architectureStart > classificationStart);
-  assert.match(hub, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
+  assert.match(hub, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Compliance[\s\S]*Conclusion[\s\S]*References/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
   assert.match(hub, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
   assert.match(hub, /VIGIL Observatory Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation/);
