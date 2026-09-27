@@ -56,9 +56,14 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
-test("VIGIL Observatory Knowledge Base exposes document navigation for its core references", async () => {
+test("CAM Initiative Knowledge Base uses the Home-menu editorial masthead and exposes its core references", async () => {
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
+  assert.match(hub, /className="public-reference-page vigil-knowledge-hub-page home-menu-page document-page"/);
+  assert.match(hub, /<header id="overview" className="document-hero public-reference-hero">[\s\S]*public-reference-kicker">CAM Initiative<[\s\S]*<h1 id="knowledge-base-heading">Knowledge Base<\/h1>/);
+  assert.match(hub, /Reference material across CAM Initiative/);
+  assert.doesNotMatch(hub, /VigilObservatoryMasthead|VigilObservatoryNav|kicker="VIGIL Observatory"/);
   assert.match(hub, /DocumentRail title="Knowledge Base"/);
+  assert.match(hub, /ariaLabel="CAM Initiative Knowledge Base sections"/);
   assert.match(hub, /href="\/observatory\/cases\/"/);
   assert.match(hub, /href="\/observatory\/knowledge-base\/standards-sources\/"/);
   assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*Open Harm Impact Assessment/);
@@ -853,23 +858,19 @@ test("Case File ticket keeps severity and classification in Incident context and
   assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
 });
 
-test("principal Observatory surfaces use the shared masthead component", async () => {
-  const [severity, standards, standardSource, policy, hub, caseFile, datasets] = await Promise.all([
+test("principal Observatory analytical surfaces use the shared masthead component", async () => {
+  const [severity, standards, standardSource, policy, caseFile, datasets] = await Promise.all([
     read("src/pages/vigil-severity-methodology.tsx"),
     read("src/pages/vigil-standards-baseline.tsx"),
     read("src/pages/vigil-standard-source.tsx"),
     read("src/pages/policy.tsx"),
-    read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/pages/datasets.tsx"),
   ]);
-  for (const page of [severity, standards, standardSource, policy, hub, caseFile, datasets]) {
-    assert.match(page, /VigilObservatoryMasthead/);
-  }
   for (const page of [severity, standards, standardSource, policy, caseFile, datasets]) {
+    assert.match(page, /VigilObservatoryMasthead/);
     assert.doesNotMatch(page, /vigil-taxonomy-ticket|vigil-case-file-hero-v4/);
   }
-  assert.ok(hub.indexOf("<VigilObservatoryMasthead") < hub.indexOf("<DocumentRail"));
   assert.match(standardSource, /mode="record"/);
   assert.match(caseFile, /mode="record"/);
 });

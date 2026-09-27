@@ -3,8 +3,6 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
-import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
-import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
@@ -70,30 +68,16 @@ export default function VigilKnowledgeHub() {
 
   return (
     <Shell>
-      <VigilObservatoryNav />
-      <main className="vigil-about-page vigil-knowledge-hub-page home-menu-page document-page">
-        <VigilObservatoryMasthead
-          id="overview"
-          titleId="knowledge-base-heading"
-          kicker="VIGIL Observatory"
-          title="Knowledge Base"
-          description="Reference material supporting the Observatory: AI governance standards, Case Files, the VIGIL Observatory Alignment Taxonomy, the Harm Impact Assessment methodology, public datasets and policy material."
-          contextLabel="Knowledge base context"
-          mode="reference"
-          visual="knowledge"
-          ariaLive="polite"
-          metadata={[
-            { label: "Case Files", value: state.caseFiles === undefined ? "—" : state.caseFiles },
-            { label: "Taxonomy families", value: state.taxonomyFamilies === undefined ? "—" : state.taxonomyFamilies },
-            { label: "Fidelity classes", value: state.taxonomyClasses === undefined ? "—" : state.taxonomyClasses },
-            { label: "Standards sources", value: state.sources === undefined ? "—" : state.sources },
-          ]}
-        />
-        <div className="document-layout document-layout--wide document-layout-below-header">
-          <DocumentRail title="Knowledge Base" items={knowledgeRail} ariaLabel="VIGIL Observatory Knowledge Base sections" />
+      <main className="public-reference-page vigil-knowledge-hub-page home-menu-page document-page">
+        <div className="document-layout document-layout--wide">
+          <DocumentRail title="Knowledge Base" items={knowledgeRail} ariaLabel="CAM Initiative Knowledge Base sections" />
 
-          <article className="document-content vigil-knowledge-document">
-
+          <article className="document-content public-reference-document vigil-knowledge-document">
+            <header id="overview" className="document-hero public-reference-hero">
+              <p className="public-reference-kicker">CAM Initiative</p>
+              <h1 id="knowledge-base-heading">Knowledge Base</h1>
+              <p>Reference material across CAM Initiative: VIGIL Observatory Case Files and methods, AI governance standards, public datasets, policy material and the CAELESTIS Architecture Model.</p>
+            </header>
 
             <section id="cases" className="document-section vigil-about-section" aria-labelledby="knowledge-cases-heading">
               <div className="document-section-heading">
