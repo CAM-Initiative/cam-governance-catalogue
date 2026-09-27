@@ -165,7 +165,6 @@ const staticRoutes = [
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
   ["/observatory/alignment-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
   ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
-  ["/observatory/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
 
   // Legacy public paths remain resolvable, but are excluded from the sitemap and canonicalized to the public URL architecture above.
   ["/observatory/severity-methodology", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.0.1 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
@@ -184,7 +183,7 @@ const canonicalAliases = new Map([
   ["/observatory/knowledge-base/failure-taxonomy", "/observatory/alignment-taxonomy"],
   ["/observatory/knowledge-base/standards-sources", "/observatory/ai-governance-standards"],
   ["/observatory/knowledge-base/external-requirements", "/observatory/ai-governance-standards"],
-  ["/observatory/knowledge-base/policy", "/observatory/policy"],
+  ["/observatory/knowledge-base/policy", "/policy"],
 ]);
 
 for (const [route, title, description] of staticRoutes) {
