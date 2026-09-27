@@ -288,6 +288,10 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /VigilAlignmentLegend/);
   assert.match(css, /\.vigil-alignment-legend/);
   assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>/);
+  assert.match(classification, /ClassificationTable[\s\S]*<VigilAlignmentLegend \/>[\s\S]*Fidelity classes and their governing invariants are defined/);
+  assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>[\s\S]*The governing invariants shown here are defined/);
+  assert.match(classification, /External Alignment Classification/);
+  assert.match(classification, /not VIGIL taxonomy mappings/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -860,17 +864,17 @@ test("Case File stage and subsection headings share one editorial scale", async 
   ]);
   assert.match(instrumentCss, /vigil-case-editorial-heading h2[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
   assert.match(instrumentCss, /vigil-case-editorial-subheading[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
-  assert.match(taxonomyAssessment, />Taxonomy assessment<\/h3>/);
+  assert.match(taxonomyAssessment, />Incident breakdown<\/h3>/);
   assert.doesNotMatch(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
-  assert.match(caseFile, />Real-world harm assessment<\/h3>/);
+  assert.match(caseFile, />Harm Impact Assessment<\/h3>/);
   assert.match(caseFile, />External assessments<\/h3>/);
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 });
 
 test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {
-  const [caseFile, dossier] = await Promise.all([
+  const [caseFile, instrument] = await Promise.all([
     read("src/pages/vigil-case-file.tsx"),
-    read("src/vigil-case-file-dossier.css"),
+    read("src/vigil-observatory-instrument-experiment.css"),
   ]);
   assert.match(caseFile, /<VigilObservatoryMasthead[\s\S]*contextLabel="Incident context"[\s\S]*artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.incidentRecord\}/);
   assert.match(caseFile, /label: "Jurisdiction"/);
@@ -879,7 +883,8 @@ test("Case File ticket keeps severity and classification in Incident context and
   assert.match(caseFile, /\.\.\.environmentMetadata[\s\S]*label: "Severity"[\s\S]*label: "Classification"/);
   assert.doesNotMatch(caseFile, /vigil-case-ticket-footer|vigil-case-ticket-footer-meta|vigil-case-ticket-report-button/);
   assert.match(caseFile, /vigil-case-report-tab[\s\S]*Full report \/ PDF/);
-  assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*repeat\(6, minmax\(0, 0\.92fr\)\)[\s\S]*minmax\(8\.4rem, 1\.18fr\)/);
+  assert.match(instrument, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: 1fr !important/);
+  assert.match(instrument, /\.vigil-case-file-page \.vigil-case-report-tab \{[\s\S]*font-family: var\(--app-font-mono\)/);
 });
 
 test("principal Observatory analytical surfaces use the shared masthead component", async () => {
@@ -918,7 +923,7 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
     read("src/home-menu-pages.css"),
   ]);
   const methodStart = hub.indexOf("One evidence-to-conclusion structure for every Incident");
-  const harmSeparation = hub.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
+  const harmSeparation = hub.indexOf("Harm Impact Assessment and alignment classification are deliberately independent");
   const stageList = hub.indexOf("about-method-list");
   const classificationStart = hub.indexOf("Mappings classify individual boundaries. The Case File index summarises the Incident.");
   const architectureStart = hub.indexOf("CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus");
@@ -1096,20 +1101,40 @@ test("Case File Incident stage renders optional source artefact images inside Wh
 });
 
 
-test("Case File stage tabs keep six stages on one desktop row while mobile may wrap", async () => {
-  const css = await read("src/vigil-case-file-dossier.css");
-  const desktopTabs = css.match(/\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*?\}/)?.[0] ?? "";
+test("Case File stage navigation has one workbench owner and preserves wrapped mobile tabs", async () => {
+  const [instrument, dossier, evidence, mobile, polish, harm] = await Promise.all([
+    read("src/vigil-observatory-instrument-experiment.css"),
+    read("src/vigil-case-file-dossier.css"),
+    read("src/vigil-evidence-reading-hierarchy.css"),
+    read("src/mobile-responsive-polish.css"),
+    read("src/vigil-case-file-polish.css"),
+    read("src/vigil-harm-assessment-cleanup.css"),
+  ]);
 
-  assert.match(desktopTabs, /grid-template-columns: repeat\(6, minmax\(0, 1fr\)\)/);
-  assert.match(css, /\.vigil-case-file-page \.vigil-case-stage-tabs button \{[\s\S]*min-width: 0;[\s\S]*white-space: nowrap;/);
-  assert.match(css, /@media \(max-width: 820px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
-  assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(instrument, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: 1fr !important/);
+  assert.match(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*display: grid !important[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) !important[\s\S]*overflow: visible !important/);
+  assert.match(instrument, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\) !important/);
+  assert.match(instrument, /\.vigil-case-file-page \.vigil-case-report-tab \{[\s\S]*grid-column: 1 \/ -1;[\s\S]*border-radius: 0\.6rem !important/);
+  assert.doesNotMatch(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*overflow-x: auto !important/);
+  assert.doesNotMatch(dossier, /\.vigil-case-stage-tabs/);
+  assert.doesNotMatch(dossier, /\.vigil-case-report-tab/);
+  assert.doesNotMatch(dossier, /\.vigil-case-active-stage/);
+  assert.doesNotMatch(evidence, /\.vigil-case-stage-tabs/);
+  assert.doesNotMatch(evidence, /\.vigil-case-active-stage/);
+  assert.doesNotMatch(mobile, /\.vigil-case-file-page/);
+
+  assert.equal((polish.match(/\.vigil-case-file-page \.vigil-exemplar-callout-copy > p:not\([\s\S]*?\{/g) || []).length, 1);
+  assert.match(polish, /vigil-exemplar-callout-copy > p:not[\s\S]*font-size: 1rem;[\s\S]*line-height: 1\.62;/);
+  assert.match(polish, /\.vigil-case-file-page \.vigil-exemplar-callout-boundary \{[\s\S]*font-size: 1rem;[\s\S]*line-height: 1\.58;/);
+
+  assert.match(harm, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-assessment-table,[\s\S]*display: block !important/);
+  assert.match(harm, /\.vigil-case-file-page \.vigil-harm-assessment-table tbody tr \{[\s\S]*border-radius: 0\.68rem/);
 });
 
 test("Knowledge Base Assessment wording keeps harm assessment distinct from alignment classification", async () => {
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
-  assert.match(hub, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
+  assert.match(hub, /Assessment<\/strong> contains the incident breakdown, external assessments and Harm Impact Assessment/);
   assert.match(hub, /VIGIL-HIM assesses materialised consequence and derives severity/);
-  assert.match(hub, /Real-world harm assessment and alignment classification are deliberately independent/);
+  assert.match(hub, /Harm Impact Assessment and alignment classification are deliberately independent/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });

@@ -29,6 +29,7 @@ const [
 // reviving retired record machinery.
 assert.match(caseFile, /CaseTaxonomyClassification/);
 assert.match(caseFile, /CaseTaxonomyRepair/);
+assert.match(caseFile, /ExternalAlignmentClassification/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
 assert.doesNotMatch(caseFile, /incident-specific assessment rather than the full methodology reference table/);
@@ -119,7 +120,7 @@ assert.doesNotMatch(report, /className="report-substantive-label">External asses
 assert.match(reportCss, /\.report-external-assessments > \.report-peer-assessment-heading \{[\s\S]*margin: 0 0 0\.55rem/);
 assert.doesNotMatch(report, /<ExternalAssessmentList assessments=\{externalAssessments\} compact/);
 assert.match(report, /className="report-substantive-label">Factual basis/);
-assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Real-world harm assessment[\s\S]*External assessments/);
+assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
 assert.match(report, /<Stage number="05" label="Conclusion">[\s\S]*Governance significance/);
 assert.match(reportCss, /\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-case-editorial-subheading \{[\s\S]*font-size: 1\.05rem !important;/);
 assert.match(reportCss, /@media print \{[\s\S]*\.report-assessment-details > section > \.report-substantive-label,[\s\S]*\.report-assessment-details > \.vigil-taxonomy-assessment > \.vigil-case-editorial-subheading \{[\s\S]*font-size: 11\.5pt !important;/);
@@ -174,20 +175,20 @@ assert.doesNotMatch(printableReport, /VIGIL Observatory Licence and Reuse Terms/
 const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url), "utf8");
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
-assert.match(taxonomyAssessment, /Taxonomy assessment/);
+assert.match(taxonomyAssessment, /Incident breakdown/);
 assert.match(taxonomyAssessment, /Recovered governance principle/);
-assert.match(taxonomyAssessment, /Taxonomy assessment/);
+assert.match(taxonomyAssessment, /Incident analysis/);
 assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
 assert.match(taxonomyAssessment, /taxonomyAssessmentRationales/);
 assert.match(taxonomyAssessment, /item\.rationale/);
 assert.match(taxonomyAssessment, /vigil-taxonomy-assessment-rationale/);
-assert.match(taxonomyAssessment, /Clause-level interpretation showing how the investigation resolved governance principles before formal taxonomy mapping\./);
+assert.match(taxonomyAssessment, /Clause-level breakdown of the incident into source wording, recovered governance principles, and occurrence-specific analysis before formal alignment classification\./);
 assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
 assert.doesNotMatch(taxonomyAssessment, /class_id/);
 assert.doesNotMatch(taxonomyAssessment, /VIGIL-FC-/);
-assert.match(caseFile, /vigil-diagnosis-factual-basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Real-world harm assessment[\s\S]*External assessments/);
+assert.match(caseFile, /vigil-diagnosis-factual-basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
 assert.match(caseFile, /if \(stageId === "conclusion"\)[\s\S]*Governance significance/);
-assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Real-world harm assessment[\s\S]*External assessments/);
+assert.match(report, /GOVERNANCE ASSESSMENT[\s\S]*Factual basis[\s\S]*<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
 assert.match(report, /<Stage number="05" label="Conclusion">[\s\S]*Governance significance/);
 assert.match(polishCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
 assert.match(reportCss, /\.vigil-taxonomy-assessment-table th:nth-child\(1\)/);
@@ -196,30 +197,30 @@ assert.match(taxonomyAssessment, /vigil-external-assessment-table vigil-taxonomy
 assert.doesNotMatch(taxonomyAssessment, /report-external-assessment-table/);
 assert.doesNotMatch(taxonomyAssessment, />\\\\n/);
 assert.doesNotMatch(taxonomyAssessment, /vigil-taxonomy-assessment-row/);
-assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Real-world harm assessment[\s\S]*vigil-external-assessment-section[\s\S]*External assessments/);
-assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Real-world harm assessment[\s\S]*External assessments/);
+assert.match(caseFile, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment[\s\S]*vigil-external-assessment-section[\s\S]*External assessments/);
+assert.match(report, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>[\s\S]*Harm Impact Assessment[\s\S]*External assessments/);
 
 assert.doesNotMatch(caseFile, />GOVERNANCE ASSESSMENT</);
 assert.match(caseFile, /External assessments/);
-assert.match(caseFile, /Real-world harm assessment/);
+assert.match(caseFile, /Harm Impact Assessment/);
 assert.doesNotMatch(caseFile, />Harm classification<\/p>/);
 assert.match(report, /GOVERNANCE ASSESSMENT/);
 assert.match(report, /External assessments/);
-assert.match(report, /Real-world harm assessment/);
+assert.match(report, /Harm Impact Assessment/);
 assert.match(reportCss, /Peer assessment headings share one deterministic report contract/);
 
-assert.match(taxonomyAssessment, /className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Taxonomy assessment<\/h3>/);
+assert.match(taxonomyAssessment, /className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown<\/h3>/);
 assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-taxonomy-assessment \{[\s\S]*border: 1px solid/);
 assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-conclusion-governance-significance \{/);
 assert.match(assessmentLayoutCss, /\.report-document \.report-governance-significance \{/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
-assert.match(reportCss, /Taxonomy assessment table mirrors the External assessments table/);
+assert.match(reportCss, /Incident breakdown table mirrors the External assessments table/);
 
 assert.match(report, /report-peer-assessment-heading">External assessments/);
-assert.match(report, /vigil-case-editorial-subheading report-peer-assessment-heading">Real-world harm assessment<\/h3>/);
+assert.match(report, /vigil-case-editorial-subheading report-peer-assessment-heading">Harm Impact Assessment<\/h3>/);
 assert.doesNotMatch(report, />Harm Impact Assessment<\/h4>/);
-assert.doesNotMatch(caseFile, />Harm Impact Assessment<\/h3>/);
+assert.match(caseFile, />Harm Impact Assessment<\/h3>/);
 assert.match(reportCss, /\.report-peer-assessment-heading \{[\s\S]*margin: 0 0 0\.55rem !important;[\s\S]*padding: 0 !important;/);
 
 assert.match(taxonomyAssessment, /vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap/);
@@ -231,3 +232,7 @@ assert.match(reportCss, /@media print \{[\s\S]*\.vigil-taxonomy-assessment-table
 
 assert.match(polishCss, /\.vigil-taxonomy-assessment-intro \{[\s\S]*margin: 0 0 0\.85rem/);
 assert.match(reportCss, /\.vigil-taxonomy-assessment-intro \{[\s\S]*margin: 0 0 0\.7rem !important/);
+
+assert.match(caseFile, /<ExternalAlignmentClassification assessments=\{externalAssessments\} \/>/);
+assert.match(report, /<ExternalAlignmentClassification assessments=\{externalAssessments\} \/>/);
+assert.match(taxonomyAssessment, /Incident breakdown/);

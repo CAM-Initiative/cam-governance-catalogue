@@ -4,6 +4,9 @@ export type ExternalClassificationOrRating = {
   scheme: string;
   value: string;
   verbatimLabel?: string;
+  schemeVersion?: string;
+  basis?: string;
+  sourceLocator?: string;
 };
 
 export type ExternalAssessment = {
@@ -92,6 +95,9 @@ export function externalAssessmentsFrom(raw: UnknownRecord): ExternalAssessment[
         scheme,
         value: ratingValue,
         verbatimLabel: text(rating?.verbatim_label),
+        schemeVersion: text(rating?.scheme_version),
+        basis: text(rating?.classification_basis ?? rating?.basis),
+        sourceLocator: text(rating?.source_locator),
       } : undefined,
     }];
   });

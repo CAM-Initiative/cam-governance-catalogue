@@ -7,6 +7,7 @@ import {
   type FailureTaxonomyFamilyDocument,
 } from "@/lib/vigilFailureTaxonomy";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
+import type { ExternalAssessment } from "@/lib/vigilExternalAssessments";
 
 type ClassificationStatus =
   | "classified"
@@ -219,6 +220,48 @@ export function VigilAlignmentLegend({ detailed = false }: { detailed?: boolean 
   </div>;
 }
 
+export function ExternalAlignmentClassification({ assessments }: { assessments: ExternalAssessment[] }) {
+  const classified = assessments.filter((assessment) => assessment.classificationOrRating);
+  if (!classified.length) return null;
+
+  return <section className="vigil-external-alignment-classification" aria-labelledby="external-alignment-classification-heading">
+    <div className="vigil-case-subheading">
+      <h3 className="vigil-case-editorial-subheading" id="external-alignment-classification-heading">External Alignment Classification</h3>
+      <p>Published external classifications are shown in the assessor's own terminology. They are not VIGIL taxonomy mappings and are not translated into VIGIL alignment roles.</p>
+    </div>
+    <div className="vigil-classification-web-table vigil-external-alignment-classification-table" role="region" aria-label="External alignment classifications" tabIndex={0}>
+      <table className="vigil-classification-table">
+        <caption className="sr-only">External assessor classifications shown in their original schemes and terminology.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Assessor</th>
+            <th scope="col">External classification</th>
+            <th scope="col">Scheme</th>
+            <th scope="col">Published basis / conclusion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {classified.map((assessment) => {
+            const classification = assessment.classificationOrRating!;
+            return <tr key={assessment.id}>
+              <td data-label="Assessor"><a href={assessment.url} target="_blank" rel="noreferrer"><strong>{assessment.assessor}</strong></a></td>
+              <td data-label="External classification"><strong>{classification.verbatimLabel ?? classification.value}</strong></td>
+              <td data-label="Scheme">
+                {classification.scheme}
+                {classification.schemeVersion ? <span className="vigil-classification-id">Version {classification.schemeVersion}</span> : null}
+              </td>
+              <td data-label="Published basis / conclusion" className="vigil-classification-basis">
+                {classification.basis ?? assessment.summary}
+                {classification.sourceLocator ? <span className="vigil-classification-id">{classification.sourceLocator}</span> : null}
+              </td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </div>
+  </section>;
+}
+
 // Web UX shows alignment state directly; primary/secondary ordering remains in canonical data and report metadata.
 function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceHref }: { rows: ClassificationTableRow[]; taxonomyReferenceNumber?: number; taxonomyReferenceHref?: string }) {
   const hasUnresolved = rows.some(({ item }) =>
@@ -283,10 +326,10 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
         </tbody>
       </table>
     </div>
+    <VigilAlignmentLegend />
     {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
     {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
-    <VigilAlignmentLegend />
   </>;
 }
 
@@ -520,7 +563,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
         </tbody>
       </table>
     </div>
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     <VigilAlignmentLegend />
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
   </div>;
 }

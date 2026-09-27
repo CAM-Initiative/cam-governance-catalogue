@@ -1,66 +1,8 @@
-/* Case File reading hierarchy.
-   Make stages feel like physical file tabs and keep source facts, analysis and limits visually distinct. */
+/* Case File evidence reading hierarchy.
+   Source facts, analysis and limits remain visually distinct. Stage navigation
+   and responsive workbench layout are owned by vigil-observatory-instrument-experiment.css. */
 
-/* Investigation stage tabs: the active file tab connects directly to its description and content. */
-.vigil-case-file-page .vigil-case-stage-tabs {
-  align-items: end;
-  margin-top: 0.9rem;
-  border-radius: 0.55rem 0.55rem 0 0;
-  overflow: visible;
-  background: transparent;
-}
-
-.vigil-case-file-page .vigil-case-stage-tabs button {
-  min-height: 46px;
-  padding: 0.62rem 0.78rem;
-  background: hsl(var(--card) / 0.28);
-  transition: min-height 140ms ease, background 140ms ease, font-size 140ms ease;
-}
-
-.vigil-case-file-page .vigil-case-stage-tabs button.is-active {
-  position: relative;
-  z-index: 2;
-  min-height: 56px;
-  margin-top: -10px;
-  border-top: 2px solid hsl(var(--primary));
-  border-bottom-color: hsl(var(--background));
-  background: hsl(var(--background));
-  box-shadow: none;
-  font-size: 1.02rem;
-  font-weight: 650;
-}
-
-.vigil-case-file-page .vigil-case-stage-tabs button.is-active span {
-  font-size: 0.76rem;
-  font-weight: 700;
-}
-
-.vigil-case-file-page .vigil-case-active-stage {
-  margin-top: -1px;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
-  border-radius: 0 0 0.55rem 0.55rem;
-}
-
-/* The tab already names the active stage; use the section header only for its explanatory sentence. */
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header {
-  min-height: 0;
-  padding: 0.82rem 1.05rem 0.9rem;
-  background: hsl(var(--background));
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header > span,
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header h2 {
-  display: none;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: hsl(var(--muted-foreground) / 0.9);
-}
+/* Stage shell and heading hierarchy are owned by vigil-observatory-instrument-experiment.css. */
 
 /* Evidence source identity. */
 .vigil-case-file-page .vigil-evidence-header {
@@ -263,13 +205,6 @@
 }
 
 @media (max-width: 640px) {
-  .vigil-case-file-page .vigil-case-stage-tabs button,
-  .vigil-case-file-page .vigil-case-stage-tabs button.is-active {
-    min-height: 48px;
-    margin-top: 0;
-    font-size: 0.82rem;
-  }
-
   .vigil-evidence-source-meta,
   .vigil-evidence-review-meta {
     grid-template-columns: 1fr;

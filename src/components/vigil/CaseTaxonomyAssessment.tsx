@@ -108,18 +108,18 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   if (!clauses.length) return null;
 
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
-    <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Taxonomy assessment</h3>
+    <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown</h3>
     <p className="vigil-taxonomy-assessment-intro">
-      Clause-level interpretation showing how the investigation resolved governance principles before formal taxonomy mapping.
+      Clause-level breakdown of the incident into source wording, recovered governance principles, and occurrence-specific analysis before formal alignment classification.
     </p>
-    <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory taxonomy assessment table" tabIndex={0}>
+    <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
-        <caption className="sr-only">Clause-level VIGIL Observatory taxonomy assessment preceding formal classification.</caption>
+        <caption className="sr-only">Clause-level VIGIL Observatory incident breakdown preceding formal alignment classification.</caption>
         <thead>
           <tr>
             <th scope="col">Source clause</th>
             <th scope="col">Recovered governance principle</th>
-            <th scope="col">Taxonomy assessment</th>
+            <th scope="col">Incident analysis</th>
           </tr>
         </thead>
         <tbody>

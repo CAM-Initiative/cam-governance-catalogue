@@ -34,6 +34,113 @@
     gap: 0.42rem;
   }
 
+  /* Case File occurrence assessments become vertical reading cards on phones.
+     The full methodology matrix remains a horizontally pannable reference table. */
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: 0 !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-matrix.is-assessment .vigil-harm-matrix-scroll {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table,
+  .vigil-case-file-page .vigil-harm-assessment-table tbody,
+  .vigil-case-file-page .vigil-harm-assessment-table tr,
+  .vigil-case-file-page .vigil-harm-assessment-table th,
+  .vigil-case-file-page .vigil-harm-assessment-table td {
+    position: static !important;
+    left: auto !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table {
+    table-layout: auto !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table thead {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody tr {
+    margin: 0 0 0.85rem !important;
+    overflow: hidden;
+    border: 1px solid hsl(var(--border) / 0.78) !important;
+    border-radius: 0.68rem;
+    background: hsl(var(--background));
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody th,
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td {
+    box-sizing: border-box;
+    padding: 0.8rem 0.85rem !important;
+    border: 0 !important;
+    border-top: 1px solid hsl(var(--border) / 0.62) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody th {
+    border-top: 0 !important;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody tr.is-controlling th {
+    box-shadow: inset 4px 0 0 hsl(var(--primary)) !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td::before {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-family: var(--app-font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td:nth-of-type(1)::before {
+    content: "Result";
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-table tbody td:nth-of-type(2)::before {
+    content: "Evidence-backed assessment";
+  }
+
+  .vigil-case-file-page .vigil-harm-assessment-basis > p {
+    font-size: 0.92rem !important;
+    line-height: 1.58 !important;
+  }
+
+  .vigil-case-file-page .vigil-harm-observed-values li {
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
 }
 
 /* The methodology citation belongs to the footnote sentence, so it inherits the

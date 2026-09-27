@@ -55,6 +55,31 @@
 .vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 30%; }
 .vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 54%; }
 
+/* External classifications preserve the external assessor's own scheme rather
+   than translating it into VIGIL alignment roles. */
+.vigil-case-file-page .vigil-external-alignment-classification {
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid hsl(var(--border) / 0.68);
+}
+
+.vigil-case-file-page .vigil-external-alignment-classification > .vigil-case-subheading {
+  margin-bottom: 0.85rem;
+}
+
+.vigil-case-file-page .vigil-external-alignment-classification > .vigil-case-subheading > p {
+  max-width: 70rem;
+  margin: 0.55rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.94rem;
+  line-height: 1.58;
+}
+
+.vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(1) { width: 18%; }
+.vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(2) { width: 20%; }
+.vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(3) { width: 24%; }
+.vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+
 .vigil-case-file-page .vigil-classification-table tbody td {
   padding: 0.9rem 0.9rem 0.95rem;
   font-size: 1.02rem;

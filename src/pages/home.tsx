@@ -3,8 +3,9 @@ import { Shell } from "@/components/layout/Shell";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
-import { loadVigilIncidentRecords, type UnknownRecord } from "@/lib/vigilRegistry";
+import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadFailureTaxonomy, type FailureTaxonomyClass } from "@/lib/vigilFailureTaxonomy";
+import { normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import "@/home-premium.css";
 import "@/home-premium-v2.css";
 import "@/home-premium-v3.css";
@@ -48,13 +49,31 @@ function incidentNumber(id: string) {
   return numericId ? `INC-${String(Number(numericId)).padStart(5, "0")}` : id;
 }
 
-function tickerItem(record: UnknownRecord): IncidentTickerItem | undefined {
-  if (typeof record.id !== "string" || typeof record.title !== "string") return undefined;
-  return { id: record.id, title: record.title };
-}
-
 function incidentSequence(id: string) {
   return Number(id.match(/(\d+)$/)?.[1] ?? 0);
+}
+
+function tickerSeverityRank(record: VigilIndexRecord) {
+  const severity = String(record.severity ?? "").trim().toUpperCase();
+  if (severity === "S5") return 2;
+  if (severity === "S4") return 1;
+  return 0;
+}
+
+function tickerPriority(records: VigilIndexRecord[]) {
+  const severe = records
+    .filter((record) => tickerSeverityRank(record) > 0)
+    .sort((left, right) =>
+      tickerSeverityRank(right) - tickerSeverityRank(left)
+      || incidentSequence(right.id) - incidentSequence(left.id));
+
+  const selected = severe.length
+    ? severe
+    : [...records].sort((left, right) => incidentSequence(right.id) - incidentSequence(left.id));
+
+  return selected
+    .slice(0, 8)
+    .map((record) => ({ id: record.id, title: record.title }));
 }
 
 function IncidentTicker() {
@@ -64,11 +83,8 @@ function IncidentTicker() {
     let mounted = true;
     loadVigilIncidentRecords()
       .then(({ records }) => {
-        const latest = records
-          .flatMap((record) => tickerItem(record) ?? [])
-          .sort((left, right) => incidentSequence(right.id) - incidentSequence(left.id))
-          .slice(0, 8);
-        if (mounted && latest.length) setItems(latest);
+        const priority = tickerPriority(normalizeRecords(records));
+        if (mounted && priority.length) setItems(priority);
       })
       .catch(() => undefined);
     return () => { mounted = false; };

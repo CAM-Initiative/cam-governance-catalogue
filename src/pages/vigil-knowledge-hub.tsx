@@ -147,8 +147,8 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-cases-heading">One evidence-to-conclusion structure for every Incident</h2>
               </div>
               <div className="document-reading">
-                <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. <strong>Assessment</strong> contains distinct governance, external and real-world harm assessments. VIGIL-HIM assesses materialised consequence and derives severity; <strong>Classification</strong> asks which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged and what happened at each boundary.</p>
-                <p>Real-world harm assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
+                <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. <strong>Assessment</strong> contains the incident breakdown, external assessments and Harm Impact Assessment. VIGIL-HIM assesses materialised consequence and derives severity; <strong>Classification</strong> asks which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged and what happened at each boundary.</p>
+                <p>Harm Impact Assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
                 <p className="vigil-knowledge-meta">{caseFilesMeta}</p>
               </div>
               <ol className="about-method-list" aria-label="VIGIL Observatory six-stage Incident Case File model">
