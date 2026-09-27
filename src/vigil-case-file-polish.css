@@ -225,7 +225,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 /* Assessment follows the reading hierarchy:
-   governance assessment -> factual basis -> governance significance -> taxonomy assessment -> external assessments -> real-world harm assessment; Stage 03 is reserved for taxonomy classification.
+   governance assessment -> factual basis -> Incident breakdown -> Harm Impact Assessment -> external assessments; Stage 03 is reserved for alignment classification.
    Narrative sections stay flush with the Section 02 content edge. */
 .vigil-case-file-page .vigil-diagnosis-metadata-panel {
   margin-top: 1rem;
@@ -582,7 +582,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 
 
-/* VIGIL taxonomy assessment intentionally reuses the External assessments table grammar. */
+/* Incident breakdown intentionally reuses the External assessments table grammar. */
 .vigil-case-file-page .vigil-taxonomy-assessment > .vigil-substantive-label {
   margin: 0 0 0.55rem;
 }
