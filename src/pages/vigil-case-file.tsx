@@ -826,7 +826,7 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Mappings where failure is evidenced or the boundary remains unresolved can be projected through the maintained taxonomy crosswalk in Compliance. Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain in Classification as evidence of boundaries that held.</p>
+        <p className="vigil-exemplar-callout-boundary">Mapped Fidelity Classes can be projected through the maintained taxonomy crosswalk in Compliance. When multiple classifications reach the same exact external requirement, Compliance reports the most conservative supported alignment state; distinct clauses or controls remain separate.</p>
       </div>
     </section>}
 
