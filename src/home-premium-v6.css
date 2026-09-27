@@ -257,12 +257,16 @@
 }
 
 @media (max-width: 720px) {
-  /* Keep the physical label-maker character on phones. Positions are allowed
-     to bleed beyond the board edge; the board clips that bleed rather than
-     squeezing every label into a fat multi-line card. */
+  /* Keep the physical label-maker character on phones. Labels retain their
+     natural width and may extend beyond the initial viewport; the sticker field
+     can be panned horizontally instead of crushing labels into narrow cards. */
   .taxonomy-sticker-board {
     min-height: 29rem;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
 
   .taxonomy-sticker {
