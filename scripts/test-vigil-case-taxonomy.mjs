@@ -25,10 +25,10 @@ const [
   readFile(new URL("../src/index.css", import.meta.url), "utf8"),
 ]);
 
-// Canonical Case File retains taxonomy-derived Classification and Repair without
+// Canonical Case File retains taxonomy-derived Classification and Compliance without
 // reviving retired record machinery.
 assert.match(caseFile, /CaseTaxonomyClassification/);
-assert.match(caseFile, /CaseTaxonomyRepair/);
+assert.match(caseFile, /CaseTaxonomyCompliance/);
 assert.match(caseFile, /ExternalAlignmentClassification/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
@@ -37,11 +37,11 @@ assert.match(caseFile, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessmen
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
-assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair/);
+assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved can be projected through the maintained taxonomy crosswalk in Compliance/);
 
 // Deterministic report retains the same canonical projection.
 assert.match(report, /CaseTaxonomyClassification/);
-assert.match(report, /CaseTaxonomyRepair/);
+assert.match(report, /CaseTaxonomyCompliance/);
 assert.doesNotMatch(report, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(report, /failureId=/);
 
@@ -142,7 +142,7 @@ assert.doesNotMatch(report, /Assessment provenance/);
 assert.doesNotMatch(report, /<EvidenceCard/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-report-cards \{[\s\S]*display: none !important;/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-web-table \{[\s\S]*display: block !important;/);
-assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-repair-metadata-panel \{[\s\S]*display: none !important;/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-compliance-reference-list \{[\s\S]*display: grid;/);
 assert.match(reportCss, /\.report-observation-summary > \.report-substantive-label[\s\S]*font-size: 1\.08rem !important;/);
 assert.match(reportCss, /Deterministic report consistency: the numbered stage is the section container/);
 assert.match(reportCss, /\.report-occurrence-card,[\s\S]*border: 0 !important/);
@@ -155,7 +155,7 @@ assert.match(reportCss, /\.report-assessment-limits \{[\s\S]*break-inside: auto 
 assert.match(reportCss, /\.report-empty \{[\s\S]*border: 0 !important/);
 assert.match(reportCss, /@media print \{[\s\S]*\.report-section \{[\s\S]*border: 0 !important;/);
 assert.match(reportCss, /\.report-affected-systems \{[\s\S]*break-inside: avoid-page/);
-assert.match(reportCss, /\.vigil-repair-web-table,[\s\S]*break-inside: auto !important/);
+assert.match(reportCss, /\.vigil-compliance-web-table,[\s\S]*break-inside: auto !important/);
 assert.match(reportCss, /\.report-severity-assessment > \.report-metadata-grid[\s\S]*background: transparent !important;/);
 assert.doesNotMatch(report, /const summary =/);
 assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css/);
@@ -163,7 +163,7 @@ assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /Limits of the assessment/);
 assert.match(printableReport, /report-postscript/);
-assert.match(printableReport, /no resolved alignment mapping that requires repair/);
+assert.match(printableReport, /No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
 assert.match(printableReport, /© 2026 CAM Initiative\. All rights reserved\./);
