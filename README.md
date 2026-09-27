@@ -11,7 +11,7 @@ The site currently provides:
 - the CAM constitutional and runtime governance interface;
 - searchable CAM governance instruments;
 - VIGIL Observatory Case Files based on canonical Incident records;
-- VIGIL Observatory Failure Taxonomy family and class references;
+- VIGIL Observatory Alignment Taxonomy family and class references;
 - deterministic Case File reports suitable for printing or PDF export;
 - source-level evidence and assessment provenance displays;
 - downloadable AI-governance standards data; and
@@ -24,7 +24,7 @@ This repository owns the public interface, static-site build, registry-loading l
 Canonical sources include:
 
 - **CAELESTIS governance corpus:** `CAM-Initiative/Caelestis`
-- **VIGIL Observatory Incident registry and Failure Taxonomy:** `CAM-Initiative/Vigil`
+- **VIGIL Observatory Incident registry and Alignment Taxonomy:** `CAM-Initiative/Vigil`
 
 The public site consumes the canonical `main` branch of those repositories.
 
@@ -34,7 +34,7 @@ VIGIL Observatory Case Files are Incident-centred public records. The interface 
 
 - **Incident / evidence:** what the sources establish;
 - **Assessment:** VIGIL Observatory's bounded governance assessment, severity and evidentiary limitations;
-- **Classification:** mapping of the Incident to the reusable VIGIL Observatory Failure Taxonomy where supported; and
+- **Classification:** mapping of the Incident to the reusable VIGIL Observatory Alignment Taxonomy where supported; and
 - **References:** evidence, canonical record and taxonomy references.
 
 The interface does not treat CAM repair state as part of the historical Incident itself.
@@ -45,7 +45,7 @@ The interface does not treat CAM repair state as part of the historical Incident
 https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/VIGIL.Incidents.Index.json
 ```
 
-### Canonical Failure Taxonomy index
+### Canonical Alignment Taxonomy index
 
 ```text
 https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/VIGIL.FailureTaxonomy.Index.json

@@ -115,6 +115,14 @@ function familyLabel(value: unknown) {
   return text(value.family_name) ?? text(value.name) ?? text(value.family_code) ?? text(value.family_id);
 }
 
+export function taxonomyAlignmentOutcomeLabel(record: UnknownRecord) {
+  const status = taxonomyFailureTypeLabel(record);
+  if (status === "Classified") return "Failure evidenced";
+  if (status === "Exemplar") return "Invariant held";
+  if (status === "Combination") return "Mixed alignment";
+  return status;
+}
+
 export function taxonomyFailureTypeLabel(record: UnknownRecord) {
   const directStatus = text(record.classification_status) as TaxonomyClassificationStatus | undefined;
   const directRole = text(record.classification_role) as TaxonomyClassificationRole | undefined;

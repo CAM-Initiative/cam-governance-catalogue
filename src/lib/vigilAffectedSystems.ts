@@ -12,6 +12,12 @@ export type AffectedSystem = {
   deploymentContext?: string;
   agentConfiguration?: string;
   agentCount?: string;
+  deploymentState?: string;
+  activityContexts?: string;
+  externalReach?: string;
+  activityActor?: string;
+  // Transitional display only. These are the pre-2026-09-27 occurrence-environment fields
+  // and are shown only when the separated four-field model is absent.
   occurrenceSetting?: string;
   testingActor?: string;
 };
@@ -42,16 +48,19 @@ function numberValue(value: unknown) {
   return undefined;
 }
 
-function agentConfigurationLabel(value: unknown) {
+function controlledLabel(value: unknown, labels: Record<string, string | undefined>) {
   const normalized = text(value)?.toLowerCase();
-  const labels: Record<string, string> = {
+  return normalized ? labels[normalized] ?? normalized : undefined;
+}
+
+function agentConfigurationLabel(value: unknown) {
+  return controlledLabel(value, {
     "non-agentic": "Non-agentic",
     "single-agent": "Single agent",
     "multi-agent": "Multi-agent",
     swarm: "Swarm",
     unknown: "Unknown",
-  };
-  return normalized ? labels[normalized] ?? normalized : undefined;
+  });
 }
 
 function agentCountLabel(agentContext: UnknownRecord) {
@@ -72,28 +81,52 @@ function agentCountLabel(agentContext: UnknownRecord) {
   return undefined;
 }
 
-function occurrenceSettingLabel(value: unknown) {
-  const normalized = text(value)?.toLowerCase();
-  const labels: Record<string, string> = {
-    testing: "Testing",
-    live: "Live",
-    mixed: "Mixed testing / live",
+function deploymentStateLabel(value: unknown) {
+  return controlledLabel(value, {
+    "pre-deployment": "Pre-deployment",
+    deployed: "Deployed",
     unknown: "Unknown",
-  };
-  return normalized ? labels[normalized] ?? normalized : undefined;
+  });
 }
 
-function testingActorLabel(value: unknown) {
-  const normalized = text(value)?.toLowerCase();
-  const labels: Record<string, string | undefined> = {
+function activityContextsLabel(value: unknown) {
+  const labels: Record<string, string> = {
+    training: "Training",
+    evaluation: "Evaluation",
+    research: "Research",
+    "operational-use": "Operational use",
+    unknown: "Unknown",
+  };
+  const values = textList(value).map((item) => labels[item.toLowerCase()] ?? item);
+  return values.length ? values.join(" · ") : undefined;
+}
+
+function externalReachLabel(value: unknown) {
+  return controlledLabel(value, {
+    contained: "Contained",
+    "live-external": "Live external",
+    unknown: "Unknown",
+  });
+}
+
+function activityActorLabel(value: unknown) {
+  return controlledLabel(value, {
     "provider-internal": "Provider / internal",
     government: "Government",
     "third-party": "Third party",
     joint: "Joint / multi-party",
     "not-applicable": undefined,
     unknown: "Unknown",
-  };
-  return normalized ? labels[normalized] ?? normalized : undefined;
+  });
+}
+
+function occurrenceSettingLabel(value: unknown) {
+  return controlledLabel(value, {
+    testing: "Testing",
+    live: "Live",
+    mixed: "Mixed testing / live",
+    unknown: "Unknown",
+  });
 }
 
 export function affectedSystemFor(record: VigilIndexRecord): AffectedSystem | undefined {
@@ -110,10 +143,25 @@ export function affectedSystemFor(record: VigilIndexRecord): AffectedSystem | un
   const deploymentContext = text(context.deployment_context);
   const agentConfiguration = agentConfigurationLabel(agentContext.agentic_status);
   const agentCount = agentCountLabel(agentContext);
-  const occurrenceSetting = occurrenceSettingLabel(occurrenceEnvironment.operational_setting);
-  const testingActor = testingActorLabel(occurrenceEnvironment.testing_actor);
 
-  if (![provider, product, model, systemType, interfaceSurface, deploymentContext, agentConfiguration, agentCount, occurrenceSetting, testingActor].some(Boolean)) {
+  const hasSeparatedEnvironment = [
+    "deployment_state",
+    "activity_contexts",
+    "external_reach",
+    "activity_actor",
+  ].some((key) => occurrenceEnvironment[key] !== undefined);
+
+  const deploymentState = hasSeparatedEnvironment ? deploymentStateLabel(occurrenceEnvironment.deployment_state) : undefined;
+  const activityContexts = hasSeparatedEnvironment ? activityContextsLabel(occurrenceEnvironment.activity_contexts) : undefined;
+  const externalReach = hasSeparatedEnvironment ? externalReachLabel(occurrenceEnvironment.external_reach) : undefined;
+  const activityActor = hasSeparatedEnvironment ? activityActorLabel(occurrenceEnvironment.activity_actor) : undefined;
+
+  // Do not infer separated semantics from the legacy field. Keep old labels only as a
+  // temporary display fallback while production VIGIL still publishes the earlier schema.
+  const occurrenceSetting = hasSeparatedEnvironment ? undefined : occurrenceSettingLabel(occurrenceEnvironment.operational_setting);
+  const testingActor = hasSeparatedEnvironment ? undefined : activityActorLabel(occurrenceEnvironment.testing_actor);
+
+  if (![provider, product, model, systemType, interfaceSurface, deploymentContext, agentConfiguration, agentCount, deploymentState, activityContexts, externalReach, activityActor, occurrenceSetting, testingActor].some(Boolean)) {
     return undefined;
   }
 
@@ -127,6 +175,10 @@ export function affectedSystemFor(record: VigilIndexRecord): AffectedSystem | un
     deploymentContext,
     agentConfiguration,
     agentCount,
+    deploymentState,
+    activityContexts,
+    externalReach,
+    activityActor,
     occurrenceSetting,
     testingActor,
   };
@@ -141,6 +193,10 @@ export function dedupeAffectedSystems(records: VigilIndexRecord[]) {
       system.model,
       system.interfaceSurface,
       system.agentConfiguration,
+      system.deploymentState,
+      system.activityContexts,
+      system.externalReach,
+      system.activityActor,
       system.occurrenceSetting,
     ].filter(Boolean).join("|").toLowerCase();
 

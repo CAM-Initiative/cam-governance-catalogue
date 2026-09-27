@@ -30,7 +30,7 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /externalAssessments\.length > 0/);
   assert.match(caseFile, /External incident records/);
   assert.match(caseFile, /Taxonomy and methodology references/);
-  assert.match(caseFile, /VIGIL Observatory Failure Taxonomy/);
+  assert.match(caseFile, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(caseFile, /VIGIL Harm Impact Methodology/);
   assert.match(caseFile, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
   assert.match(caseFile, /Internal records/);
@@ -57,8 +57,17 @@ test("Affected systems expose evidence-bounded agent and occurrence metadata in 
   assert.match(helper, /context\.occurrence_environment/);
   assert.match(helper, /count_basis/);
   assert.match(helper, /At least \$\{min\}/);
-  assert.match(helper, /Mixed testing \/ live/);
+  assert.match(helper, /deployment_state/);
+  assert.match(helper, /activity_contexts/);
+  assert.match(helper, /external_reach/);
+  assert.match(helper, /activity_actor/);
+  assert.match(helper, /Pre-deployment/);
+  assert.match(helper, /Operational use/);
+  assert.match(helper, /Live external/);
   assert.match(helper, /Provider \/ internal/);
+  assert.match(helper, /hasSeparatedEnvironment/);
+  assert.match(helper, /operational_setting/);
+  assert.match(helper, /testing_actor/);
   assert.match(helper, /joinedText\(context\.interface_surface\)/);
   assert.doesNotMatch(helper, /evidence_basis|source_record_refs|environment_detail/);
 
@@ -66,6 +75,10 @@ test("Affected systems expose evidence-bounded agent and occurrence metadata in 
     assert.match(source, /dedupeAffectedSystems/);
     assert.match(source, /label="Agent configuration"/);
     assert.match(source, /label="Agent count"/);
+    assert.match(source, /label="Deployment state"/);
+    assert.match(source, /label="Activity context"/);
+    assert.match(source, /label="External reach"/);
+    assert.match(source, /label="Activity actor"/);
     assert.match(source, /label="Occurrence setting"/);
     assert.match(source, /label="Testing conducted by"/);
   }
@@ -76,28 +89,33 @@ test("Case File source contains no escaped newline text between hero cards", asy
   assert.doesNotMatch(source, /<\/section>}\\n\\n/);
 });
 
-test("Case File Section 02 leads with factual basis and governance significance before harm assessment", async () => {
+test("Case File Section 02 orders factual basis, taxonomy assessment, harm and external assessments without duplicate headings", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
-  const governanceIndex = assessmentRenderer.indexOf("GOVERNANCE ASSESSMENT");
-  const harmIndex = assessmentRenderer.indexOf("REAL-WORLD HARM ASSESSMENT");
-  const factualIndex = assessmentRenderer.indexOf("Factual basis");
-  const significanceIndex = assessmentRenderer.indexOf("Governance significance");
+  const factualIndex = assessmentRenderer.indexOf("vigil-diagnosis-factual-basis");
+  const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
+  const harmIndex = assessmentRenderer.indexOf("Real-world harm assessment");
+  const externalIndex = assessmentRenderer.indexOf("External assessments");
 
-  assert.ok(governanceIndex >= 0 && factualIndex > governanceIndex && significanceIndex > factualIndex && harmIndex > significanceIndex);
-  assert.match(assessmentRenderer, /vigil-diagnosis-assessment-details/);
+  assert.ok(factualIndex >= 0 && taxonomyIndex > factualIndex && harmIndex > taxonomyIndex && externalIndex > harmIndex);
+  assert.doesNotMatch(assessmentRenderer, />GOVERNANCE ASSESSMENT</);
+  assert.doesNotMatch(assessmentRenderer, />Factual basis</);
+  assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-assessment-summary|\{governanceConclusion\}/);
   assert.doesNotMatch(assessmentRenderer, /vigil-diagnosis-reading-stack/);
 });
 
-test("Factual basis and Governance significance stay inside the governance assessment card", async () => {
+test("Governance significance is integrated under Conclusion while taxonomy assessment remains its own Section 02 card", async () => {
   const source = await caseFileSource();
-  const card = source.match(/<section className="vigil-diagnosis-definition">[\s\S]*?<\/section>\n\n\s*\{externalAssessments\.length > 0/)?.[0] ?? "";
-  assert.match(card, /GOVERNANCE ASSESSMENT/);
-  assert.match(card, /Factual basis/);
-  assert.match(card, /Governance significance/);
-  assert.match(card, /vigil-diagnosis-assessment-details/);
-  assert.match(card, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
+  const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
+  const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
+  assert.doesNotMatch(assessmentRenderer, />GOVERNANCE ASSESSMENT</);
+  assert.doesNotMatch(assessmentRenderer, />Factual basis</);
+  assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
+  assert.doesNotMatch(assessmentRenderer, /Governance significance/);
+  assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
+  assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3 className="vigil-case-editorial-subheading">Governance significance<\/h3>/);
+  assert.doesNotMatch(conclusionRenderer, /vigil-governance-significance-card/);
 });
 
 test("governance interpretation is projected only in Conclusion across web and deterministic PDF", async () => {
@@ -158,7 +176,7 @@ test("Case File References remain bibliographic and do not republish evidence co
   assert.doesNotMatch(evidenceMapper, /source_context|relevance_note|source\.description/);
   assert.doesNotMatch(referencesRenderer, /source\.description/);
   assert.doesNotMatch(referencesRenderer, /<ExternalAssessmentList assessments=\{externalAssessments\}/);
-  assert.doesNotMatch(referencesRenderer, /EXTERNAL ASSESSMENTS/);
+  assert.doesNotMatch(referencesRenderer, /External assessments/);
   assert.doesNotMatch(referencesRenderer, /externalAssessments\.map|unmatchedExternalAssessments\.map/);
 });
 
@@ -170,8 +188,8 @@ test("Incident Case File retains evidence context and moves governance interpret
   assert.ok(observationRenderer, "Observation renderer must remain present");
   assert.match(source, /vigil_assessment\.factual_basis/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
-  assert.match(source, /GOVERNANCE ASSESSMENT/);
-  assert.match(conclusionRenderer, /VIGIL Observatory conclusion/);
+  assert.match(source, /vigil-diagnosis-factual-basis/);
+  assert.doesNotMatch(conclusionRenderer, /VIGIL Observatory conclusion/);
   assert.match(conclusionRenderer, /\{governanceConclusion\}/);
 });
 
@@ -220,7 +238,7 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.doesNotMatch(report, /ExternalAssessmentList assessments=\{externalAssessments\} compact/);
   assert.match(report, /data-report-taxonomy-reference-list/);
   assert.match(printable, /data-report-taxonomy-reference-list/);
-  assert.match(printable, /VIGIL Observatory Failure Taxonomy/);
+  assert.match(printable, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(printable, /VIGIL Harm Impact Methodology/);
   assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
   assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/knowledge-base\/failure-taxonomy/);
@@ -296,7 +314,7 @@ test("Incident artefact captions use one label plus numbered evidence reference"
   assert.match(css, /\.vigil-incident-artefact-reference/);
 });
 
-test("Classification and Repair cite the single numbered VIGIL Failure Taxonomy reference instead of row-level source links", async () => {
+test("Classification and Repair cite the single numbered VIGIL Alignment Taxonomy reference instead of row-level source links", async () => {
   const [component, caseFile, report, printable, css, reportCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8"),
     caseFileSource(),
@@ -307,9 +325,9 @@ test("Classification and Repair cite the single numbered VIGIL Failure Taxonomy 
   ]);
 
   assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
-  assert.match(component, /Failure classes and their governing invariants are defined in the/);
+  assert.match(component, /Fidelity classes and their governing invariants are defined in the/);
   assert.match(component, /The governing invariants shown here are defined in the/);
-  assert.match(component, /VIGIL Observatory Failure Taxonomy \[\{taxonomyReferenceNumber\}\]/);
+  assert.match(component, /VIGIL Observatory Alignment Taxonomy \[\{taxonomyReferenceNumber\}\]/);
   assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
   assert.match(caseFile, /id="vigil-failure-taxonomy-reference"/);
   assert.match(caseFile, /taxonomyReferenceHref="#vigil-failure-taxonomy-reference"/);
@@ -406,7 +424,7 @@ test("Classification and Repair tables keep readable body and legend typography"
 });
 
 
-test("EXTERNAL ASSESSMENTS cite Evidence sources without creating a second References subsection", async () => {
+test("External assessments cite Evidence sources without creating a second References subsection", async () => {
   const [caseFile, report] = await Promise.all([
     caseFileSource(),
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
@@ -418,8 +436,8 @@ test("EXTERNAL ASSESSMENTS cite Evidence sources without creating a second Refer
   }
   const caseReferences = caseFile.match(/if \(stageId === "references"\)[\s\S]*?return null;/)?.[0] ?? "";
   const reportReferences = report.match(/<Stage number="06" label="References">[\s\S]*?<\/Stage>/)?.[0] ?? "";
-  assert.doesNotMatch(caseReferences, /EXTERNAL ASSESSMENTS/);
-  assert.doesNotMatch(reportReferences, /EXTERNAL ASSESSMENTS/);
+  assert.doesNotMatch(caseReferences, /External assessments/);
+  assert.doesNotMatch(reportReferences, /External assessments/);
 });
 
 test("Taxonomy and methodology references expose version and revision metadata in web and PDF", async () => {
@@ -473,12 +491,13 @@ test("mobile Assessment prose stays viewport-bound while Harm tables remain hori
 });
 
 
-test("external assessments and harm are peer Stage 02 sections", async () => {
+test("taxonomy, harm and external assessments remain distinct Stage 02 sections in that order", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
-  const governanceEnd = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
-  const harmStart = assessmentRenderer.indexOf('REAL-WORLD HARM ASSESSMENT');
-  assert.ok(governanceEnd > 0 && harmStart > governanceEnd);
+  const taxonomyStart = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
+  const harmStart = assessmentRenderer.indexOf("Real-world harm assessment");
+  const externalStart = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
+  assert.ok(taxonomyStart > 0 && harmStart > taxonomyStart && externalStart > harmStart);
   assert.match(assessmentRenderer, /vigil-external-assessment-section/);
-  assert.match(assessmentRenderer, /EXTERNAL ASSESSMENTS/);
+  assert.match(assessmentRenderer, /External assessments/);
 });

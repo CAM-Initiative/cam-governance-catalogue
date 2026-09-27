@@ -33,3 +33,19 @@ main.overflow-hidden:has(#evidence-repair-heading):has(#policy-papers) > section
 .vigil-deterministic-report-host .report-section > header {
   background: transparent;
 }
+
+
+/* Dataset actions use the same restrained instrument control grammar as the
+ * public CAM pages rather than a separate rounded-pill vocabulary. */
+.vigil-datasets-page .vigil-baseline-download {
+  border-radius: var(--cam-radius-control);
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vigil-datasets-page .vigil-knowledge-collection {
+  border-radius: var(--cam-radius-panel);
+}

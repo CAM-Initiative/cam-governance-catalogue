@@ -163,7 +163,7 @@ export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Prom
     return {
       status: "unavailable",
       attemptedUrl: url,
-      message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${(error as Error).message}).`,
+      message: `The VIGIL Alignment Taxonomy dataset is not yet available from the configured source (${(error as Error).message}).`,
     };
   }
 }
@@ -194,7 +194,7 @@ export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<F
     return {
       status: "unavailable",
       attemptedUrl: indexUrl,
-      message: `The VIGIL Failure Taxonomy dataset is not yet available from the configured source (${(error as Error).message}).`,
+      message: `The VIGIL Alignment Taxonomy dataset is not yet available from the configured source (${(error as Error).message}).`,
     };
   }
 }

@@ -1,0 +1,275 @@
+/* Sixth-pass homepage refinement.
+   Taxonomy classes now accumulate as loose white label-maker stickers, while the diagnostic gears gain another layer of machined depth. */
+
+.taxonomy-reveal-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(34rem, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  min-height: 46rem;
+  padding-right: clamp(2rem, 5vw, 5rem);
+}
+
+.taxonomy-reveal-copy {
+  position: relative;
+  z-index: 3;
+  max-width: 43rem;
+}
+
+.taxonomy-sticker-stage {
+  position: relative;
+  z-index: 4;
+  min-width: 0;
+}
+
+/* No presentation container: the labels float directly in the field like physical tags. */
+.taxonomy-sticker-board {
+  position: relative;
+  min-height: 34rem;
+  overflow: visible;
+}
+
+.taxonomy-sticker-board::before,
+.taxonomy-sticker-board::after {
+  display: none;
+  content: none;
+}
+
+.taxonomy-sticker {
+  position: absolute;
+  z-index: 2;
+  left: var(--sticker-left);
+  top: var(--sticker-top);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  width: max-content;
+  max-width: min(18rem, 31vw);
+  padding: 0.42rem 0.62rem 0.46rem;
+  border: 1px solid rgba(18, 18, 16, 0.16);
+  border-radius: 0.08rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 252, 0.99), rgba(238, 236, 226, 0.99));
+  color: #171713;
+  text-decoration: none;
+  box-shadow:
+    0 0.12rem 0.16rem rgba(0, 0, 0, 0.2),
+    0 0.65rem 1rem rgba(0, 0, 0, 0.12);
+  rotate: var(--sticker-rotate);
+  transform-origin: 50% 50%;
+  animation: taxonomy-label-land 420ms cubic-bezier(.22,1,.36,1) both;
+  transition:
+    rotate 200ms cubic-bezier(.22,1,.36,1),
+    translate 200ms cubic-bezier(.22,1,.36,1),
+    box-shadow 200ms ease,
+    filter 200ms ease;
+}
+
+.taxonomy-sticker::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  background:
+    repeating-linear-gradient(0deg, rgba(20,20,16,0.045) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+.taxonomy-sticker:hover,
+.taxonomy-sticker:focus-visible {
+  z-index: 30;
+  outline: none;
+  rotate: 0deg;
+  translate: 0 -0.2rem;
+  box-shadow:
+    0 0.16rem 0.2rem rgba(0, 0, 0, 0.2),
+    0 1rem 1.7rem rgba(0, 0, 0, 0.18);
+  filter: brightness(1.025);
+}
+
+.taxonomy-sticker-code,
+.taxonomy-sticker strong {
+  position: relative;
+  z-index: 1;
+  font-family: "Courier New", Courier, var(--app-font-mono), monospace;
+  color: #171713;
+}
+
+.taxonomy-sticker-code {
+  flex: 0 0 auto;
+  font-size: 0.67rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.045em;
+  white-space: nowrap;
+}
+
+.taxonomy-sticker strong {
+  display: block;
+  min-width: 0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+}
+
+@keyframes taxonomy-label-land {
+  0% { opacity: 0; translate: 0 -0.85rem; scale: 0.92; }
+  70% { opacity: 1; translate: 0 0.08rem; scale: 1.018; }
+  100% { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+.taxonomy-reveal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.taxonomy-reveal-link svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 180ms ease;
+}
+
+.taxonomy-reveal-link:hover svg { transform: translateX(0.25rem); }
+
+/* ---- Diagnostic instrument: deepen the back gear and add nested machined layers. ---- */
+
+/* A dark recessed track inside the outer gear makes it read as a rear mechanical plate rather than another line. */
+.diagnostic-gear-outer::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 1.15rem;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from 8deg,
+      hsl(var(--background) / 0.76) 0deg 7deg,
+      hsl(var(--primary) / 0.12) 7deg 11deg,
+      transparent 11deg 30deg
+    );
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.12),
+    inset 0 0 1.8rem hsl(var(--foreground) / 0.08),
+    0 0 0 1px hsl(var(--background) / 0.5);
+  -webkit-mask: radial-gradient(circle, transparent 0 67%, #000 68% 82%, transparent 83% 100%);
+  mask: radial-gradient(circle, transparent 0 67%, #000 68% 82%, transparent 83% 100%);
+}
+
+/* Inner gear receives a fine calibration rail and a darker recessed hub shoulder. */
+.diagnostic-gear-inner::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0.72rem;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      hsl(var(--primary) / 0.24) 0deg 1.3deg,
+      transparent 1.3deg 15deg
+    ),
+    radial-gradient(circle,
+      transparent 0 58%,
+      hsl(var(--background) / 0.58) 59% 62%,
+      hsl(var(--primary) / 0.09) 63% 66%,
+      transparent 67% 100%
+    );
+  opacity: 0.72;
+}
+
+/* Make the rear gear body visually heavier without increasing its footprint. */
+.diagnostic-gear-outer::before {
+  background:
+    radial-gradient(circle,
+      transparent 0 68%,
+      hsl(var(--background) / 0.76) 68.5% 72%,
+      hsl(var(--primary) / 0.08) 72.5% 76%,
+      hsl(var(--primary) / 0.18) 76.5% 86%,
+      hsl(var(--primary) / 0.28) 86.5% 91%,
+      hsl(var(--background) / 0.58) 91.5% 94%,
+      hsl(var(--primary) / 0.22) 94.5% 100%);
+  box-shadow:
+    inset 0 0 0 1px hsl(var(--primary) / 0.2),
+    inset 0 0 2.4rem hsl(var(--foreground) / 0.05),
+    0 0 0 1px hsl(var(--primary) / 0.14),
+    0 0 2rem hsl(var(--primary) / 0.045);
+}
+
+/* Rear ribs should be visible enough to create construction depth, but stay behind the foreground wheel. */
+.diagnostic-gear-outer .diagnostic-gear-spokes i {
+  width: 0.84rem;
+  height: 33%;
+  opacity: 0.52;
+  border-color: hsl(var(--primary) / 0.12);
+  background:
+    linear-gradient(90deg,
+      hsl(var(--background) / 0.72),
+      hsl(var(--primary) / 0.08) 28%,
+      hsl(var(--primary) / 0.22) 50%,
+      hsl(var(--primary) / 0.08) 72%,
+      hsl(var(--background) / 0.72));
+}
+
+/* Pull every right-side stage further inward; active expansion must never kiss the viewport edge. */
+.diagnostic-orbit-v2 .diagnostic-node-2 {
+  right: 8.5%;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node-3 {
+  right: 9.5%;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node {
+  max-width: 9.8rem;
+}
+
+.diagnostic-orbit-v2 .diagnostic-node.is-active {
+  width: min(11rem, 33vw);
+  max-width: 11rem;
+}
+
+@media (max-width: 1100px) {
+  .taxonomy-reveal-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    min-height: auto;
+    padding-right: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  .taxonomy-reveal-copy { max-width: 52rem; }
+  .taxonomy-sticker-board { min-height: 31rem; }
+  .taxonomy-sticker { max-width: min(17rem, 42vw); }
+
+  .diagnostic-orbit-v2 .diagnostic-node-2 { right: 6%; }
+  .diagnostic-orbit-v2 .diagnostic-node-3 { right: 7%; }
+}
+
+@media (max-width: 720px) {
+  .taxonomy-sticker-board { min-height: 29rem; overflow: hidden; }
+  .taxonomy-sticker {
+    max-width: 47vw;
+    gap: 0.38rem;
+    padding: 0.34rem 0.46rem 0.38rem;
+  }
+  .taxonomy-sticker-code { font-size: 0.56rem; }
+  .taxonomy-sticker strong { font-size: 0.66rem; }
+
+  .diagnostic-orbit-v2 .diagnostic-node-2 { right: 4%; }
+  .diagnostic-orbit-v2 .diagnostic-node-3 { right: 5%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taxonomy-sticker { animation: none; transition: none; }
+}

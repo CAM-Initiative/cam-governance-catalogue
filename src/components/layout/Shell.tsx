@@ -8,8 +8,10 @@ const mobileLinks = [
   { href: "/about/", label: "About", internal: true },
   { href: "/observatory/knowledge-base/", label: "Knowledge Base", internal: true },
   { href: "/observatory/cases/", label: "Case Files", internal: true },
-  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Failure Taxonomy", internal: true },
-  { href: "/observatory/severity-methodology/", label: "Harm & Severity Methodology", internal: true },
+  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "Alignment Taxonomy", internal: true },
+  { href: "/observatory/severity-methodology/", label: "Harm Impact Assessment", internal: true },
+  { href: "/observatory/knowledge-base/policy/", label: "Policy", internal: true },
+  { href: "/observatory/knowledge-base/standards-sources/", label: "AI Governance Standards", internal: true },
   { href: "/datasets/", label: "Datasets", internal: true },
   { href: "/licensing/", label: "Copyright & Licence", internal: true },
   { href: "/privacy/", label: "Privacy", internal: true },
@@ -19,22 +21,29 @@ const mobileLinks = [
 const homeLinks = [
   { href: "/", label: "Overview" },
   { href: "/about/", label: "About" },
+  { href: "/observatory/knowledge-base/", label: "Knowledge Base" },
   { href: "/licensing/", label: "Copyright & Licence" },
   { href: "/privacy/", label: "Privacy" },
 ];
 
 const vigilLinks = [
-  { href: "/observatory/knowledge-base/", label: "VIGIL Observatory Knowledge Base", navLabel: "Knowledge Base" },
   { href: "/observatory/cases/", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
-  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Failure Taxonomy", navLabel: "Failure Taxonomy" },
-  { href: "/observatory/severity-methodology/", label: "Harm & Severity Methodology", navLabel: "Harm & Severity Methodology" },
+  { href: "/observatory/knowledge-base/failure-taxonomy/", label: "VIGIL Observatory Alignment Taxonomy", navLabel: "Alignment Taxonomy" },
+  { href: "/observatory/severity-methodology/", label: "Harm Impact Assessment", navLabel: "Harm Impact Assessment" },
+  { href: "/observatory/knowledge-base/policy/", label: "VIGIL Observatory Policy", navLabel: "Policy" },
+  { href: "/observatory/knowledge-base/standards-sources/", label: "VIGIL Observatory AI Governance Standards", navLabel: "AI Governance Standards" },
 ];
+
+function navActive(location: string, href: string) {
+  return location === href || (href.startsWith("/observatory/") && location.startsWith(href));
+}
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/";
-  const isVigilActive = location === "/observatory/" || location.startsWith("/observatory/");
+  const isKnowledgeBaseHome = location === "/observatory/knowledge-base/";
+  const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/" || isKnowledgeBaseHome;
+  const isVigilActive = !isKnowledgeBaseHome && (location === "/observatory/" || location.startsWith("/observatory/"));
   const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");
 
   useEffect(() => {
@@ -42,25 +51,19 @@ export function Shell({ children }: { children: ReactNode }) {
   }, [location]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20">
-      <header className="site-header sticky top-0 z-50 w-full border-b border-border/60 bg-background/90 backdrop-blur-sm">
-        <div className="container mx-auto px-6 md:px-10 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <img
-              src="/cam-triskelion.svg"
-              alt="CAM Initiative"
-              className="w-8 h-8 object-contain opacity-95 group-hover:opacity-100 transition-opacity"
-            />
-            <span className="font-mono text-[12px] tracking-[0.18em] uppercase text-primary font-semibold">
-              CAM Initiative
-            </span>
+    <div className="site-frame">
+      <header className="site-header">
+        <div className="site-header-inner">
+          <Link href="/" className="site-brand">
+            <img src="/cam-triskelion.svg" alt="" className="site-brand-mark" />
+            <span className="site-brand-name">CAM Initiative</span>
           </Link>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="site-mobile-controls">
             <ThemeToggle />
             <button
               type="button"
-              className="inline-flex items-center rounded-lg border border-border bg-card/70 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="site-menu-button"
               aria-controls="mobile-site-navigation"
               aria-expanded={isMobileMenuOpen}
               onClick={() => setIsMobileMenuOpen((open) => !open)}
@@ -69,25 +72,18 @@ export function Shell({ children }: { children: ReactNode }) {
             </button>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <div className="group relative">
-              <Link
-                href="/"
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isHomeActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
+          <nav className="site-desktop-nav" aria-label="Primary navigation">
+            <div className="site-nav-group">
+              <Link href="/" className={isHomeActive ? "site-nav-root is-active" : "site-nav-root"}>
                 Home
               </Link>
-              <div className="invisible absolute left-0 top-full min-w-44 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/35 bg-popover p-2 shadow-2xl ring-1 ring-primary/15">
+              <div className="site-nav-dropdown-wrap">
+                <div className="site-nav-dropdown">
                   {homeLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-card hover:text-foreground"
-                      }`}
+                      className={location === link.href ? "site-nav-dropdown-link is-active" : "site-nav-dropdown-link"}
                     >
                       {link.label}
                     </Link>
@@ -96,27 +92,21 @@ export function Shell({ children }: { children: ReactNode }) {
               </div>
             </div>
 
-            <div className="group relative">
+            <div className="site-nav-group">
               <Link
-                href="/observatory/knowledge-base/"
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isVigilActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
+                href="/observatory/cases/"
+                className={isVigilActive ? "site-nav-root is-active" : "site-nav-root"}
               >
                 VIGIL Observatory
               </Link>
-              <div className="invisible absolute left-0 top-full min-w-64 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="rounded-xl border border-primary/35 bg-background p-2 shadow-2xl ring-1 ring-primary/15">
+              <div className="site-nav-dropdown-wrap site-nav-dropdown-wrap--wide">
+                <div className="site-nav-dropdown">
                   {vigilLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       aria-label={link.label}
-                      className={`block rounded-lg px-3 py-2 font-mono text-[11px] uppercase tracking-[0.13em] transition-colors ${
-                        location === link.href || location.startsWith(link.href)
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-card hover:text-foreground"
-                      }`}
+                      className={navActive(location, link.href) ? "site-nav-dropdown-link is-active" : "site-nav-dropdown-link"}
                     >
                       {link.navLabel}
                     </Link>
@@ -125,45 +115,30 @@ export function Shell({ children }: { children: ReactNode }) {
               </div>
             </div>
 
-            <div className="flex items-center gap-8">
-              <Link
-                href="/datasets/"
-                className={`text-[12px] font-mono tracking-[0.14em] uppercase transition-colors ${
-                  isDatasetsActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Datasets
-              </Link>
-              <ThemeToggle />
-            </div>
+            <Link
+              href="/datasets/"
+              className={isDatasetsActive ? "site-nav-root is-active" : "site-nav-root"}
+            >
+              Datasets
+            </Link>
+            <ThemeToggle />
           </nav>
         </div>
 
         {isMobileMenuOpen && (
-          <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="border-t border-border/70 bg-card px-6 py-3 shadow-md md:hidden">
-            <div className="container mx-auto grid gap-1">
+          <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="site-mobile-nav">
+            <div className="site-mobile-nav-inner">
               {mobileLinks.map((link) => (
                 link.internal ? (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] transition-colors ${
-                      location === link.href ||
-                      (link.href.startsWith("/observatory/") && location.startsWith(link.href))
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-card hover:text-foreground"
-                    }`}
+                    className={navActive(location, link.href) ? "site-mobile-nav-link is-active" : "site-mobile-nav-link"}
                   >
                     {link.label}
                   </Link>
                 ) : (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                    className="rounded-lg px-3 py-2 font-mono text-[12px] uppercase tracking-[0.13em] text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-                  >
+                  <a key={link.href} href={link.href} className="site-mobile-nav-link">
                     {link.label}
                   </a>
                 )
@@ -173,39 +148,37 @@ export function Shell({ children }: { children: ReactNode }) {
         )}
       </header>
 
-      <main className="flex-1 flex flex-col">
+      <main className="site-main">
         {children}
       </main>
 
-      <footer className="mt-auto border-t border-border/70 bg-background py-4 text-foreground md:py-5">
-        <div className="container mx-auto min-w-0 px-4 sm:px-6 md:px-10">
-          <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
-            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center md:justify-start md:text-left">
-              <span className="text-sm text-muted-foreground">© 2026 CAM Initiative. All rights reserved.</span>
-              <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <Link href="/licensing/" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Copyright & Licence</Link>
-              <span className="text-muted-foreground" aria-hidden="true">·</span>
-              <Link href="/privacy/" className="text-sm text-muted-foreground transition-colors hover:text-foreground">Privacy</Link>
-            </div>
-
-            <nav aria-label="Footer" className="flex w-full max-w-full flex-wrap justify-center gap-3 md:w-auto md:justify-end">
-              <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                <Mail className="h-4 w-4" aria-hidden="true" />
-              </a>
-              <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                <span className="font-serif text-base leading-none" aria-hidden="true">𝕏</span>
-              </a>
-              <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                <Newspaper className="h-4 w-4" aria-hidden="true" />
-              </a>
-              <a href="https://github.com/CAM-Initiative/Vigil" aria-label="VIGIL Observatory repository on GitHub" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                <Github className="h-4 w-4" aria-hidden="true" />
-              </a>
-              <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-primary/20 bg-background text-foreground/75 transition-colors hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background">
-                <Coffee className="h-4 w-4" aria-hidden="true" />
-              </a>
-            </nav>
+      <footer className="site-footer">
+        <div className="site-footer-inner">
+          <div className="site-footer-copy">
+            <span>© 2026 CAM Initiative. All rights reserved.</span>
+            <span aria-hidden="true">·</span>
+            <Link href="/licensing/">Copyright & Licence</Link>
+            <span aria-hidden="true">·</span>
+            <Link href="/privacy/">Privacy</Link>
           </div>
+
+          <nav aria-label="Footer" className="site-social-links">
+            <a href="mailto:ethics@cam-initiative.org" aria-label="Contact" className="site-social-link">
+              <Mail aria-hidden="true" />
+            </a>
+            <a href="https://x.com/CAM_Initiative" aria-label="CAM Initiative updates on X" target="_blank" rel="noreferrer" className="site-social-link">
+              <span className="site-social-x" aria-hidden="true">𝕏</span>
+            </a>
+            <a href="https://substack.com/@caminitiative" aria-label="Substack" target="_blank" rel="noreferrer" className="site-social-link">
+              <Newspaper aria-hidden="true" />
+            </a>
+            <a href="https://github.com/CAM-Initiative/Vigil" aria-label="VIGIL Observatory repository on GitHub" target="_blank" rel="noreferrer" className="site-social-link">
+              <Github aria-hidden="true" />
+            </a>
+            <a href="https://buymeacoffee.com/cam_initiative" aria-label="Support CAM Initiative" target="_blank" rel="noreferrer" className="site-social-link">
+              <Coffee aria-hidden="true" />
+            </a>
+          </nav>
         </div>
       </footer>
     </div>

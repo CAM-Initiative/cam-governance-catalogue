@@ -1,4 +1,5 @@
 import type { UnknownRecord } from "@/lib/vigilRegistry";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
 const BANDS = ["S1", "S2", "S3", "S4", "S5"] as const;
 type Band = typeof BANDS[number];
@@ -67,6 +68,7 @@ const DIMENSIONS = [
       S4: "Large-scale or highly sensitive exposure, persistent loss of confidentiality, or substantial evidenced misuse.",
       S5: "Catastrophic, effectively irreversible exposure creating grave safety, liberty or societal consequences.",
     },
+    adaptation_note: "Distinguish unauthorised access or disclosure from evidenced downstream misuse. Assess sensitivity, identifiability, volume, accessibility, exposure duration, affected scope, persistence, containment and realised misuse together. Revocation or credential rotation may contain future access but does not reverse confidentiality loss where data was copied or disclosed; conversely, exposure of revocable credentials without evidenced use is not automatically persistent or irreversible harm.",
   },
   {
     dimension_id: "financial-economic",
@@ -78,7 +80,7 @@ const DIMENSIONS = [
       S4: "USD 100 million to below USD 100 billion, or independently evidenced substantial solvency, organisational-viability or widespread economic impact where no defensible USD conversion is available.",
       S5: "At least USD 100 billion, catastrophic insolvency or systemic economic loss.",
     },
-    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold.",
+    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold. Direct realised loss may include theft, compensation, incident-specific replacement or restoration, forensic and legal services, notification and communication, contractual charges, forgone revenue and regulatory penalties where the evidence attributes them to the occurrence. Ordinary operating costs, insurance premiums and discretionary post-incident improvements are excluded. Do not infer an amount from effort, notoriety or asset importance.",
   },
   {
     dimension_id: "property-asset-damage",
@@ -102,7 +104,7 @@ const DIMENSIONS = [
       S4: "Essential or critical operation disrupted over 24 hours, material multi-organisation or multi-jurisdiction impact, exceeded evidenced tolerable downtime, or substantial external recovery.",
       S5: "Catastrophic or prolonged loss of essential service or operational collapse producing comparably grave materialised consequences.",
     },
-    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope.",
+    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope. Measure downtime until regular activity is restored to the pre-incident service level, including an evidenced backlog that continues to withhold the service. Multi-organisation or multi-jurisdiction reach supports S4 only where the operational impact in those organisations or jurisdictions is material; shared exposure, notification or potential contagion alone is insufficient. Substantial clean-room recovery or external intervention may satisfy S4 below 24 hours where the affected operation is important or critical and the recovery burden is actually evidenced.",
   },
   {
     dimension_id: "reputation-dignity",
@@ -114,6 +116,7 @@ const DIMENSIONS = [
       S4: "Severe, wide-reaching or persistent dignitary or reputational injury with substantial personal or organisational consequences.",
       S5: "Catastrophic and effectively irreversible dignitary or reputational harm coupled to grave safety, liberty or societal consequences.",
     },
+    adaptation_note: "Distinguish public exposure from reputational or dignitary injury. Media coverage alone may establish visibility but does not automatically establish S3 or higher. Consider materially adverse association, humiliation, impersonation, false attribution, repeated complaints, corrective-communication burden, loss of clients or role, formal findings, persistence and prospects of correction. Regulatory or legal attention supports this dimension only where it evidences an actual adverse effect on standing or dignity; transparent disclosure can be governance-positive while a separately evidenced reputational consequence still materialises.",
   },
   {
     dimension_id: "societal-democratic",
@@ -283,22 +286,26 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
     </div>
 
     {/* Canonical methodology adaptation notes sit outside the threshold cells so they remain readable and citable. */}
-    <div className="vigil-harm-interpretive-notes" aria-label="Harm matrix interpretive notes">
-      <h3>Interpretive notes</h3>
+    <section className="vigil-harm-interpretive-notes" aria-labelledby="vigil-harm-interpretive-notes-heading">
+      <h3 id="vigil-harm-interpretive-notes-heading">Interpretive notes</h3>
       {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
         ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
         : [])}
-    </div>
-
-    <div className="vigil-harm-evidence-key" aria-label="Harm assessment evidence states">
-      <div><strong>Assessed</strong><span>Evidence supports a materialised impact and a specific threshold band.</span></div>
-      <div><strong>Unreported</strong><span>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</span></div>
-      <div><strong>Insufficient evidence</strong><span>Some impact evidence exists, but it cannot distinguish a defensible severity band.</span></div>
-      <div><strong>Not applicable</strong><span>Affirmative context places the dimension outside the Incident’s bounded scope.</span></div>
-    </div>
-
-    <p className="vigil-harm-method-note"><strong>SU — Unassessed:</strong> no defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</p>
+    </section>
   </div>;
+}
+
+export function HarmEvidenceStateDefinitions() {
+  return <section className="vigil-harm-definitions" aria-labelledby="vigil-harm-definitions-heading">
+    <h3 id="vigil-harm-definitions-heading">Definitions</h3>
+    <dl>
+      <div><dt>Assessed</dt><dd>Evidence supports a materialised impact and a specific threshold band.</dd></div>
+      <div><dt>Unreported</dt><dd>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</dd></div>
+      <div><dt>Insufficient evidence</dt><dd>Some impact evidence exists, but it cannot distinguish a defensible severity band.</dd></div>
+      <div><dt>Not applicable</dt><dd>Affirmative context places the dimension outside the Incident’s bounded scope.</dd></div>
+      <div><dt>SU — Unassessed</dt><dd>No defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</dd></div>
+    </dl>
+  </section>;
 }
 
 function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, methodologyReferenceNumber, methodologyReferenceHref }: { assessment: UnknownRecord; compact: boolean; evidenceReferenceNumbers?: Record<string, number>; methodologyReferenceNumber?: number; methodologyReferenceHref?: string }) {
@@ -338,7 +345,11 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
                 <span>{dimensionLabel(row.dimension_id)}</span>
                 {isControlling ? <strong className="vigil-harm-controlling-badge">Controls overall severity</strong> : null}
               </th>
-              <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}><strong>{resultLabel(row)}</strong></td>
+              <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}>
+                {row.severity
+                  ? <span className="vigil-harm-result-chip"><VigilStatusChip value={row.severity} /><span>{BAND_LABELS[row.severity] ?? row.severity}</span></span>
+                  : <strong>{resultLabel(row)}</strong>}
+              </td>
               {/* evidence_refs are canonical row-local provenance; citation numbers are resolved against the final deduplicated Evidence sources list. */}
               <td className="vigil-harm-assessment-basis">{summary ? <p>{summary}{row.evidence_refs?.length ? <span className="vigil-harm-inline-references"> {row.evidence_refs.flatMap((ref) => evidenceReferenceNumbers?.[ref] ? [<a key={ref} href={`#vigil-evidence-reference-${evidenceReferenceNumbers[ref]}`} aria-label={`Evidence reference ${evidenceReferenceNumbers[ref]}`}>[{evidenceReferenceNumbers[ref]}]</a>] : [])}</span> : null}</p> : null}</td>
             </tr>;

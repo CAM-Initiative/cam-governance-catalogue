@@ -134,9 +134,6 @@ function polishIncidentDiagnosisSeverity() {
     diagnosis.dataset.severityUxReady = "true";
   }
 
-  document.querySelectorAll<HTMLElement>(".vigil-case-file-page .vigil-case-meta-panel .vigil-case-field").forEach((field) => {
-    if (field.querySelector("dt")?.textContent?.trim() === "Severity") field.remove();
-  });
 }
 
 function applyObservatorySurfaceCleanup() {

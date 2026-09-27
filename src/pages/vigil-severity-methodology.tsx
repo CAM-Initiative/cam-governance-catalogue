@@ -1,7 +1,9 @@
-import { ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
 const methodologyReferences = [
   {
@@ -72,54 +74,93 @@ const methodologyReferences = [
   },
 ] as const;
 
+const harmImpactRail = [
+  { href: "#matrix", label: "Reference matrix" },
+  { href: "#method", label: "Method" },
+  { href: "#references", label: "References" },
+];
+
 export default function VigilSeverityMethodology() {
   return <Shell>
-    <main className="vigil-about-page vigil-severity-methodology-page">
-      <div className="container mx-auto max-w-[1500px] px-4 py-8 sm:px-6 md:px-10 md:py-11">
-        <header className="vigil-about-hero">
-          <p className="vigil-library-kicker">VIGIL Observatory · VIGIL-HIM 1.0.0</p>
-          <h1>Harm & Severity Methodology</h1>
-          <p>VIGIL Observatory severity is an incident-level assessment of supported materialised consequence. It is deliberately separate from taxonomy classification, source prestige, workflow priority and hypothetical worst-case harm.</p>
-        </header>
+    <main className="vigil-about-page vigil-severity-methodology-page home-menu-page document-page">
+      <VigilObservatoryMasthead
+        id="overview"
+        titleId="harm-impact-assessment-heading"
+        kicker="VIGIL Observatory · Harm Impact Assessment"
+        title="Harm Impact Assessment"
+        description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."
+        artworkSrc={VIGIL_MASTHEAD_ARTWORK.harm}
+        contextLabel="Methodology context"
+        mode="reference"
+        visual="harm"
+        metadata={[
+          { label: "Method", value: "VIGIL-HIM", mono: true },
+          { label: "Version", value: "1.0.1", mono: true },
+          { label: "Dimensions", value: "11" },
+          { label: "Severity bands", value: "S1–S5 · SU", mono: true },
+        ]}
+      />
 
-        <article className="vigil-severity-methodology-document">
-          <section className="vigil-severity-methodology-section" aria-labelledby="severity-principles-heading">
-            <header>
-              <p className="vigil-library-kicker">Method</p>
-              <h2 id="severity-principles-heading">How the overall severity band is derived</h2>
-            </header>
-            <div className="vigil-severity-principles">
-              <div><h3>Evidence state first</h3><p>Each harm dimension is recorded as assessed, unreported, insufficient evidence or not applicable. Missing publication evidence is not converted into S1.</p></div>
-              <div><h3>Highest supported harm</h3><p>The highest defensible materialised-harm threshold controls the overall severity. Dimensions are not averaged, summed or increased because an Incident has several taxonomy classifications.</p></div>
-              <div><h3>SU remains unassessed</h3><p>SU is used when the evidence cannot support a defensible overall band. It is an evidence state, not a sixth severity band.</p></div>
-            </div>
-          </section>
+      <div className="document-layout document-layout--wide document-layout-below-header">
+        <DocumentRail title="Harm Impact Assessment" items={harmImpactRail} ariaLabel="Harm Impact Assessment sections" />
 
-          <section className="vigil-severity-methodology-section" aria-labelledby="severity-matrix-heading">
-            <header>
-              <p className="vigil-library-kicker">Reference matrix</p>
+        <article className="document-content vigil-severity-methodology-document">
+          <section id="matrix" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-matrix-heading">
+            <div className="document-section-heading">
+              <p>Reference matrix</p>
               <h2 id="severity-matrix-heading">VIGIL Observatory Harm Impact Matrix</h2>
-            </header>
-            <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling.</p>
-            <p className="vigil-severity-alignment"><strong>External alignment.</strong> VIGIL Observatory aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL Observatory also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. These sources inform VIGIL Observatory; their scales are not interchangeable with VIGIL-HIM.</p>
+            </div>
+            <div className="document-reading">
+              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling.</p>
+              <p className="vigil-severity-alignment"><strong>External alignment.</strong> VIGIL Observatory aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL Observatory also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. These sources inform VIGIL Observatory; their scales are not interchangeable with VIGIL-HIM.</p>
+            </div>
             <HarmImpactMatrix />
           </section>
 
-          <section className="vigil-severity-methodology-section" aria-labelledby="severity-case-files-heading">
-            <header>
-              <p className="vigil-library-kicker">Case Files</p>
-              <h2 id="severity-case-files-heading">The Incident view shows only the assessment that was actually made</h2>
-            </header>
-            <p>Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
-            <Link className="vigil-about-action" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+          <section id="method" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-principles-heading">
+            <div className="document-section-heading">
+              <p>Method</p>
+              <h2 id="severity-principles-heading">How the overall severity band is derived</h2>
+            </div>
+            <div className="vigil-severity-principles">
+              <div className="vigil-severity-evidence-states">
+                <h3>Evidence states</h3>
+                <p>Each harm dimension is resolved to an evidence state before any overall severity is derived.</p>
+                <dl>
+                  <div><dt>Assessed</dt><dd>Evidence supports a materialised impact and a specific threshold band.</dd></div>
+                  <div><dt>Unreported</dt><dd>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</dd></div>
+                  <div><dt>Insufficient evidence</dt><dd>Some impact evidence exists, but it cannot distinguish a defensible severity band.</dd></div>
+                  <div><dt>Not applicable</dt><dd>Affirmative context places the dimension outside the Incident’s bounded scope.</dd></div>
+                  <div><dt>SU — Unassessed</dt><dd>No defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</dd></div>
+                </dl>
+              </div>
+            </div>
+
+            <div className="vigil-severity-derivation-rows">
+              <div className="vigil-severity-chip-key" aria-label="Severity chip display">
+                <div className="vigil-severity-chip-key-bands">
+                  {(["S1", "S2", "S3", "S4", "S5"] as const).map((band) => <VigilStatusChip key={band} value={band} />)}
+                </div>
+                <p><strong>Severity display.</strong> S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU remains visually neutral because it is an unassessed evidence state, not a sixth severity band.</p>
+              </div>
+
+              <div className="vigil-severity-overall-rule">
+                <h3>Overall severity</h3>
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p>
+              </div>
+
+              <p className="vigil-severity-case-file-note">Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
+            </div>
           </section>
 
-          <section className="vigil-severity-methodology-section" aria-labelledby="severity-references-heading">
-            <header>
-              <p className="vigil-library-kicker">References</p>
+          <section id="references" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-references-heading">
+            <div className="document-section-heading">
+              <p>References</p>
               <h2 id="severity-references-heading">Methodology source trail</h2>
-            </header>
-            <p>The references below are the external sources registered against VIGIL-HIM 1.0.0. The alignment note above explains how those sources inform the methodology; this list preserves the source trail without repeating that discussion.</p>
+            </div>
+            <div className="document-reading">
+              <p>The references below are the external sources registered against VIGIL-HIM 1.0.1.</p>
+            </div>
             <ol className="vigil-methodology-reference-list">
               {methodologyReferences.map((reference, index) => <li key={reference.id} className="vigil-methodology-reference-item">
                 <span className="vigil-methodology-reference-number">[{index + 1}]</span>

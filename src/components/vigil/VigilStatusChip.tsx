@@ -10,10 +10,20 @@ function toneFor(value: string) {
   return "neutral";
 }
 
+function severityCode(value: string) {
+  const code = value.trim().toUpperCase();
+  return /^S[1-5]$/.test(code) ? code : undefined;
+}
+
 export function VigilStatusChip({ value, prefix }: { value?: string; prefix?: string }) {
   if (!value) return null;
+  const severity = severityCode(value);
   return (
-    <span className="vigil-status-chip" data-tone={toneFor(value)}>
+    <span
+      className="vigil-status-chip"
+      data-tone={toneFor(value)}
+      data-severity={severity}
+    >
       {[prefix, titleizeValue(value)].filter(Boolean).join(" ")}
     </span>
   );

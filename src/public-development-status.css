@@ -43,8 +43,8 @@
   color: hsl(var(--primary));
 }
 
-/* Homepage: retain compact development markers only for surfaces that remain
- * explicitly beta. Case Files is now treated as a stable public surface. */
+/* Homepage: retain compact development markers for surfaces explicitly marked
+ * beta, including Case Files while the Observatory workflow remains in active refinement. */
 main.overflow-hidden:has(#evidence-repair-heading)
   > section:first-child
   > .container

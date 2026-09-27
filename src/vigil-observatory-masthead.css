@@ -1,0 +1,757 @@
+/* Canonical editorial masthead for every VIGIL Observatory surface.
+   Visual correction pass: horizontal instrument fascia, not poster hero. */
+.vigil-observatory-masthead {
+  --masthead-accent: 38 78% 38%;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 26%);
+  min-height: clamp(15rem, 19vw, 17.5rem);
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid hsl(34 28% 73% / 0.76);
+  border-radius: 0;
+  background:
+    linear-gradient(90deg, hsl(38 48% 97% / 0.98), hsl(36 39% 95% / 0.96) 72%, hsl(35 34% 94% / 0.98)),
+    repeating-linear-gradient(0deg, transparent 0 27px, hsl(30 35% 46% / 0.025) 28px),
+    hsl(38 40% 96%);
+  box-shadow:
+    0 0.38rem 1.15rem hsl(28 25% 16% / 0.045),
+    inset 0 1px 0 hsl(0 0% 100% / 0.76);
+}
+
+.vigil-observatory-masthead::before,
+.vigil-observatory-masthead::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.vigil-observatory-masthead::before {
+  z-index: 0;
+  inset: 0 26% 0 0;
+  background:
+    linear-gradient(90deg, transparent 0 12%, hsl(var(--masthead-accent) / 0.055) 12% calc(12% + 1px), transparent calc(12% + 1px)),
+    linear-gradient(0deg, transparent 0 72%, hsl(30 28% 38% / 0.055) 72% calc(72% + 1px), transparent calc(72% + 1px)),
+    radial-gradient(circle at 84% 27%, transparent 0 2px, hsl(var(--masthead-accent) / 0.12) 2px 3px, transparent 3px),
+    radial-gradient(circle at 66% 112%, transparent 0 6.4rem, hsl(30 28% 38% / 0.075) 6.45rem 6.53rem, transparent 6.58rem);
+}
+
+.vigil-observatory-masthead::after {
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0.82rem;
+  border-top: 1px solid hsl(32 22% 55% / 0.22);
+  background:
+    repeating-linear-gradient(90deg, hsl(31 21% 35% / 0.2) 0 1px, transparent 1px 18px) top left / auto 0.34rem no-repeat,
+    repeating-linear-gradient(90deg, hsl(31 21% 35% / 0.1) 0 1px, transparent 1px 6px) bottom left / auto 0.18rem no-repeat;
+  opacity: 0.82;
+}
+
+.vigil-observatory-masthead-title {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  min-width: 0;
+  max-width: 61rem;
+  padding: clamp(1.55rem, 2.35vw, 2.15rem) clamp(1.5rem, 3vw, 3rem) clamp(2rem, 2.8vw, 2.55rem);
+}
+
+.vigil-observatory-masthead .vigil-observatory-masthead-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.62rem;
+  margin: 0 !important;
+  font-family: var(--app-font-mono) !important;
+  font-size: clamp(0.68rem, 0.75vw, 0.78rem) !important;
+  font-weight: 760 !important;
+  line-height: 1.3 !important;
+  letter-spacing: 0.17em !important;
+  text-transform: uppercase !important;
+  color: hsl(var(--masthead-accent)) !important;
+}
+
+.vigil-observatory-masthead-kicker::before {
+  width: 1.45rem;
+  height: 1px;
+  flex: 0 0 auto;
+  content: "";
+  background: currentColor;
+}
+
+.vigil-observatory-masthead h1 {
+  margin: 0.58rem 0 0;
+  max-width: 62rem;
+  font-family: var(--app-font-serif);
+  font-size: clamp(3.2rem, 4.25vw, 4.15rem);
+  font-weight: 500;
+  line-height: 0.96;
+  letter-spacing: -0.047em;
+  text-wrap: balance;
+  color: hsl(24 22% 8%);
+}
+
+.vigil-observatory-masthead-description {
+  max-width: 48rem;
+  margin: 0.82rem 0 0;
+  font-family: var(--app-font-sans);
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  color: hsl(27 11% 27%);
+}
+
+.vigil-observatory-masthead-description a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+}
+
+/* Restrained measuring geometry. This replaces the page-specific hero pictogram:
+   it should register after the information hierarchy, not before it. */
+.vigil-observatory-masthead-instrument {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 26%;
+  width: clamp(9rem, 14vw, 12.5rem);
+  aspect-ratio: 1;
+  transform: translate(31%, -50%);
+  color: hsl(30 25% 28%);
+  opacity: 0.11;
+  pointer-events: none;
+}
+
+.vigil-observatory-masthead-instrument-arc {
+  position: absolute;
+  inset: 10%;
+  border: 1px solid currentColor;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  transform: rotate(18deg);
+}
+
+.vigil-observatory-masthead-instrument-arc::before,
+.vigil-observatory-masthead-instrument-arc::after {
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+}
+
+.vigil-observatory-masthead-instrument-arc::before {
+  inset: 17%;
+  border: 1px dashed currentColor;
+  opacity: 0.62;
+}
+
+.vigil-observatory-masthead-instrument-arc::after {
+  inset: 46%;
+  border: 1px solid currentColor;
+}
+
+.vigil-observatory-masthead-instrument-axis {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor;
+  transform-origin: 0 50%;
+}
+
+.vigil-observatory-masthead-instrument-axis-x {
+  width: 48%;
+  height: 1px;
+  transform: rotate(-12deg);
+}
+
+.vigil-observatory-masthead-instrument-axis-y {
+  width: 42%;
+  height: 1px;
+  transform: rotate(72deg);
+}
+
+.vigil-observatory-masthead-instrument-index {
+  position: absolute;
+  top: 5%;
+  right: 25%;
+  width: 1px;
+  height: 20%;
+  background: repeating-linear-gradient(0deg, currentColor 0 1px, transparent 1px 5px);
+}
+
+.vigil-observatory-masthead-instrument-node {
+  position: absolute;
+  top: 20%;
+  right: 19%;
+  width: 0.36rem;
+  height: 0.36rem;
+  border: 1px solid hsl(var(--masthead-accent) / 0.86);
+  border-radius: 50%;
+  background: hsl(var(--masthead-accent) / 0.3);
+  box-shadow: 0 0 0 0.18rem hsl(var(--masthead-accent) / 0.08);
+  opacity: 1;
+}
+
+.vigil-observatory-masthead-calibration-accent {
+  position: absolute;
+  z-index: 4;
+  bottom: 0.48rem;
+  left: 63%;
+  width: 1px;
+  height: 0.62rem;
+  background: hsl(var(--masthead-accent) / 0.82);
+  pointer-events: none;
+}
+
+.vigil-observatory-masthead-context {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  padding: clamp(1.25rem, 2vw, 1.7rem) clamp(1.05rem, 1.8vw, 1.55rem) clamp(1.7rem, 2.5vw, 2.15rem);
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid hsl(33 24% 58% / 0.48);
+  background: linear-gradient(135deg, hsl(38 34% 97% / 0.32), hsl(32 26% 91% / 0.3));
+}
+
+.vigil-observatory-masthead-context-label {
+  margin: 0 0 0.72rem;
+  padding-bottom: 0.42rem;
+  border-bottom: 1px solid hsl(var(--masthead-accent) / 0.24);
+  font-family: var(--app-font-mono);
+  font-size: 0.64rem;
+  font-weight: 760;
+  line-height: 1.28;
+  letter-spacing: 0.145em;
+  text-transform: uppercase;
+  color: hsl(var(--masthead-accent));
+}
+
+.vigil-observatory-masthead-context dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.72rem 0.85rem;
+  margin: 0;
+}
+
+.vigil-observatory-masthead-context dl > div {
+  min-width: 0;
+}
+
+.vigil-observatory-masthead-context dt {
+  margin: 0 0 0.18rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.58rem;
+  font-weight: 680;
+  line-height: 1.25;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+  color: hsl(28 9% 42%);
+}
+
+.vigil-observatory-masthead-context dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--app-font-serif);
+  font-size: clamp(0.88rem, 0.95vw, 1rem);
+  font-weight: 520;
+  line-height: 1.2;
+  color: hsl(24 22% 9%);
+}
+
+.vigil-observatory-masthead-context dd.is-mono {
+  font-family: var(--app-font-mono);
+  font-size: 0.76rem;
+}
+
+.vigil-observatory-masthead[data-mode="record"] {
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 28%);
+}
+
+.vigil-observatory-masthead[data-mode="record"]::before {
+  right: 28%;
+}
+
+.vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-instrument {
+  right: 28%;
+}
+
+.vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-title {
+  max-width: 61rem;
+}
+
+.vigil-observatory-masthead-context-footer {
+  margin-top: 0.82rem;
+  padding-top: 0.72rem;
+  border-top: 1px solid hsl(var(--masthead-accent) / 0.2);
+}
+
+.vigil-observatory-masthead-context-footer .cam-action {
+  min-height: 2.15rem;
+  padding: 0.44rem 0.68rem;
+  font-size: 0.64rem;
+}
+
+.vigil-case-file-page .vigil-observatory-masthead.is-exemplar {
+  --masthead-accent: 148 46% 31%;
+}
+
+.vigil-case-file-page .vigil-observatory-masthead.is-exemplar.is-mixed-execution {
+  --masthead-accent: var(--primary);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead {
+  --masthead-accent: 39 73% 56%;
+  border-color: hsl(36 25% 35% / 0.72);
+  background:
+    linear-gradient(90deg, hsl(28 16% 11%), hsl(29 17% 13% / 0.98) 72%, hsl(27 15% 12%)),
+    hsl(28 16% 11%);
+  box-shadow:
+    0 0.42rem 1.2rem hsl(0 0% 0% / 0.18),
+    inset 0 1px 0 hsl(36 30% 70% / 0.06);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead h1 {
+  color: hsl(38 35% 95%);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead-description {
+  color: hsl(34 13% 73%);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead::before {
+  opacity: 0.72;
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead::after {
+  border-top-color: hsl(37 20% 64% / 0.15);
+  opacity: 0.62;
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead-instrument {
+  color: hsl(39 22% 76%);
+  opacity: 0.085;
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead-context {
+  border-left-color: hsl(36 22% 45% / 0.42);
+  background: linear-gradient(145deg, hsl(29 17% 16% / 0.2), hsl(25 15% 11% / 0.16));
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead-context dt {
+  color: hsl(34 10% 61%);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead-context dd {
+  color: hsl(38 27% 92%);
+}
+
+@media (max-width: 1050px) {
+  .vigil-observatory-masthead {
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 28%);
+  }
+
+  .vigil-observatory-masthead::before {
+    right: 28%;
+  }
+
+  .vigil-observatory-masthead-instrument {
+    right: 28%;
+    width: 9.5rem;
+  }
+
+  .vigil-observatory-masthead[data-mode="record"] {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 30%);
+  }
+
+  .vigil-observatory-masthead[data-mode="record"]::before,
+  .vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-instrument {
+    right: 30%;
+  }
+}
+
+@media (max-width: 820px) {
+  .vigil-observatory-masthead,
+  .vigil-observatory-masthead[data-mode="record"] {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .vigil-observatory-masthead::before,
+  .vigil-observatory-masthead[data-mode="record"]::before {
+    inset: 0 0 auto;
+    height: 14rem;
+  }
+
+  .vigil-observatory-masthead-title,
+  .vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-title {
+    max-width: none;
+  }
+
+  .vigil-observatory-masthead-instrument,
+  .vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-instrument {
+    top: 6.7rem;
+    right: 0.8rem;
+    width: 8.5rem;
+    transform: none;
+    opacity: 0.075;
+  }
+
+  .vigil-observatory-masthead-context {
+    border-top: 1px solid hsl(33 24% 58% / 0.38);
+    border-left: 0;
+  }
+
+  html[data-theme="dark"] .vigil-observatory-masthead-context {
+    border-top-color: hsl(36 22% 45% / 0.34);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .vigil-observatory-masthead-title,
+  .vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-title {
+    padding: 1.65rem 1.15rem 2rem;
+  }
+
+  .vigil-observatory-masthead h1 {
+    max-width: 94%;
+    font-size: clamp(2.5rem, 12vw, 3.35rem);
+  }
+
+  .vigil-observatory-masthead-description {
+    max-width: 95%;
+    font-size: 0.96rem !important;
+  }
+
+  .vigil-observatory-masthead-instrument,
+  .vigil-observatory-masthead[data-mode="record"] .vigil-observatory-masthead-instrument {
+    top: 5.6rem;
+    right: -1.7rem;
+    width: 7.5rem;
+    opacity: 0.06;
+  }
+
+  .vigil-observatory-masthead-context {
+    padding: 1.15rem 1.15rem 1.55rem;
+  }
+
+  .vigil-observatory-masthead-context dt {
+    font-size: 0.6rem;
+  }
+
+  .vigil-observatory-masthead-context dd {
+    font-size: 0.92rem;
+  }
+
+  .vigil-observatory-masthead-calibration-accent {
+    left: 72%;
+  }
+}
+
+.vigil-knowledge-hub-page.document-page,
+.vigil-datasets-page.document-page {
+  width: min(100%, 1500px);
+  padding-top: 1.5rem;
+}
+
+
+/* Registry artwork mastheads follow the storyboard: the illustration is a
+   continuous underlay for the editorial field, while only the metadata readout
+   remains a distinct terminal column. */
+.vigil-observatory-masthead.has-artwork {
+  --masthead-accent: 39 73% 56%;
+  --masthead-artwork-opacity: 0.76;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 24%);
+  min-height: clamp(14.5rem, 18vw, 16rem);
+  border-color: hsl(36 25% 42% / 0.62);
+  background:
+    linear-gradient(90deg, hsl(31 20% 25%), hsl(29 18% 21% / 0.99) 72%, hsl(27 16% 18%)),
+    hsl(29 18% 21%);
+  box-shadow:
+    0 0.34rem 0.95rem hsl(0 0% 0% / 0.11),
+    inset 0 1px 0 hsl(36 30% 74% / 0.09);
+}
+
+.vigil-observatory-masthead.has-artwork::before {
+  display: none;
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+  opacity: 0;
+  filter: sepia(0.14) saturate(0.76) brightness(0.6) contrast(1.04);
+  transition: opacity 120ms cubic-bezier(.22, 1, .36, 1);
+  pointer-events: none;
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork.is-loaded {
+  opacity: var(--masthead-artwork-opacity);
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-instrument {
+  display: none;
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  max-width: none;
+  padding:
+    clamp(1.35rem, 2vw, 1.85rem)
+    clamp(1.35rem, 2.25vw, 2.25rem)
+    clamp(1.8rem, 2.4vw, 2.2rem)
+    clamp(20rem, 31vw, 28rem);
+}
+
+.vigil-observatory-masthead.has-artwork h1 {
+  max-width: 43rem;
+  font-size: clamp(3rem, 3.9vw, 4rem);
+  color: hsl(38 35% 95%);
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-description {
+  max-width: 36rem;
+  margin-top: 0.7rem;
+  color: hsl(34 13% 78%);
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+  position: relative;
+  z-index: 3;
+  margin-left: -2.4rem;
+  padding-left: calc(clamp(1.05rem, 1.8vw, 1.55rem) + 2.4rem);
+  border-left: 0;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(28 14% 18% / 0) 0%,
+      hsl(28 14% 18% / 0.14) 18%,
+      hsl(28 14% 17% / 0.4) 42%,
+      hsl(27 14% 16% / 0.7) 68%,
+      hsl(27 14% 15% / 0.9) 100%
+    );
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context dt {
+  color: hsl(34 10% 64%);
+}
+
+.vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context dd {
+  color: hsl(38 27% 92%);
+}
+
+.vigil-observatory-masthead.has-artwork[data-mode="record"] {
+  --masthead-artwork-opacity: 0.62;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 28%);
+  min-height: clamp(12.75rem, 15vw, 14.5rem);
+}
+
+.vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
+  filter: sepia(0.18) saturate(0.68) brightness(0.5) contrast(0.98) blur(0.45px);
+  transform: scale(1.004);
+}
+
+.vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-title {
+  padding:
+    clamp(1.2rem, 1.7vw, 1.55rem)
+    clamp(1.15rem, 1.8vw, 1.8rem)
+    clamp(1.55rem, 2vw, 1.9rem)
+    clamp(16rem, 24vw, 21rem);
+}
+
+.vigil-observatory-masthead.has-artwork[data-mode="record"] h1 {
+  max-width: 40rem;
+  font-size: clamp(2.35rem, 3.15vw, 3.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.026em;
+}
+
+.vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-context {
+  margin-left: -1.4rem;
+  padding-left: calc(clamp(1.05rem, 1.8vw, 1.55rem) + 1.4rem);
+}
+
+
+/* Light appearance uses the same compositing model as dark mode:
+   a tonal surface sits beneath a partially transparent, high-contrast artwork
+   layer, with typography remaining transparent above it. Here the tonal base
+   is a soft warm grey rather than dark charcoal. */
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
+  --masthead-accent: 38 78% 38%;
+  --masthead-artwork-opacity: 0.82;
+  border-color: hsl(30 6% 64% / 0.76);
+  background:
+    linear-gradient(90deg, hsl(30 4% 88%), hsl(30 3% 84% / 0.99) 72%, hsl(30 3% 80%)),
+    hsl(30 3% 85%);
+  box-shadow:
+    0 0.26rem 0.72rem hsl(28 12% 18% / 0.07),
+    inset 0 1px 0 hsl(0 0% 100% / 0.4);
+}
+
+/* The soft-grey veil belongs above the artwork and below the content.
+   This is the layer that was previously disabled, which left the warm/blush
+   tones in the source image visually dominant in light mode. */
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork::before {
+  display: block;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(30 3% 78% / 0.22) 0%,
+      hsl(30 3% 76% / 0.18) 58%,
+      hsl(30 3% 72% / 0.24) 100%
+    );
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+  filter: saturate(0.82) brightness(0.99) contrast(1.08);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork h1 {
+  color: hsl(27 19% 13%);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-description {
+  color: hsl(28 12% 27%);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+  background: transparent;
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context dt {
+  color: hsl(28 10% 39%);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context dd {
+  color: hsl(27 18% 16%);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] {
+  --masthead-artwork-opacity: 0.78;
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
+  filter: saturate(0.8) brightness(0.99) contrast(1.08);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead.has-artwork {
+  --masthead-artwork-opacity: 0.78;
+  background:
+    linear-gradient(90deg, hsl(29 17% 15%), hsl(28 16% 12% / 0.99) 72%, hsl(27 15% 10%)),
+    hsl(28 16% 11%);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+  filter: sepia(0.2) saturate(0.72) brightness(0.46) contrast(1.08);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead.has-artwork[data-mode="record"] {
+  --masthead-artwork-opacity: 0.6;
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
+  filter: sepia(0.2) saturate(0.64) brightness(0.43) contrast(0.98) blur(0.45px);
+}
+
+html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+  border-left: 0;
+  background:
+    linear-gradient(
+      90deg,
+      hsl(28 14% 12% / 0) 0%,
+      hsl(28 14% 12% / 0.2) 18%,
+      hsl(28 14% 12% / 0.52) 42%,
+      hsl(27 14% 11% / 0.82) 68%,
+      hsl(27 14% 10% / 0.96) 100%
+    );
+}
+
+@media (max-width: 1120px) {
+  .vigil-observatory-masthead.has-artwork {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 27%);
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
+    padding-left: clamp(16.25rem, 28vw, 21rem);
+  }
+
+  .vigil-observatory-masthead.has-artwork h1 {
+    font-size: clamp(2.7rem, 4vw, 3.55rem);
+  }
+}
+
+@media (max-width: 820px) {
+  .vigil-observatory-masthead.has-artwork,
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] {
+    --masthead-artwork-opacity: 0.62;
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] {
+    --masthead-artwork-opacity: 0.52;
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 14rem;
+    object-fit: cover;
+    object-position: left center;
+    transform: none;
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title,
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-title {
+    max-width: none;
+    padding-left: clamp(1.35rem, 4vw, 2rem);
+  }
+
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] h1 {
+    max-width: 95%;
+    font-size: clamp(2.2rem, 7vw, 2.85rem);
+    line-height: 1;
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+    margin-left: 0;
+    padding-left: clamp(1.05rem, 1.8vw, 1.55rem);
+    border-top: 1px solid hsl(33 24% 58% / 0.38);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .vigil-observatory-masthead.has-artwork {
+    --masthead-artwork-opacity: 0.54;
+  }
+
+  .vigil-observatory-masthead.has-artwork h1 {
+    max-width: 92%;
+    font-size: clamp(2.45rem, 11vw, 3.15rem);
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+    width: 84%;
+    height: 12rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+    transition: none;
+  }
+}

@@ -2,18 +2,19 @@
    Keep the dossier readable: consistent body scale, calm labels, balanced hero spacing,
    and no accidental type jumps in evidence limitations. */
 
-/* Opening Case File hero: vertically balance the narrative against the metadata panel. */
+/* Opening Case File hero: align incident title and context to one top baseline.
+   The right-hand context panel should not force the title into vertical centring. */
 .vigil-case-file-page .vigil-case-file-hero-v4 {
-  align-items: stretch;
+  align-items: start;
 }
 
 .vigil-case-file-page .vigil-case-file-title-block {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0;
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
+  padding-top: 0.65rem;
+  padding-bottom: 0.45rem;
 }
 
 .vigil-case-file-page .vigil-case-file-title-block .vigil-library-kicker {
@@ -32,11 +33,11 @@
 
 .vigil-case-file-page .vigil-case-meta-panel {
   padding-top: 0.65rem;
-  padding-bottom: 0.65rem;
+  padding-bottom: 0.45rem;
 }
 
 .vigil-case-file-page .vigil-case-meta-panel dl {
-  gap: 1.25rem 1.5rem;
+  gap: 0.9rem 1.5rem;
 }
 
 /* Limits stay visually subordinate whether collapsed or expanded. */
@@ -456,6 +457,18 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   margin: 0 auto;
 }
 
+.vigil-case-file-page .vigil-incident-artefact-video {
+  display: block;
+  width: min(100%, 54rem);
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: 0.65rem;
+  background: hsl(var(--background));
+  box-shadow: var(--shadow-sm);
+}
+
 .vigil-case-file-page .vigil-incident-artefact figcaption {
   display: flex;
   flex-wrap: wrap;
@@ -625,4 +638,76 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   letter-spacing: 0.055em;
   text-transform: uppercase;
   color: hsl(var(--muted-foreground) / 0.86);
+}
+
+
+/* Incident-context hero density: keep the dossier readable without creating a tall empty left column. */
+.vigil-case-file-page .vigil-case-file-hero-v4 {
+  min-height: 0;
+}
+
+.vigil-case-file-page .vigil-case-file-title-block,
+.vigil-case-file-page .vigil-case-meta-panel {
+  align-self: start;
+}
+
+.vigil-case-file-page .vigil-case-context-label {
+  margin-bottom: 0.72rem;
+}
+
+.vigil-case-file-page .vigil-case-record-strip {
+  margin-top: 0.9rem;
+  padding-top: 0.72rem;
+}
+
+.vigil-case-file-page .vigil-case-print-button {
+  margin-top: 0.9rem;
+}
+
+
+/* Alignment status is a secondary banner, not a second title hero. */
+.vigil-case-file-page .vigil-exemplar-callout {
+  padding: 1rem 1.15rem;
+  gap: 0.9rem;
+}
+
+.vigil-case-file-page .vigil-exemplar-callout-icon {
+  width: 2.7rem;
+  height: 2.7rem;
+}
+
+.vigil-case-file-page .vigil-exemplar-callout-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.vigil-case-file-page .vigil-exemplar-callout h2 {
+  margin-top: 0.14rem;
+  font-size: clamp(1.15rem, 1.55vw, 1.48rem);
+  line-height: 1.16;
+}
+
+@media (min-width: 900px) {
+  .vigil-case-file-page .vigil-exemplar-callout h2 {
+    white-space: nowrap;
+  }
+}
+
+.vigil-case-file-page .vigil-exemplar-callout-copy > p:not(.vigil-exemplar-callout-kicker):not(.vigil-exemplar-callout-boundary) {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-exemplar-callout-boundary {
+  margin-top: 0.55rem;
+  padding-top: 0.5rem;
+  font-size: 0.86rem;
+  line-height: 1.48;
+}
+
+@media (max-width: 899px) {
+  .vigil-case-file-page .vigil-exemplar-callout h2 {
+    white-space: normal;
+  }
 }

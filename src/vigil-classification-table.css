@@ -35,6 +35,8 @@
 }
 
 .vigil-case-file-page .vigil-classification-table thead th {
+  box-sizing: border-box;
+  min-width: 0;
   padding: 0.72rem 0.85rem;
   background: hsl(var(--muted) / 0.28);
   font-family: var(--app-font-sans);
@@ -44,11 +46,14 @@
   letter-spacing: 0.055em;
   text-transform: uppercase;
   color: hsl(var(--muted-foreground) / 0.86);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 8%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 31%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 61%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 16%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 30%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 54%; }
 
 .vigil-case-file-page .vigil-classification-table tbody td {
   padding: 0.9rem 0.9rem 0.95rem;
@@ -246,9 +251,9 @@
 
 /* Repair keeps only the public decision-useful fields.
    Primary/secondary ordering remains in canonical data and the deterministic report. */
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 8%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 30%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 62%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 16%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 28%; }
+.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 56%; }
 
 .vigil-case-file-page .vigil-repair-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;

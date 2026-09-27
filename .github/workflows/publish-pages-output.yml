@@ -13,6 +13,10 @@ on:
       - "scripts/prepare-github-pages.js"
       - "scripts/sync-cam-governance.mjs"
       - "scripts/sync-vigil-records.mjs"
+      - "scripts/test-vigil-public-surfaces.mjs"
+      - "scripts/test-vigil-observatory.mjs"
+      - "scripts/validate-cam-palette.mjs"
+      - "scripts/validate-docs-published-output.py"
       - ".github/workflows/publish-pages-output.yml"
   workflow_dispatch:
 

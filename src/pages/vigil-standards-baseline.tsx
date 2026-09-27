@@ -3,6 +3,8 @@ import { ChevronRight, Search, X } from "lucide-react";
 import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import {
   canonicalIdentifierLabel,
   externalSourceKey,
@@ -149,14 +151,23 @@ export default function VigilStandardsBaseline() {
   const clauseCount = state.status === "ready" ? state.requirements.length : 0;
 
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-case-library-page vigil-standards-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
-    <section className="vigil-library-shell vigil-standards-shell" aria-labelledby="standards-heading">
-      <header className="vigil-library-header vigil-standards-header">
-        <div>
-          <p className="vigil-library-kicker">VIGIL Observatory</p>
-          <h1 id="standards-heading">AI Governance Standards</h1>
-          <p className="vigil-library-description">A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question.</p>
-        </div>
-      </header>
+    <section className="vigil-library-shell vigil-standards-shell vigil-taxonomy-shell" aria-labelledby="standards-heading">
+      <VigilObservatoryMasthead
+        titleId="standards-heading"
+        kicker="VIGIL Observatory"
+        title="AI Governance Standards"
+        description="A curated library of AI governance laws, standards, frameworks and technical guidance used to support VIGIL analysis."
+        artworkSrc={VIGIL_MASTHEAD_ARTWORK.standards}
+        contextLabel="Library context"
+        mode="collection"
+        visual="standards"
+        metadata={[
+          { label: "Status", value: "Beta" },
+          { label: "Release status", value: "0.1.0", mono: true },
+          { label: "Sources", value: state.status === "ready" ? sourceCount : "—" },
+          { label: "Clauses", value: state.status === "ready" ? clauseCount.toLocaleString() : "—" },
+        ]}
+      />
 
       {state.status === "loading" && <div className="vigil-registry-notice">Loading AI Governance Standards…</div>}
       {state.status === "unavailable" && <div className="vigil-registry-notice is-error"><strong>AI Governance Standards unavailable.</strong> {state.message}</div>}
@@ -173,7 +184,10 @@ export default function VigilStandardsBaseline() {
             <label className="vigil-family-select"><span>Source type</span><select value={sourceType} onChange={(event) => setSourceType(event.target.value)}><option value="all">All source types</option>{sourceTypes.map((value) => <option key={value} value={value}>{clean(value) ?? value}</option>)}</select></label>
             <label className="vigil-family-select"><span>Jurisdiction</span><select value={jurisdiction} onChange={(event) => setJurisdiction(event.target.value)}><option value="all">All jurisdictions</option>{jurisdictions.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
           </div>
-          <div className="vigil-result-summary"><span>{visibleSources.length} of {sourceCount} sources · {clauseCount.toLocaleString()} clauses represented</span>{(query || sourceType !== "all" || jurisdiction !== "all") ? <button type="button" onClick={() => { setQuery(""); setSourceType("all"); setJurisdiction("all"); }}>Clear filters</button> : null}</div>
+          <div className="vigil-result-summary">
+            <span>{visibleSources.length} matching {visibleSources.length === 1 ? "source" : "sources"} · {clauseCount.toLocaleString()} clauses represented</span>
+            {(query || sourceType !== "all" || jurisdiction !== "all") ? <button type="button" onClick={() => { setQuery(""); setSourceType("all"); setJurisdiction("all"); }}>Clear filters</button> : null}
+          </div>
         </section>
 
         <section className="vigil-case-table vigil-standards-case-table" aria-label="AI governance standards sources">
