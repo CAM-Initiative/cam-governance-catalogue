@@ -167,11 +167,11 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(policy, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.policy\}/);
   assert.match(standards, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.standards\}/);
   assert.match(datasets, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.datasets\}/);
-  assert.match(mastheadArtwork, /VIGIL_FASCIA_REGISTRY_REVISION = "95d71ab632ab3da2e1d7b426deb091bf44305232"/);
+  assert.match(mastheadArtwork, /VIGIL_FASCIA_REGISTRY_REVISION = "cb04f4ff442dc2af7bb0108a77a933d690f758c0"/);
   assert.match(mastheadArtwork, /vigil-fascia-taxonomy\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-case-files\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-harm-impact\.png/);
-  assert.match(mastheadArtwork, /VIGIL-fascia-policy\.png/);
+  assert.match(mastheadArtwork, /%20VIGIL-fascia-policy\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-standards\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-datasetsV2\.png/);
   assert.match(mastheadArtwork, /VIGIL-fascia-incidentsV2\.png/);
