@@ -60,7 +60,7 @@
    It is deliberately wide and horizontally scrollable so evidence is duplicated,
    not collapsed or discarded. */
 .vigil-case-file-page .vigil-primary-classification-table {
-  min-width: 277rem;
+  min-width: 198rem;
   table-layout: auto;
 }
 
@@ -69,18 +69,13 @@
 }
 
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { min-width: 10rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { min-width: 16rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { min-width: 18rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { min-width: 22rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { min-width: 26rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(6) { min-width: 24rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(7) { min-width: 28rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(8) { min-width: 24rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(9) { min-width: 18rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(10) { min-width: 24rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(11) { min-width: 30rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(12) { min-width: 28rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(13) { min-width: 9rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { min-width: 24rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { min-width: 30rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { min-width: 28rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { min-width: 30rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(6) { min-width: 32rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(7) { min-width: 34rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(8) { min-width: 10rem; }
 
 .vigil-case-file-page .vigil-primary-classification-table-wrap {
   overflow-x: auto;
@@ -131,6 +126,34 @@
 
 .vigil-case-file-page .vigil-classification-taxonomy-list li + li {
   margin-top: 0.42rem;
+}
+
+.vigil-case-file-page .vigil-classification-class-chip {
+  display: inline-flex;
+  width: max-content;
+  margin-bottom: 0.55rem;
+  padding: 0.2rem 0.48rem;
+  border: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 999px;
+  background: hsl(var(--card) / 0.72);
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: 0.025em;
+}
+
+.vigil-case-file-page .vigil-classification-class-title {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.42;
+}
+
+.vigil-case-file-page .vigil-classification-class-explanation {
+  margin: 0.55rem 0 0;
+  color: hsl(var(--foreground) / 0.86);
+  font-size: 0.94rem;
+  line-height: 1.58;
 }
 
 .vigil-case-file-page .vigil-classification-incident-analysis,
@@ -273,7 +296,7 @@
   }
 
   .vigil-case-file-page .vigil-primary-classification-table {
-    min-width: 277rem;
+    min-width: 198rem;
   }
 
   .vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table {
@@ -281,17 +304,18 @@
   }
 
   .vigil-case-file-page .vigil-compliance-table {
-    min-width: 110rem;
+    min-width: 150rem;
   }
 }
 
 
-/* Compliance keeps the Incident's existing alignment result and Fidelity Class,
-   then projects only the external requirement references maintained by that class. */
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 22%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 30%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 36%; }
+/* Compliance keeps the Incident observation visible while projecting each
+   external requirement into its own traceable row. */
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 8%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 18%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 20%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 32%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(5) { width: 22%; }
 
 .vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
@@ -344,6 +368,25 @@
 
 .vigil-case-file-page .vigil-compliance-reference p {
   margin: 0.16rem 0 0;
+}
+
+.vigil-case-file-page .vigil-compliance-requirement-title strong {
+  display: block;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-compliance-clause,
+.vigil-case-file-page .vigil-compliance-requirement-id {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-compliance-requirement-explanation {
+  color: hsl(var(--foreground) / 0.9);
 }
 
 .vigil-case-file-page .vigil-compliance-gap {
