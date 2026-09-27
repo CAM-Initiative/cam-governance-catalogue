@@ -133,7 +133,7 @@ test("Alignment Taxonomy remains available if the linked Case File projection ca
 });
 
 test("Observatory index pages share the canonical illustrated masthead", async () => {
-  const [cases, taxonomy, harm, policy, standards, datasets, masthead, mastheadCss, main, indexHtml] = await Promise.all([
+  const [cases, taxonomy, harm, policy, standards, datasets, masthead, mastheadCss, mastheadArtwork, main, indexHtml] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/pages/vigil-severity-methodology.tsx"),
@@ -142,6 +142,7 @@ test("Observatory index pages share the canonical illustrated masthead", async (
     read("src/pages/datasets.tsx"),
     read("src/components/vigil/VigilObservatoryMasthead.tsx"),
     read("src/vigil-observatory-masthead.css"),
+    read("src/lib/vigilMastheadArtwork.ts"),
     read("src/main.tsx"),
     read("src/index.html"),
   ]);
@@ -160,12 +161,20 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(masthead, /vigil-observatory-masthead-artwork/);
   assert.match(masthead, /loading="eager"[\s\S]*decoding="async"[\s\S]*fetchPriority="high"/);
   assert.match(masthead, /onLoad=\{\(event\) => event\.currentTarget\.classList\.add\("is-loaded"\)\}/);
-  assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomy\.png"/);
-  assert.match(cases, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-case-files\.png"/);
-  assert.match(harm, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-harm-impact\.png"/);
-  assert.match(policy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-policy\.png"/);
-  assert.match(standards, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-standards\.png"/);
-  assert.match(datasets, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-datasetsV2\.png"/);
+  assert.match(taxonomy, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.taxonomy\}/);
+  assert.match(cases, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.cases\}/);
+  assert.match(harm, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.harm\}/);
+  assert.match(policy, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.policy\}/);
+  assert.match(standards, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.standards\}/);
+  assert.match(datasets, /artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.datasets\}/);
+  assert.match(mastheadArtwork, /VIGIL_FASCIA_REGISTRY_REVISION = "95d71ab632ab3da2e1d7b426deb091bf44305232"/);
+  assert.match(mastheadArtwork, /vigil-fascia-taxonomy\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-case-files\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-harm-impact\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-policy\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-standards\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-datasetsV2\.png/);
+  assert.match(mastheadArtwork, /VIGIL-fascia-incidentsV2\.png/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
@@ -862,7 +871,7 @@ test("Case File ticket keeps severity and classification in Incident context and
     read("src/pages/vigil-case-file.tsx"),
     read("src/vigil-case-file-dossier.css"),
   ]);
-  assert.match(caseFile, /<VigilObservatoryMasthead[\s\S]*contextLabel="Incident context"[\s\S]*artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-incidentsV2\.png"/);
+  assert.match(caseFile, /<VigilObservatoryMasthead[\s\S]*contextLabel="Incident context"[\s\S]*artworkSrc=\{VIGIL_MASTHEAD_ARTWORK\.incidentRecord\}/);
   assert.match(caseFile, /label: "Jurisdiction"/);
   assert.match(caseFile, /label: "Deployment"[\s\S]*label: "Activity"[\s\S]*label: "External reach"/);
   assert.match(caseFile, /label: "Environment"/);
