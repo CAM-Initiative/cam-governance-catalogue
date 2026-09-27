@@ -351,6 +351,9 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(classification, /export function CaseTaxonomyCompliance/);
   assert.match(classification, /vigil-classification-web-table vigil-compliance-web-table/);
   assert.match(classification, /vigil-classification-table vigil-compliance-table/);
+  assert.match(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>[\s\S]*<th scope="col">Mapped external requirements<\/th>/);
+  assert.match(classification, /evidenceByClass\.get\(classificationClass\.class_id\)/);
+  assert.match(classification, /vigil-compliance-governance-principle/);
   assert.match(classification, /<th scope="col">Mapped external requirements<\/th>/);
   assert.match(classification, /classificationClass\.external_references/);
   assert.match(classification, /reference\.requirement_id/);
@@ -364,8 +367,9 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
 
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 14%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 60%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 12%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 30%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 36%; \}/);
   assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 153rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
