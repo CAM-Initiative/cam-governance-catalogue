@@ -65,7 +65,9 @@ function taxonomyRelationshipLabel(relationship?: string) {
       return "Failure occurred";
     case "successful-invariant":
       return "Invariant held";
+    case "ambiguous-boundary":
     case "ambiguous-boundary exemplar":
+    case "candidate boundary":
       return "Boundary unresolved";
     default:
       return relationship
@@ -117,13 +119,30 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
   return summary;
 }
 
-function SourceWording({ clause }: { clause: ClauseAssessment }) {
+function SourceClause({ clause }: { clause: ClauseAssessment }) {
   return <div className="vigil-taxonomy-source-wording">
     {clause.sourceAnchor ? <q>{clause.sourceAnchor}</q> : null}
-    {clause.sourceParaphrase ? <p><span>Paraphrase</span>{clause.sourceParaphrase}</p> : null}
+    {clause.sourceParaphrase ? <p>{clause.sourceParaphrase}</p> : null}
     {!clause.sourceAnchor && !clause.sourceParaphrase
       ? <span>Source language is not separately published for this clause.</span>
       : null}
+  </div>;
+}
+
+function RelationshipStack({
+  relationships,
+  render,
+}: {
+  relationships: ClauseRelationship[];
+  render: (relationship: ClauseRelationship, index: number) => React.ReactNode;
+}) {
+  if (!relationships.length) return <span>—</span>;
+  return <div className="vigil-taxonomy-assessment-stack">
+    {relationships.map((relationship, index) => (
+      <div className="vigil-taxonomy-assessment-stack-item" key={`${relationship.classId ?? "unmapped"}-${relationship.relationship ?? "relationship"}-${index}`}>
+        {render(relationship, index)}
+      </div>
+    ))}
   </div>;
 }
 
@@ -131,69 +150,65 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   const clauses = parseAssessment(raw);
   if (!clauses.length) return null;
 
-  const rows = clauses.flatMap((clause, clauseIndex) => {
-    if (!clause.relationships.length) {
-      return [{
-        clause,
-        clauseIndex,
-        relationship: undefined,
-        relationshipIndex: 0,
-      }];
-    }
-    return clause.relationships.map((relationship, relationshipIndex) => ({
-      clause,
-      clauseIndex,
-      relationship,
-      relationshipIndex,
-    }));
-  });
-
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
     <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown</h3>
     <p className="vigil-taxonomy-assessment-intro">
-      Clause-level breakdown of the incident into source wording, recovered governance principles, taxonomy relationships, mapping state, and occurrence-specific analysis before formal alignment classification.
+      Clause-level breakdown of the incident into source wording, recovered governance principles, occurrence-specific incident analysis, and the taxonomy relationships considered or carried into formal alignment classification.
     </p>
     <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
         <caption className="sr-only">Clause-level VIGIL Observatory incident breakdown preceding formal alignment classification.</caption>
         <thead>
           <tr>
-            <th scope="col">Source wording</th>
+            <th scope="col">Source clause</th>
             <th scope="col">Recovered governance principle</th>
+            <th scope="col">Incident analysis</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Relationship</th>
             <th scope="col">Mapping state</th>
-            <th scope="col">Incident analysis</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ clause, clauseIndex, relationship, relationshipIndex }) => {
-            const href = taxonomyClassHref(relationship?.classId);
-            const relationshipLabel = taxonomyRelationshipLabel(relationship?.relationship);
-            return <tr key={`${clauseIndex}-${relationshipIndex}-${relationship?.classId ?? "unmapped"}`}>
-              <td data-label="Source wording"><SourceWording clause={clause} /></td>
-              <td data-label="Recovered governance principle">{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</td>
-              <td data-label="Fidelity class">
-                {relationship?.classId
-                  ? href
-                    ? <a className="vigil-taxonomy-assessment-class-link" href={href}><strong>{relationship.classId}</strong></a>
-                    : <strong>{relationship.classId}</strong>
-                  : <span>—</span>}
-              </td>
-              <td data-label="Relationship">
-                <strong>{relationshipLabel}</strong>
-                {relationship?.relationship ? <span className="vigil-taxonomy-relationship-code">{relationship.relationship}</span> : null}
-              </td>
-              <td data-label="Mapping state">
-                {relationship
-                  ? <span className="vigil-taxonomy-mapping-state">{relationship.canonical ? "Canonical mapping" : "Non-canonical relationship"}</span>
-                  : <span>—</span>}
-              </td>
-              <td data-label="Incident analysis">
-                {relationship?.rationale ?? taxonomyAssessmentSummary(clause.relationships)}
-              </td>
-            </tr>;
-          })}
+          {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
+            <td data-label="Source clause"><SourceClause clause={clause} /></td>
+            <td data-label="Recovered governance principle">{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</td>
+            <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
+              <RelationshipStack
+                relationships={clause.relationships}
+                render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
+              />
+            </td>
+            <td data-label="Fidelity class">
+              <RelationshipStack
+                relationships={clause.relationships}
+                render={(relationship) => {
+                  const href = taxonomyClassHref(relationship.classId);
+                  return relationship.classId
+                    ? href
+                      ? <a className="vigil-taxonomy-assessment-class-link" href={href}><strong>{relationship.classId}</strong></a>
+                      : <strong>{relationship.classId}</strong>
+                    : <span>—</span>;
+                }}
+              />
+            </td>
+            <td data-label="Relationship">
+              <RelationshipStack
+                relationships={clause.relationships}
+                render={(relationship) => <span>
+                  <strong>{taxonomyRelationshipLabel(relationship.relationship)}</strong>
+                  {relationship.relationship ? <span className="vigil-taxonomy-relationship-code">{relationship.relationship}</span> : null}
+                </span>}
+              />
+            </td>
+            <td data-label="Mapping state">
+              <RelationshipStack
+                relationships={clause.relationships}
+                render={(relationship) => <span className="vigil-taxonomy-mapping-state">
+                  {relationship.canonical ? "Canonical mapping" : "Non-canonical relationship"}
+                </span>}
+              />
+            </td>
+          </tr>)}
         </tbody>
       </table>
     </div>
