@@ -285,8 +285,14 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
   line-height: 1.52;
   color: hsl(var(--foreground) / 0.84);
 }
+/* Case File assessment uses the available document width, matching the
+   taxonomy assessment above it instead of manufacturing horizontal scroll. */
+.vigil-case-file-page .vigil-harm-matrix.is-assessment {
+  padding-inline: 0;
+}
 .vigil-harm-assessment-table {
-  min-width: 1040px;
+  width: 100%;
+  min-width: 0;
   table-layout: fixed;
 }
 /* Match the Case File table-header grammar used by Classification and Repair. */
