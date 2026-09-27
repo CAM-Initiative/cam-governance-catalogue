@@ -355,8 +355,9 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(classification, /const controlling = group\.filter/);
   assert.match(classification, /classificationBases: \[\.\.\.new Set/);
   assert.match(classification, /explanations: \[\.\.\.new Set/);
-  assert.doesNotMatch(classification, /reference\.publisher/);
-  assert.doesNotMatch(classification, /reference\.date/);
+  assert.doesNotMatch(classification, /vigil-compliance-reference-meta/);
+  assert.doesNotMatch(classification, /\{reference\.publisher\}/);
+  assert.doesNotMatch(classification, /\{reference\.date\}/);
   assert.match(classification, /role === "regulatory-evidence"/);
   assert.match(classification, /role === "standards-evidence"/);
   assert.match(classification, /role === "authoritative-guidance"/);
