@@ -263,16 +263,17 @@
   }
 
   .vigil-case-file-page .vigil-compliance-table {
-    min-width: 76rem;
+    min-width: 110rem;
   }
 }
 
 
 /* Compliance keeps the Incident's existing alignment result and Fidelity Class,
    then projects only the external requirement references maintained by that class. */
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 14%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 26%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 60%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 22%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 30%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 36%; }
 
 .vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
