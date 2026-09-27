@@ -112,34 +112,20 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <h1>About CAM Initiative</h1>
   <p>CAM Initiative develops publicly accessible AI governance infrastructure for understanding systems, supporting compliance, diagnosing failures and navigating change.</p>
 
-  <h2>CAELESTIS Architecture Model</h2>
-  <h3>Governance architecture for advanced AI systems</h3>
-  <p>The CAELESTIS Architecture Model is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. Its public architecture reference is undergoing a substantive refactor.</p>
-  <p>CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
-  <nav aria-label="CAELESTIS Architecture Model resources">
-    <ul>
-      <li><a href="https://doi.org/10.5281/zenodo.20686316" rel="noreferrer">Open archived version 1.1.0</a></li>
-      <li><a href="https://github.com/CAM-Initiative/Caelestis" rel="noreferrer">CAELESTIS repository</a></li>
-    </ul>
-  </nav>
-
   <h2>VIGIL Observatory</h2>
   <h3>Public Incident evidence, classification and repair analysis</h3>
   <p>VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies evidence against recurring governance boundaries through the VIGIL Observatory Alignment Taxonomy, and records exemplars when the relevant invariant holds under pressure.</p>
   <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
 
-  <h2>VIGIL Case File method</h2>
-  <p>Every Incident moves through the same six-stage evidence-to-conclusion structure: Incident, Assessment, Classification, Repair, Conclusion and References. Real-world harm assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity, while alignment classification describes governance mechanism and boundary behaviour.</p>
-  <p>Alignment Taxonomy mappings record whether a boundary failed, held or remains unresolved. Case File outcomes may therefore show failure evidenced, an invariant-held exemplar, or a mixed alignment outcome where different boundaries produced different evidentiary roles.</p>
-  <nav aria-label="Explore VIGIL Observatory">
+  <nav aria-label="CAM Initiative resources">
     <ul>
+      <li><a href="/observatory/knowledge-base/">Open the CAM Initiative Knowledge Base</a></li>
       <li><a href="/observatory/cases/">Browse VIGIL Observatory Case Files</a></li>
-      <li><a href="/observatory/knowledge-base/failure-taxonomy/">Explore the VIGIL Observatory Alignment Taxonomy</a></li>
-      <li><a href="/observatory/severity-methodology/">Read the VIGIL Harm &amp; Severity Methodology</a></li>
       <li><a href="https://github.com/CAM-Initiative/Vigil" rel="noreferrer">VIGIL Observatory repository</a></li>
+      <li><a href="https://github.com/CAM-Initiative/Caelestis" rel="noreferrer">CAELESTIS repository</a></li>
     </ul>
   </nav>
-</main>`;
+</main>`
 
 const vigilAboutStructuredData = {
   "@context": "https://schema.org",
@@ -175,7 +161,7 @@ const staticRoutes = [
   ["/observatory/severity-methodology", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.0.1 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
   ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, repair and references."],
   ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
-  ["/observatory/knowledge-base", "VIGIL Observatory Knowledge Base", "VIGIL Observatory governance taxonomy, standards sources, policy and public knowledge resources."],
+  ["/observatory/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
   ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
   ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
   ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],

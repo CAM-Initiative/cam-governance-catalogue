@@ -37,12 +37,11 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
   assert.match(pages, /Incident-centred public observatory and AI incident database/);
-  const fallbackCaelestis = pages.indexOf("<h2>CAELESTIS Architecture Model</h2>");
-  const fallbackVigil = pages.indexOf("<h2>VIGIL Observatory</h2>");
-  assert.ok(fallbackCaelestis >= 0 && fallbackVigil > fallbackCaelestis);
-  assert.match(pages, /Every Incident moves through the same six-stage evidence-to-conclusion structure/);
-  assert.match(pages, /Real-world harm assessment and alignment classification are deliberately independent/);
-  assert.match(pages, /mixed alignment outcome/);
+  const aboutFallback = pages.match(/const vigilAboutFallbackBody = `([\s\S]*?)`;/)?.[1] ?? "";
+  assert.match(aboutFallback, /<h2>VIGIL Observatory<\/h2>/);
+  assert.match(aboutFallback, /Open the CAM Initiative Knowledge Base/);
+  assert.doesNotMatch(aboutFallback, /VIGIL Case File method|<h2>CAELESTIS Architecture Model<\/h2>/);
+  assert.match(pages, /CAM Initiative Knowledge Base/);
   assert.doesNotMatch(pages, /VIGIL Observatory is distinct from CAELESTIS/);
   assert.match(pages, /const vigilAboutStructuredData = \{/);
   assert.match(pages, /"@type": "CreativeWork"/);
@@ -366,44 +365,45 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
 });
 
-test("About keeps dedicated six-stage explanatory copy as plain document rows", async () => {
-  const [about, homeMenuCss, sections] = await Promise.all([
+test("Knowledge Base keeps the dedicated six-stage Case File method as plain document rows", async () => {
+  const [hub, about, homeMenuCss, sections] = await Promise.all([
+    read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/about.tsx"),
     read("src/home-menu-pages.css"),
     read("src/lib/vigilCaseSections.ts"),
   ]);
-  assert.match(about, /const ABOUT_CASE_FILE_STAGES = \[/);
-  assert.match(about, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
-  assert.match(about, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM/);
-  assert.match(about, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
-  assert.match(about, /governing class invariants for mappings where failure is evidenced or the boundary remains unresolved/);
-  assert.match(about, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
-  assert.match(about, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
-  assert.match(about, /ABOUT_CASE_FILE_STAGES\.map/);
-  assert.match(about, /<ol className="about-method-list"/);
-  assert.match(about, /about-method-number/);
-  assert.doesNotMatch(about, /vigil-about-stage-disclosure|<details|vigil-about-stage-toggle/);
-  assert.doesNotMatch(about, /VIGIL_INCIDENT_CASE_SECTIONS\.map/);
+  assert.match(hub, /const CASE_FILE_STAGES = \[/);
+  assert.match(hub, /One evidence-to-conclusion structure for every Incident/);
+  assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
+  assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM/);
+  assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
+  assert.match(hub, /governing class invariants for mappings where failure is evidenced or the boundary remains unresolved/);
+  assert.match(hub, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
+  assert.match(hub, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
+  assert.match(hub, /CASE_FILE_STAGES\.map/);
+  assert.match(hub, /<ol className="about-method-list"/);
+  assert.match(hub, /about-method-number/);
+  assert.doesNotMatch(about, /Case File method|ABOUT_CASE_FILE_STAGES|about-method-list/);
   assert.doesNotMatch(sections, /description:/);
   assert.match(homeMenuCss, /\.about-method-list \{/);
-  assert.match(homeMenuCss, /\.about-method-list li \{[\s\S]*border-bottom: 1px solid/);
 });
 
-test("About explains alignment exemplars without duplicating the Case File legend", async () => {
-  const about = await read("src/pages/about.tsx");
-  assert.match(about, /Invariant held · exemplar/i);
-  assert.doesNotMatch(about, /VigilAlignmentLegend detailed/);
-  assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
-  assert.match(about, /do not create a Repair requirement/i);
-  assert.match(about, /Mixed alignment outcome/);
-  assert.match(about, /Traceable findings, visible judgment and clear boundaries/);
-  assert.match(about, /Keep evidence and judgment separate/);
-  assert.match(about, /Open to scrutiny, not openly licensed/);
-  assert.match(about, /It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine/);
+test("Knowledge Base explains mapping outcomes and all five Case File index classifications", async () => {
+  const [hub, about, classification, css] = await Promise.all([
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/about.tsx"),
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/home-menu-pages.css"),
+  ]);
+  assert.match(hub, /Mappings classify individual boundaries\. The Case File index summarises the Incident\./);
+  assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
+  assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
+  assert.match(hub, /Case File index classification/);
+  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
+  assert.match(css, /\.vigil-knowledge-index-classifications[\s\S]*\.vigil-knowledge-index-state\.is-failure[\s\S]*\.is-exemplar[\s\S]*\.is-mixed/);
+  assert.doesNotMatch(about, /Mappings classify individual boundaries|Publication model|Traceable findings, visible judgment and clear boundaries/);
   assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Alignment Taxonomy/);
-  assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
-  assert.match(about, /href="\/observatory\/severity-methodology\/"[\s\S]*Harm Impact Assessment/);
-  assert.doesNotMatch(about, /CAELESTIS governance instruments are a separate authority layer/);
 });
 
 test("Long-form public pages share the document rail and editorial hero grammar", async () => {
@@ -601,7 +601,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm Impact Assessment/);
-  assert.match(about, /Publication model/);
+  assert.doesNotMatch(about, /Publication model|Traceable findings, visible judgment and clear boundaries/);
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
@@ -889,41 +889,32 @@ test("Case Files landing page uses the shared Observatory masthead and stays con
 });
 
 
-test("About explains the VIGIL evidence-to-conclusion method and classification outcomes without card grids", async () => {
-  const [about, homeMenuCss] = await Promise.all([
+test("Knowledge Base owns VIGIL method, classification and CAELESTIS architecture explanations", async () => {
+  const [hub, about, homeMenuCss] = await Promise.all([
+    read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/about.tsx"),
     read("src/home-menu-pages.css"),
   ]);
-  const methodStart = about.indexOf("One evidence-to-conclusion structure for every Incident");
-  const harmSeparation = about.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
-  const stageList = about.indexOf("about-method-list");
+  const methodStart = hub.indexOf("One evidence-to-conclusion structure for every Incident");
+  const harmSeparation = hub.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
+  const stageList = hub.indexOf("about-method-list");
+  const classificationStart = hub.indexOf("Mappings classify individual boundaries. The Case File index summarises the Incident.");
+  const architectureStart = hub.indexOf("CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus");
   assert.ok(methodStart >= 0 && harmSeparation > methodStart && stageList > harmSeparation);
-  assert.match(about, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
-  assert.match(about, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
-  assert.match(about, /Failure evidenced[\s\S]*Invariant held · exemplar[\s\S]*Mixed alignment outcome/);
-  assert.match(about, /about-outcome-list/);
-  assert.doesNotMatch(about, /vigil-about-case-outcome-grid|vigil-about-outcome-visual|CircleX|CircleCheckBig/);
-  assert.match(about, /Mixed alignment outcome[\s\S]*Browse the taxonomy/);
+  assert.ok(classificationStart > stageList && architectureStart > classificationStart);
+  assert.match(hub, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
+  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
+  assert.match(hub, /Open archived release[\s\S]*CAELESTIS repository/);
+  assert.doesNotMatch(about, /One evidence-to-conclusion structure for every Incident|Mappings classify individual boundaries|CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus|Publication model/);
 
   const aboutStart = about.indexOf("<h1>About CAM Initiative</h1>");
   const vigilStart = about.indexOf('id="vigil-observatory-heading"');
-  const caelestisStart = about.indexOf('id="caelestis-architecture-heading"');
   const connectStart = about.indexOf('id="connect-heading"');
-  assert.ok(aboutStart >= 0 && vigilStart > aboutStart && caelestisStart > vigilStart && connectStart > caelestisStart);
-
-  const vigilIntro = about.indexOf("VIGIL Observatory is the CAM Initiative");
-  const vigilBoundary = about.indexOf("VIGIL uses its own Incident model");
-  const vigilActions = about.indexOf('href="/observatory/cases/"');
-  assert.ok(vigilIntro >= 0 && vigilBoundary > vigilIntro && vigilActions > vigilBoundary);
-
-  assert.match(about, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
-  assert.match(about, /It does not create or amend CAM or CAELESTIS doctrine/);
-  assert.match(about, /Any CAM or CAELESTIS applicability is assessed separately/);
-  assert.match(about, /Copyright &amp; Licence[\s\S]*Privacy[\s\S]*VIGIL Observatory repository/);
+  assert.ok(aboutStart >= 0 && vigilStart > aboutStart && connectStart > vigilStart);
   assert.match(homeMenuCss, /\.about-method-list \{/);
-  assert.match(homeMenuCss, /\.about-outcome-list \{/);
+  assert.match(homeMenuCss, /\.vigil-knowledge-index-classifications/);
 });
-
 
 test("homepage omits the retired external governance explorer", async () => {
   const [home, main] = await Promise.all([
@@ -948,8 +939,10 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
 
   assert.doesNotMatch(about, /01 · VIGIL Observatory|02 · Case File method|03 · VIGIL Observatory Alignment Taxonomy|04 · Publication model|05 · CAELESTIS Architecture Model|06 · Connect/);
   assert.match(about, /label: "VIGIL Observatory"/);
-  assert.match(about, /label: "Case File method"/);
-  assert.match(about, /label: "Alignment Taxonomy"/);
+  assert.match(about, /label: "Connect"/);
+  assert.doesNotMatch(about, /label: "Case File method"|label: "Alignment Taxonomy"|label: "Publication model"|label: "CAELESTIS Architecture Model"/);
+  assert.match(hub, /label: "Case File method"/);
+  assert.match(hub, /label: "Classification"/);
 
   const homeStart = shell.indexOf("const homeLinks");
   const homeEnd = shell.indexOf("];", homeStart);
@@ -1085,10 +1078,10 @@ test("Case File stage tabs keep six stages on one desktop row while mobile may w
   assert.match(css, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
 });
 
-test("Assessment wording keeps harm assessment distinct from alignment classification", async () => {
-  const about = await read("src/pages/about.tsx");
-  assert.match(about, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
-  assert.match(about, /VIGIL-HIM assesses materialised consequence and derives severity/);
-  assert.match(about, /Real-world harm assessment and alignment classification are deliberately independent/);
-  assert.doesNotMatch(about, /classify materialised harm/);
+test("Knowledge Base Assessment wording keeps harm assessment distinct from alignment classification", async () => {
+  const hub = await read("src/pages/vigil-knowledge-hub.tsx");
+  assert.match(hub, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
+  assert.match(hub, /VIGIL-HIM assesses materialised consequence and derives severity/);
+  assert.match(hub, /Real-world harm assessment and alignment classification are deliberately independent/);
+  assert.doesNotMatch(hub, /classify materialised harm/);
 });
