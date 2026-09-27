@@ -111,6 +111,34 @@ test("homepage refinement preserves the six-stage instrument, readable gear labe
   assert.match(mobileStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-expanded \.diagnostic-node-detail \{[\s\S]*max-height: 9rem[\s\S]*font-size: 0\.9rem/);
 });
 
+
+test("homepage mobile feed and taxonomy stickers keep their component-owned responsive styles", async () => {
+  const [feedCss, stickerCss, mobileCss] = await Promise.all([
+    read("src/home-premium-v2.css"),
+    read("src/home-premium-v6.css"),
+    read("src/mobile-responsive-polish.css"),
+  ]);
+
+  assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker-label \{[\s\S]*font-size: 0\.74rem/);
+  assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker a \{[\s\S]*font-size: 0\.8rem[\s\S]*line-height: 1\.35/);
+
+  assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker \{[\s\S]*width: max-content;[\s\S]*max-width: none/);
+  assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker strong \{[\s\S]*white-space: nowrap;[\s\S]*overflow-wrap: normal/);
+  assert.doesNotMatch(mobileCss, /\.taxonomy-sticker-board\s*\{/);
+  assert.doesNotMatch(mobileCss, /\.taxonomy-sticker\s*\{/);
+});
+
+test("Datasets mobile rail is page-specific normal document flow rather than a horizontal scroller", async () => {
+  const [datasets, menuCss] = await Promise.all([
+    read("src/pages/datasets.tsx"),
+    read("src/home-menu-pages.css"),
+  ]);
+
+  assert.match(datasets, /<DocumentRail title="Datasets"/);
+  assert.match(menuCss, /@media \(max-width: 900px\)[\s\S]*\.vigil-datasets-page \.document-rail-nav \{[\s\S]*display: grid;[\s\S]*grid-template-columns: 1fr;[\s\S]*overflow: visible/);
+  assert.match(menuCss, /\.vigil-datasets-page \.document-rail-link \{[\s\S]*min-width: 0;[\s\S]*white-space: normal/);
+});
+
 test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async () => {
   const [taxonomy, masthead, aboutVigil, shell, hub, datasets] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
