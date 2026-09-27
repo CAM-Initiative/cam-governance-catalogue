@@ -3,7 +3,7 @@ import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucid
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification, CaseTaxonomyRepair } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyRepair, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -296,7 +296,7 @@ function Field({ label, value, mono = false }: { label: string; value?: string; 
 
 const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and affected systems",
-  "case-diagnose": "Governance, external and real-world harm assessment",
+  "case-diagnose": "Governance, external and harm impact assessment",
   "case-classify": "Alignment classification",
   "case-repair": "Governing invariants and repair",
   "case-conclusion": "Integrated conclusion",
@@ -612,7 +612,10 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "classify") return <>
-      {incident ? <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory alignment classification can be rendered.</p>}
+      {incident ? <>
+        <CaseTaxonomyClassification raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />
+        <ExternalAlignmentClassification assessments={externalAssessments} />
+      </> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory alignment classification can be rendered.</p>}
     </>;
 
     if (stageId === "repair") return <>
@@ -643,7 +646,7 @@ export default function VigilCaseFile() {
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
-            <h3 className="vigil-case-editorial-subheading" id="severity-assessment-heading">Real-world harm assessment</h3>
+            <h3 className="vigil-case-editorial-subheading" id="severity-assessment-heading">Harm Impact Assessment</h3>
           </div>
           <HarmImpactMatrix
             assessment={harmImpactAssessment}
@@ -662,7 +665,6 @@ export default function VigilCaseFile() {
                   <th scope="col">Assessor</th>
                   <th scope="col">Date</th>
                   <th scope="col">Conclusion</th>
-                  <th scope="col">Classification / scheme</th>
                 </tr>
               </thead>
               <tbody>
@@ -672,9 +674,6 @@ export default function VigilCaseFile() {
                     <td><strong>{assessment.assessor}</strong>{evidenceReferenceNumber ? <> <a className="vigil-external-assessment-reference" href={`#vigil-evidence-reference-${evidenceReferenceNumber}`}>[{evidenceReferenceNumber}]</a></> : null}</td>
                     <td>{externalAssessmentDate(assessment.date)}</td>
                     <td>{assessment.summary}</td>
-                    <td>{assessment.classificationOrRating
-                      ? [assessment.classificationOrRating.verbatimLabel ?? assessment.classificationOrRating.value, assessment.classificationOrRating.scheme].filter(Boolean).join(" · ")
-                      : "—"}</td>
                   </tr>;
                 })}
               </tbody>
