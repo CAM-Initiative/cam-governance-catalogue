@@ -325,7 +325,7 @@ def validate_published_vigil_ui_contract() -> list[str]:
 
     index_html = index_path.read_text()
     import re
-    match = re.search(r'<script type="module" crossorigin src="/assets/(index-[^"]+\\.js)"></script>', index_html)
+    match = re.search(r'<script\\b[^>]*\\bsrc="/assets/(index-[^"]+\\.js)"[^>]*></script>', index_html)
     if not match:
         return ["docs/index.html does not reference the generated application JavaScript bundle."]
 
