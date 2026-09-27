@@ -477,19 +477,22 @@ test("Harm derivation footer remains footnote-sized after removing duplicated le
 });
 
 
-test("mobile Assessment prose stays viewport-bound while Harm tables remain horizontally scrollable", async () => {
-  const [polishCss, harmCss] = await Promise.all([
+test("mobile Assessment prose stays viewport-bound while Case File harm stacks and methodology remains pannable", async () => {
+  const [polishCss, harmCss, harmCleanupCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/vigil-case-file-polish.css"), "utf8"),
     readFile(resolve(repoRoot, "src/vigil-incident-severity-refinement.css"), "utf8"),
+    readFile(resolve(repoRoot, "src/vigil-harm-assessment-cleanup.css"), "utf8"),
   ]);
 
   assert.match(polishCss, /@media \(max-width: 820px\)[\s\S]*#case-diagnose[\s\S]*min-width: 0;[\s\S]*max-width: 100%;/);
   assert.match(polishCss, /\.vigil-diagnosis-assessment-details p,[\s\S]*white-space: normal;[\s\S]*overflow-wrap: anywhere;/);
 
-  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-matrix-scroll \{[\s\S]*overflow-x: auto;[\s\S]*-webkit-overflow-scrolling: touch;/);
-  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-methodology-table \{[\s\S]*min-width: 1120px;/);
-  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-assessment-table \{[\s\S]*min-width: 800px;/);
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-severity-methodology-page \.vigil-harm-matrix-scroll \{[\s\S]*overflow-x: auto;[\s\S]*-webkit-overflow-scrolling: touch;/);
+  assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-severity-methodology-page \.vigil-harm-methodology-table \{[\s\S]*min-width: 1080px;/);
+  assert.doesNotMatch(harmCss, /\.vigil-harm-assessment-table \{[\s\S]{0,120}min-width: 800px;/);
 
+  assert.match(harmCleanupCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-assessment-table,[\s\S]*display: block !important/);
+  assert.match(harmCleanupCss, /\.vigil-harm-assessment-basis > p \{[\s\S]*font-size: 0\.92rem !important/);
   assert.match(harmCss, /\.vigil-harm-methodology-table \{[\s\S]*min-width: 1680px;/);
   assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*width: 100%;[\s\S]*min-width: 0;/);
 });
