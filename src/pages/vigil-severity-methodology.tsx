@@ -1,5 +1,3 @@
-import { ArrowRight } from "lucide-react";
-import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
@@ -78,7 +76,6 @@ const methodologyReferences = [
 const harmImpactRail = [
   { href: "#matrix", label: "Reference matrix" },
   { href: "#method", label: "Method" },
-  { href: "#case-files", label: "Case Files" },
   { href: "#references", label: "References" },
 ];
 
@@ -136,29 +133,22 @@ export default function VigilSeverityMethodology() {
                   <div><dt>SU — Unassessed</dt><dd>No defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</dd></div>
                 </dl>
               </div>
+            </div>
+
+            <div className="vigil-severity-derivation-rows">
+              <div className="vigil-severity-chip-key" aria-label="Severity chip display">
+                <div className="vigil-severity-chip-key-bands">
+                  {(["S1", "S2", "S3", "S4", "S5"] as const).map((band) => <VigilStatusChip key={band} value={band} />)}
+                </div>
+                <p><strong>Severity display.</strong> S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU remains visually neutral because it is an unassessed evidence state, not a sixth severity band.</p>
+              </div>
+
               <div className="vigil-severity-overall-rule">
                 <h3>Overall severity</h3>
                 <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p>
               </div>
-            </div>
-            <div className="vigil-severity-chip-key" aria-label="Severity chip display">
-              <div className="vigil-severity-chip-key-bands">
-                {(["S1", "S2", "S3", "S4", "S5"] as const).map((band) => <VigilStatusChip key={band} value={band} />)}
-              </div>
-              <p><strong>Severity display.</strong> S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU remains visually neutral because it is an unassessed evidence state, not a sixth severity band.</p>
-            </div>
-          </section>
 
-          <section id="case-files" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-case-files-heading">
-            <div className="document-section-heading">
-              <p>Case Files</p>
-              <h2 id="severity-case-files-heading">The Incident view shows only the assessment that was actually made</h2>
-            </div>
-            <div className="document-reading">
-              <p>Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
-            </div>
-            <div className="cam-action-row">
-              <Link className="cam-action cam-action-secondary" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
+              <p className="vigil-severity-case-file-note">Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
             </div>
           </section>
 

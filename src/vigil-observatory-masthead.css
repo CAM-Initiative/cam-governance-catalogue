@@ -463,7 +463,7 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
    remains a distinct terminal column. */
 .vigil-observatory-masthead.has-artwork {
   --masthead-accent: 39 73% 56%;
-  --masthead-artwork-opacity: 0.8;
+  --masthead-artwork-opacity: 0.76;
   grid-template-columns: minmax(0, 1fr) minmax(15rem, 24%);
   min-height: clamp(14.5rem, 18vw, 16rem);
   border-color: hsl(36 25% 42% / 0.62);
@@ -551,7 +551,7 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
 }
 
 .vigil-observatory-masthead.has-artwork[data-mode="record"] {
-  --masthead-artwork-opacity: 0.66;
+  --masthead-artwork-opacity: 0.62;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 28%);
   min-height: clamp(12.75rem, 15vw, 14.5rem);
 }
@@ -581,6 +581,40 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
   padding-left: calc(clamp(1.05rem, 1.8vw, 1.55rem) + 1.4rem);
 }
 
+
+/* Light appearance intentionally keeps the Observatory fascia dark enough to
+   read as an instrument plate, but visibly lighter than the true dark-mode
+   treatment. The explicit theme selector prevents later shared rules from
+   collapsing the two appearances into the same visual value. */
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
+  border-color: hsl(36 24% 48% / 0.58);
+  background:
+    linear-gradient(90deg, hsl(31 21% 32%), hsl(29 19% 27% / 0.98) 72%, hsl(27 17% 23%)),
+    hsl(29 19% 27%);
+  box-shadow:
+    0 0.28rem 0.78rem hsl(0 0% 0% / 0.085),
+    inset 0 1px 0 hsl(36 32% 78% / 0.12);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+  filter: sepia(0.12) saturate(0.72) brightness(0.7) contrast(1.02);
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+  background:
+    linear-gradient(
+      90deg,
+      hsl(28 14% 23% / 0) 0%,
+      hsl(28 14% 22% / 0.12) 18%,
+      hsl(28 14% 21% / 0.32) 42%,
+      hsl(27 14% 20% / 0.6) 68%,
+      hsl(27 14% 19% / 0.86) 100%
+    );
+}
+
+html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
+  filter: sepia(0.14) saturate(0.64) brightness(0.62) contrast(0.96) blur(0.45px);
+}
 
 html[data-theme="dark"] .vigil-observatory-masthead.has-artwork {
   --masthead-artwork-opacity: 0.78;

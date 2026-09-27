@@ -170,15 +170,17 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(15rem, 24%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*position: absolute[\s\S]*object-fit: cover/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*inset: 0;[\s\S]*width: 100%;/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*--masthead-artwork-opacity: 0\.8[\s\S]*hsl\(31 20% 25%\)/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*opacity: 0;[\s\S]*brightness\(0\.6\)[\s\S]*transition: opacity 120ms/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork[\s\S]*--masthead-artwork-opacity: 0\.76/);
+  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork[\s\S]*hsl\(31 21% 32%\)[\s\S]*hsl\(27 17% 23%\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*opacity: 0;[\s\S]*transition: opacity 120ms/);
+  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*brightness\(0\.7\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead-artwork\.is-loaded[\s\S]*opacity: var\(--masthead-artwork-opacity\)/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-mode="record"\][\s\S]*--masthead-artwork-opacity: 0\.66[\s\S]*min-height: clamp\(12\.75rem, 15vw, 14\.5rem\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-mode="record"\][\s\S]*--masthead-artwork-opacity: 0\.62[\s\S]*min-height: clamp\(12\.75rem, 15vw, 14\.5rem\)/);
   assert.match(mastheadCss, /has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-artwork[\s\S]*saturate\(0\.68\)[\s\S]*blur\(0\.45px\)/);
   assert.match(mastheadCss, /has-artwork\[data-mode="record"\] h1[\s\S]*font-size: clamp\(2\.35rem, 3\.15vw, 3\.2rem\)[\s\S]*line-height: 0\.98/);
   assert.match(indexHtml, /rel="preconnect" href="https:\/\/raw\.githubusercontent\.com" crossorigin/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork h1[\s\S]*color: hsl\(38 35% 95%\)/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context[\s\S]*margin-left: -2\.4rem[\s\S]*hsl\(28 14% 18% \/ 0\)[\s\S]*hsl\(27 14% 15% \/ 0\.9\)/);
+  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context[\s\S]*hsl\(28 14% 23% \/ 0\)[\s\S]*hsl\(27 14% 19% \/ 0\.86\)/);
   assert.doesNotMatch(mastheadCss, /mask-image: linear-gradient\(90deg, #000 0 79%/);
   assert.doesNotMatch(mastheadCss, /grid-template-areas: "art title context"/);
   assert.doesNotMatch(mastheadCss, /border-right: 1px solid hsl\(34 28% 73%/);
@@ -647,12 +649,11 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   assert.match(matrix, /Measure downtime until regular activity is restored to the pre-incident service level/);
   assert.match(matrix, /Distinguish public exposure from reputational or dignitary injury/);
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
-  const caseFilesSection = severity.match(/<section id="case-files"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
-  assert.match(methodSection, /Overall severity[\s\S]*highest defensible materialised-harm threshold controls the overall severity/);
-  assert.doesNotMatch(caseFilesSection, /HarmEvidenceStateDefinitions|>Definitions</);
+  assert.match(methodSection, /Severity display\.[\s\S]*Overall severity[\s\S]*highest defensible materialised-harm threshold controls the overall severity[\s\S]*Individual Case Files do not repeat this entire reference matrix/);
+  assert.doesNotMatch(severity, /<section id="case-files"|The Incident view shows only the assessment that was actually made/);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
-  assert.match(menuCss, /vigil-severity-evidence-states dl[\s\S]*vigil-severity-overall-rule/);
+  assert.match(menuCss, /vigil-severity-derivation-rows[\s\S]*vigil-severity-chip-key,[\s\S]*vigil-severity-overall-rule[\s\S]*vigil-severity-case-file-note/);
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {
@@ -700,14 +701,15 @@ test("About, Privacy and licensing use open rail documents while methodology kee
   assert.match(homeMenuCss, /\.document-content\.public-reference-document/);
 });
 
-test("severity methodology exposes the registered source trail after Case Files", async () => {
+test("severity methodology exposes the registered source trail after the derivation method", async () => {
   const severity = await read("src/pages/vigil-severity-methodology.tsx");
   assert.match(severity, /Methodology source trail/);
   assert.match(severity, /VIGIL-REF-000001/);
   assert.match(severity, /VIGIL-REF-000011/);
   assert.match(severity, /AI Incident Tracker: Harm Taxonomy/);
   assert.match(severity, /Prioritization of Risks from Artificial Intelligence/);
-  assert.ok(severity.indexOf('id="severity-case-files-heading"') < severity.indexOf('id="severity-references-heading"'));
+  assert.ok(severity.indexOf('id="severity-principles-heading"') < severity.indexOf('id="severity-references-heading"'));
+  assert.doesNotMatch(severity, /href: "#case-files"/);
   assert.match(severity, /vigil-methodology-reference-list/);
 });
 
@@ -971,7 +973,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section[\s\S]*background: transparent !important/);
   assert.match(menuCss, /vigil-severity-methodology-document \.vigil-about-section \+ \.vigil-about-section[\s\S]*border-top: 1px solid/);
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
-  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*grid-template-columns: minmax\(0, 1\.55fr\) minmax\(16rem, 0\.8fr\)[\s\S]*border: 0/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(severity, /vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5"\][\s\S]*VigilStatusChip/);
   assert.match(severity, /The band label carries the severity level; colour is not an ordinal scale/);

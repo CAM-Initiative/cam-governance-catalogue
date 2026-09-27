@@ -1682,9 +1682,7 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 .vigil-severity-methodology-page .vigil-severity-principles {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(16rem, 0.8fr);
-  gap: clamp(1.4rem, 3vw, 2.4rem);
+  display: block;
   margin-top: 1.25rem;
   border: 0;
 }
@@ -1741,20 +1739,43 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
   line-height: 1.55;
 }
 
-.vigil-severity-methodology-page .vigil-severity-overall-rule {
-  padding-left: clamp(1rem, 2vw, 1.5rem) !important;
-  border-left: 1px solid hsl(var(--border)) !important;
-}
-
-.vigil-severity-methodology-page .vigil-severity-chip-key {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 1rem 1.35rem;
-  align-items: center;
+.vigil-severity-methodology-page .vigil-severity-derivation-rows {
   margin-top: 1.5rem;
-  padding: 1rem 0;
   border-top: 1px solid hsl(var(--border));
   border-bottom: 1px solid hsl(var(--border));
+}
+
+.vigil-severity-methodology-page .vigil-severity-chip-key,
+.vigil-severity-methodology-page .vigil-severity-overall-rule {
+  display: grid;
+  grid-template-columns: minmax(13rem, auto) minmax(0, 1fr);
+  gap: 1rem 1.35rem;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.vigil-severity-methodology-page .vigil-severity-overall-rule {
+  border-top: 1px solid hsl(var(--border) / 0.72);
+}
+
+.vigil-severity-methodology-page .vigil-severity-overall-rule h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+}
+
+.vigil-severity-methodology-page .vigil-severity-overall-rule p,
+.vigil-severity-methodology-page .vigil-severity-case-file-note {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.58;
+}
+
+.vigil-severity-methodology-page .vigil-severity-case-file-note {
+  padding: 1rem 0 1rem calc(13rem + 1.35rem);
+  border-top: 1px solid hsl(var(--border) / 0.72);
 }
 
 .vigil-severity-methodology-page .vigil-severity-chip-key-bands {
@@ -1777,25 +1798,18 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 @media (max-width: 900px) {
-  .vigil-severity-methodology-page .vigil-severity-principles {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-
-  .vigil-severity-methodology-page .vigil-severity-overall-rule {
-    padding-top: 1rem !important;
-    padding-left: 0 !important;
-    border-top: 1px solid hsl(var(--border)) !important;
-    border-left: 0 !important;
-  }
-
   .vigil-severity-methodology-page .vigil-severity-evidence-states dl > div {
     grid-template-columns: 1fr;
     gap: 0.22rem;
   }
 
-  .vigil-severity-methodology-page .vigil-severity-chip-key {
+  .vigil-severity-methodology-page .vigil-severity-chip-key,
+  .vigil-severity-methodology-page .vigil-severity-overall-rule {
     grid-template-columns: 1fr;
+  }
+
+  .vigil-severity-methodology-page .vigil-severity-case-file-note {
+    padding-left: 0;
   }
 }
 
