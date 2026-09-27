@@ -337,10 +337,12 @@ def validate_published_vigil_ui_contract() -> list[str]:
     required_strings = (
         "Incident breakdown",
         "Harm Impact Assessment",
-        "What this class means",
+        "Incident analysis",
+        "Source clause(s)",
+        "Recovered governance principle(s)",
         "Mapped external requirements",
-        "Carried into Classification",
-        "Fidelity classes and their plain-English explanations are defined in the",
+        "Canonical mapping",
+        "Source clauses, recovered governance principles and Incident analysis are repeated here from the Section 02 Incident breakdown",
         "These external requirement mappings are maintained with the relevant Fidelity Classes in the",
     )
     for required in required_strings:
