@@ -37,7 +37,7 @@ assert.match(caseFile, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessmen
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
-assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved can be projected through the maintained taxonomy crosswalk in Compliance/);
+assert.match(caseFile, /When multiple classifications reach the same exact external requirement, Compliance reports the most conservative supported alignment state/);
 
 // Deterministic report retains the same canonical projection.
 assert.match(report, /CaseTaxonomyClassification/);
@@ -163,7 +163,7 @@ assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /Limits of the assessment/);
 assert.match(printableReport, /report-postscript/);
-assert.match(printableReport, /No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File/);
+assert.match(printableReport, /No mapped external requirement is available for compliance cross-reference in this Case File/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
 assert.match(printableReport, /© 2026 CAM Initiative\. All rights reserved\./);
@@ -176,7 +176,7 @@ const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseT
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
 assert.match(taxonomyAssessment, /Incident breakdown/);
-assert.match(taxonomyAssessment, /<th scope="col">Source clause<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>/);
+assert.match(taxonomyAssessment, /<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>/);
 assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Recovered governance principle<\/th>/);
 assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Fidelity class<\/th>/);
 assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Relationship<\/th>/);
@@ -185,7 +185,7 @@ assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
 assert.match(taxonomyAssessment, /relationship\.rationale \?\? taxonomyAssessmentSummary/);
 assert.match(taxonomyAssessment, /<RelationshipStack[\s\S]*relationships=\{clause\.relationships\}/);
 assert.match(taxonomyAssessment, /clauses\.map\(\(clause, index\)/);
-assert.match(taxonomyAssessment, /Clause-level breakdown of the incident into source wording and occurrence-specific incident analysis before formal alignment classification\./);
+assert.match(taxonomyAssessment, /Incident observations paired with occurrence-specific analysis before formal alignment classification\./);
 assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
 assert.doesNotMatch(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
 assert.doesNotMatch(taxonomyAssessment, /Canonical mapping/);
