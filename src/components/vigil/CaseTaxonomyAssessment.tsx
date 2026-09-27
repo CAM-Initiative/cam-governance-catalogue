@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 type ClauseRelationship = {
@@ -134,7 +135,7 @@ function RelationshipStack({
   render,
 }: {
   relationships: ClauseRelationship[];
-  render: (relationship: ClauseRelationship, index: number) => React.ReactNode;
+  render: (relationship: ClauseRelationship, index: number) => ReactNode;
 }) {
   if (!relationships.length) return <span>—</span>;
   return <div className="vigil-taxonomy-assessment-stack">
