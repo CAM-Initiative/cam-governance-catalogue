@@ -103,8 +103,8 @@ test("homepage refinement preserves the six-stage instrument, readable gear labe
   assert.doesNotMatch(home, /VIGIL diagnoses the failure/);
   assert.match(styles, /diagnostic-counter-rotation/);
   assert.match(styles, /incident-ticker-travel 112s linear infinite/);
-  assert.match(styles, /\.incident-ticker-label \{[\s\S]*font-size: 0\.7rem/);
-  assert.match(styles, /\.incident-ticker a \{[\s\S]*font-size: 0\.8rem/);
+  assert.match(styles, /\.incident-ticker-label \{[\s\S]*font-size: 0\.76rem/);
+  assert.match(styles, /\.incident-ticker a \{[\s\S]*font-size: 0\.88rem/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.incident-ticker-track \{ animation: none; \}/);
   assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node-label \{[\s\S]*font-size: 0\.78rem/);
   assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-active \.diagnostic-node-copy strong,[\s\S]*max-height: 5\.5rem[\s\S]*font-size: 1\.16rem/);
@@ -121,8 +121,8 @@ test("homepage mobile feed and taxonomy stickers keep their component-owned resp
     read("src/mobile-responsive-polish.css"),
   ]);
 
-  assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker-label \{[\s\S]*font-size: 0\.74rem/);
-  assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker a \{[\s\S]*font-size: 0\.8rem[\s\S]*line-height: 1\.35/);
+  assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker-label \{[\s\S]*font-size: 0\.78rem/);
+  assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker a \{[\s\S]*font-size: 0\.88rem[\s\S]*line-height: 1\.35/);
 
   assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker \{[\s\S]*width: max-content;[\s\S]*max-width: none/);
   assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker strong \{[\s\S]*white-space: nowrap;[\s\S]*overflow-wrap: normal/);
