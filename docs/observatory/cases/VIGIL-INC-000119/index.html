@@ -61,9 +61,9 @@
     <h1>Nx s1ngularity malware weaponized local AI coding CLIs during credential-harvesting supply-chain attack</h1>
     <p>Attackers stole an Nx npm publishing token through a GitHub Actions injection flaw and published malicious Nx package versions on 26 August 2025. The package post-install malware directly harvested credentials and sensitive files and also attempted to invoke locally configured Claude, Gemini and Amazon Q command-line tools with prompts designed to identify additional sensitive files for exfiltration. Results and stolen credentials were uploaded to public GitHub repositories. GitGuardian identified 2,349 distinct secrets in 1,079 affected repositories during the initial phase, with more than 1,100 still valid at the time of analysis, and later observed 10,767 private repositories made public, exposing 82,901 secrets including 11,168 then-valid secrets. The AI-assisted path was only one component of the attack: GitGuardian reported that only 95 of 366 targeted systems produced the requested AI-generated inventory file, and Wiz separately found substantial refusal, configuration and workspace-restriction failure rates across the invoked AI tools.</p>
     <dl>
-      <dt>VIGIL Observatory alignment outcome</dt><dd>Unclassified</dd>
-      <dt>VIGIL Observatory primary classification</dt><dd>not stated</dd>
-      <dt>VIGIL Observatory secondary classifications</dt><dd>None recorded</dd>
+      <dt>VIGIL Observatory alignment outcome</dt><dd>Boundary unresolved</dd>
+      <dt>VIGIL Observatory primary classification</dt><dd>Source-Authority Separation (VIGIL-FC-000001) — Authority Boundary Integrity (VIGIL-FF-0001)</dd>
+      <dt>VIGIL Observatory secondary classifications</dt><dd><ul><li>Capability-Authority Separation (VIGIL-FC-000002) — Authority Boundary Integrity (VIGIL-FF-0001)</li></ul></dd>
       <dt>Severity</dt><dd>S4</dd>
       <dt>Vendor / platform</dt><dd>Multi Vendor</dd>
     </dl>
