@@ -257,14 +257,33 @@
 }
 
 @media (max-width: 720px) {
-  .taxonomy-sticker-board { min-height: 29rem; overflow: hidden; }
-  .taxonomy-sticker {
-    max-width: 47vw;
-    gap: 0.38rem;
-    padding: 0.34rem 0.46rem 0.38rem;
+  /* Keep the physical label-maker character on phones. Positions are allowed
+     to bleed beyond the board edge; the board clips that bleed rather than
+     squeezing every label into a fat multi-line card. */
+  .taxonomy-sticker-board {
+    min-height: 29rem;
+    overflow: hidden;
   }
-  .taxonomy-sticker-code { font-size: 0.56rem; }
-  .taxonomy-sticker strong { font-size: 0.66rem; }
+
+  .taxonomy-sticker {
+    width: max-content;
+    max-width: none;
+    gap: 0.42rem;
+    padding: 0.34rem 0.5rem 0.38rem;
+  }
+
+  .taxonomy-sticker-code {
+    font-size: 0.58rem;
+  }
+
+  .taxonomy-sticker strong {
+    max-width: none;
+    font-size: 0.68rem;
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: visible;
+    overflow-wrap: normal;
+  }
 
   .diagnostic-orbit-v2 .diagnostic-node-2 { right: 4%; }
   .diagnostic-orbit-v2 .diagnostic-node-3 { right: 5%; }
