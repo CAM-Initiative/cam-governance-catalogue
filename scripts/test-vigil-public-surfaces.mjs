@@ -459,7 +459,7 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /The relevant governance boundary was tested and held/);
   assert.match(classification, /Primary alignment exemplar · invariant held/);
   assert.match(classification, /Secondary alignment exemplar · invariant held/);
-  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
+  assert.match(classification, /complianceRolePriority/);
   assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
   assert.match(report, /Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence/i);
