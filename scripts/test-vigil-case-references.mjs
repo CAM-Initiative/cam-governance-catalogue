@@ -32,7 +32,7 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /Taxonomy and methodology references/);
   assert.match(caseFile, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(caseFile, /VIGIL Harm Impact Methodology/);
-  assert.match(caseFile, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
+  assert.match(caseFile, /https:\/\/www\.cam-initiative\.org\/observatory\/harm-impact-assessment/);
   assert.match(caseFile, /Internal records/);
   assert.doesNotMatch(caseFile, /taxonomyReferences\.map\(\(reference/);
   assert.match(component, /External classification \/ rating/);
@@ -244,8 +244,8 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(printable, /data-report-taxonomy-reference-list/);
   assert.match(printable, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(printable, /VIGIL Harm Impact Methodology/);
-  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/severity-methodology/);
-  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/knowledge-base\/failure-taxonomy/);
+  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/harm-impact-assessment/);
+  assert.match(printable, /https:\/\/www\.cam-initiative\.org\/observatory\/alignment-taxonomy/);
   assert.doesNotMatch(printable, /reportIncident\.taxonomyReferences\.map/);
   assert.match(report, /Internal records/);
   assert.doesNotMatch(report, /report-reference-number">\[\{index \+ 1\}\]/);
