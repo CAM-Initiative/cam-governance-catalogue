@@ -46,6 +46,7 @@ type ResolvedClassification = ClassificationRef & {
 
 type ClassificationTableRow = {
   item: ResolvedClassification;
+  mapping: "Primary" | "Secondary";
 };
 
 type Props = {
@@ -265,7 +266,19 @@ export function ExternalAlignmentClassification({ assessments }: { assessments: 
 // Web UX shows the alignment state, the meaning of the mapped class, and the
 // occurrence-specific reason for applying it. Primary/secondary ordering remains
 // in canonical data and report metadata.
-function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceHref }: { rows: ClassificationTableRow[]; taxonomyReferenceNumber?: number; taxonomyReferenceHref?: string }) {
+function ClassificationTable({
+  rows,
+  status,
+  taxonomyVersion,
+  taxonomyReferenceNumber,
+  taxonomyReferenceHref,
+}: {
+  rows: ClassificationTableRow[];
+  status?: ClassificationStatus;
+  taxonomyVersion?: string;
+  taxonomyReferenceNumber?: number;
+  taxonomyReferenceHref?: string;
+}) {
   const hasUnresolved = rows.some(({ item }) =>
     (item.classId && !item.class) || (item.familyId && !item.family)
   );
@@ -292,37 +305,84 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
   });
 
   return <>
-    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
-      <table className="vigil-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings grouped by Fidelity Family, including the class meaning and the occurrence-specific classification basis.</caption>
+    <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
+      <table className="vigil-classification-table vigil-primary-classification-table">
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings grouped by Fidelity Family, with classification metadata, class meaning, definition, invariant, recognition conditions, exclusions and occurrence-specific basis.</caption>
         <thead>
           <tr>
+            <th scope="col">Mapping</th>
             <th scope="col">Alignment</th>
+            <th scope="col">Status</th>
+            <th scope="col">Confidence</th>
+            <th scope="col">Taxonomy version</th>
+            <th scope="col">Fidelity family</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">What this class means</th>
+            <th scope="col">Canonical definition</th>
+            <th scope="col">Governing invariant</th>
+            <th scope="col">Recognition conditions</th>
+            <th scope="col">Exclusions</th>
             <th scope="col">Classification basis</th>
           </tr>
         </thead>
         <tbody>
           {[...familyGroups.entries()].map(([groupKey, group]) => <Fragment key={groupKey}>
             <tr key={`family-${groupKey}`} className="vigil-classification-family-row">
-              <th colSpan={4} scope="rowgroup">
+              <th colSpan={13} scope="rowgroup">
                 {group.familyId && <span className="vigil-classification-family-id">{group.familyId}</span>}
                 <strong>{group.familyName}</strong>
               </th>
             </tr>
-            {group.rows.map(({ item }, index) => {
+            {group.rows.map(({ item, mapping }, index) => {
+              const family = item.family?.family;
               const classificationClass = item.class;
               const classId = classificationClass?.class_id ?? item.classId;
-              const classMeaning = classificationClass?.plain_english ?? item.family?.family.plain_english;
+              const classMeaning = classificationClass?.plain_english ?? family?.plain_english;
+              const canonicalDefinition = classificationClass?.definition ?? family?.definition;
+              const governingInvariant = classificationClass?.invariant ?? family?.invariant;
+              const recognitionConditions = classificationClass?.recognition?.required_conditions ?? [];
+              const exclusions = classificationClass?.exclusions ?? [];
+              const outcome = mappingOutcome(item.role);
               return <tr key={`${groupKey}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
-                <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
+                <td data-label="Mapping"><strong>{mapping}</strong></td>
+                <td data-label="Alignment" className="vigil-classification-outcome-cell">
+                  <span className="vigil-classification-outcome-detail">
+                    <MappingOutcome role={item.role} />
+                    <strong>{outcome.label}</strong>
+                    {item.role ? <span className="vigil-classification-id">{item.role}</span> : null}
+                  </span>
+                </td>
+                <td data-label="Status">{statusLabel(status)}</td>
+                <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
+                <td data-label="Taxonomy version"><span className="vigil-classification-id">{taxonomyVersion ?? "Not stated"}</span></td>
+                <td data-label="Fidelity family">
+                  <strong>{family?.name ?? (item.familyId ? "Unresolved fidelity family" : "No fidelity family assigned")}</strong>
+                  {(family?.family_id ?? item.familyId) ? <span className="vigil-classification-id">{family?.family_id ?? item.familyId}</span> : null}
+                  {family?.family_code ? <span className="vigil-classification-id">{family.family_code}</span> : null}
+                </td>
                 <td data-label="Fidelity class">
                   <strong>{classificationClass?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned")}</strong>
                   {classId && <span className="vigil-classification-id">{classId}</span>}
+                  {classificationClass?.class_code ? <span className="vigil-classification-id">{classificationClass.class_code}</span> : null}
                 </td>
                 <td data-label="What this class means" className="vigil-classification-meaning">
                   {classMeaning ?? "No plain-English class explanation is currently published."}
+                </td>
+                <td data-label="Canonical definition" className="vigil-classification-definition">
+                  {canonicalDefinition ?? "No canonical definition is currently published for this mapping."}
+                </td>
+                <td data-label="Governing invariant" className="vigil-classification-invariant">
+                  {governingInvariant ?? "No class- or family-level governing invariant is currently published for this mapping."}
+                </td>
+                <td data-label="Recognition conditions" className="vigil-classification-recognition">
+                  {recognitionConditions.length
+                    ? <ul>{recognitionConditions.map((condition, conditionIndex) => <li key={conditionIndex}>{condition}</li>)}</ul>
+                    : <span>No separate recognition conditions are published.</span>}
+                </td>
+                <td data-label="Exclusions" className="vigil-classification-exclusions">
+                  {exclusions.length
+                    ? <ul>{exclusions.map((exclusion, exclusionIndex) => <li key={exclusionIndex}>{exclusion}</li>)}</ul>
+                    : <span>No separate exclusions are published.</span>}
                 </td>
                 <td data-label="Classification basis" className="vigil-classification-basis">
                   {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
@@ -334,8 +394,7 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
       </table>
     </div>
     <VigilAlignmentLegend />
-    {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity classes and their plain-English explanations are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity families, classes, definitions, invariants, recognition conditions and exclusions are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
 }
@@ -420,7 +479,7 @@ function ExplicitClassificationState({
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationTable rows={[{ item: primary }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={[{ item: primary, mapping: "Primary" }]} status={parsed.status} taxonomyVersion={parsed.taxonomyVersion} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
@@ -456,15 +515,15 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
-    { item: primary },
-    ...secondaries.map((item) => ({ item })),
+    { item: primary, mapping: "Primary" },
+    ...secondaries.map((item) => ({ item, mapping: "Secondary" as const })),
   ];
 
   return <div className="vigil-taxonomy-classification-view">
     {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={tableRows} status={parsed.status} taxonomyVersion={parsed.taxonomyVersion} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard
