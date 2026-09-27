@@ -1101,7 +1101,7 @@ test("Case File Incident stage renders optional source artefact images inside Wh
 });
 
 
-test("Case File stage navigation has one workbench owner and preserves mobile horizontal pills", async () => {
+test("Case File stage navigation has one workbench owner and preserves wrapped mobile tabs", async () => {
   const [instrument, dossier, evidence, mobile, polish, harm] = await Promise.all([
     read("src/vigil-observatory-instrument-experiment.css"),
     read("src/vigil-case-file-dossier.css"),
@@ -1112,8 +1112,10 @@ test("Case File stage navigation has one workbench owner and preserves mobile ho
   ]);
 
   assert.match(instrument, /\.vigil-case-file-page \.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: 1fr !important/);
-  assert.match(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*display: flex !important[\s\S]*overflow-x: auto !important/);
-  assert.match(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs button,[\s\S]*border-radius: 999px !important/);
+  assert.match(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*display: grid !important[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) !important[\s\S]*overflow: visible !important/);
+  assert.match(instrument, /@media \(max-width: 640px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\) !important/);
+  assert.match(instrument, /\.vigil-case-file-page \.vigil-case-report-tab \{[\s\S]*grid-column: 1 \/ -1;[\s\S]*border-radius: 0\.6rem !important/);
+  assert.doesNotMatch(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs \{[\s\S]*overflow-x: auto !important/);
   assert.doesNotMatch(dossier, /\.vigil-case-stage-tabs/);
   assert.doesNotMatch(dossier, /\.vigil-case-report-tab/);
   assert.doesNotMatch(dossier, /\.vigil-case-active-stage/);
