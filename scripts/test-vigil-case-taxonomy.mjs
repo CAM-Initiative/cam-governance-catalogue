@@ -182,7 +182,7 @@ assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
 assert.match(taxonomyAssessment, /relationship\.rationale \?\? taxonomyAssessmentSummary/);
 assert.match(taxonomyAssessment, /<RelationshipStack[\s\S]*relationships=\{clause\.relationships\}/);
 assert.match(taxonomyAssessment, /clauses\.map\(\(clause, index\)/);
-assert.match(taxonomyAssessment, /Clause-level breakdown of the incident into source wording, recovered governance principles, occurrence-specific incident analysis, and the taxonomy relationships considered or carried into formal alignment classification\./);
+assert.match(taxonomyAssessment, /Clause-level breakdown of the incident into source wording, occurrence-specific incident analysis, and the taxonomy relationships considered or carried into formal alignment classification\./);
 assert.doesNotMatch(taxonomyAssessment, /Canonical failure classes, alignment outcomes and classification basis are stated once in Section 03/);
 assert.match(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
 assert.match(taxonomyAssessment, /Canonical mapping/);
