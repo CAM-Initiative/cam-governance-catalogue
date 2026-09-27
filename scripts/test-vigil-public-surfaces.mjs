@@ -674,7 +674,7 @@ test("Stage 02 is presented publicly as Assessment", async () => {
   assert.match(printable, /number: "01", label: "Incident"/);
   assert.match(printable, /number: "02", label: "Assessment"/);
   assert.doesNotMatch(cases, /Observation, Assessment, Classification, Repair and References model/);
-  assert.match(hub, /Incident, Assessment, Classification, Repair, Conclusion and References/);
+  assert.match(hub, /const CASE_FILE_STAGES = \[[\s\S]*number: "01"[\s\S]*label: "Incident"[\s\S]*number: "02"[\s\S]*label: "Assessment"[\s\S]*number: "03"[\s\S]*label: "Classification"[\s\S]*number: "04"[\s\S]*label: "Repair"[\s\S]*number: "05"[\s\S]*label: "Conclusion"[\s\S]*number: "06"[\s\S]*label: "References"/);
   assert.match(pages, /evidence, assessment, alignment classification/);
   assert.match(readme, /\*\*Assessment:\*\*/);
   assert.match(contract, /severity as substantive assessment/);
@@ -1041,10 +1041,9 @@ test("About citation uses a single Suggested general citation heading", async ()
   assert.doesNotMatch(about, /Cite the work while preserving the relevant record or version/);
 });
 
-test("Publication copy names CAM Initiative without repeating the maintainer", async () => {
+test("About omits the retired Publication model mechanics", async () => {
   const about = await read("src/pages/about.tsx");
-  assert.match(about, /Published by <strong>CAM Initiative<\/strong>, a VIGIL Observatory Case File/);
-  assert.doesNotMatch(about, /published by <strong>CAM Initiative<\/strong> and maintained by/);
+  assert.doesNotMatch(about, /Publication model|Published by <strong>CAM Initiative<\/strong>, a VIGIL Observatory Case File|Traceable findings, visible judgment and clear boundaries/);
 });
 
 test("Case File Incident stage renders optional source artefact images inside What happened", async () => {
