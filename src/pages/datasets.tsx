@@ -3,6 +3,7 @@ import { Download } from "lucide-react";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import {
   downloadExternalGovernanceDataset,
   loadExternalRequirements,
@@ -178,7 +179,7 @@ export default function Datasets() {
         contextLabel="Collection context"
         mode="collection"
         visual="datasets"
-        artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-datasetsV2.png"
+        artworkSrc={VIGIL_MASTHEAD_ARTWORK.datasets}
         metadata={[
           { label: "Status", value: "Beta" },
           { label: "Public resources", value: "5" },
