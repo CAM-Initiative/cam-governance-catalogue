@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
@@ -206,7 +207,7 @@ export default function VigilCases() {
               kicker="VIGIL Observatory · Incident investigations"
               title="Case Files"
               description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and re-adjudication."
-              artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-case-files.png"
+              artworkSrc={VIGIL_MASTHEAD_ARTWORK.cases}
               contextLabel="Collection context"
               mode="collection"
               visual="cases"
