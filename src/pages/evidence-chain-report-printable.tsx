@@ -256,7 +256,7 @@ export default function EvidenceChainReportPrintable() {
           <strong>VIGIL Observatory Alignment Taxonomy</strong>
           <span className="report-reference-meta"> — {["CAM Initiative", "Public taxonomy reference", reportIncident?.taxonomyReferences[0]?.referenceVersion ? `Version ${reportIncident.taxonomyReferences[0].referenceVersion}` : reportIncident?.taxonomyReferences[0]?.taxonomyVersion ? `Version ${reportIncident.taxonomyReferences[0].taxonomyVersion}` : undefined, reportIncident?.taxonomyReferences[0]?.referencePublicationDate ? `Revised ${reportIncident.taxonomyReferences[0].referencePublicationDate}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
-          <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
+          <a href="https://www.cam-initiative.org/observatory/alignment-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/alignment-taxonomy</a>
         </span>
       </li>}
       {hasHarmMethodologyReference && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
@@ -265,7 +265,7 @@ export default function EvidenceChainReportPrintable() {
           <strong>VIGIL Harm Impact Methodology</strong>
           <span className="report-reference-meta"> — {["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : reportIncident && isObject(reportIncident.raw.harm_impact_assessment) && text(reportIncident.raw.harm_impact_assessment.methodology_version) ? `Version ${text(reportIncident.raw.harm_impact_assessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
-          <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/severity-methodology</a>
+          <a href="https://www.cam-initiative.org/observatory/harm-impact-assessment" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/harm-impact-assessment</a>
         </span>
       </li>}
       {taxonomyEvidenceReferences.map((reference) => {
