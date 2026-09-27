@@ -337,16 +337,16 @@ def validate_published_vigil_ui_contract() -> list[str]:
     required_strings = (
         "Incident breakdown",
         "Harm Impact Assessment",
+        "Incident observation",
         "Incident analysis",
-        "Source clause(s)",
-        "Recovered governance principle(s)",
-        "Plain-English explanation",
+        "Fidelity class",
         "Technical definition",
         "Recognition criteria",
-        "Mapped external requirements",
-        "Canonical mapping",
-        "Source clauses and Incident analysis are repeated here from the Section 02 Incident breakdown; recovered governance principles are surfaced here as part of the evidence-to-classification bridge.",
-        "These external requirement mappings are maintained with the relevant Fidelity Classes in the",
+        "Classification basis",
+        "External requirement",
+        "Requirement explanation",
+        "Incident observations and Incident analysis carry the occurrence-specific evidence from Section 02 into the classification decision.",
+        "Section 04 repeats the Incident observation and classification basis so the path from occurrence to VIGIL classification to external requirement remains visible.",
     )
     for required in required_strings:
         if required not in bundle:
