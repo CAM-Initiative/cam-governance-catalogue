@@ -1,23 +1,21 @@
-/* Interactive Case File repair presentation.
-   Repair now uses the same table grammar as Classification. */
+/* Interactive Case File compliance presentation.
+   Compliance is a deterministic class-to-external-requirement crosswalk. */
 
-.vigil-case-file-page .vigil-taxonomy-repair-view {
+.vigil-case-file-page .vigil-taxonomy-compliance-view {
   display: grid;
   gap: 0.9rem;
 }
 
-.vigil-case-file-page .vigil-repair-boundary {
-  margin: 0.05rem 0 0;
-  padding: 0.75rem 0.9rem;
-  border-left: 3px solid hsl(var(--border));
-  background: hsl(var(--card) / 0.24);
-  font-size: 0.82rem;
-  line-height: 1.55;
-  color: hsl(var(--muted-foreground) / 0.92);
+.vigil-case-file-page .vigil-compliance-intro {
+  max-width: 74rem;
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.94rem;
+  line-height: 1.58;
 }
 
 @media (max-width: 760px) {
-  .vigil-case-file-page .vigil-repair-boundary {
-    font-size: 0.8rem;
+  .vigil-case-file-page .vigil-compliance-intro {
+    font-size: 0.9rem;
   }
 }
