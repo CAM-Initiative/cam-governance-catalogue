@@ -168,7 +168,7 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-references-heading">Methodology source trail</h2>
             </div>
             <div className="document-reading">
-              <p>The references below are the external sources registered against VIGIL-HIM 1.0.0. The alignment note above explains how those sources inform the methodology; this list preserves the source trail without repeating that discussion.</p>
+              <p>The references below are the external sources registered against VIGIL-HIM 1.0.0.</p>
             </div>
             <ol className="vigil-methodology-reference-list">
               {methodologyReferences.map((reference, index) => <li key={reference.id} className="vigil-methodology-reference-item">
