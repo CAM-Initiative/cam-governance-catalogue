@@ -582,24 +582,24 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
 }
 
 
-/* Light appearance lets the purpose-built archival artwork retain its own
-   contrast and material detail. The warm masthead surface sits underneath as
-   a fallback/edge-integrating layer; typography remains a transparent layer
-   above the artwork rather than relying on a full-fascia wash. */
+/* Light appearance uses the same compositing model as dark mode:
+   a tonal surface sits beneath a partially transparent, high-contrast artwork
+   layer, with typography remaining transparent above it. Here the tonal base
+   is a soft warm grey rather than dark charcoal. */
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
   --masthead-accent: 38 78% 38%;
-  --masthead-artwork-opacity: 0.94;
-  border-color: hsl(34 28% 68% / 0.72);
+  --masthead-artwork-opacity: 0.78;
+  border-color: hsl(34 16% 67% / 0.74);
   background:
-    linear-gradient(90deg, hsl(36 42% 92%), hsl(33 34% 88% / 0.99) 72%, hsl(30 27% 84%)),
-    hsl(34 35% 89%);
+    linear-gradient(90deg, hsl(34 10% 89%), hsl(32 9% 85% / 0.99) 72%, hsl(30 8% 82%)),
+    hsl(32 9% 86%);
   box-shadow:
-    0 0.26rem 0.72rem hsl(28 22% 18% / 0.07),
-    inset 0 1px 0 hsl(0 0% 100% / 0.48);
+    0 0.26rem 0.72rem hsl(28 16% 18% / 0.07),
+    inset 0 1px 0 hsl(0 0% 100% / 0.42);
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
-  filter: sepia(0.05) saturate(0.92) brightness(1) contrast(1.04);
+  filter: sepia(0.05) saturate(0.9) brightness(0.98) contrast(1.08);
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork h1 {
@@ -623,11 +623,11 @@ html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-obs
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] {
-  --masthead-artwork-opacity: 0.92;
+  --masthead-artwork-opacity: 0.74;
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
-  filter: sepia(0.05) saturate(0.9) brightness(1) contrast(1.04);
+  filter: sepia(0.05) saturate(0.88) brightness(0.98) contrast(1.08);
 }
 
 html[data-theme="dark"] .vigil-observatory-masthead.has-artwork {
