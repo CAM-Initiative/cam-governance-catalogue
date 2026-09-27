@@ -320,63 +320,53 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
-test("Classification traces Incident observations into Fidelity Classes and Compliance traces them into external requirements", async () => {
+test("Classification presents Fidelity Classes and Compliance rolls exact requirements conservatively", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/vigil-classification-table.css"),
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>/);
-  assert.match(classification, /<th scope="col">Incident observation<\/th>/);
-  assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
-  assert.match(classification, /<th scope="col">Technical definition<\/th>/);
-  assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
-  assert.match(classification, /<th scope="col">Incident analysis<\/th>/);
-  assert.match(classification, /<th scope="col">Classification basis<\/th>/);
-  assert.match(classification, /<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Incident observation<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Technical definition<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Fidelity family<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Plain-English explanation<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Exclusions<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Source clause\(s\)<\/th>/);
   assert.match(classification, /vigil-classification-class-chip/);
   assert.match(classification, /vigil-classification-class-title/);
   assert.match(classification, /vigil-classification-class-explanation/);
   assert.match(classification, /classificationClass\?\.plain_english \?\? family\?\.plain_english/);
-  assert.match(classification, /classificationClass\?\.definition \?\? family\?\.definition/);
   assert.match(classification, /classificationClass\?\.recognition\?\.required_conditions/);
-  assert.match(classification, /classificationEvidenceByClass/);
-  assert.match(classification, /const incidentObservations = evidence\.map\(classificationEvidenceSource\)/);
   assert.match(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
-  assert.match(classification, /evidenceByClass\.get\(primary\.classId\)/);
-  assert.match(classification, /evidenceByClass\.get\(item\.classId\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
-  assert.match(classification, /vigil-classification-web-table vigil-compliance-web-table/);
-  assert.match(classification, /vigil-classification-table vigil-compliance-table/);
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Classification basis<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Mapped external requirements<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>[\s\S]*vigil-compliance/);
-  assert.match(classification, /mappings\.flatMap/);
-  assert.match(classification, /evidenceByClass\.get\(classificationClass\.class_id\)/);
-  assert.match(classification, /reference\?\.evidence_note/);
-  assert.match(classification, /classificationBasis \?\?/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Classification basis<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Incident observation<\/th>[\s\S]*vigil-compliance-table/);
+  assert.match(classification, /function complianceReferenceKey/);
+  assert.match(classification, /reference\.clause_or_control/);
+  assert.match(classification, /function complianceRolePriority/);
+  assert.match(classification, /role === "failure-occurrence"\) return 3/);
+  assert.match(classification, /role === "ambiguous-boundary"\) return 2/);
+  assert.match(classification, /return 1/);
+  assert.match(classification, /function rollupComplianceRequirements/);
+  assert.match(classification, /const highestPriority = Math\.max/);
+  assert.match(classification, /const controlling = group\.filter/);
+  assert.match(classification, /classificationBases: \[\.\.\.new Set/);
+  assert.match(classification, /explanations: \[\.\.\.new Set/);
   assert.doesNotMatch(classification, /reference\.publisher/);
   assert.doesNotMatch(classification, /reference\.date/);
-  assert.doesNotMatch(classification, /referenceRoleLabel/);
   assert.match(classification, /role === "regulatory-evidence"/);
   assert.match(classification, /role === "standards-evidence"/);
   assert.match(classification, /role === "authoritative-guidance"/);
-  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
 
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 8%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 32%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(5\) \{ width: 22%; \}/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 198rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 42%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 26%; \}/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 128rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-class-chip/);
@@ -429,11 +419,11 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(taxonomy, /"ambiguous-boundary"/);
   assert.match(taxonomy, /hasAmbiguousBoundary/);
   assert.match(classification, /Secondary unresolved boundary/);
-  assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
+  assert.match(classification, /complianceRolePriority/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
-  assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved can be projected through the maintained taxonomy crosswalk in Compliance/);
+  assert.match(caseFile, /When multiple classifications reach the same exact external requirement, Compliance reports the most conservative supported alignment state/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /Material facts remain contested\./);
   assert.match(caseFile, /does not mean that litigation or a formal legal dispute exists/);
@@ -470,8 +460,8 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /Primary alignment exemplar · invariant held/);
   assert.match(classification, /Secondary alignment exemplar · invariant held/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
-  assert.match(classification, /No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File\./);
-  assert.doesNotMatch(classification, /Successful-invariant exemplar mappings remain in Classification/);
+  assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
+  assert.match(classification, /failure, then unresolved boundary, then invariant held/);
   assert.match(report, /Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence/i);
   assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
   assert.match(sync, /classification_role: record\.classification_role/);
