@@ -315,7 +315,6 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
               const classificationClass = item.class;
               const classId = classificationClass?.class_id ?? item.classId;
               const classMeaning = classificationClass?.plain_english ?? item.family?.family.plain_english;
-              const invariant = classificationClass?.invariant;
               return <tr key={`${groupKey}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
                 <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
                 <td data-label="Fidelity class">
@@ -324,7 +323,6 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
                 </td>
                 <td data-label="What this class means" className="vigil-classification-meaning">
                   {classMeaning ?? "No plain-English class explanation is currently published."}
-                  {invariant && <span className="vigil-classification-invariant"><strong>Governing invariant.</strong> {invariant}</span>}
                 </td>
                 <td data-label="Classification basis" className="vigil-classification-basis">
                   {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
@@ -337,7 +335,7 @@ function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceH
     </div>
     <VigilAlignmentLegend />
     {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity classes, their plain-English explanations and governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity classes and their plain-English explanations are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
 }
