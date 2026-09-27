@@ -1,0 +1,282 @@
+/* Mobile responsive repair layer.
+ * Loaded after the public surface/page styles so narrow viewport corrections
+ * reset older desktop-era positioning instead of competing with it.
+ */
+
+/* Mobile primary navigation: restore the horizontal tab grammar rather than
+ * hiding the site's destinations behind a dropdown panel. */
+@media (max-width: 767px) {
+  .site-header-inner {
+    min-height: 3.35rem;
+    padding-inline: 1rem;
+    gap: 0.8rem;
+  }
+
+  .site-mobile-controls {
+    flex: 0 0 auto;
+  }
+
+  .site-menu-button {
+    display: none;
+  }
+
+  .site-mobile-nav {
+    display: block;
+    border-top: 1px solid hsl(var(--border) / 0.72);
+    background: hsl(var(--background));
+    box-shadow: none;
+  }
+
+  .site-mobile-nav-inner {
+    display: flex;
+    width: 100%;
+    gap: 0.35rem;
+    overflow-x: auto;
+    padding: 0.42rem 1rem 0.55rem;
+    scroll-padding-inline: 1rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+
+  .site-mobile-nav-link {
+    flex: 0 0 auto;
+    min-height: 2.3rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.55rem 0.72rem;
+    border: 1px solid hsl(var(--border) / 0.72);
+    border-radius: 999px;
+    background: hsl(var(--background));
+    font-size: 0.68rem;
+    line-height: 1;
+    scroll-snap-align: start;
+    white-space: nowrap;
+  }
+
+  .site-mobile-nav-link:hover,
+  .site-mobile-nav-link:focus-visible,
+  .site-mobile-nav-link.is-active {
+    border-color: hsl(var(--primary) / 0.55);
+    background: hsl(var(--primary) / 0.08);
+    color: hsl(var(--primary));
+  }
+}
+
+/* The photographic masthead treatment reads well at desktop scale but becomes
+ * an illegible backing layer on phones. Mobile gets the instrument fascia
+ * without the image, with the information hierarchy doing the work. */
+@media (max-width: 820px) {
+  .vigil-observatory-masthead.has-artwork,
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] {
+    --masthead-artwork-opacity: 0;
+    grid-template-columns: 1fr;
+    min-height: 0;
+    background:
+      linear-gradient(135deg, hsl(38 48% 97%), hsl(36 34% 94%)),
+      hsl(38 40% 96%);
+  }
+
+  html[data-theme="dark"] .vigil-observatory-masthead.has-artwork,
+  html[data-theme="dark"] .vigil-observatory-masthead.has-artwork[data-mode="record"] {
+    background:
+      linear-gradient(135deg, hsl(29 17% 15%), hsl(27 15% 10%)),
+      hsl(28 16% 11%);
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
+    display: none !important;
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title,
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-title {
+    max-width: none;
+    padding: 1.35rem 1.15rem 1.5rem;
+  }
+
+  .vigil-observatory-masthead.has-artwork h1,
+  .vigil-observatory-masthead.has-artwork[data-mode="record"] h1 {
+    max-width: 100%;
+    font-size: clamp(2.35rem, 10.5vw, 3.1rem);
+    line-height: 0.98;
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-description {
+    max-width: 100%;
+    font-size: 0.96rem !important;
+    line-height: 1.52 !important;
+  }
+
+  .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
+    margin-left: 0;
+    padding: 1rem 1.15rem 1.3rem;
+    border-top: 1px solid hsl(var(--border) / 0.72);
+    border-left: 0;
+    background: transparent !important;
+  }
+
+  /* Reset a legacy rule that assigns every filter select to grid row 2.
+   * Without this reset Classification and Severity occupy the same coordinates. */
+  .vigil-case-table-search {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.72rem;
+  }
+
+  .vigil-case-table-search .vigil-search-control,
+  .vigil-case-table-search .vigil-family-select {
+    width: 100%;
+    max-width: none;
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  .vigil-case-table-search .vigil-family-select {
+    min-height: 3.2rem;
+    padding: 0.38rem 0.72rem;
+  }
+
+  .vigil-case-table-search .vigil-family-select > span {
+    font-size: 0.58rem;
+  }
+
+  .vigil-case-table-search .vigil-family-select select {
+    min-height: 1.75rem;
+    font-size: 0.84rem;
+  }
+}
+
+/* About / Connect descriptions need to remain secondary, not microscopic. */
+@media (max-width: 680px) {
+  .about-link-list > a {
+    grid-template-columns: 1.7rem minmax(0, 1fr) auto;
+    gap: 0.78rem;
+    padding: 0.98rem 0;
+  }
+
+  .about-link-list strong {
+    font-size: 0.98rem;
+  }
+
+  .about-link-list small {
+    margin-top: 0.2rem;
+    font-size: 0.91rem;
+    line-height: 1.5;
+  }
+
+  .about-link-icon {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  .about-link-list > a > svg,
+  .about-link-icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+}
+
+/* Homepage taxonomy labels: preserve the loose physical pile, but clamp every
+ * label into a safe mobile rectangle so generated positions cannot leave the viewport. */
+@media (max-width: 720px) {
+  .taxonomy-sticker-board {
+    min-height: 30rem;
+    overflow: hidden;
+  }
+
+  .taxonomy-sticker {
+    left: clamp(0.4rem, var(--sticker-left), calc(100% - 9.8rem));
+    top: clamp(0.35rem, var(--sticker-top), calc(100% - 3.7rem));
+    max-width: min(9.35rem, calc(100% - 0.8rem));
+    padding: 0.38rem 0.48rem 0.42rem;
+  }
+
+  .taxonomy-sticker-code {
+    font-size: 0.59rem;
+  }
+
+  .taxonomy-sticker strong {
+    font-size: 0.69rem;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+
+  /* Automatic dwell remains a compact ring cue. An explicit tap gets the
+   * readable centred detail card rather than expanding toward a screen edge. */
+  .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) {
+    width: auto !important;
+    max-width: 7.8rem !important;
+    min-height: 2.15rem !important;
+    padding: 0.48rem 0.58rem !important;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) .diagnostic-node-detail {
+    display: none;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) .diagnostic-node-copy strong {
+    margin-top: 0.2rem;
+    font-size: 0.79rem;
+    line-height: 1.08;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded {
+    top: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 50% !important;
+    width: min(78vw, 18rem) !important;
+    max-width: min(78vw, 18rem) !important;
+    min-height: 7.6rem !important;
+    padding: 0.9rem 1rem 0.95rem 1.08rem !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 40;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-label {
+    font-size: 0.7rem;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-copy strong {
+    margin-top: 0.34rem;
+    font-size: 1.14rem;
+    line-height: 1.12;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node.is-expanded .diagnostic-node-detail {
+    max-height: 7rem;
+    margin-top: 0.5rem;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    opacity: 0.88;
+  }
+
+  .adjudication-doom-stamp {
+    margin-top: 1rem;
+    padding: 0.44rem 0.68rem 0.4rem;
+    font-size: 0.72rem;
+    line-height: 1.15;
+    letter-spacing: 0.1em;
+    opacity: 1 !important;
+  }
+}
+
+/* The stamp is deliberately tactile, but in dark mode it must still read as a
+ * statement rather than disappearing into the card stack. */
+html[data-theme="dark"] .adjudication-doom-stamp {
+  border-color: hsl(4 72% 70% / 0.72) !important;
+  background: hsl(28 16% 9% / 0.96) !important;
+  color: hsl(6 82% 79%) !important;
+  box-shadow:
+    inset 0 0 0 2px hsl(4 72% 62% / 0.18),
+    0 0.12rem 0.22rem hsl(0 0% 0% / 0.34) !important;
+  filter: none !important;
+}
+
+html[data-theme="dark"] .adjudication-doom-stamp::before {
+  border-color: hsl(4 72% 72% / 0.55) !important;
+}
+
+html[data-theme="dark"] .adjudication-doom-stamp::after {
+  opacity: 0.12 !important;
+  mix-blend-mode: normal !important;
+}
