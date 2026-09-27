@@ -268,6 +268,39 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
 }
 
 @media (max-width: 900px) {
+  /* Datasets is a document index, not a swipe carousel. Keep its rail in
+     ordinary mobile document flow without changing other DocumentRail users. */
+  .vigil-datasets-page .document-rail {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .vigil-datasets-page .document-rail-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    overflow: visible;
+    border-top: 1px solid hsl(var(--border) / 0.82);
+    border-bottom: 0;
+    scrollbar-width: auto;
+  }
+
+  .vigil-datasets-page .document-rail-link {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
+    padding: 0.72rem 0;
+    border-bottom: 1px solid hsl(var(--border) / 0.72);
+    white-space: normal;
+  }
+
+  .vigil-datasets-page .document-rail-link:hover,
+  .vigil-datasets-page .document-rail-link:focus-visible {
+    padding-left: 0.32rem;
+  }
+
   .home-menu-page .home-menu-hero--founder {
     grid-template-columns: minmax(0, 1fr) minmax(190px, 238px);
     gap: 2rem;
