@@ -1,6 +1,7 @@
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { motion } from "framer-motion";
 import { Download, ExternalLink } from "lucide-react";
 
@@ -29,7 +30,7 @@ export default function Policy() {
           kicker="CAM Initiative · Public policy"
           title="Policy Papers & Submissions"
           description="Public policy proposals and consultation submissions translating CAM governance architecture into institutional, legal and administrative design."
-          artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-policy.png"
+          artworkSrc={VIGIL_MASTHEAD_ARTWORK.policy}
           contextLabel="Library context"
           mode="collection"
           visual="policy"
