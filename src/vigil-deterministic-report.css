@@ -2370,11 +2370,46 @@
   color: hsl(var(--report-muted)) !important;
 }
 
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(1) { width: 20%; }
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(2) { width: 40%; }
-.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(3) { width: 40%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(1) { width: 17%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(2) { width: 23%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(3) { width: 12%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(4) { width: 12%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(5) { width: 12%; }
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-table th:nth-child(6) { width: 24%; }
 
 .vigil-deterministic-report-host .vigil-taxonomy-assessment-table q {
+  font-weight: 650;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-source-wording {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-source-wording p {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-source-wording p > span,
+.vigil-deterministic-report-host .vigil-taxonomy-relationship-code {
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  color: hsl(var(--report-muted));
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-assessment-class-link {
+  color: hsl(var(--report-gold));
+  text-decoration: none;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-relationship-code {
+  display: block;
+  margin-top: 0.18rem;
+}
+
+.vigil-deterministic-report-host .vigil-taxonomy-mapping-state {
   font-weight: 650;
 }
 
@@ -2455,18 +2490,18 @@
 @media print {
   .vigil-deterministic-report-host .vigil-taxonomy-assessment-table,
   .vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
-    font-size: 11.5pt !important;
-    line-height: 1.5 !important;
+    font-size: 8.4pt !important;
+    line-height: 1.42 !important;
   }
 
   .vigil-deterministic-report-host .vigil-taxonomy-assessment-table th,
   .vigil-deterministic-report-host .vigil-taxonomy-assessment-table td {
-    padding: 2.6mm 2.8mm !important;
+    padding: 1.8mm 1.9mm !important;
   }
 
   .vigil-deterministic-report-host .vigil-taxonomy-assessment-table thead th {
-    font-size: 10pt !important;
-    line-height: 1.35 !important;
+    font-size: 7.4pt !important;
+    line-height: 1.28 !important;
   }
 }
 
