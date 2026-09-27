@@ -82,10 +82,12 @@ test("homepage exposes the current evidence and Alignment Taxonomy surfaces with
   assert.doesNotMatch(home, /VIGIL AI Governance Failure Taxonomy/);
 });
 
-test("homepage refinement preserves the six-stage instrument and live Observatory feed", async () => {
-  const [home, styles] = await Promise.all([
+test("homepage refinement preserves the six-stage instrument, readable gear labels and live Observatory feed", async () => {
+  const [home, styles, gearStyles, mobileStyles] = await Promise.all([
     read("src/pages/home.tsx"),
     read("src/home-premium-v2.css"),
+    read("src/home-premium-v11-tactile.css"),
+    read("src/mobile-responsive-polish.css"),
   ]);
   const evidence = home.indexOf('{ label: "Evidence"');
   const environment = home.indexOf('{ label: "Environment"');
@@ -102,6 +104,11 @@ test("homepage refinement preserves the six-stage instrument and live Observator
   assert.match(styles, /diagnostic-counter-rotation/);
   assert.match(styles, /incident-ticker-travel 112s linear infinite/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.incident-ticker-track \{ animation: none; \}/);
+  assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node-label \{[\s\S]*font-size: 0\.78rem/);
+  assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-active \.diagnostic-node-copy strong,[\s\S]*max-height: 5\.5rem[\s\S]*font-size: 1\.16rem/);
+  assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-expanded \{[\s\S]*width: min\(17rem, 44vw\)[\s\S]*min-height: 7\.2rem/);
+  assert.match(mobileStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-active:not\(\.is-expanded\) \{[\s\S]*width: min\(46vw, 10\.8rem\) !important[\s\S]*min-height: 3\.1rem !important/);
+  assert.match(mobileStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-expanded \.diagnostic-node-detail \{[\s\S]*max-height: 9rem[\s\S]*font-size: 0\.9rem/);
 });
 
 test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async () => {
@@ -186,11 +193,15 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork h1[\s\S]*color: hsl\(27 19% 13%\)/);
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-description[\s\S]*color: hsl\(28 12% 27%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead-artwork\.is-loaded[\s\S]*opacity: var\(--masthead-artwork-opacity\)/);
-  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-mode="record"\][\s\S]*--masthead-artwork-opacity: 0\.62[\s\S]*min-height: clamp\(12\.75rem, 15vw, 14\.5rem\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-mode="record"\][\s\S]*--masthead-artwork-opacity: 0\.62[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(19\.5rem, 30%\)[\s\S]*min-height: clamp\(15rem, 17\.5vw, 17rem\)/);
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork\[data-mode="record"\][\s\S]*--masthead-artwork-opacity: 0\.78/);
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-artwork[\s\S]*saturate\(0\.8\)[\s\S]*brightness\(0\.99\)[\s\S]*contrast\(1\.08\)/);
   assert.match(mastheadCss, /has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-artwork[\s\S]*saturate\(0\.68\)[\s\S]*blur\(0\.45px\)/);
-  assert.match(mastheadCss, /has-artwork\[data-mode="record"\] h1[\s\S]*font-size: clamp\(2\.35rem, 3\.15vw, 3\.2rem\)[\s\S]*line-height: 0\.98/);
+  assert.match(mastheadCss, /has-artwork\[data-mode="record"\] h1[\s\S]*font-size: clamp\(2\.7rem, 3\.55vw, 3\.65rem\)[\s\S]*line-height: 0\.99/);
+  assert.match(mastheadCss, /has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-context-label[\s\S]*font-size: 0\.72rem/);
+  assert.match(mastheadCss, /has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-context dt[\s\S]*font-size: 0\.66rem/);
+  assert.match(mastheadCss, /has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-context dd \{[\s\S]*font-size: clamp\(0\.98rem, 1\.05vw, 1\.08rem\)/);
+  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-context \{[\s\S]*border-left: 1px solid[\s\S]*hsl\(35 24% 92% \/ 0\.76\)/);
   assert.match(indexHtml, /rel="preconnect" href="https:\/\/raw\.githubusercontent\.com" crossorigin/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork h1[\s\S]*color: hsl\(38 35% 95%\)/);
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context \{[\s\S]*background: transparent/);
