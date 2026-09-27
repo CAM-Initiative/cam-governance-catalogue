@@ -337,8 +337,10 @@ def validate_published_vigil_ui_contract() -> list[str]:
     required_strings = (
         "Incident breakdown",
         "Harm Impact Assessment",
-        "Fidelity classes and their governing invariants are defined in the",
-        "The governing invariants shown here are defined in the",
+        "What this class means",
+        "Mapped external requirements",
+        "Fidelity classes, their plain-English explanations and governing invariants are defined in the",
+        "These external requirement mappings are maintained with the relevant Fidelity Classes in the",
     )
     for required in required_strings:
         if required not in bundle:
