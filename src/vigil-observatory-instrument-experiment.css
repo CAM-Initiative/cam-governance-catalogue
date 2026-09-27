@@ -732,15 +732,29 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
 }
 
 @media (max-width: 900px) {
+  .vigil-case-file-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .vigil-case-file-page > .container {
+    width: 100%;
+    max-width: 100% !important;
+    min-width: 0;
+    padding-inline: 1rem !important;
+  }
+
   .vigil-case-file-page .vigil-case-manual-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    display: block !important;
+    width: 100%;
+    min-width: 0;
+    margin-top: 1rem;
   }
 
   .policy-page .document-rail,
   .vigil-severity-methodology-page .document-rail,
-  .vigil-standard-manual-page .vigil-standard-manual-contents,
-  .vigil-case-file-page .vigil-case-stage-nav {
+  .vigil-standard-manual-page .vigil-standard-manual-contents {
     position: static;
     max-height: none;
     padding-right: 0;
@@ -748,27 +762,101 @@ html[data-theme="dark"] .vigil-case-file-page .vigil-case-file-hero-v4 {
     border-bottom: 1px solid var(--vigil-workbench-rule);
   }
 
+  .vigil-case-file-page .vigil-case-stage-nav {
+    position: static !important;
+    top: auto !important;
+    width: 100%;
+    min-width: 0;
+    max-height: none !important;
+    margin: 0 0 0.9rem !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid hsl(var(--border) / 0.72) !important;
+    background: transparent !important;
+  }
+
+  .vigil-case-file-page .vigil-case-section-rail-title {
+    display: none !important;
+  }
+
   .vigil-case-file-page .vigil-case-stage-tabs {
     display: flex !important;
+    grid-template-columns: none !important;
+    gap: 0.35rem !important;
+    width: 100%;
+    min-width: 0;
+    margin: 0 !important;
+    padding: 0 0 0.55rem !important;
     overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border: 0 !important;
+    scroll-padding-inline: 0.15rem;
     scrollbar-width: thin;
   }
 
   .vigil-case-file-page .vigil-case-stage-tabs button,
   .vigil-case-file-page .vigil-case-report-tab {
-    flex: 0 0 auto;
-    width: auto;
-    min-width: max-content;
-    padding: 0.66rem 0.9rem 0.66rem 0 !important;
-    margin-right: 0.9rem;
-    border-bottom: 0 !important;
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: max-content !important;
+    min-height: 2.75rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.38rem !important;
+    padding: 0.62rem 0.78rem !important;
+    margin-right: 0 !important;
+    border: 1px solid hsl(var(--border) / 0.78) !important;
+    border-radius: 999px !important;
+    background: hsl(var(--background)) !important;
     box-shadow: none !important;
+    font-size: 0.78rem !important;
+    line-height: 1 !important;
     white-space: nowrap !important;
   }
 
+  .vigil-case-file-page .vigil-case-stage-tabs button:hover,
+  .vigil-case-file-page .vigil-case-stage-tabs button:focus-visible,
   .vigil-case-file-page .vigil-case-stage-tabs button.is-active {
-    padding-left: 0 !important;
-    border-bottom: 2px solid hsl(var(--primary)) !important;
+    padding-left: 0.78rem !important;
+    border-color: hsl(var(--primary) / 0.58) !important;
+    background: hsl(var(--primary) / 0.08) !important;
+    color: hsl(var(--foreground)) !important;
+    box-shadow: none !important;
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs button.is-active {
+    color: hsl(var(--primary)) !important;
+  }
+
+  .vigil-case-file-page .vigil-case-stage-tabs button span {
+    margin: 0 !important;
+    font-size: 0.67rem !important;
+  }
+
+  .vigil-case-file-page .vigil-case-manual-document,
+  .vigil-case-file-page .vigil-case-active-stage,
+  .vigil-case-file-page .vigil-case-active-stage .vigil-case-section,
+  .vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .vigil-case-file-page .vigil-case-active-stage {
+    margin-top: 0 !important;
+  }
+
+  .vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
+    padding-inline: 0 !important;
+  }
+
+  .vigil-case-file-page .vigil-case-file-masthead,
+  .vigil-case-file-page .vigil-case-file-masthead .vigil-observatory-masthead-title,
+  .vigil-case-file-page .vigil-case-file-masthead .vigil-observatory-masthead-context {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 }
 
