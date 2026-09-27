@@ -582,12 +582,13 @@ html[data-theme="dark"] .vigil-observatory-masthead-context dd {
 }
 
 
-/* Light appearance is a true inverse of the dark Observatory fascia:
-   one warm archival wash across the full artwork with dark typography.
-   Dark mode retains the bronze/charcoal instrument treatment below. */
+/* Light appearance lets the purpose-built archival artwork retain its own
+   contrast and material detail. The warm masthead surface sits underneath as
+   a fallback/edge-integrating layer; typography remains a transparent layer
+   above the artwork rather than relying on a full-fascia wash. */
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
   --masthead-accent: 38 78% 38%;
-  --masthead-artwork-opacity: 0.5;
+  --masthead-artwork-opacity: 0.94;
   border-color: hsl(34 28% 68% / 0.72);
   background:
     linear-gradient(90deg, hsl(36 42% 92%), hsl(33 34% 88% / 0.99) 72%, hsl(30 27% 84%)),
@@ -598,7 +599,7 @@ html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
-  filter: sepia(0.18) saturate(0.62) brightness(1.02) contrast(0.86);
+  filter: sepia(0.05) saturate(0.92) brightness(1) contrast(1.04);
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork h1 {
@@ -622,11 +623,11 @@ html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-obs
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] {
-  --masthead-artwork-opacity: 0.44;
+  --masthead-artwork-opacity: 0.92;
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
-  filter: sepia(0.2) saturate(0.58) brightness(0.98) contrast(0.84) blur(0.45px);
+  filter: sepia(0.05) saturate(0.9) brightness(1) contrast(1.04);
 }
 
 html[data-theme="dark"] .vigil-observatory-masthead.has-artwork {
@@ -687,14 +688,6 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
     --masthead-artwork-opacity: 0.52;
   }
 
-  html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
-    --masthead-artwork-opacity: 0.46;
-  }
-
-  html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] {
-    --masthead-artwork-opacity: 0.4;
-  }
-
   .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-artwork {
     position: absolute;
     inset: 0;
@@ -728,10 +721,6 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
 @media (max-width: 560px) {
   .vigil-observatory-masthead.has-artwork {
     --masthead-artwork-opacity: 0.54;
-  }
-
-  html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork {
-    --masthead-artwork-opacity: 0.42;
   }
 
   .vigil-observatory-masthead.has-artwork h1 {
