@@ -600,28 +600,6 @@ html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-obs
   filter: sepia(0.12) saturate(0.72) brightness(0.7) contrast(1.02);
 }
 
-html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
-  background:
-    linear-gradient(
-      90deg,
-      hsl(28 18% 17% / 0) 0%,
-      hsl(28 18% 17% / 0) 30%,
-      hsl(28 18% 17% / 0.14) 43%,
-      hsl(28 18% 16% / 0.25) 70%,
-      hsl(28 18% 15% / 0.36) 100%
-    );
-}
-
-html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork h1 {
-  color: hsl(38 42% 98%);
-  text-shadow: 0 1px 1px hsl(28 24% 10% / 0.22);
-}
-
-html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-description {
-  color: hsl(36 22% 89%);
-  text-shadow: 0 1px 1px hsl(28 24% 10% / 0.2);
-}
-
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context {
   background:
     linear-gradient(
@@ -632,15 +610,6 @@ html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-obs
       hsl(27 14% 20% / 0.6) 68%,
       hsl(27 14% 19% / 0.86) 100%
     );
-}
-
-html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context dt {
-  color: hsl(36 12% 74%);
-}
-
-html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-context dd {
-  color: hsl(38 32% 96%);
-  text-shadow: 0 1px 1px hsl(28 24% 10% / 0.18);
 }
 
 html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork[data-mode="record"] .vigil-observatory-masthead-artwork {
@@ -694,15 +663,6 @@ html[data-theme="dark"] .vigil-observatory-masthead.has-artwork .vigil-observato
 }
 
 @media (max-width: 820px) {
-  html:not([data-theme="dark"]) .vigil-observatory-masthead.has-artwork .vigil-observatory-masthead-title {
-    background:
-      linear-gradient(
-        180deg,
-        hsl(28 18% 16% / 0.12) 0%,
-        hsl(28 18% 15% / 0.3) 100%
-      );
-  }
-
   .vigil-observatory-masthead.has-artwork,
   .vigil-observatory-masthead.has-artwork[data-mode="record"] {
     --masthead-artwork-opacity: 0.62;

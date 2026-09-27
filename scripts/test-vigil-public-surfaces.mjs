@@ -173,9 +173,6 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork[\s\S]*hsl\(31 21% 32%\)[\s\S]*hsl\(27 17% 23%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*opacity: 0;[\s\S]*transition: opacity 120ms/);
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-artwork[\s\S]*brightness\(0\.7\)/);
-  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-title[\s\S]*hsl\(28 18% 17% \/ 0\.14\)[\s\S]*hsl\(28 18% 15% \/ 0\.36\)/);
-  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork h1[\s\S]*hsl\(38 42% 98%\)[\s\S]*text-shadow/);
-  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-description[\s\S]*hsl\(36 22% 89%\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead-artwork\.is-loaded[\s\S]*opacity: var\(--masthead-artwork-opacity\)/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork\[data-mode="record"\][\s\S]*--masthead-artwork-opacity: 0\.62[\s\S]*min-height: clamp\(12\.75rem, 15vw, 14\.5rem\)/);
   assert.match(mastheadCss, /has-artwork\[data-mode="record"\] \.vigil-observatory-masthead-artwork[\s\S]*saturate\(0\.68\)[\s\S]*blur\(0\.45px\)/);
@@ -183,8 +180,6 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(indexHtml, /rel="preconnect" href="https:\/\/raw\.githubusercontent\.com" crossorigin/);
   assert.match(mastheadCss, /vigil-observatory-masthead\.has-artwork h1[\s\S]*color: hsl\(38 35% 95%\)/);
   assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context[\s\S]*hsl\(28 14% 23% \/ 0\)[\s\S]*hsl\(27 14% 19% \/ 0\.86\)/);
-  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context dt[\s\S]*hsl\(36 12% 74%\)/);
-  assert.match(mastheadCss, /html:not\(\[data-theme="dark"\]\) \.vigil-observatory-masthead\.has-artwork \.vigil-observatory-masthead-context dd[\s\S]*hsl\(38 32% 96%\)/);
   assert.doesNotMatch(mastheadCss, /mask-image: linear-gradient\(90deg, #000 0 79%/);
   assert.doesNotMatch(mastheadCss, /grid-template-areas: "art title context"/);
   assert.doesNotMatch(mastheadCss, /border-right: 1px solid hsl\(34 28% 73%/);
