@@ -160,7 +160,7 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(masthead, /vigil-observatory-masthead-artwork/);
   assert.match(masthead, /loading="eager"[\s\S]*decoding="async"[\s\S]*fetchPriority="high"/);
   assert.match(masthead, /onLoad=\{\(event\) => event\.currentTarget\.classList\.add\("is-loaded"\)\}/);
-  assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomyV2\.png"/);
+  assert.match(taxonomy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/vigil-fascia-taxonomy\.png"/);
   assert.match(cases, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-case-files\.png"/);
   assert.match(harm, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-harm-impact\.png"/);
   assert.match(policy, /artworkSrc="https:\/\/raw\.githubusercontent\.com\/CAM-Initiative\/Registry\/main\/Images\/Website\/VIGIL-fascia-policy\.png"/);
