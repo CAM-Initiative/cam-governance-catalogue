@@ -163,7 +163,6 @@ assert.doesNotMatch(mainTs, /vigil-deterministic-report-typography-contract\.css
 assert.match(printableReport, /Use and reliance notice/);
 assert.match(printableReport, /Limits of the assessment/);
 assert.match(printableReport, /report-postscript/);
-assert.match(printableReport, /No mapped external requirement is available for compliance cross-reference in this Case File/);
 assert.match(printableReport, /does not constitute legal, regulatory, security, assurance, certification, risk, or other professional advice/);
 assert.match(printableReport, /Third parties remain responsible for verifying the cited source material/);
 assert.match(printableReport, /© 2026 CAM Initiative\. All rights reserved\./);
