@@ -194,7 +194,7 @@ export default function VigilKnowledgeHub() {
               </div>
 
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/failure-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/alignment-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -209,7 +209,7 @@ export default function VigilKnowledgeHub() {
                 <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -235,7 +235,7 @@ export default function VigilKnowledgeHub() {
                 <p>CAM Initiative policy papers and consultation submissions translate governance analysis into practical institutional, legal and regulatory proposals.</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -264,7 +264,7 @@ export default function VigilKnowledgeHub() {
                 <p className="vigil-knowledge-meta">{baselineMeta}</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/standards-sources/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/ai-governance-standards/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
