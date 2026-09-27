@@ -124,6 +124,7 @@ test("homepage mobile feed and taxonomy stickers keep their component-owned resp
   assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker-label \{[\s\S]*font-size: 0\.78rem/);
   assert.match(feedCss, /@media \(max-width: 720px\)[\s\S]*\.incident-ticker a \{[\s\S]*font-size: 0\.9rem[\s\S]*line-height: 1\.4/);
 
+  assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker-board \{[\s\S]*overflow-x: auto;[\s\S]*overflow-y: hidden;[\s\S]*overscroll-behavior-x: contain/);
   assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker \{[\s\S]*width: max-content;[\s\S]*max-width: none/);
   assert.match(stickerCss, /@media \(max-width: 720px\)[\s\S]*\.taxonomy-sticker strong \{[\s\S]*white-space: nowrap;[\s\S]*overflow-wrap: normal/);
   assert.doesNotMatch(mobileCss, /\.taxonomy-sticker-board\s*\{/);
@@ -717,10 +718,15 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   assert.match(matrix, /Distinguish public exposure from reputational or dignitary injury/);
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
-  assert.match(methodSection, /Severity display\.[\s\S]*Overall severity[\s\S]*highest defensible materialised-harm threshold controls the overall severity[\s\S]*Individual Case Files do not repeat this entire reference matrix/);
+  assert.match(methodSection, /<h3>Severity display<\/h3>[\s\S]*<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity[\s\S]*Individual Case Files do not repeat this entire reference matrix/);
+  assert.doesNotMatch(methodSection, /vigil-severity-case-file-note/);
+  const overallRule = methodSection.match(/<h3>Overall severity<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
+  assert.match(overallRule, /Only dimensions with a defensible assessed band/);
+  assert.match(overallRule, /Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(severity, /<section id="case-files"|The Incident view shows only the assessment that was actually made/);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
-  assert.match(menuCss, /vigil-severity-derivation-rows[\s\S]*vigil-severity-chip-key,[\s\S]*vigil-severity-overall-rule[\s\S]*vigil-severity-case-file-note/);
+  assert.match(menuCss, /\.vigil-severity-method-row \{[\s\S]*grid-template-columns: minmax\(9rem, 0\.42fr\) minmax\(0, 1fr\)/);
+  assert.match(menuCss, /\.vigil-severity-evidence-states dt,[\s\S]*\.vigil-severity-method-row h3 \{[\s\S]*font-family: var\(--app-font-sans\)[\s\S]*font-size: 0\.92rem[\s\S]*font-weight: 680/);
 });
 
 test("Stage 02 is presented publicly as Assessment", async () => {
@@ -1059,9 +1065,10 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
+  assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*The band label carries the severity level; colour is not an ordinal scale/);
   assert.match(severity, /vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5"\][\s\S]*VigilStatusChip/);
-  assert.match(severity, /The band label carries the severity level; colour is not an ordinal scale/);
-  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key[\s\S]*border-top: 1px solid[\s\S]*border-bottom: 1px solid/);
+  assert.ok(severity.indexOf('className="vigil-severity-derivation-rows"') < severity.indexOf('className="vigil-severity-chip-key"'));
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin-top: 0\.85rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table th,[\s\S]*border: 0 !important/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
