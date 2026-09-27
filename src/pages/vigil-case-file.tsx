@@ -735,7 +735,7 @@ export default function VigilCaseFile() {
           <div>
             <strong>VIGIL Observatory Alignment Taxonomy</strong>
             <p>{["CAM Initiative", "Public taxonomy reference", taxonomyReferenceVersion ? `Version ${taxonomyReferenceVersion}` : undefined, taxonomyReferenceDate ? `Revised ${taxonomyReferenceDate}` : undefined].filter(Boolean).join(" · ")}</p>
-            <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
+            <a href="https://www.cam-initiative.org/observatory/alignment-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/alignment-taxonomy</a>
           </div>
         </li>}
         {harmImpactAssessment && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology">
@@ -743,7 +743,7 @@ export default function VigilCaseFile() {
           <div>
             <strong>VIGIL Harm Impact Methodology</strong>
             <p>{["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : text(harmImpactAssessment.methodology_version) ? `Version ${text(harmImpactAssessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</p>
-            <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/severity-methodology</a>
+            <a href="https://www.cam-initiative.org/observatory/harm-impact-assessment" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/harm-impact-assessment</a>
           </div>
         </li>}
         {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
