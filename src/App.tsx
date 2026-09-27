@@ -47,7 +47,6 @@ function Router() {
       <Route path="/observatory/alignment-taxonomy" component={VigilFailureTaxonomy} />
       <Route path="/observatory/ai-governance-standards/:sourceKey" component={VigilStandardSource} />
       <Route path="/observatory/ai-governance-standards" component={VigilStandardsBaseline} />
-      <Route path="/observatory/policy" component={Policy} />
 
       {/* VIGIL public investigations. Case Files are anchored to canonical Incident records. */}
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
