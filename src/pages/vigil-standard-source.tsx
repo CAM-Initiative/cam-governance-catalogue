@@ -193,7 +193,7 @@ function ReviewHistory({ events }: { events: ExternalReviewEvent[] }) {
 }
 
 export default function VigilStandardSource() {
-  const [, params] = useRoute("/observatory/knowledge-base/standards-sources/:sourceKey");
+  const [, params] = useRoute("/observatory/ai-governance-standards/:sourceKey");
   const requestedKey = decodeURIComponent(params?.sourceKey ?? "");
   const [state, setState] = useState<DetailState>({ status: "loading" });
 
@@ -230,9 +230,9 @@ export default function VigilStandardSource() {
     .filter((item) => sourceIdentity(item) === sourceIdentity(source) && externalSourceKey(item) !== requestedKey)
     .sort((a, b) => b.source_version.localeCompare(a.source_version, undefined, { numeric: true })) : [];
 
-  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state">Loading standard…</div></div></main></Shell>;
-  if (state.status === "unavailable") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard unavailable</h2><p>{state.message}</p></div></div></main></Shell>;
-  if (!source) return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard not found</h2><p>The requested source is not represented in the current standards library.</p></div></div></main></Shell>;
+  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/ai-governance-standards/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state">Loading standard…</div></div></main></Shell>;
+  if (state.status === "unavailable") return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/ai-governance-standards/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard unavailable</h2><p>{state.message}</p></div></div></main></Shell>;
+  if (!source) return <Shell><VigilObservatoryNav /><main className="vigil-case-file-page"><div className="container mx-auto max-w-[1360px] px-4 py-7 sm:px-6 md:px-10 md:py-10"><Link href="/observatory/ai-governance-standards/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link><div className="vigil-reference-state"><h2>Standard not found</h2><p>The requested source is not represented in the current standards library.</p></div></div></main></Shell>;
 
   const reviewEvent = currentReviewEvent(source);
   const reviewDate = reviewEvent?.review_date ?? source.last_substantive_reviewed;
@@ -241,7 +241,7 @@ export default function VigilStandardSource() {
   const reviewEvents = source.substantive_review_provenance?.review_events ?? [];
 
   return <Shell><VigilObservatoryNav /><main className="vigil-library-page vigil-standard-file-page vigil-standard-manual-page"><div className="container mx-auto max-w-[1500px] px-4 py-7 sm:px-6 md:px-10 md:py-9">
-    <Link href="/observatory/knowledge-base/standards-sources/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link>
+    <Link href="/observatory/ai-governance-standards/" className="vigil-back-link"><ArrowLeft aria-hidden="true" /> AI Governance Standards</Link>
 
     <section className="vigil-library-shell vigil-taxonomy-shell" aria-labelledby="standard-heading">
       <VigilObservatoryMasthead
