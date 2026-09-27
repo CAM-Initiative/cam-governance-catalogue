@@ -961,8 +961,9 @@ test("Case File stage and subsection headings share one editorial scale", async 
   assert.match(instrumentCss, /vigil-case-editorial-subheading[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
   assert.match(taxonomyAssessment, />Incident breakdown<\/h3>/);
   assert.doesNotMatch(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
-  assert.match(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
-  assert.match(taxonomyAssessment, /Canonical mapping/);
+  assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Fidelity class<\/th>/);
+  assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Relationship<\/th>/);
+  assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Mapping state<\/th>/);
   assert.match(taxonomyAssessment, /vigil-taxonomy-assessment-stack/);
   assert.match(caseFile, />Harm Impact Assessment<\/h3>/);
   assert.match(caseFile, />External assessments<\/h3>/);
