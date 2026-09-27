@@ -622,6 +622,7 @@ function referenceRoleLabel(role?: string) {
 
 export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
+  const evidenceByClass = useMemo(() => classificationEvidenceByClass(raw), [raw]);
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <p className="vigil-case-empty">No compliance crosswalk can be resolved because this Incident has no canonical alignment classification.</p>;
@@ -643,15 +644,22 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
+            <th scope="col">Recovered governance principle(s)</th>
             <th scope="col">Mapped external requirements</th>
           </tr>
         </thead>
         <tbody>
-          {mappings.map(({ class: classificationClass, role, references }) => <tr key={classificationClass.class_id}>
+          {mappings.map(({ class: classificationClass, role, references }) => {
+            const recoveredPrinciples = (evidenceByClass.get(classificationClass.class_id) ?? [])
+              .map((entry) => entry.recoveredInvariant);
+            return <tr key={classificationClass.class_id}>
             <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
             <td data-label="Fidelity class">
               <strong>{classificationClass.name}</strong>
               <span className="vigil-classification-id">{classificationClass.class_id}</span>
+            </td>
+            <td data-label="Recovered governance principle(s)" className="vigil-compliance-governance-principle">
+              <ClassificationEvidenceStack values={recoveredPrinciples} empty="No recovered governance principle is linked to this Fidelity Class." />
             </td>
             <td data-label="Mapped external requirements" className="vigil-compliance-references-cell">
               {references.length ? <div className="vigil-compliance-reference-list">
@@ -673,7 +681,8 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
                 })}
               </div> : <span className="vigil-compliance-gap">No structured standards, regulatory or authoritative-guidance cross-reference is currently published for this Fidelity Class.</span>}
             </td>
-          </tr>)}
+          </tr>;
+          })}
         </tbody>
       </table>
     </div>
