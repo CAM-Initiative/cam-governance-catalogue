@@ -2,24 +2,7 @@
    Source facts, analysis and limits remain visually distinct. Stage navigation
    and responsive workbench layout are owned by vigil-observatory-instrument-experiment.css. */
 
-/* The tab already names the active stage; use the section header only for its explanatory sentence. */
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header {
-  min-height: 0;
-  padding: 0.82rem 1.05rem 0.9rem;
-  background: hsl(var(--background));
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header > span,
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header h2 {
-  display: none;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: hsl(var(--muted-foreground) / 0.9);
-}
+/* Stage shell and heading hierarchy are owned by vigil-observatory-instrument-experiment.css. */
 
 /* Evidence source identity. */
 .vigil-case-file-page .vigil-evidence-header {
