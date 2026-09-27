@@ -329,7 +329,8 @@ test("Classification and Compliance cite the single numbered VIGIL Alignment Tax
   ]);
 
   assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
-  assert.match(component, /Fidelity classes and their plain-English explanations are defined in the/);
+  assert.match(component, /Fidelity families and classes are defined in the/);
+  assert.match(component, /Source clauses, recovered governance principles and Incident analysis are repeated here from the Section 02 Incident breakdown/);
   assert.match(component, /These external requirement mappings are maintained with the relevant Fidelity Classes in the/);
   assert.match(component, /VIGIL Observatory Alignment Taxonomy \[\{taxonomyReferenceNumber\}\]/);
   assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
