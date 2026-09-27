@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
-import { CaseTaxonomyClassification, CaseTaxonomyRepair, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -426,8 +426,8 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           </> : <Empty>No current Alignment Taxonomy classification is linked.</Empty>}
         </Stage>
 
-        <Stage number="04" label="Repair">
-          {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No class invariant can be resolved from a canonical classification for this Incident.</Empty>}
+        <Stage number="04" label="Compliance">
+          {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No external requirement crosswalk can be resolved without a canonical classification for this Incident.</Empty>}
         </Stage>
 
         <Stage number="05" label="Conclusion">
