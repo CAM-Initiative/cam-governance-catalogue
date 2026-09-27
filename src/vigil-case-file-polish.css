@@ -604,6 +604,52 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   font-weight: 650;
 }
 
+.vigil-case-file-page .vigil-taxonomy-assessment-rationale {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-rationale + .vigil-taxonomy-assessment-rationale {
+  margin-top: 0.8rem;
+  padding-top: 0.72rem;
+  border-top: 1px solid hsl(var(--border) / 0.5);
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-rationale > p {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-mapping {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.32rem 0.55rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-mapping a {
+  font-family: var(--app-font-mono);
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-mapping a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-mapping > span:not(.vigil-taxonomy-assessment-mapping-state) {
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-mapping-state {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+}
+
 
 /* External assessments and real-world harm are peer Stage 02 assessment cards. */
 .vigil-case-file-page .vigil-external-assessment-section .vigil-external-assessment-table-wrap {
