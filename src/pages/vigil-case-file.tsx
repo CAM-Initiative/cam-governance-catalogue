@@ -843,10 +843,10 @@ export default function VigilCaseFile() {
     {isDisputed && <section className="vigil-exemplar-callout is-disputed" aria-labelledby="vigil-disputed-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">Disputed evidence</p>
-        <h2 id="vigil-disputed-heading">The evidence is disputed.</h2>
-        <p>Material claims about this occurrence are contested, denied, or have not been independently adjudicated. VIGIL preserves the available evidence and its current classification without presenting disputed claims as settled fact.</p>
-        <p className="vigil-exemplar-callout-boundary">The taxonomy mapping describes the governance mechanism evidenced if the reported occurrence is supported; it does not convert disputed claims into established fact.</p>
+        <p className="vigil-exemplar-callout-kicker">Disputed evidence state</p>
+        <h2 id="vigil-disputed-heading">Material facts remain contested.</h2>
+        <p><strong>Disputed</strong> does not mean that litigation or a formal legal dispute exists. It means that material facts needed to establish the occurrence or its taxonomy classification are contested—for example, an affected party expressly denies the alleged conduct, involved parties give materially incompatible accounts, or the available evidence does not independently resolve the conflict.</p>
+        <p className="vigil-exemplar-callout-boundary">VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported. A denial does not itself establish that an allegation is false, and a taxonomy mapping does not convert a disputed allegation into settled fact.</p>
       </div>
     </section>}
 
