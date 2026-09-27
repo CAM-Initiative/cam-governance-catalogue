@@ -320,7 +320,7 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
-test("Classification explains each Fidelity Class and Compliance projects maintained external requirement cross-references", async () => {
+test("Classification traces Incident observations into Fidelity Classes and Compliance traces them into external requirements", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/vigil-classification-table.css"),
@@ -328,64 +328,61 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   ]);
 
   assert.match(classification, /<th scope="col">Alignment<\/th>/);
-  assert.match(classification, /<th scope="col">Fidelity family<\/th>/);
+  assert.match(classification, /<th scope="col">Incident observation<\/th>/);
   assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
-  assert.match(classification, /<th scope="col">Plain-English explanation<\/th>/);
   assert.match(classification, /<th scope="col">Technical definition<\/th>/);
-  assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
   assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
-  assert.match(classification, /<th scope="col">Exclusions<\/th>/);
-  assert.match(classification, /<th scope="col">Source clause\(s\)<\/th>/);
-  assert.match(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Incident analysis<\/th>/);
   assert.match(classification, /<th scope="col">Classification basis<\/th>/);
   assert.match(classification, /<th scope="col">Confidence<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Mapping<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Status<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Taxonomy version<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Relationship\(s\)<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Mapping state\(s\)<\/th>/);
-  assert.match(classification, /classificationEvidenceByClass/);
-  assert.match(classification, /const sourceAnchor = text\(clause\.source_anchor\)/);
-  assert.match(classification, /const sourceParaphrase = text\(clause\.source_paraphrase\)/);
-  assert.match(classification, /const recoveredInvariant = text\(clause\.recovered_invariant_interpretation\)/);
-  assert.match(classification, /rationale: text\(value\.rationale\)/);
-  assert.match(classification, /evidenceByClass\.get\(primary\.classId\)/);
-  assert.match(classification, /evidenceByClass\.get\(item\.classId\)/);
+  assert.doesNotMatch(classification, /<th scope="col">Fidelity family<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Plain-English explanation<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Governing invariant<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Exclusions<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Source clause\(s\)<\/th>/);
+  assert.match(classification, /vigil-classification-class-chip/);
+  assert.match(classification, /vigil-classification-class-title/);
+  assert.match(classification, /vigil-classification-class-explanation/);
   assert.match(classification, /classificationClass\?\.plain_english \?\? family\?\.plain_english/);
   assert.match(classification, /classificationClass\?\.definition \?\? family\?\.definition/);
-  assert.match(classification, /classificationClass\?\.invariant \?\? family\?\.invariant/);
   assert.match(classification, /classificationClass\?\.recognition\?\.required_conditions/);
-  assert.match(classification, /classificationClass\?\.exclusions/);
-  assert.match(classification, /vigil-classification-taxonomy-list/);
+  assert.match(classification, /classificationEvidenceByClass/);
+  assert.match(classification, /const incidentObservations = evidence\.map\(classificationEvidenceSource\)/);
+  assert.match(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
+  assert.match(classification, /evidenceByClass\.get\(primary\.classId\)/);
+  assert.match(classification, /evidenceByClass\.get\(item\.classId\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
   assert.match(classification, /vigil-classification-web-table vigil-compliance-web-table/);
   assert.match(classification, /vigil-classification-table vigil-compliance-table/);
-  assert.match(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>[\s\S]*<th scope="col">Mapped external requirements<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Classification basis<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Mapped external requirements<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>[\s\S]*vigil-compliance/);
+  assert.match(classification, /mappings\.flatMap/);
   assert.match(classification, /evidenceByClass\.get\(classificationClass\.class_id\)/);
-  assert.match(classification, /vigil-compliance-governance-principle/);
-  assert.match(classification, /<th scope="col">Mapped external requirements<\/th>/);
-  assert.match(classification, /classificationClass\.external_references/);
-  assert.match(classification, /reference\.requirement_id/);
-  assert.match(classification, /reference\.clause_or_control/);
-  assert.match(classification, /reference\.evidence_note/);
+  assert.match(classification, /reference\?\.evidence_note/);
+  assert.match(classification, /classificationBasis \?\?/);
+  assert.doesNotMatch(classification, /reference\.publisher/);
+  assert.doesNotMatch(classification, /reference\.date/);
+  assert.doesNotMatch(classification, /referenceRoleLabel/);
   assert.match(classification, /role === "regulatory-evidence"/);
   assert.match(classification, /role === "standards-evidence"/);
   assert.match(classification, /role === "authoritative-guidance"/);
   assert.match(classification, /item\.role !== "failure-occurrence" && item\.role !== "ambiguous-boundary"/);
-  assert.match(classification, /This section is a cross-reference of the Classification findings above, not a second Incident adjudication/);
 
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 12%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 30%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 36%; \}/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 277rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 8%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 32%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(5\) \{ width: 22%; \}/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 198rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
+  assert.match(css, /\.vigil-classification-class-chip/);
+  assert.match(css, /\.vigil-classification-class-title/);
+  assert.match(css, /\.vigil-classification-class-explanation/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
-  assert.match(css, /\.vigil-classification-taxonomy-copy/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
   assert.match(css, /\.vigil-classification-incident-analysis/);
   assert.match(classification, /External Alignment Classification/);
