@@ -382,8 +382,9 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
   assert.match(caseFile, /Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
-  assert.match(caseFile, /The evidence is disputed\./);
-  assert.match(caseFile, /does not convert disputed claims into established fact/);
+  assert.match(caseFile, /Material facts remain contested\./);
+  assert.match(caseFile, /does not mean that litigation or a formal legal dispute exists/);
+  assert.match(caseFile, /VIGIL takes a legally conservative approach/);
   assert.match(contract, /informational mixed-record affordance/);
 });
 
@@ -437,7 +438,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(hub, /const CASE_FILE_STAGES = \[/);
   assert.match(hub, /One evidence-to-conclusion structure for every Incident/);
   assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
-  assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm and severity under VIGIL-HIM/);
+  assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
   assert.match(hub, /governing class invariants for mappings where failure is evidenced or the boundary remains unresolved/);
   assert.match(hub, /Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation\./);
@@ -462,6 +463,8 @@ test("Knowledge Base explains mapping outcomes and all five Case File index clas
   assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /It does not require litigation or a formal legal dispute/);
+  assert.match(hub, /VIGIL takes a legally conservative approach/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
   assert.match(css, /\.vigil-knowledge-index-classifications[\s\S]*\.vigil-knowledge-index-state \{[\s\S]*background: hsl\(var\(--primary\) \/ 0\.045\)/);
   assert.doesNotMatch(css, /\.vigil-knowledge-index-state\.is-(?:failure|exemplar|mixed|disputed|unclassified)/);
