@@ -197,7 +197,7 @@ test("Incident Case File retains evidence context and moves governance interpret
   assert.match(conclusionRenderer, /\{governanceConclusion\}/);
 });
 
-test("Incident Case File projects taxonomy-derived class-invariant repair, not implementation state", async () => {
+test("Incident Case File projects taxonomy-derived compliance crosswalk, not implementation state", async () => {
   const source = await caseFileSource();
 
   for (const obsolete of [
@@ -209,14 +209,14 @@ test("Incident Case File projects taxonomy-derived class-invariant repair, not i
     "cam_internal.target_instruments",
   ]) assert.doesNotMatch(source, new RegExp(obsolete.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"));
 
-  assert.match(source, /stageId === "repair"/);
-  assert.match(source, /<CaseTaxonomyRepair raw=\{incident\.raw\}/);
+  assert.match(source, /stageId === "compliance"/);
+  assert.match(source, /<CaseTaxonomyCompliance raw=\{incident\.raw\}/);
   assert.match(source, /VIGIL_INCIDENT_CASE_SECTIONS/);
   assert.match(source, /vigil_assessment\.governance_interpretation/);
   assert.match(source, /diagnostic_provenance/);
 });
 
-test("deterministic Incident print and PDF projections include class-invariant Repair without legacy repair machinery", async () => {
+test("deterministic Incident print and PDF projections include Compliance without legacy repair machinery", async () => {
   const [report, printable] = await reportSources();
   const combined = `${report}\n${printable}`;
 
@@ -231,10 +231,10 @@ test("deterministic Incident print and PDF projections include class-invariant R
   assert.match(report, /vigil_assessment\.governance_interpretation/);
   assert.match(report, /vigil_assessment\.factual_basis/);
   assert.match(report, /label="Classification"/);
-  assert.match(report, /label="Repair"/);
+  assert.match(report, /label="Compliance"/);
   assert.match(report, /<Stage number="05" label="Conclusion">/);
   assert.match(report, /<Stage number="06" label="References">/);
-  assert.match(printable, /label: "Repair"/);
+  assert.match(printable, /label: "Compliance"/);
   assert.match(printable, /label: "Conclusion"/);
   assert.match(printable, /number: "06", label: "References"/);
   assert.match(report, /report-external-assessment-table/);
@@ -318,7 +318,7 @@ test("Incident artefact captions use one label plus numbered evidence reference"
   assert.match(css, /\.vigil-incident-artefact-reference/);
 });
 
-test("Classification and Repair cite the single numbered VIGIL Alignment Taxonomy reference instead of row-level source links", async () => {
+test("Classification and Compliance cite the single numbered VIGIL Alignment Taxonomy reference instead of row-level taxonomy links", async () => {
   const [component, caseFile, report, printable, css, reportCss] = await Promise.all([
     readFile(resolve(repoRoot, "src/components/vigil/CaseTaxonomyClassification.tsx"), "utf8"),
     caseFileSource(),
@@ -329,8 +329,8 @@ test("Classification and Repair cite the single numbered VIGIL Alignment Taxonom
   ]);
 
   assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
-  assert.match(component, /Fidelity classes and their governing invariants are defined in the/);
-  assert.match(component, /The governing invariants shown here are defined in the/);
+  assert.match(component, /Fidelity classes, their plain-English explanations and governing invariants are defined in the/);
+  assert.match(component, /These external requirement mappings are maintained with the relevant Fidelity Classes in the/);
   assert.match(component, /VIGIL Observatory Alignment Taxonomy \[\{taxonomyReferenceNumber\}\]/);
   assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
   assert.match(caseFile, /id="vigil-failure-taxonomy-reference"/);
@@ -419,10 +419,10 @@ test("External assessment tables match comparable table typography in web and PD
   assert.match(reportCss, /@media print \{[\s\S]*\.report-external-assessment-table thead th \{[\s\S]*font-size: 10pt !important;/);
 });
 
-test("Classification and Repair tables keep readable body and legend typography", async () => {
+test("Classification and Compliance tables keep readable body and legend typography", async () => {
   const css = await readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8");
   assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
-  assert.match(css, /\.vigil-case-file-page \.vigil-repair-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-compliance-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
   assert.match(css, /\.vigil-alignment-legend \{[\s\S]*font-size: 0\.92rem[\s\S]*line-height: 1\.5/);
   assert.match(css, /\.vigil-alignment-legend-item > span:last-child > strong \{[\s\S]*font-size: 0\.92rem/);
 });
