@@ -311,8 +311,8 @@ export function ExternalAlignmentClassification({ assessments }: { assessments: 
   </section>;
 }
 
-// Web UX shows the alignment state, the meaning of the mapped class, and the
-// occurrence-specific reason for applying it. Primary/secondary ordering remains
+// Section 03 keeps the Incident observation visible beside the mapped Fidelity
+// Class and occurrence-specific adjudication. Primary/secondary ordering remains
 // in canonical data and report metadata.
 function ClassificationEvidenceStack({
   values,
