@@ -328,6 +328,19 @@ function ClassificationEvidenceStack({
   </div>;
 }
 
+function TaxonomyList({
+  values,
+  empty,
+}: {
+  values?: string[];
+  empty: string;
+}) {
+  if (!values?.length) return <span>{empty}</span>;
+  return <ul className="vigil-classification-taxonomy-list">
+    {values.map((value, index) => <li key={`${index}-${value.slice(0, 40)}`}>{value}</li>)}
+  </ul>;
+}
+
 function classificationEvidenceSource(entry: ClassificationEvidence) {
   if (entry.sourceAnchor && entry.sourceParaphrase) return `${entry.sourceAnchor} — ${entry.sourceParaphrase}`;
   return entry.sourceAnchor ?? entry.sourceParaphrase;
@@ -355,6 +368,11 @@ function ClassificationTable({
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity family</th>
             <th scope="col">Fidelity class</th>
+            <th scope="col">Plain-English explanation</th>
+            <th scope="col">Technical definition</th>
+            <th scope="col">Governing invariant</th>
+            <th scope="col">Recognition criteria</th>
+            <th scope="col">Exclusions</th>
             <th scope="col">Source clause(s)</th>
             <th scope="col">Recovered governance principle(s)</th>
             <th scope="col">Incident analysis</th>
@@ -386,6 +404,27 @@ function ClassificationTable({
               <td data-label="Fidelity class">
                 <strong>{classificationClass?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned")}</strong>
                 {classId && <span className="vigil-classification-id">{classId}</span>}
+              </td>
+              <td data-label="Plain-English explanation" className="vigil-classification-taxonomy-copy">
+                {classificationClass?.plain_english ?? family?.plain_english ?? "No plain-English explanation is currently published for this mapping."}
+              </td>
+              <td data-label="Technical definition" className="vigil-classification-taxonomy-copy">
+                {classificationClass?.definition ?? family?.definition ?? "No technical definition is currently published for this mapping."}
+              </td>
+              <td data-label="Governing invariant" className="vigil-classification-taxonomy-copy">
+                {classificationClass?.invariant ?? family?.invariant ?? "No governing invariant is currently published for this mapping."}
+              </td>
+              <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
+                <TaxonomyList
+                  values={classificationClass?.recognition?.required_conditions}
+                  empty="No separate recognition criteria are currently published for this Fidelity Class."
+                />
+              </td>
+              <td data-label="Exclusions" className="vigil-classification-taxonomy-copy">
+                <TaxonomyList
+                  values={classificationClass?.exclusions}
+                  empty="No separate exclusions are currently published for this Fidelity Class."
+                />
               </td>
               <td data-label="Source clause(s)">
                 <ClassificationEvidenceStack values={sourceClauses} empty="No clause-level source wording is linked to this mapping." />
