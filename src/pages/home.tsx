@@ -103,7 +103,7 @@ function IncidentTicker() {
   );
 
   return (
-    <nav className="incident-ticker" aria-label="High-severity VIGIL Case Files">
+    <nav className="incident-ticker" aria-label="Recent VIGIL Case Files">
       <div className="incident-ticker-label"><span aria-hidden="true" /> Case File feed</div>
       <div className="incident-ticker-window">
         <div className="incident-ticker-track">
