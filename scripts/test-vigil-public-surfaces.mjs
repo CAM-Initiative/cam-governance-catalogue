@@ -717,7 +717,9 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   assert.match(matrix, /Measure downtime until regular activity is restored to the pre-incident service level/);
   assert.match(matrix, /Distinguish public exposure from reputational or dignitary injury/);
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
-  assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
+  assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable/);
+  assert.doesNotMatch(methodSection, /<dt>SU — Unassessed<\/dt>/);
+  assert.match(methodSection, /SU — Unassessed remains visually neutral and is used when no defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm; SU is an evidence state, not a sixth severity band/);
   assert.match(methodSection, /<h3>Severity display<\/h3>[\s\S]*<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity[\s\S]*Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(methodSection, /vigil-severity-case-file-note/);
   const overallRule = methodSection.match(/<h3>Overall severity<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
@@ -1066,9 +1068,9 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*The band label carries the severity level; colour is not an ordinal scale/);
-  assert.match(severity, /vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5"\][\s\S]*VigilStatusChip/);
-  assert.ok(severity.indexOf('className="vigil-severity-derivation-rows"') < severity.indexOf('className="vigil-severity-chip-key"'));
-  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin-top: 0\.85rem/);
+  assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*vigil-severity-method-copy[\s\S]*vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5", "SU"\][\s\S]*VigilStatusChip[\s\S]*<h3>Overall severity<\/h3>/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-method-copy \{[\s\S]*display: grid[\s\S]*gap: 0\.72rem/);
+  assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin: 0;[\s\S]*padding: 0;/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table th,[\s\S]*border: 0 !important/);
   assert.match(datasets, /DocumentRail title="Datasets"/);
