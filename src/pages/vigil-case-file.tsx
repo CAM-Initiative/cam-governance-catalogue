@@ -3,7 +3,7 @@ import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucid
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification, CaseTaxonomyRepair, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -298,7 +298,7 @@ const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and affected systems",
   "case-diagnose": "Governance, external and harm impact assessment",
   "case-classify": "Alignment classification",
-  "case-repair": "Governing invariants and repair",
+  "case-compliance": "External standards and requirement crosswalk",
   "case-conclusion": "Integrated conclusion",
   "case-references": "Evidence and reference trail",
 };
@@ -618,8 +618,8 @@ export default function VigilCaseFile() {
       </> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory alignment classification can be rendered.</p>}
     </>;
 
-    if (stageId === "repair") return <>
-      {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
+    if (stageId === "compliance") return <>
+      {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No external requirement crosswalk can be resolved without a canonical classification for this Incident.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
