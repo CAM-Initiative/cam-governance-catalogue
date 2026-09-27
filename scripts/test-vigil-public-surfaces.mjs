@@ -203,6 +203,10 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /grid-template-columns: minmax\(0, 1fr\) minmax\(16rem, 26%\)/);
   assert.match(mastheadCss, /min-height: clamp\(15rem, 19vw, 17\.5rem\)/);
   assert.match(mastheadCss, /font-size: clamp\(3\.2rem, 4\.25vw, 4\.15rem\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-context-label[\s\S]*font-size: 0\.7rem/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-context dt[\s\S]*font-size: 0\.64rem/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-context dd[\s\S]*font-size: clamp\(0\.96rem, 1\.02vw, 1\.05rem\)/);
+  assert.match(mastheadCss, /vigil-observatory-masthead-context dd\.is-mono[\s\S]*font-size: 0\.84rem/);
   assert.match(mastheadCss, /vigil-observatory-masthead-instrument/);
   assert.match(mastheadCss, /vigil-observatory-masthead-calibration-accent/);
   assert.match(masthead, /artworkSrc/);
