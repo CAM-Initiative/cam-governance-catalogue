@@ -406,7 +406,7 @@ function ClassificationTable({
       </table>
     </div>
     <VigilAlignmentLegend />
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity families and classes are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Source clauses, recovered governance principles and Incident analysis are repeated here from the Section 02 Incident breakdown so the evidence-to-classification bridge remains visible.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity families and classes are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Source clauses and Incident analysis are repeated here from the Section 02 Incident breakdown; recovered governance principles are surfaced here as part of the evidence-to-classification bridge.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
 }
@@ -650,8 +650,10 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
         </thead>
         <tbody>
           {mappings.map(({ class: classificationClass, role, references }) => {
-            const recoveredPrinciples = (evidenceByClass.get(classificationClass.class_id) ?? [])
-              .map((entry) => entry.recoveredInvariant);
+            const recoveredPrinciples = [...new Set(
+              (evidenceByClass.get(classificationClass.class_id) ?? [])
+                .flatMap((entry) => entry.recoveredInvariant ? [entry.recoveredInvariant] : [])
+            )];
             return <tr key={classificationClass.class_id}>
             <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
             <td data-label="Fidelity class">
