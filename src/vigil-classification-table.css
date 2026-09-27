@@ -56,11 +56,11 @@
 .vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 30%; }
 .vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 36%; }
 
-/* The primary Classification table deliberately exposes the richer canonical
-   taxonomy/adjudication fields. It is wider than the viewport by design and
-   remains horizontally scrollable rather than collapsing fields into cards. */
+/* Section 03 repeats the occurrence-specific evidence bridge from Section 02.
+   It is deliberately wide and horizontally scrollable so evidence is duplicated,
+   not collapsed or discarded. */
 .vigil-case-file-page .vigil-primary-classification-table {
-  min-width: 150rem;
+  min-width: 158rem;
   table-layout: auto;
 }
 
@@ -72,15 +72,13 @@
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { min-width: 10rem; }
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { min-width: 9rem; }
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { min-width: 9rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { min-width: 9rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(6) { min-width: 15rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(7) { min-width: 17rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(8) { min-width: 21rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(9) { min-width: 24rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(10) { min-width: 24rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(11) { min-width: 22rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(12) { min-width: 22rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(13) { min-width: 28rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { min-width: 16rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(6) { min-width: 18rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(7) { min-width: 18rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(8) { min-width: 24rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(9) { min-width: 30rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(10) { min-width: 28rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(11) { min-width: 9rem; }
 
 .vigil-case-file-page .vigil-primary-classification-table-wrap {
   overflow-x: auto;
@@ -99,15 +97,30 @@
   line-height: 1.35;
 }
 
-.vigil-case-file-page .vigil-classification-recognition ul,
-.vigil-case-file-page .vigil-classification-exclusions ul {
-  margin: 0;
-  padding-left: 1.1rem;
+.vigil-case-file-page .vigil-classification-evidence-stack {
+  display: grid;
+  gap: 0;
 }
 
-.vigil-case-file-page .vigil-classification-recognition li + li,
-.vigil-case-file-page .vigil-classification-exclusions li + li {
-  margin-top: 0.38rem;
+.vigil-case-file-page .vigil-classification-evidence-item {
+  padding: 0.58rem 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item:first-child {
+  padding-top: 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item:last-child {
+  padding-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item + .vigil-classification-evidence-item {
+  border-top: 1px solid hsl(var(--border) / 0.48);
+}
+
+.vigil-case-file-page .vigil-classification-incident-analysis,
+.vigil-case-file-page .vigil-classification-basis {
+  color: hsl(var(--foreground) / 0.9) !important;
 }
 
 /* External classifications preserve the external assessor's own scheme rather
@@ -228,13 +241,9 @@
 }
 
 
-.vigil-case-file-page .vigil-classification-meaning,
-.vigil-case-file-page .vigil-classification-definition,
-.vigil-case-file-page .vigil-classification-invariant,
-.vigil-case-file-page .vigil-classification-recognition,
-.vigil-case-file-page .vigil-classification-exclusions,
-.vigil-case-file-page .vigil-classification-basis {
-  color: hsl(var(--foreground) / 0.88) !important;
+.vigil-case-file-page .vigil-classification-basis,
+.vigil-case-file-page .vigil-classification-incident-analysis {
+  color: hsl(var(--foreground) / 0.9) !important;
 }
 
 @media (max-width: 760px) {
@@ -249,7 +258,7 @@
   }
 
   .vigil-case-file-page .vigil-primary-classification-table {
-    min-width: 150rem;
+    min-width: 158rem;
   }
 
   .vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table {
