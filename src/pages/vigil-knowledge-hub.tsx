@@ -37,13 +37,13 @@ const CASE_FILE_STAGES = [
   },
   {
     number: "04",
-    label: "Repair",
-    description: "Surface the governing class invariants for mappings where failure is evidenced or the boundary remains unresolved; invariant-held mappings create no Repair requirement.",
+    label: "Compliance",
+    description: "Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy.",
   },
   {
     number: "05",
     label: "Conclusion",
-    description: "Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation.",
+    description: "Integrate the evidence, harm assessment, taxonomy relationships and external requirement crosswalk into a bounded VIGIL interpretation.",
   },
   {
     number: "06",
