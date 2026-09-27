@@ -41,7 +41,11 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(caseFile, /vigil-external-assessment-table/);
   assert.match(caseFile, /Assessor/);
   assert.match(caseFile, /Conclusion/);
-  assert.match(caseFile, /Classification \/ scheme/);
+  assert.doesNotMatch(caseFile, /Classification \/ scheme/);
+  assert.match(caseFile, /ExternalAlignmentClassification/);
+  assert.match(parser, /schemeVersion/);
+  assert.match(parser, /classification_basis/);
+  assert.match(parser, /source_locator/);
   assert.doesNotMatch(caseFile, /ExternalAssessmentList assessments=\{externalAssessments\}/);
   assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
 });
