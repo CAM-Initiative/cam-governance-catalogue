@@ -288,6 +288,10 @@ test("Repair uses the same public table grammar as Classification", async () => 
   assert.match(classification, /VigilAlignmentLegend/);
   assert.match(css, /\.vigil-alignment-legend/);
   assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>/);
+  assert.match(classification, /ClassificationTable[\s\S]*<VigilAlignmentLegend \/>[\s\S]*Fidelity classes and their governing invariants are defined/);
+  assert.match(classification, /CaseTaxonomyRepair[\s\S]*<VigilAlignmentLegend \/>[\s\S]*The governing invariants shown here are defined/);
+  assert.match(classification, /External Alignment Classification/);
+  assert.match(classification, /not VIGIL taxonomy mappings/);
 });
 
 test("Case Files expose scalable numbered pagination with first and last navigation", async () => {
@@ -860,9 +864,9 @@ test("Case File stage and subsection headings share one editorial scale", async 
   ]);
   assert.match(instrumentCss, /vigil-case-editorial-heading h2[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
   assert.match(instrumentCss, /vigil-case-editorial-subheading[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
-  assert.match(taxonomyAssessment, />Taxonomy assessment<\/h3>/);
+  assert.match(taxonomyAssessment, />Incident breakdown<\/h3>/);
   assert.doesNotMatch(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
-  assert.match(caseFile, />Real-world harm assessment<\/h3>/);
+  assert.match(caseFile, />Harm Impact Assessment<\/h3>/);
   assert.match(caseFile, />External assessments<\/h3>/);
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 });
