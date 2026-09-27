@@ -339,7 +339,8 @@ def validate_published_vigil_ui_contract() -> list[str]:
         "Harm Impact Assessment",
         "What this class means",
         "Mapped external requirements",
-        "Fidelity classes, their plain-English explanations and governing invariants are defined in the",
+        "Carried into Classification",
+        "Fidelity classes and their plain-English explanations are defined in the",
         "These external requirement mappings are maintained with the relevant Fidelity Classes in the",
     )
     for required in required_strings:
