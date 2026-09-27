@@ -103,6 +103,8 @@ test("homepage refinement preserves the six-stage instrument, readable gear labe
   assert.doesNotMatch(home, /VIGIL diagnoses the failure/);
   assert.match(styles, /diagnostic-counter-rotation/);
   assert.match(styles, /incident-ticker-travel 112s linear infinite/);
+  assert.match(styles, /\.incident-ticker-label \{[\s\S]*font-size: 0\.7rem/);
+  assert.match(styles, /\.incident-ticker a \{[\s\S]*font-size: 0\.8rem/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.incident-ticker-track \{ animation: none; \}/);
   assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node-label \{[\s\S]*font-size: 0\.78rem/);
   assert.match(gearStyles, /\.diagnostic-orbit-v2 \.diagnostic-node\.is-active \.diagnostic-node-copy strong,[\s\S]*max-height: 5\.5rem[\s\S]*font-size: 1\.16rem/);
@@ -128,15 +130,16 @@ test("homepage mobile feed and taxonomy stickers keep their component-owned resp
   assert.doesNotMatch(mobileCss, /\.taxonomy-sticker\s*\{/);
 });
 
-test("Datasets mobile rail is page-specific normal document flow rather than a horizontal scroller", async () => {
-  const [datasets, menuCss] = await Promise.all([
-    read("src/pages/datasets.tsx"),
+test("shared DocumentRail mobile navigation wraps without horizontal scrolling", async () => {
+  const [indexCss, menuCss] = await Promise.all([
+    read("src/index.css"),
     read("src/home-menu-pages.css"),
   ]);
 
-  assert.match(datasets, /<DocumentRail title="Datasets"/);
-  assert.match(menuCss, /@media \(max-width: 900px\)[\s\S]*\.vigil-datasets-page \.document-rail-nav \{[\s\S]*display: grid;[\s\S]*grid-template-columns: 1fr;[\s\S]*overflow: visible/);
-  assert.match(menuCss, /\.vigil-datasets-page \.document-rail-link \{[\s\S]*min-width: 0;[\s\S]*white-space: normal/);
+  assert.match(indexCss, /@media \(max-width: 900px\)[\s\S]*\.document-rail-nav \{[\s\S]*display: grid;[\s\S]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);[\s\S]*overflow: visible/);
+  assert.match(indexCss, /@media \(max-width: 620px\)[\s\S]*\.document-rail-nav \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.doesNotMatch(indexCss, /@media \(max-width: 900px\)[\s\S]*\.document-rail-nav \{[\s\S]*overflow-x: auto/);
+  assert.doesNotMatch(menuCss, /\.vigil-datasets-page \.document-rail-nav/);
 });
 
 test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async () => {
@@ -910,6 +913,20 @@ test("Case File stage and subsection headings share one editorial scale", async 
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 });
 
+test("Case File Incident content aligns to the document edge without legacy card indentation", async () => {
+  const [narrativeCss, dossierCss, instrumentCss] = await Promise.all([
+    read("src/vigil-case-file-narrative-cards.css"),
+    read("src/vigil-case-file-dossier.css"),
+    read("src/vigil-observatory-instrument-experiment.css"),
+  ]);
+
+  assert.match(narrativeCss, /\.vigil-observation-summary > p \{[\s\S]*padding: 0\.65rem 0 1\.4rem/);
+  assert.match(narrativeCss, /\.vigil-observation-summary \.vigil-case-subheading \{[\s\S]*padding: 1\.15rem 0 0\.85rem/);
+  assert.match(dossierCss, /\.vigil-affected-systems \.vigil-case-subheading \{[\s\S]*padding: 1\.15rem 0 0\.85rem/);
+  assert.match(dossierCss, /\.vigil-affected-system-grid > article \{[\s\S]*padding: 0\.65rem 0 1\.4rem/);
+  assert.doesNotMatch(instrumentCss, /\.vigil-observation-summary \.vigil-case-subheading,[\s\S]*\.vigil-affected-systems \.vigil-case-subheading/);
+});
+
 test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {
   const [caseFile, instrument] = await Promise.all([
     read("src/pages/vigil-case-file.tsx"),
@@ -1170,10 +1187,19 @@ test("Case File stage navigation has one workbench owner and preserves wrapped m
   assert.match(harm, /\.vigil-case-file-page \.vigil-harm-assessment-table tbody tr \{[\s\S]*border-radius: 0\.68rem/);
 });
 
-test("Knowledge Base Assessment wording keeps harm assessment distinct from alignment classification", async () => {
-  const hub = await read("src/pages/vigil-knowledge-hub.tsx");
-  assert.match(hub, /Assessment<\/strong> contains the incident breakdown, external assessments and Harm Impact Assessment/);
-  assert.match(hub, /VIGIL-HIM assesses materialised consequence and derives severity/);
-  assert.match(hub, /Harm Impact Assessment and alignment classification are deliberately independent/);
+test("Knowledge Base introduces Harm Impact Assessment plainly and defines Disputed conservatively", async () => {
+  const [hub, caseFile] = await Promise.all([
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+  ]);
+  assert.match(hub, /Assessment<\/strong> contains the incident breakdown, external assessments and the <strong>Harm Impact Assessment<\/strong>/);
+  assert.match(hub, /VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
+  assert.match(hub, /reviews eleven harm dimensions/);
+  assert.match(hub, /Harm Impact Assessment describes materialised consequence and severity/);
+  assert.match(hub, /does not require litigation or a formal legal dispute/);
+  assert.match(hub, /affected party expressly denying the alleged conduct/);
+  assert.match(hub, /VIGIL takes a legally conservative approach/);
+  assert.match(caseFile, /<strong>Disputed<\/strong> does not mean that litigation or a formal legal dispute exists/);
+  assert.match(caseFile, /A denial does not itself establish that an allegation is false/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });
