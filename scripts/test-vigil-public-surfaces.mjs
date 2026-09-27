@@ -922,7 +922,7 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
     read("src/home-menu-pages.css"),
   ]);
   const methodStart = hub.indexOf("One evidence-to-conclusion structure for every Incident");
-  const harmSeparation = hub.indexOf("Real-world harm assessment and alignment classification are deliberately independent");
+  const harmSeparation = hub.indexOf("Harm Impact Assessment and alignment classification are deliberately independent");
   const stageList = hub.indexOf("about-method-list");
   const classificationStart = hub.indexOf("Mappings classify individual boundaries. The Case File index summarises the Incident.");
   const architectureStart = hub.indexOf("CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus");
@@ -1114,6 +1114,6 @@ test("Knowledge Base Assessment wording keeps harm assessment distinct from alig
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
   assert.match(hub, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
   assert.match(hub, /VIGIL-HIM assesses materialised consequence and derives severity/);
-  assert.match(hub, /Real-world harm assessment and alignment classification are deliberately independent/);
+  assert.match(hub, /Harm Impact Assessment and alignment classification are deliberately independent/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });
