@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import {
   canonicalIdentifierLabel,
   externalSourceKey,
@@ -156,7 +157,7 @@ export default function VigilStandardsBaseline() {
         kicker="VIGIL Observatory"
         title="AI Governance Standards"
         description="A curated library of AI governance laws, standards, frameworks and technical guidance used to support VIGIL analysis."
-        artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-standards.png"
+        artworkSrc={VIGIL_MASTHEAD_ARTWORK.standards}
         contextLabel="Library context"
         mode="collection"
         visual="standards"
