@@ -370,17 +370,35 @@
     bottom: auto;
     grid-template-columns: 1fr;
     width: min(100% - 2rem, 92rem);
+    min-height: 3.4rem;
   }
 
   .incident-ticker-label {
     justify-content: center;
-    padding: 0.58rem 0.8rem;
+    padding: 0.72rem 0.85rem;
     border-right: 0;
     border-bottom: 1px solid hsl(var(--primary) / 0.18);
+    font-size: 0.74rem;
+    line-height: 1.25;
+    letter-spacing: 0.12em;
   }
 
-  .incident-ticker-window { min-height: 2.65rem; }
-  .incident-ticker a { font-size: 0.63rem; }
+  .incident-ticker-window { min-height: 3.15rem; }
+
+  .incident-ticker-set {
+    gap: 2.8rem;
+    padding-inline: 1.5rem 2.8rem;
+  }
+
+  .incident-ticker a {
+    gap: 0.62rem;
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  .incident-ticker a span {
+    font-size: 0.78rem;
+  }
 
   .pattern-copy {
     padding-top: 5rem;
