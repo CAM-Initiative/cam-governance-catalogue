@@ -330,6 +330,11 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(classification, /<th scope="col">Alignment<\/th>/);
   assert.match(classification, /<th scope="col">Fidelity family<\/th>/);
   assert.match(classification, /<th scope="col">Fidelity class<\/th>/);
+  assert.match(classification, /<th scope="col">Plain-English explanation<\/th>/);
+  assert.match(classification, /<th scope="col">Technical definition<\/th>/);
+  assert.match(classification, /<th scope="col">Governing invariant<\/th>/);
+  assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
+  assert.match(classification, /<th scope="col">Exclusions<\/th>/);
   assert.match(classification, /<th scope="col">Source clause\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Incident analysis<\/th>/);
@@ -347,6 +352,12 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(classification, /rationale: text\(value\.rationale\)/);
   assert.match(classification, /evidenceByClass\.get\(primary\.classId\)/);
   assert.match(classification, /evidenceByClass\.get\(item\.classId\)/);
+  assert.match(classification, /classificationClass\?\.plain_english \?\? family\?\.plain_english/);
+  assert.match(classification, /classificationClass\?\.definition \?\? family\?\.definition/);
+  assert.match(classification, /classificationClass\?\.invariant \?\? family\?\.invariant/);
+  assert.match(classification, /classificationClass\?\.recognition\?\.required_conditions/);
+  assert.match(classification, /classificationClass\?\.exclusions/);
+  assert.match(classification, /vigil-classification-taxonomy-list/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
   assert.match(classification, /vigil-classification-web-table vigil-compliance-web-table/);
@@ -370,10 +381,12 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 12%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 30%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 36%; \}/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 153rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 277rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
+  assert.match(css, /\.vigil-classification-taxonomy-copy/);
+  assert.match(css, /\.vigil-classification-taxonomy-list/);
   assert.match(css, /\.vigil-classification-incident-analysis/);
   assert.match(classification, /External Alignment Classification/);
   assert.match(classification, /not VIGIL taxonomy mappings/);
