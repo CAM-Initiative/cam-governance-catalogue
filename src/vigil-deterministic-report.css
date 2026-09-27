@@ -1343,6 +1343,28 @@
 .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 32%; }
 .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 58%; }
 
+.vigil-deterministic-report-host .vigil-external-alignment-classification {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.72);
+}
+
+.vigil-deterministic-report-host .vigil-external-alignment-classification > .vigil-case-subheading {
+  margin-bottom: 0.65rem;
+}
+
+.vigil-deterministic-report-host .vigil-external-alignment-classification > .vigil-case-subheading > p {
+  margin: 0.45rem 0 0;
+  color: hsl(var(--report-muted));
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(1) { width: 18%; }
+.vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(2) { width: 19%; }
+.vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(3) { width: 23%; }
+.vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(4) { width: 40%; }
+
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(1) { width: 15%; }
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(2) { width: 30%; }
 .vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(3) { width: 55%; }
@@ -2177,6 +2199,11 @@
   .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 13% !important; }
   .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 30% !important; }
   .vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 57% !important; }
+
+  .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(1) { width: 18% !important; }
+  .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(2) { width: 19% !important; }
+  .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(3) { width: 23% !important; }
+  .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(4) { width: 40% !important; }
 }
 
 
@@ -2299,7 +2326,7 @@
 }
 
 
-/* Taxonomy assessment table mirrors the External assessments table without leaking report-only classes into the web DOM. */
+/* Incident breakdown table mirrors the External assessments table without leaking report-only classes into the web DOM. */
 .vigil-deterministic-report-host .vigil-taxonomy-assessment-table {
   width: 100%;
   border-collapse: collapse;
