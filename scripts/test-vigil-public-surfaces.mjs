@@ -644,7 +644,7 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   const caseFilesSection = severity.match(/<section id="case-files"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
-  assert.match(methodSection, /Overall severity[\s\S]*highest supported materialised-harm band controls the result/);
+  assert.match(methodSection, /Overall severity[\s\S]*highest defensible materialised-harm threshold controls the overall severity/);
   assert.doesNotMatch(caseFilesSection, /HarmEvidenceStateDefinitions|>Definitions</);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
   assert.match(menuCss, /vigil-severity-evidence-states dl[\s\S]*vigil-severity-overall-rule/);
