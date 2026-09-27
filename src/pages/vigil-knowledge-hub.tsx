@@ -235,7 +235,7 @@ export default function VigilKnowledgeHub() {
                 <p>CAM Initiative policy papers and consultation submissions translate governance analysis into practical institutional, legal and regulatory proposals.</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
