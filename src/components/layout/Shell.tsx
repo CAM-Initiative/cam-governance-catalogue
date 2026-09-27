@@ -10,7 +10,7 @@ const mobileLinks = [
   { href: "/observatory/cases/", label: "Case Files", internal: true },
   { href: "/observatory/alignment-taxonomy/", label: "Alignment Taxonomy", internal: true },
   { href: "/observatory/harm-impact-assessment/", label: "Harm Impact Assessment", internal: true },
-  { href: "/observatory/policy/", label: "Policy", internal: true },
+  { href: "/policy/", label: "Policy", internal: true },
   { href: "/observatory/ai-governance-standards/", label: "AI Governance Standards", internal: true },
   { href: "/datasets/", label: "Datasets", internal: true },
   { href: "/licensing/", label: "Copyright & Licence", internal: true },
@@ -30,7 +30,7 @@ const vigilLinks = [
   { href: "/observatory/cases/", label: "VIGIL Observatory Case Files", navLabel: "Case Files" },
   { href: "/observatory/alignment-taxonomy/", label: "VIGIL Observatory Alignment Taxonomy", navLabel: "Alignment Taxonomy" },
   { href: "/observatory/harm-impact-assessment/", label: "Harm Impact Assessment", navLabel: "Harm Impact Assessment" },
-  { href: "/observatory/policy/", label: "VIGIL Observatory Policy", navLabel: "Policy" },
+  { href: "/policy/", label: "VIGIL Observatory Policy", navLabel: "Policy" },
   { href: "/observatory/ai-governance-standards/", label: "VIGIL Observatory AI Governance Standards", navLabel: "AI Governance Standards" },
 ];
 
