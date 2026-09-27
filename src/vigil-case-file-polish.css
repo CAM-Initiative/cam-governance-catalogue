@@ -604,12 +604,12 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   min-width: 118rem;
 }
 
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 18%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 24%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 12%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 16%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 22%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 30%; }
 .vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(4) { width: 12%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(5) { width: 12%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(6) { width: 22%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(5) { width: 10%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(6) { width: 10%; }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table q {
   font-weight: 650;
@@ -653,6 +653,32 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   display: inline-block;
   font-weight: 650;
   line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-stack {
+  display: grid;
+  gap: 0;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-stack-item {
+  min-height: 2.5rem;
+  padding: 0.58rem 0;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-stack-item:first-child {
+  padding-top: 0;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-stack-item:last-child {
+  padding-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-stack-item + .vigil-taxonomy-assessment-stack-item {
+  border-top: 1px solid hsl(var(--border) / 0.48);
+}
+
+.vigil-case-file-page .vigil-taxonomy-incident-analysis .vigil-taxonomy-assessment-stack-item {
+  color: hsl(var(--foreground) / 0.9);
 }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-rationale {
