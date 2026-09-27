@@ -333,35 +333,12 @@ function classificationEvidenceSource(entry: ClassificationEvidence) {
   return entry.sourceAnchor ?? entry.sourceParaphrase;
 }
 
-function classificationEvidenceRelationshipLabel(relationship?: string) {
-  switch (relationship) {
-    case "failure-occurrence":
-    case "failure-occurrence contribution":
-      return "Failure occurred";
-    case "successful-invariant":
-      return "Invariant held";
-    case "ambiguous-boundary":
-    case "ambiguous-boundary exemplar":
-    case "candidate boundary":
-      return "Boundary unresolved";
-    default:
-      return relationship
-        ? relationship.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ")
-        : undefined;
-  }
-}
-
-
 function ClassificationTable({
   rows,
-  status,
-  taxonomyVersion,
   taxonomyReferenceNumber,
   taxonomyReferenceHref,
 }: {
   rows: ClassificationTableRow[];
-  status?: ClassificationStatus;
-  taxonomyVersion?: string;
   taxonomyReferenceNumber?: number;
   taxonomyReferenceHref?: string;
 }) {
@@ -375,17 +352,12 @@ function ClassificationTable({
         <caption className="sr-only">Canonical Alignment Taxonomy mappings with the occurrence-specific evidence bridge repeated from the Incident breakdown.</caption>
         <thead>
           <tr>
-            <th scope="col">Mapping</th>
             <th scope="col">Alignment</th>
-            <th scope="col">Status</th>
-            <th scope="col">Taxonomy version</th>
             <th scope="col">Fidelity family</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Source clause(s)</th>
             <th scope="col">Recovered governance principle(s)</th>
             <th scope="col">Incident analysis</th>
-            <th scope="col">Relationship(s)</th>
-            <th scope="col">Mapping state(s)</th>
             <th scope="col">Classification basis</th>
             <th scope="col">Confidence</th>
           </tr>
@@ -399,19 +371,14 @@ function ClassificationTable({
             const sourceClauses = evidence.map(classificationEvidenceSource);
             const recoveredPrinciples = evidence.map((entry) => entry.recoveredInvariant);
             const incidentAnalysis = evidence.map((entry) => entry.rationale);
-            const relationships = evidence.map((entry) => classificationEvidenceRelationshipLabel(entry.relationship));
-            const mappingStates = evidence.map((entry) => entry.canonical ? "Canonical mapping" : "Non-canonical relationship");
 
             return <tr key={`${mapping}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
-              <td data-label="Mapping"><strong>{mapping}</strong></td>
               <td data-label="Alignment" className="vigil-classification-outcome-cell">
                 <span className="vigil-classification-outcome-detail">
                   <MappingOutcome role={item.role} />
                   <strong>{outcome.label}</strong>
                 </span>
               </td>
-              <td data-label="Status">{statusLabel(status)}</td>
-              <td data-label="Taxonomy version"><span className="vigil-classification-id">{taxonomyVersion ?? "Not stated"}</span></td>
               <td data-label="Fidelity family">
                 <strong>{family?.name ?? (item.familyId ? "Unresolved fidelity family" : "No fidelity family assigned")}</strong>
                 {(family?.family_id ?? item.familyId) ? <span className="vigil-classification-id">{family?.family_id ?? item.familyId}</span> : null}
@@ -428,12 +395,6 @@ function ClassificationTable({
               </td>
               <td data-label="Incident analysis" className="vigil-classification-incident-analysis">
                 <ClassificationEvidenceStack values={incidentAnalysis} empty={item.basis ?? "No separate occurrence-specific incident analysis is linked to this mapping."} />
-              </td>
-              <td data-label="Relationship(s)">
-                <ClassificationEvidenceStack values={relationships} empty="No clause-level relationship is linked to this mapping." />
-              </td>
-              <td data-label="Mapping state(s)">
-                <ClassificationEvidenceStack values={mappingStates} empty="No clause-level mapping state is linked to this mapping." />
               </td>
               <td data-label="Classification basis" className="vigil-classification-basis">
                 {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
@@ -530,7 +491,7 @@ function ExplicitClassificationState({
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationTable rows={[{ item: primary, mapping: "Primary", evidence: [] }]} status={parsed.status} taxonomyVersion={parsed.taxonomyVersion} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={[{ item: primary, mapping: "Primary", evidence: [] }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
@@ -579,7 +540,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
     {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationTable rows={tableRows} status={parsed.status} taxonomyVersion={parsed.taxonomyVersion} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard
