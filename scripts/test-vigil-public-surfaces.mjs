@@ -1116,7 +1116,9 @@ test("Case File stage navigation has one workbench owner and preserves mobile ho
   assert.match(instrument, /@media \(max-width: 900px\)[\s\S]*\.vigil-case-stage-tabs button,[\s\S]*border-radius: 999px !important/);
   assert.doesNotMatch(dossier, /\.vigil-case-stage-tabs/);
   assert.doesNotMatch(dossier, /\.vigil-case-report-tab/);
+  assert.doesNotMatch(dossier, /\.vigil-case-active-stage/);
   assert.doesNotMatch(evidence, /\.vigil-case-stage-tabs/);
+  assert.doesNotMatch(evidence, /\.vigil-case-active-stage/);
   assert.doesNotMatch(mobile, /\.vigil-case-file-page/);
 
   assert.equal((polish.match(/\.vigil-case-file-page \.vigil-exemplar-callout-copy > p:not\([\s\S]*?\{/g) || []).length, 1);
