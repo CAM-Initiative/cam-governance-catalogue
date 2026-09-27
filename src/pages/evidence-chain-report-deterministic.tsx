@@ -348,6 +348,10 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
                   <Field label="Agent configuration" value={system.agentConfiguration} />
                   <Field label="Agent count" value={system.agentCount} />
                   <Field label="Interface" value={system.interfaceSurface} />
+                  <Field label="Deployment state" value={system.deploymentState} />
+                  <Field label="Activity context" value={system.activityContexts} />
+                  <Field label="External reach" value={system.externalReach} />
+                  <Field label="Activity actor" value={system.activityActor} />
                   <Field label="Occurrence setting" value={system.occurrenceSetting} />
                   <Field label="Testing conducted by" value={system.testingActor} />
                   <Field label="Deployment context" value={system.deploymentContext} />

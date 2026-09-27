@@ -517,10 +517,20 @@ export default function VigilCaseFile() {
   const reportId = incident?.id ?? state.sourceId;
   const occurred = incidentTimingLabel(incident?.raw);
   const jurisdiction = incident ? firstText(incident.raw, ["jurisdictional_context.primary_jurisdiction"]) ?? "Not established" : "Not established";
-  const environment = incident
-    ? firstText(incident.raw, ["system_context.occurrence_environment.operational_setting"])
-    : undefined;
-  const environmentLabel = environment ? titleizeValue(environment) : "Not established";
+  const occurrenceSummary = affectedSystems[0];
+  const hasSeparatedEnvironment = Boolean(
+    occurrenceSummary?.deploymentState
+    || occurrenceSummary?.activityContexts
+    || occurrenceSummary?.externalReach
+    || occurrenceSummary?.activityActor,
+  );
+  const environmentMetadata = hasSeparatedEnvironment
+    ? [
+        { label: "Deployment", value: occurrenceSummary?.deploymentState ?? "Not established" },
+        { label: "Activity", value: occurrenceSummary?.activityContexts ?? "Not established" },
+        { label: "External reach", value: occurrenceSummary?.externalReach ?? "Not established" },
+      ]
+    : [{ label: "Environment", value: occurrenceSummary?.occurrenceSetting ?? "Not established" }];
 
   const governanceConclusion = incident ? firstText(incident.raw, ["vigil_assessment.governance_interpretation"]) : undefined;
   const factualBasis = incident ? firstText(incident.raw, ["vigil_assessment.factual_basis"]) : undefined;
@@ -585,6 +595,10 @@ export default function VigilCaseFile() {
             <Field label="Agent configuration" value={system.agentConfiguration} />
             <Field label="Agent count" value={system.agentCount} />
             <Field label="Interface" value={system.interfaceSurface} />
+            <Field label="Deployment state" value={system.deploymentState} />
+            <Field label="Activity context" value={system.activityContexts} />
+            <Field label="External reach" value={system.externalReach} />
+            <Field label="Activity actor" value={system.activityActor} />
             <Field label="Occurrence setting" value={system.occurrenceSetting} />
             <Field label="Testing conducted by" value={system.testingActor} />
             <Field label="Deployment context" value={system.deploymentContext} />
@@ -799,7 +813,7 @@ export default function VigilCaseFile() {
         { label: "Incident", value: incident ? compactId(incident.id) : compactId(state.sourceId), mono: true },
         { label: "Occurred", value: occurred },
         { label: "Jurisdiction", value: jurisdiction },
-        { label: "Environment", value: environmentLabel },
+        ...environmentMetadata,
         { label: "Severity", value: <VigilStatusChip value={incident?.severity} /> },
         { label: "Classification", value: classificationDisplay },
         ...(hasMixedExecution ? [{ label: "Execution", value: "Mixed" }] : []),

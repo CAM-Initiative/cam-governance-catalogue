@@ -57,8 +57,17 @@ test("Affected systems expose evidence-bounded agent and occurrence metadata in 
   assert.match(helper, /context\.occurrence_environment/);
   assert.match(helper, /count_basis/);
   assert.match(helper, /At least \$\{min\}/);
-  assert.match(helper, /Mixed testing \/ live/);
+  assert.match(helper, /deployment_state/);
+  assert.match(helper, /activity_contexts/);
+  assert.match(helper, /external_reach/);
+  assert.match(helper, /activity_actor/);
+  assert.match(helper, /Pre-deployment/);
+  assert.match(helper, /Operational use/);
+  assert.match(helper, /Live external/);
   assert.match(helper, /Provider \/ internal/);
+  assert.match(helper, /hasSeparatedEnvironment/);
+  assert.match(helper, /operational_setting/);
+  assert.match(helper, /testing_actor/);
   assert.match(helper, /joinedText\(context\.interface_surface\)/);
   assert.doesNotMatch(helper, /evidence_basis|source_record_refs|environment_detail/);
 
@@ -66,6 +75,10 @@ test("Affected systems expose evidence-bounded agent and occurrence metadata in 
     assert.match(source, /dedupeAffectedSystems/);
     assert.match(source, /label="Agent configuration"/);
     assert.match(source, /label="Agent count"/);
+    assert.match(source, /label="Deployment state"/);
+    assert.match(source, /label="Activity context"/);
+    assert.match(source, /label="External reach"/);
+    assert.match(source, /label="Activity actor"/);
     assert.match(source, /label="Occurrence setting"/);
     assert.match(source, /label="Testing conducted by"/);
   }
