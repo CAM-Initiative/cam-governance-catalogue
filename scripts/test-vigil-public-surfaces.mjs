@@ -1112,7 +1112,7 @@ test("Case File stage tabs keep six stages on one desktop row while mobile may w
 
 test("Knowledge Base Assessment wording keeps harm assessment distinct from alignment classification", async () => {
   const hub = await read("src/pages/vigil-knowledge-hub.tsx");
-  assert.match(hub, /Assessment<\/strong> contains distinct governance, external and real-world harm assessments/);
+  assert.match(hub, /Assessment<\/strong> contains the incident breakdown, external assessments and Harm Impact Assessment/);
   assert.match(hub, /VIGIL-HIM assesses materialised consequence and derives severity/);
   assert.match(hub, /Harm Impact Assessment and alignment classification are deliberately independent/);
   assert.doesNotMatch(hub, /classify materialised harm/);
