@@ -138,7 +138,7 @@ export default function VigilSeverityMethodology() {
               </div>
               <div className="vigil-severity-overall-rule">
                 <h3>Overall severity</h3>
-                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest supported materialised-harm band controls the result; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p>
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p>
               </div>
             </div>
             <div className="vigil-severity-chip-key" aria-label="Severity chip display">
