@@ -452,13 +452,7 @@
   border-bottom: 1px solid var(--vigil-workbench-rule);
 }
 
-.vigil-case-file-page .vigil-observation-summary .vigil-case-subheading,
-.vigil-case-file-page .vigil-affected-systems .vigil-case-subheading,
 .vigil-case-file-page .vigil-severity-assessment .vigil-case-subheading {
-  padding-inline: 0;
-}
-
-.vigil-case-file-page .vigil-affected-system-grid > article {
   padding-inline: 0;
 }
 
