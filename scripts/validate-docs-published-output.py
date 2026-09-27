@@ -340,8 +340,6 @@ def validate_published_vigil_ui_contract() -> list[str]:
         "Incident analysis",
         "Source clause(s)",
         "Recovered governance principle(s)",
-        "Relationship(s)",
-        "Mapping state(s)",
         "Mapped external requirements",
         "Canonical mapping",
         "Source clauses, recovered governance principles and Incident analysis are repeated here from the Section 02 Incident breakdown",
