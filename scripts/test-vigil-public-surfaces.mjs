@@ -401,7 +401,9 @@ test("Knowledge Base explains mapping outcomes and all five Case File index clas
   assert.match(hub, /Case File index classification/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
-  assert.match(css, /\.vigil-knowledge-index-classifications[\s\S]*\.vigil-knowledge-index-state\.is-failure[\s\S]*\.is-exemplar[\s\S]*\.is-mixed/);
+  assert.match(css, /\.vigil-knowledge-index-classifications[\s\S]*\.vigil-knowledge-index-state \{[\s\S]*background: hsl\(var\(--primary\) \/ 0\.045\)/);
+  assert.doesNotMatch(css, /\.vigil-knowledge-index-state\.is-(?:failure|exemplar|mixed|disputed|unclassified)/);
+  assert.doesNotMatch(hub, /vigil-knowledge-index-state is-/);
   assert.doesNotMatch(about, /Mappings classify individual boundaries|Publication model|Traceable findings, visible judgment and clear boundaries/);
   assert.match(about, /VIGIL uses its own Incident model, VIGIL Harm Impact Methodology \(VIGIL-HIM\) and VIGIL Observatory Alignment Taxonomy/);
 });
@@ -905,6 +907,11 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
   assert.match(hub, /VIGIL-HIM[\s\S]*VIGIL Alignment Taxonomy[\s\S]*Repair[\s\S]*Conclusion[\s\S]*References/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
   assert.match(hub, /CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus/);
+  assert.match(hub, /VIGIL Observatory Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation/);
+  assert.match(hub, /does not create or amend CAELESTIS doctrine/);
+  assert.doesNotMatch(hub, /caelestis-project\.eu/);
+  assert.match(about, /CAELESTIS Architecture Model are not affiliated with the separate Caelestis project/);
+  assert.match(about, /https:\/\/caelestis-project\.eu\//);
   assert.match(hub, /Open archived release[\s\S]*CAELESTIS repository/);
   assert.doesNotMatch(about, /One evidence-to-conclusion structure for every Incident|Mappings classify individual boundaries|CAELESTIS Architecture Model \(CAM\) is a publicly inspectable governance corpus|Publication model/);
 
@@ -1032,6 +1039,8 @@ test("About disambiguates VIGIL Observatory from unrelated VIGIL projects", asyn
   assert.match(about, /https:\/\/vigilsoc\.org\//);
   assert.match(about, /open-source AI-powered security operations platform/);
   assert.match(about, /open-source AI security operations project/);
+  assert.match(about, /CAELESTIS Architecture Model are not affiliated with the separate Caelestis project/);
+  assert.match(about, /https:\/\/caelestis-project\.eu\//);
 });
 
 test("About citation uses a single Suggested general citation heading", async () => {

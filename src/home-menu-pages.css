@@ -1160,43 +1160,14 @@ html[data-theme="dark"] .home-menu-founder-portrait img {
   align-items: center;
   min-height: 1.8rem;
   padding: 0.2rem 0.62rem;
-  border: 1px solid hsl(var(--border));
+  border: 1px solid hsl(var(--primary) / 0.3);
   border-radius: 999px;
-  background: hsl(var(--background));
+  background: hsl(var(--primary) / 0.045);
+  color: hsl(var(--foreground) / 0.88);
   font-family: var(--app-font-sans);
   font-size: 0.8rem;
   font-weight: 720;
   line-height: 1.2;
-}
-
-.vigil-knowledge-index-state.is-failure {
-  border-color: hsl(var(--destructive) / 0.42);
-  background: hsl(var(--destructive) / 0.055);
-  color: hsl(var(--destructive));
-}
-
-.vigil-knowledge-index-state.is-exemplar {
-  border-color: hsl(var(--status-success) / 0.46);
-  background: hsl(var(--status-success-surface) / 0.62);
-  color: hsl(var(--status-success));
-}
-
-.vigil-knowledge-index-state.is-mixed {
-  border-color: hsl(var(--status-mixed) / 0.5);
-  background: hsl(var(--status-mixed-surface) / 0.62);
-  color: hsl(var(--status-mixed));
-}
-
-.vigil-knowledge-index-state.is-disputed {
-  border-color: hsl(var(--primary) / 0.42);
-  background: hsl(var(--primary) / 0.06);
-  color: hsl(var(--primary));
-}
-
-.vigil-knowledge-index-state.is-unclassified {
-  border-color: hsl(var(--border));
-  background: hsl(var(--muted) / 0.38);
-  color: hsl(var(--muted-foreground));
 }
 
 @media (max-width: 720px) {

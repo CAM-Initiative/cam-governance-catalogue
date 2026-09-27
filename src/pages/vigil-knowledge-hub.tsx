@@ -187,7 +187,7 @@ export default function VigilKnowledgeHub() {
                 <p>The current public Case File index combines those mapping-level results into one of five whole-Incident labels. These are summary states; the underlying mapping outcomes remain separately visible inside the Case File.</p>
                 <div className="vigil-knowledge-index-classifications" aria-label="Case File index classification states">
                   {CASE_FILE_INDEX_CLASSIFICATIONS.map((item) => <article key={item.key}>
-                    <span className={`vigil-knowledge-index-state is-${item.key}`}>{item.label}</span>
+                    <span className="vigil-knowledge-index-state">{item.label}</span>
                     <p>{item.description}</p>
                   </article>)}
                 </div>
@@ -246,8 +246,7 @@ export default function VigilKnowledgeHub() {
               <div className="document-reading">
                 <p>The CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus for advanced AI systems, synthetic agents, relational AI environments and digital ecosystem accountability. It sets out constitutional architecture, charters, laws, schedules, registries, symbolic structures and supporting validation infrastructure for CAM-governed contexts.</p>
                 <p>The public architecture reference and supporting source material are published through the CAELESTIS repository, with versioned releases preserved through Zenodo.</p>
-                <p>CAELESTIS provides a governance architecture. VIGIL Observatory documents and analyses Incidents independently; a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
-                <p>The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
+                <p>The VIGIL Observatory Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation, alongside other evidence and governance sources. That source relationship does not merge the two systems: VIGIL documents and assesses Incidents independently, and a VIGIL assessment or taxonomy relationship does not create or amend CAELESTIS doctrine.</p>
               </div>
               <div className="cam-action-row">
                 <a className="cam-action cam-action-secondary" href="https://doi.org/10.5281/zenodo.20686316" target="_blank" rel="noreferrer">Open archived release <ArrowRight aria-hidden="true" /></a>

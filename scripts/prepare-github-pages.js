@@ -115,7 +115,8 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <h2>VIGIL Observatory</h2>
   <h3>Public Incident evidence, classification and repair analysis</h3>
   <p>VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies evidence against recurring governance boundaries through the VIGIL Observatory Alignment Taxonomy, and records exemplars when the relevant invariant holds under pressure.</p>
-  <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. It is separate from CAELESTIS and does not create or amend CAELESTIS doctrine; CAM or CAELESTIS applicability is assessed separately.</p>
+  <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. The Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation, while VIGIL remains an independent Incident-analysis system; VIGIL assessments and taxonomy relationships do not create or amend CAELESTIS doctrine.</p>
+  <p>VIGIL Observatory is not affiliated with Vigil at vigil.agency or Vigil SOC. CAM Initiative and the CAELESTIS Architecture Model are also not affiliated with the separate Caelestis project at caelestis-project.eu.</p>
 
   <nav aria-label="CAM Initiative resources">
     <ul>
