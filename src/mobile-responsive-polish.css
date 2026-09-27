@@ -179,31 +179,9 @@
   }
 }
 
-/* Homepage taxonomy labels: preserve the loose physical pile, but clamp every
- * label into a safe mobile rectangle so generated positions cannot leave the viewport. */
+/* Homepage taxonomy sticker mobile behaviour is owned by
+ * home-premium-v6.css. Do not re-clamp it in this late repair layer. */
 @media (max-width: 720px) {
-  .taxonomy-sticker-board {
-    min-height: 30rem;
-    overflow: hidden;
-  }
-
-  .taxonomy-sticker {
-    left: clamp(0.4rem, var(--sticker-left), calc(100% - 9.8rem));
-    top: clamp(0.35rem, var(--sticker-top), calc(100% - 3.7rem));
-    max-width: min(9.35rem, calc(100% - 0.8rem));
-    padding: 0.38rem 0.48rem 0.42rem;
-  }
-
-  .taxonomy-sticker-code {
-    font-size: 0.59rem;
-  }
-
-  .taxonomy-sticker strong {
-    font-size: 0.69rem;
-    line-height: 1.12;
-    overflow-wrap: anywhere;
-  }
-
   /* Automatic dwell remains a compact ring cue. An explicit tap gets the
    * readable centred detail card rather than expanding toward a screen edge. */
   .diagnostic-orbit-v2 .diagnostic-node.is-active:not(.is-expanded) {
