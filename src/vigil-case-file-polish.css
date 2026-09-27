@@ -535,6 +535,10 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   .vigil-case-file-page .vigil-external-assessment-table {
     min-width: 42rem;
   }
+
+  .vigil-case-file-page .vigil-taxonomy-assessment-table {
+    min-width: 118rem;
+  }
 }
 
 
@@ -596,12 +600,59 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   color: hsl(var(--muted-foreground));
 }
 
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 20%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 40%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 40%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table {
+  min-width: 118rem;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 18%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 24%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 12%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(4) { width: 12%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(5) { width: 12%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(6) { width: 22%; }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table q {
   font-weight: 650;
+}
+
+.vigil-case-file-page .vigil-taxonomy-source-wording {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.vigil-case-file-page .vigil-taxonomy-source-wording p {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-taxonomy-source-wording p > span,
+.vigil-case-file-page .vigil-taxonomy-relationship-code {
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-class-link {
+  color: hsl(var(--primary));
+  text-decoration: none;
+}
+
+.vigil-case-file-page .vigil-taxonomy-assessment-class-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
+.vigil-case-file-page .vigil-taxonomy-relationship-code {
+  display: block;
+  margin-top: 0.28rem;
+}
+
+.vigil-case-file-page .vigil-taxonomy-mapping-state {
+  display: inline-block;
+  font-weight: 650;
+  line-height: 1.45;
 }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-rationale {
@@ -674,6 +725,9 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 /* Taxonomy assessment table outline and header treatment match Classification and real-world harm. */
 .vigil-case-file-page .vigil-taxonomy-assessment-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-inline: contain;
   border: 1px solid hsl(var(--border) / 0.74);
   border-radius: 0.58rem;
   background: hsl(var(--background));
