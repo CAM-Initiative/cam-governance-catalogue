@@ -2,6 +2,7 @@ import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
 const methodologyReferences = [
@@ -88,7 +89,7 @@ export default function VigilSeverityMethodology() {
         kicker="VIGIL Observatory · Harm Impact Assessment"
         title="Harm Impact Assessment"
         description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."
-        artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-harm-impact.png"
+        artworkSrc={VIGIL_MASTHEAD_ARTWORK.harm}
         contextLabel="Methodology context"
         mode="reference"
         visual="harm"
