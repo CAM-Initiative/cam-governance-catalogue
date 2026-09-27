@@ -4,6 +4,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
+import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import {
   loadFailureTaxonomy,
   type FailureTaxonomyCaseFileExample,
@@ -504,7 +505,7 @@ export default function VigilFailureTaxonomy() {
           contextLabel="Taxonomy context"
           mode="reference"
           visual="taxonomy"
-          artworkSrc="https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/vigil-fascia-taxonomy.png"
+          artworkSrc={VIGIL_MASTHEAD_ARTWORK.taxonomy}
           metadata={[
             { label: "Version", value: state.status === "ready" ? state.data.index.standard.version : "—" },
             { label: "Status", value: "Beta" },
