@@ -37,6 +37,8 @@ export type FailureTaxonomyExternalReference = {
   url?: string;
   reference_role?: string;
   evidence_note?: string;
+  requirement_id?: string;
+  clause_or_control?: string;
 };
 
 export type FailureTaxonomyInvariantExemplar = {
