@@ -94,7 +94,7 @@ test("Case File Section 02 orders factual basis, taxonomy assessment, harm and e
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const factualIndex = assessmentRenderer.indexOf("vigil-diagnosis-factual-basis");
   const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
-  const harmIndex = assessmentRenderer.indexOf("Real-world harm assessment");
+  const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
   const externalIndex = assessmentRenderer.indexOf("External assessments");
 
   assert.ok(factualIndex >= 0 && taxonomyIndex > factualIndex && harmIndex > taxonomyIndex && externalIndex > harmIndex);
@@ -487,7 +487,7 @@ test("mobile Assessment prose stays viewport-bound while Harm tables remain hori
   assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-harm-assessment-table \{[\s\S]*min-width: 800px;/);
 
   assert.match(harmCss, /\.vigil-harm-methodology-table \{[\s\S]*min-width: 1680px;/);
-  assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*min-width: 1040px;/);
+  assert.match(harmCss, /\.vigil-harm-assessment-table \{[\s\S]*width: 100%;[\s\S]*min-width: 0;/);
 });
 
 
@@ -495,7 +495,7 @@ test("taxonomy, harm and external assessments remain distinct Stage 02 sections 
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const taxonomyStart = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
-  const harmStart = assessmentRenderer.indexOf("Real-world harm assessment");
+  const harmStart = assessmentRenderer.indexOf("Harm Impact Assessment");
   const externalStart = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
   assert.ok(taxonomyStart > 0 && harmStart > taxonomyStart && externalStart > harmStart);
   assert.match(assessmentRenderer, /vigil-external-assessment-section/);
