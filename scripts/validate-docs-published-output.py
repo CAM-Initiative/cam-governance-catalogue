@@ -340,13 +340,13 @@ def validate_published_vigil_ui_contract() -> list[str]:
         "Incident observation",
         "Incident analysis",
         "Fidelity class",
-        "Technical definition",
         "Recognition criteria",
-        "Classification basis",
+        "Confidence",
         "External requirement",
         "Requirement explanation",
-        "Incident observations and Incident analysis carry the occurrence-specific evidence from Section 02 into the classification decision.",
-        "Section 04 repeats the Incident observation and classification basis so the path from occurrence to VIGIL classification to external requirement remains visible.",
+        "Classification basis",
+        "Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.",
+        "Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.",
     )
     for required in required_strings:
         if required not in bundle:
