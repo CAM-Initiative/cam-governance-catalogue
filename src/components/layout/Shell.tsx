@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Coffee, Github, Mail, Newspaper } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -40,11 +40,15 @@ function navActive(location: string, href: string) {
 
 export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isKnowledgeBaseHome = location === "/observatory/knowledge-base/";
   const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/" || isKnowledgeBaseHome;
   const isVigilActive = !isKnowledgeBaseHome && (location === "/observatory/" || location.startsWith("/observatory/"));
   const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   return (
     <div className="site-frame">
@@ -57,6 +61,15 @@ export function Shell({ children }: { children: ReactNode }) {
 
           <div className="site-mobile-controls">
             <ThemeToggle />
+            <button
+              type="button"
+              className="site-menu-button"
+              aria-controls="mobile-site-navigation"
+              aria-expanded={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+            >
+              Menu
+            </button>
           </div>
 
           <nav className="site-desktop-nav" aria-label="Primary navigation">
@@ -112,25 +125,27 @@ export function Shell({ children }: { children: ReactNode }) {
           </nav>
         </div>
 
-        <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="site-mobile-nav">
-          <div className="site-mobile-nav-inner">
-            {mobileLinks.map((link) => (
-              link.internal ? (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={navActive(location, link.href) ? "site-mobile-nav-link is-active" : "site-mobile-nav-link"}
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a key={link.href} href={link.href} className="site-mobile-nav-link">
-                  {link.label}
-                </a>
-              )
-            ))}
-          </div>
-        </nav>
+        {isMobileMenuOpen && (
+          <nav id="mobile-site-navigation" aria-label="Mobile navigation" className="site-mobile-nav">
+            <div className="site-mobile-nav-inner">
+              {mobileLinks.map((link) => (
+                link.internal ? (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={navActive(location, link.href) ? "site-mobile-nav-link is-active" : "site-mobile-nav-link"}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a key={link.href} href={link.href} className="site-mobile-nav-link">
+                    {link.label}
+                  </a>
+                )
+              ))}
+            </div>
+          </nav>
+        )}
       </header>
 
       <main className="site-main">
