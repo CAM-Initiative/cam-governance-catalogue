@@ -97,7 +97,7 @@ export default function VigilSeverityMethodology() {
         visual="harm"
         metadata={[
           { label: "Method", value: "VIGIL-HIM", mono: true },
-          { label: "Version", value: "1.0.0", mono: true },
+          { label: "Version", value: "1.0.1", mono: true },
           { label: "Dimensions", value: "11" },
           { label: "Severity bands", value: "S1–S5 · SU", mono: true },
         ]}
@@ -168,7 +168,7 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-references-heading">Methodology source trail</h2>
             </div>
             <div className="document-reading">
-              <p>The references below are the external sources registered against VIGIL-HIM 1.0.0.</p>
+              <p>The references below are the external sources registered against VIGIL-HIM 1.0.1.</p>
             </div>
             <ol className="vigil-methodology-reference-list">
               {methodologyReferences.map((reference, index) => <li key={reference.id} className="vigil-methodology-reference-item">

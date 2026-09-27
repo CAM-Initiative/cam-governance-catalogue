@@ -62,7 +62,7 @@ test("VIGIL Observatory Knowledge Base exposes document navigation for its core 
   assert.match(hub, /href="\/observatory\/cases\/"/);
   assert.match(hub, /href="\/observatory\/knowledge-base\/standards-sources\/"/);
   assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*Open Harm Impact Assessment/);
-  assert.match(hub, /VIGIL-HIM 1\.0\.0/);
+  assert.match(hub, /VIGIL-HIM 1\.0\.1/);
   assert.match(hub, /href="\/datasets\/"/);
   assert.doesNotMatch(hub, /CollectionCard/);
 });
@@ -598,7 +598,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
-  assert.match(severity, /VIGIL-HIM 1\.0\.0/);
+  assert.match(severity, /VIGIL-HIM 1\.0\.1/);
   assert.match(severity, /vigil-severity-methodology-document/);
   assert.doesNotMatch(severity, /severity-alignment-heading/);
   assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
@@ -637,6 +637,10 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   assert.match(matrix, /adaptation_note/);
   assert.match(matrix, /must be wiped and rebuilt or reconstructed from a known-clean state/);
   assert.match(matrix, /Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5/);
+  assert.match(matrix, /Distinguish unauthorised access or disclosure from evidenced downstream misuse/);
+  assert.match(matrix, /Direct realised loss may include theft, compensation, incident-specific replacement or restoration/);
+  assert.match(matrix, /Measure downtime until regular activity is restored to the pre-incident service level/);
+  assert.match(matrix, /Distinguish public exposure from reputational or dignitary injury/);
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   const caseFilesSection = severity.match(/<section id="case-files"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable[\s\S]*SU — Unassessed/);
@@ -731,7 +735,7 @@ test("Alignment Taxonomy PDF uses the canonical public naming", async () => {
 test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
   const datasets = await read("src/pages/datasets.tsx");
   assert.match(datasets, /title="Harm Impact Matrix"/);
-  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.0\.json/);
+  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.1\.json/);
   assert.match(datasets, /11 harm dimensions/);
   assert.match(datasets, /Open JSON matrix/);
   assert.doesNotMatch(datasets, /title="Observatory Reference Registry"/);

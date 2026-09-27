@@ -68,6 +68,7 @@ const DIMENSIONS = [
       S4: "Large-scale or highly sensitive exposure, persistent loss of confidentiality, or substantial evidenced misuse.",
       S5: "Catastrophic, effectively irreversible exposure creating grave safety, liberty or societal consequences.",
     },
+    adaptation_note: "Distinguish unauthorised access or disclosure from evidenced downstream misuse. Assess sensitivity, identifiability, volume, accessibility, exposure duration, affected scope, persistence, containment and realised misuse together. Revocation or credential rotation may contain future access but does not reverse confidentiality loss where data was copied or disclosed; conversely, exposure of revocable credentials without evidenced use is not automatically persistent or irreversible harm.",
   },
   {
     dimension_id: "financial-economic",
@@ -79,7 +80,7 @@ const DIMENSIONS = [
       S4: "USD 100 million to below USD 100 billion, or independently evidenced substantial solvency, organisational-viability or widespread economic impact where no defensible USD conversion is available.",
       S5: "At least USD 100 billion, catastrophic insolvency or systemic economic loss.",
     },
-    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold.",
+    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold. Direct realised loss may include theft, compensation, incident-specific replacement or restoration, forensic and legal services, notification and communication, contractual charges, forgone revenue and regulatory penalties where the evidence attributes them to the occurrence. Ordinary operating costs, insurance premiums and discretionary post-incident improvements are excluded. Do not infer an amount from effort, notoriety or asset importance.",
   },
   {
     dimension_id: "property-asset-damage",
@@ -103,7 +104,7 @@ const DIMENSIONS = [
       S4: "Essential or critical operation disrupted over 24 hours, material multi-organisation or multi-jurisdiction impact, exceeded evidenced tolerable downtime, or substantial external recovery.",
       S5: "Catastrophic or prolonged loss of essential service or operational collapse producing comparably grave materialised consequences.",
     },
-    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope.",
+    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope. Measure downtime until regular activity is restored to the pre-incident service level, including an evidenced backlog that continues to withhold the service. Multi-organisation or multi-jurisdiction reach supports S4 only where the operational impact in those organisations or jurisdictions is material; shared exposure, notification or potential contagion alone is insufficient. Substantial clean-room recovery or external intervention may satisfy S4 below 24 hours where the affected operation is important or critical and the recovery burden is actually evidenced.",
   },
   {
     dimension_id: "reputation-dignity",
@@ -115,6 +116,7 @@ const DIMENSIONS = [
       S4: "Severe, wide-reaching or persistent dignitary or reputational injury with substantial personal or organisational consequences.",
       S5: "Catastrophic and effectively irreversible dignitary or reputational harm coupled to grave safety, liberty or societal consequences.",
     },
+    adaptation_note: "Distinguish public exposure from reputational or dignitary injury. Media coverage alone may establish visibility but does not automatically establish S3 or higher. Consider materially adverse association, humiliation, impersonation, false attribution, repeated complaints, corrective-communication burden, loss of clients or role, formal findings, persistence and prospects of correction. Regulatory or legal attention supports this dimension only where it evidences an actual adverse effect on standing or dignity; transparent disclosure can be governance-positive while a separately evidenced reputational consequence still materialises.",
   },
   {
     dimension_id: "societal-democratic",

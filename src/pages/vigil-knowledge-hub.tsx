@@ -130,7 +130,7 @@ export default function VigilKnowledgeHub() {
               </div>
               <div className="document-reading">
                 <p>VIGIL-HIM defines the harm dimensions, evidence states and S1–S5 thresholds used in Case Files. Harm assessment is deliberately separate from alignment classification: one describes materialised consequence; the other describes governance-boundary behaviour.</p>
-                <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.0 · methodology reference</p>
+                <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
               </div>
               <div className="cam-action-row">
                 <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
