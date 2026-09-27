@@ -563,7 +563,7 @@ export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyRefer
         </tbody>
       </table>
     </div>
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     <VigilAlignmentLegend />
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
   </div>;
 }
