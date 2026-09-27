@@ -32,6 +32,11 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(entrypoint, /"name": "CAM Initiative"/);
   assert.match(pages, /\["\/observatory\/incidents", "\/observatory\/cases"\]/);
   assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
+  assert.match(pages, /\["\/observatory\/severity-methodology", "\/observatory\/harm-impact-assessment"\]/);
+  assert.match(pages, /\["\/observatory\/knowledge-base", "\/knowledge-base"\]/);
+  assert.match(pages, /\["\/observatory\/knowledge-base\/failure-taxonomy", "\/observatory\/alignment-taxonomy"\]/);
+  assert.match(pages, /\["\/observatory\/knowledge-base\/standards-sources", "\/observatory\/ai-governance-standards"\]/);
+  assert.match(pages, /\["\/observatory\/knowledge-base\/policy", "\/observatory\/policy"\]/);
   assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
   assert.match(pages, /data-static-crawl-fallback="vigil-about"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
@@ -52,6 +57,11 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /function externalAssessmentsHtml\(record\)/);
   assert.match(pages, /External classification \/ rating/);
   assert.match(pages, /VIGIL relationship/);
+  assert.match(pages, /"\/knowledge-base"/);
+  assert.match(pages, /"\/observatory\/alignment-taxonomy"/);
+  assert.match(pages, /"\/observatory\/harm-impact-assessment"/);
+  assert.match(pages, /"\/observatory\/ai-governance-standards"/);
+  assert.match(pages, /"\/observatory\/policy"/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
@@ -64,8 +74,8 @@ test("CAM Initiative Knowledge Base uses the Home-menu editorial masthead and ex
   assert.match(hub, /DocumentRail title="Knowledge Base"/);
   assert.match(hub, /ariaLabel="CAM Initiative Knowledge Base sections"/);
   assert.match(hub, /href="\/observatory\/cases\/"/);
-  assert.match(hub, /href="\/observatory\/knowledge-base\/standards-sources\/"/);
-  assert.match(hub, /href="\/observatory\/severity-methodology\/"[\s\S]*Open Harm Impact Assessment/);
+  assert.match(hub, /href="\/observatory\/ai-governance-standards\/"/);
+  assert.match(hub, /href="\/observatory\/harm-impact-assessment\/"[\s\S]*Open Harm Impact Assessment/);
   assert.match(hub, /VIGIL-HIM 1\.0\.1/);
   assert.match(hub, /href="\/datasets\/"/);
   assert.doesNotMatch(hub, /CollectionCard/);
