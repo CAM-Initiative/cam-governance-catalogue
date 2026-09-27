@@ -12,7 +12,7 @@ const REPORT_SECTIONS = [
   { number: "01", label: "Incident" },
   { number: "02", label: "Assessment" },
   { number: "03", label: "Classification" },
-  { number: "04", label: "Repair" },
+  { number: "04", label: "Compliance" },
   { number: "05", label: "Conclusion" },
   { number: "06", label: "References" },
 ] as const;
@@ -42,10 +42,9 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "02": ["No structured diagnosis is available."],
   "03": ["No current Alignment Taxonomy classification is linked."],
   "04": [
-    "No class invariant can be resolved from a canonical classification for this Incident.",
-    "No Fidelity Class can be resolved from the canonical alignment classification for this Incident, so no class invariant can be shown.",
-    "No repair invariant is shown because this Case File has no resolved mapping where failure is evidenced.",
-    "No repair invariant is shown because this Case File has no resolved alignment mapping that requires repair.",
+    "No external requirement crosswalk can be resolved without a canonical classification for this Incident.",
+    "No compliance crosswalk can be resolved because this Incident has no canonical alignment classification.",
+    "No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File.",
   ],
   "05": ["No integrated governance conclusion is currently published for this Incident."],
   "06": ["No references are currently available."],
