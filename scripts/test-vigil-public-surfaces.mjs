@@ -336,10 +336,13 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(classification, /<th scope="col">Source clause\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Recovered governance principle\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Incident analysis<\/th>/);
+  assert.match(classification, /<th scope="col">Relationship\(s\)<\/th>/);
+  assert.match(classification, /<th scope="col">Mapping state\(s\)<\/th>/);
   assert.match(classification, /<th scope="col">Classification basis<\/th>/);
   assert.match(classification, /<th scope="col">Confidence<\/th>/);
   assert.match(classification, /classificationEvidenceByClass/);
-  assert.match(classification, /const sourceClause = text\(clause\.source_anchor\) \?\? text\(clause\.source_paraphrase\)/);
+  assert.match(classification, /const sourceAnchor = text\(clause\.source_anchor\)/);
+  assert.match(classification, /const sourceParaphrase = text\(clause\.source_paraphrase\)/);
   assert.match(classification, /const recoveredInvariant = text\(clause\.recovered_invariant_interpretation\)/);
   assert.match(classification, /rationale: text\(value\.rationale\)/);
   assert.match(classification, /evidenceByClass\.get\(primary\.classId\)/);
@@ -363,7 +366,7 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 14%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 60%; \}/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 158rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 176rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
