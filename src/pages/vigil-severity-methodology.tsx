@@ -76,8 +76,8 @@ const methodologyReferences = [
 ] as const;
 
 const harmImpactRail = [
-  { href: "#method", label: "Method" },
   { href: "#matrix", label: "Reference matrix" },
+  { href: "#method", label: "Method" },
   { href: "#case-files", label: "Case Files" },
   { href: "#references", label: "References" },
 ];
@@ -107,6 +107,18 @@ export default function VigilSeverityMethodology() {
         <DocumentRail title="Harm Impact Assessment" items={harmImpactRail} ariaLabel="Harm Impact Assessment sections" />
 
         <article className="document-content vigil-severity-methodology-document">
+          <section id="matrix" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-matrix-heading">
+            <div className="document-section-heading">
+              <p>Reference matrix</p>
+              <h2 id="severity-matrix-heading">VIGIL Observatory Harm Impact Matrix</h2>
+            </div>
+            <div className="document-reading">
+              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling.</p>
+              <p className="vigil-severity-alignment"><strong>External alignment.</strong> VIGIL Observatory aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL Observatory also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. These sources inform VIGIL Observatory; their scales are not interchangeable with VIGIL-HIM.</p>
+            </div>
+            <HarmImpactMatrix />
+          </section>
+
           <section id="method" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-principles-heading">
             <div className="document-section-heading">
               <p>Method</p>
@@ -123,18 +135,6 @@ export default function VigilSeverityMethodology() {
               </div>
               <p><strong>Severity display.</strong> S1–S5 use the same flat yellow chip throughout VIGIL Case Files. The band label carries the severity level; colour is not an ordinal scale. SU remains visually neutral because it is an unassessed evidence state, not a sixth severity band.</p>
             </div>
-          </section>
-
-          <section id="matrix" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-matrix-heading">
-            <div className="document-section-heading">
-              <p>Reference matrix</p>
-              <h2 id="severity-matrix-heading">VIGIL Observatory Harm Impact Matrix</h2>
-            </div>
-            <div className="document-reading">
-              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling.</p>
-              <p className="vigil-severity-alignment"><strong>External alignment.</strong> VIGIL Observatory aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL Observatory also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. These sources inform VIGIL Observatory; their scales are not interchangeable with VIGIL-HIM.</p>
-            </div>
-            <HarmImpactMatrix />
           </section>
 
           <section id="case-files" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-case-files-heading">
