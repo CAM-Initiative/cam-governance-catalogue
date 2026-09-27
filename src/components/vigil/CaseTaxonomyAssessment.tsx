@@ -130,20 +130,20 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
     <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown</h3>
     <p className="vigil-taxonomy-assessment-intro">
-      Clause-level breakdown of the incident into source wording and occurrence-specific incident analysis before formal alignment classification.
+      Incident observations paired with occurrence-specific analysis before formal alignment classification.
     </p>
     <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
-        <caption className="sr-only">Clause-level VIGIL Observatory incident breakdown preceding formal alignment classification.</caption>
+        <caption className="sr-only">VIGIL Observatory Incident observations and occurrence-specific analysis preceding formal alignment classification.</caption>
         <thead>
           <tr>
-            <th scope="col">Source clause</th>
+            <th scope="col">Incident observation</th>
             <th scope="col">Incident analysis</th>
           </tr>
         </thead>
         <tbody>
           {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
-            <td data-label="Source clause"><SourceClause clause={clause} /></td>
+            <td data-label="Incident observation"><SourceClause clause={clause} /></td>
             <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
               <RelationshipStack
                 relationships={clause.relationships}
