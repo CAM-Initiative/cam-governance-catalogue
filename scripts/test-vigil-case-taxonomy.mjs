@@ -176,8 +176,8 @@ const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseT
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
 assert.match(taxonomyAssessment, /Incident breakdown/);
-assert.match(taxonomyAssessment, /Recovered governance principle/);
-assert.match(taxonomyAssessment, /<th scope="col">Source clause<\/th>[\s\S]*<th scope="col">Recovered governance principle<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Relationship<\/th>[\s\S]*<th scope="col">Mapping state<\/th>/);
+assert.match(taxonomyAssessment, /<th scope="col">Source clause<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Relationship<\/th>[\s\S]*<th scope="col">Mapping state<\/th>/);
+assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Recovered governance principle<\/th>/);
 assert.match(taxonomyAssessment, /rationale: text\(relationship\.rationale\)/);
 assert.match(taxonomyAssessment, /relationship\.rationale \?\? taxonomyAssessmentSummary/);
 assert.match(taxonomyAssessment, /<RelationshipStack[\s\S]*relationships=\{clause\.relationships\}/);
@@ -217,7 +217,7 @@ assert.match(taxonomyAssessment, /className="vigil-case-editorial-subheading" id
 assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-taxonomy-assessment \{[\s\S]*border: 1px solid/);
 assert.match(assessmentLayoutCss, /\.vigil-case-file-page \.vigil-conclusion-governance-significance \{/);
 assert.match(assessmentLayoutCss, /\.report-document \.report-governance-significance \{/);
-assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*min-width: 118rem/);
+assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*min-width: 104rem/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table-wrap[\s\S]*overflow-x: auto/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
