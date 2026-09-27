@@ -129,6 +129,7 @@ function taxonomyAssessmentRationales(relationships: ClauseRelationship[]) {
   return rationales.length ? rationales : [taxonomyAssessmentSummary(relationships)];
 }
 
+// Keep the stored class ID and role visible here: this is the explicit bridge from Stage 02 evidence analysis to Stage 03 Classification.
 function TaxonomyRelationshipAssessment({ relationship, clauseIndex, relationshipIndex }: {
   relationship: ClauseRelationship;
   clauseIndex: number;
