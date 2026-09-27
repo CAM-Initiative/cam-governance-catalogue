@@ -537,7 +537,7 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   }
 
   .vigil-case-file-page .vigil-taxonomy-assessment-table {
-    min-width: 118rem;
+    min-width: 104rem;
   }
 }
 
@@ -601,15 +601,14 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table {
-  min-width: 118rem;
+  min-width: 104rem;
 }
 
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 16%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 22%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 30%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(4) { width: 12%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(5) { width: 10%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(6) { width: 10%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 18%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 38%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 16%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(4) { width: 14%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(5) { width: 14%; }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table q {
   font-weight: 650;
