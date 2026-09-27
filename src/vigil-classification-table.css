@@ -51,9 +51,10 @@
   word-break: normal;
 }
 
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 16%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 30%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 54%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 10%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 24%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 30%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 36%; }
 
 /* External classifications preserve the external assessor's own scheme rather
    than translating it into VIGIL alignment roles. */
@@ -173,8 +174,26 @@
 }
 
 
+.vigil-case-file-page .vigil-classification-meaning,
 .vigil-case-file-page .vigil-classification-basis {
   color: hsl(var(--foreground) / 0.88) !important;
+}
+
+.vigil-case-file-page .vigil-classification-invariant {
+  display: block;
+  margin-top: 0.58rem;
+  padding-top: 0.52rem;
+  border-top: 1px solid hsl(var(--border) / 0.48);
+  color: hsl(var(--muted-foreground) / 0.96);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.vigil-case-file-page .vigil-classification-invariant strong {
+  display: inline;
+  font-size: inherit;
+  font-weight: 700;
+  color: hsl(var(--foreground) / 0.86);
 }
 
 @media (max-width: 760px) {
@@ -274,28 +293,68 @@
 }
 
 
-/* Repair keeps only the public decision-useful fields.
-   Primary/secondary ordering remains in canonical data and the deterministic report. */
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 16%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 28%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 56%; }
+/* Compliance keeps the Incident's existing alignment result and Fidelity Class,
+   then projects only the external requirement references maintained by that class. */
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 14%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 26%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 60%; }
 
-.vigil-case-file-page .vigil-repair-table tbody td {
+.vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
   font-size: 1.02rem;
   line-height: 1.62;
 }
 
-.vigil-case-file-page .vigil-repair-table td > strong {
+.vigil-case-file-page .vigil-compliance-reference-list {
+  display: grid;
+  gap: 0.82rem;
+}
+
+.vigil-case-file-page .vigil-compliance-reference {
+  display: grid;
+  gap: 0.28rem;
+  padding-bottom: 0.82rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.48);
+}
+
+.vigil-case-file-page .vigil-compliance-reference:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-compliance-reference-title,
+.vigil-case-file-page .vigil-compliance-reference-title a {
+  color: hsl(var(--foreground) / 0.94);
   font-size: 1.02rem;
+  font-weight: 670;
+  line-height: 1.42;
 }
 
-.vigil-case-file-page .vigil-repair-table .vigil-classification-id {
+.vigil-case-file-page .vigil-compliance-reference-title a {
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.45);
+  text-underline-offset: 0.16em;
+}
+
+.vigil-case-file-page .vigil-compliance-reference-meta,
+.vigil-case-file-page .vigil-compliance-requirement-id {
+  display: block;
+  color: hsl(var(--muted-foreground));
   font-size: 0.84rem;
+  line-height: 1.45;
 }
 
-.vigil-case-file-page .vigil-repair-invariant-cell {
-  color: hsl(var(--foreground) / 0.9) !important;
+.vigil-case-file-page .vigil-compliance-requirement-id {
+  font-family: var(--app-font-mono);
+}
+
+.vigil-case-file-page .vigil-compliance-reference p {
+  margin: 0.16rem 0 0;
+}
+
+.vigil-case-file-page .vigil-compliance-gap {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
 }
 
 
