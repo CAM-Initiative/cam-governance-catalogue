@@ -143,7 +143,9 @@ function TaxonomyRelationshipAssessment({ relationship, clauseIndex, relationshi
           : <strong>{compactClassId(relationship.classId)}</strong>
         : null}
       <span>{taxonomyRelationshipLabel(relationship.relationship)}</span>
-      {!relationship.canonical ? <span className="vigil-taxonomy-assessment-mapping-state">Non-canonical relationship</span> : null}
+      <span className="vigil-taxonomy-assessment-mapping-state">
+        {relationship.canonical ? "Carried into Classification" : "Non-canonical relationship"}
+      </span>
     </div>
     {relationship.rationale ? <p>{relationship.rationale}</p> : null}
   </div>;
