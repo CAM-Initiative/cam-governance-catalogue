@@ -58,45 +58,7 @@
 
 /* Stage navigation is owned by vigil-observatory-instrument-experiment.css. */
 
-/* One open-file surface rather than another stack of boxes. */
-.vigil-case-file-page .vigil-case-active-stage {
-  position: relative;
-  z-index: 1;
-  margin-top: -1px;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
-  border: 1px solid hsl(var(--border) / 0.82);
-  border-radius: 0 var(--vigil-case-card-radius) var(--vigil-case-card-radius) var(--vigil-case-card-radius);
-  background: hsl(var(--background));
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header {
-  display: block;
-  padding: 1.15rem var(--vigil-case-card-pad) 0.95rem;
-  border: 0;
-  background: transparent;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header > span,
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header h2 {
-  display: none;
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section > header p {
-  margin: 0;
-  max-width: 62rem;
-  font-size: 0.98rem;
-  line-height: 1.62;
-  color: hsl(var(--foreground) / 0.72);
-}
-
-.vigil-case-file-page .vigil-case-active-stage .vigil-case-section-body {
-  gap: 1.45rem;
-  padding: 1.25rem var(--vigil-case-card-pad) 1.6rem;
-}
+/* The open-stage editorial shell is owned by vigil-observatory-instrument-experiment.css. */
 
 /* One metadata grammar everywhere. */
 .vigil-case-file-page .vigil-case-field dt,
@@ -478,14 +440,6 @@
 
   .vigil-case-file-page .vigil-case-meta-panel {
     padding: 1.1rem 0 0;
-  }
-
-  .vigil-case-file-page .vigil-case-active-stage {
-    margin-top: 0.65rem;
-  }
-
-  .vigil-case-file-page .vigil-case-active-stage .vigil-case-section {
-    border-radius: var(--vigil-case-card-radius);
   }
 
   .vigil-case-file-page .vigil-affected-system-grid dl,
