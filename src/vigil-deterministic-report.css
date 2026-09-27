@@ -524,9 +524,9 @@
   line-height: 1.5 !important;
 }
 
-/* Classification + Repair */
+/* Classification + Compliance */
 .vigil-deterministic-report-host .vigil-taxonomy-classification-view,
-.vigil-deterministic-report-host .vigil-taxonomy-repair-view,
+.vigil-deterministic-report-host .vigil-taxonomy-compliance-view,
 .vigil-deterministic-report-host .vigil-secondary-classifications,
 .vigil-deterministic-report-host .vigil-classification-secondary-list {
   display: grid;
@@ -1339,9 +1339,10 @@
   color: hsl(var(--report-muted));
 }
 
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 10%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 32%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 58%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 9%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 23%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 30%; }
+.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(4) { width: 38%; }
 
 .vigil-deterministic-report-host .vigil-external-alignment-classification {
   margin-top: 1rem;
@@ -1365,9 +1366,9 @@
 .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(3) { width: 23%; }
 .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(4) { width: 40%; }
 
-.vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(1) { width: 15%; }
-.vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(2) { width: 30%; }
-.vigil-deterministic-report-host .vigil-repair-table thead th:nth-child(3) { width: 55%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(2) { width: 27%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(3) { width: 61%; }
 
 .vigil-deterministic-report-host .vigil-classification-table tbody td {
   padding: 0.78rem 0.76rem 0.82rem;
@@ -1415,6 +1416,68 @@
   font-size: 0.8rem;
   line-height: 1.4;
   color: hsl(var(--report-muted));
+}
+
+.vigil-deterministic-report-host .vigil-classification-invariant {
+  display: block;
+  margin-top: 0.45rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid hsl(var(--report-rule) / 0.55);
+  color: hsl(var(--report-muted));
+  font-size: 0.84rem;
+  line-height: 1.48;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-intro {
+  margin: 0 0 0.65rem;
+  color: hsl(var(--report-muted));
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-reference-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-reference {
+  display: grid;
+  gap: 0.2rem;
+  padding-bottom: 0.58rem;
+  border-bottom: 1px solid hsl(var(--report-rule) / 0.55);
+  break-inside: avoid-page;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-reference:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-reference-title,
+.vigil-deterministic-report-host .vigil-compliance-reference-title a {
+  color: hsl(var(--report-ink));
+  font-weight: 670;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-reference-meta,
+.vigil-deterministic-report-host .vigil-compliance-requirement-id {
+  display: block;
+  color: hsl(var(--report-muted));
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-requirement-id {
+  font-family: var(--app-font-mono);
+}
+
+.vigil-deterministic-report-host .vigil-compliance-reference p {
+  margin: 0.14rem 0 0;
+}
+
+.vigil-deterministic-report-host .vigil-compliance-gap {
+  color: hsl(var(--report-muted));
+  font-style: italic;
 }
 
 .vigil-deterministic-report-host .vigil-taxonomy-reference-note {
@@ -1750,7 +1813,7 @@
 .vigil-deterministic-report-host .report-occurrence-card,
 .vigil-deterministic-report-host .report-severity-assessment,
 .vigil-deterministic-report-host .vigil-classification-web-table,
-.vigil-deterministic-report-host .vigil-repair-web-table {
+.vigil-deterministic-report-host .vigil-compliance-web-table {
   overflow: visible;
   border: 0 !important;
   border-radius: 0 !important;
@@ -2050,7 +2113,7 @@
   }
 
   .vigil-deterministic-report-host .vigil-classification-web-table,
-  .vigil-deterministic-report-host .vigil-repair-web-table,
+  .vigil-deterministic-report-host .vigil-compliance-web-table,
   .vigil-deterministic-report-host .report-external-assessment-table {
     break-inside: auto !important;
     page-break-inside: auto !important;
@@ -2119,7 +2182,7 @@
   .vigil-deterministic-report-host .report-reference-item,
   .vigil-deterministic-report-host .report-reference-copy,
   .vigil-deterministic-report-host .vigil-classification-web-table,
-  .vigil-deterministic-report-host .vigil-repair-web-table {
+  .vigil-deterministic-report-host .vigil-compliance-web-table {
     min-width: 0 !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
@@ -2178,7 +2241,7 @@
   .vigil-deterministic-report-host .report-system-grid,
   .vigil-deterministic-report-host .vigil-harm-matrix,
   .vigil-deterministic-report-host .vigil-classification-web-table,
-  .vigil-deterministic-report-host .vigil-repair-web-table {
+  .vigil-deterministic-report-host .vigil-compliance-web-table {
     width: 100% !important;
     max-width: 100% !important;
     min-width: 0 !important;
