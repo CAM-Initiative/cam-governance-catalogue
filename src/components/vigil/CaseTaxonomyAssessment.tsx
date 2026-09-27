@@ -147,7 +147,7 @@ function TaxonomyRelationshipAssessment({ relationship, clauseIndex, relationshi
         {relationship.canonical ? "Carried into Classification" : "Non-canonical relationship"}
       </span>
     </div>
-    {relationship.rationale ? <p>{relationship.rationale}</p> : null}
+    <p>{relationship.rationale ?? taxonomyAssessmentSummary([relationship])}</p>
   </div>;
 }
 
