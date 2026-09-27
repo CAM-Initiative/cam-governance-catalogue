@@ -807,7 +807,7 @@ test("public brand names prefer VIGIL Observatory over standalone VIGIL labels",
     read("src/pages/home.tsx"),
   ]);
   assert.match(shell, />\s*VIGIL Observatory\s*<\/Link>/);
-  assert.match(shell, /href: "\/observatory\/knowledge-base\/", label: "Knowledge Base"/);
+  assert.match(shell, /href: "\/knowledge-base\/", label: "Knowledge Base"/);
   assert.match(hub, /VIGIL Observatory Case Files/);
   assert.match(taxonomy, /VIGIL Observatory Alignment Taxonomy/);
   assert.match(cases, /VIGIL Observatory · Incident investigations/);
