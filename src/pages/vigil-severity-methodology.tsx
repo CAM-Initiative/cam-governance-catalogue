@@ -2,7 +2,7 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
-import { HarmEvidenceStateDefinitions, HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
@@ -125,9 +125,21 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-principles-heading">How the overall severity band is derived</h2>
             </div>
             <div className="vigil-severity-principles">
-              <div><h3>Evidence state first</h3><p>Each harm dimension is recorded as assessed, unreported, insufficient evidence or not applicable. Missing publication evidence is not converted into S1.</p></div>
-              <div><h3>Highest supported harm</h3><p>The highest defensible materialised-harm threshold controls the overall severity. Dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p></div>
-              <div><h3>SU remains unassessed</h3><p>SU is used when the evidence cannot support a defensible overall band. It is an evidence state, not a sixth severity band.</p></div>
+              <div className="vigil-severity-evidence-states">
+                <h3>Evidence states</h3>
+                <p>Each harm dimension is resolved to an evidence state before any overall severity is derived.</p>
+                <dl>
+                  <div><dt>Assessed</dt><dd>Evidence supports a materialised impact and a specific threshold band.</dd></div>
+                  <div><dt>Unreported</dt><dd>The dimension is relevant, but published evidence does not report whether or how harm materialised. It is not S1.</dd></div>
+                  <div><dt>Insufficient evidence</dt><dd>Some impact evidence exists, but it cannot distinguish a defensible severity band.</dd></div>
+                  <div><dt>Not applicable</dt><dd>Affirmative context places the dimension outside the Incident’s bounded scope.</dd></div>
+                  <div><dt>SU — Unassessed</dt><dd>No defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm. SU is an evidence state, not a sixth severity band.</dd></div>
+                </dl>
+              </div>
+              <div className="vigil-severity-overall-rule">
+                <h3>Overall severity</h3>
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest supported materialised-harm band controls the result; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</p>
+              </div>
             </div>
             <div className="vigil-severity-chip-key" aria-label="Severity chip display">
               <div className="vigil-severity-chip-key-bands">
@@ -145,7 +157,6 @@ export default function VigilSeverityMethodology() {
             <div className="document-reading">
               <p>Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
             </div>
-            <HarmEvidenceStateDefinitions />
             <div className="cam-action-row">
               <Link className="cam-action cam-action-secondary" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
             </div>
