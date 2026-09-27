@@ -341,11 +341,6 @@ function TaxonomyList({
   </ul>;
 }
 
-function classificationEvidenceSource(entry: ClassificationEvidence) {
-  if (entry.sourceAnchor && entry.sourceParaphrase) return `${entry.sourceAnchor} — ${entry.sourceParaphrase}`;
-  return entry.sourceAnchor ?? entry.sourceParaphrase;
-}
-
 function ClassificationTable({
   rows,
   taxonomyReferenceNumber,
