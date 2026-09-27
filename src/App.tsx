@@ -27,7 +27,6 @@ import Licensing from "@/pages/licensing";
 import VigilSeverityMethodology from "@/pages/vigil-severity-methodology";
 import Policy from "@/pages/policy";
 import Privacy from "@/pages/privacy";
-import "./mobile-responsive-polish.css";
 
 function Router() {
   return (
