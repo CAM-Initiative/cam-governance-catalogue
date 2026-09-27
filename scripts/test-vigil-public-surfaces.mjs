@@ -329,7 +329,7 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
 
   assert.match(classification, /<th scope="col">What this class means<\/th>/);
   assert.match(classification, /classificationClass\?\.plain_english/);
-  assert.match(classification, /vigil-classification-invariant/);
+  assert.doesNotMatch(classification, /vigil-classification-invariant|Governing invariant\.<\/strong>/);
   assert.match(classification, /<th scope="col">Classification basis<\/th>/);
   assert.match(classification, /colSpan=\{4\} scope="rowgroup"/);
 
@@ -351,7 +351,7 @@ test("Classification explains each Fidelity Class and Compliance projects mainta
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 14%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 60%; \}/);
-  assert.match(css, /\.vigil-classification-invariant/);
+  assert.doesNotMatch(css, /\.vigil-classification-invariant/);
   assert.match(classification, /External Alignment Classification/);
   assert.match(classification, /not VIGIL taxonomy mappings/);
 });
@@ -938,6 +938,9 @@ test("Case File stage and subsection headings share one editorial scale", async 
   assert.match(instrumentCss, /vigil-case-editorial-subheading[\s\S]*font-size: clamp\(1\.7rem, 2\.8vw, 2\.45rem\)[\s\S]*font-weight: 540[\s\S]*line-height: 1\.08/);
   assert.match(taxonomyAssessment, />Incident breakdown<\/h3>/);
   assert.doesNotMatch(taxonomyAssessment, /VIGIL OBSERVATORY TAXONOMY ASSESSMENT/);
+  assert.match(taxonomyAssessment, /classId: text\(relationship\.class_id\)/);
+  assert.match(taxonomyAssessment, /Carried into Classification/);
+  assert.match(taxonomyAssessment, /vigil-taxonomy-assessment-mapping/);
   assert.match(caseFile, />Harm Impact Assessment<\/h3>/);
   assert.match(caseFile, />External assessments<\/h3>/);
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
