@@ -60,7 +60,7 @@
    It is deliberately wide and horizontally scrollable so evidence is duplicated,
    not collapsed or discarded. */
 .vigil-case-file-page .vigil-primary-classification-table {
-  min-width: 158rem;
+  min-width: 176rem;
   table-layout: auto;
 }
 
@@ -77,8 +77,10 @@
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(7) { min-width: 18rem; }
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(8) { min-width: 24rem; }
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(9) { min-width: 30rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(10) { min-width: 28rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(11) { min-width: 9rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(10) { min-width: 12rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(11) { min-width: 12rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(12) { min-width: 28rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(13) { min-width: 9rem; }
 
 .vigil-case-file-page .vigil-primary-classification-table-wrap {
   overflow-x: auto;
@@ -258,7 +260,7 @@
   }
 
   .vigil-case-file-page .vigil-primary-classification-table {
-    min-width: 158rem;
+    min-width: 176rem;
   }
 
   .vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table {
