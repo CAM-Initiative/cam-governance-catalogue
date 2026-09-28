@@ -206,7 +206,7 @@ export default function VigilCases() {
               titleId="case-files-heading"
               kicker="VIGIL Observatory · Incident investigations"
               title="Case Files"
-              description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and re-adjudication."
+              description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and adjudication."
               artworkSrc={VIGIL_MASTHEAD_ARTWORK.cases}
               contextLabel="Collection context"
               mode="collection"
