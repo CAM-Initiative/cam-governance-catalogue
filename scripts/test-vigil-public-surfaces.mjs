@@ -22,23 +22,23 @@ test("Observatory instrument experiment keeps tickets and opens the workbench", 
   assert.match(css, /\.vigil-case-file-page \.vigil-case-active-stage \.vigil-case-section \{[\s\S]*border: 0;[\s\S]*box-shadow: none/);
 });
 
-test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
-  const [entrypoint, pages] = await Promise.all([
+test("SEO publication signals expose canonical-only sitemap routes and crawlable indexes", async () => {
+  const [entrypoint, pages, standards] = await Promise.all([
     read("src/index.html"),
     read("scripts/prepare-github-pages.js"),
+    read("src/pages/vigil-standards-baseline.tsx"),
   ]);
   assert.match(entrypoint, /property="og:site_name" content="CAM Initiative"/);
   assert.match(entrypoint, /"@type": "WebSite"/);
   assert.match(entrypoint, /"name": "CAM Initiative"/);
-  assert.match(pages, /\["\/observatory\/incidents", "\/observatory\/cases"\]/);
-  assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
-  assert.match(pages, /\["\/observatory\/severity-methodology", "\/observatory\/harm-impact-assessment"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base", "\/knowledge-base"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base\/failure-taxonomy", "\/observatory\/alignment-taxonomy"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base\/standards-sources", "\/observatory\/ai-governance-standards"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base\/policy", "\/policy"\]/);
-  assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
+  assert.doesNotMatch(pages, /const canonicalAliases/);
+  assert.match(pages, /const retiredPublicRouteDirs = \[/);
+  assert.match(pages, /const sitemapRoutes = \[\.\.\.new Set\(\[/);
+  assert.match(pages, /\.\.\.staticRoutes\.map\(\(\[route\]\) => route\)/);
   assert.match(pages, /data-static-crawl-fallback="vigil-about"/);
+  assert.match(pages, /data-static-crawl-fallback="knowledge-base"/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-harm-impact"/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-governance-standards"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
   assert.match(pages, /Incident-centred public observatory and AI incident database/);
@@ -52,7 +52,7 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /"@type": "CreativeWork"/);
   assert.match(pages, /alternateName: "VIGIL"/);
   assert.match(pages, /https:\/\/github\.com\/CAM-Initiative\/Vigil/);
-  assert.match(pages, /body: isAboutRoute \? vigilAboutFallbackBody : ""/);
+  assert.match(pages, /body: isAboutRoute \? vigilAboutFallbackBody : \(staticRouteBodies\.get\(route\) \?\? ""\)/);
   assert.match(pages, /structuredData: isAboutRoute \? vigilAboutStructuredData : undefined/);
   assert.match(pages, /function externalAssessmentsHtml\(record\)/);
   assert.match(pages, /External classification \/ rating/);
@@ -61,6 +61,8 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /"\/observatory\/alignment-taxonomy"/);
   assert.match(pages, /"\/observatory\/harm-impact-assessment"/);
   assert.match(pages, /"\/observatory\/ai-governance-standards"/);
+  assert.match(standards, /`\/observatory\/ai-governance-standards\/\$\{encodeURIComponent\(key\)\}\/`/);
+  assert.doesNotMatch(standards, /\/observatory\/knowledge-base\/standards-sources/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
@@ -269,10 +271,10 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(main, /vigil-observatory-masthead\.css/);
 });
 
-test("public VIGIL Observatory routes expose Incidents, taxonomy, standards and policy only", async () => {
+test("public VIGIL Observatory routes expose canonical Case Files, taxonomy, standards and harm surfaces only", async () => {
   const [app, shell, hub] = await Promise.all([read("src/App.tsx"), read("src/components/layout/Shell.tsx"), read("src/pages/vigil-knowledge-hub.tsx")]);
-  for (const route of ["/observatory/cases", "/observatory/incidents", "/observatory/knowledge-base", "/observatory/knowledge-base/failure-taxonomy", "/observatory/knowledge-base/standards-sources", "/observatory/knowledge-base/policy"]) assert.match(app, new RegExp(route.replaceAll("/", "\\/")));
-  for (const retired of ["failure-modes", "observatory/lessons", "observatory/repairs", "VigilKnowledgeBase"]) assert.doesNotMatch(`${app}\n${shell}\n${hub}`, new RegExp(retired, "i"));
+  for (const route of ["/observatory/cases", "/observatory/alignment-taxonomy", "/observatory/ai-governance-standards", "/observatory/harm-impact-assessment", "/knowledge-base", "/policy"]) assert.match(app, new RegExp(route.replaceAll("/", "\\/")));
+  for (const retired of ["/observatory/incidents", "/observatory/about", "/observatory/severity-methodology", "/observatory/knowledge-base", "failure-modes", "observatory/lessons", "observatory/repairs", "VigilKnowledgeBase"]) assert.doesNotMatch(`${app}\n${shell}\n${hub}`, new RegExp(retired.replaceAll("/", "\\/"), "i"));
 });
 
 test("retired standalone record surfaces and the unpublished draft tree are absent", async () => {
