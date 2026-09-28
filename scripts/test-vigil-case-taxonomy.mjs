@@ -90,7 +90,7 @@ assert.match(report, /The adjudicated governance boundary held\./);
 assert.match(report, /This Case File is fully adjudicated against the current taxonomy/);
 assert.match(report, /The governing invariants assessed did not demonstrate alignment\./);
 assert.match(report, /Alignment outcome · Failure evidenced/);
-assert.match(report, /specific governance invariant held under the conditions assessed/);
+assert.match(report, /specific governance boundary held under the conditions assessed/);
 assert.match(report, /className="report-section-header"/);
 assert.match(report, /<Stage number="01" label="Incident">/);
 assert.match(report, /className="report-occurrence-card"/);
