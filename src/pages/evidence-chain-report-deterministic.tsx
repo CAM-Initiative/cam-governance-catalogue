@@ -256,12 +256,16 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const updated = incident?.record_last_updated ?? incident?.publicDisplay.dates.lastUpdated ?? incident?.date_recorded;
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
-  const isExemplar = classification === "Exemplar";
-  const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete";
-  const isInvariantHeld = isExemplar || isIncompleteInvariant || classification === "Invariant held";
-  const isFailure = classification === "Classified";
-  const isCombination = classification === "Combination";
-  const isDisputed = classification === "Disputed";
+  const adjudicationIncomplete = classification?.endsWith(" · adjudication incomplete") ?? false;
+  const classificationBase = adjudicationIncomplete
+    ? classification?.slice(0, -" · adjudication incomplete".length)
+    : classification;
+  const isExemplar = classificationBase === "Exemplar";
+  const isIncompleteInvariant = adjudicationIncomplete && classificationBase === "Invariant held";
+  const isInvariantHeld = isExemplar || classificationBase === "Invariant held";
+  const isFailure = classificationBase === "Classified";
+  const isCombination = classificationBase === "Combination";
+  const isDisputed = classificationBase === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
 
