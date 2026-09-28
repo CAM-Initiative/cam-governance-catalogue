@@ -408,13 +408,12 @@ function ClassificationTable({
   return <>
     <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table vigil-primary-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings with class meaning, recognition criteria and occurrence-specific analysis.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with class meaning, recognition criteria and confidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Recognition criteria</th>
-            <th scope="col">Incident analysis</th>
             <th scope="col">Confidence</th>
           </tr>
         </thead>
@@ -424,7 +423,6 @@ function ClassificationTable({
             const classificationClass = item.class;
             const classId = classificationClass?.class_id ?? item.classId;
             const outcome = mappingOutcome(item.role);
-            const incidentAnalysis = evidence.map((entry) => entry.rationale);
             const classTitle = classificationClass?.name ?? family?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned");
             const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
 
@@ -446,9 +444,6 @@ function ClassificationTable({
                   empty="No separate recognition criteria are currently published for this Fidelity Class."
                 />
               </td>
-              <td data-label="Incident analysis" className="vigil-classification-incident-analysis">
-                <ClassificationEvidenceStack values={incidentAnalysis} empty={item.basis ?? "No separate occurrence-specific incident analysis is linked to this mapping."} />
-              </td>
               <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
             </tr>;
           })}
@@ -456,7 +451,7 @@ function ClassificationTable({
       </table>
     </div>
     <VigilAlignmentLegend />
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity Classes and their recognition criteria are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity Classes and their recognition criteria are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
 }
@@ -705,7 +700,7 @@ type ComplianceReference = NonNullable<FailureTaxonomyClass["external_references
 
 type ComplianceContribution = {
   role: ClassificationRole;
-  classificationBasis?: string;
+  recognitionCriteria: string[];
   reference: ComplianceReference;
 };
 
@@ -713,7 +708,7 @@ type ComplianceRollup = {
   role: ClassificationRole;
   reference: ComplianceReference;
   explanations: string[];
-  classificationBases: string[];
+  recognitionCriteria: string[];
 };
 
 function complianceReference(reference: ComplianceReference) {
@@ -749,7 +744,7 @@ function complianceContributions(primary: ResolvedClassification, secondaries: R
     for (const reference of (classificationClass.external_references ?? []).filter(complianceReference)) {
       result.push({
         role: item.role,
-        classificationBasis: item.basis,
+        recognitionCriteria: classificationClass.recognition?.required_conditions ?? [],
         reference,
       });
     }
@@ -778,7 +773,7 @@ function rollupComplianceRequirements(contributions: ComplianceContribution[]): 
       role: representative.role,
       reference: representative.reference,
       explanations: [...new Set(controlling.flatMap((item) => item.reference.evidence_note ? [item.reference.evidence_note] : []))],
-      classificationBases: [...new Set(controlling.flatMap((item) => item.classificationBasis ? [item.classificationBasis] : []))],
+      recognitionCriteria: [...new Set(controlling.flatMap((item) => item.recognitionCriteria))],
     };
   });
 }
@@ -807,11 +802,11 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
             <th scope="col">Alignment</th>
             <th scope="col">External requirement</th>
             <th scope="col">Requirement explanation</th>
-            <th scope="col">Classification basis</th>
+            <th scope="col">Recognition criteria</th>
           </tr>
         </thead>
         <tbody>
-          {requirements.map(({ role, reference, explanations, classificationBases }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
+          {requirements.map(({ role, reference, explanations, recognitionCriteria }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
             <td data-label="Alignment" className="vigil-classification-outcome-cell">
               <MappingOutcome role={role} />
             </td>
@@ -823,8 +818,8 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
             <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
               <ClassificationEvidenceStack values={explanations} empty="No separate requirement explanation is currently published for this external requirement." />
             </td>
-            <td data-label="Classification basis" className="vigil-classification-basis">
-              <ClassificationEvidenceStack values={classificationBases} empty="No separate alignment-classification basis is published for the controlling compliance mapping." />
+            <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
+              <ClassificationEvidenceStack values={recognitionCriteria} empty="No separate recognition criteria are currently published for the controlling Fidelity Class." />
             </td>
           </tr>)}
         </tbody>
