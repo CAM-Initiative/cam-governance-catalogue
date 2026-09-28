@@ -451,7 +451,7 @@ function ClassificationCard({
           <p>{technicalDefinition}</p>
         </section>}
         {item.basis && <section>
-          <h4 className="vigil-substantive-label">{exemplar ? "Why this Case File is an exemplar" : "Why this Case File maps here"}</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Why this invariant held" : "Why this Case File maps here"}</h4>
           <p>{item.basis}</p>
         </section>}
       </div>
@@ -459,8 +459,8 @@ function ClassificationCard({
       <aside className="vigil-classification-metadata" aria-label={`${label} classification metadata`}>
         <p className="vigil-diagnostic-meta-label">Classification metadata</p>
         <dl>
-          <Meta label="Status" value={exemplar ? "Exemplar" : statusLabel(status)} />
-          <Meta label="Relationship" value={exemplar ? "Successful invariant exemplar" : relationship} />
+          <Meta label="Status" value={exemplar ? "Invariant held" : statusLabel(status)} />
+          <Meta label="Relationship" value={exemplar ? "Successful invariant" : relationship} />
           <Meta label="Confidence" value={item.confidence} />
           <Meta label="Taxonomy version" value={taxonomyVersion} mono />
           <Meta label="Fidelity family" value={family?.name} />
