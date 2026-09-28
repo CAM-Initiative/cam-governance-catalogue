@@ -452,7 +452,8 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
   assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
-  assert.match(caseFile, /The system worked as intended\./);
+  assert.match(caseFile, /The assessed governance boundary held\./);
+assert.match(caseFile, /Overall exemplar status requires the material source clauses to be fully adjudicated/);
   assert.match(caseFile, /const isFailure = classification === "Classified"/);
   assert.match(caseFile, /Alignment outcome · Failure evidenced/);
   assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
