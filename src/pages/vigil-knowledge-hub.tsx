@@ -61,7 +61,7 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "exemplar",
     label: "Invariant held",
-    description: "The mapped governance boundary or boundaries held under pressure and no failure occurrence is evidenced. These Case Files act as alignment exemplars.",
+    description: "One or more mapped governance boundaries held under pressure. A Case File is presented as an alignment exemplar only when its adjudication coverage is complete and no failure or unresolved boundary changes that result.",
   },
   {
     key: "mixed",
