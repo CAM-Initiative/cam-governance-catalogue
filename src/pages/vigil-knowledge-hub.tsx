@@ -65,8 +65,8 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   },
   {
     key: "incomplete",
-    label: "Invariant held · adjudication incomplete",
-    description: "A mapped governance boundary held, but one or more material incident observations still require a final taxonomy determination. The invariant-held finding is retained without presenting the Incident as an alignment exemplar.",
+    label: "Adjudication incomplete · coverage qualifier",
+    description: "This is not a separate alignment outcome. It is appended to the current Case File outcome whenever one or more material incident observations still require a final taxonomy determination.",
   },
   {
     key: "mixed",
@@ -189,7 +189,7 @@ export default function VigilKnowledgeHub() {
 
               <div className="vigil-knowledge-classification-layer">
                 <h3>Case File index classification</h3>
-                <p>The current public Case File index combines those mapping-level results into one of five whole-Incident labels. These are summary states; the underlying mapping outcomes remain separately visible inside the Case File.</p>
+                <p>The current public Case File index combines those mapping-level results into whole-Incident outcome labels. These are summary states; the underlying mapping outcomes remain separately visible inside the Case File. <strong>Adjudication incomplete</strong> is a separate coverage qualifier and may accompany any outcome when adjudication coverage is partial.</p>
                 <div className="vigil-knowledge-index-classifications" aria-label="Case File index classification states">
                   {CASE_FILE_INDEX_CLASSIFICATIONS.map((item) => <article key={item.key}>
                     <span className="vigil-knowledge-index-state">{item.label}</span>
