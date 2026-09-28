@@ -88,7 +88,7 @@ assert.match(report, /The assessed governance boundary held\./);
 assert.match(report, /Overall exemplar status requires the material source clauses to be fully adjudicated/);
 assert.match(report, /The governing invariants assessed did not demonstrate alignment\./);
 assert.match(report, /Alignment outcome · Failure evidenced/);
-assert.match(report, /invariant-held governance outcome/);
+assert.match(report, /specific governance invariant held under the conditions assessed/);
 assert.match(report, /className="report-section-header"/);
 assert.match(report, /<Stage number="01" label="Incident">/);
 assert.match(report, /className="report-occurrence-card"/);
