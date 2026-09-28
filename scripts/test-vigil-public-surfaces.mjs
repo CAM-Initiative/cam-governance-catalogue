@@ -526,6 +526,7 @@ test("Knowledge Base explains mapping outcomes and all five Case File index clas
   assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /A Case File is presented as an alignment exemplar only when its adjudication coverage is complete/);
   assert.match(hub, /It does not require litigation or a formal legal dispute/);
   assert.match(hub, /VIGIL takes a legally conservative approach/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
