@@ -802,7 +802,7 @@ export default function VigilCaseFile() {
 
     <VigilObservatoryMasthead
       titleId="case-file-heading"
-      kicker={isExemplar ? "VIGIL Observatory Case File · Alignment exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
+      kicker={isExemplar ? "VIGIL Observatory Case File · Invariant held" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
       title={title}
       contextLabel="Incident context"
       mode="record"
