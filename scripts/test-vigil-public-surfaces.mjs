@@ -348,7 +348,8 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
   assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Classification basis<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Incident observation<\/th>[\s\S]*vigil-compliance-table/);
+  const complianceMarkup = classification.match(/<table className="vigil-classification-table vigil-compliance-table">[\s\S]*?<\/table>/)?.[0] ?? "";
+  assert.doesNotMatch(complianceMarkup, /Incident observation/);
   assert.match(classification, /function complianceReferenceKey/);
   assert.match(classification, /reference\.clause_or_control/);
   assert.doesNotMatch(classification, /vigil-compliance-clause/);
@@ -481,7 +482,9 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
   assert.match(report, /Section 03 identifies what remains unresolved/);
   assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Invariant held · adjudication incomplete"/);
-  assert.match(sync, /classification_role: record\.classification_role/);\n  assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);\n  assert.match(sync, /alignment_exemplar_eligible/);
+  assert.match(sync, /classification_role: record\.classification_role/);
+  assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);
+  assert.match(sync, /alignment_exemplar_eligible/);
   assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
   assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
   assert.match(casePolishCss, /display: grid !important/);
