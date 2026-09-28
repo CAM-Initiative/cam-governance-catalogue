@@ -427,7 +427,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
-  assert.match(caseFile, /When multiple classifications reach the same exact external requirement, Compliance reports the most conservative supported alignment state/);
+  assert.match(caseFile, /Compliance shows which external standards, regulations and guidance relate to the governance issues identified in this Case File/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /Material facts remain contested\./);
   assert.match(caseFile, /does not mean that litigation or a formal legal dispute exists/);
