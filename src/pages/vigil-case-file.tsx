@@ -358,7 +358,7 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
       ? "Secondary alignment classification"
       : "Family-only alignment classification";
   return reference.role === "successful-invariant"
-    ? `${relationship} · invariant held · exemplar`
+    ? `${relationship} · invariant held`
     : relationship;
 }
 
