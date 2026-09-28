@@ -544,7 +544,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
-        label={primary.role === "successful-invariant" ? "Primary alignment exemplar · invariant held" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+        label={primary.role === "successful-invariant" ? "Primary alignment finding · invariant held" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
         status={parsed.status}
         taxonomyVersion={parsed.taxonomyVersion}
         relationship={primary.role === "successful-invariant" ? "Primary · invariant held" : "Primary"}
@@ -561,7 +561,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
           {secondaries.map((item, index) => <ClassificationCard
             key={`${item.classId ?? item.familyId ?? index}`}
             item={item}
-            label={item.role === "successful-invariant" ? `Secondary alignment exemplar · invariant held ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
+            label={item.role === "successful-invariant" ? `Secondary alignment finding · invariant held ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
             status={parsed.status}
             taxonomyVersion={parsed.taxonomyVersion}
             relationship={item.role === "successful-invariant" ? "Secondary · invariant held" : item.role === "ambiguous-boundary" ? "Secondary · boundary unresolved" : "Secondary"}
