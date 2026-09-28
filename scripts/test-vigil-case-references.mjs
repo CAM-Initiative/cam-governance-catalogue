@@ -421,11 +421,12 @@ test("External assessment tables match comparable table typography in web and PD
 });
 
 test("Classification and Compliance tables keep readable body and legend typography", async () => {
-  const css = await readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8");
-  assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
+  const [css, reportCss] = await Promise.all([\n    readFile(resolve(repoRoot, "src/vigil-classification-table.css"), "utf8"),\n    readFile(resolve(repoRoot, "src/vigil-deterministic-report.css"), "utf8"),\n  ]);\n  assert.match(css, /\.vigil-case-file-page \.vigil-classification-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
   assert.match(css, /\.vigil-case-file-page \.vigil-compliance-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
   assert.match(css, /\.vigil-alignment-legend \{[\s\S]*font-size: 0\.92rem[\s\S]*line-height: 1\.5/);
   assert.match(css, /\.vigil-alignment-legend-item > span:last-child > strong \{[\s\S]*font-size: 0\.92rem/);
+  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\),[\s\S]*\.vigil-primary-classification-table tbody td:nth-child\(5\) \{[\s\S]*display: none !important;/);
+  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 11%; \}[\s\S]*nth-child\(2\) \{ width: 25%; \}[\s\S]*nth-child\(3\) \{ width: 28%; \}[\s\S]*nth-child\(4\) \{ width: 36%; \}/);
 });
 
 
