@@ -297,17 +297,16 @@
   }
 
   .vigil-case-file-page .vigil-compliance-table {
-    min-width: 132rem;
+    min-width: 82rem;
   }
 }
 
 
-/* Compliance projects each external requirement with the controlling
-   Fidelity Class recognition criteria into its own traceable row. */
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 8%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 24%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 34%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 34%; }
+/* Compliance is a lean external crosswalk: VIGIL finding, requirement,
+   and the published requirement explanation. */
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 32%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 56%; }
 
 .vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
