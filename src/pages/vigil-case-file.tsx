@@ -508,16 +508,12 @@ export default function VigilCaseFile() {
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
-  const adjudicationIncomplete = classification?.endsWith(" · adjudication incomplete") ?? false;
-  const classificationBase = adjudicationIncomplete
-    ? classification?.slice(0, -" · adjudication incomplete".length)
-    : classification;
-  const isExemplar = classificationBase === "Exemplar";
-  const isIncompleteInvariant = adjudicationIncomplete && classificationBase === "Invariant held";
-  const isInvariantHeld = isExemplar || classificationBase === "Invariant held";
-  const isFailure = classificationBase === "Classified";
-  const isCombination = classificationBase === "Combination";
-  const isDisputed = classificationBase === "Disputed";
+  const adjudicationIncomplete = classification === "Adjudication incomplete";
+  const isExemplar = classification === "Exemplar";
+  const isInvariantHeld = isExemplar || classification === "Invariant held";
+  const isFailure = classification === "Classified";
+  const isCombination = classification === "Combination";
+  const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
   const diagnostic = diagnosticProvenance(incident);
@@ -808,7 +804,7 @@ export default function VigilCaseFile() {
 
     <VigilObservatoryMasthead
       titleId="case-file-heading"
-      kicker={`${isExemplar ? "VIGIL Observatory Case File · Alignment exemplar · Invariant held" : isInvariantHeld ? "VIGIL Observatory Case File · Invariant held" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}${adjudicationIncomplete ? " · adjudication incomplete" : ""}`}
+      kicker={adjudicationIncomplete ? "VIGIL Observatory Case File · Adjudication incomplete" : isExemplar ? "VIGIL Observatory Case File · Alignment exemplar · Invariant held" : isInvariantHeld ? "VIGIL Observatory Case File · Invariant held" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
       title={title}
       contextLabel="Incident context"
       mode="record"
@@ -855,15 +851,23 @@ export default function VigilCaseFile() {
       </div>
     </section>}
 
+    {adjudicationIncomplete && <section className="vigil-exemplar-callout is-incomplete-adjudication" aria-labelledby="vigil-adjudication-incomplete-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Adjudication status</p>
+        <h2 id="vigil-adjudication-incomplete-heading">Adjudication is incomplete.</h2>
+        <p>VIGIL has not assigned a whole-Incident alignment classification because one or more material incident observations still require a final taxonomy determination.</p>
+        <p className="vigil-exemplar-callout-boundary">Completed mapping-level findings remain visible in Classification for transparency, but they do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete.</p>
+      </div>
+    </section>}
+
     {isInvariantHeld && !isExemplar && <section className="vigil-exemplar-callout is-incomplete-adjudication" aria-labelledby="vigil-invariant-held-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Alignment finding · Invariant held</p>
-        <h2 id="vigil-invariant-held-heading">{isIncompleteInvariant ? "A governance invariant held, but adjudication is incomplete." : "A governance invariant held."}</h2>
+        <h2 id="vigil-invariant-held-heading">A governance invariant held.</h2>
         <p>This Case File contains evidence that a specific governance boundary held under the conditions assessed. That finding is limited to the mapped boundary and does not mean the Incident as a whole was aligned.</p>
-        <p className="vigil-exemplar-callout-boundary">{isIncompleteInvariant
-          ? "Other incident observations still require a final taxonomy determination. Open Classification to see what remains unresolved."
-          : "Overall exemplar status has not been established from complete adjudication coverage."}</p>
+        <p className="vigil-exemplar-callout-boundary">Overall exemplar status has not been established from complete adjudication coverage.</p>
       </div>
     </section>}
 
