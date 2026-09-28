@@ -311,21 +311,16 @@ function publicMappingRoleLabel(role) {
   return role ? String(role).replaceAll("-", " ") : "";
 }
 
-function withPublicAdjudicationCoverage(record, label) {
-  return record.adjudication_coverage?.status === "partial"
-    ? `${label} · adjudication incomplete`
-    : label;
-}
-
 function publicAlignmentOutcome(record) {
-  if (record.classification_role === "failure-occurrence") return withPublicAdjudicationCoverage(record, "Failure evidenced");
-  if (record.classification_role === "successful-invariant") return withPublicAdjudicationCoverage(record, "Invariant held");
-  if (record.classification_role === "ambiguous-boundary") return withPublicAdjudicationCoverage(record, "Boundary unresolved");
-  if (record.classification_status === "classified" || record.classification_status === "provisionally-classified") return withPublicAdjudicationCoverage(record, "Failure evidenced");
-  if (record.classification_status === "classification-disputed") return withPublicAdjudicationCoverage(record, "Disputed");
-  if (record.classification_status === "requires-human-review") return withPublicAdjudicationCoverage(record, "Under review");
-  if (record.classification_status === "unclassified") return withPublicAdjudicationCoverage(record, "Unclassified");
-  return withPublicAdjudicationCoverage(record, record.classification_status || "not stated");
+  if (record.adjudication_coverage?.status === "partial") return "Adjudication incomplete";
+  if (record.classification_role === "failure-occurrence") return "Failure evidenced";
+  if (record.classification_role === "successful-invariant") return "Invariant held";
+  if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
+  if (record.classification_status === "classified" || record.classification_status === "provisionally-classified") return "Failure evidenced";
+  if (record.classification_status === "classification-disputed") return "Disputed";
+  if (record.classification_status === "requires-human-review") return "Under review";
+  if (record.classification_status === "unclassified") return "Unclassified";
+  return record.classification_status || "not stated";
 }
 
 function taxonomyCaseLinkHtml(example) {
