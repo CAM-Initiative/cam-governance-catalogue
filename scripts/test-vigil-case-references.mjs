@@ -330,7 +330,7 @@ test("Classification and Compliance cite the single numbered VIGIL Alignment Tax
 
   assert.doesNotMatch(component, /View taxonomy source|View canonical taxonomy source|vigil-classification-source-link/);
   assert.match(component, /Fidelity Classes and their recognition criteria are defined in the/);
-  assert.match(component, /Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision\./);
+  assert.doesNotMatch(component, /Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision\./);
   assert.match(component, /Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate\./);
   assert.match(component, /VIGIL Observatory Alignment Taxonomy \[\{taxonomyReferenceNumber\}\]/);
   assert.match(caseFile, /taxonomyReferenceNumber = taxonomyReferences\.length/);
@@ -429,8 +429,8 @@ test("Classification and Compliance tables keep readable body and legend typogra
   assert.match(css, /\.vigil-case-file-page \.vigil-compliance-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
   assert.match(css, /\.vigil-alignment-legend \{[\s\S]*font-size: 0\.92rem[\s\S]*line-height: 1\.5/);
   assert.match(css, /\.vigil-alignment-legend-item > span:last-child > strong \{[\s\S]*font-size: 0\.92rem/);
-  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\),[\s\S]*\.vigil-primary-classification-table tbody td:nth-child\(5\) \{[\s\S]*display: none !important;/);
-  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 11%; \}[\s\S]*nth-child\(2\) \{ width: 25%; \}[\s\S]*nth-child\(3\) \{ width: 28%; \}[\s\S]*nth-child\(4\) \{ width: 36%; \}/);
+  assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\)[\s\S]*display: none !important/);
+  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 11%; \}[\s\S]*nth-child\(2\) \{ width: 30%; \}[\s\S]*nth-child\(3\) \{ width: 44%; \}[\s\S]*nth-child\(4\) \{ width: 15%; \}/);
 });
 
 
