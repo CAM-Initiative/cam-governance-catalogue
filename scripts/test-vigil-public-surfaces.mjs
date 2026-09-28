@@ -460,10 +460,10 @@ assert.match(caseFile, /Overall exemplar status requires the material source cla
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
-  assert.match(classification, /alignment exemplar · invariant held/i);
+  assert.match(classification, /alignment finding · invariant held/i);
   assert.match(classification, /The relevant governance boundary was tested and held/);
-  assert.match(classification, /Primary alignment exemplar · invariant held/);
-  assert.match(classification, /Secondary alignment exemplar · invariant held/);
+  assert.match(classification, /Primary alignment finding · invariant held/);
+  assert.match(classification, /Secondary alignment finding · invariant held/);
   assert.match(classification, /complianceRolePriority/);
   assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
