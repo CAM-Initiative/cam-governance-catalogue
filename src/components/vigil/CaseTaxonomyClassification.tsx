@@ -418,7 +418,7 @@ function ClassificationTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ item, mapping, evidence }, index) => {
+          {rows.map(({ item, mapping }, index) => {
             const family = item.family?.family;
             const classificationClass = item.class;
             const classId = classificationClass?.class_id ?? item.classId;
