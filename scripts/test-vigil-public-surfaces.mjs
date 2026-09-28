@@ -612,7 +612,7 @@ test("historical identifiers do not become live retired-record links", async () 
   assert.doesNotMatch(combined, /VIGIL-(?:\d{4}-)?(?:FM|OBS|RESEARCH)-/);
 });
 
-test("Alignment Taxonomy pages project canonical linked Case Files without conflating successful exemplars", async () => {
+test("Alignment Taxonomy pages distinguish failure-linked cases from invariant-held examples", async () => {
   const [taxonomyPage, taxonomyLoader, taxonomyCss, pages] = await Promise.all([
     read("src/pages/vigil-failure-taxonomy.tsx"),
     read("src/lib/vigilFailureTaxonomy.ts"),
@@ -623,14 +623,14 @@ test("Alignment Taxonomy pages project canonical linked Case Files without confl
   assert.match(taxonomyLoader, /caseFileExamples: FailureTaxonomyCaseFileExamples/);
   assert.match(taxonomyPage, /Linked Case Files/);
   assert.match(taxonomyPage, /No Case Files currently evidence failure for this class/);
-  assert.match(taxonomyPage, /Alignment exemplars/);
+  assert.match(taxonomyPage, /Invariant-held examples/);
   assert.match(taxonomyPage, /item\.invariant_exemplars/);
   assert.match(taxonomyPage, /\/observatory\/cases\/\$\{example\.incident_id\}/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-linked-cases/);
   assert.match(taxonomyCss, /\.vigil-taxonomy-invariant-exemplars/);
   assert.match(pages, /generated\/VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(pages, /taxonomyCaseExamplesForClass/);
-  assert.match(pages, /Alignment exemplars/);
+  assert.match(pages, /Invariant-held examples/);
   assert.doesNotMatch(taxonomyPage, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(pages, /No classified failure Case Files are currently linked to this family/);
   assert.doesNotMatch(taxonomyCss, /vigil-taxonomy-family-case-list|vigil-taxonomy-family-exemplars/);
