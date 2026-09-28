@@ -1,3 +1,5 @@
+import { vigilRawUrl } from "@/lib/vigilBranchSource";
+
 export type HarmMethodologyMetadata = {
   id: string;
   version: string;
@@ -9,7 +11,7 @@ type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 export async function loadHarmMethodologyMetadata(version: string, fetcher: FetchLike = fetch): Promise<HarmMethodologyMetadata | undefined> {
   const normalized = version.trim();
   if (!normalized) return undefined;
-  const url = `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v${normalized}.json`;
+  const url = await vigilRawUrl(`vigil/methodologies/VIGIL.HarmImpactMatrix.v${normalized}.json`, fetcher);
   try {
     const response = await fetcher(`${url}?v=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) return undefined;
