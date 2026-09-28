@@ -651,7 +651,6 @@ type ComplianceReference = NonNullable<FailureTaxonomyClass["external_references
 
 type ComplianceContribution = {
   role: ClassificationRole;
-  recognitionCriteria: string[];
   reference: ComplianceReference;
 };
 
@@ -659,7 +658,6 @@ type ComplianceRollup = {
   role: ClassificationRole;
   reference: ComplianceReference;
   explanations: string[];
-  recognitionCriteria: string[];
 };
 
 function complianceReference(reference: ComplianceReference) {
@@ -695,7 +693,6 @@ function complianceContributions(primary: ResolvedClassification, secondaries: R
     for (const reference of (classificationClass.external_references ?? []).filter(complianceReference)) {
       result.push({
         role: item.role,
-        recognitionCriteria: classificationClass.recognition?.required_conditions ?? [],
         reference,
       });
     }
@@ -724,7 +721,6 @@ function rollupComplianceRequirements(contributions: ComplianceContribution[]): 
       role: representative.role,
       reference: representative.reference,
       explanations: [...new Set(controlling.flatMap((item) => item.reference.evidence_note ? [item.reference.evidence_note] : []))],
-      recognitionCriteria: [...new Set(controlling.flatMap((item) => item.recognitionCriteria))],
     };
   });
 }
@@ -744,21 +740,20 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
   if (!requirements.length) return <p className="vigil-case-empty">No mapped external requirement is available for compliance cross-reference in this Case File.</p>;
 
   return <div className="vigil-taxonomy-compliance-view">
-    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported alignment state: failure, then unresolved boundary, then invariant held.</p>
+    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported VIGIL finding: failure, then unresolved boundary, then invariant held.</p>
     <div className="vigil-classification-web-table vigil-compliance-web-table" role="region" aria-label="External compliance crosswalk" tabIndex={0}>
       <table className="vigil-classification-table vigil-compliance-table">
-        <caption className="sr-only">External requirements rolled up from the Incident's VIGIL alignment classifications.</caption>
+        <caption className="sr-only">External requirements cross-referenced to the Incident's VIGIL findings.</caption>
         <thead>
           <tr>
-            <th scope="col">Alignment</th>
+            <th scope="col">VIGIL Finding</th>
             <th scope="col">External requirement</th>
             <th scope="col">Requirement explanation</th>
-            <th scope="col">Recognition criteria</th>
           </tr>
         </thead>
         <tbody>
-          {requirements.map(({ role, reference, explanations, recognitionCriteria }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
-            <td data-label="Alignment" className="vigil-classification-outcome-cell">
+          {requirements.map(({ role, reference, explanations }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
+            <td data-label="VIGIL Finding" className="vigil-classification-outcome-cell">
               <MappingOutcome role={role} />
             </td>
             <td data-label="External requirement" className="vigil-compliance-requirement-title">
@@ -768,9 +763,6 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
             </td>
             <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
               <ClassificationEvidenceStack values={explanations} empty="No separate requirement explanation is currently published for this external requirement." />
-            </td>
-            <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
-              <ClassificationEvidenceStack values={recognitionCriteria} empty="No separate recognition criteria are currently published for the controlling Fidelity Class." />
             </td>
           </tr>)}
         </tbody>
