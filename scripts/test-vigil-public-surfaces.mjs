@@ -420,12 +420,14 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
   assert.match(taxonomy, /taxonomyAdjudicationCoverageStatus/);
   assert.match(taxonomy, /taxonomyAlignmentExemplarEligible/);
-  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasInvariantHeld\)\) return "Combination"/);
-  assert.match(taxonomy, /coverage === "partial"\) return "Invariant held · adjudication incomplete"/);
+  assert.match(taxonomy, /const ADJUDICATION_INCOMPLETE_SUFFIX = " · adjudication incomplete"/);
+  assert.match(taxonomy, /function withAdjudicationCoverage/);
+  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasInvariantHeld\)\) return withAdjudicationCoverage\("Combination", coverage\)/);
+  assert.match(taxonomy, /coverage === "partial"\) return withAdjudicationCoverage\("Invariant held", coverage\)/);
   assert.match(taxonomy, /exemplarEligible === true\) return "Exemplar"/);
-  assert.match(taxonomy, /hasFailure && !hasInvariantHeld\) return "Classified"/);
-  assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
-  assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
+  assert.match(taxonomy, /hasFailure && !hasInvariantHeld\) return withAdjudicationCoverage\("Classified", coverage\)/);
+  assert.match(taxonomy, /status === "classification-disputed"\) return withAdjudicationCoverage\("Disputed", coverage\)/);
+  assert.match(taxonomy, /status === "requires-human-review"\) return withAdjudicationCoverage\("Under review", coverage\)/);
   assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
 });
 
@@ -440,7 +442,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(taxonomy, /hasAmbiguousBoundary/);
   assert.match(classification, /Secondary unresolved boundary/);
   assert.match(classification, /complianceRolePriority/);
-  assert.match(caseFile, /const isCombination = classification === "Combination"/);
+  assert.match(caseFile, /const isCombination = classificationBase === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
   assert.match(caseFile, /The system is neither aligned nor misaligned/);
   assert.doesNotMatch(caseFile, /Compliance shows the external standards, regulations and guidance connected to the governance issues identified in this Case File/);
@@ -467,12 +469,14 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(cases, /vigil-case-table-text/);
   assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
   assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
-  assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
-  assert.match(caseFile, /const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete"/);
+  assert.match(caseFile, /const adjudicationIncomplete = classification\?\.endsWith\(" · adjudication incomplete"\)/);
+  assert.match(caseFile, /const classificationBase = adjudicationIncomplete/);
+  assert.match(caseFile, /const isExemplar = classificationBase === "Exemplar"/);
+  assert.match(caseFile, /const isIncompleteInvariant = adjudicationIncomplete && classificationBase === "Invariant held"/);
   assert.match(caseFile, /A governance invariant held, but adjudication is incomplete\./);
   assert.match(caseFile, /The adjudicated governance boundary held\./);
   assert.match(caseFile, /This Case File is fully adjudicated against the current taxonomy/);
-  assert.match(caseFile, /const isFailure = classification === "Classified"/);
+  assert.match(caseFile, /const isFailure = classificationBase === "Classified"/);
   assert.match(caseFile, /Alignment outcome · Failure evidenced/);
   assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
@@ -486,7 +490,9 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
   assert.match(report, /Section 03 identifies what remains unresolved/);
-  assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Invariant held · adjudication incomplete"/);
+  assert.match(pages, /function withPublicAdjudicationCoverage/);
+  assert.match(pages, /classification_role === "failure-occurrence"\) return withPublicAdjudicationCoverage\(record, "Failure evidenced"\)/);
+  assert.match(pages, /classification_role === "successful-invariant"\) return withPublicAdjudicationCoverage\(record, "Invariant held"\)/);
   assert.match(sync, /classification_role: record\.classification_role/);
   assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);
   assert.match(sync, /alignment_exemplar_eligible/);
@@ -519,7 +525,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(homeMenuCss, /\.about-method-list \{/);
 });
 
-test("Knowledge Base explains mapping outcomes and all six Case File index classifications", async () => {
+test("Knowledge Base explains mapping outcomes and the outcome-independent adjudication qualifier", async () => {
   const [hub, about, classification, css] = await Promise.all([
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/about.tsx"),
@@ -530,7 +536,8 @@ test("Knowledge Base explains mapping outcomes and all six Case File index class
   assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
   assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
-  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Invariant held · adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Adjudication incomplete · coverage qualifier[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /Adjudication incomplete[\s\S]*separate coverage qualifier[\s\S]*may accompany any outcome/);
   assert.match(hub, /one or more material incident observations still require a final taxonomy determination/);
   assert.match(hub, /It does not require litigation or a formal legal dispute/);
   assert.match(hub, /VIGIL takes a legally conservative approach/);
