@@ -56,11 +56,10 @@
 .vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 30%; }
 .vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 36%; }
 
-/* Section 03 repeats the occurrence-specific evidence bridge from Section 02.
-   It is deliberately wide and horizontally scrollable so evidence is duplicated,
-   not collapsed or discarded. */
+/* Section 03 carries only the adjudication result and taxonomy definition.
+   Occurrence-specific incident analysis remains in Section 02. */
 .vigil-case-file-page .vigil-primary-classification-table {
-  min-width: 128rem;
+  min-width: 96rem;
   table-layout: auto;
 }
 
@@ -70,9 +69,8 @@
 
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { min-width: 10rem; }
 .vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { min-width: 32rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { min-width: 30rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { min-width: 42rem; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { min-width: 10rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { min-width: 42rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { min-width: 10rem; }
 
 .vigil-case-file-page .vigil-primary-classification-table-wrap {
   overflow-x: auto;
@@ -293,7 +291,7 @@
   }
 
   .vigil-case-file-page .vigil-primary-classification-table {
-    min-width: 128rem;
+    min-width: 96rem;
   }
 
   .vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table {
@@ -310,8 +308,8 @@
    external requirement into its own traceable row. */
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 8%; }
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 24%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 42%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 26%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 34%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 34%; }
 
 .vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
