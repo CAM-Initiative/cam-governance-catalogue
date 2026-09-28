@@ -337,13 +337,29 @@ def validate_published_vigil_ui_contract() -> list[str]:
     required_strings = (
         "Incident breakdown",
         "Harm Impact Assessment",
-        "Fidelity classes and their governing invariants are defined in the",
-        "The governing invariants shown here are defined in the",
+        "Incident observation",
+        "Incident analysis",
+        "Fidelity class",
+        "Recognition criteria",
+        "Confidence",
+        "External requirement",
+        "Requirement explanation",
+        "VIGIL Finding",
+        "Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.",
     )
     for required in required_strings:
         if required not in bundle:
             errors.append(
                 f"Generated application bundle {bundle_path} is missing required Case File UI text: {required!r}"
+            )
+
+    for retired in (
+        "Classification basis",
+        "Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.",
+    ):
+        if retired in bundle:
+            errors.append(
+                f"Generated application bundle {bundle_path} still contains retired Case File UI text: {retired!r}"
             )
 
     if "Taxonomy assessment" in bundle:

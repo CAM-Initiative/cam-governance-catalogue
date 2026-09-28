@@ -13,7 +13,7 @@
   }
 
   function normalizeReferenceBackNavigation() {
-    if (!location.pathname.includes("/observatory/knowledge-base/")) return;
+    if (!["/knowledge-base/", "/observatory/alignment-taxonomy/", "/observatory/ai-governance-standards/"].some((prefix) => location.pathname.includes(prefix))) return;
     const page = document.querySelector(".vigil-reference-page");
     const hero = page?.querySelector(".vigil-reference-hero");
     const back = page?.querySelector(":scope > .container > .vigil-back-link");

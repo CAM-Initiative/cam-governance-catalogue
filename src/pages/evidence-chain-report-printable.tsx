@@ -12,7 +12,7 @@ const REPORT_SECTIONS = [
   { number: "01", label: "Incident" },
   { number: "02", label: "Assessment" },
   { number: "03", label: "Classification" },
-  { number: "04", label: "Repair" },
+  { number: "04", label: "Compliance" },
   { number: "05", label: "Conclusion" },
   { number: "06", label: "References" },
 ] as const;
@@ -42,10 +42,9 @@ const EMPTY_SECTION_MARKERS: Record<string, string[]> = {
   "02": ["No structured diagnosis is available."],
   "03": ["No current Alignment Taxonomy classification is linked."],
   "04": [
-    "No class invariant can be resolved from a canonical classification for this Incident.",
-    "No Fidelity Class can be resolved from the canonical alignment classification for this Incident, so no class invariant can be shown.",
-    "No repair invariant is shown because this Case File has no resolved mapping where failure is evidenced.",
-    "No repair invariant is shown because this Case File has no resolved alignment mapping that requires repair.",
+    "No external requirement crosswalk can be resolved without a canonical classification for this Incident.",
+    "No compliance crosswalk can be resolved because this Incident has no canonical alignment classification.",
+    "No failed or unresolved Fidelity Class is available for external requirement cross-reference in this Case File.",
   ],
   "05": ["No integrated governance conclusion is currently published for this Incident."],
   "06": ["No references are currently available."],
@@ -72,7 +71,7 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
       ? "Secondary alignment classification"
       : "Family-only alignment classification";
   return reference.role === "successful-invariant"
-    ? `${relationship} · invariant held · exemplar`
+    ? `${relationship} · invariant held`
     : relationship;
 }
 
@@ -256,7 +255,7 @@ export default function EvidenceChainReportPrintable() {
           <strong>VIGIL Observatory Alignment Taxonomy</strong>
           <span className="report-reference-meta"> — {["CAM Initiative", "Public taxonomy reference", reportIncident?.taxonomyReferences[0]?.referenceVersion ? `Version ${reportIncident.taxonomyReferences[0].referenceVersion}` : reportIncident?.taxonomyReferences[0]?.taxonomyVersion ? `Version ${reportIncident.taxonomyReferences[0].taxonomyVersion}` : undefined, reportIncident?.taxonomyReferences[0]?.referencePublicationDate ? `Revised ${reportIncident.taxonomyReferences[0].referencePublicationDate}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
-          <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
+          <a href="https://www.cam-initiative.org/observatory/alignment-taxonomy" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/alignment-taxonomy</a>
         </span>
       </li>}
       {hasHarmMethodologyReference && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology" className="report-reference-item report-methodology-reference">
@@ -265,7 +264,7 @@ export default function EvidenceChainReportPrintable() {
           <strong>VIGIL Harm Impact Methodology</strong>
           <span className="report-reference-meta"> — {["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : reportIncident && isObject(reportIncident.raw.harm_impact_assessment) && text(reportIncident.raw.harm_impact_assessment.methodology_version) ? `Version ${text(reportIncident.raw.harm_impact_assessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</span>
           <br />
-          <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/severity-methodology</a>
+          <a href="https://www.cam-initiative.org/observatory/harm-impact-assessment" target="_blank" rel="noreferrer" className="report-reference-url">https://www.cam-initiative.org/observatory/harm-impact-assessment</a>
         </span>
       </li>}
       {taxonomyEvidenceReferences.map((reference) => {

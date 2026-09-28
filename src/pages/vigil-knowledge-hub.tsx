@@ -37,13 +37,13 @@ const CASE_FILE_STAGES = [
   },
   {
     number: "04",
-    label: "Repair",
-    description: "Surface the governing class invariants for mappings where failure is evidenced or the boundary remains unresolved; invariant-held mappings create no Repair requirement.",
+    label: "Compliance",
+    description: "Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy.",
   },
   {
     number: "05",
     label: "Conclusion",
-    description: "Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation.",
+    description: "Integrate the evidence, harm assessment, taxonomy relationships and external requirement crosswalk into a bounded VIGIL interpretation.",
   },
   {
     number: "06",
@@ -61,7 +61,12 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "exemplar",
     label: "Invariant held",
-    description: "The mapped governance boundary or boundaries held under pressure and no failure occurrence is evidenced. These Case Files act as alignment exemplars.",
+    description: "The mapped governance boundary or boundaries held and the Incident has complete adjudication coverage. These Case Files may be presented as alignment exemplars when no failure or unresolved boundary changes that result.",
+  },
+  {
+    key: "incomplete",
+    label: "Invariant held · adjudication incomplete",
+    description: "A mapped governance boundary held, but one or more material incident observations still require a final taxonomy determination. The invariant-held finding is retained without presenting the Incident as an alignment exemplar.",
   },
   {
     key: "mixed",
@@ -194,7 +199,7 @@ export default function VigilKnowledgeHub() {
               </div>
 
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/failure-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/alignment-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -209,7 +214,7 @@ export default function VigilKnowledgeHub() {
                 <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -235,7 +240,7 @@ export default function VigilKnowledgeHub() {
                 <p>CAM Initiative policy papers and consultation submissions translate governance analysis into practical institutional, legal and regulatory proposals.</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -264,7 +269,7 @@ export default function VigilKnowledgeHub() {
                 <p className="vigil-knowledge-meta">{baselineMeta}</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/standards-sources/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/ai-governance-standards/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 

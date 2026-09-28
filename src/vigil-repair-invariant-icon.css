@@ -1,11 +1,10 @@
-/* Section 04 Repair keeps the failure / unresolved assessment-state icons.
-   The first column is labelled as an assessment result rather than Alignment because
-   Repair is presenting the state that gives rise to the governing invariant. */
-.vigil-case-file-page .vigil-repair-table thead th:first-child {
+/* Section 04 Compliance retains the failed / unresolved classification-state icon
+   while the remainder of the row maps the Fidelity Class to external requirements. */
+.vigil-case-file-page .vigil-compliance-table thead th:first-child {
   font-size: 0;
 }
 
-.vigil-case-file-page .vigil-repair-table thead th:first-child::after {
+.vigil-case-file-page .vigil-compliance-table thead th:first-child::after {
   content: "Assessment Result";
   font-family: var(--app-font-sans);
   font-size: 0.8rem;
@@ -17,7 +16,7 @@
 }
 
 @media (max-width: 760px) {
-  .vigil-case-file-page .vigil-repair-table tbody td:first-child::before {
+  .vigil-case-file-page .vigil-compliance-table tbody td:first-child::before {
     content: "Assessment Result";
   }
 }

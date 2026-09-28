@@ -3,7 +3,7 @@ import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucid
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
-import { CaseTaxonomyClassification, CaseTaxonomyRepair, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
+import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
@@ -298,7 +298,7 @@ const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and affected systems",
   "case-diagnose": "Governance, external and harm impact assessment",
   "case-classify": "Alignment classification",
-  "case-repair": "Governing invariants and repair",
+  "case-compliance": "External standards and requirement crosswalk",
   "case-conclusion": "Integrated conclusion",
   "case-references": "Evidence and reference trail",
 };
@@ -358,7 +358,7 @@ function taxonomyRelationshipLabel(reference: TaxonomyReferenceTarget) {
       ? "Secondary alignment classification"
       : "Family-only alignment classification";
   return reference.role === "successful-invariant"
-    ? `${relationship} · invariant held · exemplar`
+    ? `${relationship} · invariant held`
     : relationship;
 }
 
@@ -509,6 +509,8 @@ export default function VigilCaseFile() {
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete";
+  const isInvariantHeld = isExemplar || isIncompleteInvariant || classification === "Invariant held";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
   const isDisputed = classification === "Disputed";
@@ -618,8 +620,8 @@ export default function VigilCaseFile() {
       </> : <p className="vigil-case-empty">No Incident is linked to this Case File, so no VIGIL Observatory alignment classification can be rendered.</p>}
     </>;
 
-    if (stageId === "repair") return <>
-      {incident ? <CaseTaxonomyRepair raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No governing invariant can be resolved from a canonical classification for this Incident.</p>}
+    if (stageId === "compliance") return <>
+      {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No external requirement crosswalk can be resolved without a canonical classification for this Incident.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
@@ -735,7 +737,7 @@ export default function VigilCaseFile() {
           <div>
             <strong>VIGIL Observatory Alignment Taxonomy</strong>
             <p>{["CAM Initiative", "Public taxonomy reference", taxonomyReferenceVersion ? `Version ${taxonomyReferenceVersion}` : undefined, taxonomyReferenceDate ? `Revised ${taxonomyReferenceDate}` : undefined].filter(Boolean).join(" · ")}</p>
-            <a href="https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/knowledge-base/failure-taxonomy</a>
+            <a href="https://www.cam-initiative.org/observatory/alignment-taxonomy" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/alignment-taxonomy</a>
           </div>
         </li>}
         {harmImpactAssessment && <li id="vigil-harm-methodology-reference" key="vigil-harm-impact-methodology">
@@ -743,7 +745,7 @@ export default function VigilCaseFile() {
           <div>
             <strong>VIGIL Harm Impact Methodology</strong>
             <p>{["CAM Initiative", "Harm severity methodology", harmMethodologyMetadata?.version ? `Version ${harmMethodologyMetadata.version}` : text(harmImpactAssessment.methodology_version) ? `Version ${text(harmImpactAssessment.methodology_version)}` : undefined, harmMethodologyMetadata?.effectiveOn ? `Revised ${harmMethodologyMetadata.effectiveOn}` : undefined].filter(Boolean).join(" · ")}</p>
-            <a href="https://www.cam-initiative.org/observatory/severity-methodology" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/severity-methodology</a>
+            <a href="https://www.cam-initiative.org/observatory/harm-impact-assessment" target="_blank" rel="noreferrer">https://www.cam-initiative.org/observatory/harm-impact-assessment</a>
           </div>
         </li>}
         {taxonomyEvidenceReferences.map((reference, index) => <li key={`taxonomy-evidence-${reference.key}`}>
@@ -802,7 +804,7 @@ export default function VigilCaseFile() {
 
     <VigilObservatoryMasthead
       titleId="case-file-heading"
-      kicker={isExemplar ? "VIGIL Observatory Case File · Alignment exemplar" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
+      kicker={isExemplar ? "VIGIL Observatory Case File · Alignment exemplar · Invariant held" : isIncompleteInvariant ? "VIGIL Observatory Case File · Invariant held · adjudication incomplete" : isInvariantHeld ? "VIGIL Observatory Case File · Invariant held" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
       title={title}
       contextLabel="Incident context"
       mode="record"
@@ -826,7 +828,6 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Mappings where failure is evidenced or the boundary remains unresolved contribute their governing invariants to Repair. Unresolved boundaries remain explicitly unresolved rather than being presented as failures; invariant-held mappings remain in Classification as evidence of boundaries that held.</p>
       </div>
     </section>}
 
@@ -850,17 +851,29 @@ export default function VigilCaseFile() {
       </div>
     </section>}
 
+    {isInvariantHeld && !isExemplar && <section className="vigil-exemplar-callout is-incomplete-adjudication" aria-labelledby="vigil-invariant-held-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Alignment finding · Invariant held</p>
+        <h2 id="vigil-invariant-held-heading">{isIncompleteInvariant ? "A governance invariant held, but adjudication is incomplete." : "A governance invariant held."}</h2>
+        <p>This Case File contains evidence that a specific governance boundary held under the conditions assessed. That finding is limited to the mapped boundary and does not mean the Incident as a whole was aligned.</p>
+        <p className="vigil-exemplar-callout-boundary">{isIncompleteInvariant
+          ? "Other incident observations still require a final taxonomy determination. Open Classification to see what remains unresolved."
+          : "Overall exemplar status has not been established from complete adjudication coverage."}</p>
+      </div>
+    </section>}
+
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <Blend /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment exemplar · mixed execution" : "Alignment exemplar · Invariant held"}</p>
-        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
+        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment exemplar · Invariant held"}</p>
+        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The adjudicated governance boundary held."}</h2>
         {hasMixedExecution
-          ? <p>This Case File is presented as an alignment exemplar overall. The relevant governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents an invariant-held governance outcome. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          ? <p>This Case File contains evidence that a specific governance invariant held, while other parts of the occurrence produced a different or unresolved result.</p>
+          : <p>This Case File is fully adjudicated against the current taxonomy, and the mapped governance invariant held under the conditions assessed.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not change the invariant-held alignment outcome."
-          : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
+          ? "The invariant-held finding is bounded to the governance boundary assessed and does not override other failure or unresolved findings in the Incident."
+          : "Exemplar status is limited to the governance boundary and evidence in this occurrence; it does not mean every aspect of the system or Incident was successful."}</p>
       </div>
     </section>}
 

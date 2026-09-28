@@ -71,8 +71,8 @@ export default function About() {
             </div>
             <div className="cam-action-row">
               <Link className="cam-action cam-action-secondary" href="/observatory/cases/">Browse Case Files <ArrowRight aria-hidden="true" /></Link>
-              <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/failure-taxonomy/">Explore the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
-              <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
+              <Link className="cam-action cam-action-secondary" href="/observatory/alignment-taxonomy/">Explore the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
+              <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
             </div>
           </section>
 

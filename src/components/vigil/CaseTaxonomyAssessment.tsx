@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
 type ClauseRelationship = {
@@ -95,12 +96,31 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
   return summary;
 }
 
-// The Case File and deterministic report/PDF share this component. Prefer the
-// canonical per-relationship rationale published by VIGIL; the generated summary
-// exists only as a compatibility fallback for older records without rationale text.
-function taxonomyAssessmentRationales(relationships: ClauseRelationship[]) {
-  const rationales = relationships.flatMap((item) => item.rationale ? [item.rationale] : []);
-  return rationales.length ? rationales : [taxonomyAssessmentSummary(relationships)];
+function SourceClause({ clause }: { clause: ClauseAssessment }) {
+  return <div className="vigil-taxonomy-source-wording">
+    {clause.sourceAnchor ? <q>{clause.sourceAnchor}</q> : null}
+    {clause.sourceParaphrase ? <p>{clause.sourceParaphrase}</p> : null}
+    {!clause.sourceAnchor && !clause.sourceParaphrase
+      ? <span>Source language is not separately published for this clause.</span>
+      : null}
+  </div>;
+}
+
+function RelationshipStack({
+  relationships,
+  render,
+}: {
+  relationships: ClauseRelationship[];
+  render: (relationship: ClauseRelationship, index: number) => ReactNode;
+}) {
+  if (!relationships.length) return <span>—</span>;
+  return <div className="vigil-taxonomy-assessment-stack">
+    {relationships.map((relationship, index) => (
+      <div className="vigil-taxonomy-assessment-stack-item" key={`${relationship.relationship ?? "relationship"}-${index}`}>
+        {render(relationship, index)}
+      </div>
+    ))}
+  </div>;
 }
 
 export function CaseTaxonomyAssessment({ raw }: Props) {
@@ -110,27 +130,26 @@ export function CaseTaxonomyAssessment({ raw }: Props) {
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
     <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown</h3>
     <p className="vigil-taxonomy-assessment-intro">
-      Clause-level breakdown of the incident into source wording, recovered governance principles, and occurrence-specific analysis before formal alignment classification.
+      Incident observations paired with occurrence-specific analysis before formal alignment classification.
     </p>
     <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
-        <caption className="sr-only">Clause-level VIGIL Observatory incident breakdown preceding formal alignment classification.</caption>
+        <caption className="sr-only">VIGIL Observatory Incident observations and occurrence-specific analysis preceding formal alignment classification.</caption>
         <thead>
           <tr>
-            <th scope="col">Source clause</th>
-            <th scope="col">Recovered governance principle</th>
+            <th scope="col">Incident observation</th>
             <th scope="col">Incident analysis</th>
           </tr>
         </thead>
         <tbody>
           {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
-            <td>{clause.sourceAnchor
-              ? <q>{clause.sourceAnchor}</q>
-              : clause.sourceParaphrase ?? "Source language is paraphrased in the canonical Incident record."}</td>
-            <td>{clause.recoveredInvariant ?? "No separate recovered-invariant interpretation is published for this clause."}</td>
-            <td>{taxonomyAssessmentRationales(clause.relationships).map((rationale, rationaleIndex) => (
-              <div className="vigil-taxonomy-assessment-rationale" key={`${index}-${rationaleIndex}`}>{rationale}</div>
-            ))}</td>
+            <td data-label="Incident observation"><SourceClause clause={clause} /></td>
+            <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
+              <RelationshipStack
+                relationships={clause.relationships}
+                render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
+              />
+            </td>
           </tr>)}
         </tbody>
       </table>

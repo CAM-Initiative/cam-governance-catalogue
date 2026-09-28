@@ -229,13 +229,13 @@ function ManualContents({
               >
                 <span aria-hidden="true">{expanded ? "−" : "+"}</span>
               </button>
-              <Link href={`/observatory/knowledge-base/failure-taxonomy/${familyId}/`} onClick={() => setQuery("")}>
+              <Link href={`/observatory/alignment-taxonomy/${familyId}/`} onClick={() => setQuery("")}>
                 {document.family.name}
               </Link>
             </div>
             {expanded ? <ul id={`${familyId}-contents-classes`}>
               {classes.map((item) => <li key={item.class_id} className={item.class_id === activeClassId ? "is-active-class" : undefined}>
-                <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}/`} onClick={() => setQuery("")}>
+                <Link href={`/observatory/alignment-taxonomy/${item.class_id}/`} onClick={() => setQuery("")}>
                   {item.name}
                 </Link>
               </li>)}
@@ -305,8 +305,8 @@ function ClassManualCard({
         </ul> : <p className="vigil-taxonomy-linked-cases-empty">No Case Files currently evidence failure for this class.</p>}
     </section>
 
-    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Alignment exemplars for ${item.name}`}>
-      <h4>Alignment exemplars <span>{invariantExemplars.length}</span></h4>
+    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Invariant-held examples for ${item.name}`}>
+      <h4>Invariant-held examples <span>{invariantExemplars.length}</span></h4>
       <ul>
         {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
           <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
@@ -328,7 +328,7 @@ function ClassManualCard({
       <h4>Relationships</h4>
       <ul>{item.relationships.map((relationship, index) => <li key={`${relationship.type}-${relationship.target_id}-${index}`}>
         <strong>{relationshipLabel(relationship.type)}:</strong>{" "}
-        <Link href={`/observatory/knowledge-base/failure-taxonomy/${relationship.target_id}/`}>
+        <Link href={`/observatory/alignment-taxonomy/${relationship.target_id}/`}>
           <code>{relationship.target_id}</code> — {relationshipTarget(relationship, classById)}
         </Link>
         {relationship.note ? <span> — {relationship.note}</span> : null}
@@ -338,7 +338,7 @@ function ClassManualCard({
     {showSupportingEvidence
       ? <SupportingEvidence item={item} />
       : item.external_references?.length ? <p className="vigil-taxonomy-supporting-evidence-link">
-        <Link href={`/observatory/knowledge-base/failure-taxonomy/${item.class_id}/`}>
+        <Link href={`/observatory/alignment-taxonomy/${item.class_id}/`}>
           Supporting evidence · {item.external_references.length} {item.external_references.length === 1 ? "source" : "sources"}
         </Link>
       </p> : null}
@@ -361,7 +361,7 @@ function ClassManualSection({
   return <section className="vigil-taxonomy-single-class-view" aria-labelledby={`${item.class_id.toLowerCase()}-view-heading`}>
     <div className="vigil-taxonomy-single-class-context">
       <p>Fidelity class</p>
-      <Link href={`/observatory/knowledge-base/failure-taxonomy/${parent.family.family_id}/`}>
+      <Link href={`/observatory/alignment-taxonomy/${parent.family.family_id}/`}>
         View whole family · {parent.family.name}
       </Link>
     </div>
@@ -437,7 +437,7 @@ function FamilyManualSection({
 }
 
 export default function VigilFailureTaxonomy() {
-  const [, params] = useRoute("/observatory/knowledge-base/failure-taxonomy/:taxonomyId");
+  const [, params] = useRoute("/observatory/alignment-taxonomy/:taxonomyId");
   const requestedId = decodeURIComponent(params?.taxonomyId ?? "").trim();
   const [state, setState] = useState<TaxonomyState>({ status: "loading" });
   const [query, setQuery] = useState("");
