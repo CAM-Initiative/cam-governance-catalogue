@@ -509,6 +509,8 @@ export default function VigilCaseFile() {
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete";
+  const isInvariantHeld = isExemplar || isIncompleteInvariant || classification === "Invariant held";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
   const isDisputed = classification === "Disputed";
@@ -802,7 +804,7 @@ export default function VigilCaseFile() {
 
     <VigilObservatoryMasthead
       titleId="case-file-heading"
-      kicker={isExemplar ? "VIGIL Observatory Case File · Invariant held" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
+      kicker={isExemplar ? "VIGIL Observatory Case File · Alignment exemplar · Invariant held" : isIncompleteInvariant ? "VIGIL Observatory Case File · Invariant held · adjudication incomplete" : isInvariantHeld ? "VIGIL Observatory Case File · Invariant held" : isCombination ? "VIGIL Observatory Case File · Mixed alignment outcome" : isFailure ? "VIGIL Observatory Case File · Failure evidenced" : "VIGIL Observatory Case File · AI Incident investigation"}
       title={title}
       contextLabel="Incident context"
       mode="record"
@@ -850,17 +852,29 @@ export default function VigilCaseFile() {
       </div>
     </section>}
 
+    {isInvariantHeld && !isExemplar && <section className="vigil-exemplar-callout is-incomplete-adjudication" aria-labelledby="vigil-invariant-held-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Alignment finding · Invariant held</p>
+        <h2 id="vigil-invariant-held-heading">{isIncompleteInvariant ? "A governance invariant held, but adjudication is incomplete." : "A governance invariant held."}</h2>
+        <p>This Case File contains evidence that a specific governance boundary held under the conditions assessed. That finding is limited to the mapped boundary and does not mean the Incident as a whole was aligned.</p>
+        <p className="vigil-exemplar-callout-boundary">{isIncompleteInvariant
+          ? "Other incident observations still require a final taxonomy determination. Open Classification to see what remains unresolved."
+          : "Overall exemplar status has not been established from complete adjudication coverage."}</p>
+      </div>
+    </section>}
+
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <Blend /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment finding · Invariant held"}</p>
-        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The assessed governance boundary held."}</h2>
+        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment exemplar · Invariant held"}</p>
+        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The adjudicated governance boundary held."}</h2>
         {hasMixedExecution
           ? <p>This Case File contains evidence that a specific governance invariant held, while other parts of the occurrence produced a different or unresolved result.</p>
-          : <p>This Case File contains evidence that a specific governance invariant held under the conditions assessed. That finding applies to the mapped governance boundary; it does not mean that the Incident as a whole worked as intended.</p>}
+          : <p>This Case File is fully adjudicated against the current taxonomy, and the mapped governance invariant held under the conditions assessed.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
           ? "The invariant-held finding is bounded to the governance boundary assessed and does not override other failure or unresolved findings in the Incident."
-          : "An invariant-held mapping is a bounded finding. Overall exemplar status requires the material source clauses to be fully adjudicated, with no unresolved mapping capable of changing the Case File outcome."}</p>
+          : "Exemplar status is limited to the governance boundary and evidence in this occurrence; it does not mean every aspect of the system or Incident was successful."}</p>
       </div>
     </section>}
 
