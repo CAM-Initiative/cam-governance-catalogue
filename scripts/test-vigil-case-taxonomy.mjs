@@ -81,10 +81,12 @@ assert.doesNotMatch(polishCss, /@page \{ margin: 1\.45cm 1\.35cm; \}/);
 assert.doesNotMatch(polishCss, /Forced page-per-stage pagination created blank and nearly blank pages/);
 
 assert.match(report, /className="report-hero"/);
-assert.match(report, /const isExemplar = classification === "Exemplar"/);
-assert.match(report, /const isFailure = classification === "Classified"/);
+assert.match(report, /const adjudicationIncomplete = classification\?\.endsWith\(" · adjudication incomplete"\)/);
+assert.match(report, /const classificationBase = adjudicationIncomplete/);
+assert.match(report, /const isExemplar = classificationBase === "Exemplar"/);
+assert.match(report, /const isFailure = classificationBase === "Classified"/);
 assert.match(report, /className=\{`report-exemplar-callout\$\{hasMixedExecution \? " is-mixed-execution" : ""\}`\}/);
-assert.match(report, /const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete"/);
+assert.match(report, /const isIncompleteInvariant = adjudicationIncomplete && classificationBase === "Invariant held"/);
 assert.match(report, /A governance invariant held, but adjudication is incomplete\./);
 assert.match(report, /The adjudicated governance boundary held\./);
 assert.match(report, /This Case File is fully adjudicated against the current taxonomy/);
