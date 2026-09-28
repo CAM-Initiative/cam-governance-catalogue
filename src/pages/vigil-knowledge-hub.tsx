@@ -61,7 +61,12 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "exemplar",
     label: "Invariant held",
-    description: "One or more mapped governance boundaries held under pressure. A Case File is presented as an alignment exemplar only when its adjudication coverage is complete and no failure or unresolved boundary changes that result.",
+    description: "The mapped governance boundary or boundaries held and the Incident has complete adjudication coverage. These Case Files may be presented as alignment exemplars when no failure or unresolved boundary changes that result.",
+  },
+  {
+    key: "incomplete",
+    label: "Invariant held · adjudication incomplete",
+    description: "A mapped governance boundary held, but one or more material incident observations still require a final taxonomy determination. The invariant-held finding is retained without presenting the Incident as an alignment exemplar.",
   },
   {
     key: "mixed",
