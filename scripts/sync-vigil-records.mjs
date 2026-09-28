@@ -127,6 +127,8 @@ function compactIncidentRecord(record) {
     severity: record.severity,
     classification_status: record.classification_status,
     classification_role: record.classification_role,
+    adjudication_coverage: record.adjudication_coverage,
+    alignment_exemplar_eligible: typeof record.alignment_exemplar_eligible === "boolean" ? record.alignment_exemplar_eligible : undefined,
     primary_class_id: primaryClassId,
     primary_family_id: primaryFamilyId,
     secondary_class_ids: secondaryClassIds,
@@ -184,6 +186,8 @@ try {
       record.severity,
       record.classification_status,
       record.classification_role,
+      record.adjudication_coverage?.status,
+      record.alignment_exemplar_eligible,
       record.primary_class_id,
       record.primary_family_id,
     ].map((value) => value ?? "").join("|"))
