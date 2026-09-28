@@ -740,9 +740,11 @@ test("site has one canonical About surface plus visible licensing and severity m
     read("scripts/prepare-github-pages.js"),
   ]);
   assert.match(app, /path="\/about" component=\{About\}/);
-  assert.match(app, /path="\/observatory\/about" component=\{About\}/);
-  assert.match(app, /path="\/observatory\/severity-methodology" component=\{VigilSeverityMethodology\}/);
-  assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
+  assert.doesNotMatch(app, /path="\/observatory\/about"/);
+  assert.match(app, /path="\/observatory\/harm-impact-assessment" component=\{VigilSeverityMethodology\}/);
+  assert.doesNotMatch(app, /path="\/observatory\/severity-methodology"/);
+  assert.match(pages, /join\(docsDir, "observatory", "about"\)/);
+  assert.match(pages, /join\(docsDir, "observatory", "severity-methodology"\)/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm Impact Assessment/);
