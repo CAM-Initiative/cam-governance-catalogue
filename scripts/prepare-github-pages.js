@@ -313,7 +313,10 @@ function publicMappingRoleLabel(role) {
 
 function publicAlignmentOutcome(record) {
   if (record.classification_role === "failure-occurrence") return "Failure evidenced";
-  if (record.classification_role === "successful-invariant") return "Invariant held";
+  if (record.classification_role === "successful-invariant") {
+    if (record.adjudication_coverage?.status === "partial") return "Invariant held · adjudication incomplete";
+    return "Invariant held";
+  }
   if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
   if (record.classification_status === "classified" || record.classification_status === "provisionally-classified") return "Failure evidenced";
   if (record.classification_status === "classification-disputed") return "Disputed";
@@ -330,7 +333,7 @@ function taxonomyCaseLinkHtml(example) {
 }
 
 function taxonomyInvariantExemplarHtml(exemplar, classId) {
-  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Invariant held · exemplar · <a href="/observatory/alignment-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
+  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
 }
 
 function taxonomyExternalReferenceHtml(reference) {
