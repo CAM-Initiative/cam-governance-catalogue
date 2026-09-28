@@ -151,6 +151,16 @@ const vigilAboutStructuredData = {
   },
 };
 
+const retiredPublicRouteDirs = [
+  join(docsDir, "observatory", "about"),
+  join(docsDir, "observatory", "incidents"),
+  join(docsDir, "observatory", "severity-methodology"),
+  join(docsDir, "observatory", "knowledge-base"),
+];
+for (const retiredRouteDir of retiredPublicRouteDirs) {
+  rmSync(retiredRouteDir, { recursive: true, force: true });
+}
+
 const staticRoutes = [
   ["/about", "About CAM Initiative", aboutDescription],
   ["/licensing", "Copyright & Licence | CAM Initiative", "Copyright, citation, reuse and licence information for VIGIL Observatory and CAM Initiative materials."],
@@ -159,42 +169,58 @@ const staticRoutes = [
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
   ["/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
-  ["/observatory/about", "About CAM Initiative", aboutDescription],
   ["/observatory/harm-impact-assessment", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.0.1 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
-  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, repair and references."],
-  ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
+  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, compliance and references."],
   ["/observatory/alignment-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
   ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
+];
 
-  // Legacy public paths remain resolvable, but are excluded from the sitemap and canonicalized to the public URL architecture above.
-  ["/observatory/severity-methodology", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.0.1 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
-  ["/observatory/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
-  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
-  ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
-  ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],
-  ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
-]
-
-const canonicalAliases = new Map([
-  ["/observatory/incidents", "/observatory/cases"],
-  ["/observatory/about", "/about"],
-  ["/observatory/severity-methodology", "/observatory/harm-impact-assessment"],
-  ["/observatory/knowledge-base", "/knowledge-base"],
-  ["/observatory/knowledge-base/failure-taxonomy", "/observatory/alignment-taxonomy"],
-  ["/observatory/knowledge-base/standards-sources", "/observatory/ai-governance-standards"],
-  ["/observatory/knowledge-base/external-requirements", "/observatory/ai-governance-standards"],
-  ["/observatory/knowledge-base/policy", "/policy"],
+const staticRouteBodies = new Map([
+  ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>CAM Initiative</p>
+    <h1>Knowledge Base</h1>
+    <p>Reference material for the VIGIL Observatory, including Case Files, the Alignment Taxonomy, the Harm Impact Assessment methodology, AI governance standards and CAM Initiative datasets.</p>
+    <nav aria-label="Knowledge Base resources"><ul>
+      <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">VIGIL Observatory Alignment Taxonomy</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">VIGIL Harm Impact Assessment</a></li>
+      <li><a href="/observatory/ai-governance-standards/">AI Governance Standards</a></li>
+      <li><a href="/datasets/">Datasets</a></li>
+      <li><a href="/policy/">Policy</a></li>
+    </ul></nav>
+  </main>`],
+  ["/observatory", `<main data-static-crawl-fallback="vigil-observatory" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>CAM Initiative</p>
+    <h1>VIGIL Observatory</h1>
+    <p>A public AI incident observatory connecting documented evidence, materialised harm, alignment classification and external governance requirements.</p>
+    <nav aria-label="VIGIL Observatory resources"><ul>
+      <li><a href="/observatory/cases/">Browse Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">Explore the Alignment Taxonomy</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">Read the Harm Impact Assessment methodology</a></li>
+      <li><a href="/observatory/ai-governance-standards/">Browse AI Governance Standards</a></li>
+    </ul></nav>
+  </main>`],
+  ["/observatory/harm-impact-assessment", `<main data-static-crawl-fallback="vigil-harm-impact" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory</p>
+    <h1>Harm Impact Assessment</h1>
+    <p>VIGIL-HIM reviews eleven harm dimensions using five severity bands, S1 to S5. The highest defensible materialised-harm threshold determines the overall severity reported in a Case File.</p>
+    <p><a href="/observatory/cases/">Browse Case Files using the methodology</a> · <a href="/knowledge-base/">Return to the Knowledge Base</a></p>
+  </main>`],
+  ["/observatory/ai-governance-standards", `<main data-static-crawl-fallback="vigil-governance-standards" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory</p>
+    <h1>AI Governance Standards</h1>
+    <p>A curated library of laws, standards, frameworks and technical guidance used to support VIGIL governance analysis and external requirement cross-references.</p>
+    <p><a href="/observatory/alignment-taxonomy/">Explore the Alignment Taxonomy</a> · <a href="/observatory/cases/">Browse Case Files</a> · <a href="/knowledge-base/">Return to the Knowledge Base</a></p>
+  </main>`],
 ]);
 
 for (const [route, title, description] of staticRoutes) {
-  const canonicalRoute = canonicalAliases.get(route) ?? route;
-  const isAboutRoute = route === "/about" || route === "/observatory/about";
+  const isAboutRoute = route === "/about";
   writeRoute(route, pageHtml({
     route,
     title,
     description,
-    canonicalRoute,
-    body: isAboutRoute ? vigilAboutFallbackBody : "",
+    body: isAboutRoute ? vigilAboutFallbackBody : (staticRouteBodies.get(route) ?? ""),
     structuredData: isAboutRoute ? vigilAboutStructuredData : undefined,
   }));
 }
@@ -217,7 +243,6 @@ try {
 
 const taxonomyRootDirs = [
   join(docsDir, "observatory", "alignment-taxonomy"),
-  join(docsDir, "observatory", "knowledge-base", "failure-taxonomy"),
 ];
 for (const taxonomyRootDir of taxonomyRootDirs) {
   if (!existsSync(taxonomyRootDir)) continue;
@@ -387,16 +412,6 @@ for (const { document } of taxonomyFamilies) {
       body: familyBody,
     }),
   );
-  const legacyFamilyRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}`;
-  writeRoute(
-    legacyFamilyRoute,
-    pageHtml({
-      route: legacyFamilyRoute,
-      canonicalRoute: familyRoute,
-      title: `${family.name || family.family_id} | VIGIL Observatory Alignment Taxonomy | CAM Initiative`,
-      description: familyDescription,
-    }),
-  );
 
   for (const item of familyClasses) {
     if (!item?.class_id) continue;
@@ -437,16 +452,6 @@ for (const { document } of taxonomyFamilies) {
         title: `${item.name || item.class_id} | VIGIL Observatory Fidelity Class | CAM Initiative`,
         description: classDescription,
         body: classBody,
-      }),
-    );
-    const legacyClassRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}`;
-    writeRoute(
-      legacyClassRoute,
-      pageHtml({
-        route: legacyClassRoute,
-        canonicalRoute: classRoute,
-        title: `${item.name || item.class_id} | VIGIL Observatory Fidelity Class | CAM Initiative`,
-        description: classDescription,
       }),
     );
   }
@@ -509,12 +514,12 @@ if (incidentRecords.length) {
 
 // Only publish change dates when a trustworthy page-level modification timestamp is available.
 // A build date is not a content modification date, so this sitemap intentionally omits modification-date elements.
-const sitemapRoutes = [
+const sitemapRoutes = [...new Set([
   "/",
-  ...staticRoutes.map(([route]) => route).filter((route) => !canonicalAliases.has(route)),
+  ...staticRoutes.map(([route]) => route),
   ...taxonomyRoutes,
   ...incidentRecords.map((record) => `/observatory/cases/${encodeURIComponent(record.id)}`),
-];
+])];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
