@@ -29,13 +29,28 @@ type ClassificationRef = {
 };
 
 type ClassificationRole = "failure-occurrence" | "successful-invariant" | "ambiguous-boundary";
+type AdjudicationCoverageStatus = "complete" | "partial";
+type ClauseAdjudicationStatus = "mapped" | "resolved-no-mapping" | "unresolved" | "taxonomy-gap";
 
 type ParsedClassification = {
   status?: ClassificationStatus;
   role?: ClassificationRole;
   taxonomyVersion?: string;
+  coverageStatus?: AdjudicationCoverageStatus;
   primary: ClassificationRef;
   secondary: ClassificationRef[];
+};
+
+type OutstandingRelationship = {
+  classId?: string;
+  rationale?: string;
+};
+
+type OutstandingAdjudicationClause = {
+  observation: string;
+  status: Extract<ClauseAdjudicationStatus, "unresolved" | "taxonomy-gap">;
+  note?: string;
+  relationships: OutstandingRelationship[];
 };
 
 type ResolvedClassification = ClassificationRef & {
@@ -95,8 +110,10 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   const primaryClassification = isObject(value.primary_classification) ? value.primary_classification : undefined;
   const primaryFamily = isObject(value.primary_family) ? value.primary_family : undefined;
   const primaryClass = isObject(value.primary_class) ? value.primary_class : undefined;
+  const coverage = isObject(value.adjudication_coverage) ? value.adjudication_coverage : undefined;
   const status = text(value.classification_status) as ClassificationStatus | undefined;
   const role = text(value.classification_role) as ClassificationRole | undefined;
+  const coverageStatus = text(coverage?.status) as AdjudicationCoverageStatus | undefined;
   const primaryRole = (text(primaryClassification?.classification_role) as ClassificationRole | undefined)
     ?? role
     ?? "failure-occurrence";
@@ -119,6 +136,7 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
     status,
     role,
     taxonomyVersion: text(value.taxonomy_version),
+    coverageStatus: coverageStatus === "complete" || coverageStatus === "partial" ? coverageStatus : undefined,
     primary: {
       familyId: text(primaryClassification?.family_id ?? primaryFamily?.family_id),
       classId: text(primaryClassification?.class_id ?? primaryClass?.class_id),
@@ -165,6 +183,39 @@ function classificationEvidenceByClass(raw: UnknownRecord) {
     }
   }
   return result;
+}
+
+function outstandingAdjudicationClauses(raw: UnknownRecord): OutstandingAdjudicationClause[] {
+  const vigilAssessment = isObject(raw.vigil_assessment) ? raw.vigil_assessment : undefined;
+  const sourceClauseAnalysis = vigilAssessment && isObject(vigilAssessment.source_clause_analysis)
+    ? vigilAssessment.source_clause_analysis
+    : undefined;
+  const clauses = sourceClauseAnalysis && Array.isArray(sourceClauseAnalysis.clauses)
+    ? sourceClauseAnalysis.clauses
+    : [];
+
+  return clauses.flatMap((clause) => {
+    if (!isObject(clause)) return [];
+    const status = text(clause.adjudication_status) as ClauseAdjudicationStatus | undefined;
+    if (status !== "unresolved" && status !== "taxonomy-gap") return [];
+    const relationships = Array.isArray(clause.taxonomy_relationships)
+      ? clause.taxonomy_relationships.flatMap((relationship) => {
+          if (!isObject(relationship) || relationship.canonical_taxonomy_mapping === true) return [];
+          return [{
+            classId: text(relationship.class_id),
+            rationale: text(relationship.rationale),
+          }];
+        })
+      : [];
+    return [{
+      observation: text(clause.source_paraphrase)
+        ?? text(clause.source_anchor)
+        ?? "This incident observation still requires a final taxonomy determination.",
+      status,
+      note: text(clause.adjudication_note),
+      relationships,
+    }];
+  });
 }
 
 
@@ -410,6 +461,80 @@ function ClassificationTable({
   </>;
 }
 
+function FurtherAdjudicationTable({
+  raw,
+  dataset,
+  coverageStatus,
+}: {
+  raw: UnknownRecord;
+  dataset: FailureTaxonomyDataset;
+  coverageStatus?: AdjudicationCoverageStatus;
+}) {
+  if (coverageStatus !== "partial") return null;
+  const clauses = outstandingAdjudicationClauses(raw);
+
+  return <section className="vigil-further-adjudication" aria-labelledby="vigil-further-adjudication-heading">
+    <div className="vigil-case-subheading">
+      <h3 className="vigil-case-editorial-subheading" id="vigil-further-adjudication-heading">Further adjudication required</h3>
+      <p>This Case File has not yet been fully adjudicated. The incident observations below still require a final taxonomy determination.</p>
+    </div>
+
+    {clauses.length ? <div className="vigil-further-adjudication-table-wrap" role="region" aria-label="Incident observations requiring further adjudication" tabIndex={0}>
+      <table className="vigil-further-adjudication-table">
+        <caption className="sr-only">Incident observations that still require a final VIGIL Alignment Taxonomy determination.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Incident observation</th>
+            <th scope="col">Candidate boundary</th>
+            <th scope="col">What remains unresolved</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clauses.map((clause, clauseIndex) => {
+            const resolvedRelationships = clause.relationships.map((relationship) => {
+              const resolved = classById(dataset, relationship.classId);
+              return {
+                ...relationship,
+                name: resolved?.class.name,
+              };
+            });
+            const rationaleItems = clause.note
+              ? [clause.note]
+              : [...new Set(resolvedRelationships.flatMap((relationship) => relationship.rationale ? [relationship.rationale] : []))];
+
+            return <tr key={`${clause.status}-${clauseIndex}-${clause.observation.slice(0, 48)}`}>
+              <td data-label="Incident observation">{clause.observation}</td>
+              <td data-label="Candidate boundary">
+                {clause.status === "taxonomy-gap"
+                  ? <strong>No current Fidelity Class</strong>
+                  : resolvedRelationships.length
+                    ? <ul className="vigil-further-adjudication-boundaries">
+                        {resolvedRelationships.map((relationship, relationshipIndex) => <li key={`${relationship.classId ?? "candidate"}-${relationshipIndex}`}>
+                          {relationship.classId
+                            ? <a href={`/observatory/alignment-taxonomy/${encodeURIComponent(relationship.classId)}/`}>
+                                <strong>{relationship.name ?? "Candidate Fidelity Class"}</strong>
+                                <span className="vigil-classification-id">{relationship.classId}</span>
+                              </a>
+                            : <strong>Candidate boundary not yet assigned</strong>}
+                        </li>)}
+                      </ul>
+                    : <span>Candidate boundary not yet assigned</span>}
+              </td>
+              <td data-label="What remains unresolved">
+                {rationaleItems.length
+                  ? rationaleItems.length === 1
+                    ? <p>{rationaleItems[0]}</p>
+                    : <ul className="vigil-further-adjudication-rationales">{rationaleItems.map((item, itemIndex) => <li key={`${itemIndex}-${item.slice(0, 48)}`}>{item}</li>)}</ul>
+                  : <p>A final taxonomy determination has not yet been established for this observation.</p>}
+              </td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </div> : <p className="vigil-case-empty">This record is marked as partially adjudicated, but no unresolved public incident observation is available in the current projection.</p>}
+  </section>;
+}
+
 /* Rich card projection retained for the deterministic report/PDF. The ordinary
    Case File WebUX uses the compact classification table above. */
 function ClassificationCard({
@@ -443,7 +568,7 @@ function ClassificationCard({
     <div className="vigil-classification-layout">
       <div className="vigil-classification-reading">
         {plainEnglish && <section>
-          <h4 className="vigil-substantive-label">{exemplar ? "Governance boundary this exemplar tests" : "What this failure means"}</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Governance boundary assessed" : "What this classification means"}</h4>
           <p>{plainEnglish}</p>
         </section>}
         {technicalDefinition && <section>
@@ -524,6 +649,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
     <ExplicitClassificationState parsed={parsed} primary={primary} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <FurtherAdjudicationTable raw={raw} dataset={taxonomy.data} coverageStatus={parsed.coverageStatus} />
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
@@ -570,6 +696,8 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
         </div>
       </section>}
     </div>
+
+    <FurtherAdjudicationTable raw={raw} dataset={taxonomy.data} coverageStatus={parsed.coverageStatus} />
   </div>;
 }
 
