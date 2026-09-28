@@ -151,7 +151,6 @@
   line-height: 1.58;
 }
 
-.vigil-case-file-page .vigil-classification-incident-analysis,
 .vigil-case-file-page .vigil-classification-basis {
   color: hsl(var(--foreground) / 0.9) !important;
 }
@@ -274,8 +273,7 @@
 }
 
 
-.vigil-case-file-page .vigil-classification-basis,
-.vigil-case-file-page .vigil-classification-incident-analysis {
+.vigil-case-file-page .vigil-classification-basis {
   color: hsl(var(--foreground) / 0.9) !important;
 }
 
@@ -304,8 +302,8 @@
 }
 
 
-/* Compliance keeps the Incident observation visible while projecting each
-   external requirement into its own traceable row. */
+/* Compliance projects each external requirement with the controlling
+   Fidelity Class recognition criteria into its own traceable row. */
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 8%; }
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 24%; }
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 34%; }
