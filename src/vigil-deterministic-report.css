@@ -1339,10 +1339,18 @@
   color: hsl(var(--report-muted));
 }
 
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(1) { width: 9%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(2) { width: 23%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(3) { width: 30%; }
-.vigil-deterministic-report-host .vigil-classification-table thead th:nth-child(4) { width: 38%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 11%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 25%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 28%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 36%; }
+
+/* Confidence remains available in the interactive Case File, but is omitted from
+   the deterministic report/PDF so the substantive four-column classification
+   table fits the A4 content width without squeezing or overflow. */
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(5),
+.vigil-deterministic-report-host .vigil-primary-classification-table tbody td:nth-child(5) {
+  display: none !important;
+}
 
 .vigil-deterministic-report-host .vigil-external-alignment-classification {
   margin-top: 1rem;
