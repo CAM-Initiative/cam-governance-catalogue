@@ -429,7 +429,7 @@ for (const { document } of taxonomyFamilies) {
       ${listHtml(item.exclusions)}
       <h2>Linked Case Files</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
-      ${classInvariantExemplars.length ? `<h2>Alignment exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classInvariantExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
