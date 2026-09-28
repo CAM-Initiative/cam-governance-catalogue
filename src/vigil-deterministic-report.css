@@ -2592,3 +2592,105 @@
     print-color-adjust: exact;
   }
 }
+
+
+/* Section 03 partial-adjudication table. */
+.vigil-deterministic-report-host .vigil-further-adjudication {
+  margin-top: 0.9rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--report-rule));
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication .vigil-case-subheading {
+  margin-bottom: 0.55rem;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication .vigil-case-subheading h3 {
+  margin: 0;
+  font-family: var(--app-font-serif);
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: hsl(var(--report-ink));
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication .vigil-case-subheading p {
+  margin: 0.3rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.48;
+  color: hsl(var(--report-muted));
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.82rem;
+  line-height: 1.42;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table th,
+.vigil-deterministic-report-host .vigil-further-adjudication-table td {
+  padding: 0.46rem 0.5rem;
+  border: 1px solid hsl(var(--report-rule) / 0.72);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table thead th {
+  background: hsl(var(--report-panel));
+  color: hsl(var(--report-muted));
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table th:nth-child(1) { width: 38%; }
+.vigil-deterministic-report-host .vigil-further-adjudication-table th:nth-child(2) { width: 24%; }
+.vigil-deterministic-report-host .vigil-further-adjudication-table th:nth-child(3) { width: 38%; }
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table tr {
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table p,
+.vigil-deterministic-report-host .vigil-further-adjudication-table ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-table ul {
+  padding-left: 0.95rem;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-boundaries a {
+  color: hsl(var(--report-ink));
+  text-decoration: none;
+}
+
+.vigil-deterministic-report-host .vigil-further-adjudication-boundaries .vigil-classification-id {
+  display: block;
+  margin-top: 0.12rem;
+  color: hsl(var(--report-muted));
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+}
+
+@media print {
+  .report-document .vigil-further-adjudication {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  .report-document .vigil-further-adjudication-table {
+    font-size: 9pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .report-document .vigil-further-adjudication-table th,
+  .report-document .vigil-further-adjudication-table td {
+    padding: 2.2mm 2.4mm !important;
+  }
+}
