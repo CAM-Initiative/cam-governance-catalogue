@@ -400,7 +400,7 @@ function AdjudicationFrameworkSection() {
       kind: "exemplar",
       label: "Exemplar",
       title: "The boundary held under pressure.",
-      body: "The case records a successful invariant: evidence of the system or governance response working as intended.",
+      body: "The case records a successful invariant: evidence that the assessed governance boundary held under the conditions examined.",
       mark: "✓",
     },
   ] as const;
