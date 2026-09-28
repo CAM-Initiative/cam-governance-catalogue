@@ -328,7 +328,12 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   ]);
 
   assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
-  assert.doesNotMatch(classification, /<th scope="col">Incident observation<\/th>/);
+  assert.match(classification, /Further adjudication required/);
+  assert.match(classification, /This Case File has not yet been fully adjudicated\. The incident observations below still require a final taxonomy determination\./);
+  assert.match(classification, /<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">Candidate boundary<\/th>[\s\S]*<th scope="col">What remains unresolved<\/th>/);
+  assert.match(classification, /status !== "unresolved" && status !== "taxonomy-gap"/);
+  assert.match(classification, /No current Fidelity Class/);
+  assert.match(classification, /adjudication_note/);
   assert.doesNotMatch(classification, /<th scope="col">Technical definition<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Fidelity family<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Governing invariant<\/th>/);
@@ -379,6 +384,8 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(css, /\.vigil-classification-evidence-stack/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
   assert.match(css, /\.vigil-classification-incident-analysis/);
+  assert.match(css, /\.vigil-further-adjudication-table/);
+  assert.match(css, /\.vigil-further-adjudication-table th:nth-child\(1\) \{ width: 38%; \}/);
   assert.match(classification, /External Alignment Classification/);
   assert.match(classification, /not VIGIL taxonomy mappings/);
 });
@@ -405,9 +412,12 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.match(taxonomy, /hasDirectPrimary \|\| hasDirectSecondary/);
   assert.match(taxonomy, /return mappingRoles\(record, directFallback \?\? "failure-occurrence"\)/);
   assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
-  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasExemplar\)\) return "Combination"/);
-  assert.match(taxonomy, /hasExemplar && !hasFailure\) return "Exemplar"/);
-  assert.match(taxonomy, /hasFailure && !hasExemplar\) return "Classified"/);
+  assert.match(taxonomy, /taxonomyAdjudicationCoverageStatus/);
+  assert.match(taxonomy, /taxonomyAlignmentExemplarEligible/);
+  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasInvariantHeld\)\) return "Combination"/);
+  assert.match(taxonomy, /coverage === "partial"\) return "Invariant held · adjudication incomplete"/);
+  assert.match(taxonomy, /exemplarEligible === true\) return "Exemplar"/);
+  assert.match(taxonomy, /hasFailure && !hasInvariantHeld\) return "Classified"/);
   assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
   assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
   assert.doesNotMatch(taxonomy, /Mixed · failure \+ exemplar/);
@@ -452,8 +462,10 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
   assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
-  assert.match(caseFile, /The assessed governance boundary held\./);
-assert.match(caseFile, /Overall exemplar status requires the material source clauses to be fully adjudicated/);
+  assert.match(caseFile, /const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete"/);
+  assert.match(caseFile, /A governance invariant held, but adjudication is incomplete\./);
+  assert.match(caseFile, /The adjudicated governance boundary held\./);
+  assert.match(caseFile, /This Case File is fully adjudicated against the current taxonomy/);
   assert.match(caseFile, /const isFailure = classification === "Classified"/);
   assert.match(caseFile, /Alignment outcome · Failure evidenced/);
   assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
@@ -467,9 +479,9 @@ assert.match(caseFile, /Overall exemplar status requires the material source cla
   assert.match(classification, /complianceRolePriority/);
   assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
-  assert.match(report, /Invariant-held exemplar mappings remain attached to their Fidelity Class without being presented as failure evidence/i);
-  assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
-  assert.match(sync, /classification_role: record\.classification_role/);
+  assert.match(report, /Section 03 identifies what remains unresolved/);
+  assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Invariant held · adjudication incomplete"/);
+  assert.match(sync, /classification_role: record\.classification_role/);\n  assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);\n  assert.match(sync, /alignment_exemplar_eligible/);
   assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
   assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
   assert.match(casePolishCss, /display: grid !important/);
