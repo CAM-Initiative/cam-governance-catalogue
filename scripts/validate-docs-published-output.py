@@ -344,14 +344,22 @@ def validate_published_vigil_ui_contract() -> list[str]:
         "Confidence",
         "External requirement",
         "Requirement explanation",
-        "Classification basis",
-        "Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.",
+        "VIGIL Finding",
         "Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.",
     )
     for required in required_strings:
         if required not in bundle:
             errors.append(
                 f"Generated application bundle {bundle_path} is missing required Case File UI text: {required!r}"
+            )
+
+    for retired in (
+        "Classification basis",
+        "Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.",
+    ):
+        if retired in bundle:
+            errors.append(
+                f"Generated application bundle {bundle_path} still contains retired Case File UI text: {retired!r}"
             )
 
     if "Taxonomy assessment" in bundle:
