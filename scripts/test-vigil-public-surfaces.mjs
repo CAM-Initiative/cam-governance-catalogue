@@ -346,6 +346,7 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.doesNotMatch(classification, /<th scope="col">Incident observation<\/th>[\s\S]*vigil-compliance-table/);
   assert.match(classification, /function complianceReferenceKey/);
   assert.match(classification, /reference\.clause_or_control/);
+  assert.doesNotMatch(classification, /vigil-compliance-clause/);
   assert.doesNotMatch(classification, /vigil-compliance-requirement-id/);
   assert.doesNotMatch(classification, /<span[^>]*>\{reference\.requirement_id\}<\/span>/);
   assert.match(classification, /function complianceRolePriority/);
