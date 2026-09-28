@@ -1340,17 +1340,12 @@
 }
 
 .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 11%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 25%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 28%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 36%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 30%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 44%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 15%; }
 
-/* Confidence remains available in the interactive Case File, but is omitted from
-   the deterministic report/PDF so the substantive four-column classification
-   table fits the A4 content width without squeezing or overflow. */
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(5),
-.vigil-deterministic-report-host .vigil-primary-classification-table tbody td:nth-child(5) {
-  display: none !important;
-}
+/* Confidence remains visible in the deterministic report/PDF. With the duplicated
+   Incident analysis column removed, the four substantive columns fit the A4 width. */
 
 .vigil-deterministic-report-host .vigil-external-alignment-classification {
   margin-top: 1rem;
@@ -1376,8 +1371,8 @@
 
 .vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(1) { width: 8%; }
 .vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(2) { width: 24%; }
-.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(3) { width: 42%; }
-.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(4) { width: 26%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(3) { width: 34%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(4) { width: 34%; }
 
 .vigil-deterministic-report-host .vigil-classification-table tbody td {
   padding: 0.78rem 0.76rem 0.82rem;
