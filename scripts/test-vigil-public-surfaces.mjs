@@ -514,7 +514,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(homeMenuCss, /\.about-method-list \{/);
 });
 
-test("Knowledge Base explains mapping outcomes and all five Case File index classifications", async () => {
+test("Knowledge Base explains mapping outcomes and all six Case File index classifications", async () => {
   const [hub, about, classification, css] = await Promise.all([
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/about.tsx"),
@@ -525,8 +525,8 @@ test("Knowledge Base explains mapping outcomes and all five Case File index clas
   assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
   assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
-  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
-  assert.match(hub, /A Case File is presented as an alignment exemplar only when its adjudication coverage is complete/);
+  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Invariant held · adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /one or more material incident observations still require a final taxonomy determination/);
   assert.match(hub, /It does not require litigation or a formal legal dispute/);
   assert.match(hub, /VIGIL takes a legally conservative approach/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
