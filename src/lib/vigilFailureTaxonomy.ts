@@ -1,3 +1,5 @@
+import { getSelectedVigilBranch, vigilRawRoot, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
+
 export type FailureTaxonomyIndexFamily = {
   family_id: string;
   family_code: string;
@@ -155,7 +157,8 @@ async function fetchJson<T>(url: string, fetcher: FetchLike) {
 }
 
 export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Promise<FailureTaxonomyLoadResult<FailureTaxonomyIndex>> {
-  const url = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
+  const sourceRoot = await vigilRawRoot(TAXONOMY_PATH, fetcher);
+  const url = `${sourceRoot}/VIGIL.FailureTaxonomy.Index.json`;
   try {
     const data = await fetchJson<FailureTaxonomyIndex>(url, fetcher);
     return { status: "ready", data, attemptedUrl: url };
@@ -169,12 +172,14 @@ export async function loadFailureTaxonomyIndex(fetcher: FetchLike = fetch): Prom
 }
 
 export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<FailureTaxonomyLoadResult<FailureTaxonomyDataset>> {
-  const indexUrl = VIGIL_FAILURE_TAXONOMY_INDEX_URL;
+  const sourceRoot = await vigilRawRoot(TAXONOMY_PATH, fetcher);
+  const indexUrl = `${sourceRoot}/VIGIL.FailureTaxonomy.Index.json`;
+  const caseFileExamplesUrl = `${sourceRoot}/generated/VIGIL.FailureTaxonomy.CaseFileExamples.json`;
   try {
     const index = await fetchJson<FailureTaxonomyIndex>(indexUrl, fetcher);
     const [families, caseFileProjection] = await Promise.all([
-      Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${VIGIL_MAIN_TAXONOMY_ROOT}/${entry.file}`, fetcher))),
-      fetchJson<FailureTaxonomyCaseFileExamples>(VIGIL_FAILURE_TAXONOMY_CASE_FILE_EXAMPLES_URL, fetcher)
+      Promise.all(index.families.map((entry) => fetchJson<FailureTaxonomyFamilyDocument>(`${sourceRoot}/${entry.file}`, fetcher))),
+      fetchJson<FailureTaxonomyCaseFileExamples>(caseFileExamplesUrl, fetcher)
         .then((data) => ({ data, available: true }))
         .catch(() => ({ data: { classes: {} }, available: false })),
     ]);
@@ -186,8 +191,8 @@ export async function loadFailureTaxonomy(fetcher: FetchLike = fetch): Promise<F
         families,
         caseFileExamples: caseFileProjection.data,
         caseFileExamplesAvailable: caseFileProjection.available,
-        sourceRoot: VIGIL_MAIN_TAXONOMY_ROOT,
-        previewSource: false,
+        sourceRoot,
+        previewSource: getSelectedVigilBranch() !== VIGIL_DEFAULT_BRANCH,
       },
     };
   } catch (error) {
