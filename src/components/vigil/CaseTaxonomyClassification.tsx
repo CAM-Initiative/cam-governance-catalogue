@@ -691,7 +691,6 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
               <strong>
                 {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}
               </strong>
-              {reference.requirement_id ? <span className="vigil-compliance-requirement-id">{reference.requirement_id}</span> : null}
               {reference.clause_or_control ? <span className="vigil-compliance-clause">{reference.clause_or_control}</span> : null}
             </td>
             <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
