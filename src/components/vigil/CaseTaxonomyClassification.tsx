@@ -59,19 +59,9 @@ type ResolvedClassification = ClassificationRef & {
   sourceUrl?: string;
 };
 
-type ClassificationEvidence = {
-  sourceAnchor?: string;
-  sourceParaphrase?: string;
-  recoveredInvariant?: string;
-  relationship?: string;
-  canonical: boolean;
-  rationale?: string;
-};
-
 type ClassificationTableRow = {
   item: ResolvedClassification;
   mapping: "Primary" | "Secondary";
-  evidence: ClassificationEvidence[];
 };
 
 type Props = {
@@ -146,43 +136,6 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
     },
     secondary,
   };
-}
-
-function classificationEvidenceByClass(raw: UnknownRecord) {
-  const result = new Map<string, ClassificationEvidence[]>();
-  const vigilAssessment = isObject(raw.vigil_assessment) ? raw.vigil_assessment : undefined;
-  const sourceClauseAnalysis = vigilAssessment && isObject(vigilAssessment.source_clause_analysis)
-    ? vigilAssessment.source_clause_analysis
-    : undefined;
-  const clauses = sourceClauseAnalysis && Array.isArray(sourceClauseAnalysis.clauses)
-    ? sourceClauseAnalysis.clauses
-    : [];
-
-  for (const clause of clauses) {
-    if (!isObject(clause)) continue;
-    const sourceAnchor = text(clause.source_anchor);
-    const sourceParaphrase = text(clause.source_paraphrase);
-    const recoveredInvariant = text(clause.recovered_invariant_interpretation);
-    const relationships = Array.isArray(clause.taxonomy_relationships) ? clause.taxonomy_relationships : [];
-
-    for (const value of relationships) {
-      if (!isObject(value)) continue;
-      const classId = text(value.class_id);
-      if (!classId) continue;
-      const evidence: ClassificationEvidence = {
-        sourceAnchor,
-        sourceParaphrase,
-        recoveredInvariant,
-        relationship: text(value.relationship),
-        canonical: value.canonical_taxonomy_mapping === true,
-        rationale: text(value.rationale),
-      };
-      const existing = result.get(classId);
-      if (existing) existing.push(evidence);
-      else result.set(classId, [evidence]);
-    }
-  }
-  return result;
 }
 
 function outstandingAdjudicationClauses(raw: UnknownRecord): OutstandingAdjudicationClause[] {
@@ -610,7 +563,7 @@ function ExplicitClassificationState({
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationTable rows={[{ item: primary, mapping: "Primary", evidence: [] }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={[{ item: primary, mapping: "Primary" }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
@@ -631,7 +584,6 @@ function ExplicitClassificationState({
 
 export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
-  const evidenceByClass = useMemo(() => classificationEvidenceByClass(raw), [raw]);
   const taxonomy = useTaxonomy();
 
   if (!parsed.status) return <ExplicitClassificationState parsed={parsed} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />;
@@ -648,11 +600,10 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
-    { item: primary, mapping: "Primary", evidence: primary.classId ? evidenceByClass.get(primary.classId) ?? [] : [] },
+    { item: primary, mapping: "Primary" },
     ...secondaries.map((item) => ({
       item,
       mapping: "Secondary" as const,
-      evidence: item.classId ? evidenceByClass.get(item.classId) ?? [] : [],
     })),
   ];
 
