@@ -37,7 +37,7 @@ assert.match(caseFile, /<HarmImpactMatrix[\s\S]*assessment=\{harmImpactAssessmen
 assert.doesNotMatch(caseFile, /Repair is shown only for mappings classified as failures/);
 assert.doesNotMatch(caseFile, /Successful-invariant exemplar mappings remain in Classification/);
 assert.doesNotMatch(caseFile, /vigil-repair-boundary/);
-assert.match(caseFile, /When multiple classifications reach the same exact external requirement, Compliance reports the most conservative supported alignment state/);
+assert.match(caseFile, /Compliance shows which external standards, regulations and guidance relate to the governance issues identified in this Case File/);
 
 // Deterministic report retains the same canonical projection.
 assert.match(report, /CaseTaxonomyClassification/);
