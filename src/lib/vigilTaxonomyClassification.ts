@@ -114,6 +114,7 @@ function incidentClassificationLabel(
   coverage?: AdjudicationCoverageStatus,
   exemplarEligible?: boolean,
 ) {
+  if (coverage === "partial") return "Adjudication incomplete";
   if (status === "classification-disputed") return "Disputed";
   if (status === "requires-human-review") return "Under review";
   if (status === "unclassified") return "Unclassified";
@@ -123,14 +124,12 @@ function incidentClassificationLabel(
   const hasAmbiguousBoundary = roles.includes("ambiguous-boundary");
   if (hasAmbiguousBoundary || (hasFailure && hasInvariantHeld)) return "Combination";
   if (hasInvariantHeld && !hasFailure) {
-    if (coverage === "partial") return "Invariant held · adjudication incomplete";
     if (exemplarEligible === true) return "Exemplar";
     return "Invariant held";
   }
   if (hasFailure && !hasInvariantHeld) return "Classified";
 
   if (fallbackRole === "successful-invariant") {
-    if (coverage === "partial") return "Invariant held · adjudication incomplete";
     if (exemplarEligible === true) return "Exemplar";
     return "Invariant held";
   }

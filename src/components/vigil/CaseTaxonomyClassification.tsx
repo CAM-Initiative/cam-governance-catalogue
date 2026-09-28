@@ -608,8 +608,9 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   ];
 
   return <div className="vigil-taxonomy-classification-view">
-    {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
-    {parsed.status === "provisionally-classified" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
+    {parsed.coverageStatus === "partial" && <p className="vigil-case-empty"><strong>Adjudication incomplete.</strong> No whole-Incident alignment classification is assigned until adjudication coverage is complete. Resolved mapping-level findings are shown below for transparency.</p>}
+    {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
+    {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
     <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
 

@@ -22,23 +22,23 @@ test("Observatory instrument experiment keeps tickets and opens the workbench", 
   assert.match(css, /\.vigil-case-file-page \.vigil-case-active-stage \.vigil-case-section \{[\s\S]*border: 0;[\s\S]*box-shadow: none/);
 });
 
-test("SEO publication signals keep one canonical Case Files URL and crawlable indexes", async () => {
-  const [entrypoint, pages] = await Promise.all([
+test("SEO publication signals expose canonical-only sitemap routes and crawlable indexes", async () => {
+  const [entrypoint, pages, standards] = await Promise.all([
     read("src/index.html"),
     read("scripts/prepare-github-pages.js"),
+    read("src/pages/vigil-standards-baseline.tsx"),
   ]);
   assert.match(entrypoint, /property="og:site_name" content="CAM Initiative"/);
   assert.match(entrypoint, /"@type": "WebSite"/);
   assert.match(entrypoint, /"name": "CAM Initiative"/);
-  assert.match(pages, /\["\/observatory\/incidents", "\/observatory\/cases"\]/);
-  assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
-  assert.match(pages, /\["\/observatory\/severity-methodology", "\/observatory\/harm-impact-assessment"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base", "\/knowledge-base"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base\/failure-taxonomy", "\/observatory\/alignment-taxonomy"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base\/standards-sources", "\/observatory\/ai-governance-standards"\]/);
-  assert.match(pages, /\["\/observatory\/knowledge-base\/policy", "\/policy"\]/);
-  assert.match(pages, /filter\(\(route\) => !canonicalAliases\.has\(route\)\)/);
+  assert.doesNotMatch(pages, /const canonicalAliases/);
+  assert.match(pages, /const retiredPublicRouteDirs = \[/);
+  assert.match(pages, /const sitemapRoutes = \[\.\.\.new Set\(\[/);
+  assert.match(pages, /\.\.\.staticRoutes\.map\(\(\[route\]\) => route\)/);
   assert.match(pages, /data-static-crawl-fallback="vigil-about"/);
+  assert.match(pages, /data-static-crawl-fallback="knowledge-base"/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-harm-impact"/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-governance-standards"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-case-index"/);
   assert.match(pages, /data-static-crawl-fallback="vigil-taxonomy-index"/);
   assert.match(pages, /Incident-centred public observatory and AI incident database/);
@@ -52,7 +52,7 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /"@type": "CreativeWork"/);
   assert.match(pages, /alternateName: "VIGIL"/);
   assert.match(pages, /https:\/\/github\.com\/CAM-Initiative\/Vigil/);
-  assert.match(pages, /body: isAboutRoute \? vigilAboutFallbackBody : ""/);
+  assert.match(pages, /body: isAboutRoute \? vigilAboutFallbackBody : \(staticRouteBodies\.get\(route\) \?\? ""\)/);
   assert.match(pages, /structuredData: isAboutRoute \? vigilAboutStructuredData : undefined/);
   assert.match(pages, /function externalAssessmentsHtml\(record\)/);
   assert.match(pages, /External classification \/ rating/);
@@ -61,6 +61,8 @@ test("SEO publication signals keep one canonical Case Files URL and crawlable in
   assert.match(pages, /"\/observatory\/alignment-taxonomy"/);
   assert.match(pages, /"\/observatory\/harm-impact-assessment"/);
   assert.match(pages, /"\/observatory\/ai-governance-standards"/);
+  assert.match(standards, /`\/observatory\/ai-governance-standards\/\$\{encodeURIComponent\(key\)\}\/`/);
+  assert.doesNotMatch(standards, /\/observatory\/knowledge-base\/standards-sources/);
   assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
 });
 
@@ -269,10 +271,10 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(main, /vigil-observatory-masthead\.css/);
 });
 
-test("public VIGIL Observatory routes expose Incidents, taxonomy, standards and policy only", async () => {
+test("public VIGIL Observatory routes expose canonical Case Files, taxonomy, standards and harm surfaces only", async () => {
   const [app, shell, hub] = await Promise.all([read("src/App.tsx"), read("src/components/layout/Shell.tsx"), read("src/pages/vigil-knowledge-hub.tsx")]);
-  for (const route of ["/observatory/cases", "/observatory/incidents", "/observatory/knowledge-base", "/observatory/knowledge-base/failure-taxonomy", "/observatory/knowledge-base/standards-sources", "/observatory/knowledge-base/policy"]) assert.match(app, new RegExp(route.replaceAll("/", "\\/")));
-  for (const retired of ["failure-modes", "observatory/lessons", "observatory/repairs", "VigilKnowledgeBase"]) assert.doesNotMatch(`${app}\n${shell}\n${hub}`, new RegExp(retired, "i"));
+  for (const route of ["/observatory/cases", "/observatory/alignment-taxonomy", "/observatory/ai-governance-standards", "/observatory/harm-impact-assessment", "/knowledge-base", "/policy"]) assert.match(app, new RegExp(route.replaceAll("/", "\\/")));
+  for (const retired of ["/observatory/incidents", "/observatory/about", "/observatory/severity-methodology", "/observatory/knowledge-base", "failure-modes", "observatory/lessons", "observatory/repairs", "VigilKnowledgeBase"]) assert.doesNotMatch(`${app}\n${shell}\n${hub}`, new RegExp(retired.replaceAll("/", "\\/"), "i"));
 });
 
 test("retired standalone record surfaces and the unpublished draft tree are absent", async () => {
@@ -420,8 +422,8 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.match(taxonomy, /return mappingRoles\(classification, fallback \?\? "failure-occurrence"\)/);
   assert.match(taxonomy, /taxonomyAdjudicationCoverageStatus/);
   assert.match(taxonomy, /taxonomyAlignmentExemplarEligible/);
+  assert.match(taxonomy, /coverage === "partial"\) return "Adjudication incomplete"/);
   assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasInvariantHeld\)\) return "Combination"/);
-  assert.match(taxonomy, /coverage === "partial"\) return "Invariant held · adjudication incomplete"/);
   assert.match(taxonomy, /exemplarEligible === true\) return "Exemplar"/);
   assert.match(taxonomy, /hasFailure && !hasInvariantHeld\) return "Classified"/);
   assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
@@ -467,9 +469,11 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(cases, /vigil-case-table-text/);
   assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
   assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
+  assert.match(caseFile, /const adjudicationIncomplete = classification === "Adjudication incomplete"/);
   assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
-  assert.match(caseFile, /const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete"/);
-  assert.match(caseFile, /A governance invariant held, but adjudication is incomplete\./);
+  assert.doesNotMatch(caseFile, /isIncompleteInvariant/);
+  assert.match(caseFile, /Adjudication is incomplete\./);
+  assert.match(caseFile, /has not assigned a whole-Incident alignment classification/);
   assert.match(caseFile, /The adjudicated governance boundary held\./);
   assert.match(caseFile, /This Case File is fully adjudicated against the current taxonomy/);
   assert.match(caseFile, /const isFailure = classification === "Classified"/);
@@ -485,8 +489,11 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /complianceRolePriority/);
   assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
-  assert.match(report, /Section 03 identifies what remains unresolved/);
-  assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Invariant held · adjudication incomplete"/);
+  assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
+  assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
+  assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
+  assert.match(pages, /classification_role === "failure-occurrence"\) return "Failure evidenced"/);
+  assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
   assert.match(sync, /classification_role: record\.classification_role/);
   assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);
   assert.match(sync, /alignment_exemplar_eligible/);
@@ -519,7 +526,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(homeMenuCss, /\.about-method-list \{/);
 });
 
-test("Knowledge Base explains mapping outcomes and all six Case File index classifications", async () => {
+test("Knowledge Base withholds whole-Incident classification until adjudication is complete", async () => {
   const [hub, about, classification, css] = await Promise.all([
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/about.tsx"),
@@ -530,8 +537,10 @@ test("Knowledge Base explains mapping outcomes and all six Case File index class
   assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
   assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
-  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Invariant held · adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
-  assert.match(hub, /one or more material incident observations still require a final taxonomy determination/);
+  assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
+  assert.match(hub, /only after adjudication coverage is complete[\s\S]*Adjudication incomplete/);
+  assert.match(hub, /does not assign a whole-Incident alignment classification until adjudication coverage is complete/);
+  assert.match(hub, /One or more material incident observations still require a final taxonomy determination/);
   assert.match(hub, /It does not require litigation or a formal legal dispute/);
   assert.match(hub, /VIGIL takes a legally conservative approach/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
@@ -731,9 +740,11 @@ test("site has one canonical About surface plus visible licensing and severity m
     read("scripts/prepare-github-pages.js"),
   ]);
   assert.match(app, /path="\/about" component=\{About\}/);
-  assert.match(app, /path="\/observatory\/about" component=\{About\}/);
-  assert.match(app, /path="\/observatory\/severity-methodology" component=\{VigilSeverityMethodology\}/);
-  assert.match(pages, /\["\/observatory\/about", "\/about"\]/);
+  assert.doesNotMatch(app, /path="\/observatory\/about"/);
+  assert.match(app, /path="\/observatory\/harm-impact-assessment" component=\{VigilSeverityMethodology\}/);
+  assert.doesNotMatch(app, /path="\/observatory\/severity-methodology"/);
+  assert.match(pages, /join\(docsDir, "observatory", "about"\)/);
+  assert.match(pages, /join\(docsDir, "observatory", "severity-methodology"\)/);
   assert.doesNotMatch(shell, /label: "About VIGIL"/);
   assert.match(shell, /Copyright & Licence/);
   assert.match(shell, /Harm Impact Assessment/);
