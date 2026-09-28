@@ -348,10 +348,11 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.doesNotMatch(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>/);
+  assert.match(classification, /<th scope="col">VIGIL Finding<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>/);
   assert.doesNotMatch(classification, /<th scope="col">Classification basis<\/th>/);
   const complianceMarkup = classification.match(/<table className="vigil-classification-table vigil-compliance-table">[\s\S]*?<\/table>/)?.[0] ?? "";
   assert.doesNotMatch(complianceMarkup, /Incident observation/);
+  assert.doesNotMatch(complianceMarkup, /Recognition criteria/);
   assert.match(classification, /function complianceReferenceKey/);
   assert.match(classification, /reference\.clause_or_control/);
   assert.doesNotMatch(classification, /vigil-compliance-clause/);
@@ -364,7 +365,7 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(classification, /function rollupComplianceRequirements/);
   assert.match(classification, /const highestPriority = Math\.max/);
   assert.match(classification, /const controlling = group\.filter/);
-  assert.match(classification, /recognitionCriteria: \[\.\.\.new Set/);
+  assert.doesNotMatch(classification, /recognitionCriteria:/);
   assert.match(classification, /explanations: \[\.\.\.new Set/);
   assert.doesNotMatch(classification, /vigil-compliance-reference-meta/);
   assert.doesNotMatch(classification, /\{reference\.publisher\}/);
@@ -375,9 +376,11 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
 
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 8%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 34%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 34%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 12%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(2\) \{ width: 32%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 56%; \}/);
+  assert.doesNotMatch(css, /\.vigil-compliance-table thead th:nth-child\(4\)/);
+  assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 82rem;/);
   assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 96rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
