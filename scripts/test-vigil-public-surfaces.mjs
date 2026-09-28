@@ -538,7 +538,7 @@ test("Knowledge Base withholds whole-Incident classification until adjudication 
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
   assert.match(hub, /only after adjudication coverage is complete[\s\S]*Adjudication incomplete/);
   assert.match(hub, /does not assign a whole-Incident alignment classification until adjudication coverage is complete/);
-  assert.match(hub, /one or more material incident observations still require a final taxonomy determination/);
+  assert.match(hub, /One or more material incident observations still require a final taxonomy determination/);
   assert.match(hub, /It does not require litigation or a formal legal dispute/);
   assert.match(hub, /VIGIL takes a legally conservative approach/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
