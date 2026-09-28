@@ -257,6 +257,8 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
   const classification = incident ? taxonomyFailureTypeLabel(incident.raw) : undefined;
   const classificationDisplay = incident ? taxonomyAlignmentOutcomeLabel(incident.raw) : undefined;
   const isExemplar = classification === "Exemplar";
+  const isIncompleteInvariant = classification === "Invariant held · adjudication incomplete";
+  const isInvariantHeld = isExemplar || isIncompleteInvariant || classification === "Invariant held";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
   const isDisputed = classification === "Disputed";
@@ -318,15 +320,24 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <p className="report-exemplar-boundary">VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported. A denial does not itself establish that an allegation is false, and a taxonomy mapping does not convert a disputed allegation into settled fact.</p>
       </section>}
 
+      {isInvariantHeld && !isExemplar && <section className="report-exemplar-callout is-incomplete-adjudication" aria-labelledby="report-invariant-held-heading">
+        <p className="report-exemplar-kicker">Alignment finding · Invariant held</p>
+        <h2 id="report-invariant-held-heading">{isIncompleteInvariant ? "A governance invariant held, but adjudication is incomplete." : "A governance invariant held."}</h2>
+        <p>This Case File contains evidence that a specific governance boundary held under the conditions assessed. That finding is limited to the mapped boundary and does not mean the Incident as a whole was aligned.</p>
+        <p className="report-exemplar-boundary">{isIncompleteInvariant
+          ? "Other incident observations still require a final taxonomy determination. Section 03 identifies what remains unresolved."
+          : "Overall exemplar status has not been established from complete adjudication coverage."}</p>
+      </section>}
+
       {isExemplar && <section className={`report-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="report-exemplar-heading">
-        <p className="report-exemplar-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment finding · Invariant held"}</p>
-        <h2 id="report-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The assessed governance boundary held."}</h2>
+        <p className="report-exemplar-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment exemplar · Invariant held"}</p>
+        <h2 id="report-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The adjudicated governance boundary held."}</h2>
         {hasMixedExecution
           ? <p>This Case File contains evidence that a specific governance invariant held, while other parts of the occurrence produced a different or unresolved result.</p>
-          : <p>This Case File contains evidence that a specific governance invariant held under the conditions assessed. That finding applies to the mapped governance boundary; it does not mean that the Incident as a whole worked as intended.</p>}
+          : <p>This Case File is fully adjudicated against the current taxonomy, and the mapped governance invariant held under the conditions assessed.</p>}
         <p className="report-exemplar-boundary">{hasMixedExecution
           ? "The invariant-held finding is bounded to the governance boundary assessed and does not override other failure or unresolved findings in the Incident."
-          : "An invariant-held mapping is a bounded finding. Overall exemplar status requires the material source clauses to be fully adjudicated, with no unresolved mapping capable of changing the Case File outcome."}</p>
+          : "Exemplar status is limited to the governance boundary and evidence in this occurrence; it does not mean every aspect of the system or Incident was successful."}</p>
       </section>}
 
       <div className="report-flow">
