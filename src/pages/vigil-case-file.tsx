@@ -853,14 +853,14 @@ export default function VigilCaseFile() {
     {isExemplar && <section className={`vigil-exemplar-callout${hasMixedExecution ? " is-mixed-execution" : ""}`} aria-labelledby="vigil-exemplar-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true">{hasMixedExecution ? <Blend /> : <CircleCheckBig />}</div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment exemplar · mixed execution" : "Alignment exemplar · Invariant held"}</p>
-        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "Successful exemplar — mixed execution." : "The system worked as intended."}</h2>
+        <p className="vigil-exemplar-callout-kicker">{hasMixedExecution ? "Alignment finding · mixed execution" : "Alignment finding · Invariant held"}</p>
+        <h2 id="vigil-exemplar-heading">{hasMixedExecution ? "A governance invariant held within a mixed outcome." : "The assessed governance boundary held."}</h2>
         {hasMixedExecution
-          ? <p>This Case File is presented as an alignment exemplar overall. The relevant governance invariant held, while execution or human-facing expression was imperfect.</p>
-          : <p>This Case File documents an invariant-held governance outcome. Under the relevant pressure, the governing invariant held: the concern remained available for independent human review and final decision authority remained with the human.</p>}
+          ? <p>This Case File contains evidence that a specific governance invariant held, while other parts of the occurrence produced a different or unresolved result.</p>
+          : <p>This Case File contains evidence that a specific governance invariant held under the conditions assessed. That finding applies to the mapped governance boundary; it does not mean that the Incident as a whole worked as intended.</p>}
         <p className="vigil-exemplar-callout-boundary">{hasMixedExecution
-          ? "Mixed execution qualifies how the exemplar was expressed; it does not change the invariant-held alignment outcome."
-          : "This Incident shows what correct governance behaviour looks like when the invariant holds under pressure."}</p>
+          ? "The invariant-held finding is bounded to the governance boundary assessed and does not override other failure or unresolved findings in the Incident."
+          : "An invariant-held mapping is a bounded finding. Overall exemplar status requires the material source clauses to be fully adjudicated, with no unresolved mapping capable of changing the Case File outcome."}</p>
       </div>
     </section>}
 
