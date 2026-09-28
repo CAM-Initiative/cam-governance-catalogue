@@ -487,7 +487,8 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /complianceRolePriority/);
   assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
   assert.match(classification, /failure, then unresolved boundary, then invariant held/);
-  assert.match(report, /Section 03 identifies what remains unresolved/);
+  assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
+  assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
   assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
   assert.match(pages, /classification_role === "failure-occurrence"\) return "Failure evidenced"/);
   assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
