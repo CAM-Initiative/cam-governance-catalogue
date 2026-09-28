@@ -826,7 +826,7 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
         <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
-        <p className="vigil-exemplar-callout-boundary">Compliance shows the external standards, regulations and guidance linked to the Fidelity Classes identified in this Case File. If more than one classification points to the same requirement, VIGIL shows the strongest supported finding once; separate requirements remain separate.</p>
+        <p className="vigil-exemplar-callout-boundary">Compliance shows which external standards, regulations and guidance relate to the governance issues identified in this Case File. If more than one finding points to the same requirement, it appears once using the strongest supported result. Separate requirements are shown separately.</p>
       </div>
     </section>}
 
