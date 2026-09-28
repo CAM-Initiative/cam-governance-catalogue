@@ -107,6 +107,12 @@ function incidentMappingRoles(record: UnknownRecord) {
   return directFallback ? [directFallback] : [];
 }
 
+const ADJUDICATION_INCOMPLETE_SUFFIX = " · adjudication incomplete";
+
+function withAdjudicationCoverage(label: string, coverage?: AdjudicationCoverageStatus) {
+  return coverage === "partial" ? `${label}${ADJUDICATION_INCOMPLETE_SUFFIX}` : label;
+}
+
 function incidentClassificationLabel(
   status: TaxonomyClassificationStatus | undefined,
   roles: TaxonomyClassificationRole[],
@@ -114,28 +120,28 @@ function incidentClassificationLabel(
   coverage?: AdjudicationCoverageStatus,
   exemplarEligible?: boolean,
 ) {
-  if (status === "classification-disputed") return "Disputed";
-  if (status === "requires-human-review") return "Under review";
-  if (status === "unclassified") return "Unclassified";
+  if (status === "classification-disputed") return withAdjudicationCoverage("Disputed", coverage);
+  if (status === "requires-human-review") return withAdjudicationCoverage("Under review", coverage);
+  if (status === "unclassified") return withAdjudicationCoverage("Unclassified", coverage);
 
   const hasFailure = roles.includes("failure-occurrence");
   const hasInvariantHeld = roles.includes("successful-invariant");
   const hasAmbiguousBoundary = roles.includes("ambiguous-boundary");
-  if (hasAmbiguousBoundary || (hasFailure && hasInvariantHeld)) return "Combination";
+  if (hasAmbiguousBoundary || (hasFailure && hasInvariantHeld)) return withAdjudicationCoverage("Combination", coverage);
   if (hasInvariantHeld && !hasFailure) {
-    if (coverage === "partial") return "Invariant held · adjudication incomplete";
+    if (coverage === "partial") return withAdjudicationCoverage("Invariant held", coverage);
     if (exemplarEligible === true) return "Exemplar";
     return "Invariant held";
   }
-  if (hasFailure && !hasInvariantHeld) return "Classified";
+  if (hasFailure && !hasInvariantHeld) return withAdjudicationCoverage("Classified", coverage);
 
   if (fallbackRole === "successful-invariant") {
-    if (coverage === "partial") return "Invariant held · adjudication incomplete";
+    if (coverage === "partial") return withAdjudicationCoverage("Invariant held", coverage);
     if (exemplarEligible === true) return "Exemplar";
     return "Invariant held";
   }
-  if (status === "classified" || status === "provisionally-classified") return "Classified";
-  return "Unclassified";
+  if (status === "classified" || status === "provisionally-classified") return withAdjudicationCoverage("Classified", coverage);
+  return withAdjudicationCoverage("Unclassified", coverage);
 }
 
 function classLabel(value: unknown) {
@@ -150,10 +156,16 @@ function familyLabel(value: unknown) {
 
 export function taxonomyAlignmentOutcomeLabel(record: UnknownRecord) {
   const status = taxonomyFailureTypeLabel(record);
-  if (status === "Classified") return "Failure evidenced";
-  if (status === "Exemplar") return "Invariant held";
-  if (status === "Combination") return "Mixed alignment";
-  return status;
+  const incomplete = status.endsWith(ADJUDICATION_INCOMPLETE_SUFFIX);
+  const baseStatus = incomplete ? status.slice(0, -ADJUDICATION_INCOMPLETE_SUFFIX.length) : status;
+  const publicLabel = baseStatus === "Classified"
+    ? "Failure evidenced"
+    : baseStatus === "Exemplar"
+      ? "Invariant held"
+      : baseStatus === "Combination"
+        ? "Mixed alignment"
+        : baseStatus;
+  return incomplete ? `${publicLabel}${ADJUDICATION_INCOMPLETE_SUFFIX}` : publicLabel;
 }
 
 export function taxonomyFailureTypeLabel(record: UnknownRecord) {
