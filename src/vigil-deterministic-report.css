@@ -1458,16 +1458,11 @@
   font-weight: 670;
 }
 
-.vigil-deterministic-report-host .vigil-compliance-reference-meta,
-.vigil-deterministic-report-host .vigil-compliance-requirement-id {
+.vigil-deterministic-report-host .vigil-compliance-reference-meta {
   display: block;
   color: hsl(var(--report-muted));
   font-size: 0.8rem;
   line-height: 1.4;
-}
-
-.vigil-deterministic-report-host .vigil-compliance-requirement-id {
-  font-family: var(--app-font-mono);
 }
 
 .vigil-deterministic-report-host .vigil-compliance-reference p {
