@@ -327,7 +327,8 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Incident analysis<\/th>/);
   assert.match(classification, /Further adjudication required/);
   assert.match(classification, /This Case File has not yet been fully adjudicated\. The incident observations below still require a final taxonomy determination\./);
   assert.match(classification, /<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">Candidate boundary<\/th>[\s\S]*<th scope="col">What remains unresolved<\/th>/);
@@ -344,10 +345,11 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(classification, /vigil-classification-class-explanation/);
   assert.match(classification, /classificationClass\?\.plain_english \?\? family\?\.plain_english/);
   assert.match(classification, /classificationClass\?\.recognition\?\.required_conditions/);
-  assert.match(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
+  assert.doesNotMatch(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Classification basis<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>/);
+  assert.doesNotMatch(classification, /<th scope="col">Classification basis<\/th>/);
   const complianceMarkup = classification.match(/<table className="vigil-classification-table vigil-compliance-table">[\s\S]*?<\/table>/)?.[0] ?? "";
   assert.doesNotMatch(complianceMarkup, /Incident observation/);
   assert.match(classification, /function complianceReferenceKey/);
@@ -362,7 +364,7 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(classification, /function rollupComplianceRequirements/);
   assert.match(classification, /const highestPriority = Math\.max/);
   assert.match(classification, /const controlling = group\.filter/);
-  assert.match(classification, /classificationBases: \[\.\.\.new Set/);
+  assert.match(classification, /recognitionCriteria: \[\.\.\.new Set/);
   assert.match(classification, /explanations: \[\.\.\.new Set/);
   assert.doesNotMatch(classification, /vigil-compliance-reference-meta/);
   assert.doesNotMatch(classification, /\{reference\.publisher\}/);
@@ -374,9 +376,9 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 8%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 42%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 26%; \}/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 128rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 34%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 34%; \}/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 96rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-class-chip/);
@@ -384,7 +386,7 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(css, /\.vigil-classification-class-explanation/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
-  assert.match(css, /\.vigil-classification-incident-analysis/);
+  assert.doesNotMatch(css, /\.vigil-classification-incident-analysis/);
   assert.match(css, /\.vigil-further-adjudication-table/);
   assert.match(css, /\.vigil-further-adjudication-table th:nth-child\(1\) \{ width: 38%; \}/);
   assert.match(classification, /External Alignment Classification/);
