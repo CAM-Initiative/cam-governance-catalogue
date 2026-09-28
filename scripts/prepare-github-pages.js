@@ -477,11 +477,13 @@ if (existsSync(caseRoot)) {
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
   const title = `${record.id}: ${record.title || "VIGIL Observatory Incident"} | VIGIL Observatory`;
-  const description = record.summary || record.title || "VIGIL Observatory AI incident case file.";
+  const summary = record.summary || record.title || "VIGIL Observatory AI incident case file.";
+  const description = conciseDescription(summary, "VIGIL Observatory AI incident case file.");
   const body = `<main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · ${escapeHtml(record.id)}</p>
     <h1>${escapeHtml(record.title || record.id)}</h1>
-    <p>${escapeHtml(description)}</p>
+    <p>${escapeHtml(summary)}</p>
+    <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
     <dl>
       <dt>VIGIL Observatory alignment outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>
       <dt>VIGIL Observatory primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
