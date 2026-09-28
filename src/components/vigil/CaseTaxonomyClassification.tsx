@@ -691,7 +691,6 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
               <strong>
                 {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}
               </strong>
-              {reference.clause_or_control ? <span className="vigil-compliance-clause">{reference.clause_or_control}</span> : null}
             </td>
             <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
               <ClassificationEvidenceStack values={explanations} empty="No separate requirement explanation is currently published for this external requirement." />
