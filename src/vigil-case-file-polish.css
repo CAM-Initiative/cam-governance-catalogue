@@ -607,6 +607,12 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 .vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 24%; }
 .vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 76%; }
 
+.vigil-case-file-page .vigil-taxonomy-assessment-table q,
+.vigil-case-file-page .vigil-taxonomy-assessment-table strong {
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .vigil-case-file-page .vigil-taxonomy-assessment-table q {
   font-weight: 650;
 }
