@@ -394,8 +394,7 @@ function collectTaxonomyEvidence(targets: TaxonomyReferenceTarget[]): TaxonomyEv
 
 export default function VigilCaseFile() {
   const [, caseParams] = useRoute("/observatory/cases/:recordId");
-  const [, incidentParams] = useRoute("/observatory/incidents/:recordId");
-  const sourceId = decodeURIComponent(caseParams?.recordId ?? incidentParams?.recordId ?? "").trim();
+  const sourceId = decodeURIComponent(caseParams?.recordId ?? "").trim();
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
   const [pendingReferenceTarget, setPendingReferenceTarget] = useState<string>();
