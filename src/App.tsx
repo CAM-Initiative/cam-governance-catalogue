@@ -12,6 +12,7 @@ import "./vigil-failure-taxonomy.css";
 import "./vigil-failure-taxonomy-refinements.css";
 import "./public-surface-refinements.css";
 import "./public-reference-pages.css";
+import "./vigil-data-explorer.css";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import VigilCases from "@/pages/vigil-cases";
@@ -22,6 +23,7 @@ import VigilStandardsBaseline from "@/pages/vigil-standards-baseline";
 import VigilStandardSource from "@/pages/vigil-standard-source";
 import VigilFailureTaxonomy from "@/pages/vigil-failure-taxonomy";
 import Datasets from "@/pages/datasets";
+import VigilDataExplorer from "@/pages/vigil-data-explorer";
 import About from "@/pages/about";
 import Licensing from "@/pages/licensing";
 import VigilSeverityMethodology from "@/pages/vigil-severity-methodology";
@@ -34,6 +36,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/licensing" component={Licensing} />
+      <Route path="/datasets/explorer" component={VigilDataExplorer} />
       <Route path="/datasets" component={Datasets} />
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
