@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Download } from "lucide-react";
+import { ArrowRight, Download } from "lucide-react";
+import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
@@ -29,6 +30,7 @@ type DatasetState = {
 };
 
 const datasetRail = [
+  { href: "#explorer", label: "Data Explorer" },
   { href: "#case-files", label: "Case Files" },
   { href: "#harm-impact", label: "Harm Impact Matrix" },
   { href: "#taxonomy", label: "Alignment Taxonomy" },
@@ -47,6 +49,8 @@ function DatasetSection({
   downloadHref,
   downloadLabel = "Download dataset",
   downloading,
+  actionHref,
+  actionLabel,
 }: {
   id: string;
   eyebrow: string;
@@ -58,6 +62,8 @@ function DatasetSection({
   downloadHref?: string;
   downloadLabel?: string;
   downloading?: boolean;
+  actionHref?: string;
+  actionLabel?: string;
 }) {
   return <section id={id} className="document-section vigil-about-section vigil-dataset-section" aria-labelledby={`${id}-heading`}>
     <div className="document-section-heading">
@@ -72,6 +78,9 @@ function DatasetSection({
       {onDownload ? <button type="button" className="cam-action cam-action-secondary" onClick={onDownload} disabled={downloading}>
         {downloading ? "Preparing download…" : downloadLabel}<Download aria-hidden="true" />
       </button> : null}
+      {actionHref ? <Link className="cam-action cam-action-primary" href={actionHref}>
+        {actionLabel ?? "Open explorer"}<ArrowRight aria-hidden="true" />
+      </Link> : null}
       {!onDownload && downloadHref ? <a className="cam-action cam-action-secondary" href={downloadHref} target="_blank" rel="noreferrer">
         {downloadLabel}<Download aria-hidden="true" />
       </a> : null}
@@ -182,7 +191,7 @@ export default function Datasets() {
         artworkSrc={VIGIL_MASTHEAD_ARTWORK.datasets}
         metadata={[
           { label: "Status", value: "Beta" },
-          { label: "Public resources", value: "5" },
+          { label: "Public resources", value: "6" },
           { label: "Formats", value: "JSON · PDF · Archive", mono: true },
           { label: "Maintainer", value: "CAM Initiative" },
         ]}
@@ -192,6 +201,17 @@ export default function Datasets() {
         <DocumentRail title="Datasets" items={datasetRail} ariaLabel="CAM Initiative dataset sections" />
 
         <article className="document-content vigil-datasets-document">
+          <DatasetSection
+            id="explorer"
+            eyebrow="VIGIL Observatory"
+            title="Data Explorer"
+            description="Experimental interactive analysis of the VIGIL corpus. Compare taxonomy mappings, failure and invariant-held evidence, Incident severity, structured metadata coverage and the Harm Impact Assessment dimensions attached to selected classes."
+            status="Interactive · Experimental"
+            beta
+            actionHref="/datasets/explorer/"
+            actionLabel="Open Data Explorer"
+          />
+
           <DatasetSection
             id="case-files"
             eyebrow="VIGIL Observatory"
