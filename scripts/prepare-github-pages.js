@@ -526,7 +526,7 @@ if (incidentRecords.length) {
 // Build/deploy timestamps are deliberately not used as content modification dates.
 function sitemapLastmod(value) {
   const candidate = String(value ?? "").trim();
-  return /^\\d{4}-\\d{2}-\\d{2}$/.test(candidate) ? candidate : undefined;
+  return /^\d{4}-\d{2}-\d{2}$/.test(candidate) ? candidate : undefined;
 }
 
 const sitemapLastmodByRoute = new Map();
