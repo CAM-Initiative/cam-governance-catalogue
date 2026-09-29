@@ -145,10 +145,6 @@ export default function VigilDataExplorer() {
       });
   }, [classSummaries, familyFilter, familyLabels, labels, search, sortBy]);
 
-  useEffect(() => {
-    if (!selectedClassId && classRows.length) setSelectedClassId(classRows[0].classId);
-  }, [classRows, selectedClassId]);
-
   const familyOptions = useMemo(() => {
     const ids = new Set(classSummaries.map((row) => row.familyId).filter((value): value is string => Boolean(value)));
     return [...ids]
