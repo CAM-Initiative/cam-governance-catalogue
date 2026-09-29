@@ -655,7 +655,7 @@ export default function VigilCaseFile() {
           </aside>
         </section>
 
-        <CaseTaxonomyAssessment raw={incident.raw} />
+        <CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
