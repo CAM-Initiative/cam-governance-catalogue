@@ -97,7 +97,7 @@ test("Case File Section 02 orders factual basis, taxonomy assessment, harm and e
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const factualIndex = assessmentRenderer.indexOf("vigil-diagnosis-factual-basis");
-  const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
+  const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />");
   const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
   const externalIndex = assessmentRenderer.indexOf("External assessments");
 
@@ -115,7 +115,7 @@ test("Governance significance is integrated under Conclusion while taxonomy asse
   const conclusionRenderer = source.match(/if \(stageId === "conclusion"\)[\s\S]*?if \(stageId === "references"\)/)?.[0] ?? "";
   assert.doesNotMatch(assessmentRenderer, />GOVERNANCE ASSESSMENT</);
   assert.doesNotMatch(assessmentRenderer, />Factual basis</);
-  assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} \/>/);
+  assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>/);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
   assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3 className="vigil-case-editorial-subheading">Governance significance<\/h3>/);
@@ -507,7 +507,7 @@ test("mobile Assessment prose stays viewport-bound while Case File harm stacks a
 test("taxonomy, harm and external assessments remain distinct Stage 02 sections in that order", async () => {
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
-  const taxonomyStart = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} />");
+  const taxonomyStart = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />");
   const harmStart = assessmentRenderer.indexOf("Harm Impact Assessment");
   const externalStart = assessmentRenderer.indexOf('className="vigil-severity-assessment vigil-external-assessment-section"');
   assert.ok(taxonomyStart > 0 && harmStart > taxonomyStart && externalStart > harmStart);
