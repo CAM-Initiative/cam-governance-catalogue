@@ -299,7 +299,7 @@ const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and affected systems",
   "case-diagnose": "Governance, external and harm impact assessment",
   "case-classify": "Alignment classification",
-  "case-compliance": "External standards and requirement crosswalk",
+  "case-compliance": "Standards adjudication summary",
   "case-conclusion": "Integrated conclusion",
   "case-references": "Evidence and reference trail",
 };
