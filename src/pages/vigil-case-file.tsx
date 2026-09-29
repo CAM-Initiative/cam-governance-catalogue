@@ -23,6 +23,7 @@ import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
+import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyAlignmentOutcomeLabel,
@@ -552,7 +553,7 @@ export default function VigilCaseFile() {
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
   const harmDimensionLimitItems = nonAssessedHarmDimensionLimitItems(harmImpactAssessment);
-  const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
+  const assessmentLimitItems = [...STANDARD_VIGIL_ASSESSMENT_LIMITS, ...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
   const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
   const taxonomyReferenceNumber = taxonomyReferences.length
