@@ -57,7 +57,7 @@ function canonicalizeInternalHrefAttributes(html) {
   });
 }
 
-function pageHtml({ route, title, description, body = "", canonicalRoute = route, structuredData }) {
+function pageHtml({ route, title, description, body = "", canonicalRoute = route, structuredData, persistentFallbackKind }) {
   const url = routeUrl(canonicalRoute);
   let html = baseHtml
     .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
@@ -73,7 +73,14 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
     const encoded = JSON.stringify(structuredData).replaceAll("<", "\\u003c");
     html = html.replace("</head>", `    <script type="application/ld+json">${encoded}</script>\n  </head>`);
   }
-  if (body) html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  if (body) {
+    html = persistentFallbackKind
+      ? html.replace(
+          '<div id="root"></div>',
+          `<div data-static-publication-fallback="${escapeHtml(persistentFallbackKind)}">${body}</div>\n    <div id="root"></div>`,
+        )
+      : html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  }
   return canonicalizeInternalHrefAttributes(html);
 }
 
@@ -493,7 +500,7 @@ for (const record of incidentRecords) {
     </dl>
     ${externalAssessmentsHtml(record)}
   </main>`;
-  writeRoute(route, pageHtml({ route, title, description, body }));
+  writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }
 
 if (incidentRecords.length) {
@@ -510,12 +517,27 @@ if (incidentRecords.length) {
       title: "VIGIL Observatory Case Files — AI Incident Database | CAM Initiative",
       description: "Browse the VIGIL Observatory AI incident database: documented Case Files with source evidence, assessment, alignment classification, repair analysis and references.",
       body: caseIndexBody,
+      persistentFallbackKind: "vigil-case-index",
     }),
   );
 }
 
-// Only publish change dates when a trustworthy page-level modification timestamp is available.
-// A build date is not a content modification date, so this sitemap intentionally omits modification-date elements.
+// Only publish change dates when VIGIL supplies a trustworthy page-level modification date.
+// Build/deploy timestamps are deliberately not used as content modification dates.
+function sitemapLastmod(value) {
+  const candidate = String(value ?? "").trim();
+  return /^\\d{4}-\\d{2}-\\d{2}$/.test(candidate) ? candidate : undefined;
+}
+
+const sitemapLastmodByRoute = new Map();
+for (const record of incidentRecords) {
+  const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
+  const lastmod = sitemapLastmod(record.record_last_updated);
+  if (lastmod) sitemapLastmodByRoute.set(route, lastmod);
+}
+const latestCaseLastmod = [...sitemapLastmodByRoute.values()].sort().at(-1);
+if (latestCaseLastmod) sitemapLastmodByRoute.set("/observatory/cases", latestCaseLastmod);
+
 const sitemapRoutes = [...new Set([
   "/",
   ...staticRoutes.map(([route]) => route),
@@ -525,9 +547,13 @@ const sitemapRoutes = [...new Set([
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapRoutes.map((route) => `  <url>
-    <loc>${routeUrl(route)}</loc>
-  </url>`).join("\n")}
+${sitemapRoutes.map((route) => {
+  const lastmod = sitemapLastmodByRoute.get(route);
+  return `  <url>
+    <loc>${routeUrl(route)}</loc>${lastmod ? `
+    <lastmod>${lastmod}</lastmod>` : ""}
+  </url>`;
+}).join("\n")}
 </urlset>
 `;
 writeFileSync(sitemapPath, sitemap);
