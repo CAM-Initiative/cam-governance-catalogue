@@ -331,7 +331,7 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.doesNotMatch(caseFile, /<p>\{description\}<\/p>/);
   assert.match(caseFile, /className="vigil-case-editorial-heading"/);
   assert.match(caseFile, /"case-classify": "Alignment classification"/);
-  assert.match(caseFile, /"case-compliance": "External standards and requirement crosswalk"/);
+  assert.match(caseFile, /"case-compliance": "Standards adjudication summary"/);
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
