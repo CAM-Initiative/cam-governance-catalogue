@@ -29,6 +29,8 @@ const [
 // reviving retired record machinery.
 assert.match(caseFile, /CaseTaxonomyClassification/);
 assert.match(caseFile, /CaseTaxonomyCompliance/);
+assert.match(caseFile, /STANDARD_VIGIL_ASSESSMENT_LIMITS/);
+assert.match(await readFile(new URL("../src/components/vigil/CaseTaxonomyClassification.tsx", import.meta.url), "utf8"), /occurrence-level runtime lens[\s\S]*do not assess organisation-wide governance programmes or overall legal or standards compliance/);
 assert.match(caseFile, /ExternalAlignmentClassification/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
