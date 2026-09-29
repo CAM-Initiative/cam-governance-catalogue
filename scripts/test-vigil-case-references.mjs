@@ -97,7 +97,7 @@ test("Case File Section 02 orders factual basis, taxonomy assessment, harm and e
   const source = await caseFileSource();
   const assessmentRenderer = source.match(/if \(stageId === "diagnose"\)[\s\S]*?if \(stageId === "conclusion"\)/)?.[0] ?? "";
   const factualIndex = assessmentRenderer.indexOf("vigil-diagnosis-factual-basis");
-  const taxonomyIndex = assessmentRenderer.indexOf("<CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />");
+  const taxonomyIndex = assessmentRenderer.indexOf('<CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />');
   const harmIndex = assessmentRenderer.indexOf("Harm Impact Assessment");
   const externalIndex = assessmentRenderer.indexOf("External assessments");
 
