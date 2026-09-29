@@ -1301,3 +1301,32 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and defines Dispu
   assert.match(report, /VIGIL takes a legally conservative approach/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });
+
+
+test("Datasets expose an experimental VIGIL Data Explorer with bounded analytical semantics", async () => {
+  const [app, datasets, explorer, model, pages, sync] = await Promise.all([
+    read("src/App.tsx"),
+    read("src/pages/datasets.tsx"),
+    read("src/pages/vigil-data-explorer.tsx"),
+    read("src/lib/vigilDataExplorer.ts"),
+    read("scripts/prepare-github-pages.js"),
+    read("scripts/sync-vigil-records.mjs"),
+  ]);
+
+  assert.match(app, /<Route path="\/datasets\/explorer" component=\{VigilDataExplorer\} \/>/);
+  assert.match(datasets, /title="Data Explorer"/);
+  assert.match(datasets, /actionHref="\/datasets\/explorer\/"/);
+  assert.match(explorer, /Where do invariants fail — and where do they hold\?/);
+  assert.match(explorer, /Association, not attribution\./);
+  assert.match(explorer, /Harm is assessed at Incident level/);
+  assert.match(explorer, /loadDetailCached/);
+  assert.match(explorer, /offset \+= 6/);
+  assert.match(model, /failure-occurrence/);
+  assert.match(model, /successful-invariant/);
+  assert.match(model, /HARM_DIMENSIONS/);
+  assert.match(model, /Missing harm dimensions|harmDimensionsFromRecord/);
+  assert.match(pages, /"\/datasets\/explorer"/);
+  assert.match(pages, /data-static-crawl-fallback="vigil-data-explorer"/);
+  assert.match(sync, /occurrence_environment: record\.occurrence_environment/);
+  assert.match(sync, /repair_classifications: Array\.isArray\(record\.repair_classifications\)/);
+});
