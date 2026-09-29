@@ -165,6 +165,7 @@ const staticRoutes = [
   ["/about", "About CAM Initiative", aboutDescription],
   ["/licensing", "Copyright & Licence | CAM Initiative", "Copyright, citation, reuse and licence information for VIGIL Observatory and CAM Initiative materials."],
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
+  ["/datasets/explorer", "VIGIL Data Explorer | CAM Initiative", "Interactive analysis of VIGIL Observatory Case Files, taxonomy evidence, Incident severity, corpus coverage and selected harm dimensions."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
   ["/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
@@ -176,6 +177,18 @@ const staticRoutes = [
 ];
 
 const staticRouteBodies = new Map([
+  ["/datasets/explorer", `<main data-static-crawl-fallback="vigil-data-explorer" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>CAM Initiative · Datasets</p>
+    <h1>VIGIL Data Explorer</h1>
+    <p>An experimental interactive view of the VIGIL Observatory corpus for examining taxonomy mappings, failure and invariant-held evidence, Incident severity, structured-data coverage and selected Harm Impact Assessment dimensions.</p>
+    <p>The interactive explorer reports its denominator and treats Incident-level harm as associated evidence rather than attributing harm to a taxonomy class.</p>
+    <nav aria-label="VIGIL Data Explorer resources"><ul>
+      <li><a href="/datasets/">Return to Datasets</a></li>
+      <li><a href="/observatory/cases/">Browse Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">Explore the Alignment Taxonomy</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">Read the Harm Impact Assessment methodology</a></li>
+    </ul></nav>
+  </main>`],
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
     <h1>Knowledge Base</h1>
