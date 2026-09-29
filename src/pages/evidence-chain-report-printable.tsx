@@ -7,6 +7,7 @@ import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } f
 import { normalizeRecords } from "@/lib/vigilPresentation";
 import { loadTaxonomyReferenceTargets, type TaxonomyReferenceTarget } from "@/lib/vigilTaxonomyClassification";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
+import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 
 const REPORT_SECTIONS = [
   { number: "01", label: "Incident" },
@@ -244,7 +245,7 @@ export default function EvidenceChainReportPrintable() {
       : undefined;
     // Keep non-assessed harm dimensions in the closing assessment limits rather than the scored Harm Impact table.
     const harmDimensionLimits = nonAssessedHarmDimensionLimitItems(harmAssessment);
-    return [...assessmentBoundaries, ...harmDimensionLimits];
+    return [...STANDARD_VIGIL_ASSESSMENT_LIMITS, ...assessmentBoundaries, ...harmDimensionLimits];
   }, [assessmentBoundaries, reportIncident]);
 
   const taxonomyReferencePortal = referenceList && ((reportIncident?.taxonomyReferences.length ?? 0) > 0 || hasHarmMethodologyReference || taxonomyEvidenceReferences.length > 0)
