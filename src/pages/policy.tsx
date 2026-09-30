@@ -17,7 +17,7 @@ const secondaryButtonClass =
   "cam-action cam-action-secondary";
 
 const policyRail = [
-  { href: "#parliamentary-submission-ai-data-centres-2026", label: "Artificial Intelligence and Data Centres", meta: "Submission 200" },
+  { href: "#parliamentary-submission-ai-data-centres-2026", label: "Artificial Intelligence and Data Centres", meta: "PS 02/2026" },
   { href: "#parliamentary-submission-ai-prosperity-2026", label: "Artificial Intelligence and Australian Prosperity", meta: "PS 01/2026" },
   { href: "#consultation-submission-01-2026", label: "SOCI Act Consultation Submission", meta: "CS 01/2026" },
   { href: "#policy-proposal-01-2026", label: "AI Training, Contribution & Copyright Scheme", meta: "PP 01/2026" },
@@ -65,13 +65,13 @@ export default function Policy() {
                 <div className="policy-publication-banner-row">
                   <p className="policy-kicker">Parliamentary Submission · 2026</p>
                   <span className="policy-publication-status">
-                    Published by the Parliament of Australia · Submission 200
+                    Published by the Parliament of Australia
                   </span>
                 </div>
               </div>
 
               <div className="policy-publication-body">
-                <p className="policy-publication-date">September 2026</p>
+                <p className="policy-publication-date">27 August 2026</p>
                 <h2 className="policy-publication-title">
                   Artificial Intelligence and Data Centres
                 </h2>
@@ -81,10 +81,13 @@ export default function Policy() {
 
                 <div className="policy-publication-copy">
                   <p>
-                    CAM Initiative’s submission to the Senate inquiry into artificial intelligence and data centres, examining the governance of rapidly expanding AI infrastructure in Australia.
+                    This submission proposes a <strong>National Data Centre Assurance Framework</strong> for proportionate, lifecycle-based governance of regionally, nationally and systemically significant data centre infrastructure.
                   </p>
                   <p>
-                    The inquiry considers the effectiveness of existing regulatory frameworks and the impacts of AI and data-centre growth on Australian communities, industries, the environment, water and energy.
+                    Rather than creating a new approval regime, the framework is designed as a common national gateway that connects existing planning, environmental, energy, water, critical-infrastructure, foreign-investment and national-security responsibilities according to why a facility is significant.
+                  </p>
+                  <p>
+                    The submission addresses cumulative regional infrastructure impacts, continuing environmental oversight, critical dependency and practical substitutability, operational control and sovereign continuity, government agreements and public-interest obligations, and material-change triggers requiring reassessment across the infrastructure lifecycle.
                   </p>
                 </div>
 
