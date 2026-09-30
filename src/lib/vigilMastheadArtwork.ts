@@ -13,6 +13,6 @@ export const VIGIL_MASTHEAD_ARTWORK = {
   harm: `${fasciaBase}/VIGIL-fascia-harm-impact.png`,
   policy: `${fasciaBase}/%20VIGIL-fascia-policy.png`,
   standards: `${fasciaBase}/VIGIL-fascia-standards.png`,
-  datasets: `${fasciaBase}/VIGIL-fascia-datasets.png`,
+  datasets: "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/VIGIL-fascia-datasets.png",
   incidentRecord: `${fasciaBase}/VIGIL-fascia-incidentsV2.png`,
 } as const;
