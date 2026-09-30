@@ -741,7 +741,7 @@ export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyR
   if (!requirements.length) return <p className="vigil-case-empty">No mapped external requirement is available for compliance cross-reference in this Case File.</p>;
 
   return <div className="vigil-taxonomy-compliance-view">
-    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported VIGIL finding: failure, then unresolved boundary, then invariant held.</p>
+    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. VIGIL applies an occurrence-level runtime lens here; these taxonomy-derived cross-references do not assess organisation-wide governance programmes or overall legal or standards compliance. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported VIGIL finding: failure, then unresolved boundary, then invariant held.</p>
     <div className="vigil-classification-web-table vigil-compliance-web-table" role="region" aria-label="External compliance crosswalk" tabIndex={0}>
       <table className="vigil-classification-table vigil-compliance-table">
         <caption className="sr-only">External requirements cross-referenced to the Incident's VIGIL findings.</caption>

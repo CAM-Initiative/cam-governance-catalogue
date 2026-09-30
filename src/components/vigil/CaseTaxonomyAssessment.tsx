@@ -16,6 +16,8 @@ type ClauseAssessment = {
 
 type Props = {
   raw: UnknownRecord;
+  taxonomyReferenceNumber?: number;
+  taxonomyReferenceHref?: string;
 };
 
 function isObject(value: unknown): value is UnknownRecord {
@@ -123,18 +125,20 @@ function RelationshipStack({
   </div>;
 }
 
-export function CaseTaxonomyAssessment({ raw }: Props) {
+export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const clauses = parseAssessment(raw);
   if (!clauses.length) return null;
 
   return <section className="vigil-taxonomy-assessment" aria-labelledby="vigil-taxonomy-assessment-heading">
     <h3 className="vigil-case-editorial-subheading" id="vigil-taxonomy-assessment-heading">Incident breakdown</h3>
     <p className="vigil-taxonomy-assessment-intro">
-      Incident observations paired with occurrence-specific analysis before formal alignment classification.
+      Incident evidence is broken into discrete observations, each analysed in the context of the occurrence and mapped to the {taxonomyReferenceNumber && taxonomyReferenceHref
+        ? <a href={taxonomyReferenceHref}>VIGIL Alignment Taxonomy [{taxonomyReferenceNumber}]</a>
+        : "VIGIL Alignment Taxonomy"} for formal adjudication.
     </p>
     <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
-        <caption className="sr-only">VIGIL Observatory Incident observations and occurrence-specific analysis preceding formal alignment classification.</caption>
+        <caption className="sr-only">VIGIL Observatory Incident observations and occurrence-specific analysis mapped to the VIGIL Alignment Taxonomy for formal adjudication.</caption>
         <thead>
           <tr>
             <th scope="col">Incident observation</th>

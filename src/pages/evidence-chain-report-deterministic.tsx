@@ -405,7 +405,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             </div>
           </section>
 
-          <CaseTaxonomyAssessment raw={incident.raw} />
+          <CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />
 
           <section className="report-severity-assessment">
             <h3 className="vigil-case-editorial-subheading report-peer-assessment-heading">Harm Impact Assessment</h3>

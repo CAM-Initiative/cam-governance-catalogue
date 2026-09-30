@@ -9,6 +9,7 @@ import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
+import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
@@ -195,6 +196,13 @@ export default function VigilCases() {
       direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : "asc",
     }));
   }
+
+  const staticPublicationFallbackAvailable = hasStaticPublicationFallback("vigil-case-index");
+  useEffect(() => {
+    if (state.status === "ready") retireStaticPublicationFallback("vigil-case-index");
+  }, [state.status]);
+
+  if (state.status !== "ready" && staticPublicationFallbackAvailable) return null;
 
   return (
     <Shell>

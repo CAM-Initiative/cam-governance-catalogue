@@ -23,10 +23,13 @@ test("Observatory instrument experiment keeps tickets and opens the workbench", 
 });
 
 test("SEO publication signals expose canonical-only sitemap routes and crawlable indexes", async () => {
-  const [entrypoint, pages, standards] = await Promise.all([
+  const [entrypoint, pages, standards, caseFile, cases, fallbackHelper] = await Promise.all([
     read("src/index.html"),
     read("scripts/prepare-github-pages.js"),
     read("src/pages/vigil-standards-baseline.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/vigil-cases.tsx"),
+    read("src/lib/staticPublicationFallback.ts"),
   ]);
   assert.match(entrypoint, /property="og:site_name" content="CAM Initiative"/);
   assert.match(entrypoint, /"@type": "WebSite"/);
@@ -63,7 +66,17 @@ test("SEO publication signals expose canonical-only sitemap routes and crawlable
   assert.match(pages, /"\/observatory\/ai-governance-standards"/);
   assert.match(standards, /`\/observatory\/ai-governance-standards\/\$\{encodeURIComponent\(key\)\}\/`/);
   assert.doesNotMatch(standards, /\/observatory\/knowledge-base\/standards-sources/);
-  assert.doesNotMatch(pages, /generatedDate|<lastmod>/);
+  assert.match(pages, /persistentFallbackKind: "vigil-case"/);
+  assert.match(pages, /persistentFallbackKind: "vigil-case-index"/);
+  assert.match(pages, /data-static-publication-fallback=/);
+  assert.match(caseFile, /hasStaticPublicationFallback\("vigil-case"\)/);
+  assert.match(caseFile, /retireStaticPublicationFallback\("vigil-case"\)/);
+  assert.match(cases, /hasStaticPublicationFallback\("vigil-case-index"\)/);
+  assert.match(cases, /retireStaticPublicationFallback\("vigil-case-index"\)/);
+  assert.match(fallbackHelper, /querySelector\(fallbackSelector\(kind\)\)\?\.remove\(\)/);
+  assert.match(pages, /record\.record_last_updated/);
+  assert.match(pages, /<lastmod>\$\{lastmod\}<\/lastmod>/);
+  assert.doesNotMatch(pages, /generatedDate/);
 });
 
 test("CAM Initiative Knowledge Base uses the Home-menu editorial masthead and exposes its core references", async () => {
@@ -318,7 +331,7 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.doesNotMatch(caseFile, /<p>\{description\}<\/p>/);
   assert.match(caseFile, /className="vigil-case-editorial-heading"/);
   assert.match(caseFile, /"case-classify": "Alignment classification"/);
-  assert.match(caseFile, /"case-compliance": "External standards and requirement crosswalk"/);
+  assert.match(caseFile, /"case-compliance": "Standards adjudication summary"/);
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 

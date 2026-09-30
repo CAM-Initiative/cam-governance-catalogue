@@ -19,9 +19,11 @@ import {
   type VigilIndexRecord,
 } from "@/lib/vigilPresentation";
 import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
+import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
+import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 import {
   loadTaxonomyReferenceTargets,
   taxonomyAlignmentOutcomeLabel,
@@ -298,7 +300,7 @@ const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and affected systems",
   "case-diagnose": "Governance, external and harm impact assessment",
   "case-classify": "Alignment classification",
-  "case-compliance": "External standards and requirement crosswalk",
+  "case-compliance": "Standards adjudication summary",
   "case-conclusion": "Integrated conclusion",
   "case-references": "Evidence and reference trail",
 };
@@ -500,8 +502,19 @@ export default function VigilCaseFile() {
     [taxonomyReferences],
   );
 
-  if (state.status === "loading") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Observatory Case File…</main></Shell>;
-  if (state.status === "error") return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
+  const staticPublicationFallbackAvailable = hasStaticPublicationFallback("vigil-case");
+  useEffect(() => {
+    if (state.status === "ready") retireStaticPublicationFallback("vigil-case");
+  }, [sourceId, state.status]);
+
+  if (state.status === "loading") {
+    if (staticPublicationFallbackAvailable) return null;
+    return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 text-muted-foreground sm:px-6 md:px-10">Preparing VIGIL Observatory Case File…</main></Shell>;
+  }
+  if (state.status === "error") {
+    if (staticPublicationFallbackAvailable) return null;
+    return <Shell><VigilObservatoryNav /><main className="container mx-auto max-w-6xl px-4 py-12 sm:px-6 md:px-10"><div className="vigil-reference-state"><h1>Case File unavailable</h1><p>{state.message}</p><Link href="/observatory/cases/">Return to Case Files →</Link></div></main></Shell>;
+  }
 
   const sourceRecord = state.records[0];
   const title = sourceRecord?.title ?? "VIGIL Observatory Case File";
@@ -540,7 +553,7 @@ export default function VigilCaseFile() {
   const assessmentBoundaries = incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : [];
   const harmImpactAssessment = incident && isObject(incident.raw.harm_impact_assessment) ? incident.raw.harm_impact_assessment : undefined;
   const harmDimensionLimitItems = nonAssessedHarmDimensionLimitItems(harmImpactAssessment);
-  const assessmentLimitItems = [...assessmentBoundaries, ...harmDimensionLimitItems];
+  const assessmentLimitItems = [...STANDARD_VIGIL_ASSESSMENT_LIMITS, ...assessmentBoundaries, ...harmDimensionLimitItems];
   const taxonomyReferenceVersion = taxonomyReferences[0]?.referenceVersion ?? taxonomyReferences[0]?.taxonomyVersion;
   const taxonomyReferenceDate = taxonomyReferences[0]?.referencePublicationDate;
   const taxonomyReferenceNumber = taxonomyReferences.length
@@ -643,7 +656,7 @@ export default function VigilCaseFile() {
           </aside>
         </section>
 
-        <CaseTaxonomyAssessment raw={incident.raw} />
+        <CaseTaxonomyAssessment raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" />
 
         <section className="vigil-severity-assessment" aria-labelledby="severity-assessment-heading">
           <div className="vigil-case-subheading">
