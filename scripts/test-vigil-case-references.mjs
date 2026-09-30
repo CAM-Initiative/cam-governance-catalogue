@@ -156,7 +156,7 @@ test("Case File moves assessment limits from Section 02 to the closing Reference
   assert.match(referencesRenderer, /<TextList items=\{assessmentLimitItems\} \/>/);
   assert.match(source, /STANDARD_VIGIL_ASSESSMENT_LIMITS/);
   assert.match(source, /nonAssessedHarmDimensionLimitItems\(harmImpactAssessment\)/);
-  assert.match(source, /assessmentLimitItems = \[\.\.\.assessmentBoundaries, \.\.\.harmDimensionLimitItems\]/);
+  assert.match(source, /assessmentLimitItems = \[\.\.\.STANDARD_VIGIL_ASSESSMENT_LIMITS, \.\.\.assessmentBoundaries, \.\.\.harmDimensionLimitItems\]/);
   assert.match(referencesRenderer, /vigil-reference-limits-label/);
   assert.match(referencesRenderer, /vigil-reference-disclaimer/);
 });
