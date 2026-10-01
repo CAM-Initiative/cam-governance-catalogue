@@ -345,6 +345,20 @@ function TaxonomyList({
   </ul>;
 }
 
+function recognitionCriteriaForRole(classificationClass: FailureTaxonomyClass | undefined, role?: ClassificationRole) {
+  if (!classificationClass) return undefined;
+  const success = classificationClass.success_recognition?.required_conditions ?? [];
+  const failure = classificationClass.failure_recognition?.required_conditions
+    ?? classificationClass.recognition?.required_conditions
+    ?? [];
+  if (role === "successful-invariant") return success.length ? success : undefined;
+  if (role === "ambiguous-boundary") {
+    const combined = [...new Set([...success, ...failure])];
+    return combined.length ? combined : undefined;
+  }
+  return failure.length ? failure : undefined;
+}
+
 function ClassificationTable({
   rows,
   taxonomyReferenceNumber,
@@ -393,7 +407,7 @@ function ClassificationTable({
               </td>
               <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
                 <TaxonomyList
-                  values={classificationClass?.recognition?.required_conditions}
+                  values={recognitionCriteriaForRole(classificationClass, item.role)}
                   empty="No separate recognition criteria are currently published for this Fidelity Class."
                 />
               </td>
