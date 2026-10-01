@@ -15,8 +15,3 @@
   color: hsl(var(--muted-foreground) / 0.86);
 }
 
-@media (max-width: 760px) {
-  .vigil-case-file-page .vigil-compliance-table tbody td:first-child::before {
-    content: "Assessment Result";
-  }
-}
