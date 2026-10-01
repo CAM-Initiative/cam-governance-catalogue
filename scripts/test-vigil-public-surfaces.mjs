@@ -179,7 +179,7 @@ test("current Harm Impact Methodology follows the version published on VIGIL mai
   ]);
   assert.match(loader, /VIGIL_SCHEMA_URL/);
   assert.match(loader, /harm_impact_methodology_version/);
-  assert.match(loader, /harmMethodologyUrl\(version\)/);
+  assert.match(loader, /harmMethodologyUrl\(metadata\.version\)/);
   assert.match(datasets, /loadCurrentHarmMethodologyMetadata/);
   assert.match(datasets, /harmMethodologyVersion/);
   assert.match(datasets, /harmMethodologyUrl/);
