@@ -224,6 +224,107 @@
   background: transparent;
 }
 
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-reading-preamble {
+  margin: 0 0 2.4rem;
+  padding: 0 0 2rem;
+  border-bottom: 1px solid var(--vigil-workbench-rule-strong);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-reading-kicker,
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-label {
+  margin: 0 0 0.45rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 760;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-reading-preamble h2 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  line-height: 1.04;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-reading-preamble p:not(.vigil-taxonomy-reading-kicker) {
+  max-width: 62rem;
+  margin: 0.5rem 0 0;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-governing-invariant,
+.vigil-taxonomy-manual-page .vigil-taxonomy-failure-exclusions,
+.vigil-taxonomy-manual-page .vigil-taxonomy-failure-examples {
+  margin-top: 1.45rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-governing-invariant blockquote {
+  margin: 0.65rem 0 0;
+  padding: 0.2rem 0 0.2rem 1.05rem;
+  border-left: 2px solid hsl(var(--primary) / 0.72);
+  background: transparent;
+  font-size: 1.08rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.6rem);
+  margin-top: 1.6rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-panel {
+  padding: 1rem 0 0;
+  border-top: 3px solid var(--vigil-workbench-rule-strong);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-panel.is-success {
+  border-top-color: hsl(149 31% 36% / 0.78);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-panel.is-failure {
+  border-top-color: hsl(4 38% 43% / 0.72);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-panel h4 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-panel h5 {
+  margin: 1rem 0 0.45rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.7rem;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-polarity-plain {
+  font-weight: 620;
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-boundary-exemplars {
+  margin-top: 1.5rem;
+  padding: 1.15rem 0 0;
+  border-top: 1px solid var(--vigil-workbench-rule);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-boundary-exemplars li {
+  border-radius: 0;
+  background: transparent;
+}
+
+@media (max-width: 760px) {
+  .vigil-taxonomy-manual-page .vigil-taxonomy-polarity-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Case Files + Standards — investigation/reference ledgers ------------- */
 
 .vigil-case-library-page .vigil-library-shell,
