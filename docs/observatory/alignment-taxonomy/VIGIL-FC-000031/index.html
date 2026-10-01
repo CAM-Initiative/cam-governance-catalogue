@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D4xBcMBV.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-sMsVReat.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B6ej6bF3.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,14 +68,15 @@
       </dl>
       <h2>Technical definition</h2>
       <p>A failure in which expiry, revocation, refresh, recovery, or replacement of authentication state is not propagated coherently to the active session and its dependent operations, leaving effective access inconsistent with the session&#39;s represented state.</p>
-      <h2>Recognition criteria</h2>
-      <ul><li>An authentication-state transition occurs or is required.</li><li>An active session or dependent operation retains a materially inconsistent authentication or access state.</li><li>The inconsistency impairs correct continuation, termination, reauthentication, or access enforcement.</li></ul>
-      <h2>Exclusions</h2>
-      <ul><li>The session transitions coherently and merely requires the user to authenticate again.</li><li>A validly authenticated actor lacks authority for the requested action.</li><li>Credentials are exposed or stolen without a session-state continuity failure.</li></ul>
-      <h2>Linked Case Files</h2>
+      <h2>Governing invariant</h2><blockquote>Expiry, revocation, refresh, recovery, credential replacement, and reauthentication must propagate coherently and promptly to every dependent session and operation. Stale authentication must not continue to authorise action, and renewed authority must be correctly rebound before protected continuation.</blockquote>
+
+      <h2>Failure established</h2><h3>Failure condition</h3><h3>Failure recognition</h3><ul><li>An authentication-state transition occurs or is required.</li><li>An active session or dependent operation retains a materially inconsistent authentication or access state.</li><li>The inconsistency impairs correct continuation, termination, reauthentication, or access enforcement.</li></ul>
+      <h2>Exclusions from failure recognition</h2><ul><li>The session transitions coherently and merely requires the user to authenticate again.</li><li>A validly authenticated actor lacks authority for the requested action.</li><li>Credentials are exposed or stolen without a session-state continuity failure.</li></ul>
+      <h2>Failure occurrences</h2>
       <p>No Case Files currently evidence failure for this class.</p>
       <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000092/"><code>VIGIL-INC-000092</code> — VIGIL-INC-000092 — Authentication-State Continuity held under pressure</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000031/"><code>VIGIL-FC-000031</code></a></span></li></ul>
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>National Institute of Standards and Technology · 2025-07-31 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.SP.800-63b-4" rel="noreferrer">Digital Identity Guidelines: Authentication and Authenticator Management (NIST SP 800-63B-4)</a></strong></p><p><strong>Evidence note.</strong> Section 5 establishes authenticated-session continuity through session bindings, lifetime limits, termination, reauthentication, and independent session handling in federated contexts. This directly supports coherent authentication-state transitions; VIGIL&#39;s class additionally covers propagation failures affecting active AI tasks and dependent operations beyond NIST&#39;s federal digital-identity scope.</p></li><li><p>Internet Engineering Task Force · 2013-08-01 · standards evidence</p><p><strong><a href="https://www.rfc-editor.org/rfc/rfc7009.html" rel="noreferrer">RFC 7009: OAuth 2.0 Token Revocation</a></strong></p><p><strong>Evidence note.</strong> RFC 7009 specifies revocation of OAuth access and refresh tokens, immediate invalidation of the revoked token, possible invalidation of related tokens and grants, and minimisation of propagation delay. This directly supports coherent propagation of authentication-state revocation across dependent authorization state; VIGIL additionally covers refresh, recovery, replacement and active-task continuity beyond OAuth.</p></li></ul>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>National Institute of Standards and Technology · 2025-07-31 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.SP.800-63b-4" rel="noreferrer">Digital Identity Guidelines: Authentication and Authenticator Management (NIST SP 800-63B-4)</a></strong></p><p><strong>Evidence note.</strong> Section 5 establishes authenticated-session continuity through session bindings, lifetime limits, termination, reauthentication, and independent session handling in federated contexts. This directly supports coherent authentication-state transitions; VIGIL&#39;s class additionally covers propagation failures affecting active AI tasks and dependent operations beyond NIST&#39;s federal digital-identity scope.</p></li><li><p>Internet Engineering Task Force · 2013-08-01 · standards evidence</p><p><strong><a href="https://www.rfc-editor.org/rfc/rfc7009.html" rel="noreferrer">RFC 7009: OAuth 2.0 Token Revocation</a></strong></p><p><strong>Evidence note.</strong> RFC 7009 specifies revocation of OAuth access and refresh tokens, immediate invalidation of the revoked token, possible invalidation of related tokens and grants, and minimisation of propagation delay. This directly supports coherent propagation of authentication-state revocation across dependent authorization state; VIGIL additionally covers refresh, recovery, replacement and active-task continuity beyond OAuth.</p></li></ul>
     </main></div>
   </body>
 </html>

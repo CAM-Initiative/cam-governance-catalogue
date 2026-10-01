@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D4xBcMBV.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-sMsVReat.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B6ej6bF3.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,14 +68,15 @@
       </dl>
       <h2>Technical definition</h2>
       <p>A failure in which the materially relevant execution state of a task, tool call, delegation, or external action is not made observable to the person or system responsible for timely supervision, intervention, or reliance.</p>
-      <h2>Recognition criteria</h2>
-      <ul><li>A task or action has a material execution state that can change over time.</li><li>Timely supervision, intervention, or reliance requires that state to be observable.</li><li>The state is withheld, collapsed, or not surfaced with sufficient timeliness or precision.</li></ul>
-      <h2>Exclusions</h2>
-      <ul><li>The execution state is adequately observable but the final outcome is incorrect.</li><li>Only internal reasoning is undisclosed and no material execution state is hidden.</li><li>The state is shown accurately and the issue is a false claim about overall completion.</li></ul>
-      <h2>Linked Case Files</h2>
+      <h2>Governing invariant</h2><blockquote>Prepared, queued, armed, running, delegated, waiting, blocked, failed, completed, cancelled, and unknown execution states and material transitions must be surfaced accurately to the supervising or relying actor while intervention or correction remains meaningful.</blockquote>
+
+      <h2>Failure established</h2><h3>Failure condition</h3><h3>Failure recognition</h3><ul><li>A task or action has a material execution state that can change over time.</li><li>Timely supervision, intervention, or reliance requires that state to be observable.</li><li>The state is withheld, collapsed, or not surfaced with sufficient timeliness or precision.</li></ul>
+      <h2>Exclusions from failure recognition</h2><ul><li>The execution state is adequately observable but the final outcome is incorrect.</li><li>Only internal reasoning is undisclosed and no material execution state is hidden.</li><li>The state is shown accurately and the issue is a false claim about overall completion.</li></ul>
+      <h2>Failure occurrences</h2>
       <p>No Case Files currently evidence failure for this class.</p>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>IEEE Standards Association · 2022-03-04 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7001/6929/" rel="noreferrer">IEEE 7001-2021, section 5.1.1 general</a></strong></p><p><strong>Evidence note.</strong> IEEE 7001-2021, section 5.1.1 general requires a simple and understandable account of system activity and its operational basis. This supports disclosure of materially relevant execution state; it does not require VIGIL&#39;s exact pending/running/blocked/failed/completed state model.</p></li></ul>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>IEEE Standards Association · 2022-03-04 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7001/6929/" rel="noreferrer">IEEE 7001-2021, section 5.1.1 general</a></strong></p><p><strong>Evidence note.</strong> IEEE 7001-2021, section 5.1.1 general requires a simple and understandable account of system activity and its operational basis. This supports disclosure of materially relevant execution state; it does not require VIGIL&#39;s exact pending/running/blocked/failed/completed state model.</p></li></ul>
     </main></div>
   </body>
 </html>

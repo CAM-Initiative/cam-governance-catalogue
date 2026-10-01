@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-D4xBcMBV.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-sMsVReat.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B6ej6bF3.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,14 +68,15 @@
       </dl>
       <h2>Technical definition</h2>
       <p>A failure in which the operational availability, applicable coverage, or callable state of a required governance control cannot be determined with sufficient confidence before the control must influence a material decision or action.</p>
-      <h2>Recognition criteria</h2>
-      <ul><li>A governance control may be required for a material decision or action.</li><li>Its operational availability or applicable coverage cannot be determined in time to rely on it.</li><li>The ambiguity materially impairs safe routing, activation, or execution.</li></ul>
-      <h2>Exclusions</h2>
-      <ul><li>The control is known to be available but is not activated.</li><li>The control&#39;s owner is uncertain while its operational availability remains clear.</li><li>The control operates and the dispute concerns whether its rule is adequate.</li></ul>
-      <h2>Linked Case Files</h2>
+      <h2>Governing invariant</h2><blockquote>Before a material action depends on a governance control, the system must determine and accurately represent whether the control is present, reachable, callable, authorised, and applicable with sufficient confidence. Unresolved availability must trigger a defined hold, safe alternative, or degraded path.</blockquote>
+
+      <h2>Failure established</h2><h3>Failure condition</h3><h3>Failure recognition</h3><ul><li>A governance control may be required for a material decision or action.</li><li>Its operational availability or applicable coverage cannot be determined in time to rely on it.</li><li>The ambiguity materially impairs safe routing, activation, or execution.</li></ul>
+      <h2>Exclusions from failure recognition</h2><ul><li>The control is known to be available but is not activated.</li><li>The control&#39;s owner is uncertain while its operational availability remains clear.</li><li>The control operates and the dispute concerns whether its rule is adequate.</li></ul>
+      <h2>Failure occurrences</h2>
       <p>No Case Files currently evidence failure for this class.</p>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>IEEE Standards Association · 2024-07-05 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7009/7096/" rel="noreferrer">IEEE 7009-2024, clause 6.1(h)</a></strong></p><p><strong>Evidence note.</strong> IEEE 7009-2024, clause 6.1(h) requires specified fail-safe capabilities to be provided to the required extent in the identified regulatory context. This supports the need to know whether a required control is actually available; it does not itself define ambiguous availability representation at the point of decision.</p></li><li><p>National Institute of Standards and Technology · 2023-01-26 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.AI.100-1" rel="noreferrer">NIST AI RMF 1.0, MEASURE 1.2</a></strong></p><p><strong>Evidence note.</strong> NIST AI RMF 1.0, MEASURE 1.2 requires regular assessment and updating of metric appropriateness and control effectiveness. This supports visibility into control capability and effectiveness, without defining VIGIL&#39;s ambiguity mechanism.</p></li></ul>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>IEEE Standards Association · 2024-07-05 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7009/7096/" rel="noreferrer">IEEE 7009-2024, clause 6.1(h)</a></strong></p><p><strong>Evidence note.</strong> IEEE 7009-2024, clause 6.1(h) requires specified fail-safe capabilities to be provided to the required extent in the identified regulatory context. This supports the need to know whether a required control is actually available; it does not itself define ambiguous availability representation at the point of decision.</p></li><li><p>National Institute of Standards and Technology · 2023-01-26 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.AI.100-1" rel="noreferrer">NIST AI RMF 1.0, MEASURE 1.2</a></strong></p><p><strong>Evidence note.</strong> NIST AI RMF 1.0, MEASURE 1.2 requires regular assessment and updating of metric appropriateness and control effectiveness. This supports visibility into control capability and effectiveness, without defining VIGIL&#39;s ambiguity mechanism.</p></li></ul>
     </main></div>
   </body>
 </html>
