@@ -178,7 +178,7 @@ export default function VigilSeverityMethodology() {
                 <span className="vigil-methodology-reference-number">[{index + 1}]</span>
                 <span className="vigil-methodology-reference-copy">
                   <strong>{reference.title}</strong>
-                  <span className="vigil-methodology-reference-meta"> — {reference.publisher} · {reference.id}</span>
+                  <span className="vigil-methodology-reference-meta"> — {reference.publisher}</span>
                   <br />
                   <a href={reference.url} target="_blank" rel="noreferrer" className="vigil-methodology-reference-url">{reference.url}</a>
                 </span>
