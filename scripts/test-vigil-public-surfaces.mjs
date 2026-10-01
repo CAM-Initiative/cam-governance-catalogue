@@ -417,7 +417,11 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.match(classification, /vigil-classification-class-title/);
   assert.match(classification, /vigil-classification-class-explanation/);
   assert.match(classification, /classificationClass\?\.plain_english \?\? family\?\.plain_english/);
-  assert.match(classification, /classificationClass\?\.recognition\?\.required_conditions/);
+  assert.match(classification, /function recognitionCriteriaForRole/);
+  assert.match(classification, /classificationClass\.success_recognition\?\.required_conditions/);
+  assert.match(classification, /classificationClass\.failure_recognition\?\.required_conditions/);
+  assert.match(classification, /classificationClass\.recognition\?\.required_conditions/);
+  assert.match(classification, /recognitionCriteriaForRole\(classificationClass, item\.role\)/);
   assert.doesNotMatch(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
