@@ -707,7 +707,7 @@ test("Alignment Taxonomy pages distinguish failure-linked cases from invariant-h
   ]);
   assert.match(taxonomyLoader, /VIGIL\.FailureTaxonomy\.CaseFileExamples\.json/);
   assert.match(taxonomyLoader, /caseFileExamples: FailureTaxonomyCaseFileExamples/);
-  assert.match(taxonomyPage, /Linked Case Files/);
+  assert.match(taxonomyPage, /Failure occurrences/);
   assert.match(taxonomyPage, /No Case Files currently evidence failure for this class/);
   assert.match(taxonomyPage, /Invariant-held examples/);
   assert.match(taxonomyPage, /item\.invariant_exemplars/);
@@ -757,8 +757,8 @@ test("Failure Class views surface external supporting evidence without bloating 
   assert.match(pages, /function taxonomyExternalReferenceHtml/);
   assert.match(pages, /<h2>Supporting evidence<\/h2>/);
   assert.ok(
-    pages.indexOf("<h2>Supporting evidence</h2>") > pages.indexOf("<h2>Linked Case Files</h2>"),
-    "Static Failure Class crawl output should keep supporting evidence last",
+    pages.indexOf("<h2>Supporting evidence</h2>") > pages.indexOf("<h2>Failure occurrences</h2>"),
+    "Static Fidelity Class crawl output should keep supporting evidence last",
   );
   assert.match(pages, /reference\.evidence_note/);
 });
@@ -823,7 +823,8 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
-  assert.match(severity, /VIGIL-HIM 1\.0\.1/);
+  assert.match(severity, /loadCurrentHarmMethodologyMetadata/);
+  assert.doesNotMatch(severity, /VIGIL-HIM 1\.0\.1/);
   assert.match(severity, /vigil-severity-methodology-document/);
   assert.doesNotMatch(severity, /severity-alignment-heading/);
   assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
@@ -967,7 +968,10 @@ test("Alignment Taxonomy PDF uses the canonical public naming", async () => {
 test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
   const datasets = await read("src/pages/datasets.tsx");
   assert.match(datasets, /title="Harm Impact Matrix"/);
-  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.1\.json/);
+  assert.match(datasets, /loadCurrentHarmMethodologyMetadata/);
+  assert.match(datasets, /harmMethodologyVersion/);
+  assert.match(datasets, /harmMethodologyUrl/);
+  assert.doesNotMatch(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.1\.json/);
   assert.match(datasets, /11 harm dimensions/);
   assert.match(datasets, /Open JSON matrix/);
   assert.doesNotMatch(datasets, /title="Observatory Reference Registry"/);
