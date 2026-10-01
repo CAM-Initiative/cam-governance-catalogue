@@ -28,6 +28,8 @@ export type FailureTaxonomyRelationship = {
 
 export type FailureTaxonomyRecognition = {
   required_conditions?: string[];
+  indicators?: string[];
+  applies_to?: string;
 };
 
 export type FailureTaxonomyExternalReference = {
@@ -89,6 +91,12 @@ export type FailureTaxonomyClass = {
   plain_english: string;
   definition: string;
   invariant?: string;
+  success_condition?: string;
+  success_plain_english?: string;
+  success_recognition?: FailureTaxonomyRecognition;
+  failure_condition?: string;
+  failure_plain_english?: string;
+  failure_recognition?: FailureTaxonomyRecognition;
   recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
