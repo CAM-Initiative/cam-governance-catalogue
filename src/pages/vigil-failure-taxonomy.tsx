@@ -61,7 +61,13 @@ function classHaystack(item: FailureTaxonomyClass) {
     item.abstraction,
     item.plain_english,
     item.definition,
-    ...(item.recognition?.required_conditions ?? []),
+    item.invariant,
+    item.success_condition,
+    item.success_plain_english,
+    item.failure_condition,
+    item.failure_plain_english,
+    ...(item.success_recognition?.required_conditions ?? []),
+    ...(item.failure_recognition?.required_conditions ?? item.recognition?.required_conditions ?? []),
     ...(item.exclusions ?? []),
     ...(item.examples ?? []),
     ...(item.aliases ?? []),
@@ -112,7 +118,7 @@ function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
     <div className="vigil-taxonomy-supporting-evidence-head">
       <div>
         <h4>Supporting evidence <span>{references.length}</span></h4>
-        <p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p>
+        <p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p>
       </div>
     </div>
     <ul>
@@ -129,6 +135,15 @@ function SupportingEvidence({ item }: { item: FailureTaxonomyClass }) {
         {reference.evidence_note ? <p className="vigil-taxonomy-supporting-evidence-note"><strong>Evidence note.</strong> {reference.evidence_note}</p> : null}
       </li>)}
     </ul>
+  </section>;
+}
+
+function TaxonomyReadingPreamble() {
+  return <section className="vigil-taxonomy-reading-preamble" aria-labelledby="vigil-taxonomy-reading-heading">
+    <p className="vigil-taxonomy-reading-kicker">How to read a Fidelity Class</p>
+    <h2 id="vigil-taxonomy-reading-heading">The class defines the governed property.</h2>
+    <p>A Fidelity Class is neither a failure nor a success. Occurrence evidence may establish that its invariant held, that its failure condition occurred, or that the evidence materially engages the boundary without establishing either polarity.</p>
+    <p>Both success and failure require affirmative evidence. Absence of evidence for one state does not establish the other.</p>
   </section>;
 }
 
@@ -263,6 +278,12 @@ function ClassManualCard({
 }) {
   const linkedCases = caseFileExamples[item.class_id] ?? [];
   const invariantExemplars = item.invariant_exemplars ?? [];
+  const successfulExemplars = invariantExemplars.filter((exemplar) => exemplar.exemplar_type === "successful-invariant");
+  const ambiguousExemplars = invariantExemplars.filter((exemplar) => exemplar.exemplar_type === "ambiguous-boundary");
+  const successRecognition = item.success_recognition?.required_conditions ?? [];
+  const failureRecognition = item.failure_recognition?.required_conditions ?? item.recognition?.required_conditions ?? [];
+  const hasSuccessCondition = Boolean(item.success_condition || item.success_plain_english || successRecognition.length);
+  const hasFailureCondition = Boolean(item.failure_condition || item.failure_plain_english || failureRecognition.length);
 
   return <article className="vigil-taxonomy-manual-class" id={item.class_id.toLowerCase()}>
     <div className="vigil-taxonomy-manual-class-top">
@@ -279,19 +300,42 @@ function ClassManualCard({
     <h4>Technical definition</h4>
     <p>{item.definition}</p>
 
-    <div className="vigil-taxonomy-manual-grid">
-      <section>
-        <h4>Recognition criteria</h4>
-        <ul>{(item.recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
-      </section>
-      <section>
-        <h4>Exclusions</h4>
-        <ul>{(item.exclusions ?? []).map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
-      </section>
-    </div>
+    {item.invariant ? <section className="vigil-taxonomy-governing-invariant">
+      <h4>Governing invariant</h4>
+      <blockquote>{item.invariant}</blockquote>
+    </section> : null}
 
-    <section className="vigil-taxonomy-linked-cases" aria-label={`Linked Case Files for ${item.name}`}>
-      <h4>Linked Case Files {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
+    {(hasSuccessCondition || hasFailureCondition) ? <div className="vigil-taxonomy-polarity-grid">
+      {hasSuccessCondition ? <section className="vigil-taxonomy-polarity-panel is-success" aria-label="Invariant held condition">
+        <p className="vigil-taxonomy-polarity-label">Invariant held</p>
+        <h4>Success condition</h4>
+        {item.success_plain_english ? <p className="vigil-taxonomy-polarity-plain">{item.success_plain_english}</p> : null}
+        {item.success_condition ? <p>{item.success_condition}</p> : null}
+        {successRecognition.length ? <>
+          <h5>Positive recognition</h5>
+          <ul>{successRecognition.map((condition) => <li key={condition}>{condition}</li>)}</ul>
+        </> : null}
+      </section> : null}
+
+      {hasFailureCondition ? <section className="vigil-taxonomy-polarity-panel is-failure" aria-label="Failure condition">
+        <p className="vigil-taxonomy-polarity-label">Failure established</p>
+        <h4>Failure condition</h4>
+        {item.failure_plain_english ? <p className="vigil-taxonomy-polarity-plain">{item.failure_plain_english}</p> : null}
+        {item.failure_condition ? <p>{item.failure_condition}</p> : null}
+        {failureRecognition.length ? <>
+          <h5>Failure recognition</h5>
+          <ul>{failureRecognition.map((condition) => <li key={condition}>{condition}</li>)}</ul>
+        </> : null}
+      </section> : null}
+    </div> : null}
+
+    {item.exclusions?.length ? <section className="vigil-taxonomy-failure-exclusions">
+      <h4>Exclusions from failure recognition</h4>
+      <ul>{item.exclusions.map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
+    </section> : null}
+
+    <section className="vigil-taxonomy-linked-cases" aria-label={`Failure occurrences for ${item.name}`}>
+      <h4>Failure occurrences {caseFileExamplesAvailable ? <span>{linkedCases.length}</span> : null}</h4>
       {!caseFileExamplesAvailable
         ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Fidelity Class definition remains current.</p>
         : linkedCases.length ? <ul>
@@ -305,24 +349,38 @@ function ClassManualCard({
         </ul> : <p className="vigil-taxonomy-linked-cases-empty">No Case Files currently evidence failure for this class.</p>}
     </section>
 
-    {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Invariant-held examples for ${item.name}`}>
-      <h4>Invariant-held examples <span>{invariantExemplars.length}</span></h4>
+    {successfulExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Invariant-held examples for ${item.name}`}>
+      <h4>Invariant-held examples <span>{successfulExemplars.length}</span></h4>
       <ul>
-        {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
+        {successfulExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
           <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
             <code>{exemplar.linked_incident_id}</code>
             <strong>{exemplar.title}</strong>
           </Link>
-          <p>Successful invariant{exemplar.exemplar_status ? ` · ${clean(exemplar.exemplar_status)}` : ""}</p>
-          {exemplar.invariant_demonstrated ? <p className="vigil-taxonomy-exemplar-basis">{exemplar.invariant_demonstrated}</p> : null}
+          <p>Invariant held{exemplar.exemplar_status ? ` · ${clean(exemplar.exemplar_status)}` : ""}</p>
+          {exemplar.success_basis || exemplar.evidence_basis ? <p className="vigil-taxonomy-exemplar-basis">{exemplar.success_basis ?? exemplar.evidence_basis}</p> : null}
         </li>)}
       </ul>
     </section> : null}
 
-    {item.examples?.length ? <>
-      <h4>Illustrative examples</h4>
+    {ambiguousExemplars.length ? <section className="vigil-taxonomy-boundary-exemplars" aria-label={`Ambiguous-boundary examples for ${item.name}`}>
+      <h4>Ambiguous-boundary examples <span>{ambiguousExemplars.length}</span></h4>
+      <ul>
+        {ambiguousExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
+          <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
+            <code>{exemplar.linked_incident_id}</code>
+            <strong>{exemplar.title}</strong>
+          </Link>
+          <p>Boundary engaged{exemplar.exemplar_status ? ` · ${clean(exemplar.exemplar_status)}` : ""}</p>
+          {exemplar.evidence_basis ? <p className="vigil-taxonomy-exemplar-basis">{exemplar.evidence_basis}</p> : null}
+        </li>)}
+      </ul>
+    </section> : null}
+
+    {item.examples?.length ? <section className="vigil-taxonomy-failure-examples">
+      <h4>Failure examples and boundary illustrations</h4>
       <ul>{item.examples.map((example) => <li key={example}>{example}</li>)}</ul>
-    </> : null}
+    </section> : null}
 
     {item.relationships?.length ? <>
       <h4>Relationships</h4>
@@ -528,6 +586,7 @@ export default function VigilFailureTaxonomy() {
             setCollapsed={setContentsCollapsed}
           />
           <div className="vigil-taxonomy-manual-document" aria-live="polite">
+            {!requestedId ? <TaxonomyReadingPreamble /> : null}
             {selectedClass ? <ClassManualSection
               item={selectedClass}
               parent={selectedFamily}
