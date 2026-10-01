@@ -7,6 +7,7 @@ import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassificat
 import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
+import { loadCurrentHarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 type HubState = {
   caseFiles?: number;
@@ -17,6 +18,7 @@ type HubState = {
   taxonomyFamilies?: number;
   taxonomyClasses?: number;
   taxonomyAvailable?: boolean;
+  harmMethodologyVersion?: string;
 };
 
 const CASE_FILE_STAGES = [
@@ -101,8 +103,8 @@ export default function VigilKnowledgeHub() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex()])
-      .then(([incidents, clauses, sources, taxonomy]) => {
+    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex(), loadCurrentHarmMethodologyMetadata()])
+      .then(([incidents, clauses, sources, taxonomy, harmMethodology]) => {
         if (cancelled) return;
         setState({
           caseFiles: incidents.records.length,
@@ -115,6 +117,7 @@ export default function VigilKnowledgeHub() {
           taxonomyFamilies: taxonomy.status === "ready" ? taxonomy.data.families.length : undefined,
           taxonomyClasses: taxonomy.status === "ready" ? taxonomy.data.families.reduce((sum, family) => sum + family.class_count, 0) : undefined,
           taxonomyAvailable: taxonomy.status === "ready",
+          harmMethodologyVersion: harmMethodology?.version,
         });
       })
       .catch(() => !cancelled && setState({}));
@@ -176,7 +179,7 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-taxonomy-heading">Mappings classify individual boundaries. The Case File index summarises the Incident.</h2>
               </div>
               <div className="document-reading">
-                <p>The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Fidelity Families</strong> and individual <strong>Fidelity Classes</strong> retain stable FF/FC identifiers and define the repeatable mechanisms, recognition criteria, exclusions and governing invariants used in adjudication.</p>
+                <p>The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Fidelity Families</strong> define integrity domains; individual <strong>Fidelity Classes</strong> define governed properties that can be evidenced as held, failed or unresolved at a boundary. Stable FF/FC identifiers preserve continuity across adjudications.</p>
                 <p>Classification happens first at the <strong>mapping level</strong>. One Incident may engage several Fidelity Classes, and each relationship records what the evidence establishes at that particular governance boundary.</p>
                 <p className="vigil-knowledge-meta">{taxonomyMeta}</p>
               </div>
@@ -211,7 +214,7 @@ export default function VigilKnowledgeHub() {
               <div className="document-reading">
                 <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews eleven harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
                 <p>Harm assessment is deliberately separate from alignment classification: the Harm Impact Assessment describes materialised consequence and severity; alignment classification describes governance-boundary behaviour.</p>
-                <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
+                <p className="vigil-knowledge-meta">{state.harmMethodologyVersion ? `VIGIL-HIM ${state.harmMethodologyVersion}` : "Current VIGIL-HIM"} · methodology reference</p>
               </div>
               <div className="cam-action-row">
                 <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
