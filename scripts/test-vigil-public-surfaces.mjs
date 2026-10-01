@@ -90,7 +90,9 @@ test("CAM Initiative Knowledge Base uses the Home-menu editorial masthead and ex
   assert.match(hub, /href="\/observatory\/cases\/"/);
   assert.match(hub, /href="\/observatory\/ai-governance-standards\/"/);
   assert.match(hub, /href="\/observatory\/harm-impact-assessment\/"[\s\S]*Open Harm Impact Assessment/);
-  assert.match(hub, /VIGIL-HIM 1\.0\.1/);
+  assert.match(hub, /loadCurrentHarmMethodologyMetadata/);
+  assert.match(hub, /state\.harmMethodologyVersion/);
+  assert.doesNotMatch(hub, /VIGIL-HIM 1\.0\.1/);
   assert.match(hub, /href="\/datasets\/"/);
   assert.doesNotMatch(hub, /CollectionCard/);
 });
@@ -165,6 +167,62 @@ test("shared DocumentRail mobile navigation wraps without horizontal scrolling",
   assert.match(indexCss, /@media \(max-width: 620px\)[\s\S]*\.document-rail-nav \{[\s\S]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/);
   assert.doesNotMatch(indexCss, /@media \(max-width: 900px\)[\s\S]*\.document-rail-nav \{[\s\S]*overflow-x: auto/);
   assert.doesNotMatch(menuCss, /\.vigil-datasets-page \.document-rail-nav/);
+});
+
+test("current Harm Impact Methodology follows the version published on VIGIL main", async () => {
+  const [loader, datasets, harm, hub, pages] = await Promise.all([
+    read("src/lib/vigilHarmMethodology.ts"),
+    read("src/pages/datasets.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(loader, /VIGIL_SCHEMA_URL/);
+  assert.match(loader, /harm_impact_methodology_version/);
+  assert.match(loader, /harmMethodologyUrl\(version\)/);
+  assert.match(datasets, /loadCurrentHarmMethodologyMetadata/);
+  assert.match(datasets, /harmMethodologyVersion/);
+  assert.match(datasets, /harmMethodologyUrl/);
+  assert.match(harm, /loadCurrentHarmMethodologyMetadata/);
+  assert.match(harm, /methodologyVersion \?\? "Current"/);
+  assert.match(hub, /loadCurrentHarmMethodologyMetadata/);
+  for (const source of [loader, datasets, harm, hub, pages]) {
+    assert.doesNotMatch(source, /VIGIL-HIM 1\.0\.1/);
+    assert.doesNotMatch(source, /HarmImpactMatrix\.v1\.0\.1\.json/);
+  }
+});
+
+test("Fidelity Classes present a neutral governed property with explicit occurrence polarity", async () => {
+  const [taxonomy, types, css, pages] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/lib/vigilFailureTaxonomy.ts"),
+    read("src/vigil-observatory-instrument-experiment.css"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(types, /success_condition\?: string/);
+  assert.match(types, /failure_condition\?: string/);
+  assert.match(types, /success_recognition\?: FailureTaxonomyRecognition/);
+  assert.match(types, /failure_recognition\?: FailureTaxonomyRecognition/);
+  assert.match(taxonomy, /How to read a Fidelity Class/);
+  assert.match(taxonomy, /The class defines the governed property/);
+  assert.match(taxonomy, /Success condition/);
+  assert.match(taxonomy, /Failure condition/);
+  assert.match(taxonomy, /Governing invariant/);
+  assert.match(taxonomy, /Exclusions from failure recognition/);
+  assert.match(taxonomy, /Failure occurrences/);
+  assert.match(taxonomy, /Ambiguous-boundary examples/);
+  assert.match(css, /vigil-taxonomy-polarity-grid/);
+  assert.match(css, /vigil-taxonomy-polarity-panel\.is-success/);
+  assert.match(css, /vigil-taxonomy-polarity-panel\.is-failure/);
+  assert.match(pages, /How to read a Fidelity Class/);
+  assert.match(pages, /classSuccessfulExemplars/);
+  assert.match(pages, /classAmbiguousExemplars/);
+
+  const familySection = taxonomy.match(/function FamilyManualSection\([\s\S]*?\n}\n\nexport default/)?.[0] ?? "";
+  assert.match(familySection, /Technical definition/);
+  assert.match(familySection, /Governing invariant/);
+  assert.match(familySection, /Classification boundary/);
+  assert.doesNotMatch(familySection, /success_condition|failure_condition|vigil-taxonomy-polarity-grid/);
 });
 
 test("public taxonomy naming uses VIGIL Observatory Alignment Taxonomy", async () => {
