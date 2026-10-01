@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
+import { loadCurrentHarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 const methodologyReferences = [
   {
@@ -81,6 +83,16 @@ const harmImpactRail = [
 ];
 
 export default function VigilSeverityMethodology() {
+  const [methodologyVersion, setMethodologyVersion] = useState<string>();
+
+  useEffect(() => {
+    let cancelled = false;
+    void loadCurrentHarmMethodologyMetadata().then((metadata) => {
+      if (!cancelled) setMethodologyVersion(metadata?.version);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
   return <Shell>
     <main className="vigil-about-page vigil-severity-methodology-page home-menu-page document-page">
       <VigilObservatoryMasthead
@@ -95,7 +107,7 @@ export default function VigilSeverityMethodology() {
         visual="harm"
         metadata={[
           { label: "Method", value: "VIGIL-HIM", mono: true },
-          { label: "Version", value: "1.0.1", mono: true },
+          { label: "Version", value: methodologyVersion ?? "Current", mono: true },
           { label: "Dimensions", value: "11" },
           { label: "Severity bands", value: "S1–S5 · SU", mono: true },
         ]}
@@ -159,7 +171,7 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-references-heading">Methodology source trail</h2>
             </div>
             <div className="document-reading">
-              <p>The references below are the external sources registered against VIGIL-HIM 1.0.1.</p>
+              <p>The references below are the external sources registered against {methodologyVersion ? `VIGIL-HIM ${methodologyVersion}` : "the current VIGIL-HIM release"} published on VIGIL main.</p>
             </div>
             <ol className="vigil-methodology-reference-list">
               {methodologyReferences.map((reference, index) => <li key={reference.id} className="vigil-methodology-reference-item">
