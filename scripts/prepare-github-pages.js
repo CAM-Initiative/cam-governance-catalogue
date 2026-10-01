@@ -176,7 +176,7 @@ const staticRoutes = [
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
   ["/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
-  ["/observatory/harm-impact-assessment", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.0.1 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
+  ["/observatory/harm-impact-assessment", "VIGIL Observatory Harm Impact Assessment", "The current VIGIL-HIM harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
   ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, compliance and references."],
   ["/observatory/alignment-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
   ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
@@ -275,6 +275,11 @@ if (taxonomyFamilies.length) {
     <p>VIGIL Observatory</p>
     <h1>VIGIL Observatory Alignment Taxonomy</h1>
     <p>A structured alignment taxonomy for recurring AI governance boundaries, organised through stable Fidelity Families and selectable Fidelity Classes.</p>
+    <section aria-labelledby="taxonomy-reading-heading">
+      <h2 id="taxonomy-reading-heading">How to read a Fidelity Class</h2>
+      <p>A Fidelity Class defines a governed property rather than a failure outcome. Occurrence evidence may establish that the invariant held, that the failure condition occurred, or that the evidence materially engages the boundary without establishing either polarity.</p>
+      <p>Both success and failure require affirmative evidence; absence of evidence for one state does not establish the other.</p>
+    </section>
     <h2>Fidelity families</h2>
     <ul>${taxonomyFamilies.map(({ document }) => {
       const family = document?.family;
@@ -287,7 +292,7 @@ if (taxonomyFamilies.length) {
     pageHtml({
       route: "/observatory/alignment-taxonomy",
       title: "VIGIL Observatory Alignment Taxonomy",
-      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and Fidelity Classes, recognition criteria, exclusions and governing invariants.",
+      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and neutral Fidelity Classes, governed invariants and explicit occurrence conditions.",
       body: taxonomyIndexBody,
     }),
   );
@@ -430,6 +435,12 @@ for (const { document } of taxonomyFamilies) {
     );
     const classCaseExamples = taxonomyCaseExamplesForClass(item.class_id);
     const classInvariantExemplars = Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : [];
+    const classSuccessfulExemplars = classInvariantExemplars.filter((exemplar) => exemplar?.exemplar_type === "successful-invariant");
+    const classAmbiguousExemplars = classInvariantExemplars.filter((exemplar) => exemplar?.exemplar_type === "ambiguous-boundary");
+    const classSuccessRecognition = Array.isArray(item.success_recognition?.required_conditions) ? item.success_recognition.required_conditions : [];
+    const classFailureRecognition = Array.isArray(item.failure_recognition?.required_conditions)
+      ? item.failure_recognition.required_conditions
+      : Array.isArray(item.recognition?.required_conditions) ? item.recognition.required_conditions : [];
     const classExternalReferences = Array.isArray(item.external_references) ? item.external_references : [];
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Observatory Alignment Taxonomy</p>
@@ -443,14 +454,15 @@ for (const { document } of taxonomyFamilies) {
       </dl>
       <h2>Technical definition</h2>
       <p>${escapeHtml(item.definition || "Not stated.")}</p>
-      <h2>Recognition criteria</h2>
-      ${listHtml(item.recognition?.required_conditions)}
-      <h2>Exclusions</h2>
-      ${listHtml(item.exclusions)}
-      <h2>Linked Case Files</h2>
+      ${item.invariant ? `<h2>Governing invariant</h2><blockquote>${escapeHtml(item.invariant)}</blockquote>` : ""}
+      ${item.success_condition || item.success_plain_english || classSuccessRecognition.length ? `<h2>Invariant held</h2><h3>Success condition</h3>${item.success_plain_english ? `<p><strong>${escapeHtml(item.success_plain_english)}</strong></p>` : ""}${item.success_condition ? `<p>${escapeHtml(item.success_condition)}</p>` : ""}${classSuccessRecognition.length ? `<h3>Positive recognition</h3>${listHtml(classSuccessRecognition)}` : ""}` : ""}
+      ${item.failure_condition || item.failure_plain_english || classFailureRecognition.length ? `<h2>Failure established</h2><h3>Failure condition</h3>${item.failure_plain_english ? `<p><strong>${escapeHtml(item.failure_plain_english)}</strong></p>` : ""}${item.failure_condition ? `<p>${escapeHtml(item.failure_condition)}</p>` : ""}${classFailureRecognition.length ? `<h3>Failure recognition</h3>${listHtml(classFailureRecognition)}` : ""}` : ""}
+      ${Array.isArray(item.exclusions) && item.exclusions.length ? `<h2>Exclusions from failure recognition</h2>${listHtml(item.exclusions)}` : ""}
+      <h2>Failure occurrences</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
-      ${classInvariantExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
-      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
+      ${classSuccessfulExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classSuccessfulExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classAmbiguousExemplars.length ? `<h2>Ambiguous-boundary examples</h2><ul>${classAmbiguousExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,
