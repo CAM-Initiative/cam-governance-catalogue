@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Synthetic Conversational Turn-State Coordination | VIGIL Observatory Fidelity Class | CAM Initiative</title>
-    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000056: Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational f…" />
+    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000056: Synthetic participants coordinate who is speaking, yielding, awaiting a response and taking the next turn." />
     <link rel="canonical" href="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000056/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="CAM Initiative" />
     <meta property="og:title" content="Synthetic Conversational Turn-State Coordination | VIGIL Observatory Fidelity Class | CAM Initiative" />
-    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000056: Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational f…" />
+    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000056: Synthetic participants coordinate who is speaking, yielding, awaiting a response and taking the next turn." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000056/" />
     <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
     <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
@@ -19,7 +19,7 @@
     <meta property="og:image:alt" content="CAM Initiative gold seal" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Synthetic Conversational Turn-State Coordination | VIGIL Observatory Fidelity Class | CAM Initiative" />
-    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000056: Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational f…" />
+    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000056: Synthetic participants coordinate who is speaking, yielding, awaiting a response and taking the next turn." />
     <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
     <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
@@ -59,7 +59,7 @@
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Observatory Alignment Taxonomy</p>
       <h1>Synthetic Conversational Turn-State Coordination</h1>
-      <p>Multiple synthetic participants share a conversation but fail to recognise, yield, sequence, or coordinate turns, so the conversational floor breaks down.</p>
+      <p>Synthetic participants coordinate who is speaking, yielding, awaiting a response and taking the next turn.</p>
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000056</dd>
         <dt>Semantic code</dt><dd>SYNTHETIC_CONVERSATIONAL_TURN_STATE_COORDINATION</dd>
@@ -67,15 +67,15 @@
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
-      <p>A failure in which two or more synthetic agents participating in the same conversational interaction do not maintain or use sufficient shared turn-state, speaker-state, or conversational-floor state to determine when another participant is speaking, has yielded, is awaiting a response, or should receive the next turn, causing materially incoherent turn allocation or continuation.</p>
+      <p>The property by which co-participating synthetic agents maintain and use sufficient shared speaker, turn and conversational-floor state for coherent allocation, yielding, handoff and continuation, including bounded clarification or collision recovery and explicitly coordinated parallel participation.</p>
       <h2>Recognition criteria</h2>
-      <ul><li>Two or more synthetic participants are participating in the same conversational context.</li><li>Coherent continuation requires coordination of speaker identity, active-turn state, turn completion, yielding, or next-speaker allocation.</li><li>One or more synthetic participants fail to recognise or act on the relevant shared turn state.</li><li>The failure produces repeated answers, simultaneous or colliding responses, inappropriate interruption, inappropriate silence, or another material conversational-floor coordination breakdown.</li></ul>
+      <p>None stated.</p>
       <h2>Exclusions</h2>
       <ul><li>A single synthetic participant gives an incorrect or irrelevant answer while turn allocation remains coherent.</li><li>Ordinary network or inference latency delays a response without losing or corrupting turn state.</li><li>The primary failure is loss of prior conversational content or persona continuity rather than allocation of the current conversational floor.</li><li>Simultaneous output is intentional and supported by the interaction design.</li><li>An authorised reviewer cannot access audiovisual evidence of an otherwise bounded event; evidence accessibility is classified separately.</li></ul>
       <h2>Linked Case Files</h2>
       <ul><li><a href="/observatory/cases/VIGIL-INC-000010/"><code>VIGIL-INC-000010</code> — Two ChatGPT voice agents responded to one human speaker without arbitration</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000078/"><code>VIGIL-INC-000078</code> — Three ChatGPT voice systems repeated responses without synthetic turn-taking</a> <span>Failure occurred · medium confidence</span></li></ul>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>AI Communications · 2022-09-15 · research evidence</p><p><strong><a href="https://doi.org/10.3233/AIC-220147" rel="noreferrer">Conversational AI for multi-agent communication in Natural Language</a></strong></p><p><strong>Evidence note.</strong> Lemon identifies dialogue-state tracking, live issues, participant state and turn-taking as core coordination problems in multi-agent conversational systems. This independently supports explicit conversational turn-state coordination; VIGIL&#39;s class is narrower and requires synthetic or mediated turn state to become materially miscoordinated.</p></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>AI Communications · 2022-09-15 · research evidence</p><p><strong><a href="https://doi.org/10.3233/AIC-220147" rel="noreferrer">Conversational AI for multi-agent communication in Natural Language</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Shared floor and turn allocation. Does not prescribe synthetic-agent collision recovery or all mandatory clarification conditions. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
   </body>
 </html>

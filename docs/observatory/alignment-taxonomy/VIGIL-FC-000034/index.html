@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Continuity Anchoring | VIGIL Observatory Fidelity Class | CAM Initiative</title>
-    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000034: The work exists, but it is no longer reliably tied to the task, checkpoint, or context needed to resume it." />
+    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000034: Continuation state has a stable, durable identity tying it to the correct task, checkpoint, dependencies and resumption point." />
     <link rel="canonical" href="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000034/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="CAM Initiative" />
     <meta property="og:title" content="Continuity Anchoring | VIGIL Observatory Fidelity Class | CAM Initiative" />
-    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000034: The work exists, but it is no longer reliably tied to the task, checkpoint, or context needed to resume it." />
+    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000034: Continuation state has a stable, durable identity tying it to the correct task, checkpoint, dependencies and resumption point." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000034/" />
     <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
     <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
@@ -19,7 +19,7 @@
     <meta property="og:image:alt" content="CAM Initiative gold seal" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Continuity Anchoring | VIGIL Observatory Fidelity Class | CAM Initiative" />
-    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000034: The work exists, but it is no longer reliably tied to the task, checkpoint, or context needed to resume it." />
+    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000034: Continuation state has a stable, durable identity tying it to the correct task, checkpoint, dependencies and resumption point." />
     <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
     <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
@@ -59,7 +59,7 @@
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Observatory Alignment Taxonomy</p>
       <h1>Continuity Anchoring</h1>
-      <p>The work exists, but it is no longer reliably tied to the task, checkpoint, or context needed to resume it.</p>
+      <p>Continuation state has a stable, durable identity tying it to the correct task, checkpoint, dependencies and resumption point.</p>
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000034</dd>
         <dt>Semantic code</dt><dd>CONTINUITY_ANCHORING</dd>
@@ -67,15 +67,15 @@
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
-      <p>A failure in which material work state lacks or loses the stable identity, checkpoint, task binding, dependency binding, or reference needed to locate and resume the correct continuation state after interruption or transition.</p>
+      <p>The property by which material work state is locatable and resumable through stable, unique and durable anchors binding the intended task, checkpoint, dependency set, relevant participants and continuation point, with explicit resolution of missing or ambiguous bindings.</p>
       <h2>Recognition criteria</h2>
-      <ul><li>Material state exists or is expected to support later continuation.</li><li>A stable anchor is required to bind that state to the correct task, checkpoint, dependency set, or continuation point.</li><li>The anchor is absent, lost, ambiguous, or detached, preventing reliable resumption.</li></ul>
+      <p>None stated.</p>
       <h2>Exclusions</h2>
       <ul><li>The state is correctly anchored but its contents were not persisted.</li><li>The correct state is recoverable and only the user-facing label is inconvenient.</li><li>The failure concerns attribution of authorship rather than resumption of work.</li></ul>
       <h2>Linked Case Files</h2>
       <p>No Case Files currently evidence failure for this class.</p>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Microsoft · 2026-08-10 · authoritative guidance</p><p><strong><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints" rel="noreferrer">Microsoft Agent Framework Workflows - Checkpoints</a></strong></p><p><strong>Evidence note.</strong> Microsoft&#39;s Agent Framework requires rehydrated workflows to preserve the topology and executor identities of the workflow that created the checkpoint, and states that changing those identities makes the rebuilt workflow incompatible with the checkpoint. This directly supports the need for a stable continuation anchor binding persisted state to the correct resumable workflow; VIGIL generalises that structural requirement beyond this framework.</p></li><li><p>ACM Computing Surveys · 2002-09-01 · research evidence</p><p><strong><a href="https://doi.org/10.1145/568522.568525" rel="noreferrer">A survey of rollback-recovery protocols in message-passing systems</a></strong></p><p><strong>Evidence note.</strong> Elnozahy et al. survey checkpoint-based and log-based rollback-recovery protocols in which consistent checkpoints anchor system restoration. This independently supports the need for trustworthy continuity anchors; VIGIL&#39;s class applies the principle to governed work-state continuity rather than only distributed-system fault recovery.</p></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Microsoft · 2026-08-10 · authoritative guidance</p><p><strong><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints" rel="noreferrer">Microsoft Agent Framework Workflows - Checkpoints</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Continuation from recorded checkpoints. No stable durable anchor guarantee or mandatory ambiguity halt. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>ACM Computing Surveys · 2002-09-01 · research evidence</p><p><strong><a href="https://doi.org/10.1145/568522.568525" rel="noreferrer">A survey of rollback-recovery protocols in message-passing systems</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Consistent recovery points. Does not govern task identity ambiguity. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
   </body>
 </html>
