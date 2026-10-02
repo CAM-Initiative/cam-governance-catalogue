@@ -12,6 +12,8 @@ type ClauseAssessment = {
   sourceParaphrase?: string;
   recoveredInvariant?: string;
   relationships: ClauseRelationship[];
+  status?: string;
+  note?: string;
 };
 
 type Props = {
@@ -55,7 +57,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
     const recoveredInvariant = text(value.recovered_invariant_interpretation);
     if (!sourceAnchor && !sourceParaphrase && !recoveredInvariant) return [];
 
-    return [{ sourceAnchor, sourceParaphrase, recoveredInvariant, relationships }];
+    return [{ sourceAnchor, sourceParaphrase, recoveredInvariant, relationships, status: text(value.adjudication_status), note: text(value.adjudication_note) }];
   });
 }
 
@@ -113,6 +115,8 @@ function RelationshipStack({
   render,
 }: {
   relationships: ClauseRelationship[];
+  status?: string;
+  note?: string;
   render: (relationship: ClauseRelationship, index: number) => ReactNode;
 }) {
   if (!relationships.length) return <span>—</span>;
@@ -149,6 +153,8 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
           {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
             <td data-label="Incident observation"><SourceClause clause={clause} /></td>
             <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
+              <p><strong>{({ mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap", adjudication_incomplete: "Adjudication incomplete" } as Record<string, string>)[clause.status ?? ""] ?? "Adjudication status not stated"}</strong></p>
+              {clause.note && <p>{clause.note}</p>}
               <RelationshipStack
                 relationships={clause.relationships}
                 render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}

@@ -30,7 +30,7 @@ const [
 assert.match(caseFile, /CaseTaxonomyClassification/);
 assert.match(caseFile, /CaseTaxonomyCompliance/);
 assert.match(caseFile, /STANDARD_VIGIL_ASSESSMENT_LIMITS/);
-assert.match(await readFile(new URL("../src/components/vigil/CaseTaxonomyClassification.tsx", import.meta.url), "utf8"), /occurrence-level runtime lens[\s\S]*do not assess organisation-wide governance programmes or overall legal or standards compliance/);
+assert.match(await readFile(new URL("../src/lib/vigilOccurrenceRequirements.mjs", import.meta.url), "utf8"), /independently[\s\S]*do not assess organisation-wide governance programmes or overall legal or standards compliance/);
 assert.match(caseFile, /ExternalAlignmentClassification/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
@@ -92,7 +92,7 @@ assert.match(report, /Adjudication is incomplete\./);
 assert.match(report, /has not assigned a whole-Incident alignment classification/);
 assert.match(report, /The adjudicated governance boundary held\./);
 assert.match(report, /This Case File is fully adjudicated against the current taxonomy/);
-assert.match(report, /The governing invariants assessed did not demonstrate alignment\./);
+assert.match(report, /Failure is evidenced at an assessed governance boundary\./);
 assert.match(report, /Alignment outcome · Failure evidenced/);
 assert.match(report, /specific governance boundary held under the conditions assessed/);
 assert.match(report, /className="report-section-header"/);

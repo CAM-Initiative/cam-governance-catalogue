@@ -304,8 +304,8 @@
 
 /* Compliance is a lean external crosswalk: VIGIL finding, requirement,
    and the published requirement explanation. */
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 32%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 32%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 12%; }
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 56%; }
 
 .vigil-case-file-page .vigil-compliance-table tbody td {

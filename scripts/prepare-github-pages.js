@@ -1,3 +1,4 @@
+import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
 import {
   copyFileSync,
   existsSync,
@@ -345,6 +346,11 @@ function publicMappingRoleLabel(role) {
 
 function publicAlignmentOutcome(record) {
   if (record.adjudication_coverage?.status === "partial") return "Adjudication incomplete";
+  if (record.classification_status === "classification-disputed") return "Disputed";
+  if (record.classification_status === "requires-human-review") return "Under review";
+  if (record.classification_status === "unclassified") return "Unclassified";
+  const roles = [record.primary_classification?.classification_role || record.classification_role, ...(record.secondary_classifications || []).map(item => item.classification_role)].filter(Boolean);
+  if (new Set(roles).size > 1) return "Mixed alignment";
   if (record.classification_role === "failure-occurrence") return "Failure evidenced";
   if (record.classification_role === "successful-invariant") return "Invariant held";
   if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
@@ -481,8 +487,41 @@ if (existsSync(caseRoot)) {
   }
 }
 
+// Canonical assessment payloads are read at publication time; the lightweight index
+// is not expanded into a duplicate store of governed analysis.
+const canonicalCases = new Map();
+let occurrenceRequirements = [];
+try {
+  const response = await fetch("https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/external_governance/requirements/requirements.json");
+  if (!response.ok) throw new Error(`Requirements HTTP ${response.status}`);
+  const payload = await response.json();
+  occurrenceRequirements = Array.isArray(payload) ? payload : payload.requirements || [];
+} catch (error) {
+  console.warn(`Requirement descriptions unavailable: ${error.message}`);
+}
+for (let start = 0; start < incidentRecords.length; start += 8) {
+  await Promise.all(incidentRecords.slice(start, start + 8).map(async record => {
+    const url = record.raw_url || `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/incidents/${record.id}.json`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Cannot publish current Case File ${record.id}: HTTP ${response.status}`);
+    canonicalCases.set(record.id, await response.json());
+  }));
+}
+function occurrenceAssessmentsHtml(raw) {
+  const rows = occurrenceRequirementRows(raw, occurrenceRequirements);
+  if (!rows.length) return "<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>";
+  const table = (items, title) => `<h3>${escapeHtml(title)}</h3>${items.length ? `<table><thead><tr><th>External requirement</th><th>${items[0].applicable ? "VIGIL Finding" : "Applicability"}</th><th>Evidence and assessment basis</th></tr></thead><tbody>${items.map(row => `<tr><td><strong>${escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p><p>${escapeHtml(row.normativeForce || "")}</p></td><td>${escapeHtml(row.finding || row.applicability)}</td><td><p>Applicability: ${escapeHtml(row.applicabilityBasis)}</p>${row.findingBasis ? `<p>Finding: ${escapeHtml(row.findingBasis)}</p>` : ""}${row.evidence.map(source => `<p>${source.url ? `<a href="${escapeHtml(source.url)}">${escapeHtml(source.title)}</a>` : escapeHtml(source.title)}</p>`).join("")}</td></tr>`).join("")}</tbody></table>` : "<p>None recorded.</p>"}`;
+  return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table(rows.filter(row => row.applicable), "Applicable requirements and findings")}${table(rows.filter(row => !row.applicable), "Applicability unresolved or not applicable")}</section>`;
+}
+function clauseAssessmentsHtml(raw) {
+  const clauses = raw.vigil_assessment?.source_clause_analysis?.clauses || [];
+  const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
+  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article><p>${escapeHtml(clause.source_anchor || clause.source_paraphrase || "")}</p><p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? `<p>${escapeHtml(clause.adjudication_note)}</p>` : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<p>${escapeHtml(item.rationale)}</p>` : "").join("")}</article>`).join("")}</section>`;
+}
+
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
+  const canonical = canonicalCases.get(record.id);
   const title = `${record.id}: ${record.title || "VIGIL Observatory Incident"} | VIGIL Observatory`;
   const summary = record.summary || record.title || "VIGIL Observatory AI incident case file.";
   const description = conciseDescription(summary, "VIGIL Observatory AI incident case file.");
@@ -498,7 +537,10 @@ for (const record of incidentRecords) {
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
-    ${externalAssessmentsHtml(record)}
+    ${externalAssessmentsHtml(canonical)}
+    ${clauseAssessmentsHtml(canonical)}
+    ${occurrenceAssessmentsHtml(canonical)}
+    <section><h2>Conclusion</h2><p>${escapeHtml(canonical.vigil_assessment?.governance_interpretation || "")}</p><h3>Governance significance</h3><p>${escapeHtml(canonical.vigil_assessment?.significance_to_cam || "")}</p></section>
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }
@@ -532,6 +574,7 @@ function sitemapLastmod(value) {
 const sitemapLastmodByRoute = new Map();
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
+  const canonical = canonicalCases.get(record.id);
   const lastmod = sitemapLastmod(record.record_last_updated);
   if (lastmod) sitemapLastmodByRoute.set(route, lastmod);
 }

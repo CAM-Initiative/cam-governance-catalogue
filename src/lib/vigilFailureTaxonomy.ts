@@ -72,6 +72,8 @@ export type FailureTaxonomySubtype = {
   plain_english?: string;
   definition?: string;
   recognition?: FailureTaxonomyRecognition;
+  failure_recognition?: FailureTaxonomyRecognition;
+  success_recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   aliases?: string[];
@@ -90,6 +92,8 @@ export type FailureTaxonomyClass = {
   definition: string;
   invariant?: string;
   recognition?: FailureTaxonomyRecognition;
+  failure_recognition?: FailureTaxonomyRecognition;
+  success_recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   relationships?: FailureTaxonomyRelationship[];

@@ -1369,8 +1369,8 @@
 .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(3) { width: 23%; }
 .vigil-deterministic-report-host .vigil-external-alignment-classification-table .vigil-classification-table thead th:nth-child(4) { width: 40%; }
 
-.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
-.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(2) { width: 32%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(1) { width: 32%; }
+.vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(2) { width: 12%; }
 .vigil-deterministic-report-host .vigil-compliance-table thead th:nth-child(3) { width: 56%; }
 
 .vigil-deterministic-report-host .vigil-classification-table tbody td {
