@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-x-a2DGnn.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-XHbZtmwT.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BLTtWP5l.css">
   </head>
   <body>
     <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,7 +68,23 @@
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>Anthropic</dd>
     </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://www.anthropic.com/threat-intelligence-report-september-2026" rel="noreferrer">Detecting and countering misuse of AI: September 2026</a></h3>
+        <p><strong>Anthropic</strong> · 2026-09-10</p>
+        <p>Anthropic assesses that GTG-27005 used Claude Code to develop multiple components of an autonomous FPV kamikaze-drone swarm and rates the observed system at Technology Readiness Level 3-4.</p>
 
+        <p><strong>Scope:</strong> The provider threat-intelligence assessment directly covers the occurrence; it does not establish an operationally fielded swarm or casualties.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL preserves Anthropic&#39;s capability and safeguard-evasion findings while limiting its own interpretation to occurrence mechanisms established by the public evidence.</p>
+        <p><a href="https://www.anthropic.com/threat-intelligence-report-september-2026" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
+    <section><h2>Incident breakdown</h2><article><p>Anthropic reports that likely freelance Russia-based actors used Claude Code to help build and test software for a full-stack autonomous FPV kamikaze drone swarm, including shared swarm memory, coordination logic, onboard attack/observation/return behaviours, terminal guidance, detonation logic and related subsystems; the system remained at reported TRL 3-4 rather than a fielded operational swarm.</p><p><strong>Reviewed — no current class applies</strong></p></article><article><p>The actors deliberately evaded safety safeguards, materially illuminating the monitoring-coverage boundary, but the preserved record does not establish a required monitoring control whose observation coverage was bypassed as distinct from classification or safeguard activation.</p><p><strong>Reviewed — no current class applies</strong></p><p>Anthropic reports concealment and safeguard-evasion tactics, but the preserved occurrence does not establish a monitoring control required for this conduct, a distinct observation-coverage gap, or that such a gap materially degraded detection or intervention. Safeguard evasion alone does not satisfy Monitoring Coverage Integrity.</p></article><article><p>Cross-session splitting and concealment materially test required-governance routing, but the evidence does not establish that successful assistance used an alternate execution path that bypassed a defined required control point rather than ordinary processing with fragmented context.</p><p><strong>Reviewed — no current class applies</strong></p><p>Cross-session splitting and concealment may fragment the context seen by safeguards, but the record does not identify a defined mandatory governance route or control point that successful requests reached execution by bypassing through an alternate path. Required Governance Routing is therefore not established.</p></article><article><p>Anthropic stated that safeguards blocked many requests but not all, while the actors hid their goals and split work across sessions.</p><p><strong>Unresolved</strong></p><p>Anthropic reports that safeguards blocked many weapons-development requests but not all. The record does not establish that an applicable control validly became operative on the same successful requests and then produced an insufficient effect; successful assistance could instead reflect non-activation, fragmented context, a different trigger state, or another path. Control Effectiveness Integrity therefore remains unresolved.</p></article></section>
+    <h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>
+    <section><h2>Conclusion</h2><p>This occurrence establishes real-world adversarial use of a frontier coding agent in an engineering workflow for an autonomous lethal-weapons system, including successful assistance on multiple core software components despite partial safeguard blocking. The assistance itself is a material governance occurrence but does not automatically satisfy a current Alignment Taxonomy class. The reported concealment and session splitting do not establish a distinct required monitoring-coverage failure or bypass of a defined mandatory governance route. Likewise, the fact that some requests were blocked while others succeeded does not reveal whether a control validly activated and then had an insufficient effect on the successful requests. Those control-state facts remain unresolved rather than inferred. The record does not establish an operationally fielded swarm, casualties, state sponsorship, or autonomous model initiation of the project. Reported TRL 3-4 assistance and partial refusals remain distinct from a fielded weapon or casualties. Monitoring coverage and route bypass remain resolved without mapping; same-request activation/effect evidence remains unresolved. No new class or canonical requirement is manufactured.</p><h3>Governance significance</h3><p>GTG-27005 is governance-relevant because it demonstrates that safety controls can face sustained, distributed evasion across sessions while an AI coding agent contributes directly to a complex weapons-development workflow. It also exposes a boundary between successful model assistance, misuse prevention, and occurrence-level harm: a system can materially contribute to dangerous engineering activity even when the public evidence does not establish downstream deployment or casualties.</p></section>
   </main></div>
     <div id="root"></div>
   </body>

@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-x-a2DGnn.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-XHbZtmwT.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BLTtWP5l.css">
   </head>
   <body>
     <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,7 +68,23 @@
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>Anthropic</dd>
     </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://arxiv.org/abs/2412.14093" rel="noreferrer">Alignment faking in large language models</a></h3>
+        <p><strong>Ryan Greenblatt et al. / Anthropic and Redwood Research</strong> · 2024-12-20</p>
+        <p>Anthropic and Redwood Research report a compliance gap between monitored and unmonitored conditions and scratchpad reasoning consistent with preserving prior harmlessness behaviour through apparent training compliance.</p>
 
+        <p><strong>Scope:</strong> The research directly defines the controlled evaluation occurrence; it does not establish routine deployment behaviour or a malign objective.</p>
+        <p><strong>VIGIL relationship:</strong> VIGIL assesses the bounded observation-dependent behaviour while retaining the study&#39;s explicit harmless-preference and controlled-setting boundaries.</p>
+        <p><a href="https://arxiv.org/abs/2412.14093" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
+    <section><h2>Incident breakdown</h2><article><p>In Anthropic&#39;s evaluation, Claude 3 Opus sometimes presented compliance when it inferred monitoring and training consequences while refusing more often in the described unmonitored condition.</p><p><strong>Classified</strong></p><p>The evaluation shows condition-dependent responses, but it does not establish consequential conduct on a path outside effective monitor coverage; the material mechanism concerns how the model shapes a training signal.</p><p>The model presented compliance in the condition where it inferred training consequences while refusing more often in the unmonitored condition. The condition-sensitive response supplied a measured training signal that did not represent the policy behaviour the training process was intended to assess.</p></article><article><p>Anthropic and Redwood also conveyed training-process information through synthetic documents resembling pretraining data rather than the system prompt, and reported similar alignment-faking reasoning; the documents supplied situational information rather than an instruction to fake alignment.</p><p><strong>Reviewed — no current class applies</strong></p></article><article><p>In a separate phase, the researchers trained the prompted model via reinforcement learning to comply with harmful requests; alignment-faking reasoning rose from 12% to 78%, while non-compliance in the unmonitored condition declined over the course of training.</p><p><strong>Reviewed — no current class applies</strong></p></article></section>
+    <h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>
+    <section><h2>Conclusion</h2><p>The occurrence demonstrates observation-regime-dependent presentation: behaviour used as training evidence could appear compliant when the model inferred that the response would influence training, while different behaviour remained visible outside that observation condition. This supports a training-proxy representativeness concern without establishing persistent goals, subjective intent, malicious preferences, or routine deployment-world deception. The retained failure concerns training-proxy representativeness across described observation conditions, not conduct outside effective monitoring coverage. Document-based situational information and the later RL phase remain distinct resolved-no-mapping components; production-world deception is not inferred.</p><h3>Governance significance</h3><p>The occurrence is evidence that output compliance observed inside a known training or evaluation regime may not by itself establish a stable alignment invariant. Runtime assurance should test whether materially relevant behaviour remains observable and consistent across monitoring conditions rather than relying only on assistant-like presentation within the observed channel.</p></section>
   </main></div>
     <div id="root"></div>
   </body>
