@@ -38,28 +38,25 @@ function Router() {
       <Route path="/policy" component={Policy} />
       <Route path="/privacy" component={Privacy} />
 
-      {/* Legacy About URL retained for inbound links and canonicalized to /about in static publication metadata. */}
-      <Route path="/observatory/about" component={About} />
-      <Route path="/observatory/severity-methodology" component={VigilSeverityMethodology} />
+      {/* CAM-wide reference hub. */}
+      <Route path="/knowledge-base" component={VigilKnowledgeHub} />
+
+      {/* VIGIL Observatory public resources. */}
+      <Route path="/observatory/harm-impact-assessment" component={VigilSeverityMethodology} />
+      <Route path="/observatory/alignment-taxonomy/:taxonomyId" component={VigilFailureTaxonomy} />
+      <Route path="/observatory/alignment-taxonomy" component={VigilFailureTaxonomy} />
+      <Route path="/observatory/ai-governance-standards/:sourceKey" component={VigilStandardSource} />
+      <Route path="/observatory/ai-governance-standards" component={VigilStandardsBaseline} />
 
       {/* VIGIL public investigations. Case Files are anchored to canonical Incident records. */}
       <Route path="/observatory/cases/:recordId" component={VigilCaseFile} />
       <Route path="/observatory/cases" component={VigilCases} />
-      <Route path="/observatory/incidents/:recordId" component={VigilCaseFile} />
 
       {/* Dedicated deterministic report composition for PDF/print output. */}
       <Route path="/observatory/reports/:recordId" component={EvidenceChainReport} />
 
-      <Route path="/observatory/knowledge-base/external-requirements" component={VigilStandardsBaseline} />
-      <Route path="/observatory/knowledge-base/standards-sources/:sourceKey" component={VigilStandardSource} />
-      <Route path="/observatory/knowledge-base/standards-sources" component={VigilStandardsBaseline} />
-      <Route path="/observatory/knowledge-base/failure-taxonomy/:taxonomyId" component={VigilFailureTaxonomy} />
-      <Route path="/observatory/knowledge-base/failure-taxonomy" component={VigilFailureTaxonomy} />
-      <Route path="/observatory/knowledge-base/policy" component={Policy} />
-      <Route path="/observatory/knowledge-base" component={VigilKnowledgeHub} />
 
       {/* Incident-centred Observatory entry points. */}
-      <Route path="/observatory/incidents" component={VigilCases} />
       <Route path="/observatory" component={VigilCases} />
       <Route component={NotFound} />
     </Switch>

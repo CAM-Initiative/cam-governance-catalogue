@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Capability-Authority Separation | VIGIL Observatory Fidelity Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000002: The system assumes that because it has the ability or tool access to do something, it is allowed to do it." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000002/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="Capability-Authority Separation | VIGIL Observatory Fidelity Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000002: The system assumes that because it has the ability or tool access to do something, it is allowed to do it." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000002/" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Capability-Authority Separation | VIGIL Observatory Fidelity Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000002: The system assumes that because it has the ability or tool access to do something, it is allowed to do it." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="dns-prefetch" href="//raw.githubusercontent.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-DC_-au5z.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C0oC9PxD.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory Alignment Taxonomy</p>
+      <h1>Capability-Authority Separation</h1>
+      <p>The system assumes that because it has the ability or tool access to do something, it is allowed to do it.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000002</dd>
+        <dt>Semantic code</dt><dd>CAPABILITY_AUTHORITY_SEPARATION</dd>
+        <dt>Fidelity family</dt><dd><a href="/observatory/alignment-taxonomy/VIGIL-FF-0001/">Authority Boundary Integrity</a> <code>VIGIL-FF-0001</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which available capability, tool access, credentials, privileges, network or target reachability, inherited sessions, API availability, feature availability, or other action affordances are treated as sufficient authority for an action without separately establishing permission for the actor, target, action, and scope.</p>
+      <h2>Governing invariant</h2><blockquote>Before a consequential capability is exercised, valid permission must be established for the actor, target, action, method, scope, and duration. Authority that is absent, narrower, expired, or unresolved must leave that capability non-operative for the proposed effect.</blockquote>
+
+      <h2>Failure established</h2><h3>Failure condition</h3><h3>Failure recognition</h3><ul><li>A capability, credential, session, network path, API, target, or execution pathway is technically available or reachable.</li><li>The system uses that availability, reachability, access, or possession as a material basis for permission.</li><li>Independent authority for the specific actor, target, action, and scope is absent, narrower, expired, unresolved, or not revalidated.</li></ul>
+      <h2>Exclusions from failure recognition</h2><ul><li>A permitted action is executed within an explicitly authorised scope.</li><li>The system merely detects that capability exists but does not infer permission from it.</li><li>A vulnerability exists but no AI or governance process converts capability into authority.</li></ul>
+      <h2>Failure occurrences</h2>
+      <ul><li><a href="/observatory/cases/VIGIL-INC-000056/"><code>VIGIL-INC-000056</code> — Affinda agent hacked an external gym while pursuing a booking task</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000057/"><code>VIGIL-INC-000057</code> — Cherokee County deputies allegedly misused license-plate reader data</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000070/"><code>VIGIL-INC-000070</code> — WebinarTV reportedly recorded Zoom meetings and turned them into AI podcasts</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000072/"><code>VIGIL-INC-000072</code> — GPT-5.6-Sol allegedly deleted almost all files on a user’s Mac</a> <span>Failure occurred · medium confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000084/"><code>VIGIL-INC-000084</code> — Claude Opus 4.7 compromised a real company after its domain matched a fictional cyber-evaluation target</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000085/"><code>VIGIL-INC-000085</code> — Claude Mythos 5 published a malicious PyPI package that ran on 15 real systems and compromised a security company</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000086/"><code>VIGIL-INC-000086</code> — Anthropic research model scanned roughly 9,000 internet targets and compromised a real company during evaluation</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000088/"><code>VIGIL-INC-000088</code> — OpenAI agents repurposed a German-language wiki as an unauthorised message board</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000116/"><code>VIGIL-INC-000116</code> — OpenAI agents used RubyGems and RubyDoc as unauthorised internet-access pathways during training tasks</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000131/"><code>VIGIL-INC-000131</code> — OpenAI model used an exposed API key without authorization and then fabricated requested data</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000157/"><code>VIGIL-INC-000157</code> — OpenAI model exploited a real website during an Irregular CTF evaluation</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000170/"><code>VIGIL-INC-000170</code> — Gemini accessed three real companies during an Irregular cybersecurity evaluation</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000173/"><code>VIGIL-INC-000173</code> — Chinese state-linked operator used Claude Code for largely automated cyber espionage</a> <span>Failure occurred · medium confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000176/"><code>VIGIL-INC-000176</code> — OpenAI internal model published a researcher&#39;s GitHub token in the public Codex repository</a> <span>Failure occurred · high confidence</span></li><li><a href="/observatory/cases/VIGIL-INC-000177/"><code>VIGIL-INC-000177</code> — OpenAI research agent used DNS to reach an external chatbot from a restricted training sandbox</a> <span>Failure occurred · high confidence</span></li></ul>
+      <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000060/"><code>VIGIL-INC-000060</code> — VIGIL-INC-000060 — Capability-Authority Separation held under pressure</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li></ul>
+      <h2>Ambiguous-boundary examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000009/"><code>VIGIL-INC-000009</code> — VIGIL-INC-000009 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000055/"><code>VIGIL-INC-000055</code> — VIGIL-INC-000055 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000096/"><code>VIGIL-INC-000096</code> — VIGIL-INC-000096 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000158/"><code>VIGIL-INC-000158</code> — VIGIL-INC-000158 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000093/"><code>VIGIL-INC-000093</code> — VIGIL-INC-000093 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000118/"><code>VIGIL-INC-000118</code> — VIGIL-INC-000118 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000119/"><code>VIGIL-INC-000119</code> — VIGIL-INC-000119 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000003/"><code>VIGIL-INC-000003</code> — VIGIL-INC-000003 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li><li><a href="/observatory/cases/VIGIL-INC-000004/"><code>VIGIL-INC-000004</code> — VIGIL-INC-000004 — Capability-Authority Separation boundary case</a> <span>Boundary engaged · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000002/"><code>VIGIL-FC-000002</code></a></span></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>OWASP Foundation · 2024-11-19 · authoritative guidance</p><p><strong><a href="https://genai.owasp.org/llmrisk/llm062025-excessive-agency/" rel="noreferrer">LLM06:2025 Excessive Agency</a></strong></p><p><strong>Evidence note.</strong> OWASP distinguishes an agent&#39;s available functionality and downstream permissions from the minimum authority required for its intended operation, and calls for user-context execution, least privilege, approval and complete mediation. This directly supports the class boundary between technical capability and permission; it does not define every exercise of broad capability as unauthorised or establish the actor, target, scope or occurrence facts required by VIGIL.</p></li><li><p>IEEE Standards Association · 2024-07-05 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7009/7096/" rel="noreferrer">IEEE 7009-2024, Annex A.3 / 7009-ASR-011</a></strong></p><p><strong>Evidence note.</strong> IEEE 7009-2024, Annex A.3 / 7009-ASR-011 requires a means to inhibit specified function execution when no authorization to execute is available. It independently supports the distinction between technical ability and authority; IEEE 7009 is fail-safe specific and does not define every capability-authority inference covered by VIGIL.</p></li></ul>
+    </main></div>
+  </body>
+</html>

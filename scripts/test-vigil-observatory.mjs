@@ -141,5 +141,6 @@ test("active routes and sync source have no retired registry-class machinery", a
   for (const retired of ["failure_modes", "observations", "research", "patch_notes", "proposals", "VIGIL.Learn.Index.json", "_canonical_markdown_body"]) assert.doesNotMatch(`${loader}\n${sync}\n${enhancements}`, new RegExp(retired, "i"));
   for (const route of ["/failure-modes", "/observatory/lessons", "/observatory/repairs", "/vigil"]) assert.equal(app.includes(`path=\"${route}`), false);
   assert.match(app, /path="\/observatory\/cases"/);
-  assert.match(app, /path="\/observatory\/knowledge-base\/failure-taxonomy"/);
+  assert.match(app, /path="\/observatory\/alignment-taxonomy"/);
+  assert.doesNotMatch(app, /path="\/observatory\/knowledge-base\/failure-taxonomy"/);
 });

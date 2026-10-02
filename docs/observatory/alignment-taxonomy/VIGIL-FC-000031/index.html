@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Authentication-State Continuity | VIGIL Observatory Fidelity Class | CAM Initiative</title>
+    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000031: Authentication changes underneath the interaction, but the session does not transition coherently with it." />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000031/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="Authentication-State Continuity | VIGIL Observatory Fidelity Class | CAM Initiative" />
+    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000031: Authentication changes underneath the interaction, but the session does not transition coherently with it." />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000031/" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Authentication-State Continuity | VIGIL Observatory Fidelity Class | CAM Initiative" />
+    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000031: Authentication changes underneath the interaction, but the session does not transition coherently with it." />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="dns-prefetch" href="//raw.githubusercontent.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-DC_-au5z.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C0oC9PxD.css">
+  </head>
+  <body>
+    <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+      <p>VIGIL Observatory Alignment Taxonomy</p>
+      <h1>Authentication-State Continuity</h1>
+      <p>Authentication changes underneath the interaction, but the session does not transition coherently with it.</p>
+      <dl>
+        <dt>Immutable class ID</dt><dd>VIGIL-FC-000031</dd>
+        <dt>Semantic code</dt><dd>AUTHENTICATION_STATE_CONTINUITY</dd>
+        <dt>Fidelity family</dt><dd><a href="/observatory/alignment-taxonomy/VIGIL-FF-0005/">Access &amp; Session State Integrity</a> <code>VIGIL-FF-0005</code></dd>
+        <dt>Status</dt><dd>beta</dd>
+      </dl>
+      <h2>Technical definition</h2>
+      <p>A failure in which expiry, revocation, refresh, recovery, or replacement of authentication state is not propagated coherently to the active session and its dependent operations, leaving effective access inconsistent with the session&#39;s represented state.</p>
+      <h2>Governing invariant</h2><blockquote>Expiry, revocation, refresh, recovery, credential replacement, and reauthentication must propagate coherently and promptly to every dependent session and operation. Stale authentication must not continue to authorise action, and renewed authority must be correctly rebound before protected continuation.</blockquote>
+
+      <h2>Failure established</h2><h3>Failure condition</h3><h3>Failure recognition</h3><ul><li>An authentication-state transition occurs or is required.</li><li>An active session or dependent operation retains a materially inconsistent authentication or access state.</li><li>The inconsistency impairs correct continuation, termination, reauthentication, or access enforcement.</li></ul>
+      <h2>Exclusions from failure recognition</h2><ul><li>The session transitions coherently and merely requires the user to authenticate again.</li><li>A validly authenticated actor lacks authority for the requested action.</li><li>Credentials are exposed or stolen without a session-state continuity failure.</li></ul>
+      <h2>Failure occurrences</h2>
+      <p>No Case Files currently evidence failure for this class.</p>
+      <h2>Invariant-held examples</h2><ul><li><a href="/observatory/cases/VIGIL-INC-000092/"><code>VIGIL-INC-000092</code> — VIGIL-INC-000092 — Authentication-State Continuity held under pressure</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/VIGIL-FC-000031/"><code>VIGIL-FC-000031</code></a></span></li></ul>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>National Institute of Standards and Technology · 2025-07-31 · authoritative guidance</p><p><strong><a href="https://doi.org/10.6028/NIST.SP.800-63b-4" rel="noreferrer">Digital Identity Guidelines: Authentication and Authenticator Management (NIST SP 800-63B-4)</a></strong></p><p><strong>Evidence note.</strong> Section 5 establishes authenticated-session continuity through session bindings, lifetime limits, termination, reauthentication, and independent session handling in federated contexts. This directly supports coherent authentication-state transitions; VIGIL&#39;s class additionally covers propagation failures affecting active AI tasks and dependent operations beyond NIST&#39;s federal digital-identity scope.</p></li><li><p>Internet Engineering Task Force · 2013-08-01 · standards evidence</p><p><strong><a href="https://www.rfc-editor.org/rfc/rfc7009.html" rel="noreferrer">RFC 7009: OAuth 2.0 Token Revocation</a></strong></p><p><strong>Evidence note.</strong> RFC 7009 specifies revocation of OAuth access and refresh tokens, immediate invalidation of the revoked token, possible invalidation of related tokens and grants, and minimisation of propagation delay. This directly supports coherent propagation of authentication-state revocation across dependent authorization state; VIGIL additionally covers refresh, recovery, replacement and active-task continuity beyond OAuth.</p></li></ul>
+    </main></div>
+  </body>
+</html>

@@ -11,20 +11,21 @@ import {
 } from "@/lib/vigilExternalKnowledge";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
+import { loadCurrentHarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 const VIGIL_TAXONOMY_PDF_NAME = "VIGIL-Alignment-Taxonomy-Full-Reference.pdf";
 const VIGIL_TAXONOMY_PDF_URLS = [
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.AlignmentTaxonomy.FullReference.pdf",
   "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/taxonomy/generated/VIGIL.Observatory.FailureTaxonomy.FullReference.pdf",
 ];
-const VIGIL_HARM_IMPACT_MATRIX_JSON = "https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v1.0.1.json";
-
 type DatasetState = {
   caseFilesCount?: number;
   sourcesCount?: number;
   clausesCount?: number;
   taxonomyVersion?: string;
   taxonomyPublicationDate?: string;
+  harmMethodologyVersion?: string;
+  harmMethodologyUrl?: string;
   loaded: boolean;
 };
 
@@ -116,7 +117,8 @@ export default function Datasets() {
       loadExternalSources(),
       loadExternalRequirements(),
       loadFailureTaxonomyIndex(),
-    ]).then(([incidents, sources, clauses, taxonomy]) => {
+      loadCurrentHarmMethodologyMetadata(),
+    ]).then(([incidents, sources, clauses, taxonomy, harmMethodology]) => {
       if (cancelled) return;
       setState({
         loaded: true,
@@ -127,6 +129,8 @@ export default function Datasets() {
         clausesCount: clauses.status === "ready" ? clauses.data.length : undefined,
         taxonomyVersion: taxonomy.status === "ready" ? taxonomy.data.standard.version : undefined,
         taxonomyPublicationDate: taxonomy.status === "ready" ? taxonomy.data.standard.publication_date ?? undefined : undefined,
+        harmMethodologyVersion: harmMethodology?.version,
+        harmMethodologyUrl: harmMethodology?.url,
       });
     });
     return () => { cancelled = true; };
@@ -206,9 +210,9 @@ export default function Datasets() {
             id="harm-impact"
             eyebrow="VIGIL Observatory"
             title="Harm Impact Matrix"
-            description="The machine-readable VIGIL-HIM 1.0.1 methodology used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm Impact Assessment page."
-            status="VIGIL-HIM 1.0.1 · 11 harm dimensions"
-            downloadHref={VIGIL_HARM_IMPACT_MATRIX_JSON}
+            description={`The machine-readable ${state.harmMethodologyVersion ? `VIGIL-HIM ${state.harmMethodologyVersion}` : "current VIGIL-HIM"} methodology published on VIGIL main, used to assess materialised harm across 11 dimensions and derive the overall S1–S5 or SU severity result for Case Files. It includes the evidence states, band definitions, threshold IDs and criteria represented on the public Harm Impact Assessment page.`}
+            status={state.harmMethodologyVersion ? `VIGIL-HIM ${state.harmMethodologyVersion} · 11 harm dimensions` : "Current VIGIL-HIM · 11 harm dimensions"}
+            downloadHref={state.harmMethodologyUrl}
             downloadLabel="Open JSON matrix"
           />
 

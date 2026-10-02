@@ -8,6 +8,7 @@ import { Download, ExternalLink } from "lucide-react";
 const trainingPolicyPdfHref = `${import.meta.env.BASE_URL}publications/CAM_Initiative_Australian_AI_Training_and_Contribution_Policy_Proposal.pdf`;
 const sociSubmissionPdfHref = `${import.meta.env.BASE_URL}publications/CAM_SOCI_Targeted_Submission_FINAL.pdf`;
 const aiProsperityParliamentHref = "https://www.aph.gov.au/DocumentStore.ashx?id=40eca803-9218-4238-93e6-6798859ef784&subId=802190";
+const aiDataCentresParliamentHref = "https://www.aph.gov.au/DocumentStore.ashx?id=53bb9dfe-2b99-483a-9331-86952b79a3ca&subId=800742";
 
 const primaryButtonClass =
   "cam-action cam-action-primary";
@@ -16,6 +17,7 @@ const secondaryButtonClass =
   "cam-action cam-action-secondary";
 
 const policyRail = [
+  { href: "#parliamentary-submission-ai-data-centres-2026", label: "Artificial Intelligence and Data Centres", meta: "PS 02/2026" },
   { href: "#parliamentary-submission-ai-prosperity-2026", label: "Artificial Intelligence and Australian Prosperity", meta: "PS 01/2026" },
   { href: "#consultation-submission-01-2026", label: "SOCI Act Consultation Submission", meta: "CS 01/2026" },
   { href: "#policy-proposal-01-2026", label: "AI Training, Contribution & Copyright Scheme", meta: "PP 01/2026" },
@@ -51,6 +53,53 @@ export default function Policy() {
 
           <div className="document-content">
             <section className="policy-publications" aria-label="Policy publications">
+            <motion.article
+              className="policy-publication"
+              id="parliamentary-submission-ai-data-centres-2026"
+              initial={{ opacity: 0, y: 14 }}
+              transition={{ duration: 0.65 }}
+              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
+            >
+              <div className="policy-publication-banner">
+                <div className="policy-publication-banner-row">
+                  <p className="policy-kicker">Parliamentary Submission · 2026</p>
+                  <span className="policy-publication-status">
+                    Published by the Parliament of Australia
+                  </span>
+                </div>
+              </div>
+
+              <div className="policy-publication-body">
+                <p className="policy-publication-date">27 August 2026</p>
+                <h2 className="policy-publication-title">
+                  Artificial Intelligence and Data Centres
+                </h2>
+                <p className="policy-publication-subtitle">
+                  Submission to the Senate Environment and Communications References Committee
+                </p>
+
+                <div className="policy-publication-copy">
+                  <p>
+                    This submission proposes a <strong>National Data Centre Assurance Framework</strong> for proportionate, lifecycle-based governance of regionally, nationally and systemically significant data centre infrastructure.
+                  </p>
+                  <p>
+                    Rather than creating a new approval regime, the framework is designed as a common national gateway that connects existing planning, environmental, energy, water, critical-infrastructure, foreign-investment and national-security responsibilities according to why a facility is significant.
+                  </p>
+                  <p>
+                    The submission addresses cumulative regional infrastructure impacts, continuing environmental oversight, critical dependency and practical substitutability, operational control and sovereign continuity, government agreements and public-interest obligations, and material-change triggers requiring reassessment across the infrastructure lifecycle.
+                  </p>
+                </div>
+
+                <div className="cam-action-row">
+                  <a className={primaryButtonClass} href={aiDataCentresParliamentHref} rel="noreferrer" target="_blank">
+                    View official parliamentary submission
+                    <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+            </motion.article>
+
             <motion.article
               className="policy-publication"
               id="parliamentary-submission-ai-prosperity-2026"

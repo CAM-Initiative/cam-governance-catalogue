@@ -186,7 +186,7 @@ function PremiumHero() {
           <p className="premium-hero-deck">A standard adjudication method, a consistent harm methodology, and traceable evidence turn isolated incidents into comparable intelligence about AI behaviour and governance boundaries.</p>
           <div className="premium-hero-actions">
             <a href="/observatory/cases/" className="premium-primary">Explore the evidence <ArrowRight aria-hidden="true" /></a>
-            <a href="/observatory/knowledge-base/failure-taxonomy/" className="premium-secondary">See the taxonomy</a>
+            <a href="/observatory/alignment-taxonomy/" className="premium-secondary">See the taxonomy</a>
           </div>
         </motion.div>
 
@@ -339,7 +339,7 @@ function TaxonomyReveal() {
         {visible.map((item, index) => (
           <a
             key={item.classId}
-            href="/observatory/knowledge-base/failure-taxonomy/"
+            href="/observatory/alignment-taxonomy/"
             className="taxonomy-sticker"
             style={stickerStyle(item, index)}
             tabIndex={-1}
@@ -349,7 +349,7 @@ function TaxonomyReveal() {
           </a>
         ))}
       </div>
-      <a className="taxonomy-reveal-link" href="/observatory/knowledge-base/failure-taxonomy/">Explore the alignment taxonomy <ArrowRight aria-hidden="true" /></a>
+      <a className="taxonomy-reveal-link" href="/observatory/alignment-taxonomy/">Explore the alignment taxonomy <ArrowRight aria-hidden="true" /></a>
     </div>
   );
 }
@@ -401,7 +401,7 @@ function AdjudicationFrameworkSection() {
       kind: "exemplar",
       label: "Exemplar",
       title: "The boundary held under pressure.",
-      body: "The case records a successful invariant: evidence of the system or governance response working as intended.",
+      body: "Once the relevant observations have been fully adjudicated, the case can show that the assessed governance boundary held under the conditions examined.",
       mark: "✓",
     },
   ] as const;

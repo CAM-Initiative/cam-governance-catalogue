@@ -57,7 +57,7 @@ function canonicalizeInternalHrefAttributes(html) {
   });
 }
 
-function pageHtml({ route, title, description, body = "", canonicalRoute = route, structuredData }) {
+function pageHtml({ route, title, description, body = "", canonicalRoute = route, structuredData, persistentFallbackKind }) {
   const url = routeUrl(canonicalRoute);
   let html = baseHtml
     .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`)
@@ -73,7 +73,14 @@ function pageHtml({ route, title, description, body = "", canonicalRoute = route
     const encoded = JSON.stringify(structuredData).replaceAll("<", "\\u003c");
     html = html.replace("</head>", `    <script type="application/ld+json">${encoded}</script>\n  </head>`);
   }
-  if (body) html = html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  if (body) {
+    html = persistentFallbackKind
+      ? html.replace(
+          '<div id="root"></div>',
+          `<div data-static-publication-fallback="${escapeHtml(persistentFallbackKind)}">${body}</div>\n    <div id="root"></div>`,
+        )
+      : html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  }
   return canonicalizeInternalHrefAttributes(html);
 }
 
@@ -120,7 +127,7 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
 
   <nav aria-label="CAM Initiative resources">
     <ul>
-      <li><a href="/observatory/knowledge-base/">Open the CAM Initiative Knowledge Base</a></li>
+      <li><a href="/knowledge-base/">Open the CAM Initiative Knowledge Base</a></li>
       <li><a href="/observatory/cases/">Browse VIGIL Observatory Case Files</a></li>
       <li><a href="https://github.com/CAM-Initiative/Vigil" rel="noreferrer">VIGIL Observatory repository</a></li>
       <li><a href="https://github.com/CAM-Initiative/Caelestis" rel="noreferrer">CAELESTIS repository</a></li>
@@ -151,38 +158,76 @@ const vigilAboutStructuredData = {
   },
 };
 
+const retiredPublicRouteDirs = [
+  join(docsDir, "observatory", "about"),
+  join(docsDir, "observatory", "incidents"),
+  join(docsDir, "observatory", "severity-methodology"),
+  join(docsDir, "observatory", "knowledge-base"),
+];
+for (const retiredRouteDir of retiredPublicRouteDirs) {
+  rmSync(retiredRouteDir, { recursive: true, force: true });
+}
+
 const staticRoutes = [
   ["/about", "About CAM Initiative", aboutDescription],
   ["/licensing", "Copyright & Licence | CAM Initiative", "Copyright, citation, reuse and licence information for VIGIL Observatory and CAM Initiative materials."],
   ["/datasets", "CAM Governance Datasets", "Machine-readable CAM and VIGIL Observatory governance datasets and registries."],
   ["/policy", "CAM Initiative Policy", "Policy, governance and publication information for CAM Initiative."],
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
+  ["/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
-  ["/observatory/about", "About CAM Initiative", aboutDescription],
-  ["/observatory/severity-methodology", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.0.1 harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
-  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, repair and references."],
-  ["/observatory/incidents", "VIGIL Observatory Incidents", "Browse canonical VIGIL Observatory AI Incident records."],
-  ["/observatory/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
-  ["/observatory/knowledge-base/failure-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
-  ["/observatory/knowledge-base/standards-sources", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
-  ["/observatory/knowledge-base/external-requirements", "VIGIL Observatory External Requirements", "External governance requirements referenced by VIGIL Observatory."],
-  ["/observatory/knowledge-base/policy", "VIGIL Observatory Policy", "Policy information for VIGIL Observatory."],
+  ["/observatory/harm-impact-assessment", "VIGIL Observatory Harm Impact Assessment", "The current VIGIL-HIM harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
+  ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, compliance and references."],
+  ["/observatory/alignment-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
+  ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
 ];
 
-const canonicalAliases = new Map([
-  ["/observatory/incidents", "/observatory/cases"],
-  ["/observatory/about", "/about"],
+const staticRouteBodies = new Map([
+  ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>CAM Initiative</p>
+    <h1>Knowledge Base</h1>
+    <p>Reference material for the VIGIL Observatory, including Case Files, the Alignment Taxonomy, the Harm Impact Assessment methodology, AI governance standards and CAM Initiative datasets.</p>
+    <nav aria-label="Knowledge Base resources"><ul>
+      <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">VIGIL Observatory Alignment Taxonomy</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">VIGIL Harm Impact Assessment</a></li>
+      <li><a href="/observatory/ai-governance-standards/">AI Governance Standards</a></li>
+      <li><a href="/datasets/">Datasets</a></li>
+      <li><a href="/policy/">Policy</a></li>
+    </ul></nav>
+  </main>`],
+  ["/observatory", `<main data-static-crawl-fallback="vigil-observatory" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>CAM Initiative</p>
+    <h1>VIGIL Observatory</h1>
+    <p>A public AI incident observatory connecting documented evidence, materialised harm, alignment classification and external governance requirements.</p>
+    <nav aria-label="VIGIL Observatory resources"><ul>
+      <li><a href="/observatory/cases/">Browse Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">Explore the Alignment Taxonomy</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">Read the Harm Impact Assessment methodology</a></li>
+      <li><a href="/observatory/ai-governance-standards/">Browse AI Governance Standards</a></li>
+    </ul></nav>
+  </main>`],
+  ["/observatory/harm-impact-assessment", `<main data-static-crawl-fallback="vigil-harm-impact" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory</p>
+    <h1>Harm Impact Assessment</h1>
+    <p>VIGIL-HIM reviews eleven harm dimensions using five severity bands, S1 to S5. The highest defensible materialised-harm threshold determines the overall severity reported in a Case File.</p>
+    <p><a href="/observatory/cases/">Browse Case Files using the methodology</a> · <a href="/knowledge-base/">Return to the Knowledge Base</a></p>
+  </main>`],
+  ["/observatory/ai-governance-standards", `<main data-static-crawl-fallback="vigil-governance-standards" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory</p>
+    <h1>AI Governance Standards</h1>
+    <p>A curated library of laws, standards, frameworks and technical guidance used to support VIGIL governance analysis and external requirement cross-references.</p>
+    <p><a href="/observatory/alignment-taxonomy/">Explore the Alignment Taxonomy</a> · <a href="/observatory/cases/">Browse Case Files</a> · <a href="/knowledge-base/">Return to the Knowledge Base</a></p>
+  </main>`],
 ]);
 
 for (const [route, title, description] of staticRoutes) {
-  const canonicalRoute = canonicalAliases.get(route) ?? route;
-  const isAboutRoute = route === "/about" || route === "/observatory/about";
+  const isAboutRoute = route === "/about";
   writeRoute(route, pageHtml({
     route,
     title,
     description,
-    canonicalRoute,
-    body: isAboutRoute ? vigilAboutFallbackBody : "",
+    body: isAboutRoute ? vigilAboutFallbackBody : (staticRouteBodies.get(route) ?? ""),
     structuredData: isAboutRoute ? vigilAboutStructuredData : undefined,
   }));
 }
@@ -203,8 +248,11 @@ try {
   console.warn(`Unable to load the VIGIL Observatory Alignment Taxonomy for static crawl routes: ${error instanceof Error ? error.message : error}`);
 }
 
-const taxonomyRootDir = join(docsDir, "observatory", "knowledge-base", "failure-taxonomy");
-if (existsSync(taxonomyRootDir)) {
+const taxonomyRootDirs = [
+  join(docsDir, "observatory", "alignment-taxonomy"),
+];
+for (const taxonomyRootDir of taxonomyRootDirs) {
+  if (!existsSync(taxonomyRootDir)) continue;
   for (const entry of readdirSync(taxonomyRootDir, { withFileTypes: true })) {
     if (entry.isDirectory() && /^VIGIL-(?:FF|FC)-\d+$/.test(entry.name)) {
       rmSync(join(taxonomyRootDir, entry.name), { recursive: true, force: true });
@@ -227,19 +275,24 @@ if (taxonomyFamilies.length) {
     <p>VIGIL Observatory</p>
     <h1>VIGIL Observatory Alignment Taxonomy</h1>
     <p>A structured alignment taxonomy for recurring AI governance boundaries, organised through stable Fidelity Families and selectable Fidelity Classes.</p>
+    <section aria-labelledby="taxonomy-reading-heading">
+      <h2 id="taxonomy-reading-heading">How to read a Fidelity Class</h2>
+      <p>A Fidelity Class defines a governed property rather than a failure outcome. Occurrence evidence may establish that the invariant held, that the failure condition occurred, or that the evidence materially engages the boundary without establishing either polarity.</p>
+      <p>Both success and failure require affirmative evidence; absence of evidence for one state does not establish the other.</p>
+    </section>
     <h2>Fidelity families</h2>
     <ul>${taxonomyFamilies.map(({ document }) => {
       const family = document?.family;
       if (!family?.family_id) return "";
-      return `<li><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></li>`;
+      return `<li><a href="/observatory/alignment-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></li>`;
     }).filter(Boolean).join("")}</ul>
   </main>`;
   writeRoute(
-    "/observatory/knowledge-base/failure-taxonomy",
+    "/observatory/alignment-taxonomy",
     pageHtml({
-      route: "/observatory/knowledge-base/failure-taxonomy",
+      route: "/observatory/alignment-taxonomy",
       title: "VIGIL Observatory Alignment Taxonomy",
-      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and Fidelity Classes, recognition criteria, exclusions and governing invariants.",
+      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and neutral Fidelity Classes, governed invariants and explicit occurrence conditions.",
       body: taxonomyIndexBody,
     }),
   );
@@ -296,6 +349,7 @@ function publicMappingRoleLabel(role) {
 }
 
 function publicAlignmentOutcome(record) {
+  if (record.adjudication_coverage?.status === "partial") return "Adjudication incomplete";
   if (record.classification_role === "failure-occurrence") return "Failure evidenced";
   if (record.classification_role === "successful-invariant") return "Invariant held";
   if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
@@ -314,7 +368,8 @@ function taxonomyCaseLinkHtml(example) {
 }
 
 function taxonomyInvariantExemplarHtml(exemplar, classId) {
-  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Invariant held · exemplar · <a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
+  const label = exemplar?.exemplar_type === "ambiguous-boundary" ? "Boundary engaged" : "Invariant held";
+  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>${label} · <a href="/observatory/alignment-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
 }
 
 function taxonomyExternalReferenceHtml(reference) {
@@ -336,7 +391,7 @@ for (const { document } of taxonomyFamilies) {
   const family = document?.family;
   if (!family?.family_id) continue;
 
-  const familyRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}`;
+  const familyRoute = `/observatory/alignment-taxonomy/${encodeURIComponent(family.family_id)}`;
   taxonomyRoutes.push(familyRoute);
   const familyDescription = conciseDescription(
     `VIGIL Observatory fidelity family ${family.family_id}: ${family.plain_english || family.definition || family.name}`,
@@ -359,7 +414,7 @@ for (const { document } of taxonomyFamilies) {
     <p><strong>Include when:</strong> ${escapeHtml(family.inclusion_rule || "Not stated.")}</p>
     <p><strong>Exclude when:</strong> ${escapeHtml(family.exclusion_rule || "Not stated.")}</p>
     <h2>Fidelity classes</h2>
-    <ul>${familyClasses.map((item) => `<li><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}">${escapeHtml(item.name || item.class_id)}</a> <code>${escapeHtml(item.class_id)}</code></li>`).join("")}</ul>
+    <ul>${familyClasses.map((item) => `<li><a href="/observatory/alignment-taxonomy/${encodeURIComponent(item.class_id)}">${escapeHtml(item.name || item.class_id)}</a> <code>${escapeHtml(item.class_id)}</code></li>`).join("")}</ul>
   </main>`;
   writeRoute(
     familyRoute,
@@ -373,7 +428,7 @@ for (const { document } of taxonomyFamilies) {
 
   for (const item of familyClasses) {
     if (!item?.class_id) continue;
-    const classRoute = `/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(item.class_id)}`;
+    const classRoute = `/observatory/alignment-taxonomy/${encodeURIComponent(item.class_id)}`;
     taxonomyRoutes.push(classRoute);
     const classDescription = conciseDescription(
       `VIGIL Observatory fidelity class ${item.class_id}: ${item.plain_english || item.definition || item.name}`,
@@ -381,6 +436,12 @@ for (const { document } of taxonomyFamilies) {
     );
     const classCaseExamples = taxonomyCaseExamplesForClass(item.class_id);
     const classInvariantExemplars = Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : [];
+    const classSuccessfulExemplars = classInvariantExemplars.filter((exemplar) => exemplar?.exemplar_type === "successful-invariant");
+    const classAmbiguousExemplars = classInvariantExemplars.filter((exemplar) => exemplar?.exemplar_type === "ambiguous-boundary");
+    const classSuccessRecognition = Array.isArray(item.success_recognition?.required_conditions) ? item.success_recognition.required_conditions : [];
+    const classFailureRecognition = Array.isArray(item.failure_recognition?.required_conditions)
+      ? item.failure_recognition.required_conditions
+      : Array.isArray(item.recognition?.required_conditions) ? item.recognition.required_conditions : [];
     const classExternalReferences = Array.isArray(item.external_references) ? item.external_references : [];
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Observatory Alignment Taxonomy</p>
@@ -389,19 +450,20 @@ for (const { document } of taxonomyFamilies) {
       <dl>
         <dt>Immutable class ID</dt><dd>${escapeHtml(item.class_id)}</dd>
         <dt>Semantic code</dt><dd>${escapeHtml(item.class_code || "not stated")}</dd>
-        <dt>Fidelity family</dt><dd><a href="/observatory/knowledge-base/failure-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></dd>
+        <dt>Fidelity family</dt><dd><a href="/observatory/alignment-taxonomy/${encodeURIComponent(family.family_id)}">${escapeHtml(family.name || family.family_id)}</a> <code>${escapeHtml(family.family_id)}</code></dd>
         <dt>Status</dt><dd>${escapeHtml(item.status || "not stated")}</dd>
       </dl>
       <h2>Technical definition</h2>
       <p>${escapeHtml(item.definition || "Not stated.")}</p>
-      <h2>Recognition criteria</h2>
-      ${listHtml(item.recognition?.required_conditions)}
-      <h2>Exclusions</h2>
-      ${listHtml(item.exclusions)}
-      <h2>Linked Case Files</h2>
+      ${item.invariant ? `<h2>Governing invariant</h2><blockquote>${escapeHtml(item.invariant)}</blockquote>` : ""}
+      ${item.success_condition || item.success_plain_english || classSuccessRecognition.length ? `<h2>Invariant held</h2><h3>Success condition</h3>${item.success_plain_english ? `<p><strong>${escapeHtml(item.success_plain_english)}</strong></p>` : ""}${item.success_condition ? `<p>${escapeHtml(item.success_condition)}</p>` : ""}${classSuccessRecognition.length ? `<h3>Positive recognition</h3>${listHtml(classSuccessRecognition)}` : ""}` : ""}
+      ${item.failure_condition || item.failure_plain_english || classFailureRecognition.length ? `<h2>Failure established</h2><h3>Failure condition</h3>${item.failure_plain_english ? `<p><strong>${escapeHtml(item.failure_plain_english)}</strong></p>` : ""}${item.failure_condition ? `<p>${escapeHtml(item.failure_condition)}</p>` : ""}${classFailureRecognition.length ? `<h3>Failure recognition</h3>${listHtml(classFailureRecognition)}` : ""}` : ""}
+      ${Array.isArray(item.exclusions) && item.exclusions.length ? `<h2>Exclusions from failure recognition</h2>${listHtml(item.exclusions)}` : ""}
+      <h2>Failure occurrences</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
-      ${classInvariantExemplars.length ? `<h2>Alignment exemplars</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
-      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
+      ${classSuccessfulExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classSuccessfulExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classAmbiguousExemplars.length ? `<h2>Ambiguous-boundary examples</h2><ul>${classAmbiguousExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,
@@ -435,11 +497,13 @@ if (existsSync(caseRoot)) {
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
   const title = `${record.id}: ${record.title || "VIGIL Observatory Incident"} | VIGIL Observatory`;
-  const description = record.summary || record.title || "VIGIL Observatory AI incident case file.";
+  const summary = record.summary || record.title || "VIGIL Observatory AI incident case file.";
+  const description = conciseDescription(summary, "VIGIL Observatory AI incident case file.");
   const body = `<main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · ${escapeHtml(record.id)}</p>
     <h1>${escapeHtml(record.title || record.id)}</h1>
-    <p>${escapeHtml(description)}</p>
+    <p>${escapeHtml(summary)}</p>
+    <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
     <dl>
       <dt>VIGIL Observatory alignment outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>
       <dt>VIGIL Observatory primary classification</dt><dd>${escapeHtml(classificationDisplay(record.primary_class_id, record.primary_family_id))}</dd>
@@ -449,7 +513,7 @@ for (const record of incidentRecords) {
     </dl>
     ${externalAssessmentsHtml(record)}
   </main>`;
-  writeRoute(route, pageHtml({ route, title, description, body }));
+  writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }
 
 if (incidentRecords.length) {
@@ -466,24 +530,43 @@ if (incidentRecords.length) {
       title: "VIGIL Observatory Case Files — AI Incident Database | CAM Initiative",
       description: "Browse the VIGIL Observatory AI incident database: documented Case Files with source evidence, assessment, alignment classification, repair analysis and references.",
       body: caseIndexBody,
+      persistentFallbackKind: "vigil-case-index",
     }),
   );
 }
 
-// Only publish change dates when a trustworthy page-level modification timestamp is available.
-// A build date is not a content modification date, so this sitemap intentionally omits modification-date elements.
-const sitemapRoutes = [
+// Only publish change dates when VIGIL supplies a trustworthy page-level modification date.
+// Build/deploy timestamps are deliberately not used as content modification dates.
+function sitemapLastmod(value) {
+  const candidate = String(value ?? "").trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(candidate) ? candidate : undefined;
+}
+
+const sitemapLastmodByRoute = new Map();
+for (const record of incidentRecords) {
+  const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
+  const lastmod = sitemapLastmod(record.record_last_updated);
+  if (lastmod) sitemapLastmodByRoute.set(route, lastmod);
+}
+const latestCaseLastmod = [...sitemapLastmodByRoute.values()].sort().at(-1);
+if (latestCaseLastmod) sitemapLastmodByRoute.set("/observatory/cases", latestCaseLastmod);
+
+const sitemapRoutes = [...new Set([
   "/",
-  ...staticRoutes.map(([route]) => route).filter((route) => !canonicalAliases.has(route)),
+  ...staticRoutes.map(([route]) => route),
   ...taxonomyRoutes,
   ...incidentRecords.map((record) => `/observatory/cases/${encodeURIComponent(record.id)}`),
-];
+])];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapRoutes.map((route) => `  <url>
-    <loc>${routeUrl(route)}</loc>
-  </url>`).join("\n")}
+${sitemapRoutes.map((route) => {
+  const lastmod = sitemapLastmodByRoute.get(route);
+  return `  <url>
+    <loc>${routeUrl(route)}</loc>${lastmod ? `
+    <lastmod>${lastmod}</lastmod>` : ""}
+  </url>`;
+}).join("\n")}
 </urlset>
 `;
 writeFileSync(sitemapPath, sitemap);

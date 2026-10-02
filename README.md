@@ -34,7 +34,8 @@ VIGIL Observatory Case Files are Incident-centred public records. The interface 
 
 - **Incident / evidence:** what the sources establish;
 - **Assessment:** VIGIL Observatory's bounded governance assessment, severity and evidentiary limitations;
-- **Classification:** mapping of the Incident to the reusable VIGIL Observatory Alignment Taxonomy where supported; and
+- **Classification:** mapping of the Incident to the reusable VIGIL Observatory Alignment Taxonomy where supported, including the plain-English class meaning and occurrence-specific basis;
+- **Compliance:** deterministic cross-reference from failed or unresolved Fidelity Classes to the external standards, regulatory requirements and authoritative governance guidance maintained by the taxonomy; and
 - **References:** evidence, canonical record and taxonomy references.
 
 The interface does not treat CAM repair state as part of the historical Incident itself.

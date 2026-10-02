@@ -9,6 +9,7 @@ import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, VIGIL_INCIDENT_REGISTRY_URL } from "@/lib/vigilRegistry";
 import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from "@/lib/vigilPresentation";
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
+import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 
 type PageState =
@@ -196,6 +197,13 @@ export default function VigilCases() {
     }));
   }
 
+  const staticPublicationFallbackAvailable = hasStaticPublicationFallback("vigil-case-index");
+  useEffect(() => {
+    if (state.status === "ready") retireStaticPublicationFallback("vigil-case-index");
+  }, [state.status]);
+
+  if (state.status !== "ready" && staticPublicationFallbackAvailable) return null;
+
   return (
     <Shell>
       <VigilObservatoryNav />
@@ -206,7 +214,7 @@ export default function VigilCases() {
               titleId="case-files-heading"
               kicker="VIGIL Observatory · Incident investigations"
               title="Case Files"
-              description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and re-adjudication."
+              description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and adjudication."
               artworkSrc={VIGIL_MASTHEAD_ARTWORK.cases}
               contextLabel="Collection context"
               mode="collection"

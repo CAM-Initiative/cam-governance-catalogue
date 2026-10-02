@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, CircleMinus, X } from "lucide-react";
 import {
   loadFailureTaxonomy,
@@ -29,13 +29,28 @@ type ClassificationRef = {
 };
 
 type ClassificationRole = "failure-occurrence" | "successful-invariant" | "ambiguous-boundary";
+type AdjudicationCoverageStatus = "complete" | "partial";
+type ClauseAdjudicationStatus = "mapped" | "resolved-no-mapping" | "unresolved" | "taxonomy-gap";
 
 type ParsedClassification = {
   status?: ClassificationStatus;
   role?: ClassificationRole;
   taxonomyVersion?: string;
+  coverageStatus?: AdjudicationCoverageStatus;
   primary: ClassificationRef;
   secondary: ClassificationRef[];
+};
+
+type OutstandingRelationship = {
+  classId?: string;
+  rationale?: string;
+};
+
+type OutstandingAdjudicationClause = {
+  observation: string;
+  status: Extract<ClauseAdjudicationStatus, "unresolved" | "taxonomy-gap">;
+  note?: string;
+  relationships: OutstandingRelationship[];
 };
 
 type ResolvedClassification = ClassificationRef & {
@@ -46,6 +61,7 @@ type ResolvedClassification = ClassificationRef & {
 
 type ClassificationTableRow = {
   item: ResolvedClassification;
+  mapping: "Primary" | "Secondary";
 };
 
 type Props = {
@@ -84,8 +100,10 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
   const primaryClassification = isObject(value.primary_classification) ? value.primary_classification : undefined;
   const primaryFamily = isObject(value.primary_family) ? value.primary_family : undefined;
   const primaryClass = isObject(value.primary_class) ? value.primary_class : undefined;
+  const coverage = isObject(value.adjudication_coverage) ? value.adjudication_coverage : undefined;
   const status = text(value.classification_status) as ClassificationStatus | undefined;
   const role = text(value.classification_role) as ClassificationRole | undefined;
+  const coverageStatus = text(coverage?.status) as AdjudicationCoverageStatus | undefined;
   const primaryRole = (text(primaryClassification?.classification_role) as ClassificationRole | undefined)
     ?? role
     ?? "failure-occurrence";
@@ -108,6 +126,7 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
     status,
     role,
     taxonomyVersion: text(value.taxonomy_version),
+    coverageStatus: coverageStatus === "complete" || coverageStatus === "partial" ? coverageStatus : undefined,
     primary: {
       familyId: text(primaryClassification?.family_id ?? primaryFamily?.family_id),
       classId: text(primaryClassification?.class_id ?? primaryClass?.class_id),
@@ -118,6 +137,40 @@ function parseClassification(raw: UnknownRecord): ParsedClassification {
     secondary,
   };
 }
+
+function outstandingAdjudicationClauses(raw: UnknownRecord): OutstandingAdjudicationClause[] {
+  const vigilAssessment = isObject(raw.vigil_assessment) ? raw.vigil_assessment : undefined;
+  const sourceClauseAnalysis = vigilAssessment && isObject(vigilAssessment.source_clause_analysis)
+    ? vigilAssessment.source_clause_analysis
+    : undefined;
+  const clauses = sourceClauseAnalysis && Array.isArray(sourceClauseAnalysis.clauses)
+    ? sourceClauseAnalysis.clauses
+    : [];
+
+  return clauses.flatMap((clause) => {
+    if (!isObject(clause)) return [];
+    const status = text(clause.adjudication_status) as ClauseAdjudicationStatus | undefined;
+    if (status !== "unresolved" && status !== "taxonomy-gap") return [];
+    const relationships = Array.isArray(clause.taxonomy_relationships)
+      ? clause.taxonomy_relationships.flatMap((relationship) => {
+          if (!isObject(relationship) || relationship.canonical_taxonomy_mapping === true) return [];
+          return [{
+            classId: text(relationship.class_id),
+            rationale: text(relationship.rationale),
+          }];
+        })
+      : [];
+    return [{
+      observation: text(clause.source_paraphrase)
+        ?? text(clause.source_anchor)
+        ?? "This incident observation still requires a final taxonomy determination.",
+      status,
+      note: text(clause.adjudication_note),
+      relationships,
+    }];
+  });
+}
+
 
 function familyById(dataset: FailureTaxonomyDataset, familyId?: string) {
   if (!familyId || !dataset.index.families.some((entry) => entry.family_id === familyId)) return undefined;
@@ -262,75 +315,186 @@ export function ExternalAlignmentClassification({ assessments }: { assessments: 
   </section>;
 }
 
-// Web UX shows alignment state directly; primary/secondary ordering remains in canonical data and report metadata.
-function ClassificationTable({ rows, taxonomyReferenceNumber, taxonomyReferenceHref }: { rows: ClassificationTableRow[]; taxonomyReferenceNumber?: number; taxonomyReferenceHref?: string }) {
+// Section 03 presents the mapped Fidelity Class, recognition criteria and
+// occurrence-specific adjudication. Primary/secondary ordering remains in
+// canonical data and report metadata.
+function ClassificationEvidenceStack({
+  values,
+  empty,
+}: {
+  values: Array<string | undefined>;
+  empty: string;
+}) {
+  const cleaned = values.flatMap((value) => value ? [value] : []);
+  if (!cleaned.length) return <span>{empty}</span>;
+  return <div className="vigil-classification-evidence-stack">
+    {cleaned.map((value, index) => <div className="vigil-classification-evidence-item" key={`${index}-${value.slice(0, 40)}`}>{value}</div>)}
+  </div>;
+}
+
+function TaxonomyList({
+  values,
+  empty,
+}: {
+  values?: string[];
+  empty: string;
+}) {
+  if (!values?.length) return <span>{empty}</span>;
+  return <ul className="vigil-classification-taxonomy-list">
+    {values.map((value, index) => <li key={`${index}-${value.slice(0, 40)}`}>{value}</li>)}
+  </ul>;
+}
+
+function recognitionCriteriaForRole(classificationClass: FailureTaxonomyClass | undefined, role?: ClassificationRole) {
+  if (!classificationClass) return undefined;
+  const success = classificationClass.success_recognition?.required_conditions ?? [];
+  const failure = classificationClass.failure_recognition?.required_conditions
+    ?? classificationClass.recognition?.required_conditions
+    ?? [];
+  if (role === "successful-invariant") return success.length ? success : undefined;
+  if (role === "ambiguous-boundary") {
+    const combined = [...new Set([...success, ...failure])];
+    return combined.length ? combined : undefined;
+  }
+  return failure.length ? failure : undefined;
+}
+
+function ClassificationTable({
+  rows,
+  taxonomyReferenceNumber,
+  taxonomyReferenceHref,
+}: {
+  rows: ClassificationTableRow[];
+  taxonomyReferenceNumber?: number;
+  taxonomyReferenceHref?: string;
+}) {
   const hasUnresolved = rows.some(({ item }) =>
     (item.classId && !item.class) || (item.familyId && !item.family)
   );
 
-  const familyGroups = new Map<string, {
-    familyId?: string;
-    familyName: string;
-    rows: ClassificationTableRow[];
-  }>();
-  rows.forEach((row, index) => {
-    const family = row.item.family?.family;
-    const familyId = family?.family_id ?? row.item.familyId;
-    const key = familyId ?? `unassigned-${index}`;
-    const existing = familyGroups.get(key);
-    if (existing) {
-      existing.rows.push(row);
-      return;
-    }
-    familyGroups.set(key, {
-      familyId,
-      familyName: family?.name ?? (familyId ? "Unresolved fidelity family" : "Fidelity family not assigned"),
-      rows: [row],
-    });
-  });
-
   return <>
-    <div className="vigil-classification-web-table" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
-      <table className="vigil-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings grouped by Fidelity Family. Invariant-held and unresolved-boundary mappings are not failure evidence.</caption>
+    <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
+      <table className="vigil-classification-table vigil-primary-classification-table">
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with class meaning, recognition criteria and confidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
-            <th scope="col">Classification basis</th>
+            <th scope="col">Recognition criteria</th>
+            <th scope="col">Confidence</th>
           </tr>
         </thead>
         <tbody>
-          {[...familyGroups.entries()].map(([groupKey, group]) => <Fragment key={groupKey}>
-            <tr key={`family-${groupKey}`} className="vigil-classification-family-row">
-              <th colSpan={3} scope="rowgroup">
-                {group.familyId && <span className="vigil-classification-family-id">{group.familyId}</span>}
-                <strong>{group.familyName}</strong>
-              </th>
-            </tr>
-            {group.rows.map(({ item }, index) => {
-              const classificationClass = item.class;
-              const classId = classificationClass?.class_id ?? item.classId;
-              return <tr key={`${groupKey}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
-                <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={item.role} /></td>
-                <td data-label="Fidelity class">
-                  <strong>{classificationClass?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned")}</strong>
-                  {classId && <span className="vigil-classification-id">{classId}</span>}
-                </td>
-                <td data-label="Classification basis" className="vigil-classification-basis">
-                  {item.basis ?? "No separate alignment-classification basis is published for this mapping."}
-                </td>
-              </tr>;
-            })}
-          </Fragment>)}
+          {rows.map(({ item, mapping }, index) => {
+            const family = item.family?.family;
+            const classificationClass = item.class;
+            const classId = classificationClass?.class_id ?? item.classId;
+            const outcome = mappingOutcome(item.role);
+            const classTitle = classificationClass?.name ?? family?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned");
+            const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
+
+            return <tr key={`${mapping}-${classId ?? index}-${item.role ?? "failure-occurrence"}`}>
+              <td data-label="Alignment" className="vigil-classification-outcome-cell">
+                <span className="vigil-classification-outcome-detail">
+                  <MappingOutcome role={item.role} />
+                  <strong>{outcome.label}</strong>
+                </span>
+              </td>
+              <td data-label="Fidelity class" className="vigil-classification-class-cell">
+                {classId ? <span className="vigil-classification-class-chip">{classId}</span> : null}
+                <strong className="vigil-classification-class-title">{classTitle}</strong>
+                {plainEnglish ? <p className="vigil-classification-class-explanation">{plainEnglish}</p> : null}
+              </td>
+              <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
+                <TaxonomyList
+                  values={recognitionCriteriaForRole(classificationClass, item.role)}
+                  empty="No separate recognition criteria are currently published for this Fidelity Class."
+                />
+              </td>
+              <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
+            </tr>;
+          })}
         </tbody>
       </table>
     </div>
     <VigilAlignmentLegend />
-    {/* One bibliography-level taxonomy citation replaces repeated row-level source links. */}
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity classes and their governing invariants are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity Classes and their recognition criteria are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
+}
+
+function FurtherAdjudicationTable({
+  raw,
+  dataset,
+  coverageStatus,
+}: {
+  raw: UnknownRecord;
+  dataset: FailureTaxonomyDataset;
+  coverageStatus?: AdjudicationCoverageStatus;
+}) {
+  if (coverageStatus !== "partial") return null;
+  const clauses = outstandingAdjudicationClauses(raw);
+
+  return <section className="vigil-further-adjudication" aria-labelledby="vigil-further-adjudication-heading">
+    <div className="vigil-case-subheading">
+      <h3 className="vigil-case-editorial-subheading" id="vigil-further-adjudication-heading">Further adjudication required</h3>
+      <p>This Case File has not yet been fully adjudicated. The incident observations below still require a final taxonomy determination.</p>
+    </div>
+
+    {clauses.length ? <div className="vigil-further-adjudication-table-wrap" role="region" aria-label="Incident observations requiring further adjudication" tabIndex={0}>
+      <table className="vigil-further-adjudication-table">
+        <caption className="sr-only">Incident observations that still require a final VIGIL Alignment Taxonomy determination.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Incident observation</th>
+            <th scope="col">Candidate boundary</th>
+            <th scope="col">What remains unresolved</th>
+          </tr>
+        </thead>
+        <tbody>
+          {clauses.map((clause, clauseIndex) => {
+            const resolvedRelationships = clause.relationships.map((relationship) => {
+              const resolved = classById(dataset, relationship.classId);
+              return {
+                ...relationship,
+                name: resolved?.class.name,
+              };
+            });
+            const rationaleItems = clause.note
+              ? [clause.note]
+              : [...new Set(resolvedRelationships.flatMap((relationship) => relationship.rationale ? [relationship.rationale] : []))];
+
+            return <tr key={`${clause.status}-${clauseIndex}-${clause.observation.slice(0, 48)}`}>
+              <td data-label="Incident observation">{clause.observation}</td>
+              <td data-label="Candidate boundary">
+                {clause.status === "taxonomy-gap"
+                  ? <strong>No current Fidelity Class</strong>
+                  : resolvedRelationships.length
+                    ? <ul className="vigil-further-adjudication-boundaries">
+                        {resolvedRelationships.map((relationship, relationshipIndex) => <li key={`${relationship.classId ?? "candidate"}-${relationshipIndex}`}>
+                          {relationship.classId
+                            ? <a href={`/observatory/alignment-taxonomy/${encodeURIComponent(relationship.classId)}/`}>
+                                <strong>{relationship.name ?? "Candidate Fidelity Class"}</strong>
+                                <span className="vigil-classification-id">{relationship.classId}</span>
+                              </a>
+                            : <strong>Candidate boundary not yet assigned</strong>}
+                        </li>)}
+                      </ul>
+                    : <span>Candidate boundary not yet assigned</span>}
+              </td>
+              <td data-label="What remains unresolved">
+                {rationaleItems.length
+                  ? rationaleItems.length === 1
+                    ? <p>{rationaleItems[0]}</p>
+                    : <ul className="vigil-further-adjudication-rationales">{rationaleItems.map((item, itemIndex) => <li key={`${itemIndex}-${item.slice(0, 48)}`}>{item}</li>)}</ul>
+                  : <p>A final taxonomy determination has not yet been established for this observation.</p>}
+              </td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+    </div> : <p className="vigil-case-empty">This record is marked as partially adjudicated, but no unresolved public incident observation is available in the current projection.</p>}
+  </section>;
 }
 
 /* Rich card projection retained for the deterministic report/PDF. The ordinary
@@ -366,7 +530,7 @@ function ClassificationCard({
     <div className="vigil-classification-layout">
       <div className="vigil-classification-reading">
         {plainEnglish && <section>
-          <h4 className="vigil-substantive-label">{exemplar ? "Governance boundary this exemplar tests" : "What this failure means"}</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Governance boundary assessed" : "What this classification means"}</h4>
           <p>{plainEnglish}</p>
         </section>}
         {technicalDefinition && <section>
@@ -374,7 +538,7 @@ function ClassificationCard({
           <p>{technicalDefinition}</p>
         </section>}
         {item.basis && <section>
-          <h4 className="vigil-substantive-label">{exemplar ? "Why this Case File is an exemplar" : "Why this Case File maps here"}</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Why this invariant held" : "Why this Case File maps here"}</h4>
           <p>{item.basis}</p>
         </section>}
       </div>
@@ -382,8 +546,8 @@ function ClassificationCard({
       <aside className="vigil-classification-metadata" aria-label={`${label} classification metadata`}>
         <p className="vigil-diagnostic-meta-label">Classification metadata</p>
         <dl>
-          <Meta label="Status" value={exemplar ? "Exemplar" : statusLabel(status)} />
-          <Meta label="Relationship" value={exemplar ? "Successful invariant exemplar" : relationship} />
+          <Meta label="Status" value={exemplar ? "Invariant held" : statusLabel(status)} />
+          <Meta label="Relationship" value={exemplar ? "Successful invariant" : relationship} />
           <Meta label="Confidence" value={item.confidence} />
           <Meta label="Taxonomy version" value={taxonomyVersion} mono />
           <Meta label="Fidelity family" value={family?.name} />
@@ -413,7 +577,7 @@ function ExplicitClassificationState({
 }) {
   const familyDefinition = primary?.family?.family.definition;
   if (parsed.status === "family-only" && primary) return <>
-    <ClassificationTable rows={[{ item: primary }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={[{ item: primary, mapping: "Primary" }]} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
@@ -446,23 +610,28 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
 
   if (!renderPrimary) return <div className="vigil-taxonomy-classification-view">
     <ExplicitClassificationState parsed={parsed} primary={primary} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <FurtherAdjudicationTable raw={raw} dataset={taxonomy.data} coverageStatus={parsed.coverageStatus} />
   </div>;
 
   const tableRows: ClassificationTableRow[] = [
-    { item: primary },
-    ...secondaries.map((item) => ({ item })),
+    { item: primary, mapping: "Primary" },
+    ...secondaries.map((item) => ({
+      item,
+      mapping: "Secondary" as const,
+    })),
   ];
 
   return <div className="vigil-taxonomy-classification-view">
-    {parsed.status === "classification-disputed" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
-    {parsed.status === "provisionally-classified" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
+    {parsed.coverageStatus === "partial" && <p className="vigil-case-empty"><strong>Adjudication incomplete.</strong> No whole-Incident alignment classification is assigned until adjudication coverage is complete. Resolved mapping-level findings are shown below for transparency.</p>}
+    {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
+    {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
     <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
-        label={primary.role === "successful-invariant" ? "Primary alignment exemplar · invariant held" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+        label={primary.role === "successful-invariant" ? "Primary alignment finding · invariant held" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
         status={parsed.status}
         taxonomyVersion={parsed.taxonomyVersion}
         relationship={primary.role === "successful-invariant" ? "Primary · invariant held" : "Primary"}
@@ -479,7 +648,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
           {secondaries.map((item, index) => <ClassificationCard
             key={`${item.classId ?? item.familyId ?? index}`}
             item={item}
-            label={item.role === "successful-invariant" ? `Secondary alignment exemplar · invariant held ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
+            label={item.role === "successful-invariant" ? `Secondary alignment finding · invariant held ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
             status={parsed.status}
             taxonomyVersion={parsed.taxonomyVersion}
             relationship={item.role === "successful-invariant" ? "Secondary · invariant held" : item.role === "ambiguous-boundary" ? "Secondary · boundary unresolved" : "Secondary"}
@@ -488,82 +657,132 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
         </div>
       </section>}
     </div>
+
+    <FurtherAdjudicationTable raw={raw} dataset={taxonomy.data} coverageStatus={parsed.coverageStatus} />
   </div>;
 }
 
-type RepairInvariant = {
-  family?: FailureTaxonomyFamilyDocument["family"];
-  class: FailureTaxonomyClass;
-  relationship: "Primary" | "Secondary";
-  role: "failure-occurrence" | "ambiguous-boundary";
-  sourceUrl?: string;
+type ComplianceReference = NonNullable<FailureTaxonomyClass["external_references"]>[number];
+
+type ComplianceContribution = {
+  role: ClassificationRole;
+  reference: ComplianceReference;
 };
 
-// Repair surfaces both established failures and unresolved boundaries because both
-// expose governing invariants that are decision-useful; successful invariants remain
-// Classification evidence only and do not create repair work.
-function governingClassInvariants(primary: ResolvedClassification, secondaries: ResolvedClassification[]): RepairInvariant[] {
-  const result: RepairInvariant[] = [];
-  const seen = new Set<string>();
+type ComplianceRollup = {
+  role: ClassificationRole;
+  reference: ComplianceReference;
+  explanations: string[];
+};
 
-  const add = (item: ResolvedClassification, relationship: RepairInvariant["relationship"]) => {
-    if (item.role !== "failure-occurrence" && item.role !== "ambiguous-boundary") return;
+function complianceReference(reference: ComplianceReference) {
+  const role = reference.reference_role ?? "";
+  return Boolean(reference.requirement_id)
+    || role === "regulatory-evidence"
+    || role === "standards-evidence"
+    || role === "authoritative-guidance";
+}
+
+function complianceReferenceKey(reference: ComplianceReference) {
+  const clause = (reference.clause_or_control ?? "").trim().toLowerCase();
+  if (reference.requirement_id?.trim()) {
+    return `requirement:${reference.requirement_id.trim().toLowerCase()}|clause:${clause}`;
+  }
+  if (reference.url?.trim()) {
+    return `url:${reference.url.trim().replace(/\/$/, "").toLowerCase()}|clause:${clause}`;
+  }
+  return `title:${reference.title.trim().toLowerCase()}|publisher:${reference.publisher.trim().toLowerCase()}|clause:${clause}`;
+}
+
+function complianceRolePriority(role: ClassificationRole) {
+  if (role === "failure-occurrence") return 3;
+  if (role === "ambiguous-boundary") return 2;
+  return 1;
+}
+
+function complianceContributions(primary: ResolvedClassification, secondaries: ResolvedClassification[]) {
+  const result: ComplianceContribution[] = [];
+  const add = (item: ResolvedClassification) => {
     const classificationClass = item.class;
-    if (!classificationClass || seen.has(classificationClass.class_id)) return;
-    seen.add(classificationClass.class_id);
-    result.push({
-      family: item.family?.family,
-      class: classificationClass,
-      relationship,
-      role: item.role,
-      sourceUrl: item.sourceUrl,
-    });
+    if (!classificationClass || !item.role) return;
+    for (const reference of (classificationClass.external_references ?? []).filter(complianceReference)) {
+      result.push({
+        role: item.role,
+        reference,
+      });
+    }
   };
 
-  add(primary, "Primary");
-  for (const secondary of secondaries) add(secondary, "Secondary");
+  add(primary);
+  for (const secondary of secondaries) add(secondary);
   return result;
 }
 
-export function CaseTaxonomyRepair({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
+function rollupComplianceRequirements(contributions: ComplianceContribution[]): ComplianceRollup[] {
+  const grouped = new Map<string, ComplianceContribution[]>();
+  for (const contribution of contributions) {
+    const key = complianceReferenceKey(contribution.reference);
+    const existing = grouped.get(key);
+    if (existing) existing.push(contribution);
+    else grouped.set(key, [contribution]);
+  }
+
+  return [...grouped.values()].map((group) => {
+    const highestPriority = Math.max(...group.map((item) => complianceRolePriority(item.role)));
+    const controlling = group.filter((item) => complianceRolePriority(item.role) === highestPriority);
+    const representative = controlling[0] ?? group[0];
+
+    return {
+      role: representative.role,
+      reference: representative.reference,
+      explanations: [...new Set(controlling.flatMap((item) => item.reference.evidence_note ? [item.reference.evidence_note] : []))],
+    };
+  });
+}
+
+export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
   const parsed = useMemo(() => parseClassification(raw), [raw]);
   const taxonomy = useTaxonomy();
 
-  if (!parsed.status) return <p className="vigil-case-empty">No class invariant can be resolved because this Incident has no canonical alignment classification.</p>;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving class invariant from the VIGIL Observatory Alignment Taxonomy…</p>;
-  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so the class invariant cannot be resolved. {taxonomy.message}</p>;
+  if (!parsed.status) return <p className="vigil-case-empty">No compliance crosswalk can be resolved because this Incident has no canonical alignment classification.</p>;
+  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving external requirement cross-references from the VIGIL Observatory Alignment Taxonomy…</p>;
+  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so its external requirement cross-references cannot be resolved. {taxonomy.message}</p>;
 
   const primary = resolveClassification(taxonomy.data, parsed.primary);
   const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
-  const invariants = governingClassInvariants(primary, secondaries);
+  const requirements = rollupComplianceRequirements(complianceContributions(primary, secondaries));
 
-  if (!invariants.length) return <p className="vigil-case-empty">No repair invariant is available for this Case File.</p>;
+  if (!requirements.length) return <p className="vigil-case-empty">No mapped external requirement is available for compliance cross-reference in this Case File.</p>;
 
-  return <div className="vigil-taxonomy-repair-view">
-    <div className="vigil-classification-web-table vigil-repair-web-table">
-      <table className="vigil-classification-table vigil-repair-table">
+  return <div className="vigil-taxonomy-compliance-view">
+    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. VIGIL applies an occurrence-level runtime lens here; these taxonomy-derived cross-references do not assess organisation-wide governance programmes or overall legal or standards compliance. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported VIGIL finding: failure, then unresolved boundary, then invariant held.</p>
+    <div className="vigil-classification-web-table vigil-compliance-web-table" role="region" aria-label="External compliance crosswalk" tabIndex={0}>
+      <table className="vigil-classification-table vigil-compliance-table">
+        <caption className="sr-only">External requirements cross-referenced to the Incident's VIGIL findings.</caption>
         <thead>
           <tr>
-            <th scope="col">Alignment</th>
-            <th scope="col">Fidelity class</th>
-            <th scope="col">Governing invariant</th>
+            <th scope="col">VIGIL Finding</th>
+            <th scope="col">External requirement</th>
+            <th scope="col">Requirement explanation</th>
           </tr>
         </thead>
         <tbody>
-          {invariants.map(({ class: classificationClass, role }) => <tr key={classificationClass.class_id}>
-            <td data-label="Alignment" className="vigil-classification-outcome-cell"><MappingOutcome role={role} /></td>
-            <td data-label="Fidelity class">
-              <strong>{classificationClass.name}</strong>
-              <span className="vigil-classification-id">{classificationClass.class_id}</span>
+          {requirements.map(({ role, reference, explanations }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
+            <td data-label="VIGIL Finding" className="vigil-classification-outcome-cell">
+              <MappingOutcome role={role} />
             </td>
-            <td data-label="Governing invariant" className="vigil-repair-invariant-cell">
-              {classificationClass.invariant ?? "A class-level invariant has not yet been published for this fidelity class. The broader family invariant is not substituted here."}
+            <td data-label="External requirement" className="vigil-compliance-requirement-title">
+              <strong>
+                {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}
+              </strong>
+            </td>
+            <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
+              <ClassificationEvidenceStack values={explanations} empty="No separate requirement explanation is currently published for this external requirement." />
             </td>
           </tr>)}
         </tbody>
       </table>
     </div>
-    <VigilAlignmentLegend />
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">The governing invariants shown here are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
+    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">These external requirement mappings are maintained with the relevant Fidelity Classes in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.</p> : null}
   </div>;
 }

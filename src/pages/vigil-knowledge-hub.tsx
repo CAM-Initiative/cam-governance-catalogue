@@ -7,6 +7,7 @@ import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassificat
 import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
+import { loadCurrentHarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 type HubState = {
   caseFiles?: number;
@@ -17,6 +18,7 @@ type HubState = {
   taxonomyFamilies?: number;
   taxonomyClasses?: number;
   taxonomyAvailable?: boolean;
+  harmMethodologyVersion?: string;
 };
 
 const CASE_FILE_STAGES = [
@@ -37,13 +39,13 @@ const CASE_FILE_STAGES = [
   },
   {
     number: "04",
-    label: "Repair",
-    description: "Surface the governing class invariants for mappings where failure is evidenced or the boundary remains unresolved; invariant-held mappings create no Repair requirement.",
+    label: "Compliance",
+    description: "Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy.",
   },
   {
     number: "05",
     label: "Conclusion",
-    description: "Integrate the evidence, harm assessment, taxonomy relationships and repair implications into a bounded VIGIL interpretation.",
+    description: "Integrate the evidence, harm assessment, taxonomy relationships and external requirement crosswalk into a bounded VIGIL interpretation.",
   },
   {
     number: "06",
@@ -61,7 +63,12 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "exemplar",
     label: "Invariant held",
-    description: "The mapped governance boundary or boundaries held under pressure and no failure occurrence is evidenced. These Case Files act as alignment exemplars.",
+    description: "The mapped governance boundary or boundaries held and the Incident has complete adjudication coverage. These Case Files may be presented as alignment exemplars when no failure or unresolved boundary changes that result.",
+  },
+  {
+    key: "incomplete",
+    label: "Adjudication incomplete",
+    description: "One or more material incident observations still require a final taxonomy determination. VIGIL does not assign a whole-Incident alignment classification until adjudication coverage is complete.",
   },
   {
     key: "mixed",
@@ -96,8 +103,8 @@ export default function VigilKnowledgeHub() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex()])
-      .then(([incidents, clauses, sources, taxonomy]) => {
+    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex(), loadCurrentHarmMethodologyMetadata()])
+      .then(([incidents, clauses, sources, taxonomy, harmMethodology]) => {
         if (cancelled) return;
         setState({
           caseFiles: incidents.records.length,
@@ -110,6 +117,7 @@ export default function VigilKnowledgeHub() {
           taxonomyFamilies: taxonomy.status === "ready" ? taxonomy.data.families.length : undefined,
           taxonomyClasses: taxonomy.status === "ready" ? taxonomy.data.families.reduce((sum, family) => sum + family.class_count, 0) : undefined,
           taxonomyAvailable: taxonomy.status === "ready",
+          harmMethodologyVersion: harmMethodology?.version,
         });
       })
       .catch(() => !cancelled && setState({}));
@@ -171,7 +179,7 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-taxonomy-heading">Mappings classify individual boundaries. The Case File index summarises the Incident.</h2>
               </div>
               <div className="document-reading">
-                <p>The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Fidelity Families</strong> and individual <strong>Fidelity Classes</strong> retain stable FF/FC identifiers and define the repeatable mechanisms, recognition criteria, exclusions and governing invariants used in adjudication.</p>
+                <p>The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Fidelity Families</strong> define integrity domains; individual <strong>Fidelity Classes</strong> define governed properties that can be evidenced as held, failed or unresolved at a boundary. Stable FF/FC identifiers preserve continuity across adjudications.</p>
                 <p>Classification happens first at the <strong>mapping level</strong>. One Incident may engage several Fidelity Classes, and each relationship records what the evidence establishes at that particular governance boundary.</p>
                 <p className="vigil-knowledge-meta">{taxonomyMeta}</p>
               </div>
@@ -184,7 +192,7 @@ export default function VigilKnowledgeHub() {
 
               <div className="vigil-knowledge-classification-layer">
                 <h3>Case File index classification</h3>
-                <p>The current public Case File index combines those mapping-level results into one of five whole-Incident labels. These are summary states; the underlying mapping outcomes remain separately visible inside the Case File.</p>
+                <p>The current public Case File index combines those mapping-level results into whole-Incident outcome labels only after adjudication coverage is complete. While coverage is partial, the Case File is shown simply as <strong>Adjudication incomplete</strong>; resolved mapping-level findings remain separately visible inside the Case File.</p>
                 <div className="vigil-knowledge-index-classifications" aria-label="Case File index classification states">
                   {CASE_FILE_INDEX_CLASSIFICATIONS.map((item) => <article key={item.key}>
                     <span className="vigil-knowledge-index-state">{item.label}</span>
@@ -194,7 +202,7 @@ export default function VigilKnowledgeHub() {
               </div>
 
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/failure-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/alignment-taxonomy/">Browse the Alignment Taxonomy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -206,10 +214,10 @@ export default function VigilKnowledgeHub() {
               <div className="document-reading">
                 <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews eleven harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
                 <p>Harm assessment is deliberately separate from alignment classification: the Harm Impact Assessment describes materialised consequence and severity; alignment classification describes governance-boundary behaviour.</p>
-                <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
+                <p className="vigil-knowledge-meta">{state.harmMethodologyVersion ? `VIGIL-HIM ${state.harmMethodologyVersion}` : "Current VIGIL-HIM"} · methodology reference</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/severity-methodology/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -235,7 +243,7 @@ export default function VigilKnowledgeHub() {
                 <p>CAM Initiative policy papers and consultation submissions translate governance analysis into practical institutional, legal and regulatory proposals.</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/policy/">Browse policy <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 
@@ -264,7 +272,7 @@ export default function VigilKnowledgeHub() {
                 <p className="vigil-knowledge-meta">{baselineMeta}</p>
               </div>
               <div className="cam-action-row">
-                <Link className="cam-action cam-action-secondary" href="/observatory/knowledge-base/standards-sources/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
+                <Link className="cam-action cam-action-secondary" href="/observatory/ai-governance-standards/">Browse AI Governance Standards <ArrowRight aria-hidden="true" /></Link>
               </div>
             </section>
 

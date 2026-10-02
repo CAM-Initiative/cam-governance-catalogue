@@ -51,9 +51,109 @@
   word-break: normal;
 }
 
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 16%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 30%; }
-.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 54%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(1) { width: 10%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(2) { width: 24%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(3) { width: 30%; }
+.vigil-case-file-page .vigil-classification-table thead th:nth-child(4) { width: 36%; }
+
+/* Section 03 carries only the adjudication result and taxonomy definition.
+   Occurrence-specific incident analysis remains in Section 02. */
+.vigil-case-file-page .vigil-primary-classification-table {
+  min-width: 96rem;
+  table-layout: auto;
+}
+
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(n) {
+  width: auto;
+}
+
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { min-width: 10rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { min-width: 32rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { min-width: 42rem; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { min-width: 10rem; }
+
+.vigil-case-file-page .vigil-primary-classification-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-inline: contain;
+}
+
+.vigil-case-file-page .vigil-classification-outcome-detail {
+  display: grid;
+  justify-items: start;
+  gap: 0.32rem;
+}
+
+.vigil-case-file-page .vigil-classification-outcome-detail > strong {
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-stack {
+  display: grid;
+  gap: 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item {
+  padding: 0.58rem 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item:first-child {
+  padding-top: 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item:last-child {
+  padding-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-classification-evidence-item + .vigil-classification-evidence-item {
+  border-top: 1px solid hsl(var(--border) / 0.48);
+}
+
+.vigil-case-file-page .vigil-classification-taxonomy-copy {
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-classification-taxonomy-list {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.vigil-case-file-page .vigil-classification-taxonomy-list li + li {
+  margin-top: 0.42rem;
+}
+
+.vigil-case-file-page .vigil-classification-class-chip {
+  display: inline-flex;
+  width: max-content;
+  margin-bottom: 0.55rem;
+  padding: 0.2rem 0.48rem;
+  border: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 999px;
+  background: hsl(var(--card) / 0.72);
+  font-family: var(--app-font-mono);
+  font-size: 0.74rem;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: 0.025em;
+}
+
+.vigil-case-file-page .vigil-classification-class-title {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.42;
+}
+
+.vigil-case-file-page .vigil-classification-class-explanation {
+  margin: 0.55rem 0 0;
+  color: hsl(var(--foreground) / 0.86);
+  font-size: 0.94rem;
+  line-height: 1.58;
+}
+
+.vigil-case-file-page .vigil-classification-basis {
+  color: hsl(var(--foreground) / 0.9) !important;
+}
 
 /* External classifications preserve the external assessor's own scheme rather
    than translating it into VIGIL alignment roles. */
@@ -174,128 +274,115 @@
 
 
 .vigil-case-file-page .vigil-classification-basis {
-  color: hsl(var(--foreground) / 0.88) !important;
+  color: hsl(var(--foreground) / 0.9) !important;
 }
 
 @media (max-width: 760px) {
   .vigil-case-file-page .vigil-classification-web-table {
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-inline: contain;
   }
 
-  .vigil-case-file-page .vigil-classification-table,
-  .vigil-case-file-page .vigil-classification-table tbody,
-  .vigil-case-file-page .vigil-classification-table tr,
-  .vigil-case-file-page .vigil-classification-table td {
-    display: block;
-    width: 100%;
-    min-width: 0;
+  .vigil-case-file-page .vigil-classification-table {
+    min-width: 54rem;
   }
 
-  .vigil-case-file-page .vigil-classification-table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+  .vigil-case-file-page .vigil-primary-classification-table {
+    min-width: 96rem;
   }
 
-  .vigil-case-file-page .vigil-classification-table tbody {
-    display: grid;
-    gap: 0.85rem;
+  .vigil-case-file-page .vigil-external-alignment-classification-table .vigil-classification-table {
+    min-width: 70rem;
   }
 
-  .vigil-case-file-page .vigil-classification-table tbody tr {
-    overflow: hidden;
-    border: 1px solid hsl(var(--border) / 0.72);
-    border-radius: 0.82rem;
-    background: hsl(var(--background));
-    box-shadow: var(--shadow-sm);
-  }
-
-  .vigil-case-file-page .vigil-classification-table tbody td {
-    display: grid;
-    grid-template-columns: minmax(7.2rem, 0.38fr) minmax(0, 1fr);
-    gap: 0.7rem;
-    padding: 0.78rem 0.82rem;
-    border-bottom: 1px solid hsl(var(--border) / 0.52);
-  }
-
-  .vigil-case-file-page .vigil-classification-table tbody td::before {
-    content: attr(data-label);
-    font-family: var(--app-font-sans);
-    font-size: 0.76rem;
-    font-weight: 700;
-    line-height: 1.35;
-    letter-spacing: 0.055em;
-    text-transform: uppercase;
-    color: hsl(var(--muted-foreground) / 0.78);
-  }
-
-  .vigil-case-file-page .vigil-classification-table tbody td:last-child {
-    border-bottom: 0;
-  }
-
-  .vigil-case-file-page .vigil-classification-table tbody tr:hover td {
-    background: transparent;
-  }
-
-  .vigil-case-file-page .vigil-classification-table tbody tr.vigil-classification-family-row {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .vigil-case-file-page .vigil-classification-family-row > th {
-    display: block;
-    width: 100%;
-    padding: 0.55rem 0.15rem 0.35rem;
-    border: 0;
-    background: transparent;
-  }
-
-  .vigil-case-file-page .vigil-classification-table td > strong,
-  .vigil-case-file-page .vigil-classification-table td > span,
-  .vigil-case-file-page .vigil-classification-table td > a {
-    grid-column: 2;
-  }
-
-  .vigil-case-file-page .vigil-classification-basis {
-    display: grid !important;
+  .vigil-case-file-page .vigil-compliance-table {
+    min-width: 82rem;
   }
 }
 
 
-/* Repair keeps only the public decision-useful fields.
-   Primary/secondary ordering remains in canonical data and the deterministic report. */
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(1) { width: 16%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(2) { width: 28%; }
-.vigil-case-file-page .vigil-repair-table thead th:nth-child(3) { width: 56%; }
+/* Compliance is a lean external crosswalk: VIGIL finding, requirement,
+   and the published requirement explanation. */
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 12%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 32%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 56%; }
 
-.vigil-case-file-page .vigil-repair-table tbody td {
+.vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
   font-size: 1.02rem;
   line-height: 1.62;
 }
 
-.vigil-case-file-page .vigil-repair-table td > strong {
+.vigil-case-file-page .vigil-compliance-reference-list {
+  display: grid;
+  gap: 0.82rem;
+}
+
+.vigil-case-file-page .vigil-compliance-reference {
+  display: grid;
+  gap: 0.28rem;
+  padding-bottom: 0.82rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.48);
+}
+
+.vigil-case-file-page .vigil-compliance-reference:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-compliance-reference-title,
+.vigil-case-file-page .vigil-compliance-reference-title a {
+  color: hsl(var(--foreground) / 0.94);
   font-size: 1.02rem;
+  font-weight: 670;
+  line-height: 1.42;
 }
 
-.vigil-case-file-page .vigil-repair-table .vigil-classification-id {
+.vigil-case-file-page .vigil-compliance-reference-title a {
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--primary) / 0.45);
+  text-underline-offset: 0.16em;
+}
+
+.vigil-case-file-page .vigil-compliance-reference-meta,
+.vigil-case-file-page .vigil-compliance-requirement-id {
+  display: block;
+  color: hsl(var(--muted-foreground));
   font-size: 0.84rem;
+  line-height: 1.45;
 }
 
-.vigil-case-file-page .vigil-repair-invariant-cell {
-  color: hsl(var(--foreground) / 0.9) !important;
+.vigil-case-file-page .vigil-compliance-requirement-id {
+  font-family: var(--app-font-mono);
+}
+
+.vigil-case-file-page .vigil-compliance-reference p {
+  margin: 0.16rem 0 0;
+}
+
+.vigil-case-file-page .vigil-compliance-requirement-title strong {
+  display: block;
+  line-height: 1.45;
+}
+
+.vigil-case-file-page .vigil-compliance-clause,
+.vigil-case-file-page .vigil-compliance-requirement-id {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-compliance-requirement-explanation {
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-compliance-gap {
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
 }
 
 
@@ -461,3 +548,97 @@
   }
 }
 
+
+
+/* Partial adjudication is shown separately from accepted Section 03 mappings.
+   This table contains only Incident observations whose final taxonomy disposition
+   remains unresolved or is a taxonomy gap. */
+.vigil-case-file-page .vigil-further-adjudication {
+  margin-top: 1.55rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid hsl(var(--border) / 0.68);
+}
+
+.vigil-case-file-page .vigil-further-adjudication > .vigil-case-subheading {
+  margin-bottom: 0.85rem;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-inline: contain;
+  border: 1px solid hsl(var(--status-mixed) / 0.38);
+  border-radius: 0.65rem;
+  background: hsl(var(--background));
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table {
+  width: 100%;
+  min-width: 72rem;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table th,
+.vigil-case-file-page .vigil-further-adjudication-table td {
+  padding: 0.78rem 0.85rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.58);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table thead th {
+  background: hsl(var(--status-mixed-surface) / 0.48);
+  color: hsl(var(--muted-foreground) / 0.9);
+  font-family: var(--app-font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table th:nth-child(1) { width: 38%; }
+.vigil-case-file-page .vigil-further-adjudication-table th:nth-child(2) { width: 24%; }
+.vigil-case-file-page .vigil-further-adjudication-table th:nth-child(3) { width: 38%; }
+
+.vigil-case-file-page .vigil-further-adjudication-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table td {
+  font-size: 1rem;
+  line-height: 1.58;
+  color: hsl(var(--foreground) / 0.9);
+}
+
+.vigil-case-file-page .vigil-further-adjudication-table td p {
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-boundaries,
+.vigil-case-file-page .vigil-further-adjudication-rationales {
+  margin: 0;
+  padding-left: 1.05rem;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-boundaries li + li,
+.vigil-case-file-page .vigil-further-adjudication-rationales li + li {
+  margin-top: 0.45rem;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-boundaries a {
+  color: hsl(var(--foreground) / 0.92);
+  text-decoration: none;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-boundaries a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.vigil-case-file-page .vigil-further-adjudication-boundaries .vigil-classification-id {
+  display: block;
+  margin-top: 0.16rem;
+}

@@ -219,6 +219,15 @@ def validate_vigil_publication_integrity() -> list[str]:
         and record.get("record_type") == "incident"
         and isinstance(record.get("id"), str)
     ]
+    record_lastmods = {
+        record["id"]: record.get("record_last_updated")
+        for record in records
+        if isinstance(record, dict)
+        and record.get("record_type") == "incident"
+        and isinstance(record.get("id"), str)
+        and isinstance(record.get("record_last_updated"), str)
+        and record.get("record_last_updated")
+    }
     if len(record_ids) != len(records):
         errors.append(
             f"{VIGIL_FALLBACK} contains non-Incident records or records without string ids."
@@ -248,6 +257,13 @@ def validate_vigil_publication_integrity() -> list[str]:
         for loc in sitemap_root.findall("sm:url/sm:loc", namespace)
         if loc.text and loc.text.strip()
     ]
+    sitemap_lastmods = {}
+    for url_node in sitemap_root.findall("sm:url", namespace):
+        loc_node = url_node.find("sm:loc", namespace)
+        lastmod_node = url_node.find("sm:lastmod", namespace)
+        if loc_node is None or not loc_node.text or lastmod_node is None or not lastmod_node.text:
+            continue
+        sitemap_lastmods[loc_node.text.strip()] = lastmod_node.text.strip()
     noncanonical_directory_urls = sorted(
         url for url in sitemap_urls
         if url != "https://www.cam-initiative.org/" and not url.endswith("/")
@@ -283,6 +299,24 @@ def validate_vigil_publication_integrity() -> list[str]:
     if len(sitemap_case_ids) != len(sitemap_id_set):
         errors.append("docs/sitemap.xml contains duplicate VIGIL Incident URLs.")
 
+    for record_id, expected_lastmod in sorted(record_lastmods.items()):
+        case_url = f"{VIGIL_CASE_URL_PREFIX}{record_id}/"
+        actual_lastmod = sitemap_lastmods.get(case_url)
+        if actual_lastmod != expected_lastmod:
+            errors.append(
+                f"{case_url} sitemap lastmod {actual_lastmod!r} does not match "
+                f"record_last_updated {expected_lastmod!r}."
+            )
+
+    if record_lastmods:
+        expected_index_lastmod = max(record_lastmods.values())
+        if sitemap_lastmods.get(VIGIL_CASE_URL_PREFIX) != expected_index_lastmod:
+            errors.append(
+                f"{VIGIL_CASE_URL_PREFIX} sitemap lastmod "
+                f"{sitemap_lastmods.get(VIGIL_CASE_URL_PREFIX)!r} does not match "
+                f"latest Incident update {expected_index_lastmod!r}."
+            )
+
     published_case_ids = {
         entry.name
         for entry in VIGIL_CASE_ROOT.iterdir()
@@ -299,6 +333,16 @@ def validate_vigil_publication_integrity() -> list[str]:
             errors.append(
                 f"{page_path} does not declare the trailing-slash canonical {expected_canonical}"
             )
+        fallback_marker = 'data-static-publication-fallback="vigil-case"'
+        root_marker = '<div id="root"></div>'
+        fallback_position = page_html.find(fallback_marker)
+        root_position = page_html.find(root_marker)
+        if fallback_position < 0:
+            errors.append(f"{page_path} does not preserve the static Case File publication fallback.")
+        if root_position < 0:
+            errors.append(f"{page_path} does not keep an empty React root beside the static fallback.")
+        if fallback_position >= 0 and root_position >= 0 and fallback_position > root_position:
+            errors.append(f"{page_path} places the Case File fallback after the React root.")
     missing_case_pages = sorted(record_id_set - published_case_ids)
     orphan_case_pages = sorted(published_case_ids - record_id_set)
     if missing_case_pages:
@@ -311,6 +355,14 @@ def validate_vigil_publication_integrity() -> list[str]:
             "Published VIGIL case entrypoints have no fallback record: "
             + ", ".join(orphan_case_pages)
         )
+
+    case_index_path = VIGIL_CASE_ROOT / "index.html"
+    if case_index_path.is_file():
+        case_index_html = case_index_path.read_text()
+        if 'data-static-publication-fallback="vigil-case-index"' not in case_index_html:
+            errors.append(f"{case_index_path} does not preserve the static Case Files index fallback.")
+        if '<div id="root"></div>' not in case_index_html:
+            errors.append(f"{case_index_path} does not keep an empty React root beside the static index fallback.")
 
     return errors
 
@@ -337,13 +389,29 @@ def validate_published_vigil_ui_contract() -> list[str]:
     required_strings = (
         "Incident breakdown",
         "Harm Impact Assessment",
-        "Fidelity classes and their governing invariants are defined in the",
-        "The governing invariants shown here are defined in the",
+        "Incident observation",
+        "Incident analysis",
+        "Fidelity class",
+        "Recognition criteria",
+        "Confidence",
+        "External requirement",
+        "Requirement explanation",
+        "VIGIL Finding",
+        "Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.",
     )
     for required in required_strings:
         if required not in bundle:
             errors.append(
                 f"Generated application bundle {bundle_path} is missing required Case File UI text: {required!r}"
+            )
+
+    for retired in (
+        "Classification basis",
+        "Incident analysis carries the occurrence-specific evidence from Section 02 into the classification decision.",
+    ):
+        if retired in bundle:
+            errors.append(
+                f"Generated application bundle {bundle_path} still contains retired Case File UI text: {retired!r}"
             )
 
     if "Taxonomy assessment" in bundle:
