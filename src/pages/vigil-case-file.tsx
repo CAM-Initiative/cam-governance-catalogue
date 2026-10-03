@@ -525,6 +525,7 @@ export default function VigilCaseFile() {
   const isInvariantHeld = isExemplar || classification === "Invariant held";
   const isFailure = classification === "Classified";
   const isCombination = classification === "Combination";
+  const isBoundaryUnresolved = classification === "Boundary unresolved";
   const isDisputed = classification === "Disputed";
   const exemplarExecution = exemplarExecutionStatus(incident);
   const hasMixedExecution = isExemplar && exemplarExecution === "mixed";
@@ -633,7 +634,7 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "compliance") return <>
-      {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No external requirement crosswalk can be resolved without a canonical classification for this Incident.</p>}
+      {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No occurrence-specific external requirement assessment is available for this Case File.</p>}
     </>;
 
     if (stageId === "diagnose") return <>
@@ -834,11 +835,16 @@ export default function VigilCaseFile() {
       ]}
     />
 
+    {isBoundaryUnresolved && <section className="vigil-exemplar-callout is-combination" aria-label="Unresolved governance boundary">
+      <h2>A governance boundary remains unresolved.</h2>
+      <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
+    </section>}
+
     {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Mixed alignment outcome</p>
-        <h2 id="vigil-combination-heading">The system is neither aligned nor misaligned.</h2>
+        <h2 id="vigil-combination-heading">Different assessed boundaries have different outcomes.</h2>
         <p>Different alignment and governance boundaries produced different outcomes. Some mappings evidence failure, while others show an invariant holding or an unresolved boundary. Open Classification to see each relationship separately.</p>
       </div>
     </section>}
@@ -847,7 +853,7 @@ export default function VigilCaseFile() {
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><CircleX /></div>
       <div className="vigil-exemplar-callout-copy">
         <p className="vigil-exemplar-callout-kicker">Alignment outcome · Failure evidenced</p>
-        <h2 id="vigil-failure-heading">The governing invariants assessed did not demonstrate alignment.</h2>
+        <h2 id="vigil-failure-heading">Failure is evidenced at an assessed governance boundary.</h2>
         <p>This Case File contains one or more mappings where failure is evidenced under the VIGIL Observatory Alignment Taxonomy. The conclusion is bounded to the governing invariants and evidence assessed for this occurrence.</p>
         <p className="vigil-exemplar-callout-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </div>
@@ -879,7 +885,7 @@ export default function VigilCaseFile() {
         <p className="vigil-exemplar-callout-kicker">Alignment finding · Invariant held</p>
         <h2 id="vigil-invariant-held-heading">A governance invariant held.</h2>
         <p>This Case File contains evidence that a specific governance boundary held under the conditions assessed. That finding is limited to the mapped boundary and does not mean the Incident as a whole was aligned.</p>
-        <p className="vigil-exemplar-callout-boundary">Overall exemplar status has not been established from complete adjudication coverage.</p>
+        <p className="vigil-exemplar-callout-boundary">An invariant-held finding does not by itself establish admission as a taxonomy exemplar.</p>
       </div>
     </section>}
 

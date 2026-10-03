@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-x-a2DGnn.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-DyCdv-7H.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BLTtWP5l.css">
   </head>
   <body>
     <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -69,6 +69,9 @@
       <dt>Vendor / platform</dt><dd>OpenAI</dd>
     </dl>
 
+    <section><h2>Incident breakdown</h2><article><p>A live ChatGPT Work adjudication thread reached its context limit and could not continue; recovery showed that material adjudication completed after the last GitHub checkpoint had not been durably published.</p><p><strong>Classified</strong></p><p>The work existed and was needed for continuation, the context boundary interrupted the workflow, and unpublished state was unavailable from the durable repository checkpoint afterward.</p><p>The task, branch and last durable repository checkpoint remained identifiable; the failure was that later material work contents were never durably persisted. Continuity Anchoring excludes a case where the continuation anchor is known but the state contents themselves were not persisted.</p></article></section>
+    <h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>
+    <section><h2>Conclusion</h2><p>The bounded failure is not merely that a long conversation ended. Material work state necessary for correct continuation remained dependent on the conversational context after substantive adjudication had been performed. When the context boundary forced termination, the durable repository state represented only an earlier checkpoint, so later completed work was unavailable for resumption and had to be reconstructed. That is a direct Material Work-State Persistence failure. The evidence does not support a broader claim about hidden product architecture or universal ChatGPT behaviour. The retained work-state persistence failure concerns actual completed material decisions missing from the durable checkpoint, not inability to identify the branch or continuity anchor. Later reconstructed blobs are not a count of lost work. No eligible reviewed FC-derived candidate or independent source-identified admitted requirement is established by this evidence; absence of an external finding does not reduce the occurrence-level persistence failure.</p><h3>Governance significance</h3><p>For CAM, the occurrence demonstrates that reasoning completion and durable work completion are distinct states. Long-running agentic or governance workflows should checkpoint material decisions to a recoverable store before a context boundary can terminate the execution surface, and should preserve a reconstructable handoff when continuation cannot proceed in the current context.</p></section>
   </main></div>
     <div id="root"></div>
   </body>
