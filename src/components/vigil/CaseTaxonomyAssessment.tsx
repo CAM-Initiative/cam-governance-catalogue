@@ -110,6 +110,15 @@ function SourceClause({ clause }: { clause: ClauseAssessment }) {
   </div>;
 }
 
+function clauseClassificationState(status?: string) {
+  if (status === "mapped") return { label: "Classified", detail: undefined, tone: "classified" };
+  if (status === "resolved-no-mapping") return { label: "Reviewed — no current class", detail: undefined, tone: "reviewed" };
+  if (status === "taxonomy-gap") return { label: "Not yet classified", detail: "Taxonomy coverage gap", tone: "pending" };
+  if (status === "adjudication_incomplete") return { label: "Not yet classified", detail: "Adjudication incomplete", tone: "pending" };
+  if (status === "unresolved") return { label: "Not yet classified", detail: "Boundary unresolved", tone: "pending" };
+  return { label: "Not yet classified", detail: "Adjudication status not stated", tone: "pending" };
+}
+
 function RelationshipStack({
   relationships,
   render,
@@ -146,21 +155,28 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
         <thead>
           <tr>
             <th scope="col">Incident observation</th>
+            <th scope="col">Classification</th>
             <th scope="col">Incident analysis</th>
           </tr>
         </thead>
         <tbody>
-          {clauses.map((clause, index) => <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
-            <td data-label="Incident observation"><SourceClause clause={clause} /></td>
-            <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
-              <p><strong>{({ mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap", adjudication_incomplete: "Adjudication incomplete" } as Record<string, string>)[clause.status ?? ""] ?? "Adjudication status not stated"}</strong></p>
-              {clause.note && <p>{clause.note}</p>}
-              <RelationshipStack
-                relationships={clause.relationships}
-                render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
-              />
-            </td>
-          </tr>)}
+          {clauses.map((clause, index) => {
+            const classificationState = clauseClassificationState(clause.status);
+            return <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
+              <td data-label="Incident observation"><SourceClause clause={clause} /></td>
+              <td data-label="Classification" className="vigil-taxonomy-clause-classification">
+                <span className={`vigil-taxonomy-clause-state is-${classificationState.tone}`}>{classificationState.label}</span>
+                {classificationState.detail && <span className="vigil-taxonomy-clause-state-detail">{classificationState.detail}</span>}
+              </td>
+              <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
+                {clause.note && <p>{clause.note}</p>}
+                <RelationshipStack
+                  relationships={clause.relationships}
+                  render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
+                />
+              </td>
+            </tr>;
+          })}
         </tbody>
       </table>
     </div>
