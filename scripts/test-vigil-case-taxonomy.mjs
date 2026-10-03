@@ -184,7 +184,9 @@ const taxonomyAssessment = await readFile(new URL("../src/components/vigil/CaseT
 assert.match(taxonomyAssessment, /vigil_assessment/);
 assert.match(taxonomyAssessment, /source_clause_analysis/);
 assert.match(taxonomyAssessment, /Incident breakdown/);
-assert.match(taxonomyAssessment, /<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>/);
+assert.match(taxonomyAssessment, /<th scope="col">Incident observation<\/th>[\s\S]*<th scope="col">Classification<\/th>[\s\S]*<th scope="col">Incident analysis<\/th>/);
+assert.match(taxonomyAssessment, /Not yet classified/);
+assert.match(taxonomyAssessment, /Reviewed — no current class/);
 assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Recovered governance principle<\/th>/);
 assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Fidelity class<\/th>/);
 assert.doesNotMatch(taxonomyAssessment, /<th scope="col">Relationship<\/th>/);
