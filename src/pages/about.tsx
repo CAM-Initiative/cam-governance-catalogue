@@ -2,6 +2,7 @@ import { ArrowRight, BookOpen, Coffee, ExternalLink, Github, Mail, Newspaper } f
 import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
+import { vigilReadingGuide } from "@/lib/vigilReadingGuide.mjs";
 
 // Canonical public portrait asset is maintained in CAM-Initiative/Registry.
 const founderPhotoHref = "https://raw.githubusercontent.com/CAM-Initiative/Registry/main/Images/Website/founder-photo.jpg";
@@ -66,6 +67,12 @@ export default function About() {
             <div className="document-reading">
               <p>VIGIL Observatory is the CAM Initiative&apos;s Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies evidence against recurring governance boundaries through the VIGIL Observatory Alignment Taxonomy, and records exemplars when the relevant invariant holds under pressure.</p>
               <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. The Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation, while VIGIL remains an independent Incident-analysis system; VIGIL assessments and taxonomy relationships do not create or amend CAELESTIS doctrine.</p>
+              <div id="reading-vigil" aria-label="How to read VIGIL assessments">
+                {vigilReadingGuide.map(section => <section key={section.title}>
+                  <h3>{section.title}</h3>
+                  {section.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+                </section>)}
+              </div>
               <p>VIGIL Observatory is also not affiliated with <a href="https://vigil.agency/" target="_blank" rel="noreferrer">Vigil</a>, the open-source AI-powered security operations platform, or <a href="https://vigilsoc.org/" target="_blank" rel="noreferrer">Vigil SOC</a>, the open-source AI security operations project.</p>
               <p>The CAM Initiative and the CAELESTIS Architecture Model are not affiliated with the separate Caelestis project at <a href="https://caelestis-project.eu/" target="_blank" rel="noreferrer">caelestis-project.eu</a>.</p>
             </div>
