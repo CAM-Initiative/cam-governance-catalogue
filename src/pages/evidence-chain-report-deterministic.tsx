@@ -493,7 +493,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       <div className="report-postscript-slot" data-report-postscript />
 
       <footer className="mt-6 border-t border-border/60 pt-4 text-sm leading-relaxed text-muted-foreground">
-        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. An invariant-held finding remains attached to the governance boundary it assesses and does not by itself establish Incident-level exemplar status. Where adjudication is incomplete, Section 03 identifies the incident observations that still require a final taxonomy determination. Compliance shows independently assessed requirement applicability and occurrence findings.
+        This report is a deterministic print projection of the corresponding VIGIL Observatory Case File. It uses the same canonical Incident, record-local evidence scope and Alignment Taxonomy relationships as the interactive Case File. An invariant-held finding remains attached to the governance boundary it assesses and does not by itself establish Incident-level exemplar status. Where adjudication is incomplete, Section 03 identifies the incident observations that still require a final taxonomy determination. Compliance shows independently assessed occurrence alignment with external requirements.
       </footer>
     </main>
   </Shell>;

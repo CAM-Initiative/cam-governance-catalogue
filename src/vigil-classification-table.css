@@ -305,8 +305,9 @@
 /* Compliance keeps the assessment result visually primary, then names the
    source requirement and finally explains the occurrence-specific basis. */
 .vigil-case-file-page .vigil-compliance-table thead th:nth-child(1) { width: 16%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 31%; }
-.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 53%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(2) { width: 28%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(3) { width: 16%; }
+.vigil-case-file-page .vigil-compliance-table thead th:nth-child(4) { width: 40%; }
 
 .vigil-case-file-page .vigil-compliance-table tbody td {
   padding: 0.78rem 0.85rem 0.82rem;
@@ -333,19 +334,19 @@
   line-height: 1.3;
 }
 
-.vigil-case-file-page .vigil-compliance-result.is-failure {
+.vigil-case-file-page .vigil-compliance-result.is-not-aligned {
   border-color: hsl(var(--destructive) / 0.32);
   background: hsl(var(--destructive) / 0.07);
   color: hsl(var(--destructive));
 }
 
-.vigil-case-file-page .vigil-compliance-result.is-met {
+.vigil-case-file-page .vigil-compliance-result.is-aligned {
   border-color: hsl(var(--status-success) / 0.3);
   background: hsl(var(--status-success) / 0.08);
   color: hsl(var(--status-success));
 }
 
-.vigil-case-file-page .vigil-compliance-result.is-unresolved {
+.vigil-case-file-page .vigil-compliance-result.is-boundary {
   border-color: hsl(var(--primary) / 0.22);
   background: hsl(var(--primary) / 0.05);
   color: hsl(var(--foreground) / 0.82);

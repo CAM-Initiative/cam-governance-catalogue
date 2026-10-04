@@ -380,9 +380,9 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 16%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(2\) \{ width: 31%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 53%; \}/);
-  assert.doesNotMatch(css, /\.vigil-compliance-table thead th:nth-child\(4\)/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(2\) \{ width: 28%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 16%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 40%; \}/);
   assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 72rem;/);
   assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 96rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
@@ -1300,7 +1300,7 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and defines Dispu
 });
 
 
-test("Compliance surfaces explicit findings, separates unresolved applicability, and uses internal references", async () => {
+test("Compliance surfaces alignment results, normative force and internal evidence references", async () => {
   const [component, rows, repairCss] = await Promise.all([
     read("src/components/vigil/CaseRequirementAssessments.tsx"),
     read("src/lib/vigilOccurrenceRequirements.mjs"),
@@ -1308,12 +1308,12 @@ test("Compliance surfaces explicit findings, separates unresolved applicability,
   ]);
 
   assert.match(component, /<th scope="col">Assessment result<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Evidence and assessment basis<\/th>/);
-  assert.match(component, /Applicable requirements and findings/);
-  assert.match(component, /Applicability unresolved/);
-  assert.match(component, /Not applicable to this occurrence/);
-  assert.match(component, /vigil-compliance-secondary-group/);
-  assert.match(component, /row\.finding === "Not met"/);
-  assert.match(rows, /Only an applicable requirement receives a VIGIL finding/);
+  assert.match(component, /<th scope="col">Normative force<\/th>/);
+  assert.match(component, /row\.resultLabel/);
+  assert.match(component, /row\.assessmentBasis/);
+  assert.match(component, /row\.assessedOn/);
+  assert.doesNotMatch(component, /applicabilityStatus|findingBasis|SecondaryAssessmentGroup/);
+  assert.match(rows, /Boundary means a relevant requirement/);
   assert.match(rows, /\/observatory\/ai-governance-standards\//);
   assert.match(rows, /#vigil-evidence-reference-/);
   assert.doesNotMatch(rows, /authoritative_locator/);

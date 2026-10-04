@@ -30,7 +30,7 @@ const [
 assert.match(caseFile, /CaseTaxonomyClassification/);
 assert.match(caseFile, /CaseTaxonomyCompliance/);
 assert.match(caseFile, /STANDARD_VIGIL_ASSESSMENT_LIMITS/);
-assert.match(await readFile(new URL("../src/lib/vigilOccurrenceRequirements.mjs", import.meta.url), "utf8"), /independently[\s\S]*do not assess organisation-wide governance programmes or overall legal or standards compliance/);
+assert.match(await readFile(new URL("../src/lib/vigilOccurrenceRequirements.mjs", import.meta.url), "utf8"), /compare the evidence from this occurrence[\s\S]*do not establish organisation-wide compliance or certification/);
 assert.match(caseFile, /ExternalAlignmentClassification/);
 assert.doesNotMatch(caseFile, /deriveFailureModePublicDetail/);
 assert.doesNotMatch(caseFile, /failureId=/);
