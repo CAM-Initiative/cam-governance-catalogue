@@ -26,7 +26,7 @@ function RequirementTable({ items, title }: { items: RequirementRow[]; title: st
           <p>{row.assessmentBasis}</p>
           {row.assessedOn && <p><strong>Assessed:</strong> <time dateTime={row.assessedOn}>{row.assessedOn}</time></p>}
           {row.evidence.length > 0 && <p className="vigil-compliance-evidence-links"><strong>Evidence:</strong>{" "}
-            {row.evidence.map((source, index) => <span key={source.url ?? index}>{index > 0 ? " · " : ""}<a href={source.url}>{source.referenceNumber ? `[${source.referenceNumber}] ` : ""}{source.title}</a></span>)}
+            {row.evidence.map((source, index) => <span key={source.url ?? index}>{index > 0 ? " · " : ""}<a href={source.url} aria-label={`Reference ${source.referenceNumber}: ${source.title}`}>[{source.referenceNumber}]</a></span>)}
           </p>}
         </td>
       </tr>)}</tbody>

@@ -58,6 +58,8 @@ test('Static Case Files publish all results, normative force, basis, date and ev
  for(const value of ['Aligned','Not aligned','Boundary','Normative force','Voluntary consensus standard',assessment.assessment_basis,assessment.assessed_on,'#vigil-evidence-reference-1'])assert.ok(output.includes(value),value);
  assert.equal((output.match(/<tr>/g)||[]).length,4);
  assert.doesNotMatch(output,/Applicability|Not met|undefined|https:\/\/example.org/);
+ assert.match(output,/>\[1\]<\/a>/);
+ assert.doesNotMatch(output,/>Observed trace<\/a>/);
 });
 test('Static zero-row Case Files make no positive compliance claim',()=>{
  assert.equal(html({external_requirement_assessments:[]}),'<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>');
