@@ -3,10 +3,18 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
+import { vigilReadingGuide } from "@/lib/vigilReadingGuide.mjs";
 import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassification";
 import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
+
+function ReadingGuide({ section }: { section: string }) {
+  return <>{vigilReadingGuide.filter(item => item.section === section).map(item => <section key={item.title}>
+    <h3>{item.title}</h3>
+    {item.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+  </section>)}</>;
+}
 
 type HubState = {
   caseFiles?: number;
@@ -38,7 +46,7 @@ const CASE_FILE_STAGES = [
   {
     number: "04",
     label: "Compliance",
-    description: "Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy.",
+    description: "Assess relevant external requirements independently against the occurrence evidence. Show Aligned, Not aligned or Boundary alongside normative force and the assessment basis.",
   },
   {
     number: "05",
@@ -153,7 +161,7 @@ export default function VigilKnowledgeHub() {
               </div>
               <div className="document-reading">
                 <p>The Case File structure keeps distinct questions separate and reconnects them at the conclusion. <strong>Assessment</strong> contains the incident breakdown, external assessments and the <strong>Harm Impact Assessment</strong>. The Harm Impact Assessment applies the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong> to evidence of materialised consequence and derives severity; <strong>Classification</strong> asks which governance or control boundaries in the VIGIL Alignment Taxonomy were engaged and what happened at each boundary.</p>
-                <p>Harm Impact Assessment and alignment classification are deliberately independent: harm assessment describes materialised consequence and derives severity; alignment classification describes mechanism and boundary behaviour. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
+                <p>The Harm Impact Assessment describes materialised consequence and severity. Alignment classification describes governance-boundary behaviour. These assessments are independent. A reported Incident is not automatically evidence of a governance failure, and a serious harm rating does not by itself determine which Fidelity Class applies.</p>
                 <p className="vigil-knowledge-meta">{caseFilesMeta}</p>
               </div>
               <ol className="about-method-list" aria-label="VIGIL Observatory six-stage Incident Case File model">
@@ -176,8 +184,7 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-taxonomy-heading">Mappings classify individual boundaries. The Case File index summarises the Incident.</h2>
               </div>
               <div className="document-reading">
-                <p>The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Fidelity Families</strong> and individual <strong>Fidelity Classes</strong> retain stable FF/FC identifiers and define the repeatable mechanisms, recognition criteria, exclusions and governing invariants used in adjudication.</p>
-                <p>Classification happens first at the <strong>mapping level</strong>. One Incident may engage several Fidelity Classes, and each relationship records what the evidence establishes at that particular governance boundary.</p>
+                <ReadingGuide section="taxonomy" />
                 <p className="vigil-knowledge-meta">{taxonomyMeta}</p>
               </div>
 
@@ -210,7 +217,7 @@ export default function VigilKnowledgeHub() {
               </div>
               <div className="document-reading">
                 <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews eleven harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
-                <p>Harm assessment is deliberately separate from alignment classification: the Harm Impact Assessment describes materialised consequence and severity; alignment classification describes governance-boundary behaviour.</p>
+                <ReadingGuide section="harm-impact" />
                 <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
               </div>
               <div className="cam-action-row">
@@ -266,6 +273,7 @@ export default function VigilKnowledgeHub() {
               </div>
               <div className="document-reading">
                 <p>A curated library of laws, standards, frameworks and technical guidance selected because each source contributes to a specific AI-governance question. Open a source to review its governance relevance, represented clauses and review provenance.</p>
+                <ReadingGuide section="standards" />
                 <p className="vigil-knowledge-meta">{baselineMeta}</p>
               </div>
               <div className="cam-action-row">

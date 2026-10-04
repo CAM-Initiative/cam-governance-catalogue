@@ -1,1 +1,1 @@
-export const vigilReadingGuide: Array<{ title: string; paragraphs: string[] }>;
+export const vigilReadingGuide: Array<{ section: "taxonomy" | "standards" | "harm-impact"; title: string; paragraphs: string[] }>;

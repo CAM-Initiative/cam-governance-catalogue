@@ -1,6 +1,7 @@
 // Public reading guide, consistent with VIGIL.AlignmentTaxonomy.ReadingGuide.json.
 export const vigilReadingGuide = [
   {
+    section: "taxonomy",
     title: "Reading the Alignment Taxonomy",
     paragraphs: [
       "A Fidelity Family groups related governance properties. A Fidelity Class defines a particular property and its governing invariant: the condition that should hold within the class boundary. Fidelity names the property examined; it does not presume an Aligned result.",
@@ -9,6 +10,7 @@ export const vigilReadingGuide = [
     ],
   },
   {
+    section: "taxonomy",
     title: "Scope, incomplete adjudication and exemplars",
     paragraphs: [
       "Results belong to assessed actions or source clauses and their governance boundaries. Different actions in one Incident can receive different results. Incomplete adjudication remains explicit while completed findings remain available. An unreviewed observation is not automatically Boundary.",
@@ -16,6 +18,7 @@ export const vigilReadingGuide = [
     ],
   },
   {
+    section: "standards",
     title: "External requirements and normative force",
     paragraphs: [
       "Taxonomy relationships help identify external requirements for review. Each retained requirement is assessed independently against the occurrence evidence. A taxonomy result does not determine the external requirement result. For an external requirement, Boundary identifies a genuinely relevant requirement with a missing decisive occurrence fact.",
@@ -24,6 +27,7 @@ export const vigilReadingGuide = [
     ],
   },
   {
+    section: "harm-impact",
     title: "Separate Harm Impact assessment",
     paragraphs: [
       "Harm Impact assesses materialised consequences. Taxonomy classification assesses governance invariants. External requirement assessments compare the occurrence with separate requirements. Severity does not determine alignment, and an alignment result does not determine severity.",

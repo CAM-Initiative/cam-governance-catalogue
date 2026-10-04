@@ -125,9 +125,6 @@ const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" s
   <h3>Public Incident evidence, classification and repair analysis</h3>
   <p>VIGIL Observatory is CAM Initiative's Incident-centred public observatory and AI incident database for evidence-to-repair governance analysis. It preserves public Incident evidence, assesses materialised consequence and governance significance, classifies evidence against recurring governance boundaries through the VIGIL Observatory Alignment Taxonomy, and records exemplars when the relevant invariant holds under pressure.</p>
   <p>VIGIL uses its own Incident model, VIGIL Harm Impact Methodology (VIGIL-HIM) and VIGIL Observatory Alignment Taxonomy. The Alignment Taxonomy uses the CAELESTIS Architecture Model as a source for taxonomy development and evaluation, while VIGIL remains an independent Incident-analysis system; VIGIL assessments and taxonomy relationships do not create or amend CAELESTIS doctrine.</p>
-  <section id="reading-vigil" aria-label="How to read VIGIL assessments">
-    ${vigilReadingGuide.map(section => `<section><h3>${escapeHtml(section.title)}</h3>${section.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</section>`).join("")}
-  </section>
   <p>VIGIL Observatory is not affiliated with Vigil at vigil.agency or Vigil SOC. CAM Initiative and the CAELESTIS Architecture Model are also not affiliated with the separate Caelestis project at caelestis-project.eu.</p>
 
   <nav aria-label="CAM Initiative resources">
@@ -187,6 +184,11 @@ const staticRoutes = [
   ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
 ];
 
+function knowledgeReadingGuideHtml(section, title) {
+  const entries = vigilReadingGuide.filter(item => item.section === section);
+  return `<section id="${escapeHtml(section)}"><h2>${escapeHtml(title)}</h2>${entries.map(item => `<section><h3>${escapeHtml(item.title)}</h3>${item.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</section>`).join("")}</section>`;
+}
+
 const staticRouteBodies = new Map([
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
@@ -200,6 +202,9 @@ const staticRouteBodies = new Map([
       <li><a href="/datasets/">Datasets</a></li>
       <li><a href="/policy/">Policy</a></li>
     </ul></nav>
+    ${knowledgeReadingGuideHtml("taxonomy", "Alignment Taxonomy")}
+    ${knowledgeReadingGuideHtml("harm-impact", "Harm Impact Assessment")}
+    ${knowledgeReadingGuideHtml("standards", "AI Governance Standards")}
   </main>`],
   ["/observatory", `<main data-static-crawl-fallback="vigil-observatory" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>

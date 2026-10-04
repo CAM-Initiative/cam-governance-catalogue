@@ -512,7 +512,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
   assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
-  assert.match(hub, /Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy/);
+  assert.match(hub, /Assess relevant external requirements independently against the occurrence evidence/);
   assert.match(hub, /Integrate the evidence, harm assessment, taxonomy relationships and external requirement crosswalk into a bounded VIGIL interpretation\./);
   assert.match(hub, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(hub, /CASE_FILE_STAGES\.map/);
@@ -1070,7 +1070,7 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
     read("src/home-menu-pages.css"),
   ]);
   const methodStart = hub.indexOf("One evidence-to-conclusion structure for every Incident");
-  const harmSeparation = hub.indexOf("Harm Impact Assessment and alignment classification are deliberately independent");
+  const harmSeparation = hub.indexOf("The Harm Impact Assessment describes materialised consequence and severity");
   const stageList = hub.indexOf("about-method-list");
   const classificationStart = hub.indexOf("Mappings classify individual boundaries. The Case File index summarises the Incident.");
   const architectureStart = hub.indexOf("CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus");
