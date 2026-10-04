@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-x-a2DGnn.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CEzGS9Ie.css">
+    <script type="module" crossorigin src="/assets/index-CdX-v6l4.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CqZNiaz6.css">
   </head>
   <body>
     <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -69,6 +69,9 @@
       <dt>Vendor / platform</dt><dd>OpenAI</dd>
     </dl>
 
+    <section><h2>Incident breakdown</h2><article><p>Two voice assistants reportedly responded to the same human utterance.</p><p><strong>Classified</strong></p><p>Both assistants acted on one utterance without an evidenced shared arbitration state.</p></article><article><p>The assistants were running on separate devices while participating in the same human conversation.</p><p><strong>Classified</strong></p><p>The failure occurs at the interaction fabric: each local assistant can be valid while the combined system lacks cross-participant yielding and conflict resolution.</p></article></section>
+    <h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>
+    <section><h2>Conclusion</h2><p>The governance issue is shared interaction arbitration. Each assistant can be individually functioning while the combined environment fails because neither instance has authoritative shared state for who owns the conversational floor, whether another synthetic participant is already responding, or which device the human intended to address. Multi-agent interaction therefore needs environment-level coordination in addition to per-agent turn-taking. The retained conversational-floor failure remains conditional on the reported collision and coordination facts, without asserting undocumented network or internal turn-state mechanisms. Intentional coordinated parallel speech remains outside that failure condition. No relevant canonical external requirement is established for this reported conversational collision. The agentic-deployment requirement has a different system object.</p><h3>Governance significance</h3><p>This incident shows why multi-agent safety cannot be reduced to the quality of each model response. Where several synthetic participants can observe one human input, the execution fabric needs explicit participant identity, floor ownership, yielding and conflict-resolution semantics.</p></section>
   </main></div>
     <div id="root"></div>
   </body>

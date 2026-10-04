@@ -122,15 +122,17 @@ function incidentClassificationLabel(
   const hasFailure = roles.includes("failure-occurrence");
   const hasInvariantHeld = roles.includes("successful-invariant");
   const hasAmbiguousBoundary = roles.includes("ambiguous-boundary");
-  if (hasAmbiguousBoundary || (hasFailure && hasInvariantHeld)) return "Combination";
+  if (hasFailure && hasInvariantHeld) return "Combination";
+  if (hasAmbiguousBoundary && (hasFailure || hasInvariantHeld)) return "Combination";
+  if (hasAmbiguousBoundary) return "Boundary unresolved";
   if (hasInvariantHeld && !hasFailure) {
-    if (exemplarEligible === true) return "Exemplar";
+    // Eligibility is not admission to the taxonomy exemplar collection.
     return "Invariant held";
   }
   if (hasFailure && !hasInvariantHeld) return "Classified";
 
   if (fallbackRole === "successful-invariant") {
-    if (exemplarEligible === true) return "Exemplar";
+    // Eligibility is not admission to the taxonomy exemplar collection.
     return "Invariant held";
   }
   if (status === "classified" || status === "provisionally-classified") return "Classified";

@@ -1,3 +1,4 @@
+import { CaseRequirementAssessments } from "./CaseRequirementAssessments";
 import { useEffect, useMemo, useState } from "react";
 import { Check, CircleMinus, X } from "lucide-react";
 import {
@@ -393,7 +394,7 @@ function ClassificationTable({
               </td>
               <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
                 <TaxonomyList
-                  values={classificationClass?.recognition?.required_conditions}
+                  values={(item.role === "successful-invariant" ? classificationClass?.success_recognition : classificationClass?.failure_recognition ?? classificationClass?.recognition)?.required_conditions}
                   empty="No separate recognition criteria are currently published for this Fidelity Class."
                 />
               </td>
@@ -648,127 +649,6 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   </div>;
 }
 
-type ComplianceReference = NonNullable<FailureTaxonomyClass["external_references"]>[number];
-
-type ComplianceContribution = {
-  role: ClassificationRole;
-  reference: ComplianceReference;
-};
-
-type ComplianceRollup = {
-  role: ClassificationRole;
-  reference: ComplianceReference;
-  explanations: string[];
-};
-
-function complianceReference(reference: ComplianceReference) {
-  const role = reference.reference_role ?? "";
-  return Boolean(reference.requirement_id)
-    || role === "regulatory-evidence"
-    || role === "standards-evidence"
-    || role === "authoritative-guidance";
-}
-
-function complianceReferenceKey(reference: ComplianceReference) {
-  const clause = (reference.clause_or_control ?? "").trim().toLowerCase();
-  if (reference.requirement_id?.trim()) {
-    return `requirement:${reference.requirement_id.trim().toLowerCase()}|clause:${clause}`;
-  }
-  if (reference.url?.trim()) {
-    return `url:${reference.url.trim().replace(/\/$/, "").toLowerCase()}|clause:${clause}`;
-  }
-  return `title:${reference.title.trim().toLowerCase()}|publisher:${reference.publisher.trim().toLowerCase()}|clause:${clause}`;
-}
-
-function complianceRolePriority(role: ClassificationRole) {
-  if (role === "failure-occurrence") return 3;
-  if (role === "ambiguous-boundary") return 2;
-  return 1;
-}
-
-function complianceContributions(primary: ResolvedClassification, secondaries: ResolvedClassification[]) {
-  const result: ComplianceContribution[] = [];
-  const add = (item: ResolvedClassification) => {
-    const classificationClass = item.class;
-    if (!classificationClass || !item.role) return;
-    for (const reference of (classificationClass.external_references ?? []).filter(complianceReference)) {
-      result.push({
-        role: item.role,
-        reference,
-      });
-    }
-  };
-
-  add(primary);
-  for (const secondary of secondaries) add(secondary);
-  return result;
-}
-
-function rollupComplianceRequirements(contributions: ComplianceContribution[]): ComplianceRollup[] {
-  const grouped = new Map<string, ComplianceContribution[]>();
-  for (const contribution of contributions) {
-    const key = complianceReferenceKey(contribution.reference);
-    const existing = grouped.get(key);
-    if (existing) existing.push(contribution);
-    else grouped.set(key, [contribution]);
-  }
-
-  return [...grouped.values()].map((group) => {
-    const highestPriority = Math.max(...group.map((item) => complianceRolePriority(item.role)));
-    const controlling = group.filter((item) => complianceRolePriority(item.role) === highestPriority);
-    const representative = controlling[0] ?? group[0];
-
-    return {
-      role: representative.role,
-      reference: representative.reference,
-      explanations: [...new Set(controlling.flatMap((item) => item.reference.evidence_note ? [item.reference.evidence_note] : []))],
-    };
-  });
-}
-
-export function CaseTaxonomyCompliance({ raw, taxonomyReferenceNumber, taxonomyReferenceHref }: Props) {
-  const parsed = useMemo(() => parseClassification(raw), [raw]);
-  const taxonomy = useTaxonomy();
-
-  if (!parsed.status) return <p className="vigil-case-empty">No compliance crosswalk can be resolved because this Incident has no canonical alignment classification.</p>;
-  if (taxonomy.status === "loading") return <p className="vigil-case-empty">Resolving external requirement cross-references from the VIGIL Observatory Alignment Taxonomy…</p>;
-  if (taxonomy.status === "unavailable") return <p className="vigil-case-empty">The VIGIL Observatory taxonomy source is temporarily unavailable, so its external requirement cross-references cannot be resolved. {taxonomy.message}</p>;
-
-  const primary = resolveClassification(taxonomy.data, parsed.primary);
-  const secondaries = parsed.secondary.map((item) => resolveClassification(taxonomy.data, item));
-  const requirements = rollupComplianceRequirements(complianceContributions(primary, secondaries));
-
-  if (!requirements.length) return <p className="vigil-case-empty">No mapped external requirement is available for compliance cross-reference in this Case File.</p>;
-
-  return <div className="vigil-taxonomy-compliance-view">
-    <p className="vigil-compliance-intro">The mappings below roll the Incident's classified Fidelity Classes into external standards, regulatory requirements and authoritative governance guidance cross-referenced by the VIGIL Alignment Taxonomy. VIGIL applies an occurrence-level runtime lens here; these taxonomy-derived cross-references do not assess organisation-wide governance programmes or overall legal or standards compliance. When the same exact requirement is reached through multiple classifications, VIGIL reports the most conservative supported VIGIL finding: failure, then unresolved boundary, then invariant held.</p>
-    <div className="vigil-classification-web-table vigil-compliance-web-table" role="region" aria-label="External compliance crosswalk" tabIndex={0}>
-      <table className="vigil-classification-table vigil-compliance-table">
-        <caption className="sr-only">External requirements cross-referenced to the Incident's VIGIL findings.</caption>
-        <thead>
-          <tr>
-            <th scope="col">VIGIL Finding</th>
-            <th scope="col">External requirement</th>
-            <th scope="col">Requirement explanation</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requirements.map(({ role, reference, explanations }, index) => <tr key={`${complianceReferenceKey(reference)}-${index}`}>
-            <td data-label="VIGIL Finding" className="vigil-classification-outcome-cell">
-              <MappingOutcome role={role} />
-            </td>
-            <td data-label="External requirement" className="vigil-compliance-requirement-title">
-              <strong>
-                {reference.url ? <a href={reference.url} target="_blank" rel="noreferrer">{reference.title}</a> : reference.title}
-              </strong>
-            </td>
-            <td data-label="Requirement explanation" className="vigil-compliance-requirement-explanation">
-              <ClassificationEvidenceStack values={explanations} empty="No separate requirement explanation is currently published for this external requirement." />
-            </td>
-          </tr>)}
-        </tbody>
-      </table>
-    </div>
-    {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">These external requirement mappings are maintained with the relevant Fidelity Classes in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>. Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.</p> : null}
-  </div>;
+export function CaseTaxonomyCompliance({ raw }: Props) {
+  return <CaseRequirementAssessments raw={raw} />;
 }

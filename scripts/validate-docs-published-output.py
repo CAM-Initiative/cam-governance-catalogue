@@ -395,9 +395,12 @@ def validate_published_vigil_ui_contract() -> list[str]:
         "Recognition criteria",
         "Confidence",
         "External requirement",
-        "Requirement explanation",
-        "VIGIL Finding",
-        "Exact duplicate requirements are rolled up conservatively while distinct clauses or controls remain separate.",
+        "Evidence and assessment basis",
+        "Assessment result",
+        "Normative force",
+        "Aligned",
+        "Not aligned",
+        "Boundary",
     )
     for required in required_strings:
         if required not in bundle:

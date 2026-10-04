@@ -1,22 +1,2 @@
-/* Section 04 Compliance retains the failed / unresolved classification-state icon
-   while the remainder of the row maps the Fidelity Class to external requirements. */
-.vigil-case-file-page .vigil-compliance-table thead th:first-child {
-  font-size: 0;
-}
-
-.vigil-case-file-page .vigil-compliance-table thead th:first-child::after {
-  content: "Assessment Result";
-  font-family: var(--app-font-sans);
-  font-size: 0.8rem;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: 0.055em;
-  text-transform: uppercase;
-  color: hsl(var(--muted-foreground) / 0.86);
-}
-
-@media (max-width: 760px) {
-  .vigil-case-file-page .vigil-compliance-table tbody td:first-child::before {
-    content: "Assessment Result";
-  }
-}
+/* Section 04 Compliance now renders an explicit Assessment result column.
+   Keep this stylesheet imported as a compatibility seam; no pseudo-label repair is required. */
