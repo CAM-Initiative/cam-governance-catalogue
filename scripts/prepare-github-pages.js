@@ -313,6 +313,16 @@ for (const { document } of taxonomyFamilies) {
   }
 }
 
+let incidentRecords = [];
+if (existsSync(vigilFallbackPath)) {
+  const registry = JSON.parse(readFileSync(vigilFallbackPath, "utf8"));
+  incidentRecords = Array.isArray(registry.records)
+    ? registry.records.filter((record) => record?.record_type === "incident" && record?.id)
+    : [];
+}
+
+// Public Case File links follow canonical classifications, not the narrower
+// textbook case-example evidence selection.
 if (taxonomyFamilies.length) {
   const taxonomyIndexBody = `<main data-static-crawl-fallback="vigil-taxonomy-index" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory</p>
@@ -374,9 +384,35 @@ function externalAssessmentsHtml(record) {
 }
 
 function taxonomyCaseExamplesForClass(classId) {
-  const classes = taxonomyCaseFileExamples?.classes;
-  if (!classes || typeof classes !== "object") return [];
-  return Array.isArray(classes[classId]) ? classes[classId] : [];
+  // The taxonomy's generated CaseFileExamples projection excludes some evidence
+  // types for textbook publication. That editorial filter does not invalidate
+  // canonical Incident classifications or their public Case File links.
+  const curatedExamples = taxonomyCaseFileExamples?.classes?.[classId];
+  const curatedById = new Map(
+    (Array.isArray(curatedExamples) ? curatedExamples : [])
+      .filter((example) => example?.incident_id)
+      .map((example) => [example.incident_id, example]),
+  );
+  return incidentRecords.flatMap((record) => {
+    const mappings = [
+      ...(record.primary_classification ? [{ ...record.primary_classification, mapping_position: "primary" }] : []),
+      ...(Array.isArray(record.secondary_classifications)
+        ? record.secondary_classifications.map((mapping) => ({ ...mapping, mapping_position: "secondary" }))
+        : []),
+    ];
+    const mapping = mappings.find((item) =>
+      item.class_id === classId && item.classification_role === "failure-occurrence"
+    );
+    if (!mapping) return [];
+    const curated = curatedById.get(record.id);
+    return [{
+      incident_id: record.id,
+      incident_title: record.title || record.id,
+      classification_role: mapping.classification_role,
+      classification_confidence: curated?.classification_confidence,
+      mapping_position: mapping.mapping_position,
+    }];
+  }).sort((a, b) => a.incident_id.localeCompare(b.incident_id));
 }
 
 function publicMappingRoleLabel(role) {
@@ -496,7 +532,7 @@ for (const { document } of taxonomyFamilies) {
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
       <h2>Linked Case Files</h2>
-      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
+      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
@@ -510,14 +546,6 @@ for (const { document } of taxonomyFamilies) {
       }),
     );
   }
-}
-
-let incidentRecords = [];
-if (existsSync(vigilFallbackPath)) {
-  const registry = JSON.parse(readFileSync(vigilFallbackPath, "utf8"));
-  incidentRecords = Array.isArray(registry.records)
-    ? registry.records.filter((record) => record?.record_type === "incident" && record?.id)
-    : [];
 }
 
 const caseRoot = join(docsDir, "observatory", "cases");
