@@ -116,6 +116,39 @@ async function fetchJson(url) {
 const aboutDescription = "CAM Initiative develops public-interest AI governance infrastructure through VIGIL Observatory and the CAELESTIS Architecture Model.";
 
 // Keep the static About fallback aligned with the React About hierarchy.
+// The homepage must expose real navigation links in the HTML response, before React runs.
+// Preserve the normal interactive homepage: React replaces the temporary crawl fallback
+// inside #root after it loads. The GitHub Pages 404 SPA fallback remains unchanged.
+const homepageCrawlFallback = `<main data-static-crawl-fallback="home" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <h1>CAM Initiative — public-interest AI governance</h1>
+  <p>CAM Initiative develops public-interest AI governance infrastructure through the VIGIL Observatory and the CAELESTIS Architecture Model.</p>
+  <h2>Explore CAM Initiative</h2>
+  <nav aria-label="CAM Initiative primary navigation">
+    <ul>
+      <li><a href="/about/">About CAM Initiative</a></li>
+      <li><a href="/observatory/">VIGIL Observatory</a></li>
+      <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">VIGIL Alignment Taxonomy</a></li>
+      <li><a href="/observatory/ai-governance-standards/">AI Governance Standards</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">Harm Impact Assessment</a></li>
+      <li><a href="/knowledge-base/">Knowledge Base</a></li>
+      <li><a href="/datasets/">Governance Datasets</a></li>
+      <li><a href="/policy/">Policy and Publications</a></li>
+      <li><a href="/licensing/">Licensing and Reuse</a></li>
+    </ul>
+  </nav>
+  <h2>VIGIL Observatory</h2>
+  <p>VIGIL publishes evidence-based AI Incident Case Files, a structured Alignment Taxonomy and harm assessments. Explore the Case Files and taxonomy to understand documented governance boundaries, failures and successful safeguards.</p>
+</main>`;
+const homepageRoot = '<div id="root"></div>';
+if (!baseHtml.includes(homepageRoot)) {
+  throw new Error("Cannot publish crawlable homepage: React root marker not found");
+}
+writeFileSync(indexPath, baseHtml.replace(
+  homepageRoot,
+  `<div id="root">${homepageCrawlFallback}</div>`,
+));
+
 const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
   <p>CAM Initiative · Public-interest AI governance</p>
   <h1>About CAM Initiative</h1>
