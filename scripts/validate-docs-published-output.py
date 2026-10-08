@@ -223,7 +223,7 @@ def validate_homepage_crawl_navigation() -> list[str]:
         errors.append("docs/index.html must retain the canonical HTTPS www homepage URL.")
 
     nav = re.search(
-        r'<nav\\b[^>]*aria-label="CAM Initiative primary navigation"[^>]*>(.*?)</nav>',
+        r'<nav\b[^>]*aria-label="CAM Initiative primary navigation"[^>]*>(.*?)</nav>',
         html,
         flags=re.DOTALL,
     )
@@ -231,7 +231,7 @@ def validate_homepage_crawl_navigation() -> list[str]:
         errors.append("docs/index.html must expose a primary navigation element before JavaScript runs.")
         return errors
 
-    hrefs = set(re.findall(r'<a\\b[^>]*href="([^"]+)"', nav.group(1)))
+    hrefs = set(re.findall(r'<a\b[^>]*href="([^"]+)"', nav.group(1)))
     for route in HOMEPAGE_PRIMARY_ROUTES:
         if route not in hrefs:
             errors.append(f"Homepage HTML is missing required crawlable link: {route}")
