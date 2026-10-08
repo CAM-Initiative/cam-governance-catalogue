@@ -421,6 +421,41 @@ def validate_vigil_publication_integrity() -> list[str]:
         if '<div id="root"></div>' not in case_index_html:
             errors.append(f"{case_index_path} does not keep an empty React root beside the static index fallback.")
 
+    # A VIGIL textbook example may be excluded for editorial evidence-type
+    # reasons, but its canonical failure mapping must still have a discoverable
+    # backlink from the corresponding public taxonomy class page. In particular,
+    # interaction-record exclusion must not erase a valid Incident relationship.
+    for record in records:
+        if not isinstance(record, dict) or record.get("record_type") != "incident":
+            continue
+        incident_id = record.get("id")
+        if not isinstance(incident_id, str):
+            continue
+        mappings = []
+        primary = record.get("primary_classification")
+        if isinstance(primary, dict):
+            mappings.append(primary)
+        secondary = record.get("secondary_classifications")
+        if isinstance(secondary, list):
+            mappings.extend(item for item in secondary if isinstance(item, dict))
+        for mapping in mappings:
+            if mapping.get("classification_role") != "failure-occurrence":
+                continue
+            class_id = mapping.get("class_id")
+            if not isinstance(class_id, str):
+                continue
+            class_page = Path("docs/observatory/alignment-taxonomy") / class_id / "index.html"
+            if not class_page.is_file():
+                # This check governs links on published class pages, not the
+                # separate question of which taxonomy IDs are current.
+                continue
+            case_link = f'href="/observatory/cases/{incident_id}/"'
+            if case_link not in class_page.read_text():
+                errors.append(
+                    f"{class_page} omits classified Case File {incident_id}; "
+                    "textbook case-study filtering must not remove canonical website links."
+                )
+
     return errors
 
 
