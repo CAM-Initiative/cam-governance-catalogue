@@ -30,6 +30,20 @@ VIGIL_SITEMAP = Path("docs/sitemap.xml")
 VIGIL_CASE_ROOT = Path("docs/observatory/cases")
 VIGIL_CASE_URL_PREFIX = "https://www.cam-initiative.org/observatory/cases/"
 
+HOMEPAGE = Path("docs/index.html")
+HOMEPAGE_PRIMARY_ROUTES = (
+    "/about/",
+    "/observatory/",
+    "/observatory/cases/",
+    "/observatory/alignment-taxonomy/",
+    "/observatory/ai-governance-standards/",
+    "/observatory/harm-impact-assessment/",
+    "/knowledge-base/",
+    "/datasets/",
+    "/policy/",
+    "/licensing/",
+)
+
 # The website is a Vite app rooted at src/ (see vite.config.ts). Keep this list
 # intentionally focused on files that feed the published site, and avoid VIGIL
 # record data, schemas, validators, and repository documentation.
@@ -191,6 +205,49 @@ def format_paths(paths: Iterable[str]) -> str:
         f"\n  ... and {len(sorted_paths) - 40} more" if len(sorted_paths) > 40 else ""
     )
 
+
+
+def validate_homepage_crawl_navigation() -> list[str]:
+    """Ensure the published homepage exposes key site links before JS execution."""
+    import re
+
+    errors: list[str] = []
+    if not HOMEPAGE.is_file():
+        return [f"Required homepage is missing: {HOMEPAGE}"]
+
+    html = HOMEPAGE.read_text()
+    if html.count('data-static-crawl-fallback="home"') != 1:
+        errors.append("docs/index.html must contain exactly one static homepage crawl fallback.")
+
+    if '<link rel="canonical" href="https://www.cam-initiative.org/" />' not in html:
+        errors.append("docs/index.html must retain the canonical HTTPS www homepage URL.")
+
+    nav = re.search(
+        r'<nav\\b[^>]*aria-label="CAM Initiative primary navigation"[^>]*>(.*?)</nav>',
+        html,
+        flags=re.DOTALL,
+    )
+    if not nav:
+        errors.append("docs/index.html must expose a primary navigation element before JavaScript runs.")
+        return errors
+
+    hrefs = set(re.findall(r'<a\\b[^>]*href="([^"]+)"', nav.group(1)))
+    for route in HOMEPAGE_PRIMARY_ROUTES:
+        if route not in hrefs:
+            errors.append(f"Homepage HTML is missing required crawlable link: {route}")
+        page = Path("docs") / route.lstrip("/") / "index.html"
+        if not page.is_file():
+            errors.append(f"Homepage crawlable link has no published static entrypoint: {page}")
+
+    if not VIGIL_SITEMAP.is_file():
+        errors.append(f"Cannot check homepage links against missing {VIGIL_SITEMAP}.")
+    else:
+        sitemap = VIGIL_SITEMAP.read_text()
+        for route in HOMEPAGE_PRIMARY_ROUTES:
+            if f"<loc>https://www.cam-initiative.org{route}</loc>" not in sitemap:
+                errors.append(f"Homepage primary route is missing from the canonical sitemap: {route}")
+
+    return errors
 
 
 def validate_vigil_publication_integrity() -> list[str]:
@@ -466,6 +523,7 @@ def main() -> int:
     print(f"/docs output changes detected: {len(docs_changes)}")
 
     errors: list[str] = []
+    errors.extend(validate_homepage_crawl_navigation())
     errors.extend(validate_vigil_publication_integrity())
     errors.extend(validate_published_vigil_ui_contract())
 
