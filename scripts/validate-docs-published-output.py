@@ -421,6 +421,27 @@ def validate_vigil_publication_integrity() -> list[str]:
         if '<div id="root"></div>' not in case_index_html:
             errors.append(f"{case_index_path} does not keep an empty React root beside the static index fallback.")
 
+    # Loss of the mapping-local role in the compact website registry would
+    # silently suppress all links, so reject a projection that keeps a primary
+    # class ID but drops its corresponding classification relationship.
+    for record in records:
+        if not isinstance(record, dict) or record.get("record_type") != "incident":
+            continue
+        primary_id = record.get("primary_class_id")
+        if not primary_id:
+            continue
+        primary = record.get("primary_classification")
+        if not isinstance(primary, dict) or primary.get("class_id") != primary_id:
+            errors.append(
+                f"Compact registry Incident {record.get('id')} is missing its primary mapping for {primary_id}."
+            )
+        elif primary.get("classification_role") not in (
+            "failure-occurrence", "successful-invariant", "ambiguous-boundary"
+        ):
+            errors.append(
+                f"Compact registry Incident {record.get('id')} has no valid mapping-local role for {primary_id}."
+            )
+
     # A VIGIL textbook example may be excluded for editorial evidence-type
     # reasons, but its canonical failure mapping must still have a discoverable
     # backlink from the corresponding public taxonomy class page. In particular,
