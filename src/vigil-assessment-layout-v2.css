@@ -91,3 +91,55 @@
     box-shadow: none !important;
   }
 }
+
+/* Experimental Stage 05 long-form reading treatment.
+   Only paragraph boundaries change; the canonical prose is not summarised. */
+.vigil-case-file-page .vigil-conclusion-prose > .vigil-evidence-kicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.vigil-case-file-page .vigil-conclusion-paragraphs,
+.vigil-deterministic-report-host .vigil-conclusion-paragraphs,
+.report-document .vigil-conclusion-paragraphs {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 74ch;
+}
+
+.vigil-case-file-page .vigil-conclusion-paragraphs > p,
+.vigil-deterministic-report-host .vigil-conclusion-paragraphs > p,
+.report-document .vigil-conclusion-paragraphs > p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  font-weight: 400;
+  color: hsl(var(--foreground) / 0.93);
+  overflow-wrap: break-word;
+}
+
+.vigil-case-file-page .vigil-conclusion-prose .vigil-conclusion-paragraphs > p:first-child {
+  font-weight: 500;
+}
+
+.vigil-case-file-page .vigil-conclusion-governance-significance > .vigil-conclusion-paragraphs,
+.report-document .report-governance-significance > .vigil-conclusion-paragraphs {
+  margin-top: 0.7rem;
+}
+
+.report-document .report-intro-copy.vigil-conclusion-paragraphs {
+  max-width: 74ch;
+  margin: 0.6rem 0 0;
+  gap: 0.85rem;
+}
+
+@media print {
+  .vigil-conclusion-paragraphs > p {
+    break-inside: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+}
