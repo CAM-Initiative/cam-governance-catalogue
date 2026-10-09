@@ -106,7 +106,8 @@ async function verifyTurnstile(token, secret, ip, expectedHostname) {
   });
   if (!res.ok) return false;
   const answer = await res.json();
-  return answer.success === true && answer.hostname === expectedHostname;
+  // Reject successful tokens issued for a different form or hostname.
+  return answer.success === true && answer.hostname === expectedHostname && answer.action === "case_file_challenge";
 }
 
 export default {
