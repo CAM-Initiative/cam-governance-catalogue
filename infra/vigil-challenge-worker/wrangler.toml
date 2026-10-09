@@ -12,12 +12,12 @@ GITHUB_REPO = "vigil-observatory"
 [secrets]
 required = ["GITHUB_TOKEN", "TURNSTILE_SECRET"]
 
-# Soft per-location limit: up to 5 POST attempts per minute per visitor IP.
+# Soft per-location limit: up to 3 POST attempts per minute per visitor IP.
 # Cloudflare's native rate-limit binding is configured via Wrangler deployment.
 [[ratelimits]]
 name = "CHALLENGE_RATE_LIMITER"
 namespace_id = "26091001"
 
   [ratelimits.simple]
-  limit = 5
+  limit = 3
   period = 60

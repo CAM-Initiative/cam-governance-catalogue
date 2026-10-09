@@ -58,16 +58,15 @@ Cloudflare Spin created widget site key `0x4AAAAAAFSNuGaY4lVBa0hY`; **do not cre
 The public website is served canonically at `https://www.cam-initiative.org`, so the public form and the deployed Worker `SITE_ORIGIN` must both use that exact origin. In the Cloudflare Worker dashboard, replace any old apex-only `SITE_ORIGIN=https://cam-initiative.org` binding with `SITE_ORIGIN=https://www.cam-initiative.org`; updating the committed `wrangler.toml` alone does not modify an existing dashboard deployment. The existing Turnstile widget bound to `cam-initiative.org` authorizes its `www` subdomain under Cloudflare hostname management, and server-side Siteverify must return `www.cam-initiative.org` for legitimate submissions. Preview hostnames must remain blocked.
 
 ## Rate limiting deployment
-The Worker includes a Cloudflare native Rate Limiting binding: `CHALLENGE_RATE_LIMITER`,
-namespace `26091001`, limit **5 POST attempts per 60 seconds per visitor IP within a Cloudflare location**.
+The production Worker has an operator-configured Cloudflare Rate Limiter binding in the dashboard; the repository records its intended configuration. The Worker source includes a native Rate Limiting binding: `CHALLENGE_RATE_LIMITER`,
+namespace `26091001`, limit **3 POST attempts per 60 seconds per visitor IP within a Cloudflare location**.
 The limiter runs after Origin and route checks but before reading the JSON body or calling
 Turnstile/GitHub. On throttling it returns HTTP 429 with `Retry-After: 60`.
 Missing or broken rate limiting fails closed with HTTP 503. Do not treat this as a
 perfect, globally consistent request budget: Cloudflare counters are local and
 eventually consistent, and different people may share an IP address.
 
-Cloudflare's native rate-limiting binding must be installed via Wrangler.
-It is not added by changing the JavaScript in the dashboard editor alone.
+The rate-limiting binding can be added through Cloudflare's dashboard under Worker Settings → Bindings → Add binding → Rate limiter. Adding a binding by itself does not enforce a limit: the deployed Worker script must also call `env.CHALLENGE_RATE_LIMITER.limit(...)`. Verify deployed source separately. Existing site keys and secrets must remain secret.
 
 From an authenticated Codespace containing this branch, run from the Worker directory:
 `npx wrangler@latest deploy --keep-vars`

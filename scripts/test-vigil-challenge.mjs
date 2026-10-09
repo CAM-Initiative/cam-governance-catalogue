@@ -220,6 +220,6 @@ test("rate limiter uses a Wrangler binding with expected namespace and per-minut
   const config = readFileSync(new URL("../infra/vigil-challenge-worker/wrangler.toml", import.meta.url), "utf8");
   assert.match(config, /\[\[ratelimits\]\]/);
   assert.match(config, /name = "CHALLENGE_RATE_LIMITER"/);
-  assert.match(config, /limit = 5/);
+  assert.match(config, /limit = 3/);
   assert.match(config, /period = 60/);
 });
