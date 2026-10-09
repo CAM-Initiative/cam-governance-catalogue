@@ -194,7 +194,7 @@ test("Incident Case File retains evidence context and moves governance interpret
   assert.match(source, /vigil_assessment\.governance_interpretation/);
   assert.match(source, /vigil-diagnosis-factual-basis/);
   assert.doesNotMatch(conclusionRenderer, /VIGIL Observatory conclusion/);
-  assert.match(conclusionRenderer, /\{governanceConclusion\}/);
+  assert.match(conclusionRenderer, /splitConclusionParagraphs\(governanceConclusion\)/);
 });
 
 test("Incident Case File projects taxonomy-derived compliance crosswalk, not implementation state", async () => {
