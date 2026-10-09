@@ -1,4 +1,4 @@
-/* Case File evidence-quality challenge. Matches existing dossier/contents navigation. */
+/* Case File issue reporting: editorial confirmation and accessible, centred dialog. */
 /* This trigger sits among stage buttons, but matches the PDF utility link. */
 .vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab {
   display: flex !important;
