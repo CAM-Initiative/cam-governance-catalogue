@@ -59,7 +59,7 @@ The public website is served canonically at `https://www.cam-initiative.org`, so
 
 ## Rate limiting deployment
 The Worker includes a Cloudflare native Rate Limiting binding: `CHALLENGE_RATE_LIMITER`,
-namespace `26091001`, limit **10 POST attempts per 60 seconds per visitor IP within a Cloudflare location**.
+namespace `26091001`, limit **5 POST attempts per 60 seconds per visitor IP within a Cloudflare location**.
 The limiter runs after Origin and route checks but before reading the JSON body or calling
 Turnstile/GitHub. On throttling it returns HTTP 429 with `Retry-After: 60`.
 Missing or broken rate limiting fails closed with HTTP 503. Do not treat this as a
