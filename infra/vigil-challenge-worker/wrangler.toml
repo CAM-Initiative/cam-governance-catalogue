@@ -1,0 +1,13 @@
+name = "vigil-case-file-challenges"
+main = "index.mjs"
+compatibility_date = "2026-10-09"
+
+# Non-secret configuration only. This MUST point to an existing PRIVATE repo.
+[vars]
+SITE_ORIGIN = "https://cam-initiative.org"
+GITHUB_OWNER = "CAM-Initiative"
+GITHUB_REPO = "vigil-case-file-challenges-private"
+
+# The deployment must fail if either secret is absent.
+[secrets]
+required = ["GITHUB_TOKEN", "TURNSTILE_SECRET"]
