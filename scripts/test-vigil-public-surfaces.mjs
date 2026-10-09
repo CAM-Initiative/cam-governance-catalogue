@@ -1321,7 +1321,7 @@ test("Compliance surfaces alignment results, normative force and internal eviden
 });
 
 
-test("Case File quality challenge uses the existing Turnstile widget and stays gated without an intake endpoint", async () => {
+test("Case File challenge uses the existing Turnstile widget and previews fields without enabling unauthorised submissions", async () => {
   const [caseFile, component, worker] = await Promise.all([
     read("src/pages/vigil-case-file.tsx"),
     read("src/components/vigil/CaseFileChallenge.tsx"),
@@ -1331,7 +1331,9 @@ test("Case File quality challenge uses the existing Turnstile widget and stays g
   assert.match(component, /"0x4AAAAAAFSNuGaY4lVBa0hY"/);
   assert.match(component, /action: "case_file_challenge"/);
   assert.match(component, /const ENABLED = [^\n]*ENDPOINT[^\n]*SITE_KEY/);
-  assert.match(component, /Online submissions are not yet available/);
+  assert.match(component, /Form preview — submissions disabled/);
+  assert.match(component, /const CAN_SUBMIT = ENABLED && typeof window !== "undefined"/);
+  assert.match(component, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);
   assert.match(worker, /answer\.success === true && answer\.hostname === expectedHostname && answer\.action === "case_file_challenge"/);
   assert.match(worker, /\.private !== true/);
 });
