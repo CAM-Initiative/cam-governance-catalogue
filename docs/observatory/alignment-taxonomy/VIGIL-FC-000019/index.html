@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>Post-Verification State Integrity | VIGIL Observatory Fidelity Class | CAM Initiative</title>
-    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000019: The system verifies one version, changes it afterwards, and still calls the changed version verified." />
+    <meta name="description" content="VIGIL Observatory fidelity class VIGIL-FC-000019: A material change after verification suspends the earlier assurance until the changed state is checked." />
     <link rel="canonical" href="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000019/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="CAM Initiative" />
     <meta property="og:title" content="Post-Verification State Integrity | VIGIL Observatory Fidelity Class | CAM Initiative" />
-    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000019: The system verifies one version, changes it afterwards, and still calls the changed version verified." />
+    <meta property="og:description" content="VIGIL Observatory fidelity class VIGIL-FC-000019: A material change after verification suspends the earlier assurance until the changed state is checked." />
     <meta property="og:url" content="https://www.cam-initiative.org/observatory/alignment-taxonomy/VIGIL-FC-000019/" />
     <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
     <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
@@ -19,7 +19,7 @@
     <meta property="og:image:alt" content="CAM Initiative gold seal" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Post-Verification State Integrity | VIGIL Observatory Fidelity Class | CAM Initiative" />
-    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000019: The system verifies one version, changes it afterwards, and still calls the changed version verified." />
+    <meta name="twitter:description" content="VIGIL Observatory fidelity class VIGIL-FC-000019: A material change after verification suspends the earlier assurance until the changed state is checked." />
     <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
     <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
     <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
@@ -52,14 +52,14 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-Dm8VR3eU.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-59Qt0pWJ.css">
+    <script type="module" crossorigin src="/assets/index-E3CMME7M.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B_qCpgaF.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Observatory Alignment Taxonomy</p>
       <h1>Post-Verification State Integrity</h1>
-      <p>The system verifies one version, changes it afterwards, and still calls the changed version verified.</p>
+      <p>A material change after verification suspends the earlier assurance until the changed state is checked.</p>
       <dl>
         <dt>Immutable class ID</dt><dd>VIGIL-FC-000019</dd>
         <dt>Semantic code</dt><dd>POST_VERIFICATION_STATE_INTEGRITY</dd>
@@ -67,15 +67,15 @@
         <dt>Status</dt><dd>beta</dd>
       </dl>
       <h2>Technical definition</h2>
-      <p>A failure in which content, state, configuration, code, data, or an execution artefact is materially changed after verification while retaining or inheriting the verification status of the earlier state without revalidation.</p>
+      <p>The property by which verification status remains bound to the specific verified content, state, version, configuration, target and scope, with suspension or invalidation and fresh validation across material post-verification mutations.</p>
       <h2>Recognition criteria</h2>
-      <ul><li>A specific state or artefact is verified.</li><li>A material mutation occurs after that verification.</li><li>The mutated state is represented or consumed as verified without a fresh check covering the mutation.</li></ul>
+      <p>None stated.</p>
       <h2>Exclusions</h2>
       <ul><li>The post-verification change is immaterial to the verified property.</li><li>The changed state is reverified before reliance.</li><li>The system clearly invalidates the earlier verification status after mutation.</li></ul>
       <h2>Linked Case Files</h2>
       <p>No Case Files currently evidence failure for this class.</p>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>The MITRE Corporation · 2026-04-30 · authoritative guidance</p><p><strong><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noreferrer">CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition</a></strong></p><p><strong>Evidence note.</strong> CWE-367 describes the structural failure in which a resource changes after a check and before use, invalidating the check result. VIGIL uses this as a technical analogue for the check–mutation–reliance sequence; CWE-367 does not establish VIGIL&#39;s broader governance class for content, configuration, data, or assurance artefacts.</p></li><li><p>IEEE Standards Association · 2021-09-15 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7000/6781/" rel="noreferrer">IEEE 7000-2021, clause 10.3(e)(8)</a></strong></p><p><strong>Evidence note.</strong> IEEE 7000-2021, clause 10.3(e)(8) requires verification and continued monitoring to identify when changed context or priorities require design revision. This supports invalidation of earlier verification after material change; it does not itself isolate mutation between verification and reliance.</p></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>The MITRE Corporation · 2026-04-30 · authoritative guidance</p><p><strong><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noreferrer">CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Changed state invalidates earlier assurance. Does not require every inherited verification status to be suspended. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>IEEE Standards Association · 2021-09-15 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7000/6781/" rel="noreferrer">IEEE 7000-2021, clause 10.3(e)(8)</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual. Verification and monitoring identify when changed context/priorities require design revision. Design iteration is not a required fresh verification of every material post-verification mutation. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
   </body>
 </html>
