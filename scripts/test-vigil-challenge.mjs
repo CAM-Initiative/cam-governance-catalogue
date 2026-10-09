@@ -233,3 +233,20 @@ test("Case File form has clean required-field labels without floating asterisks"
   assert.match(ui, /value=\{target\}[^\n]*required/);
   assert.match(ui, /value=\{explanation\}[^\n]*required/);
 });
+
+test("report confirmation uses public-facing language and editorial receipt", () => {
+  const ui = readFileSync(new URL("../src/components/vigil/CaseFileChallenge.tsx", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/vigil-case-file-challenge.css", import.meta.url), "utf8");
+  assert.match(ui, /reference \? "Report submitted" : "Report a Case File issue"/);
+  assert.match(ui, /Your report has been added to the private review queue\./);
+  assert.match(ui, /<span>Confirmation reference<\/span>/);
+  assert.match(ui, /<strong>\{reference\}<\/strong>/);
+  assert.match(ui, /Return to Case File/);
+  assert.doesNotMatch(ui, /Challenge received/);
+  assert.match(ui, /function openReport\(\)/);
+  assert.match(ui, /onClick=\{openReport\}/);
+  assert.match(css, /\.vigil-case-challenge-dialog \{[\s\S]*?position: fixed;[\s\S]*?transform: translate\(-50%, -50%\);/);
+  assert.match(css, /\.vigil-case-challenge-reference strong/);
+  assert.match(css, /\.vigil-case-challenge-confirmation svg/);
+  assert.doesNotMatch(css, /\.vigil-case-challenge-success \{[\s\S]*?background: hsl\(var\(--muted\) \/ 0\.5\)/);
+});
