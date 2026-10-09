@@ -1319,3 +1319,19 @@ test("Compliance surfaces alignment results, normative force and internal eviden
   assert.doesNotMatch(rows, /authoritative_locator/);
   assert.doesNotMatch(repairCss, /content: "Assessment Result"/);
 });
+
+
+test("Case File quality challenge uses the existing Turnstile widget and stays gated without an intake endpoint", async () => {
+  const [caseFile, component, worker] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/components/vigil/CaseFileChallenge.tsx"),
+    read("infra/vigil-challenge-worker/index.mjs"),
+  ]);
+  assert.match(caseFile, /Full report \/ PDF<\/Link>\s*<CaseFileChallenge caseId=\{reportId\}/);
+  assert.match(component, /"0x4AAAAAAFSNuGaY4lVBa0hY"/);
+  assert.match(component, /action: "case_file_challenge"/);
+  assert.match(component, /const ENABLED = [^\n]*ENDPOINT[^\n]*SITE_KEY/);
+  assert.match(component, /Online submissions are not yet available/);
+  assert.match(worker, /answer\.success === true && answer\.hostname === expectedHostname && answer\.action === "case_file_challenge"/);
+  assert.match(worker, /\.private !== true/);
+});
