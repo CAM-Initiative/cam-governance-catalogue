@@ -6,6 +6,8 @@ const ENDPOINT = String(import.meta.env.VITE_VIGIL_CHALLENGE_ENDPOINT ?? "").tri
 // Turnstile site keys are public; only the corresponding secret belongs in Cloudflare.
 const SITE_KEY = String(import.meta.env.VITE_VIGIL_TURNSTILE_SITE_KEY || "0x4AAAAAAFSNuGaY4lVBa0hY").trim();
 const ENABLED = /^https:\/\/[^/]+\/case-file-challenges$/.test(ENDPOINT) && Boolean(SITE_KEY);
+// Never submit from temporary preview hostnames, even when a local build has the endpoint.
+const CAN_SUBMIT = ENABLED && typeof window !== "undefined" && window.location.origin === "https://cam-initiative.org";
 const TYPES = [
   { value: "factual", label: "Factually inaccurate information" },
   { value: "misleading", label: "Misleading or unsupported interpretation" },
@@ -57,7 +59,7 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
   }, [open]);
 
   useEffect(() => {
-    if (!open || !ENABLED || reference) return;
+    if (!open || !CAN_SUBMIT || reference) return;
     let cancelled = false;
     const mount = () => {
       if (cancelled || widgetId.current || !widgetContainer.current || !turnstile()) return;
@@ -92,7 +94,7 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!ENABLED || sending || !token || !consent) return;
+    if (!CAN_SUBMIT || sending || !token || !consent) return;
     setError("");
     setSending(true);
     try {
@@ -148,15 +150,20 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
         <h3>Challenge received</h3>
         <p>Your report was recorded as <strong>{reference}</strong>. A VIGIL maintainer will assess the evidence before any Case File changes are made.</p>
         <button type="button" onClick={() => dialog.current?.close()}>Close</button>
-      </div> : !ENABLED ? <div role="status" className="vigil-case-challenge-unavailable">
-        <strong>Online submissions are not yet available.</strong>
-        <p>The private review service is being configured. This control does not send an email or create a public GitHub issue.</p>
       </div> : <form onSubmit={submit} className="vigil-case-challenge-form">
-        <label>What needs review?
-          <select value={category} onChange={event => setCategory(event.target.value)} required>
-            {TYPES.map(type => <option key={type.value} value={type.value}>{type.label}</option>)}
-          </select>
-        </label>
+        {!CAN_SUBMIT && <div role="status" className="vigil-case-challenge-unavailable">
+          <strong>Form preview — submissions disabled</strong>
+          <p>You can explore the fields, but nothing entered here will be sent or saved. Reports can only be submitted on the configured public website.</p>
+        </div>}
+        <fieldset className="vigil-case-challenge-categories">
+          <legend>What needs review? <span aria-hidden="true">*</span></legend>
+          <div className="vigil-case-challenge-options">
+            {TYPES.map(type => <label key={type.value} className="vigil-case-challenge-option">
+              <input type="radio" name="challenge-category" value={type.value} checked={category === type.value} onChange={() => setCategory(type.value)} required />
+              <span>{type.label}</span>
+            </label>)}
+          </div>
+        </fieldset>
         <label>Which statement, clause or section? <span aria-hidden="true">*</span>
           <input value={target} onChange={event => setTarget(event.target.value)} maxLength={200} required placeholder="For example: Section 02, source clause 3" />
         </label>
@@ -179,8 +186,8 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
         </label>
         <div ref={widgetContainer} aria-label="Anti-abuse verification" />
         {error && <p className="vigil-case-challenge-error" role="alert">{error}</p>}
-        <button className="vigil-case-challenge-submit" disabled={sending || !token || !consent} type="submit">
-          {sending ? "Recording challenge…" : "Submit for review"}
+        <button className="vigil-case-challenge-submit" disabled={!CAN_SUBMIT || sending || !token || !consent} type="submit">
+          {sending ? "Recording challenge…" : CAN_SUBMIT ? "Submit for review" : "Submission unavailable in preview"}
         </button>
       </form>}
     </dialog>, document.body)}
