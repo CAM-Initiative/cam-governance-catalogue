@@ -7,7 +7,7 @@ const ENDPOINT = String(import.meta.env.VITE_VIGIL_CHALLENGE_ENDPOINT ?? "").tri
 const SITE_KEY = String(import.meta.env.VITE_VIGIL_TURNSTILE_SITE_KEY || "0x4AAAAAAFSNuGaY4lVBa0hY").trim();
 const ENABLED = /^https:\/\/[^/]+\/case-file-challenges$/.test(ENDPOINT) && Boolean(SITE_KEY);
 // Never submit from temporary preview hostnames, even when a local build has the endpoint.
-const CAN_SUBMIT = ENABLED && typeof window !== "undefined" && window.location.origin === "https://cam-initiative.org";
+const CAN_SUBMIT = ENABLED && typeof window !== "undefined" && window.location.origin === "https://www.cam-initiative.org";
 const TYPES = [
   { value: "factual", label: "Factually inaccurate information" },
   { value: "misleading", label: "Misleading or unsupported interpretation" },

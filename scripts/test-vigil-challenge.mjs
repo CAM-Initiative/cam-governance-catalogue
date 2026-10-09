@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import worker, { validateChallenge, issuePayload } from "../infra/vigil-challenge-worker/index.mjs";
 
-const site = "https://cam-initiative.org";
+const site = "https://www.cam-initiative.org";
 const challenge = {
   caseId: "VIGIL-INC-000126",
   caseUrl: site + "/observatory/cases/VIGIL-INC-000126/",
@@ -67,7 +67,7 @@ test("requires Turnstile and a private destination before recording an issue", a
   let calledPost = false;
   try {
     globalThis.fetch = async (url, init) => {
-      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org", action: "case_file_challenge" }), { status: 200 });
+      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "www.cam-initiative.org", action: "case_file_challenge" }), { status: 200 });
       if (init?.method === "POST") calledPost = true;
       return new Response(JSON.stringify({ private: false }), { status: 200 });
     };
@@ -86,7 +86,7 @@ test("rejects a token verified for a different Turnstile action", async () => {
   try {
     globalThis.fetch = async (url) => {
       if (String(url).includes("/siteverify")) {
-        return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org", action: "unrelated_form" }), { status: 200 });
+        return new Response(JSON.stringify({ success: true, hostname: "www.cam-initiative.org", action: "unrelated_form" }), { status: 200 });
       }
       githubCalled = true;
       throw new Error("GitHub should not be contacted on wrong action");
@@ -105,7 +105,7 @@ test("creates an issue only after verification and private-repo check", async ()
   try {
     globalThis.fetch = async (url, init) => {
       calls.push(String(url));
-      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org", action: "case_file_challenge" }), { status: 200 });
+      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "www.cam-initiative.org", action: "case_file_challenge" }), { status: 200 });
       if (!init?.method || init.method === "GET") return new Response(JSON.stringify({ private: true }), { status: 200 });
       return new Response(JSON.stringify({ number: 42 }), { status: 201 });
     };
@@ -147,4 +147,11 @@ test("category radio controls remain visible in preview with submission fail-clo
   assert.match(ui, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);
   assert.match(css, /input:not\(\[type="checkbox"\]\):not\(\[type="radio"\]\)/);
   assert.match(css, /\.vigil-case-challenge-option input\[type="radio"\]/);
+});
+
+test("production hostname is consistent across form and Worker configuration", () => {
+  const form = readFileSync(new URL("../src/components/vigil/CaseFileChallenge.tsx", import.meta.url), "utf8");
+  const configuration = readFileSync(new URL("../infra/vigil-challenge-worker/wrangler.toml", import.meta.url), "utf8");
+  assert.match(form, /window\.location\.origin === "https:\/\/www\.cam-initiative\.org"/);
+  assert.match(configuration, /SITE_ORIGIN = "https:\/\/www\.cam-initiative\.org"/);
 });

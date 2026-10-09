@@ -4,7 +4,7 @@ compatibility_date = "2026-10-09"
 
 # Non-secret configuration only. This MUST point to an existing PRIVATE repo.
 [vars]
-SITE_ORIGIN = "https://cam-initiative.org"
+SITE_ORIGIN = "https://www.cam-initiative.org"
 GITHUB_OWNER = "CAM-Initiative"
 GITHUB_REPO = "vigil-observatory"
 
