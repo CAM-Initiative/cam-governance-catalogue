@@ -223,3 +223,13 @@ test("rate limiter uses a Wrangler binding with expected namespace and per-minut
   assert.match(config, /limit = 3/);
   assert.match(config, /period = 60/);
 });
+
+test("Case File form has clean required-field labels without floating asterisks", () => {
+  const ui = readFileSync(new URL("../src/components/vigil/CaseFileChallenge.tsx", import.meta.url), "utf8");
+  assert.match(ui, /<legend>What needs review\?<\/legend>/);
+  assert.match(ui, /<label>Which statement, clause or section\?/);
+  assert.match(ui, /<label>Describe the problem/);
+  assert.doesNotMatch(ui, /aria-hidden="true">\*<\/span>/);
+  assert.match(ui, /value=\{target\}[^>]*required/);
+  assert.match(ui, /value=\{explanation\}[^>]*required/);
+});

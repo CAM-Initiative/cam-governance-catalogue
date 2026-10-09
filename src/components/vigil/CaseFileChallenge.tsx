@@ -152,7 +152,7 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
         <button type="button" onClick={() => dialog.current?.close()}>Close</button>
       </div> : <form onSubmit={submit} className="vigil-case-challenge-form">
         <fieldset className="vigil-case-challenge-categories">
-          <legend>What needs review? <span aria-hidden="true">*</span></legend>
+          <legend>What needs review?</legend>
           <div className="vigil-case-challenge-options">
             {TYPES.map(type => <label key={type.value} className="vigil-case-challenge-option">
               <input type="radio" name="challenge-category" value={type.value} checked={category === type.value} onChange={() => setCategory(type.value)} required />
@@ -160,10 +160,10 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
             </label>)}
           </div>
         </fieldset>
-        <label>Which statement, clause or section? <span aria-hidden="true">*</span>
+        <label>Which statement, clause or section?
           <input value={target} onChange={event => setTarget(event.target.value)} maxLength={200} required placeholder="For example: Section 02, source clause 3" />
         </label>
-        <label>Describe the problem <span aria-hidden="true">*</span>
+        <label>Describe the problem
           <textarea value={explanation} onChange={event => setExplanation(event.target.value)} minLength={20} maxLength={4000} rows={5} required placeholder="Explain what is inaccurate or misleading and why." />
         </label>
         <label>Supporting evidence or references (optional)
