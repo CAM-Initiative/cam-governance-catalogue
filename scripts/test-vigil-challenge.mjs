@@ -22,6 +22,7 @@ const env = {
   GITHUB_OWNER: "example-org",
   GITHUB_REPO: "private-challenges",
   TURNSTILE_SECRET: "fixture",
+  CHALLENGE_RATE_LIMITER: { limit: async () => ({ success: true }) },
 };
 const post = input => new Request("https://worker.example/case-file-challenges", {
   method: "POST",
@@ -154,4 +155,70 @@ test("production hostname is consistent across form and Worker configuration", (
   const configuration = readFileSync(new URL("../infra/vigil-challenge-worker/wrangler.toml", import.meta.url), "utf8");
   assert.match(form, /window\.location\.origin === "https:\/\/www\.cam-initiative\.org"/);
   assert.match(configuration, /SITE_ORIGIN = "https:\/\/www\.cam-initiative\.org"/);
+});
+
+test("rejects POST attempts when the rate-limit binding is absent (fails closed)", async () => {
+  const { CHALLENGE_RATE_LIMITER: removed, ...withoutLimiter } = env;
+  const reply = await worker.fetch(post(challenge), withoutLimiter);
+  assert.equal(reply.status, 503);
+  assert.match((await reply.json()).error, /Intake protection is not configured/);
+});
+
+test("returns 429 with a retry hint before Turnstile or GitHub access when throttled", async () => {
+  const original = globalThis.fetch;
+  let externalCalls = 0;
+  let observedKey = "";
+  try {
+    globalThis.fetch = async () => {
+      externalCalls += 1;
+      throw new Error("Rate-limited requests must not contact external services");
+    };
+    const limitedEnv = {
+      ...env,
+      CHALLENGE_RATE_LIMITER: {
+        limit: async ({ key }) => {
+          observedKey = key;
+          return { success: false };
+        },
+      },
+    };
+    const request = new Request("https://worker.example/case-file-challenges", {
+      method: "POST",
+      headers: { Origin: site, "Content-Type": "application/json", "CF-Connecting-IP": "192.0.2.15" },
+      body: JSON.stringify(challenge),
+    });
+    const reply = await worker.fetch(request, limitedEnv);
+    assert.equal(reply.status, 429);
+    assert.equal(reply.headers.get("Retry-After"), "60");
+    assert.equal(reply.headers.get("Access-Control-Allow-Origin"), site);
+    assert.match((await reply.json()).error, /Too many requests/);
+    assert.equal(observedKey, "case-file-challenges:192.0.2.15");
+    assert.equal(externalCalls, 0);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
+test("returns 503 and does not reach external services when rate limiter is unavailable", async () => {
+  const original = globalThis.fetch;
+  let called = false;
+  try {
+    globalThis.fetch = async () => { called = true; throw new Error("Should not call external API"); };
+    const reply = await worker.fetch(post(challenge), {
+      ...env,
+      CHALLENGE_RATE_LIMITER: { limit: async () => { throw new Error("Unavailable"); } },
+    });
+    assert.equal(reply.status, 503);
+    assert.equal(called, false);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
+test("rate limiter uses a Wrangler binding with expected namespace and per-minute limit", () => {
+  const config = readFileSync(new URL("../infra/vigil-challenge-worker/wrangler.toml", import.meta.url), "utf8");
+  assert.match(config, /\[\[ratelimits\]\]/);
+  assert.match(config, /name = "CHALLENGE_RATE_LIMITER"/);
+  assert.match(config, /limit = 10/);
+  assert.match(config, /period = 60/);
 });

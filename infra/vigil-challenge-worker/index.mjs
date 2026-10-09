@@ -128,6 +128,26 @@ export default {
     if (!(request.headers.get("Content-Type") || "").toLowerCase().startsWith("application/json")) {
       return response({ error: "Content type must be JSON" }, 415, origin);
     }
+    // Rate limit before reading the payload or contacting Turnstile and GitHub.
+    // Anonymous reports have no account identifier. Cloudflare supplies this
+    // connecting IP; the fallback is a small shared bucket if unavailable.
+    // Counters are ephemeral and enforced per Cloudflare location.
+    const limiter = env.CHALLENGE_RATE_LIMITER;
+    if (!limiter || typeof limiter.limit !== "function") {
+      return response({ error: "Intake protection is not configured. No submission was recorded." }, 503, origin);
+    }
+    try {
+      const actor = request.headers.get("CF-Connecting-IP") || "unidentified";
+      const allowed = await limiter.limit({ key: "case-file-challenges:" + actor });
+      if (!allowed.success) {
+        return response(
+          { error: "Too many requests. Please wait a minute before trying again." },
+          429, origin, { "Retry-After": "60" }
+        );
+      }
+    } catch {
+      return response({ error: "Intake protection is temporarily unavailable." }, 503, origin);
+    }
     if (Number(request.headers.get("Content-Length")) > MAX_BODY) {
       return response({ error: "Submission too large" }, 413, origin);
     }

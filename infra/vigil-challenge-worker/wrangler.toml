@@ -11,3 +11,13 @@ GITHUB_REPO = "vigil-observatory"
 # The deployment must fail if either secret is absent.
 [secrets]
 required = ["GITHUB_TOKEN", "TURNSTILE_SECRET"]
+
+# Soft per-location limit: up to 10 POST attempts per minute per visitor IP.
+# Cloudflare's native rate-limit binding is configured via Wrangler deployment.
+[[ratelimits]]
+name = "CHALLENGE_RATE_LIMITER"
+namespace_id = "26091001"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60

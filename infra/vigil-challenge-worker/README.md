@@ -18,13 +18,13 @@ The private intake repository is created and verified. The connected tools canno
 2. Create a fine-grained GitHub access token confined to CAM-Initiative/vigil-observatory, with Issues read/write and minimum metadata permissions. Set expiry/rotation as appropriate. Do NOT paste the value into chat, files, GitHub issues, Pages variables or commits.
 3. Create a Cloudflare Turnstile widget restricted to cam-initiative.org. The public site key is not a password; the Turnstile secret must remain confidential.
 4. Deploy this directory as a Cloudflare Worker, providing GITHUB_TOKEN and TURNSTILE_SECRET using Cloudflare Worker **secret** bindings only (via dashboard or secure interactive Wrangler secret put prompts).
-5. Set non-secret Worker vars SITE_ORIGIN, GITHUB_OWNER, GITHUB_REPO from wrangler.toml. Create Cloudflare rate-limiting controls for the endpoint; Turnstile and Origin checks alone are not a rate limit.
+5. Set non-secret Worker vars SITE_ORIGIN, GITHUB_OWNER, GITHUB_REPO from wrangler.toml. Deploy the Wrangler-configured native Worker rate-limiting binding. Turnstile and Origin checks alone are not a rate limit.
 6. Configure the public website build variables VITE_VIGIL_CHALLENGE_ENDPOINT (complete HTTPS Worker URL ending /case-file-challenges) and VITE_VIGIL_TURNSTILE_SITE_KEY (public Turnstile site key). These are the only values the browser sees.
 7. BEFORE enabling a live form, update the Privacy Policy to explain collection, purpose, processors (Cloudflare and GitHub), retention/deletion, response and removal requests, and contact details. Review applicable privacy duties.
 8. Run node --test scripts/test-vigil-challenge.mjs and pnpm run test:vigil; then rebuild and validate /docs. Test one consented report end-to-end against the actual private repository, including negative security cases and mobile access.
 
 ## Safe defaults
-- If the Worker endpoint build variable is missing, the dialog opens in unavailable mode and cannot accept or submit text. The existing public Turnstile site key alone does not activate submissions.
+- The Case File form is always visible in previews, but submissions are blocked unless the page originates from the canonical public hostname and the build endpoint is configured. The public Turnstile site key alone does not activate submissions.
 - If the Worker has missing configuration/secrets, it rejects the request (503). If the GitHub repository is public, it refuses to create any issue.
 - The Worker returns a reference like VIGIL-CH-00042, not a private repo link.
 - Never commit tokens, secret keys, private keys, passwords, .env or .dev.vars files. Browser build variables are public and must NOT contain secrets.
@@ -56,3 +56,24 @@ Cloudflare Spin created widget site key `0x4AAAAAAFSNuGaY4lVBa0hY`; **do not cre
 ### Canonical hostname alignment
 
 The public website is served canonically at `https://www.cam-initiative.org`, so the public form and the deployed Worker `SITE_ORIGIN` must both use that exact origin. In the Cloudflare Worker dashboard, replace any old apex-only `SITE_ORIGIN=https://cam-initiative.org` binding with `SITE_ORIGIN=https://www.cam-initiative.org`; updating the committed `wrangler.toml` alone does not modify an existing dashboard deployment. The existing Turnstile widget bound to `cam-initiative.org` authorizes its `www` subdomain under Cloudflare hostname management, and server-side Siteverify must return `www.cam-initiative.org` for legitimate submissions. Preview hostnames must remain blocked.
+
+## Rate limiting deployment
+The Worker includes a Cloudflare native Rate Limiting binding: `CHALLENGE_RATE_LIMITER`,
+namespace `26091001`, limit **10 POST attempts per 60 seconds per visitor IP within a Cloudflare location**.
+The limiter runs after Origin and route checks but before reading the JSON body or calling
+Turnstile/GitHub. On throttling it returns HTTP 429 with `Retry-After: 60`.
+Missing or broken rate limiting fails closed with HTTP 503. Do not treat this as a
+perfect, globally consistent request budget: Cloudflare counters are local and
+eventually consistent, and different people may share an IP address.
+
+Cloudflare's native rate-limiting binding must be installed via Wrangler.
+It is not added by changing the JavaScript in the dashboard editor alone.
+
+From an authenticated Codespace containing this branch, run from the Worker directory:
+`npx wrangler@latest deploy --keep-vars`
+
+Verify the Cloudflare account/Worker name and the deployment preview before approving.
+The `--keep-vars` flag preserves any dashboard-defined non-secret variables; existing
+Worker secrets are retained during deployments. No secret values should be pasted
+into chat, GitHub files or the terminal command line. Only update the Worker after the
+new source and tests are committed and validated.
