@@ -1337,3 +1337,20 @@ test("Case File challenge uses the existing Turnstile widget and previews fields
   assert.match(worker, /answer\.success === true && answer\.hostname === expectedHostname && answer\.action === "case_file_challenge"/);
   assert.match(worker, /\.private !== true/);
 });
+
+test("privacy source of truth feeds both React and crawlable HTML", async () => {
+  const [privacyComponent, publicationScript, policyJson] = await Promise.all([
+    read("src/pages/privacy.tsx"),
+    read("scripts/prepare-github-pages.js"),
+    read("src/lib/privacyPolicy.json"),
+  ]);
+  const policy = JSON.parse(policyJson);
+  assert.equal(policy.lastUpdated, "9 October 2026");
+  for (const id of ["case-file-form-data", "case-file-processing", "case-file-review-retention"]) {
+    assert.ok(policy.sections.some(section => section.id === id));
+  }
+  assert.match(privacyComponent, /import privacyPolicy from "@\/lib\/privacyPolicy\.json"/);
+  assert.match(publicationScript, /data-static-crawl-fallback="privacy"/);
+  assert.match(publicationScript, /privacyPolicy\.sections\.map\(section =>/);
+  assert.match(publicationScript, /privacyPolicy\.lastUpdated/);
+});
