@@ -80,7 +80,7 @@
   font-size: 0.9rem;
   font-weight: 600;
 }
-.vigil-case-challenge-form input:not([type="checkbox"]),
+.vigil-case-challenge-form input:not([type="checkbox"]):not([type="radio"]),
 .vigil-case-challenge-form textarea,
 .vigil-case-challenge-form select {
   width: 100%;
@@ -91,6 +91,51 @@
   color: hsl(var(--foreground));
   font-size: 0.9rem;
   font-weight: 400;
+}
+.vigil-case-challenge-categories {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.vigil-case-challenge-categories legend {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+.vigil-case-challenge-options { display: grid; gap: 0.45rem; }
+.vigil-case-challenge-form .vigil-case-challenge-option {
+  display: flex;
+  gap: 0.72rem;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid hsl(var(--border) / 0.82);
+  border-radius: 0.45rem;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 0.9rem;
+  line-height: 1.45;
+  cursor: pointer;
+}
+.vigil-case-challenge-form .vigil-case-challenge-option:has(input:checked) {
+  border-color: hsl(var(--primary) / 0.68);
+  background: hsl(var(--primary) / 0.06);
+}
+.vigil-case-challenge-form .vigil-case-challenge-option input[type="radio"] {
+  flex: 0 0 auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.1rem 0 0;
+  padding: 0;
+  accent-color: hsl(var(--primary));
+  cursor: pointer;
+}
+.vigil-case-challenge-form .vigil-case-challenge-option:focus-within {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
 }
 .vigil-case-challenge-form textarea { resize: vertical; }
 .vigil-case-challenge-form :is(input,select,textarea):focus-visible {
