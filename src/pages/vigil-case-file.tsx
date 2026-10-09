@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
+import { splitConclusionParagraphs } from "@/lib/vigilConclusionParagraphs";
 import { Shell } from "@/components/layout/Shell";
 import { EvidenceCard } from "@/components/vigil/EvidenceCard";
 import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
@@ -687,12 +688,19 @@ export default function VigilCaseFile() {
 
     if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
       <section className="vigil-diagnosis-definition vigil-conclusion-content">
-        {governanceConclusion && <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>}
+        {governanceConclusion && <div className="vigil-conclusion-prose" aria-label="VIGIL Observatory conclusion">
+          <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
+          <div className="vigil-conclusion-paragraphs">
+            {splitConclusionParagraphs(governanceConclusion).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+          </div>
+        </div>
         <div className="vigil-conclusion-governance-significance">
           <div className="vigil-case-subheading">
             <h3 className="vigil-case-editorial-subheading">Governance significance</h3>
           </div>
-          <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+          <div className="vigil-conclusion-paragraphs vigil-conclusion-significance-paragraphs">
+            {splitConclusionParagraphs(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+          </div>
         </div>
       </section>
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
