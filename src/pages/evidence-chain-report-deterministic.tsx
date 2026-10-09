@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
+import { splitConclusionParagraphs } from "@/lib/vigilConclusionParagraphs";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
@@ -450,13 +451,17 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           {(governanceConclusion || governanceSignificance) ? <section className="report-intro">
             {governanceConclusion && <>
               <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
-              <p className="report-intro-copy">{governanceConclusion}</p>
+              <div className="report-intro-copy vigil-conclusion-paragraphs">
+                {splitConclusionParagraphs(governanceConclusion).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+              </div>
             </>}
             <div className="report-governance-significance">
               <div className="vigil-case-subheading">
                 <h3>Governance significance</h3>
               </div>
-              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+              <div className="vigil-conclusion-paragraphs vigil-conclusion-significance-paragraphs">
+                {splitConclusionParagraphs(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+              </div>
             </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
         </Stage>
