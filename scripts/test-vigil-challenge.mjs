@@ -132,3 +132,19 @@ test("challenge modal escapes Case File tab button styles and matches PDF link t
   assert.match(css, /font-size: 0\.7rem !important/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*font-size: 0\.72rem !important/);
 });
+
+test("category radio controls remain visible in preview with submission fail-closed", () => {
+  const ui = readFileSync(new URL("../src/components/vigil/CaseFileChallenge.tsx", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/vigil-case-file-challenge.css", import.meta.url), "utf8");
+  assert.match(ui, /<fieldset className="vigil-case-challenge-categories">/);
+  assert.match(ui, /<input type="radio" name="challenge-category"/);
+  assert.match(ui, /<textarea value=\{explanation\}/);
+  assert.match(ui, /<textarea value=\{evidence\}/);
+  assert.match(ui, /<input type="email" value=\{contact\}/);
+  assert.match(ui, /Form preview — submissions disabled/);
+  assert.doesNotMatch(ui, /!ENABLED \? <div role="status"/);
+  assert.match(ui, /if \(!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\) return/);
+  assert.match(ui, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);
+  assert.match(css, /input:not\(\[type="checkbox"\]\):not\(\[type="radio"\]\)/);
+  assert.match(css, /\.vigil-case-challenge-option input\[type="radio"\]/);
+});
