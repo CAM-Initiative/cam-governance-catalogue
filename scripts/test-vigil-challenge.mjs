@@ -66,7 +66,7 @@ test("requires Turnstile and a private destination before recording an issue", a
   let calledPost = false;
   try {
     globalThis.fetch = async (url, init) => {
-      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org" }), { status: 200 });
+      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org", action: "case_file_challenge" }), { status: 200 });
       if (init?.method === "POST") calledPost = true;
       return new Response(JSON.stringify({ private: false }), { status: 200 });
     };
@@ -79,13 +79,32 @@ test("requires Turnstile and a private destination before recording an issue", a
   }
 });
 
+test("rejects a token verified for a different Turnstile action", async () => {
+  const original = globalThis.fetch;
+  let githubCalled = false;
+  try {
+    globalThis.fetch = async (url) => {
+      if (String(url).includes("/siteverify")) {
+        return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org", action: "unrelated_form" }), { status: 200 });
+      }
+      githubCalled = true;
+      throw new Error("GitHub should not be contacted on wrong action");
+    };
+    const reply = await worker.fetch(post(challenge), env);
+    assert.equal(reply.status, 403);
+    assert.equal(githubCalled, false);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
+
 test("creates an issue only after verification and private-repo check", async () => {
   const original = globalThis.fetch;
   const calls = [];
   try {
     globalThis.fetch = async (url, init) => {
       calls.push(String(url));
-      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org" }), { status: 200 });
+      if (String(url).includes("/siteverify")) return new Response(JSON.stringify({ success: true, hostname: "cam-initiative.org", action: "case_file_challenge" }), { status: 200 });
       if (!init?.method || init.method === "GET") return new Response(JSON.stringify({ private: true }), { status: 200 });
       return new Response(JSON.stringify({ number: 42 }), { status: 201 });
     };
