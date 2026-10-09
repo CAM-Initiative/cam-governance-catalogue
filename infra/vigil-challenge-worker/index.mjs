@@ -12,7 +12,7 @@ const MAX_BODY = 12000;
 const ID_PATTERN = /^VIGIL-INC-\d{6}$/;
 
 function response(body, status, origin, headers = {}) {
-  return new Response(JSON.stringify(body), {
+  return new Response(status === 204 ? null : JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
@@ -159,6 +159,24 @@ export default {
 
     const issue = issuePayload(validated);
     try {
+      // Fail closed if the configured destination is public or inaccessible.
+      // This prevents accidental publication of reporter emails or unverified allegations.
+      const destination = await fetch(
+        "https://api.github.com/repos/" + encodeURIComponent(env.GITHUB_OWNER) +
+          "/" + encodeURIComponent(env.GITHUB_REPO),
+        {
+          headers: {
+            Authorization: "Bearer " + env.GITHUB_TOKEN,
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "User-Agent": "CAM-VIGIL-Case-File-Challenges",
+          },
+          signal: AbortSignal.timeout(8000),
+        }
+      );
+      if (!destination.ok || (await destination.json()).private !== true) {
+        return response({ error: "Private intake is not configured. No submission was recorded." }, 503, origin);
+      }
       const github = await fetch(
         "https://api.github.com/repos/" + encodeURIComponent(env.GITHUB_OWNER) +
           "/" + encodeURIComponent(env.GITHUB_REPO) + "/issues",
