@@ -6,7 +6,7 @@ compatibility_date = "2026-10-09"
 [vars]
 SITE_ORIGIN = "https://cam-initiative.org"
 GITHUB_OWNER = "CAM-Initiative"
-GITHUB_REPO = "vigil-case-file-challenges-private"
+GITHUB_REPO = "vigil-observatory"
 
 # The deployment must fail if either secret is absent.
 [secrets]
