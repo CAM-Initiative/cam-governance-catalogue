@@ -134,9 +134,9 @@ test("governance interpretation is projected only in Conclusion across web and d
   const reportConclusion = report.match(/<Stage number="05" label="Conclusion">[\s\S]*?<Stage number="06" label="References">/)?.[0] ?? "";
 
   assert.doesNotMatch(caseAssessment, /\{governanceConclusion\}/);
-  assert.match(caseConclusion, /\{governanceConclusion\}/);
+  assert.match(caseConclusion, /splitConclusionParagraphs\(governanceConclusion\)/);
   assert.doesNotMatch(reportAssessment, /\{governanceConclusion\}/);
-  assert.match(reportConclusion, /\{governanceConclusion\}/);
+  assert.match(reportConclusion, /splitConclusionParagraphs\(governanceConclusion\)/);
   assert.match(sections, /id: "conclusion",[\s\S]*number: "05",[\s\S]*label: "Conclusion"/);
   assert.match(sections, /id: "references",[\s\S]*number: "06",[\s\S]*label: "References"/);
 });
