@@ -8,8 +8,8 @@
  * Paragraph boundaries follow completed sentences, with preference for
  * explicitly signalled enumeration and contrast in the source prose.
  */
-const TRANSITION = /^(?:First|Second|Third|Fourth|Fifth|Sixth|Seventh|Eighth|Ninth|Tenth|Separately|However|Finally|Nevertheless|Conversely|Taken together|In contrast|By contrast)(?:[,.:]|\\b)/i;
-const SENTENCE_BOUNDARY = /(?<=[.!?])\\s+(?=[A-Z“"‘])/g;
+const TRANSITION = /^(?:First|Second|Third|Fourth|Fifth|Sixth|Seventh|Eighth|Ninth|Tenth|Separately|However|Finally|Nevertheless|Conversely|Taken together|In contrast|By contrast)(?:[,.:]|\b)/i;
+const SENTENCE_BOUNDARY = /(?<=[.!?])\s+(?=[A-Z“"‘])/g;
 
 export function splitConclusionParagraphs(text: string): string[] {
   const source = text.trim();
