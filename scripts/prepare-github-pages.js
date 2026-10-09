@@ -13,6 +13,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+const privacyPolicy = JSON.parse(readFileSync(join(repoRoot, "src", "lib", "privacyPolicy.json"), "utf8"));
 const docsDir = join(repoRoot, "docs");
 const indexPath = join(docsDir, "index.html");
 const fallbackPath = join(docsDir, "404.html");
@@ -222,7 +223,16 @@ function knowledgeReadingGuideHtml(section, title) {
   return `<section id="${escapeHtml(section)}"><h2>${escapeHtml(title)}</h2>${entries.map(item => `<section><h3>${escapeHtml(item.title)}</h3>${item.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</section>`).join("")}</section>`;
 }
 
+const privacyStaticBody = `<main data-static-crawl-fallback="privacy" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <p>CAM Initiative</p>
+  <h1>Privacy Policy</h1>
+  <p>${escapeHtml(privacyPolicy.intro)}</p>
+  <p>Last updated · ${escapeHtml(privacyPolicy.lastUpdated)}</p>
+  ${privacyPolicy.sections.map(section => `<section id="${escapeHtml(section.id)}"><h2>${escapeHtml(section.title)}</h2><p>${escapeHtml(section.body)}</p></section>`).join("\n  ")}
+</main>`;
+
 const staticRouteBodies = new Map([
+  ["/privacy", privacyStaticBody],
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
     <h1>Knowledge Base</h1>
