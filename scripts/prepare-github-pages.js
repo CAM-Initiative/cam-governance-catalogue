@@ -13,6 +13,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+const privacyPolicy = JSON.parse(readFileSync(join(repoRoot, "src", "lib", "privacyPolicy.json"), "utf8"));
 const docsDir = join(repoRoot, "docs");
 const indexPath = join(docsDir, "index.html");
 const fallbackPath = join(docsDir, "404.html");
@@ -116,6 +117,39 @@ async function fetchJson(url) {
 const aboutDescription = "CAM Initiative develops public-interest AI governance infrastructure through VIGIL Observatory and the CAELESTIS Architecture Model.";
 
 // Keep the static About fallback aligned with the React About hierarchy.
+// The homepage must expose real navigation links in the HTML response, before React runs.
+// Preserve the normal interactive homepage: React replaces the temporary crawl fallback
+// inside #root after it loads. The GitHub Pages 404 SPA fallback remains unchanged.
+const homepageCrawlFallback = `<main data-static-crawl-fallback="home" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <h1>CAM Initiative — public-interest AI governance</h1>
+  <p>CAM Initiative develops public-interest AI governance infrastructure through the VIGIL Observatory and the CAELESTIS Architecture Model.</p>
+  <h2>Explore CAM Initiative</h2>
+  <nav aria-label="CAM Initiative primary navigation">
+    <ul>
+      <li><a href="/about/">About CAM Initiative</a></li>
+      <li><a href="/observatory/">VIGIL Observatory</a></li>
+      <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">VIGIL Alignment Taxonomy</a></li>
+      <li><a href="/observatory/ai-governance-standards/">AI Governance Standards</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">Harm Impact Assessment</a></li>
+      <li><a href="/knowledge-base/">Knowledge Base</a></li>
+      <li><a href="/datasets/">Governance Datasets</a></li>
+      <li><a href="/policy/">Policy and Publications</a></li>
+      <li><a href="/licensing/">Licensing and Reuse</a></li>
+    </ul>
+  </nav>
+  <h2>VIGIL Observatory</h2>
+  <p>VIGIL publishes evidence-based AI Incident Case Files, a structured Alignment Taxonomy and harm assessments. Explore the Case Files and taxonomy to understand documented governance boundaries, failures and successful safeguards.</p>
+</main>`;
+const homepageRoot = '<div id="root"></div>';
+if (!baseHtml.includes(homepageRoot)) {
+  throw new Error("Cannot publish crawlable homepage: React root marker not found");
+}
+writeFileSync(indexPath, baseHtml.replace(
+  homepageRoot,
+  `<div id="root">${homepageCrawlFallback}</div>`,
+));
+
 const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
   <p>CAM Initiative · Public-interest AI governance</p>
   <h1>About CAM Initiative</h1>
@@ -189,7 +223,16 @@ function knowledgeReadingGuideHtml(section, title) {
   return `<section id="${escapeHtml(section)}"><h2>${escapeHtml(title)}</h2>${entries.map(item => `<section><h3>${escapeHtml(item.title)}</h3>${item.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</section>`).join("")}</section>`;
 }
 
+const privacyStaticBody = `<main data-static-crawl-fallback="privacy" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <p>CAM Initiative</p>
+  <h1>Privacy Policy</h1>
+  <p>${escapeHtml(privacyPolicy.intro)}</p>
+  <p>Last updated · ${escapeHtml(privacyPolicy.lastUpdated)}</p>
+  ${privacyPolicy.sections.map(section => `<section id="${escapeHtml(section.id)}"><h2>${escapeHtml(section.title)}</h2><p>${escapeHtml(section.body)}</p></section>`).join("\n  ")}
+</main>`;
+
 const staticRouteBodies = new Map([
+  ["/privacy", privacyStaticBody],
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
     <h1>Knowledge Base</h1>
@@ -280,6 +323,16 @@ for (const { document } of taxonomyFamilies) {
   }
 }
 
+let incidentRecords = [];
+if (existsSync(vigilFallbackPath)) {
+  const registry = JSON.parse(readFileSync(vigilFallbackPath, "utf8"));
+  incidentRecords = Array.isArray(registry.records)
+    ? registry.records.filter((record) => record?.record_type === "incident" && record?.id)
+    : [];
+}
+
+// Public Case File links follow canonical classifications, not the narrower
+// textbook case-example evidence selection.
 if (taxonomyFamilies.length) {
   const taxonomyIndexBody = `<main data-static-crawl-fallback="vigil-taxonomy-index" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory</p>
@@ -341,9 +394,35 @@ function externalAssessmentsHtml(record) {
 }
 
 function taxonomyCaseExamplesForClass(classId) {
-  const classes = taxonomyCaseFileExamples?.classes;
-  if (!classes || typeof classes !== "object") return [];
-  return Array.isArray(classes[classId]) ? classes[classId] : [];
+  // The taxonomy's generated CaseFileExamples projection excludes some evidence
+  // types for textbook publication. That editorial filter does not invalidate
+  // canonical Incident classifications or their public Case File links.
+  const curatedExamples = taxonomyCaseFileExamples?.classes?.[classId];
+  const curatedById = new Map(
+    (Array.isArray(curatedExamples) ? curatedExamples : [])
+      .filter((example) => example?.incident_id)
+      .map((example) => [example.incident_id, example]),
+  );
+  return incidentRecords.flatMap((record) => {
+    const mappings = [
+      ...(record.primary_classification ? [{ ...record.primary_classification, mapping_position: "primary" }] : []),
+      ...(Array.isArray(record.secondary_classifications)
+        ? record.secondary_classifications.map((mapping) => ({ ...mapping, mapping_position: "secondary" }))
+        : []),
+    ];
+    const mapping = mappings.find((item) =>
+      item.class_id === classId && item.classification_role === "failure-occurrence"
+    );
+    if (!mapping) return [];
+    const curated = curatedById.get(record.id);
+    return [{
+      incident_id: record.id,
+      incident_title: record.title || record.id,
+      classification_role: mapping.classification_role,
+      classification_confidence: curated?.classification_confidence,
+      mapping_position: mapping.mapping_position,
+    }];
+  }).sort((a, b) => a.incident_id.localeCompare(b.incident_id));
 }
 
 function publicMappingRoleLabel(role) {
@@ -463,7 +542,7 @@ for (const { document } of taxonomyFamilies) {
       <h2>Exclusions</h2>
       ${listHtml(item.exclusions)}
       <h2>Linked Case Files</h2>
-      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
+      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>"}
       ${classInvariantExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
@@ -477,14 +556,6 @@ for (const { document } of taxonomyFamilies) {
       }),
     );
   }
-}
-
-let incidentRecords = [];
-if (existsSync(vigilFallbackPath)) {
-  const registry = JSON.parse(readFileSync(vigilFallbackPath, "utf8"));
-  incidentRecords = Array.isArray(registry.records)
-    ? registry.records.filter((record) => record?.record_type === "incident" && record?.id)
-    : [];
 }
 
 const caseRoot = join(docsDir, "observatory", "cases");

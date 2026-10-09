@@ -44,6 +44,9 @@ jobs:
         run: node --test scripts/test-vigil-public-surfaces.mjs
 
       - name: Compile website source
+        env:
+          VITE_VIGIL_CHALLENGE_ENDPOINT: ${{ vars.VITE_VIGIL_CHALLENGE_ENDPOINT }}
+          VITE_VIGIL_TURNSTILE_SITE_KEY: ${{ vars.VITE_VIGIL_TURNSTILE_SITE_KEY }}
         run: pnpm exec vite build
 
       - name: Prepare GitHub Pages routes

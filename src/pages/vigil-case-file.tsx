@@ -7,6 +7,7 @@ import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentCl
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
 import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
+import { CaseFileChallenge } from "@/components/vigil/CaseFileChallenge";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
@@ -917,6 +918,7 @@ export default function VigilCaseFile() {
             onClick={() => setActiveStage(stage.id)}
           ><span>{stage.number}</span>{stage.label}</button>)}
           <Link href={`/observatory/reports/${encodeURIComponent(reportId)}/`} className="vigil-case-report-tab"><FileText aria-hidden="true" /> Full report / PDF</Link>
+          <CaseFileChallenge caseId={reportId} />
         </div>
       </nav>
 

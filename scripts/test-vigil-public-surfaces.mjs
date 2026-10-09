@@ -1319,3 +1319,39 @@ test("Compliance surfaces alignment results, normative force and internal eviden
   assert.doesNotMatch(rows, /authoritative_locator/);
   assert.doesNotMatch(repairCss, /content: "Assessment Result"/);
 });
+
+
+test("Case File challenge uses the existing Turnstile widget and previews fields without enabling unauthorised submissions", async () => {
+  const [caseFile, component, worker] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/components/vigil/CaseFileChallenge.tsx"),
+    read("infra/vigil-challenge-worker/index.mjs"),
+  ]);
+  assert.match(caseFile, /Full report \/ PDF<\/Link>\s*<CaseFileChallenge caseId=\{reportId\}/);
+  assert.match(component, /"0x4AAAAAAFSNuGaY4lVBa0hY"/);
+  assert.match(component, /action: "case_file_challenge"/);
+  assert.match(component, /const ENABLED = [^\n]*ENDPOINT[^\n]*SITE_KEY/);
+  assert.doesNotMatch(component, /Form preview — submissions disabled|Submission unavailable in preview/);
+  assert.match(component, /\{sending \? "Recording challenge…" : "Submit for review"\}/);
+  assert.match(component, /const CAN_SUBMIT = ENABLED && typeof window !== "undefined"/);
+  assert.match(component, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);
+  assert.match(worker, /answer\.success === true && answer\.hostname === expectedHostname && answer\.action === "case_file_challenge"/);
+  assert.match(worker, /\.private !== true/);
+});
+
+test("privacy source of truth feeds both React and crawlable HTML", async () => {
+  const [privacyComponent, publicationScript, policyJson] = await Promise.all([
+    read("src/pages/privacy.tsx"),
+    read("scripts/prepare-github-pages.js"),
+    read("src/lib/privacyPolicy.json"),
+  ]);
+  const policy = JSON.parse(policyJson);
+  assert.equal(policy.lastUpdated, "9 October 2026");
+  for (const id of ["case-file-form-data", "case-file-processing", "case-file-review-retention"]) {
+    assert.ok(policy.sections.some(section => section.id === id));
+  }
+  assert.match(privacyComponent, /import privacyPolicy from "@\/lib\/privacyPolicy\.json"/);
+  assert.match(publicationScript, /data-static-crawl-fallback="privacy"/);
+  assert.match(publicationScript, /privacyPolicy\.sections\.map\(section =>/);
+  assert.match(publicationScript, /privacyPolicy\.lastUpdated/);
+});
