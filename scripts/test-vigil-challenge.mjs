@@ -230,6 +230,6 @@ test("Case File form has clean required-field labels without floating asterisks"
   assert.match(ui, /<label>Which statement, clause or section\?/);
   assert.match(ui, /<label>Describe the problem/);
   assert.doesNotMatch(ui, /aria-hidden="true">\*<\/span>/);
-  assert.match(ui, /value=\{target\}[^>]*required/);
-  assert.match(ui, /value=\{explanation\}[^>]*required/);
+  assert.match(ui, /value=\{target\}[^\n]*required/);
+  assert.match(ui, /value=\{explanation\}[^\n]*required/);
 });
