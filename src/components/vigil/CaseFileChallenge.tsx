@@ -131,12 +131,12 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
     <button type="button" className="vigil-case-report-tab vigil-case-challenge-tab" onClick={() => setOpen(true)}>
       <Flag aria-hidden="true" /> Report a Case File issue
     </button>
-    <dialog ref={dialog} className="vigil-case-challenge-dialog" onClose={close} aria-labelledby="vigil-challenge-title">
+    <dialog ref={dialog} className="vigil-case-challenge-dialog" onClose={close} aria-labelledby="vigil-challenge-title" aria-describedby="vigil-challenge-description">
       <div className="vigil-case-challenge-header">
         <div>
           <p className="vigil-case-challenge-kicker">VIGIL Observatory · Evidence integrity</p>
           <h2 id="vigil-challenge-title">Report a Case File issue</h2>
-          <p>Question an inaccuracy, unsupported statement or assessment in {caseId}.</p>
+          <p id="vigil-challenge-description">Question an inaccuracy, unsupported statement or assessment in {caseId}.</p>
         </div>
         <button type="button" className="vigil-case-challenge-close" aria-label="Close report" onClick={() => dialog.current?.close()}><X aria-hidden="true" /></button>
       </div>
