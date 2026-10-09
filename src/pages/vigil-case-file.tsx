@@ -689,7 +689,6 @@ export default function VigilCaseFile() {
     if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
       <section className="vigil-diagnosis-definition vigil-conclusion-content">
         {governanceConclusion && <div className="vigil-conclusion-prose" aria-label="VIGIL Observatory conclusion">
-          <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
           <div className="vigil-conclusion-paragraphs">
             {splitConclusionParagraphs(governanceConclusion).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
           </div>
