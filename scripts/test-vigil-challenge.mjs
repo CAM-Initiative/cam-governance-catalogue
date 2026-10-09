@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import worker, { validateChallenge, issuePayload } from "../infra/vigil-challenge-worker/index.mjs";
 
 const site = "https://cam-initiative.org";
@@ -120,4 +121,14 @@ test("creates an issue only after verification and private-repo check", async ()
 test("fails closed without backend secrets", async () => {
   const reply = await worker.fetch(post(challenge), { SITE_ORIGIN: site });
   assert.equal(reply.status, 503);
+});
+
+test("challenge modal escapes Case File tab button styles and matches PDF link typography", () => {
+  const ui = readFileSync(new URL("../src/components/vigil/CaseFileChallenge.tsx", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../src/vigil-case-file-challenge.css", import.meta.url), "utf8");
+  assert.match(ui, /createPortal\(<dialog\b/);
+  assert.match(ui, /document\.body\)}/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-case-stage-tabs \.vigil-case-challenge-tab \{/);
+  assert.match(css, /font-size: 0\.7rem !important/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*font-size: 0\.72rem !important/);
 });
