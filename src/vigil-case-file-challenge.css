@@ -34,6 +34,13 @@
   text-underline-offset: 0.2rem;
 }
 .vigil-case-challenge-dialog {
+  /* The site reset removes the browser's default <dialog> auto-centering. */
+  position: fixed;
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%);
   width: min(92vw, 640px);
   max-height: min(88dvh, 850px);
   padding: 1.5rem;
@@ -177,17 +184,81 @@
 .vigil-case-challenge-submit:disabled { cursor: not-allowed; opacity: 0.5; }
 .vigil-case-challenge-success {
   display: grid;
-  gap: 0.7rem;
-  padding: 0.9rem;
-  line-height: 1.6;
-  background: hsl(var(--muted) / 0.5);
-  border-radius: 0.6rem;
+  gap: 1.15rem;
+  padding: 0.15rem 0 0;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.vigil-case-challenge-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.vigil-case-challenge-confirmation svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: 0 0 auto;
+  margin-top: 0.1rem;
+  color: hsl(var(--primary));
+}
+.vigil-case-challenge-reference {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  background: hsl(var(--muted) / 0.18);
+}
+.vigil-case-challenge-reference span {
+  color: hsl(var(--muted-foreground));
+  font-family: var(--app-font-mono);
+  font-size: 0.69rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.vigil-case-challenge-reference strong {
+  font-family: var(--app-font-mono);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: 0.025em;
+  overflow-wrap: anywhere;
+}
+.vigil-case-challenge-next-step {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.87rem;
+  line-height: 1.65;
+}
+.vigil-case-challenge-success button {
+  justify-self: start;
+  width: auto;
+  min-height: 2.7rem;
+  padding: 0.65rem 1.05rem;
+  border: 1px solid hsl(var(--primary) / 0.45);
+  border-radius: 0.35rem;
+  background: transparent;
+  color: hsl(var(--primary));
+  font-family: var(--app-font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.vigil-case-challenge-success button:hover,
+.vigil-case-challenge-success button:focus-visible {
+  background: hsl(var(--primary) / 0.07);
 }
 @media (max-width: 640px) {
   .vigil-case-challenge-dialog {
     width: calc(100vw - 1rem);
     max-height: 92dvh;
     padding: 1rem;
+  }
+  .vigil-case-challenge-success button {
+    width: 100%;
+    justify-self: stretch;
   }
 }
 @media (max-width: 900px) {
