@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Flag, X } from "lucide-react";
+import { createPortal } from "react-dom";
 
 const ENDPOINT = String(import.meta.env.VITE_VIGIL_CHALLENGE_ENDPOINT ?? "").trim();
 // Turnstile site keys are public; only the corresponding secret belongs in Cloudflare.
@@ -134,7 +135,7 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
     <button type="button" className="vigil-case-report-tab vigil-case-challenge-tab" onClick={() => setOpen(true)}>
       <Flag aria-hidden="true" /> Report a Case File issue
     </button>
-    <dialog ref={dialog} className="vigil-case-challenge-dialog" onClose={close} aria-labelledby="vigil-challenge-title" aria-describedby="vigil-challenge-description">
+    {typeof document !== "undefined" && createPortal(<dialog ref={dialog} className="vigil-case-challenge-dialog" onClose={close} aria-labelledby="vigil-challenge-title" aria-describedby="vigil-challenge-description">
       <div className="vigil-case-challenge-header">
         <div>
           <p className="vigil-case-challenge-kicker">VIGIL Observatory · Evidence integrity</p>
@@ -182,6 +183,6 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
           {sending ? "Recording challenge…" : "Submit for review"}
         </button>
       </form>}
-    </dialog>
+    </dialog>, document.body)}
   </>;
 }
