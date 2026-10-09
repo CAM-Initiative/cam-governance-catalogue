@@ -36,3 +36,15 @@ Record issue triage, source verification, reasons, and final state: correction, 
 ## Expansion boundary
 
 This private repository may later support other VIGIL Observatory operations. Keep Case File challenges distinguishable from other workflow issues by their `[Case File challenge]` title prefix (and optional separately managed GitHub labels). The Worker must retain an explicit, single-purpose issue-creation policy.
+
+
+## Browser-based setup sequence
+
+1. In GitHub (Settings > Developer settings > Personal access tokens > Fine-grained tokens), create a token restricted to owner CAM-Initiative, repository vigil-observatory only, with Issues: Read and write. GitHub grants read-only Metadata automatically. Do not share the token in a message or commit.
+2. In the Cloudflare dashboard, under Turnstile, create a Managed widget named VIGIL Case File Challenges for hostname cam-initiative.org. Retain the public site key for the website; enter the private secret ONLY as a Cloudflare Worker secret.
+3. Under Cloudflare Workers & Pages create a Worker named vigil-case-file-challenges. The worker's script is infra/vigil-challenge-worker/index.mjs, and should be deployed from this source. Its request path is /case-file-challenges.
+4. In the Worker Settings > Variables and Secrets, add non-secret TEXT variables SITE_ORIGIN=https://cam-initiative.org, GITHUB_OWNER=CAM-Initiative, GITHUB_REPO=vigil-observatory. Add SECRET variables GITHUB_TOKEN and TURNSTILE_SECRET. Use the Cloudflare secret input controls, not plain-text bindings or source code.
+5. In the website repository Settings > Secrets and variables > Actions > Variables (not Secrets), configure VITE_VIGIL_CHALLENGE_ENDPOINT as the complete Worker HTTPS URL ending /case-file-challenges, and VITE_VIGIL_TURNSTILE_SITE_KEY as the PUBLIC Turnstile site key. Both website GitHub Actions workflows explicitly use these public values when building. Never put the GitHub token or Turnstile secret in variables with the VITE_ prefix.
+6. Run the rebuild/publish workflow on the feature branch AFTER the endpoint is safely configured, and perform end-to-end tests before merging. Site remains unavailable if either public value is missing.
+
+Cloudflare's Wrangler configuration for deployments from a local checkout is supplied in wrangler.toml. The Worker code has no hardcoded credentials.
