@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Flag, X } from "lucide-react";
 
 const ENDPOINT = String(import.meta.env.VITE_VIGIL_CHALLENGE_ENDPOINT ?? "").trim();
-const SITE_KEY = String(import.meta.env.VITE_VIGIL_TURNSTILE_SITE_KEY ?? "").trim();
+// Turnstile site keys are public; only the corresponding secret belongs in Cloudflare.
+const SITE_KEY = String(import.meta.env.VITE_VIGIL_TURNSTILE_SITE_KEY || "0x4AAAAAAFSNuGaY4lVBa0hY").trim();
 const ENABLED = /^https:\/\/[^/]+\/case-file-challenges$/.test(ENDPOINT) && Boolean(SITE_KEY);
 const TYPES = [
   { value: "factual", label: "Factually inaccurate information" },
@@ -16,6 +17,7 @@ const TYPES = [
 type Turnstile = {
   render: (element: HTMLElement, options: {
     sitekey: string;
+    action: string;
     callback: (token: string) => void;
     "expired-callback": () => void;
     "error-callback": () => void;
@@ -60,6 +62,7 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
       if (cancelled || widgetId.current || !widgetContainer.current || !turnstile()) return;
       widgetId.current = turnstile()!.render(widgetContainer.current, {
         sitekey: SITE_KEY,
+        action: "case_file_challenge",
         theme: "auto",
         callback: setToken,
         "expired-callback": () => setToken(""),
