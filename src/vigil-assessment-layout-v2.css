@@ -94,13 +94,6 @@
 
 /* Experimental Stage 05 long-form reading treatment.
    Only paragraph boundaries change; the canonical prose is not summarised. */
-.vigil-case-file-page .vigil-conclusion-prose > .vigil-evidence-kicker {
-  margin: 0 0 0.8rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.075em;
-  text-transform: uppercase;
-}
-
 .vigil-case-file-page .vigil-conclusion-paragraphs,
 .vigil-deterministic-report-host .vigil-conclusion-paragraphs,
 .report-document .vigil-conclusion-paragraphs {
