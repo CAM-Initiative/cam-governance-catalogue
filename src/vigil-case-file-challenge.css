@@ -1,10 +1,32 @@
 /* Case File evidence-quality challenge. Matches existing dossier/contents navigation. */
-.vigil-case-file-page .vigil-case-challenge-tab {
-  width: 100%;
-  cursor: pointer;
-  text-align: left;
-  font-family: var(--app-font-mono);
+/* This trigger sits among stage buttons, but matches the PDF utility link. */
+.vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.48rem !important;
+  width: 100% !important;
+  min-height: 2.9rem !important;
+  padding: 0.72rem 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid hsl(var(--border) / 0.62) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   color: hsl(var(--primary));
+  cursor: pointer;
+  font-family: var(--app-font-mono) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.055em;
+  line-height: 1.35 !important;
+  text-align: left !important;
+  text-transform: uppercase;
+  white-space: normal !important;
+}
+.vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab:hover,
+.vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab:focus-visible {
+  padding-left: 0 !important;
 }
 .vigil-case-file-page .vigil-case-challenge-tab:hover,
 .vigil-case-file-page .vigil-case-challenge-tab:focus-visible {
@@ -122,5 +144,23 @@
     width: calc(100vw - 1rem);
     max-height: 92dvh;
     padding: 1rem;
+  }
+}
+@media (max-width: 900px) {
+  .vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab {
+    grid-column: 1 / -1;
+    justify-content: center !important;
+    min-height: 2.75rem !important;
+    padding: 0.62rem 0.78rem !important;
+    border: 1px solid hsl(var(--primary) / 0.46) !important;
+    border-radius: 0.6rem !important;
+    background: hsl(var(--primary) / 0.045) !important;
+    font-size: 0.72rem !important;
+    line-height: 1.15 !important;
+    text-align: center !important;
+  }
+  .vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab:hover,
+  .vigil-case-file-page .vigil-case-stage-tabs .vigil-case-challenge-tab:focus-visible {
+    padding-left: 0.78rem !important;
   }
 }
