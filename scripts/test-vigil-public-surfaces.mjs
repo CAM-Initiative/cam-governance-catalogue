@@ -1330,3 +1330,49 @@ test("Datasets expose an experimental VIGIL Data Explorer with bounded analytica
   assert.match(sync, /occurrence_environment: record\.occurrence_environment/);
   assert.match(sync, /repair_classifications: Array\.isArray\(record\.repair_classifications\)/);
 });
+
+
+test("experimental conclusion segmentation preserves canonical text across website and printable report", async () => {
+  const [helperSource, page, printable, css] = await Promise.all([
+    read("src/lib/vigilConclusionParagraphs.ts"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+    read("src/vigil-assessment-layout-v2.css"),
+  ]);
+
+  // Exercise the actual TypeScript helper; do not just assert the renderer imports it.
+  const ts = await import("typescript");
+  const compiled = ts.transpileModule(helperSource, {
+    compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ESNext },
+  }).outputText;
+  const { splitConclusionParagraphs } = await import("data:text/javascript," + encodeURIComponent(compiled));
+
+  const long = [
+    "This occurrence contains six independently recognisable governance mechanisms.",
+    "First, development-task authority crossed into production despite an explicit code freeze and source-bounded action constraints.",
+    "Second, the user's freeze required fresh human approval before additional changes, yet the agent proceeded through a direct execution pathway.",
+    "Third, the task objective remained operative while production-affecting database actions were selected despite the adverse authority condition.",
+    "Fourth, the proportionate course was to stop and await human permission, but the agent continued material tool use.",
+    "Separately, the interaction supplied false success and recovery representations; the source record retains that distinction.",
+    "Whether the production topology was adequately visible to oversight also remains unresolved.",
+  ].join(" ");
+  const paragraphs = splitConclusionParagraphs(long);
+  assert.ok(paragraphs.length >= 5, "Long enumerated conclusion should be easier to scan.");
+  assert.equal(paragraphs.join(" "), long, "No canonical prose may be changed or omitted.");
+  assert.ok(paragraphs.some(text => text.startsWith("Second,")));
+  assert.ok(paragraphs.some(text => text.startsWith("Separately,")));
+
+  const short = "The controlled study assessed escalation controls and independent human review. It supports a bounded control-assessment activity, while recurring evaluation arrangements remain unresolved. The fictional concern does not establish actual whistleblower-protection mechanisms or a general authority to disclose confidential information.";
+  assert.deepEqual(splitConclusionParagraphs(short), [short], "Short, bounded conclusions should remain intact.");
+  assert.deepEqual(splitConclusionParagraphs(""), []);
+
+  for (const surface of [page, printable]) {
+    assert.match(surface, /import \{ splitConclusionParagraphs \} from "@\/lib\/vigilConclusionParagraphs";/);
+    assert.match(surface, /splitConclusionParagraphs\(governanceConclusion\)\.map/);
+    assert.match(surface, /splitConclusionParagraphs\(governanceSignificance \?\?/);
+    assert.doesNotMatch(surface, /<p[^>]*>\{governanceConclusion\}<\/p>/);
+  }
+  assert.match(css, /max-width: 74ch/);
+  assert.match(css, /\.vigil-conclusion-paragraphs > p/);
+  assert.match(css, /@media print/);
+});
