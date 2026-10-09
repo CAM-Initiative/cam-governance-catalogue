@@ -24,7 +24,7 @@ The private intake repository is created and verified. The connected tools canno
 8. Run node --test scripts/test-vigil-challenge.mjs and pnpm run test:vigil; then rebuild and validate /docs. Test one consented report end-to-end against the actual private repository, including negative security cases and mobile access.
 
 ## Safe defaults
-- If the public build variables are not supplied, the dialog opens in unavailable mode and cannot accept or submit text.
+- If the Worker endpoint build variable is missing, the dialog opens in unavailable mode and cannot accept or submit text. The existing public Turnstile site key alone does not activate submissions.
 - If the Worker has missing configuration/secrets, it rejects the request (503). If the GitHub repository is public, it refuses to create any issue.
 - The Worker returns a reference like VIGIL-CH-00042, not a private repo link.
 - Never commit tokens, secret keys, private keys, passwords, .env or .dev.vars files. Browser build variables are public and must NOT contain secrets.
@@ -41,10 +41,14 @@ This private repository may later support other VIGIL Observatory operations. Ke
 ## Browser-based setup sequence
 
 1. In GitHub (Settings > Developer settings > Personal access tokens > Fine-grained tokens), create a token restricted to owner CAM-Initiative, repository vigil-observatory only, with Issues: Read and write. GitHub grants read-only Metadata automatically. Do not share the token in a message or commit.
-2. In the Cloudflare dashboard, under Turnstile, create a Managed widget named VIGIL Case File Challenges for hostname cam-initiative.org. Retain the public site key for the website; enter the private secret ONLY as a Cloudflare Worker secret.
+2. In Cloudflare Dashboard > Turnstile, open the **existing widget** with public site key `0x4AAAAAAFSNuGaY4lVBa0hY`. Check it allows hostname `cam-initiative.org`. Do not create another widget. The private secret belongs only in the Worker secret binding (`TURNSTILE_SECRET`).
 3. Under Cloudflare Workers & Pages create a Worker named vigil-case-file-challenges. The worker's script is infra/vigil-challenge-worker/index.mjs, and should be deployed from this source. Its request path is /case-file-challenges.
 4. In the Worker Settings > Variables and Secrets, add non-secret TEXT variables SITE_ORIGIN=https://cam-initiative.org, GITHUB_OWNER=CAM-Initiative, GITHUB_REPO=vigil-observatory. Add SECRET variables GITHUB_TOKEN and TURNSTILE_SECRET. Use the Cloudflare secret input controls, not plain-text bindings or source code.
-5. In the website repository Settings > Secrets and variables > Actions > Variables (not Secrets), configure VITE_VIGIL_CHALLENGE_ENDPOINT as the complete Worker HTTPS URL ending /case-file-challenges, and VITE_VIGIL_TURNSTILE_SITE_KEY as the PUBLIC Turnstile site key. Both website GitHub Actions workflows explicitly use these public values when building. Never put the GitHub token or Turnstile secret in variables with the VITE_ prefix.
-6. Run the rebuild/publish workflow on the feature branch AFTER the endpoint is safely configured, and perform end-to-end tests before merging. Site remains unavailable if either public value is missing.
+5. In website repository Settings > Secrets and variables > Actions > Variables (not Secrets), configure `VITE_VIGIL_CHALLENGE_ENDPOINT` as the full deployed Worker HTTPS URL ending `/case-file-challenges`. The existing PUBLIC site key is already present as a browser-safe fallback in `CaseFileChallenge.tsx`; optionally override with `VITE_VIGIL_TURNSTILE_SITE_KEY` for a future widget. Both website build workflows pass these public values. Never put GitHub tokens or Turnstile secrets in VITE_ variables.
+6. Run the rebuild/publish workflow on the feature branch AFTER the endpoint is safely configured, and perform end-to-end tests before merging. Site remains unavailable while the Worker HTTPS endpoint variable is missing, even though the public site key is already embedded.
 
 Cloudflare's Wrangler configuration for deployments from a local checkout is supplied in wrangler.toml. The Worker code has no hardcoded credentials.
+
+## Existing-widget integration (Cloudflare Spin)
+
+Cloudflare Spin created widget site key `0x4AAAAAAFSNuGaY4lVBa0hY`; **do not create another widget**. The site key is a public, non-secret frontend constant. The React dialog renders this widget explicitly with the action `case_file_challenge`. The Worker uses Cloudflare's canonical `/turnstile/v0/siteverify` endpoint and refuses reports unless both the hostname and the action match. The secret is never embedded in a frontend build. Cloudflare's existing-widget recovery flow normally uses an authenticated Wrangler 4.109+ CLI to retrieve the secret directly into the Worker; no such authenticated Cloudflare tooling is available in this chat. The account owner must set `TURNSTILE_SECRET` using Cloudflare's secure Worker Secret UI. Do not paste or send the secret to an assistant.
