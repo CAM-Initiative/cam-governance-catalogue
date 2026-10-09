@@ -693,7 +693,7 @@ export default function VigilCaseFile() {
           <div className="vigil-conclusion-paragraphs">
             {splitConclusionParagraphs(governanceConclusion).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
           </div>
-        </div>
+        </div>}
         <div className="vigil-conclusion-governance-significance">
           <div className="vigil-case-subheading">
             <h3 className="vigil-case-editorial-subheading">Governance significance</h3>
