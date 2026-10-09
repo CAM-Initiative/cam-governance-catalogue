@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Flag, X } from "lucide-react";
+import { CheckCircle2, Flag, X } from "lucide-react";
 import { createPortal } from "react-dom";
 
 const ENDPOINT = String(import.meta.env.VITE_VIGIL_CHALLENGE_ENDPOINT ?? "").trim();
@@ -133,23 +133,45 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
     setError("");
   }
 
+  function openReport() {
+    if (reference) {
+      setReference("");
+      setCategory("factual");
+      setTarget("");
+      setExplanation("");
+      setEvidence("");
+      setContact("");
+      setConsent(false);
+      setWebsite("");
+      setToken("");
+    }
+    setOpen(true);
+  }
+
   return <>
-    <button type="button" className="vigil-case-report-tab vigil-case-challenge-tab" onClick={() => setOpen(true)}>
+    <button type="button" className="vigil-case-report-tab vigil-case-challenge-tab" onClick={openReport}>
       <Flag aria-hidden="true" /> Report a Case File issue
     </button>
     {typeof document !== "undefined" && createPortal(<dialog ref={dialog} className="vigil-case-challenge-dialog" onClose={close} aria-labelledby="vigil-challenge-title" aria-describedby="vigil-challenge-description">
       <div className="vigil-case-challenge-header">
         <div>
           <p className="vigil-case-challenge-kicker">VIGIL Observatory · Evidence integrity</p>
-          <h2 id="vigil-challenge-title">Report a Case File issue</h2>
-          <p id="vigil-challenge-description">Question an inaccuracy, unsupported statement or assessment in {caseId}.</p>
+          <h2 id="vigil-challenge-title">{reference ? "Report submitted" : "Report a Case File issue"}</h2>
+          <p id="vigil-challenge-description">{reference ? "Thank you for helping maintain an accurate public record." : `Question an inaccuracy, unsupported statement or assessment in ${caseId}.`}</p>
         </div>
         <button type="button" className="vigil-case-challenge-close" aria-label="Close report" onClick={() => dialog.current?.close()}><X aria-hidden="true" /></button>
       </div>
       {reference ? <div role="status" className="vigil-case-challenge-success">
-        <h3>Challenge received</h3>
-        <p>Your report was recorded as <strong>{reference}</strong>. A VIGIL maintainer will assess the evidence before any Case File changes are made.</p>
-        <button type="button" onClick={() => dialog.current?.close()}>Close</button>
+        <div className="vigil-case-challenge-confirmation">
+          <CheckCircle2 aria-hidden="true" />
+          <p>Your report has been added to the private review queue.</p>
+        </div>
+        <div className="vigil-case-challenge-reference">
+          <span>Confirmation reference</span>
+          <strong>{reference}</strong>
+        </div>
+        <p className="vigil-case-challenge-next-step">A VIGIL maintainer will assess the supporting information before any changes are made to the published Case File.</p>
+        <button type="button" onClick={() => dialog.current?.close()}>Return to Case File</button>
       </div> : <form onSubmit={submit} className="vigil-case-challenge-form">
         <fieldset className="vigil-case-challenge-categories">
           <legend>What needs review?</legend>
