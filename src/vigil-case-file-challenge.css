@@ -175,8 +175,7 @@
   font-weight: 600;
 }
 .vigil-case-challenge-submit:disabled { cursor: not-allowed; opacity: 0.5; }
-.vigil-case-challenge-success,
-.vigil-case-challenge-unavailable {
+.vigil-case-challenge-success {
   display: grid;
   gap: 0.7rem;
   padding: 0.9rem;

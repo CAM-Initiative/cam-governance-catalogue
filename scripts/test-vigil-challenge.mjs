@@ -142,7 +142,8 @@ test("category radio controls remain visible in preview with submission fail-clo
   assert.match(ui, /<textarea value=\{explanation\}/);
   assert.match(ui, /<textarea value=\{evidence\}/);
   assert.match(ui, /<input type="email" value=\{contact\}/);
-  assert.match(ui, /Form preview — submissions disabled/);
+  assert.doesNotMatch(ui, /Form preview — submissions disabled|Submission unavailable in preview/);
+  assert.match(ui, /\{sending \? "Recording challenge…" : "Submit for review"\}/);
   assert.doesNotMatch(ui, /!ENABLED \? <div role="status"/);
   assert.match(ui, /if \(!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\) return/);
   assert.match(ui, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);

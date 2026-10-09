@@ -151,10 +151,6 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
         <p>Your report was recorded as <strong>{reference}</strong>. A VIGIL maintainer will assess the evidence before any Case File changes are made.</p>
         <button type="button" onClick={() => dialog.current?.close()}>Close</button>
       </div> : <form onSubmit={submit} className="vigil-case-challenge-form">
-        {!CAN_SUBMIT && <div role="status" className="vigil-case-challenge-unavailable">
-          <strong>Form preview — submissions disabled</strong>
-          <p>You can explore the fields, but nothing entered here will be sent or saved. Reports can only be submitted on the configured public website.</p>
-        </div>}
         <fieldset className="vigil-case-challenge-categories">
           <legend>What needs review? <span aria-hidden="true">*</span></legend>
           <div className="vigil-case-challenge-options">
@@ -187,7 +183,7 @@ export function CaseFileChallenge({ caseId }: { caseId: string }) {
         <div ref={widgetContainer} aria-label="Anti-abuse verification" />
         {error && <p className="vigil-case-challenge-error" role="alert">{error}</p>}
         <button className="vigil-case-challenge-submit" disabled={!CAN_SUBMIT || sending || !token || !consent} type="submit">
-          {sending ? "Recording challenge…" : CAN_SUBMIT ? "Submit for review" : "Submission unavailable in preview"}
+          {sending ? "Recording challenge…" : "Submit for review"}
         </button>
       </form>}
     </dialog>, document.body)}

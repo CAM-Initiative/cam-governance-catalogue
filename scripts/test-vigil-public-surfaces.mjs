@@ -1331,7 +1331,8 @@ test("Case File challenge uses the existing Turnstile widget and previews fields
   assert.match(component, /"0x4AAAAAAFSNuGaY4lVBa0hY"/);
   assert.match(component, /action: "case_file_challenge"/);
   assert.match(component, /const ENABLED = [^\n]*ENDPOINT[^\n]*SITE_KEY/);
-  assert.match(component, /Form preview — submissions disabled/);
+  assert.doesNotMatch(component, /Form preview — submissions disabled|Submission unavailable in preview/);
+  assert.match(component, /\{sending \? "Recording challenge…" : "Submit for review"\}/);
   assert.match(component, /const CAN_SUBMIT = ENABLED && typeof window !== "undefined"/);
   assert.match(component, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);
   assert.match(worker, /answer\.success === true && answer\.hostname === expectedHostname && answer\.action === "case_file_challenge"/);
