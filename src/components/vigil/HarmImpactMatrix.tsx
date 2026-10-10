@@ -372,7 +372,9 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
   const assessmentGap = string(assessment.assessment_gap);
 
   const derivationNote = aggregateHarm
-    ? <>This band represents <strong>Aggregate Harm — modelled from a deployed evaluation</strong>. It applies only to a generic Incident without a particular evidenced harmed person or group; eligible users are not verified victims.</>
+    ? overall === "SU"
+      ? <>No defensible Aggregate Harm band is supported by the deployed-evaluation evidence. SU remains an evidence state; a missing eligible-population denominator or unresolved failure does not default to S1.</>
+      : <>This band represents <strong>Aggregate Harm — modelled from a deployed evaluation</strong>. It applies only to a generic Incident without a particular evidenced harmed person or group; eligible users are not verified victims.</>
     : noMaterialisedHarmBasis
     ? <>No materialised downstream harm was established for the bounded occurrence. S1 is assigned under the VIGIL-HIM positive no-materialised-harm pathway. <strong>Basis:</strong> {noMaterialisedHarmBasis}</>
     : overall === "SU"
