@@ -275,7 +275,8 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /vigil-observatory-masthead-description[\s\S]*font-family: var\(--app-font-sans\)/);
   assert.match(taxonomy, /description="Governance boundaries for AI systems, organised into Fidelity Families and Fidelity Classes\."/);
   assert.match(cases, /description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and adjudication\."/);
-  assert.match(harm, /description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology\."/);
+  assert.match(harm, /description=\{aggregateSupported/);
+  assert.match(harm, /Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology/);
   assert.match(policy, /description="Public policy proposals and consultation submissions translating CAM governance architecture into institutional, legal and administrative design\."/);
   assert.match(standards, /description="A curated library of AI governance laws, standards, frameworks and technical guidance used to support VIGIL analysis\."/);
   assert.doesNotMatch(masthead, /Archive|LibraryBig|Landmark|ShieldCheck|<Visual/);
@@ -1372,4 +1373,30 @@ test("Knowledge Base publicly defines source-first Incident Admission Principle 
   assert.match(hub, /Incidental AI use is not enough/);
   assert.match(hub, /Historical external requirements are not applied retrospectively/);
   assert.match(prepare, /<section id="admission">[\s\S]*?Incident Admission Principle[\s\S]*?Security scope/);
+});
+
+test("HIM 1.1.0 readiness is gated by the VIGIL canonical schema on the admission-principle working branch", async () => {
+  const [loader, matrix, methodPage, hub] = await Promise.all([
+    read("src/lib/vigilHarmMethodology.ts"),
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
+    read("src/pages/vigil-severity-methodology.tsx"),
+    read("src/pages/vigil-knowledge-hub.tsx"),
+  ]);
+  assert.match(loader, /loadCurrentHarmMethodologyDefinition/);
+  assert.match(loader, /incident\?\.harm_impact_methodology_version/);
+  assert.match(loader, /method\.version !== version/);
+  assert.doesNotMatch(loader, /methodologies\/proposals\/|agent\/incident-ecosystem-ingestion/);
+  assert.match(matrix, /definition\.dimensions\.map/);
+  assert.match(matrix, /aggregateDimensions\.length > 0/);
+  assert.match(matrix, /epistemic_downstream_reliance_threshold/);
+  assert.match(matrix, /This band represents <strong>Aggregate Harm/);
+  assert.match(methodPage, /id="proposed-him"/);
+  assert.match(methodPage, /Draft, not a published scoring standard/);
+  assert.match(methodPage, /current\?\.dimensions\.length/);
+  assert.match(hub, /What qualifies as a VIGIL Incident\?/);
+  assert.match(hub, /HIM 1\.1\.0 — proposed assessment clarification/);
+  assert.match(hub, /Specific Harm:/);
+  assert.match(hub, /Aggregate Harm:/);
+  assert.match(hub, /Epistemic reliance and reputation:/);
+  assert.match(hub, /VIGIL-HIM 1\.0\.1 · methodology reference/);
 });
