@@ -384,7 +384,9 @@ test("Harm Impact assessment uses one context-sensitive methodology footer", asy
   assert.doesNotMatch(matrix, /Harm assessment summary:|Assessment date|Overall severity|vigil-harm-summary-row/);
   assert.doesNotMatch(matrix, /coverageNote|assessment\.coverage_note|className="vigil-harm-summary"/);
   assert.doesNotMatch(matrix, /className="vigil-harm-no-harm-basis"/);
-  assert.match(matrix, /const derivationNote = noMaterialisedHarmBasis/);
+  assert.match(matrix, /const derivationNote = aggregateHarm/);
+  assert.match(matrix, /Aggregate Harm — modelled from a deployed evaluation/);
+  assert.match(matrix, /string\(assessment\.assessment_pathway\) === "aggregate_harm"/);
   assert.match(matrix, /No materialised downstream harm was established for the bounded occurrence/);
   assert.match(matrix, /S1 is assigned under the VIGIL-HIM positive no-materialised-harm pathway/);
   assert.match(matrix, /<strong>Basis:<\/strong> \{noMaterialisedHarmBasis\}/);
