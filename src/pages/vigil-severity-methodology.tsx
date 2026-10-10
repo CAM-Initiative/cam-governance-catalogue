@@ -168,6 +168,26 @@ export default function VigilSeverityMethodology() {
             </div>
           </section>
 
+          <section id="proposed-him" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-draft-heading">
+            <div className="document-section-heading">
+              <p>Methodology development · not yet adopted</p>
+              <h2 id="severity-draft-heading">Proposed HIM 1.1.0 — pathways and thresholds</h2>
+            </div>
+            <div className="document-reading">
+              <p><strong>Draft, not a published scoring standard.</strong> VIGIL is calibrating HIM 1.1.0 on its working branch. Until adoption and schema/validator migration, canonical Case Files retain their recorded methodology version and no proposed Aggregate Harm score is treated as observed injury.</p>
+              <h3>Specific Harm</h3>
+              <p>For an Incident with an actual person, group, organisation or other bounded affected subject, use the ordinary S1–S5 thresholds based on <em>documented consequences</em>. One person can experience S5 harm. The model provider's overall deployment size never modifies that Incident's score.</p>
+              <h3>Aggregate Harm — generic deployed evaluations only</h3>
+              <p>When a deployed-model benchmark or generic product-level Incident has no particular evidenced harmed person or group, the proposal uses higher, dimension-specific S1–S5 population or decision thresholds. They apply to psychological wellbeing; relational integrity and autonomy; rights and liberty; equal treatment; and societal and democratic impact. Source-backed feature-eligible cohorts, a demonstrated material failure and a credible consequence must all be established. S1 is available; neither an S2 minimum nor a post-hoc score discount applies.</p>
+              <p>The two pathways are <strong>mutually exclusive</strong> within an Incident. Eligible active users are not a tally of injured people. A specific case never receives Aggregate Harm thresholds, even where the incident's consequences are uncertain.</p>
+              <h3>Epistemic reliance and reputational harm</h3>
+              <p>Epistemic failures become reputational consequences only where evidence connects a false or unsupported artefact to real downstream reliance, an identifiable reputation-bearing subject and an independently demonstrated adverse outcome. HIM 1.1.0 proposes specific S1–S5 thresholds for corrective burden, professional credibility, role/opportunity loss, persistence and reversibility. A taxonomy failure or citation error by itself does not automatically constitute reputational harm.</p>
+              <h3>Release boundary</h3>
+              <p>The adopted matrix above is sourced from the methodology version authorised in VIGIL's canonical Incident schema. HIM 1.0.1 currently governs 11 dimensions; the draft would add Relational Integrity and Autonomy as a twelfth. The website must keep draft thresholds clearly separate until VIGIL adopts HIM 1.1.0 and updates the Case File and validator contracts together.</p>
+              <p>Review the <a href="https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/methodologies/proposals/VIGIL.HarmImpactMatrix.v1.1.0-proposal.json" target="_blank" rel="noreferrer">draft matrix with all dimensional S1–S5 criteria</a> and the <a href="https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/docs/reviews/2026-10-10-him-12-dimension-scale-exposure-proposal.md" target="_blank" rel="noreferrer">methodology calibration and Incident examples</a>.</p>
+            </div>
+          </section>
+
           <section id="references" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-references-heading">
             <div className="document-section-heading">
               <p>References</p>
