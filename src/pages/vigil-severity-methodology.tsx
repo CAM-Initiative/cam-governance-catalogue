@@ -161,9 +161,9 @@ export default function VigilSeverityMethodology() {
 
               <div className="vigil-severity-method-row">
                 <h3>Overall severity</h3>
-                {aggregateSupported
-                  ? <p>Only dimensions with a defensible assessed band contribute to the overall severity. Each Incident follows exactly one evidence pathway: Specific Harm uses actual observed consequences; a generic deployed-model benchmark without a particular harmed person or group may use adopted Aggregate Harm thresholds. The highest supported band within that pathway controls; dimensions are not summed. Case Files must distinguish Aggregate Harm from observed injury.</p>
-                  : <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>}
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. {aggregateSupported
+                  ? <>Each Incident follows exactly one evidence pathway: Specific Harm uses actual observed consequences; a generic deployed-model benchmark without a particular harmed person or group may use adopted Aggregate Harm thresholds. The highest supported band within that pathway controls; dimensions are not summed and Aggregate Harm is not observed injury.</>
+                  : <>The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</>} Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
               </div>
             </div>
           </section>
