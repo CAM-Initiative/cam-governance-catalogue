@@ -95,6 +95,7 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
 
 const knowledgeRail = [
   { href: "#overview", label: "Overview" },
+  { href: "#admission", label: "Incident admission" },
   { href: "#cases", label: "Case File method" },
   { href: "#taxonomy", label: "Classification" },
   { href: "#harm-impact", label: "Harm Impact Assessment" },
@@ -153,6 +154,30 @@ export default function VigilKnowledgeHub() {
               <h1 id="knowledge-base-heading">Knowledge Base</h1>
               <p>Reference material across CAM Initiative: VIGIL Observatory Case Files and methods, AI governance standards, public datasets, policy material and the CAELESTIS Architecture Model.</p>
             </header>
+
+            <section id="admission" className="document-section vigil-about-section" aria-labelledby="knowledge-admission-heading">
+              <div className="document-section-heading">
+                <p>Incident admission</p>
+                <h2 id="knowledge-admission-heading">What qualifies as a VIGIL Incident?</h2>
+              </div>
+              <div className="document-reading">
+                <p><strong>Incident Admission Principle.</strong> VIGIL admits sufficiently evidenced, bounded occurrences in which an AI system materially participates in behaviour, decisions, actions, interactions or consequences relevant to the evaluation of AI governance and alignment.</p>
+                <p><strong>Admission is not a finding of misalignment.</strong> An Incident may demonstrate a failed governance boundary, a successfully preserved invariant, mixed outcomes or an unresolved question. It need not involve realised harm, a security breach or a model that disobeyed instructions. Classification and Harm Impact are separate assessments made after the occurrence is established.</p>
+                <h3>How an occurrence qualifies</h3>
+                <ul>
+                  <li><strong>A bounded occurrence:</strong> identifiable actors or systems, actions, sequence and context, including an actual observed evaluation or successful containment. A hypothetical attack or general risk description is not an Incident.</li>
+                  <li><strong>Material AI participation:</strong> the AI system's output, decision, interaction, action or control response meaningfully contributed to what occurred. Incidental use of an AI tool is insufficient.</li>
+                  <li><strong>A governance-relevant question:</strong> the evidence illuminates a material boundary of authority, safety, reliability, deception, privacy, security, oversight or another AI governance property. A matching Fidelity Class need not already exist.</li>
+                  <li><strong>Traceable evidence:</strong> sources support the claimed occurrence, AI contribution and material chronology with explicit limits. Independent or first-party artefacts are preferred; allegations remain attributed, and unresolved facts are not presented as established.</li>
+                </ul>
+                <h3>Security incidents and malicious use</h3>
+                <p><strong>AI security behaviour is in scope</strong> where the AI was manipulated, crossed an access or authority boundary, exposed information, attempted an unauthorised action or successfully resisted such pressure. An observed protective response can be as informative as a breach.</p>
+                <p><strong>Malicious human use of AI can be in scope</strong> when AI generation or action was a material part of an evidenced intrusion, impersonation, fraud or other harmful pathway. A perpetrator's objective is not automatically the model's objective, and the existence of a crime is not evidence by itself that the AI violated its governing invariant.</p>
+                <p><strong>Incidental AI use is not enough.</strong> An ordinary cyberattack, software malfunction or rule-based automation failure does not qualify solely because it involved technology or was described as AI-related. Historical algorithmic systems require the same independent examination of system nature and material involvement; uncertainty remains a research question, not an automatic admission or rejection.</p>
+                <h3>Admission is separate from diagnosis</h3>
+                <p>Before creating a new Case File, VIGIL checks whether the occurrence is already represented, including by a differently titled, superseded or formerly withdrawn record. Distinct events are not merged merely because they share a technique or affected technology. Admission does not establish legal liability, compliance, a taxonomy verdict, severity or exemplar status. Historical external requirements are not applied retrospectively merely because they are now included in the governance library.</p>
+              </div>
+            </section>
 
             <section id="cases" className="document-section vigil-about-section" aria-labelledby="knowledge-cases-heading">
               <div className="document-section-heading">

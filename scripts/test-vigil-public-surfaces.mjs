@@ -1357,3 +1357,19 @@ test("privacy source of truth feeds both React and crawlable HTML", async () => 
   assert.match(publicationScript, /privacyPolicy\.sections\.map\(section =>/);
   assert.match(publicationScript, /privacyPolicy\.lastUpdated/);
 });
+
+test("Knowledge Base publicly defines source-first Incident Admission Principle before Case File assessment", async () => {
+  const [hub, prepare] = await Promise.all([
+    read("src/pages/vigil-knowledge-hub.tsx"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(hub, /href: "#admission", label: "Incident admission"/);
+  assert.match(hub, /<section id="admission"[\s\S]*?<section id="cases"/);
+  assert.match(hub, /Incident Admission Principle/);
+  assert.match(hub, /Admission is not a finding of misalignment/);
+  assert.match(hub, /AI security behaviour is in scope/);
+  assert.match(hub, /Malicious human use of AI can be in scope/);
+  assert.match(hub, /Incidental AI use is not enough/);
+  assert.match(hub, /historical external requirements are not applied retrospectively/);
+  assert.match(prepare, /<section id="admission">[\s\S]*?Incident Admission Principle[\s\S]*?Security scope/);
+});
