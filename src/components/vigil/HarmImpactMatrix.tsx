@@ -402,7 +402,7 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
               </th>
               <td className={row.severity ? "band-" + row.severity.toLowerCase() + " is-result" : undefined}>
                 {row.severity
-                  ? <span className="vigil-harm-result-chip"><VigilStatusChip value={row.severity} /><span>{BAND_LABELS[row.severity] ?? row.severity}</span></span>
+                  ? <span className="vigil-harm-result-chip"><VigilStatusChip value={row.severity} /><span>{aggregateHarm && row.severity === "S1" ? "Minimal Aggregate Harm" : BAND_LABELS[row.severity] ?? row.severity}</span></span>
                   : <strong>{resultLabel(row)}</strong>}
               </td>
               {/* evidence_refs are canonical row-local provenance; citation numbers are resolved against the final deduplicated Evidence sources list. */}
