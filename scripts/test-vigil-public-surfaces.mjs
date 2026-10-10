@@ -1370,6 +1370,6 @@ test("Knowledge Base publicly defines source-first Incident Admission Principle 
   assert.match(hub, /AI security behaviour is in scope/);
   assert.match(hub, /Malicious human use of AI can be in scope/);
   assert.match(hub, /Incidental AI use is not enough/);
-  assert.match(hub, /historical external requirements are not applied retrospectively/);
+  assert.match(hub, /Historical external requirements are not applied retrospectively/);
   assert.match(prepare, /<section id="admission">[\s\S]*?Incident Admission Principle[\s\S]*?Security scope/);
 });
