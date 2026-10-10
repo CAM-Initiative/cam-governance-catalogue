@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { loadCurrentHarmMethodologyDefinition, type HarmMethodologyDefinition } from "@/lib/vigilHarmMethodology";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
@@ -262,7 +264,39 @@ function highlightedThreshold(text: string) {
 }
 
 function MethodologyMatrix({ compact }: { compact: boolean }) {
+  const [definition, setDefinition] = useState<HarmMethodologyDefinition>();
+  const [lookupFinished, setLookupFinished] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    void loadCurrentHarmMethodologyDefinition().then((value) => {
+      if (!cancelled) {
+        setDefinition(value);
+        setLookupFinished(true);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+  const dimensions = definition
+    ? definition.dimensions.map((dimension) => ({
+        dimension_id: dimension.dimension_id,
+        label: dimension.label,
+        thresholds: Object.fromEntries(BANDS.map((band) => [band, dimension.thresholds[band].criterion])) as Record<Band, string>,
+        adaptation_note: dimension.adaptation_note,
+      }))
+    : DIMENSIONS;
+  // Aggregate Harm rows exist only in an adopted versioned methodology, never
+  // because the current VIGIL branch contains an unapproved proposal JSON.
+  const aggregateDimensions = definition?.dimensions.filter((dimension) =>
+    BANDS.every((band) => !!dimension.thresholds[band].aggregate_harm_threshold)) ?? [];
+  const reputation = definition?.dimensions.find((dimension) => dimension.dimension_id === "reputation-dignity");
+  const epistemicLinkage = reputation && BANDS.every((band) =>
+    !!reputation.thresholds[band].epistemic_downstream_reliance_threshold);
   return <div className={"vigil-harm-matrix is-methodology" + (compact ? " is-compact" : "")}>
+    {definition
+      ? <p className="vigil-harm-method-note">Canonical VIGIL-HIM {definition.version} · {definition.dimensions.length} dimensions · source: adopted VIGIL Incident schema.</p>
+      : lookupFinished
+        ? <p className="vigil-harm-method-note">Current VIGIL methodology could not be verified. Showing the embedded HIM 1.0.1 reference only; confirm the canonical version before relying on these thresholds.</p>
+        : null}
     <div className="vigil-harm-matrix-scroll" role="region" aria-label="VIGIL Harm Impact Matrix severity threshold reference" tabIndex={0}>
       <table className="vigil-harm-methodology-table">
         <thead>
@@ -275,7 +309,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
           </tr>
         </thead>
         <tbody>
-          {DIMENSIONS.map((dimension) => <tr key={dimension.dimension_id}>
+          {dimensions.map((dimension) => <tr key={dimension.dimension_id}>
             <th scope="row">{dimension.label}</th>
             {BANDS.map((band) => <td key={band} className={"band-" + band.toLowerCase()}>
               <p>{highlightedThreshold(dimension.thresholds[band])}</p>
@@ -288,10 +322,28 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
     {/* Canonical methodology adaptation notes sit outside the threshold cells so they remain readable and citable. */}
     <section className="vigil-harm-interpretive-notes" aria-labelledby="vigil-harm-interpretive-notes-heading">
       <h3 id="vigil-harm-interpretive-notes-heading">Interpretive notes</h3>
-      {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
+      {dimensions.flatMap((dimension) => dimension.adaptation_note
         ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
         : [])}
     </section>
+    {aggregateDimensions.length > 0 && <section className="vigil-harm-interpretive-notes" aria-labelledby="vigil-harm-aggregate-heading">
+      <h3 id="vigil-harm-aggregate-heading">Aggregate Harm — generic deployed evaluations only</h3>
+      <p>These are the additional S1–S5 criteria for a generic Incident or benchmark on an already deployed model where no particular harmed individual or group is established. They are never applied to a specific harmed-person or harmed-group Incident; eligible populations are not counted as injured users.</p>
+      <div className="vigil-harm-matrix-scroll" role="region" aria-label="Adopted Aggregate Harm S1–S5 thresholds" tabIndex={0}>
+        <table className="vigil-harm-methodology-table">
+          <thead><tr><th scope="col">Generic deployed assessment dimension</th>{BANDS.map((band) => <th scope="col" key={band} className={"band-" + band.toLowerCase()}><strong>{band}</strong></th>)}</tr></thead>
+          <tbody>{aggregateDimensions.map((dimension) => <tr key={dimension.dimension_id}>
+            <th scope="row">{dimension.label}</th>
+            {BANDS.map((band) => <td key={band} className={"band-" + band.toLowerCase()}><p>{dimension.thresholds[band].aggregate_harm_threshold}</p></td>)}
+          </tr>)}</tbody>
+        </table>
+      </div>
+    </section>}
+    {epistemicLinkage && <section className="vigil-harm-interpretive-notes" aria-labelledby="vigil-harm-epistemic-heading">
+      <h3 id="vigil-harm-epistemic-heading">Epistemic reliance and reputational harm</h3>
+      <p>Epistemic failure does not automatically establish reputational injury. Where a specific Incident involves downstream reliance on a false or inadequately supported artefact, verify the actual relying actor, the affected reputation-bearing subject, and the distinct adverse consequence.</p>
+      <ul>{BANDS.map((band) => <li key={band}><strong>{band}:</strong> {reputation?.thresholds[band].epistemic_downstream_reliance_threshold?.numeric} {reputation?.thresholds[band].epistemic_downstream_reliance_threshold?.outcome}</li>)}</ul>
+    </section>}
   </div>;
 }
 
@@ -312,13 +364,16 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const overall = string(assessment.overall_severity) ?? "SU";
+  const aggregateHarm = string(assessment.methodology_version) !== "1.0.1" && string(assessment.assessment_pathway) === "aggregate_harm";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
     : []);
   const noMaterialisedHarmBasis = string(assessment.no_materialised_harm_basis);
   const assessmentGap = string(assessment.assessment_gap);
 
-  const derivationNote = noMaterialisedHarmBasis
+  const derivationNote = aggregateHarm
+    ? <>This band represents <strong>Aggregate Harm — modelled from a deployed evaluation</strong>. It applies only to a generic Incident without a particular evidenced harmed person or group; eligible users are not verified victims.</>
+    : noMaterialisedHarmBasis
     ? <>No materialised downstream harm was established for the bounded occurrence. S1 is assigned under the VIGIL-HIM positive no-materialised-harm pathway. <strong>Basis:</strong> {noMaterialisedHarmBasis}</>
     : overall === "SU"
       ? <>No defensible overall severity band could be derived because no Harm Impact dimension could be banded and positive no-materialised-harm was not established. SU denotes an unassessed evidence state, not a sixth severity band.</>
