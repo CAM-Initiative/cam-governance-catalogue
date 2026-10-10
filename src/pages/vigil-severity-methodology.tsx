@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { loadCurrentHarmMethodologyDefinition, type HarmMethodologyDefinition } from "@/lib/vigilHarmMethodology";
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
 import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
@@ -77,10 +79,21 @@ const methodologyReferences = [
 const harmImpactRail = [
   { href: "#matrix", label: "Reference matrix" },
   { href: "#method", label: "Method" },
+  { href: "#proposed-him", label: "Proposed HIM 1.1.0" },
   { href: "#references", label: "References" },
 ];
 
 export default function VigilSeverityMethodology() {
+  const [current, setCurrent] = useState<HarmMethodologyDefinition>();
+  useEffect(() => {
+    let cancelled = false;
+    void loadCurrentHarmMethodologyDefinition().then((method) => {
+      if (!cancelled) setCurrent(method);
+    });
+    return () => { cancelled = true; };
+  }, []);
+  const aggregateSupported = current?.dimensions.some((dimension) =>
+    Object.values(dimension.thresholds).some((threshold) => !!threshold.aggregate_harm_threshold));
   return <Shell>
     <main className="vigil-about-page vigil-severity-methodology-page home-menu-page document-page">
       <VigilObservatoryMasthead
@@ -88,15 +101,15 @@ export default function VigilSeverityMethodology() {
         titleId="harm-impact-assessment-heading"
         kicker="VIGIL Observatory · Harm Impact Assessment"
         title="Harm Impact Assessment"
-        description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."
+        description={aggregateSupported ? "Assessing Specific Harm and Aggregate Harm through the adopted VIGIL Harm Impact Methodology." : "Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."}
         artworkSrc={VIGIL_MASTHEAD_ARTWORK.harm}
         contextLabel="Methodology context"
         mode="reference"
         visual="harm"
         metadata={[
           { label: "Method", value: "VIGIL-HIM", mono: true },
-          { label: "Version", value: "1.0.1", mono: true },
-          { label: "Dimensions", value: "11" },
+          { label: "Version", value: current?.version ?? "1.0.1", mono: true },
+          { label: "Dimensions", value: String(current?.dimensions.length ?? 11) },
           { label: "Severity bands", value: "S1–S5 · SU", mono: true },
         ]}
       />
@@ -111,7 +124,7 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-matrix-heading">VIGIL Observatory Harm Impact Matrix</h2>
             </div>
             <div className="document-reading">
-              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling.</p>
+              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band from the <strong>currently adopted</strong> VIGIL Incident methodology. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling. An unapproved proposal must never change the published reference matrix.</p>
               <p className="vigil-severity-alignment"><strong>External alignment.</strong> VIGIL Observatory aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL Observatory also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. These sources inform VIGIL Observatory; their scales are not interchangeable with VIGIL-HIM.</p>
             </div>
             <HarmImpactMatrix />
@@ -148,7 +161,9 @@ export default function VigilSeverityMethodology() {
 
               <div className="vigil-severity-method-row">
                 <h3>Overall severity</h3>
-                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
+                {aggregateSupported
+                  ? <p>Only dimensions with a defensible assessed band contribute to the overall severity. Each Incident follows exactly one evidence pathway: Specific Harm uses actual observed consequences; a generic deployed-model benchmark without a particular harmed person or group may use adopted Aggregate Harm thresholds. The highest supported band within that pathway controls; dimensions are not summed. Case Files must distinguish Aggregate Harm from observed injury.</p>
+                  : <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>}
               </div>
             </div>
           </section>
