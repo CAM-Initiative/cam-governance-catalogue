@@ -169,7 +169,7 @@ test("shared DocumentRail mobile navigation wraps without horizontal scrolling",
   assert.doesNotMatch(menuCss, /\.vigil-datasets-page \.document-rail-nav/);
 });
 
-test("current Harm Impact Methodology follows the version published on VIGIL main", async () => {
+test("current Harm Impact Methodology follows the version published on the selected VIGIL branch", async () => {
   const [loader, datasets, harm, hub, pages] = await Promise.all([
     read("src/lib/vigilHarmMethodology.ts"),
     read("src/pages/datasets.tsx"),
@@ -179,7 +179,7 @@ test("current Harm Impact Methodology follows the version published on VIGIL mai
   ]);
   assert.match(loader, /VIGIL_SCHEMA_URL/);
   assert.match(loader, /harm_impact_methodology_version/);
-  assert.match(loader, /harmMethodologyUrl\(metadata\.version\)/);
+  assert.match(loader, /vigilRawUrl\(`vigil\/methodologies\/VIGIL\.HarmImpactMatrix\.v\$\{metadata\.version\}\.json`, fetcher\)/);
   assert.match(datasets, /loadCurrentHarmMethodologyMetadata/);
   assert.match(datasets, /harmMethodologyVersion/);
   assert.match(datasets, /harmMethodologyUrl/);
