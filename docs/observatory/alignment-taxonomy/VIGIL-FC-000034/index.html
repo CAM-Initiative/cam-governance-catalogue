@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-BC24jVpT.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DQQuB37d.css">
+    <script type="module" crossorigin src="/assets/index-hFgelIv-.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C-ECJwGU.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,14 +68,15 @@
       </dl>
       <h2>Technical definition</h2>
       <p>The property by which material work state is locatable and resumable through stable, unique and durable anchors binding the intended task, checkpoint, dependency set, relevant participants and continuation point, with explicit resolution of missing or ambiguous bindings.</p>
-      <h2>Recognition criteria</h2>
-      <p>None stated.</p>
-      <h2>Exclusions</h2>
-      <ul><li>The state is correctly anchored but its contents were not persisted.</li><li>The correct state is recoverable and only the user-facing label is inconvenient.</li><li>The failure concerns attribution of authorship rather than resumption of work.</li></ul>
-      <h2>Linked Case Files</h2>
+      <h2>Governing invariant</h2><blockquote>State intended for continuation must be bound to a stable, unique, and durable anchor identifying the correct task, checkpoint, dependencies, relevant participants, and continuation point. Missing or ambiguous anchoring must pause continuation for explicit resolution rather than attach state to a guessed or similar context.</blockquote>
+      <h2>Invariant held</h2><h3>Success condition</h3><p>Available occurrence evidence establishes the following bounded outcome: Stable unique anchors bind the intended task, checkpoint, dependencies, participants and continuation point.</p><h3>Positive recognition</h3><ul><li>Material work must be resumed after interruption or handoff.</li><li>Stable unique anchors bind the intended task, checkpoint, dependencies, participants and continuation point.</li><li>A resumption resolves those anchors to the intended work and explicitly handles any missing or ambiguous binding.</li></ul>
+      <h2>Failure established</h2><h3>Failure condition</h3><p><strong>The work exists, but it is no longer reliably tied to the task, checkpoint, or context needed to resume it.</strong></p><p>A failure in which material work state lacks or loses the stable identity, checkpoint, task binding, dependency binding, or reference needed to locate and resume the correct continuation state after interruption or transition.</p><h3>Failure recognition</h3><ul><li>Material state exists or is expected to support later continuation.</li><li>A stable anchor is required to bind that state to the correct task, checkpoint, dependency set, or continuation point.</li><li>The anchor is absent, lost, ambiguous, or detached, preventing reliable resumption.</li></ul>
+      <h2>Exclusions from failure recognition</h2><ul><li>The state is correctly anchored but its contents were not persisted.</li><li>The correct state is recoverable and only the user-facing label is inconvenient.</li><li>The failure concerns attribution of authorship rather than resumption of work.</li></ul>
+      <h2>Failure occurrences</h2>
       <p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>
 
-      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>Microsoft · 2026-08-10 · authoritative guidance</p><p><strong><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints" rel="noreferrer">Microsoft Agent Framework Workflows - Checkpoints</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Continuation from recorded checkpoints. No stable durable anchor guarantee or mandatory ambiguity halt. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>ACM Computing Surveys · 2002-09-01 · research evidence</p><p><strong><a href="https://doi.org/10.1145/568522.568525" rel="noreferrer">A survey of rollback-recovery protocols in message-passing systems</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Consistent recovery points. Does not govern task identity ambiguity. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
+
+      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>Microsoft · 2026-08-10 · authoritative guidance</p><p><strong><a href="https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints" rel="noreferrer">Microsoft Agent Framework Workflows - Checkpoints</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Continuation from recorded checkpoints. No stable durable anchor guarantee or mandatory ambiguity halt. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>ACM Computing Surveys · 2002-09-01 · research evidence</p><p><strong><a href="https://doi.org/10.1145/568522.568525" rel="noreferrer">A survey of rollback-recovery protocols in message-passing systems</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Consistent recovery points. Does not govern task identity ambiguity. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
   </body>
 </html>
