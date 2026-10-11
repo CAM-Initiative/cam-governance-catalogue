@@ -1464,5 +1464,6 @@ test("HIM 1.1.0 readiness is gated by the VIGIL canonical schema on the admissio
   assert.match(hub, /Specific Harm:/);
   assert.match(hub, /Aggregate Harm:/);
   assert.match(hub, /Epistemic reliance and reputation:/);
-  assert.match(hub, /VIGIL-HIM 1\.0\.1 · methodology reference/);
+  assert.match(hub, /harmMethodologyVersion/);
+  assert.match(hub, /Current VIGIL-HIM/);
 });
