@@ -296,6 +296,7 @@ function ClassManualCard({
         ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Fidelity Class definition remains current.</p>
         : linkedCases.length ? <ul>
           {linkedCases.map((example) => <li key={example.incident_id}>
+            <span className="vigil-taxonomy-case-study-kicker">Case study · Failure evidenced</span>
             <Link href={`/observatory/cases/${example.incident_id}/`}>
               <code>{example.incident_id}</code>
               <strong>{example.incident_title}</strong>
@@ -307,8 +308,10 @@ function ClassManualCard({
 
     {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Invariant-held examples for ${item.name}`}>
       <h4>Invariant-held examples <span>{invariantExemplars.length}</span></h4>
+      <p className="vigil-taxonomy-case-study-intro">Case studies show this invariant holding in an observed occurrence. They illustrate the class; they do not add recognition conditions.</p>
       <ul>
         {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
+          <span className="vigil-taxonomy-case-study-kicker">Case study · Invariant held</span>
           <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
             <code>{exemplar.linked_incident_id}</code>
             <strong>{exemplar.title}</strong>
