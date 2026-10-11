@@ -5,7 +5,7 @@ import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
-import { loadCurrentHarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
+import { loadCurrentHarmMethodologyMetadata, loadCurrentHarmMethodologyDefinition, type HarmMethodologyDefinition } from "@/lib/vigilHarmMethodology";
 
 const methodologyReferences = [
   {
@@ -79,6 +79,7 @@ const methodologyReferences = [
 const harmImpactRail = [
   { href: "#matrix", label: "Reference matrix" },
   { href: "#method", label: "Method" },
+  { href: "#proposed-him", label: "Proposed HIM 1.1.0" },
   { href: "#references", label: "References" },
 ];
 
@@ -93,6 +94,16 @@ export default function VigilSeverityMethodology() {
     return () => { cancelled = true; };
   }, []);
 
+  const [current, setCurrent] = useState<HarmMethodologyDefinition>();
+  useEffect(() => {
+    let cancelled = false;
+    void loadCurrentHarmMethodologyDefinition().then((method) => {
+      if (!cancelled) setCurrent(method);
+    });
+    return () => { cancelled = true; };
+  }, []);
+  const aggregateSupported = current?.dimensions.some((dimension) =>
+    Object.values(dimension.thresholds).some((threshold) => !!threshold.aggregate_harm_threshold));
   return <Shell>
     <main className="vigil-about-page vigil-severity-methodology-page home-menu-page document-page">
       <VigilObservatoryMasthead
@@ -100,15 +111,15 @@ export default function VigilSeverityMethodology() {
         titleId="harm-impact-assessment-heading"
         kicker="VIGIL Observatory · Harm Impact Assessment"
         title="Harm Impact Assessment"
-        description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."
+        description={aggregateSupported ? "Assessing Specific Harm and Aggregate Harm through the adopted VIGIL Harm Impact Methodology." : "Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."}
         artworkSrc={VIGIL_MASTHEAD_ARTWORK.harm}
         contextLabel="Methodology context"
         mode="reference"
         visual="harm"
         metadata={[
           { label: "Method", value: "VIGIL-HIM", mono: true },
-          { label: "Version", value: methodologyVersion ?? "Current", mono: true },
-          { label: "Dimensions", value: "11" },
+          { label: "Version", value: current?.version ?? methodologyVersion ?? "Current", mono: true },
+          { label: "Dimensions", value: String(current?.dimensions.length ?? 11) },
           { label: "Severity bands", value: "S1–S5 · SU", mono: true },
         ]}
       />
@@ -123,7 +134,7 @@ export default function VigilSeverityMethodology() {
               <h2 id="severity-matrix-heading">VIGIL Observatory Harm Impact Matrix</h2>
             </div>
             <div className="document-reading">
-              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling.</p>
+              <p>The matrix below publishes the threshold criteria for every VIGIL Observatory harm dimension and each S1–S5 band from the <strong>currently adopted</strong> VIGIL Incident methodology. Bold text marks quantitative or grave-consequence thresholds that are especially useful when scanning the table; the full wording of each cell remains controlling. An unapproved proposal must never change the published reference matrix.</p>
               <p className="vigil-severity-alignment"><strong>External alignment.</strong> VIGIL Observatory aligns the direction of its five-level scale with established AI harm-assessment practice: the <a href="https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy">MIT AI Incident Tracker harm-severity scale</a> runs from 1 (Negligible) to 5 (Catastrophic) and uses harm categories based on the <a href="https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf">CSET AI Harm Framework</a>. VIGIL Observatory also adapts functional-impact and recoverability concepts from CISA, NIST, NIS2, DORA and ASD. These sources inform VIGIL Observatory; their scales are not interchangeable with VIGIL-HIM.</p>
             </div>
             <HarmImpactMatrix />
@@ -160,8 +171,30 @@ export default function VigilSeverityMethodology() {
 
               <div className="vigil-severity-method-row">
                 <h3>Overall severity</h3>
-                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. {aggregateSupported
+                  ? <>Each Incident follows exactly one evidence pathway: Specific Harm uses actual observed consequences; a generic deployed-model benchmark without a particular harmed person or group may use adopted Aggregate Harm thresholds. The highest supported band within that pathway controls; dimensions are not summed and Aggregate Harm is not observed injury.</>
+                  : <>The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings.</>} Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
               </div>
+            </div>
+          </section>
+
+          <section id="proposed-him" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-draft-heading">
+            <div className="document-section-heading">
+              <p>Methodology development · not yet adopted</p>
+              <h2 id="severity-draft-heading">Proposed HIM 1.1.0 — pathways and thresholds</h2>
+            </div>
+            <div className="document-reading">
+              <p><strong>Draft, not a published scoring standard.</strong> VIGIL is calibrating HIM 1.1.0 on its working branch. Until adoption and schema/validator migration, canonical Case Files retain their recorded methodology version and no proposed Aggregate Harm score is treated as observed injury.</p>
+              <h3>Specific Harm</h3>
+              <p>For an Incident with an actual person, group, organisation or other bounded affected subject, use the ordinary S1–S5 thresholds based on <em>documented consequences</em>. One person can experience S5 harm. The model provider's overall deployment size never modifies that Incident's score.</p>
+              <h3>Aggregate Harm — generic deployed evaluations only</h3>
+              <p>When a deployed-model benchmark or generic product-level Incident has no particular evidenced harmed person or group, the proposal uses higher, dimension-specific S1–S5 population or decision thresholds. They apply to psychological wellbeing; relational integrity and autonomy; rights and liberty; equal treatment; and societal and democratic impact. Source-backed feature-eligible cohorts, a demonstrated material failure and a credible consequence must all be established. S1 is available; neither an S2 minimum nor a post-hoc score discount applies.</p>
+              <p>The two pathways are <strong>mutually exclusive</strong> within an Incident. Eligible active users are not a tally of injured people. A specific case never receives Aggregate Harm thresholds, even where the incident's consequences are uncertain.</p>
+              <h3>Epistemic reliance and reputational harm</h3>
+              <p>Epistemic failures become reputational consequences only where evidence connects a false or unsupported artefact to real downstream reliance, an identifiable reputation-bearing subject and an independently demonstrated adverse outcome. HIM 1.1.0 proposes specific S1–S5 thresholds for corrective burden, professional credibility, role/opportunity loss, persistence and reversibility. A taxonomy failure or citation error by itself does not automatically constitute reputational harm.</p>
+              <h3>Release boundary</h3>
+              <p>The adopted matrix above is sourced from the methodology version authorised in VIGIL's canonical Incident schema. HIM 1.0.1 currently governs 11 dimensions; the draft would add Relational Integrity and Autonomy as a twelfth. The website must keep draft thresholds clearly separate until VIGIL adopts HIM 1.1.0 and updates the Case File and validator contracts together.</p>
+              <p>Review the <a href="https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/methodologies/proposals/VIGIL.HarmImpactMatrix.v1.1.0-proposal.json" target="_blank" rel="noreferrer">draft matrix with all dimensional S1–S5 criteria</a> and the <a href="https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/docs/reviews/2026-10-10-him-12-dimension-scale-exposure-proposal.md" target="_blank" rel="noreferrer">methodology calibration and Incident examples</a>.</p>
             </div>
           </section>
 

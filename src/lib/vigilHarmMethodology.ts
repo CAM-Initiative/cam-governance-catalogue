@@ -52,3 +52,79 @@ export async function loadCurrentHarmMethodologyMetadata(fetcher: FetchLike = fe
     return undefined;
   }
 }
+
+/**
+ * Resolve the methodology version from the selected VIGIL branch's Incident
+ * schema (main by default, or the explicit preview branch). Never infer adoption
+ * merely because a proposal JSON file exists.
+ */
+export type HarmMethodologyThreshold = {
+  criterion: string;
+  aggregate_harm_threshold?: string;
+  epistemic_downstream_reliance_threshold?: { numeric?: string; outcome?: string };
+};
+
+export type HarmMethodologyDimension = {
+  dimension_id: string;
+  label: string;
+  thresholds: Record<string, HarmMethodologyThreshold>;
+  adaptation_note?: string;
+};
+
+export type HarmMethodologyDefinition = HarmMethodologyMetadata & {
+  dimensions: HarmMethodologyDimension[];
+};
+
+export async function loadCurrentHarmMethodologyDefinition(fetcher: FetchLike = fetch): Promise<HarmMethodologyDefinition | undefined> {
+  try {
+    const schemaUrl = await vigilRawUrl("vigil/VIGIL.Schema.json", fetcher);
+    const schemaResponse = await fetcher(schemaUrl, { cache: "no-store" });
+    if (!schemaResponse.ok) return undefined;
+    const schema = await schemaResponse.json() as Record<string, unknown>;
+    const classes = schema.record_classes as Record<string, unknown> | undefined;
+    const incident = classes?.incident as Record<string, unknown> | undefined;
+    const version = typeof incident?.harm_impact_methodology_version === "string" ? incident.harm_impact_methodology_version : undefined;
+    if (!version || !/^\d+\.\d+\.\d+$/.test(version)) return undefined;
+    const methodUrl = await vigilRawUrl(`vigil/methodologies/VIGIL.HarmImpactMatrix.v${version}.json`, fetcher);
+    const methodResponse = await fetcher(methodUrl, { cache: "no-store" });
+    if (!methodResponse.ok) return undefined;
+    const method = await methodResponse.json() as Record<string, unknown>;
+    if (method.methodology_id !== "VIGIL-HIM" || method.version !== version || !Array.isArray(method.dimensions)) return undefined;
+    const dimensions: HarmMethodologyDimension[] = [];
+    for (const value of method.dimensions) {
+      if (!value || typeof value !== "object") return undefined;
+      const dim = value as Record<string, unknown>;
+      if (typeof dim.dimension_id !== "string" || typeof dim.label !== "string") return undefined;
+      const rawThresholds = dim.thresholds && typeof dim.thresholds === "object" ? dim.thresholds as Record<string, unknown> : undefined;
+      if (!rawThresholds) return undefined;
+      const thresholds: Record<string, HarmMethodologyThreshold> = {};
+      for (const band of ["S1", "S2", "S3", "S4", "S5"]) {
+        const raw = rawThresholds[band] as Record<string, unknown> | undefined;
+        if (!raw || typeof raw.criterion !== "string" || !raw.criterion.trim()) return undefined;
+        thresholds[band] = {
+          criterion: raw.criterion,
+          aggregate_harm_threshold: typeof raw.aggregate_harm_threshold === "string" ? raw.aggregate_harm_threshold : undefined,
+          epistemic_downstream_reliance_threshold:
+            raw.epistemic_downstream_reliance_threshold && typeof raw.epistemic_downstream_reliance_threshold === "object"
+              ? raw.epistemic_downstream_reliance_threshold as HarmMethodologyThreshold["epistemic_downstream_reliance_threshold"]
+              : undefined,
+        };
+      }
+      dimensions.push({
+        dimension_id: dim.dimension_id,
+        label: dim.label,
+        thresholds,
+        adaptation_note: typeof dim.adaptation_note === "string" ? dim.adaptation_note : undefined,
+      });
+    }
+    if (dimensions.length < 11) return undefined;
+    return {
+      id: "VIGIL-HIM",
+      version,
+      effectiveOn: typeof method.effective_on === "string" ? method.effective_on : undefined,
+      dimensions,
+    };
+  } catch {
+    return undefined;
+  }
+}

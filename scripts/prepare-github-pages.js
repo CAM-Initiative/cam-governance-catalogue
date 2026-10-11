@@ -245,6 +245,21 @@ const staticRouteBodies = new Map([
       <li><a href="/datasets/">Datasets</a></li>
       <li><a href="/policy/">Policy</a></li>
     </ul></nav>
+    <section id="admission">
+      <h2>Incident Admission Principle</h2>
+      <p>VIGIL admits sufficiently evidenced, bounded occurrences in which an AI system materially participates in behaviour, decisions, actions, interactions or consequences relevant to the evaluation of AI governance and alignment.</p>
+      <p>Admission does not require a failed invariant, realised harm or adverse security outcome. Failed boundaries, successfully preserved invariants, mixed outcomes and unresolved questions are assessed independently after admission.</p>
+      <h3>Admission criteria</h3>
+      <ul>
+        <li>An identifiable, actual occurrence or observed evaluation rather than a hypothetical risk.</li>
+        <li>Material AI participation rather than incidental tool use.</li>
+        <li>An evidence-based governance question about the behaviour or control boundary.</li>
+        <li>Traceable sources, bounded claims and explicit uncertainty.</li>
+      </ul>
+      <h3>Security scope</h3>
+      <p>Security incidents involving AI actions, manipulation, boundary crossings or successful containment can qualify. Human misuse of AI can also qualify when AI materially contributed, without automatically implying misalignment by the model. Ordinary cyberattacks and non-AI automation failures are not admitted solely because they involve software.</p>
+      <p>VIGIL crosschecks existing and withdrawn Case Files before admitting a distinct occurrence. Incident admission, Alignment Taxonomy classification, Harm Impact and external requirement assessment remain separate decisions.</p>
+    </section>
     ${knowledgeReadingGuideHtml("taxonomy", "Alignment Taxonomy")}
     ${knowledgeReadingGuideHtml("harm-impact", "Harm Impact Assessment")}
     ${knowledgeReadingGuideHtml("standards", "AI Governance Standards")}
