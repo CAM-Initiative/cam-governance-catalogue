@@ -25,6 +25,19 @@ const [
   readFile(new URL("../src/index.css", import.meta.url), "utf8"),
 ]);
 
+// A reviewed, no-mapping source clause may have no separate adjudication_note or
+// taxonomy_relationships. Its recovered interpretation must still appear in the
+// public Incident analysis column rather than rendering an unexplained dash.
+const clauseAssessmentComponent = await readFile(
+  new URL("../src/components/vigil/CaseTaxonomyAssessment.tsx", import.meta.url),
+  "utf8",
+);
+assert.match(clauseAssessmentComponent, /clause\.status === "resolved-no-mapping" \? clause\.recoveredInvariant : undefined/);
+assert.match(clauseAssessmentComponent, /analysisText && <p>\{analysisText\}<\/p>/);
+assert.match(clauseAssessmentComponent, /!analysisText && <span>—<\/span>/);
+assert.match(clauseAssessmentComponent, /status === "taxonomy-gap"/);
+assert.match(clauseAssessmentComponent, /status === "unresolved"/);
+
 // Canonical Case File retains taxonomy-derived Classification and Compliance without
 // reviving retired record machinery.
 assert.match(caseFile, /CaseTaxonomyClassification/);
