@@ -162,6 +162,11 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
         <tbody>
           {clauses.map((clause, index) => {
             const classificationState = clauseClassificationState(clause.status);
+            // "Reviewed — no current class" is a completed class-fit decision.
+            // Preserve its source-grounded interpretation in the visible analysis
+            // when no separate adjudication note was authored.
+            const analysisText = clause.note
+              ?? (clause.status === "resolved-no-mapping" ? clause.recoveredInvariant : undefined);
             return <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
               <td data-label="Incident observation"><SourceClause clause={clause} /></td>
               <td data-label="Classification" className="vigil-taxonomy-clause-classification">
@@ -169,11 +174,13 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
                 {classificationState.detail && <span className="vigil-taxonomy-clause-state-detail">{classificationState.detail}</span>}
               </td>
               <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
-                {clause.note && <p>{clause.note}</p>}
-                <RelationshipStack
-                  relationships={clause.relationships}
-                  render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
-                />
+                {analysisText && <p>{analysisText}</p>}
+                {clause.relationships.length > 0
+                  ? <RelationshipStack
+                      relationships={clause.relationships}
+                      render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
+                    />
+                  : !analysisText && <span>—</span>}
               </td>
             </tr>;
           })}
