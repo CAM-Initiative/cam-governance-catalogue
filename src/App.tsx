@@ -4,6 +4,7 @@ import "./vigil-storyboard.css";
 import "./vigil-ux-v2.css";
 import "./vigil-ux-v3.css";
 import "./vigil-ux-v4.css";
+import "./vigil-case-file-challenge.css";
 import "./vigil-ux-v5.css";
 import "./vigil-ux-v6.css";
 import "./vigil-standards-dossier.css";

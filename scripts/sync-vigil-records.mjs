@@ -127,6 +127,25 @@ function compactIncidentRecord(record) {
     severity: record.severity,
     classification_status: record.classification_status,
     classification_role: record.classification_role,
+    // Preserve mapping-local roles from the canonical VIGIL index. A class ID
+    // alone cannot establish failure vs successful-invariant occurrence, and
+    // textbook example filtering must not erase public Case File relationships.
+    primary_classification: primary.class_id
+      ? {
+          class_id: primary.class_id,
+          family_id: primary.family_id,
+          classification_role: primary.classification_role,
+        }
+      : undefined,
+    secondary_classifications: Array.isArray(record.secondary_classifications)
+      ? record.secondary_classifications
+          .filter((item) => item && typeof item === "object" && item.class_id)
+          .map((item) => ({
+            class_id: item.class_id,
+            family_id: item.family_id,
+            classification_role: item.classification_role,
+          }))
+      : [],
     adjudication_coverage: record.adjudication_coverage,
     alignment_exemplar_eligible: typeof record.alignment_exemplar_eligible === "boolean" ? record.alignment_exemplar_eligible : undefined,
     primary_class_id: primaryClassId,

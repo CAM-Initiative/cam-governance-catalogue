@@ -70,6 +70,8 @@ jobs:
 
       - name: Rebuild published site
         env:
+          VITE_VIGIL_CHALLENGE_ENDPOINT: ${{ vars.VITE_VIGIL_CHALLENGE_ENDPOINT }}
+          VITE_VIGIL_TURNSTILE_SITE_KEY: ${{ vars.VITE_VIGIL_TURNSTILE_SITE_KEY }}
           VIGIL_FEATURE_REGISTRY: https://raw.githubusercontent.com/CAM-Initiative/Vigil/chore/remove-aeon-governance-lab-public-references/vigil/VIGIL.Incidents.Index.json
         run: |
           rm -rf docs/assets

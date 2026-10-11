@@ -393,7 +393,7 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
-test("Classification presents Fidelity Classes and Compliance rolls exact requirements conservatively", async () => {
+test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/vigil-classification-table.css"),
@@ -425,39 +425,27 @@ test("Classification presents Fidelity Classes and Compliance rolls exact requir
   assert.doesNotMatch(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
-  assert.match(classification, /<th scope="col">VIGIL Finding<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Requirement explanation<\/th>/);
+  assert.match(classification, /CaseRequirementAssessments/);
+  assert.doesNotMatch(classification, /complianceContributions|rollupComplianceRequirements/);
   assert.doesNotMatch(classification, /<th scope="col">Classification basis<\/th>/);
   const complianceMarkup = classification.match(/<table className="vigil-classification-table vigil-compliance-table">[\s\S]*?<\/table>/)?.[0] ?? "";
   assert.doesNotMatch(complianceMarkup, /Incident observation/);
   assert.doesNotMatch(complianceMarkup, /Recognition criteria/);
-  assert.match(classification, /function complianceReferenceKey/);
-  assert.match(classification, /reference\.clause_or_control/);
   assert.doesNotMatch(classification, /vigil-compliance-clause/);
   assert.doesNotMatch(classification, /vigil-compliance-requirement-id/);
   assert.doesNotMatch(classification, /<span[^>]*>\{reference\.requirement_id\}<\/span>/);
-  assert.match(classification, /function complianceRolePriority/);
-  assert.match(classification, /role === "failure-occurrence"\) return 3/);
-  assert.match(classification, /role === "ambiguous-boundary"\) return 2/);
-  assert.match(classification, /return 1/);
-  assert.match(classification, /function rollupComplianceRequirements/);
-  assert.match(classification, /const highestPriority = Math\.max/);
-  assert.match(classification, /const controlling = group\.filter/);
   assert.doesNotMatch(classification, /recognitionCriteria:/);
-  assert.match(classification, /explanations: \[\.\.\.new Set/);
   assert.doesNotMatch(classification, /vigil-compliance-reference-meta/);
   assert.doesNotMatch(classification, /\{reference\.publisher\}/);
   assert.doesNotMatch(classification, /\{reference\.date\}/);
-  assert.match(classification, /role === "regulatory-evidence"/);
-  assert.match(classification, /role === "standards-evidence"/);
-  assert.match(classification, /role === "authoritative-guidance"/);
 
   assert.match(taxonomyLoader, /requirement_id\?: string/);
   assert.match(taxonomyLoader, /clause_or_control\?: string/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 12%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(2\) \{ width: 32%; \}/);
-  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 56%; \}/);
-  assert.doesNotMatch(css, /\.vigil-compliance-table thead th:nth-child\(4\)/);
-  assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 82rem;/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(1\) \{ width: 16%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(2\) \{ width: 28%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 16%; \}/);
+  assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 40%; \}/);
+  assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 72rem;/);
   assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 96rem;[\s\S]*table-layout: auto;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
@@ -498,8 +486,8 @@ test("Case File classification labels derive public state from mapping-local rol
   assert.match(taxonomy, /taxonomyAdjudicationCoverageStatus/);
   assert.match(taxonomy, /taxonomyAlignmentExemplarEligible/);
   assert.match(taxonomy, /coverage === "partial"\) return "Adjudication incomplete"/);
-  assert.match(taxonomy, /hasAmbiguousBoundary \|\| \(hasFailure && hasInvariantHeld\)\) return "Combination"/);
-  assert.match(taxonomy, /exemplarEligible === true\) return "Exemplar"/);
+  assert.match(taxonomy, /hasAmbiguousBoundary\) return "Boundary unresolved"/);
+  assert.doesNotMatch(taxonomy, /exemplarEligible === true\) return "Exemplar"/);
   assert.match(taxonomy, /hasFailure && !hasInvariantHeld\) return "Classified"/);
   assert.match(taxonomy, /status === "classification-disputed"\) return "Disputed"/);
   assert.match(taxonomy, /status === "requires-human-review"\) return "Under review"/);
@@ -516,10 +504,9 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(taxonomy, /"ambiguous-boundary"/);
   assert.match(taxonomy, /hasAmbiguousBoundary/);
   assert.match(classification, /Secondary unresolved boundary/);
-  assert.match(classification, /complianceRolePriority/);
   assert.match(caseFile, /const isCombination = classification === "Combination"/);
   assert.match(caseFile, /<Info \/>/);
-  assert.match(caseFile, /The system is neither aligned nor misaligned/);
+  assert.match(caseFile, /Different assessed boundaries have different outcomes/);
   assert.doesNotMatch(caseFile, /Compliance shows the external standards, regulations and guidance connected to the governance issues identified in this Case File/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
   assert.match(caseFile, /Material facts remain contested\./);
@@ -553,7 +540,7 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(caseFile, /This Case File is fully adjudicated against the current taxonomy/);
   assert.match(caseFile, /const isFailure = classification === "Classified"/);
   assert.match(caseFile, /Alignment outcome · Failure evidenced/);
-  assert.match(caseFile, /The governing invariants assessed did not demonstrate alignment\./);
+  assert.match(caseFile, /Failure is evidenced at an assessed governance boundary\./);
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
@@ -561,9 +548,6 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(classification, /The relevant governance boundary was tested and held/);
   assert.match(classification, /Primary alignment finding · invariant held/);
   assert.match(classification, /Secondary alignment finding · invariant held/);
-  assert.match(classification, /complianceRolePriority/);
-  assert.match(classification, /No mapped external requirement is available for compliance cross-reference in this Case File\./);
-  assert.match(classification, /failure, then unresolved boundary, then invariant held/);
   assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
   assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
   assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
@@ -590,7 +574,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
   assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
-  assert.match(hub, /Project failed or unresolved Fidelity Classes into the standards, regulatory requirements and authoritative governance guidance already cross-referenced by the VIGIL Alignment Taxonomy/);
+  assert.match(hub, /Assess relevant external requirements independently against the occurrence evidence/);
   assert.match(hub, /Integrate the evidence, harm assessment, taxonomy relationships and external requirement crosswalk into a bounded VIGIL interpretation\./);
   assert.match(hub, /Preserve the evidence sources, taxonomy records, methodology references and canonical Incident supporting the analysis\./);
   assert.match(hub, /CASE_FILE_STAGES\.map/);
@@ -1152,7 +1136,7 @@ test("Knowledge Base owns VIGIL method, classification and CAELESTIS architectur
     read("src/home-menu-pages.css"),
   ]);
   const methodStart = hub.indexOf("One evidence-to-conclusion structure for every Incident");
-  const harmSeparation = hub.indexOf("Harm Impact Assessment and alignment classification are deliberately independent");
+  const harmSeparation = hub.indexOf("The Harm Impact Assessment describes materialised consequence and severity");
   const stageList = hub.indexOf("about-method-list");
   const classificationStart = hub.indexOf("Mappings classify individual boundaries. The Case File index summarises the Incident.");
   const architectureStart = hub.indexOf("CAELESTIS Architecture Model (CAM) is a publicly inspectable governance corpus");
@@ -1379,4 +1363,63 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and defines Dispu
   assert.match(report, /Material facts remain contested\./);
   assert.match(report, /VIGIL takes a legally conservative approach/);
   assert.doesNotMatch(hub, /classify materialised harm/);
+});
+
+
+test("Compliance surfaces alignment results, normative force and internal evidence references", async () => {
+  const [component, rows, repairCss] = await Promise.all([
+    read("src/components/vigil/CaseRequirementAssessments.tsx"),
+    read("src/lib/vigilOccurrenceRequirements.mjs"),
+    read("src/vigil-repair-invariant-icon.css"),
+  ]);
+
+  assert.match(component, /<th scope="col">Assessment result<\/th>[\s\S]*<th scope="col">External requirement<\/th>[\s\S]*<th scope="col">Evidence and assessment basis<\/th>/);
+  assert.match(component, /<th scope="col">Normative force<\/th>/);
+  assert.match(component, /row\.resultLabel/);
+  assert.match(component, /row\.assessmentBasis/);
+  assert.match(component, /row\.assessedOn/);
+  assert.doesNotMatch(component, /applicabilityStatus|findingBasis|SecondaryAssessmentGroup/);
+  assert.match(rows, /Boundary means a relevant requirement/);
+  assert.match(rows, /\/observatory\/ai-governance-standards\//);
+  assert.match(rows, /#vigil-evidence-reference-/);
+  assert.doesNotMatch(rows, /authoritative_locator/);
+  assert.doesNotMatch(repairCss, /content: "Assessment Result"/);
+});
+
+
+test("Case File challenge uses the existing Turnstile widget and previews fields without enabling unauthorised submissions", async () => {
+  const [caseFile, component, worker] = await Promise.all([
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/components/vigil/CaseFileChallenge.tsx"),
+    read("infra/vigil-challenge-worker/index.mjs"),
+  ]);
+  assert.match(caseFile, /Full report \/ PDF<\/Link>\s*<CaseFileChallenge caseId=\{reportId\}/);
+  assert.match(component, /"0x4AAAAAAFSNuGaY4lVBa0hY"/);
+  assert.match(component, /action: "case_file_challenge"/);
+  assert.match(component, /const ENABLED = [^\n]*ENDPOINT[^\n]*SITE_KEY/);
+  assert.doesNotMatch(component, /Form preview — submissions disabled|Submission unavailable in preview/);
+  assert.match(component, /\{sending \? "Recording challenge…" : "Submit for review"\}/);
+  assert.match(component, /const CAN_SUBMIT = ENABLED && typeof window !== "undefined"/);
+  assert.doesNotMatch(component, /aria-hidden="true">\*<\/span>/);
+  assert.match(component, /<legend>What needs review\?<\/legend>/);
+  assert.match(component, /disabled=\{!CAN_SUBMIT \|\| sending \|\| !token \|\| !consent\}/);
+  assert.match(worker, /answer\.success === true && answer\.hostname === expectedHostname && answer\.action === "case_file_challenge"/);
+  assert.match(worker, /\.private !== true/);
+});
+
+test("privacy source of truth feeds both React and crawlable HTML", async () => {
+  const [privacyComponent, publicationScript, policyJson] = await Promise.all([
+    read("src/pages/privacy.tsx"),
+    read("scripts/prepare-github-pages.js"),
+    read("src/lib/privacyPolicy.json"),
+  ]);
+  const policy = JSON.parse(policyJson);
+  assert.equal(policy.lastUpdated, "9 October 2026");
+  for (const id of ["case-file-form-data", "case-file-processing", "case-file-review-retention"]) {
+    assert.ok(policy.sections.some(section => section.id === id));
+  }
+  assert.match(privacyComponent, /import privacyPolicy from "@\/lib\/privacyPolicy\.json"/);
+  assert.match(publicationScript, /data-static-crawl-fallback="privacy"/);
+  assert.match(publicationScript, /privacyPolicy\.sections\.map\(section =>/);
+  assert.match(publicationScript, /privacyPolicy\.lastUpdated/);
 });

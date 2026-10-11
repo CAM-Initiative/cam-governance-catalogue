@@ -1,3 +1,5 @@
+import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
+import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
 import {
   copyFileSync,
   existsSync,
@@ -11,6 +13,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+const privacyPolicy = JSON.parse(readFileSync(join(repoRoot, "src", "lib", "privacyPolicy.json"), "utf8"));
 const docsDir = join(repoRoot, "docs");
 const indexPath = join(docsDir, "index.html");
 const fallbackPath = join(docsDir, "404.html");
@@ -114,6 +117,39 @@ async function fetchJson(url) {
 const aboutDescription = "CAM Initiative develops public-interest AI governance infrastructure through VIGIL Observatory and the CAELESTIS Architecture Model.";
 
 // Keep the static About fallback aligned with the React About hierarchy.
+// The homepage must expose real navigation links in the HTML response, before React runs.
+// Preserve the normal interactive homepage: React replaces the temporary crawl fallback
+// inside #root after it loads. The GitHub Pages 404 SPA fallback remains unchanged.
+const homepageCrawlFallback = `<main data-static-crawl-fallback="home" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <h1>CAM Initiative — public-interest AI governance</h1>
+  <p>CAM Initiative develops public-interest AI governance infrastructure through the VIGIL Observatory and the CAELESTIS Architecture Model.</p>
+  <h2>Explore CAM Initiative</h2>
+  <nav aria-label="CAM Initiative primary navigation">
+    <ul>
+      <li><a href="/about/">About CAM Initiative</a></li>
+      <li><a href="/observatory/">VIGIL Observatory</a></li>
+      <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
+      <li><a href="/observatory/alignment-taxonomy/">VIGIL Alignment Taxonomy</a></li>
+      <li><a href="/observatory/ai-governance-standards/">AI Governance Standards</a></li>
+      <li><a href="/observatory/harm-impact-assessment/">Harm Impact Assessment</a></li>
+      <li><a href="/knowledge-base/">Knowledge Base</a></li>
+      <li><a href="/datasets/">Governance Datasets</a></li>
+      <li><a href="/policy/">Policy and Publications</a></li>
+      <li><a href="/licensing/">Licensing and Reuse</a></li>
+    </ul>
+  </nav>
+  <h2>VIGIL Observatory</h2>
+  <p>VIGIL publishes evidence-based AI Incident Case Files, a structured Alignment Taxonomy and harm assessments. Explore the Case Files and taxonomy to understand documented governance boundaries, failures and successful safeguards.</p>
+</main>`;
+const homepageRoot = '<div id="root"></div>';
+if (!baseHtml.includes(homepageRoot)) {
+  throw new Error("Cannot publish crawlable homepage: React root marker not found");
+}
+writeFileSync(indexPath, baseHtml.replace(
+  homepageRoot,
+  `<div id="root">${homepageCrawlFallback}</div>`,
+));
+
 const vigilAboutFallbackBody = `<main data-static-crawl-fallback="vigil-about" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
   <p>CAM Initiative · Public-interest AI governance</p>
   <h1>About CAM Initiative</h1>
@@ -182,7 +218,21 @@ const staticRoutes = [
   ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
 ];
 
+function knowledgeReadingGuideHtml(section, title) {
+  const entries = vigilReadingGuide.filter(item => item.section === section);
+  return `<section id="${escapeHtml(section)}"><h2>${escapeHtml(title)}</h2>${entries.map(item => `<section><h3>${escapeHtml(item.title)}</h3>${item.paragraphs.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</section>`).join("")}</section>`;
+}
+
+const privacyStaticBody = `<main data-static-crawl-fallback="privacy" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+  <p>CAM Initiative</p>
+  <h1>Privacy Policy</h1>
+  <p>${escapeHtml(privacyPolicy.intro)}</p>
+  <p>Last updated · ${escapeHtml(privacyPolicy.lastUpdated)}</p>
+  ${privacyPolicy.sections.map(section => `<section id="${escapeHtml(section.id)}"><h2>${escapeHtml(section.title)}</h2><p>${escapeHtml(section.body)}</p></section>`).join("\n  ")}
+</main>`;
+
 const staticRouteBodies = new Map([
+  ["/privacy", privacyStaticBody],
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
     <h1>Knowledge Base</h1>
@@ -195,6 +245,9 @@ const staticRouteBodies = new Map([
       <li><a href="/datasets/">Datasets</a></li>
       <li><a href="/policy/">Policy</a></li>
     </ul></nav>
+    ${knowledgeReadingGuideHtml("taxonomy", "Alignment Taxonomy")}
+    ${knowledgeReadingGuideHtml("harm-impact", "Harm Impact Assessment")}
+    ${knowledgeReadingGuideHtml("standards", "AI Governance Standards")}
   </main>`],
   ["/observatory", `<main data-static-crawl-fallback="vigil-observatory" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
@@ -270,6 +323,16 @@ for (const { document } of taxonomyFamilies) {
   }
 }
 
+let incidentRecords = [];
+if (existsSync(vigilFallbackPath)) {
+  const registry = JSON.parse(readFileSync(vigilFallbackPath, "utf8"));
+  incidentRecords = Array.isArray(registry.records)
+    ? registry.records.filter((record) => record?.record_type === "incident" && record?.id)
+    : [];
+}
+
+// Public Case File links follow canonical classifications, not the narrower
+// textbook case-example evidence selection.
 if (taxonomyFamilies.length) {
   const taxonomyIndexBody = `<main data-static-crawl-fallback="vigil-taxonomy-index" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory</p>
@@ -336,9 +399,35 @@ function externalAssessmentsHtml(record) {
 }
 
 function taxonomyCaseExamplesForClass(classId) {
-  const classes = taxonomyCaseFileExamples?.classes;
-  if (!classes || typeof classes !== "object") return [];
-  return Array.isArray(classes[classId]) ? classes[classId] : [];
+  // The taxonomy's generated CaseFileExamples projection excludes some evidence
+  // types for textbook publication. That editorial filter does not invalidate
+  // canonical Incident classifications or their public Case File links.
+  const curatedExamples = taxonomyCaseFileExamples?.classes?.[classId];
+  const curatedById = new Map(
+    (Array.isArray(curatedExamples) ? curatedExamples : [])
+      .filter((example) => example?.incident_id)
+      .map((example) => [example.incident_id, example]),
+  );
+  return incidentRecords.flatMap((record) => {
+    const mappings = [
+      ...(record.primary_classification ? [{ ...record.primary_classification, mapping_position: "primary" }] : []),
+      ...(Array.isArray(record.secondary_classifications)
+        ? record.secondary_classifications.map((mapping) => ({ ...mapping, mapping_position: "secondary" }))
+        : []),
+    ];
+    const mapping = mappings.find((item) =>
+      item.class_id === classId && item.classification_role === "failure-occurrence"
+    );
+    if (!mapping) return [];
+    const curated = curatedById.get(record.id);
+    return [{
+      incident_id: record.id,
+      incident_title: record.title || record.id,
+      classification_role: mapping.classification_role,
+      classification_confidence: curated?.classification_confidence,
+      mapping_position: mapping.mapping_position,
+    }];
+  }).sort((a, b) => a.incident_id.localeCompare(b.incident_id));
 }
 
 function publicMappingRoleLabel(role) {
@@ -350,6 +439,11 @@ function publicMappingRoleLabel(role) {
 
 function publicAlignmentOutcome(record) {
   if (record.adjudication_coverage?.status === "partial") return "Adjudication incomplete";
+  if (record.classification_status === "classification-disputed") return "Disputed";
+  if (record.classification_status === "requires-human-review") return "Under review";
+  if (record.classification_status === "unclassified") return "Unclassified";
+  const roles = [record.primary_classification?.classification_role || record.classification_role, ...(record.secondary_classifications || []).map(item => item.classification_role)].filter(Boolean);
+  if (new Set(roles).size > 1) return "Mixed alignment";
   if (record.classification_role === "failure-occurrence") return "Failure evidenced";
   if (record.classification_role === "successful-invariant") return "Invariant held";
   if (record.classification_role === "ambiguous-boundary") return "Boundary unresolved";
@@ -460,7 +554,7 @@ for (const { document } of taxonomyFamilies) {
       ${item.failure_condition || item.failure_plain_english || classFailureRecognition.length ? `<h2>Failure established</h2><h3>Failure condition</h3>${item.failure_plain_english ? `<p><strong>${escapeHtml(item.failure_plain_english)}</strong></p>` : ""}${item.failure_condition ? `<p>${escapeHtml(item.failure_condition)}</p>` : ""}${classFailureRecognition.length ? `<h3>Failure recognition</h3>${listHtml(classFailureRecognition)}` : ""}` : ""}
       ${Array.isArray(item.exclusions) && item.exclusions.length ? `<h2>Exclusions from failure recognition</h2>${listHtml(item.exclusions)}` : ""}
       <h2>Failure occurrences</h2>
-      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No Case Files currently evidence failure for this class.</p>"}
+      ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>"}
       ${classSuccessfulExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classSuccessfulExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classAmbiguousExemplars.length ? `<h2>Ambiguous-boundary examples</h2><ul>${classAmbiguousExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
       ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
@@ -477,14 +571,6 @@ for (const { document } of taxonomyFamilies) {
   }
 }
 
-let incidentRecords = [];
-if (existsSync(vigilFallbackPath)) {
-  const registry = JSON.parse(readFileSync(vigilFallbackPath, "utf8"));
-  incidentRecords = Array.isArray(registry.records)
-    ? registry.records.filter((record) => record?.record_type === "incident" && record?.id)
-    : [];
-}
-
 const caseRoot = join(docsDir, "observatory", "cases");
 if (existsSync(caseRoot)) {
   for (const entry of readdirSync(caseRoot, { withFileTypes: true })) {
@@ -494,8 +580,41 @@ if (existsSync(caseRoot)) {
   }
 }
 
+// Canonical assessment payloads are read at publication time; the lightweight index
+// is not expanded into a duplicate store of governed analysis.
+const canonicalCases = new Map();
+let occurrenceRequirements = [];
+try {
+  const response = await fetch("https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/external_governance/requirements/requirements.json");
+  if (!response.ok) throw new Error(`Requirements HTTP ${response.status}`);
+  const payload = await response.json();
+  occurrenceRequirements = Array.isArray(payload) ? payload : payload.requirements || [];
+} catch (error) {
+  console.warn(`Requirement descriptions unavailable: ${error.message}`);
+}
+for (let start = 0; start < incidentRecords.length; start += 8) {
+  await Promise.all(incidentRecords.slice(start, start + 8).map(async record => {
+    const url = record.raw_url || `https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/records/incidents/${record.id}.json`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Cannot publish current Case File ${record.id}: HTTP ${response.status}`);
+    canonicalCases.set(record.id, await response.json());
+  }));
+}
+function occurrenceAssessmentsHtml(raw) {
+  const rows = occurrenceRequirementRows(raw, occurrenceRequirements);
+  if (!rows.length) return "<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>";
+  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td>${escapeHtml(row.resultLabel)}</td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
+  return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table}</section>`;
+}
+function clauseAssessmentsHtml(raw) {
+  const clauses = raw.vigil_assessment?.source_clause_analysis?.clauses || [];
+  const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
+  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article><p>${escapeHtml(clause.source_anchor || clause.source_paraphrase || "")}</p><p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? `<p>${escapeHtml(clause.adjudication_note)}</p>` : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<p>${escapeHtml(item.rationale)}</p>` : "").join("")}</article>`).join("")}</section>`;
+}
+
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
+  const canonical = canonicalCases.get(record.id);
   const title = `${record.id}: ${record.title || "VIGIL Observatory Incident"} | VIGIL Observatory`;
   const summary = record.summary || record.title || "VIGIL Observatory AI incident case file.";
   const description = conciseDescription(summary, "VIGIL Observatory AI incident case file.");
@@ -511,7 +630,10 @@ for (const record of incidentRecords) {
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
-    ${externalAssessmentsHtml(record)}
+    ${externalAssessmentsHtml(canonical)}
+    ${clauseAssessmentsHtml(canonical)}
+    ${occurrenceAssessmentsHtml(canonical)}
+    <section><h2>Conclusion</h2><p>${escapeHtml(canonical.vigil_assessment?.governance_interpretation || "")}</p><h3>Governance significance</h3><p>${escapeHtml(canonical.vigil_assessment?.significance_to_cam || "")}</p></section>
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }
@@ -545,6 +667,7 @@ function sitemapLastmod(value) {
 const sitemapLastmodByRoute = new Map();
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
+  const canonical = canonicalCases.get(record.id);
   const lastmod = sitemapLastmod(record.record_last_updated);
   if (lastmod) sitemapLastmodByRoute.set(route, lastmod);
 }

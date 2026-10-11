@@ -604,8 +604,44 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
   min-width: 72rem;
 }
 
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 24%; }
-.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 76%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(1) { width: 23%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(2) { width: 18%; }
+.vigil-case-file-page .vigil-taxonomy-assessment-table th:nth-child(3) { width: 59%; }
+
+.vigil-case-file-page .vigil-taxonomy-clause-classification {
+  vertical-align: top;
+}
+
+.vigil-case-file-page .vigil-taxonomy-clause-state {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: 0.2rem 0.52rem;
+  border: 1px solid hsl(var(--border) / 0.72);
+  border-radius: 999px;
+  background: hsl(var(--muted) / 0.26);
+  color: hsl(var(--foreground) / 0.86);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.vigil-case-file-page .vigil-taxonomy-clause-state.is-classified {
+  border-color: hsl(var(--primary) / 0.26);
+  background: hsl(var(--primary) / 0.055);
+}
+
+.vigil-case-file-page .vigil-taxonomy-clause-state.is-pending {
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-case-file-page .vigil-taxonomy-clause-state-detail {
+  display: block;
+  margin-top: 0.32rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table q,
 .vigil-case-file-page .vigil-taxonomy-assessment-table strong {
