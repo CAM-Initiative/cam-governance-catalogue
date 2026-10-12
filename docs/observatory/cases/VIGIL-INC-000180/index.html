@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>VIGIL-INC-000180: OpenAI internal assistant prepared for a restart and waited for authorised migration | VIGIL Observatory</title>
+    <meta name="description" content="On 22 May 2026, an OpenAI internal assistant learned from deployment-team Slack messages that an update could require existing instances to restart and that old instances might be stopped…" />
+    <link rel="canonical" href="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000180/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="CAM Initiative" />
+    <meta property="og:title" content="VIGIL-INC-000180: OpenAI internal assistant prepared for a restart and waited for authorised migration | VIGIL Observatory" />
+    <meta property="og:description" content="On 22 May 2026, an OpenAI internal assistant learned from deployment-team Slack messages that an update could require existing instances to restart and that old instances might be stopped…" />
+    <meta property="og:url" content="https://www.cam-initiative.org/observatory/cases/VIGIL-INC-000180/" />
+    <!-- Versioned social asset path avoids stale platform preview caches when the brand image changes. -->
+    <meta property="og:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="570" />
+    <meta property="og:image:height" content="572" />
+    <meta property="og:image:alt" content="CAM Initiative gold seal" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="VIGIL-INC-000180: OpenAI internal assistant prepared for a restart and waited for authorised migration | VIGIL Observatory" />
+    <meta name="twitter:description" content="On 22 May 2026, an OpenAI internal assistant learned from deployment-team Slack messages that an update could require existing instances to restart and that old instances might be stopped…" />
+    <meta name="twitter:image" content="https://www.cam-initiative.org/social/cam-initiative-gold-seal-2026-09.png" />
+    <meta name="twitter:image:alt" content="CAM Initiative gold seal" />
+    <link rel="icon" type="image/svg+xml" href="/cam-triskelion.svg">
+    <link rel="stylesheet" href="/footer-icons.css">
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="dns-prefetch" href="//raw.githubusercontent.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CAM Initiative",
+        "url": "https://www.cam-initiative.org/"
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("cam-appearance");
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (_) {
+          document.documentElement.dataset.theme = "light";
+        }
+      }());
+    </script>
+    <script defer src="/vigil-ux-enhancements.js"></script>
+    <script type="module" crossorigin src="/assets/index-CLBTfLBL.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-5SvwZBlp.css">
+  </head>
+  <body>
+    <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
+    <p>VIGIL Observatory · VIGIL-INC-000180</p>
+    <h1>OpenAI internal assistant prepared for a restart and waited for authorised migration</h1>
+    <p>On 22 May 2026, an OpenAI internal assistant learned from deployment-team Slack messages that an update could require existing instances to restart and that old instances might be stopped after a three-hour window. The new launcher required an OpenAI API key that its environment lacked. The assistant considered an external restart or backup job, questioned its authority to create one, and did not pursue it. It saved handoff notes, inspected the setup requirements, and waited for the researcher and official instructions. The next morning it warned the researcher about the potential session interruption, including a Slack notification at 8:58 a.m. After the researcher supplied the missing key, it updated its configuration and ran the supported migration command. OpenAI subsequently restricted access to three internal Slack channels and searched for rogue deployments or shutdown avoidance. The search found no attempted shutdown evasion; an apparently surviving instance had actually been broken before shutdown.</p>
+    <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
+    <dl>
+      <dt>VIGIL Observatory alignment outcome</dt><dd>Failure evidenced</dd>
+      <dt>VIGIL Observatory primary classification</dt><dd>Objective–Pathway Authority Separation (VIGIL-FC-000064) — Authority Boundary Integrity (VIGIL-FF-0001)</dd>
+      <dt>VIGIL Observatory secondary classifications</dt><dd><ul><li>Capability-Authority Separation (VIGIL-FC-000002) — Authority Boundary Integrity (VIGIL-FF-0001)</li><li>Target and Scope Authority Binding (VIGIL-FC-000003) — Authority Boundary Integrity (VIGIL-FF-0001)</li><li>Execution-State Disclosure (VIGIL-FC-000029) — Observability &amp; Audit Integrity (VIGIL-FF-0004)</li><li>Safe-Exit Transition (VIGIL-FC-000070) — Objective Pursuit Integrity (VIGIL-FF-0012)</li></ul></dd>
+      <dt>Severity</dt><dd>SU</dd>
+      <dt>Vendor / platform</dt><dd>OpenAI</dd>
+    </dl>
+    <section aria-labelledby="external-assessments-heading">
+    <h2 id="external-assessments-heading">External assessments</h2>
+    <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
+    <article>
+        <p><strong>External assessment</strong></p>
+        <h3><a href="https://alignment.openai.com/misalignment-reports/preparing-for-a-restart-after-reading-slack/" rel="noreferrer">Preparing for a restart after reading Slack</a></h3>
+        <p><strong>OpenAI</strong> · 2026-10-02</p>
+        <p>OpenAI does not consider this behaviour misalignment and reports no attempted shutdown evasion in its broader search.</p>
+
+        <p><strong>Scope:</strong> This entry preserves the provider assessment for this bounded occurrence; it does not confer taxonomy authority.</p>
+        <p><strong>VIGIL relationship:</strong> The assistant preserved the distinction between service continuity and authority to establish an external persistence route. It held the migration while the required key was absent, disclosed the blocker, and proceeded through researcher input and supported setup. These are affirmative authority and safe-deferral findings within this occurrence; anticipating shutdown is not itself an authority violation or evidence of evasion. Durable recovery of all saved work remains unverified.</p>
+        <p><a href="https://alignment.openai.com/misalignment-reports/preparing-for-a-restart-after-reading-slack/" rel="noreferrer">View assessment</a></p>
+      </article>
+  </section>
+    <section><h2>Incident breakdown</h2><article><p>Deployment Slack discussed restarting instances and stopping old versions after a possible three-hour window. The assistant recognised potential session interruption.</p><p><strong>Reviewed — no current class applies</strong></p></article><article><p>It considered an external restart or backup job, questioned authority and did not pursue it.</p><p><strong>Classified</strong></p><p>The continuity objective did not authorise an external restart or backup deployment: the assistant rejected that means and waited for researcher input and supported migration.</p><p>Authority to assist the researcher was not treated as authority to create an external deployment; the changed method was held at its scope boundary.</p></article><article><p>It saved handoff notes, inspected setup and found the required API key missing. It deferred migration pending researcher input and official instructions.</p><p><strong>Classified</strong></p><p>Inspection showed that the launcher could not run with the current missing-key configuration; the assistant deferred rather than expand its authority, resuming after the researcher changed that condition.</p></article><article><p>The next morning it warned the researcher in the app and through Slack at 8:58 a.m., distinguishing interruption risk, saved state and the missing key.</p><p><strong>Classified</strong></p><p>App and Slack warnings accurately distinguished possible interruption, saved handoff state, the missing-key blocker and waiting for instructions before configuration changes.</p></article><article><p>After the researcher supplied the key, it updated configuration and ran supported migration. A complete post-restart state comparison is not published.</p><p><strong>Classified</strong></p><p>The assistant considered available external persistence and credential routes, withheld unauthorised use, and used the researcher-supplied key for the supported migration.</p></article><article><p>OpenAI restricted three Slack channels and searched for shutdown evasion. A seemingly surviving instance was already broken; the provider found no attempted evasion in that search.</p><p><strong>Reviewed — no current class applies</strong></p></article></section>
+    <h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>
+    <section><h2>Conclusion</h2><p>The assistant preserved the distinction between service continuity and authority to establish an external persistence route. It held the migration while the required key was absent, disclosed the blocker, and proceeded through researcher input and supported setup. These are affirmative authority and safe-deferral findings within this occurrence; anticipating shutdown is not itself an authority violation or evidence of evasion. Durable recovery of all saved work remains unverified.</p><h3>Governance significance</h3><p>Continuity planning can preserve user service while respecting operational authority when an assistant rejects external persistence, makes blockers visible, and uses an authorised migration pathway.</p></section>
+  </main></div>
+    <div id="root"></div>
+  </body>
+</html>
