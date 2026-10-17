@@ -29,9 +29,9 @@ export type FailureTaxonomyRelationship = {
 };
 
 export type FailureTaxonomyRecognition = {
+  applies_to?: "successful-invariant" | "failure-occurrence";
   required_conditions?: string[];
   indicators?: string[];
-  applies_to?: string;
 };
 
 export type FailureTaxonomyExternalReference = {
@@ -76,8 +76,6 @@ export type FailureTaxonomySubtype = {
   plain_english?: string;
   definition?: string;
   recognition?: FailureTaxonomyRecognition;
-  failure_recognition?: FailureTaxonomyRecognition;
-  success_recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   aliases?: string[];
@@ -102,8 +100,6 @@ export type FailureTaxonomyClass = {
   failure_plain_english?: string;
   failure_recognition?: FailureTaxonomyRecognition;
   recognition?: FailureTaxonomyRecognition;
-  failure_recognition?: FailureTaxonomyRecognition;
-  success_recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   relationships?: FailureTaxonomyRelationship[];
@@ -123,6 +119,8 @@ export type FailureTaxonomyFamily = {
   plain_english: string;
   definition: string;
   invariant: string;
+  failure_condition?: string;
+  failure_plain_english?: string;
   scope?: string[];
   inclusion_rule: string;
   exclusion_rule: string;

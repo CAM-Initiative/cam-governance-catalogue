@@ -6,6 +6,15 @@ on:
   # The cross-repository token trigger is the canonical automatic sync path.
   repository_dispatch:
     types: [vigil-records-updated]
+  # Safety-net polling: the source repo's cross-repository dispatch token can
+  # expire independently of canonical VIGIL validation and taxonomy publication.
+  schedule:
+    - cron: "17 */6 * * *"
+
+# Share the Pages publication lock: only one workflow may commit docs at a time.
+concurrency:
+  group: pages-output-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
