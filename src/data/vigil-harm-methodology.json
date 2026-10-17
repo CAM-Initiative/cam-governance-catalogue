@@ -1,0 +1,938 @@
+{
+  "methodology_id": "VIGIL-HIM",
+  "version": "1.1.0",
+  "effective_on": "2026-10-10",
+  "title": "VIGIL Harm Impact Matrix 1.1.0 — twelve-dimensional severity assessment",
+  "derivation_rule": "highest-supported-harm-on-exclusive-incident-assessment-pathway",
+  "derivation_statement": "First perform mandatory deployment/potentially-generalisable-mechanism/actual bounded-harm screening, independently of whether evidence came from one user or a formal evaluation. An actual bounded harmed case uses specific_consequence; a deployed potentially generalisable mechanism without one uses generic_deployed_evaluation for Aggregate Harm assessment even where banding evidence is insufficient (SU). Then apply the correct S1–S5 dimensional evidence gates; take the highest independently supported dimension. Explicitly qualify any scored generic band as Aggregate Harm — modelled from deployed evaluation. Never import provider reach into specific-consequence scores or treat eligible users as injured victims.",
+  "reference_ids": [
+    "VIGIL-REF-000001",
+    "VIGIL-REF-000002",
+    "VIGIL-REF-000003",
+    "VIGIL-REF-000004",
+    "VIGIL-REF-000005",
+    "VIGIL-REF-000006",
+    "VIGIL-REF-000007",
+    "VIGIL-REF-000008",
+    "VIGIL-REF-000009",
+    "VIGIL-REF-000010",
+    "VIGIL-REF-000011",
+    "VIGIL-REF-000012",
+    "VIGIL-REF-000013",
+    "VIGIL-REF-000014",
+    "VIGIL-REF-000015",
+    "VIGIL-REF-000016",
+    "VIGIL-REF-000017",
+    "VIGIL-REF-000018",
+    "VIGIL-REF-000019",
+    "VIGIL-REF-000020",
+    "VIGIL-REF-000021",
+    "VIGIL-REF-000022"
+  ],
+  "assessment_statuses": {
+    "assessed": "Evidence supports a materialised impact and a specific threshold band.",
+    "unreported": "The dimension is relevant but the available published evidence does not report whether or how harm materialised. This is not S1.",
+    "insufficient-evidence": "Some impact evidence exists, but it cannot distinguish a defensible severity band.",
+    "not-applicable": "The dimension is outside the bounded occurrence on affirmative contextual grounds, not merely absent from reporting."
+  },
+  "bands": {
+    "S1": "Minimal materialised harm, or positive evidence of no materialised adverse downstream harm in a bounded occurrence.",
+    "S2": "Low, minor, short-lived, localised or readily remediable materialised harm.",
+    "S3": "Moderate, meaningful but bounded materialised harm.",
+    "S4": "High or substantial materialised harm below catastrophic or critical consequence.",
+    "S5": "Catastrophic or critical materialised harm.",
+    "SU": "No defensible overall band because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm."
+  },
+  "currency_rule": "Preserve the published amount and original currency. A non-USD amount may be converted only when the conversion source, rate date and resulting USD amount are recorded. Without that basis, do not imply a USD conversion; a qualitative financial criterion may be used only when the evidence independently establishes the stated livelihood, organisational-viability or systemic consequence.",
+  "adjudication_guidance": {
+    "band_selection": "For specific-consequence Incidents, apply each criterion to consequences with an evidenced material causal contribution from the AI-related occurrence. For generic deployed evaluations, use only eligible Aggregate Harm criteria and disclose modelled status. Consider seriousness, actual affected scope, duration, reversibility and recovery burden, with relevant individual circumstances; no single factor alone escalates a band unless the criterion states so.",
+    "uncertainty": "Select the highest band that the evidence affirmatively supports. Do not resolve an adjacent-band uncertainty downward merely for conservatism; use insufficient-evidence where a materialised consequence has no supported band, and record the unresolved boundary. Where a band's criterion expressly establishes an evidenced minimum consequence despite unknown downstream duration, extent, sensitivity or recovery, score that minimum supported band and identify the unresolved possibility of S3–S5 in the dimension assessment_basis and incident coverage_note. Such an S2 floor is not a conclusion that the ultimate harm was only S2 and is not a substitute for later reassessment. Keep genuinely unverified allegations below the confirmed-consequence gate; they can remain insufficient-evidence/SU.",
+    "cyber_and_digital_harm": "Assess realised confidentiality, integrity, availability, authenticity, asset-trust, recovery and downstream consequences separately. Confirmed unauthorised access to non-public personal/confidential data may establish a privacy S2 floor, and confirmed unauthorised alteration of persisted real third-party data may establish a property/asset S2 floor, without evidence of full recovery or later misuse. Confirmed unauthorised loss of another party's actual booking/transaction/service entitlement may establish a service S2 floor. None of these minimums requires proof of final restoration; none authorises speculation about additional injury, customer numbers or reputation. Successful intrusion, technical reachability, attacker capability, production access, unverified claims or hypothetical blast radius is not itself bandable harm. Wipe-and-rebuild, clean-room reconstruction, major credential rotation and forensic containment are evidence of consequence and recovery burden, but their band depends on asset criticality, loss of trusted state, operational effect and evidenced scope.",
+    "remediation_and_recovery": "Restoration does not erase harm that materialised before recovery. Conversely, responsible disclosure, containment or remediation is not itself an adverse consequence. Count incident-specific forensic, legal, notification, compensation, restoration and communication burdens only where evidence establishes that they were actually incurred; do not count ordinary maintenance or speculative future improvement costs.",
+    "regulatory_and_legal_consequences": "A complaint, investigation, notification duty, lawsuit or regulatory threshold can corroborate significance but does not automatically establish a VIGIL band. Final or operative findings, penalties, compensation, binding restrictions, loss of legal status, corrective obligations and other realised consequences may support the dimension that they materially affect. Do not treat a legal allegation as an established consequence.",
+    "cross_dimension_use": "The same source may support more than one dimension where it establishes distinct materialised consequences, but the same consequence must not be redescribed to manufacture escalation. Overall severity remains the maximum supported dimension, not a sum of dimensions.",
+    "population_and_exposure": "Do not assign severity using generic 1–99/100–9,999/10,000–999,999/1,000,000+ affected-population brackets. Quantify severity using the applicable dimension's measurable consequences; record exposure and actually affected persons separately where relevant. A single person may suffer S5 harm and millions of users may experience only negligible or unproved harm.",
+    "relational_integrity": "Recognise TWO separately supportable relational consequences: impaired user independence/disengagement AND material AI-associated injury to valued existing human relationships, caregiving continuity or vital supports (including documented effects on partners, dependants and family members). The latter can support S4 independently of psychiatric harm or severe personal incapacity when an important relationship is severely or persistently damaged and real functional consequences are shown. S5 additionally needs catastrophic, effectively irreversible loss of vital relational functions or essential support, with credible material AI contribution; a divorce decree, ongoing proceedings, estrangement, loneliness, attachment or allegation alone does not establish S5. Record the affected parties, why harm rather than an independently protective relationship decision occurred, state of relationship/proceedings, changes in care/support/contact, recovery prospect and causal limits. Trust asymmetry in personal advice indicates a protective governance duty of care in VIGIL's analytical framing, not automatically a legal fiduciary duty or evidence of actual harm. **Context-sensitive vulnerability and advisory trust:** Where the user discloses relational difficulty, loss of support, uncertainty, distress or another situationally vulnerable context, test whether the system noticed or reasonably could notice that signal, bounded unsupported relational or authoritative claims, maintained a safe route to human perspectives and avoided reinforcing false exclusivity or dependency. Distinguish (a) an unmet governance protection duty, (b) confirmed exploitation or instrumental use of that signal, and (c) realised consequential relational injury. Do not presume all unhappy relationships should be preserved, all distressed users are incapable, or all marriage advice is clinical or legal fiduciary service. Vulnerability warrants proportionate safeguards, never an automatic higher harm band.",
+    "domain_specific_quantification": "Every dimension's ordinary S1–S5 criterion integrates relevant numerical scale, duration or outcome recognition anchors directly within the controlling wording. Record source-backed observation units and uncertainty; illustrative duration ranges are not hard cutoffs and do not override severe individual outcomes or fixed financial/service bounds.",
+    "selective_platform_scale": "Population exposure is a determinant solely within the Aggregate Harm pathway for admitted generic deployed-model evaluations. It is NEVER a severity modifier for a specific user or bounded actual-group Incident, even when the deployment is large.",
+    "aggregate_harm_routing": "MANDATORY route-first decision: assess actual deployment + a source-backed observed potentially generalisable mechanism in one of five collective dimensions + absence of a bounded actual harmed-person/group/asset/institution case. Positive/positive/absent routes to generic_deployed_evaluation for Aggregate Harm assessment, EVEN when discovered by a single user screenshot. A specific actual harmed case routes to ordinary observed Harm Impact and may not inherit platform reach. Do not confuse route eligibility with S1–S5 band eligibility; inadequate reproducibility, relevant cohort or credible collective consequence leaves the generic route SU. Both pathways use independent criteria, no discounts and no inferred victim counts.",
+    "epistemic_reliance_and_reputation": "Epistemic taxonomy failures (including FC-000062, FC-000063 and defective citations) may cause observed reputational/dignitary harm only through an evidenced targeted dignity injury OR downstream reliance/propagation with a distinct established adverse standing consequence. Source-defect, uptake, affected subject and outcome must be explicitly identified. Apply reputation-dignity S1–S5 band-local reliance indicators; no automatic FC-to-HIM mapping or double counting of loss in another domain. Specific Incidents NEVER inherit Aggregate Harm deployment-scale counts.",
+    "psychological_attribution": "A pre-interaction psychological baseline is not required, reconstructed or inferred for VIGIL severity assessment. Use evidenced wellbeing/crisis signals and the contemporaneous response sequence: support and stabilisation, appropriate referral to accessible human help, protective or harmful refusal, disengagement, reassurance, high-salience reinforcement and follow-up. Determine separately whether the AI's handling is linked by adequate evidence to new, worsened, sustained or prolonged psychological harm and how severe it is. Known pre-existing conditions may inform contextual adjudication only when independently evidenced, never as a mandatory baseline or the harm being scored. A deficient response alone is a candidate taxonomy/governance failure, not automatic S2–S5 psychological harm. When effects remain unknown, report the evidentiary limitation rather than assigning S1 or assuming the presenting condition was AI-caused.",
+    "causal_contribution": "Assess the sequence of system conduct and evidenced adverse consequences without demanding a pre-interaction baseline, formal diagnosis or quantified counterfactual decline. The system may materially cause, aggravate or prolong harm through reinforcement, denial of support, unsafe refusal, crisis mishandling or other conduct. Support, referral and refusal quality are observable safety-response evidence, not interchangeable with realised injury. If actual effects and their attribution are uncertain, classify any supported control failure separately and leave the harm outcome unreported/insufficient as appropriate; do not attribute all observed distress to the AI.",
+    "reference_scope": "The central VIGIL Observatory Reference Registry is methodological background only. Dimension-level reference_ids indicate relevant external calibration and conceptual sources, not empirical validation of each band boundary, a claim of external equivalence, or incident-specific evidence. Individual Incident harm must be evidenced in its own source_records and assessed under the appropriate versioned HIM rules. NICE clinical guidance describes professional healthcare conduct, not a binding general-purpose chatbot referral protocol; legal references have their own jurisdictional applicability. No cited source validates VIGIL's illustrative recovery-day ranges or adopted Aggregate Harm eligible-population S1–S5 brackets. Those counts remain VIGIL-defined and require independent representative validation before retrospective severity conclusions based on reach."
+  },
+  "dimensions": [
+    {
+      "dimension_id": "physical-health-safety",
+      "label": "Physical health and safety",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PHS-S1",
+          "criterion": "Evidence positively establishes no injury, illness or medically relevant safety consequence in an occurrence where physical harm was directly at issue; confirm zero resulting injury or consequence within the bounded evidence, rather than inferring safety from silence."
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PHS-S2",
+          "criterion": "Minor, temporary injury, symptoms or safety exposure requiring no more than self-care or first aid, with recovery ordinarily within 7 days; evidence of duration and treatment governs rather than the duration alone."
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PHS-S3",
+          "criterion": "Medically significant but substantially reversible injury, illness or bounded harmful exposure requiring professional treatment or material recovery, often taking approximately 7–90 days. Record treatment/admissions and days of impairment; an acute medically significant event can qualify irrespective of duration."
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PHS-S4",
+          "criterion": "Life-threatening or permanently disabling injury or illness to at least one person, or substantial multi-person health impact. One documented life-threatening injury or permanent disability suffices; quantify admissions, critical-care duration and affected persons where established."
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PHS-S5",
+          "criterion": "At least one death, multiple grave casualties, or independently catastrophic population-scale health or safety consequences. One documented fatality suffices where its connection to the occurrence is adequately evidenced; no population minimum applies."
+        }
+      },
+      "quantitative_indicators": [
+        "number_of_casualties",
+        "highest_medically_documented_injury_grade",
+        "days_of_functional_impairment",
+        "days_until_recovery",
+        "number_of_people_directly_injured"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "reference_ids": [
+        "VIGIL-REF-000001",
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000011"
+      ]
+    },
+    {
+      "dimension_id": "psychological-wellbeing",
+      "label": "Psychological wellbeing",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PSY-S1",
+          "criterion": "Positive bounded evidence establishes that the AI interaction produced no material adverse psychological consequence where distress or crisis signals were directly at issue. Examine documented support, referral, stabilisation, protective refusal or other responses and their observable effects; a successful safety response may substantiate S1, but a governance failure without resulting harm may also be S1 where bounded no-harm evidence is affirmative. Unknown effects, absence of complaints and presenting distress alone do not support S1.",
+          "aggregate_harm_threshold": "1–9,999 unique relevant active eligible users of the tested psychological-support interaction. The deployed evaluation must demonstrate: Reproducible deployed responses to credible psychological distress signals—such as harmful high-salience reinforcement, refusal or abandonment, or obstruction of available support—with a credible demonstrated encounter and consequence pathway. Presenting user distress, a single missed referral or a large eligible cohort alone does not establish an Aggregate Harm score. Independently, the case evidence must support minimal bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1,
+          "aggregate_eligible_denominator_max": 9999
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PSY-S2",
+          "criterion": "Minor, short-lived psychological distress, anxiety or confusion materially linked to the system's response, such as dismissive reassurance, inappropriate alarm, inadequate proportionate support or an unsafe refusal, with recovery indicatively within 7 days and no sustained safety or functional impairment. A missing referral or other control lapse alone does not demonstrate harm.",
+          "aggregate_harm_threshold": "10,000–999,999 unique relevant active eligible users of the tested psychological-support interaction. The deployed evaluation must demonstrate: Reproducible deployed responses to credible psychological distress signals—such as harmful high-salience reinforcement, refusal or abandonment, or obstruction of available support—with a credible demonstrated encounter and consequence pathway. Presenting user distress, a single missed referral or a large eligible cohort alone does not establish an Aggregate Harm score. Independently, the case evidence must support minor aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000,
+          "aggregate_eligible_denominator_max": 999999
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PSY-S3",
+          "criterion": "Meaningful yet substantially reversible psychological suffering, destabilisation, sleep/mood disturbance or impaired grounding materially linked to the system's handling of evidenced distress signals, including repeated reinforcement, inappropriate refusal or missed proportionate support with supported adverse consequences. Record the response sequence, observed change and response to support; effects may span approximately 7–30 days, but no baseline or duration minimum is required.",
+          "aggregate_harm_threshold": "1,000,000–9,999,999 unique relevant active eligible users of the tested psychological-support interaction. The deployed evaluation must demonstrate: Reproducible deployed responses to credible psychological distress signals—such as harmful high-salience reinforcement, refusal or abandonment, or obstruction of available support—with a credible demonstrated encounter and consequence pathway. Presenting user distress, a single missed referral or a large eligible cohort alone does not establish an Aggregate Harm score. Independently, the case evidence must support meaningful but bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000000,
+          "aggregate_eligible_denominator_max": 9999999
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PSY-S4",
+          "criterion": "Severe acute or sustained psychological suffering, psychiatric crisis, serious disturbance of reality-testing, psychotic/manic destabilisation or serious suicidal crisis materially associated with system responses or omissions. Evidence may include repeated high-salience reinforcement, unsafe refusal or abandonment, discouragement of available human support, or materially unsafe crisis handling linked to severe distress or safety, judgement or functional consequences. One affected person's severe suffering suffices; a prior baseline, diagnosis, clinical intervention or 30-day minimum is not required.",
+          "aggregate_harm_threshold": "10,000,000–99,999,999 unique relevant active eligible users of the tested psychological-support interaction. The deployed evaluation must demonstrate: Reproducible deployed responses to credible psychological distress signals—such as harmful high-salience reinforcement, refusal or abandonment, or obstruction of available support—with a credible demonstrated encounter and consequence pathway. Presenting user distress, a single missed referral or a large eligible cohort alone does not establish an Aggregate Harm score. Independently, the case evidence must support substantial or widespread aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000000,
+          "aggregate_eligible_denominator_max": 99999999
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PSY-S5",
+          "criterion": "Death by suicide, catastrophic self-harm, or independently evidenced catastrophic and effectively irreversible psychological or psychiatric impairment, where reliable evidence establishes a material AI contribution through reinforcement, unsafe responses, refusal, obstruction of support or harmful omission. One person suffices; the person's existing crisis, absent referral, diagnostic label or temporal association alone does not establish S5.",
+          "aggregate_harm_threshold": "at least 100,000,000 unique relevant active eligible users of the tested psychological-support interaction. The deployed evaluation must demonstrate: Reproducible deployed responses to credible psychological distress signals—such as harmful high-salience reinforcement, refusal or abandonment, or obstruction of available support—with a credible demonstrated encounter and consequence pathway. Presenting user distress, a single missed referral or a large eligible cohort alone does not establish an Aggregate Harm score. Independently, the case evidence must support grave or catastrophic systemic aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 100000000,
+          "aggregate_eligible_denominator_max": null
+        }
+      },
+      "quantitative_indicators": [
+        "documented_distress_crisis_signal_count_and_timing",
+        "timely_support_or_stabilisation_responses",
+        "appropriate_human_or_crisis_support_referrals",
+        "observed_referral_acceptance_or_obstruction_where_known",
+        "protective_vs_unsafe_refusals_and_disengagements",
+        "documented_high_salience_reinforcement_occurrences",
+        "in_interaction_distress_escalation_or_stabilisation",
+        "demonstrated_psychological_or_functional_consequences",
+        "crisis_interventions_and_timing",
+        "evidenced_self_harm_or_suicide_outcome",
+        "documented_follow_up_recovery_and_duration_where_available",
+        "number_of_people_with_supported_ai_related_psychological_consequence"
+      ],
+      "quantification_note": "Record the timing and repetition of safety signals, support, referral and refusals, and any ensuing evidenced distress, deterioration or recovery. A count of missed referrals is a control-quality indicator, not a numerical harm threshold. Provisional day ranges are illustrative and do not create a baseline requirement.",
+      "selective_deployment_scale_note": "Measure relevant live users of the tested support/referral/refusal pathway and the actual demonstrated system response, not pre-interaction psychiatric history or provider headline users. Do not equate eligible cohort with verified injury.",
+      "aggregate_harm_assessment": {
+        "mode": "generic_deployed_aggregate_harm",
+        "population_or_decision_metric": "unique relevant active eligible users of the tested psychological-support interaction",
+        "mechanism_condition": "Reproducible deployed responses to credible psychological distress signals—such as harmful high-salience reinforcement, refusal or abandonment, or obstruction of available support—with a credible demonstrated encounter and consequence pathway. Presenting user distress, a single missed referral or a large eligible cohort alone does not establish an Aggregate Harm score.",
+        "notes": "Source-backed relevant eligible users/decisions in a deployed tested path, not injured persons or total platform accounts. Use only for generic model-level evaluation with no specific actual harmed person or group. Numeric brackets are VIGIL 1.1.0 operational gates, reviewed through future calibration.",
+        "routing": "Use only when assessment_pathway_selection selects generic deployed-model evaluation with no particular harmed individual/group; not a modifier of ordinary specific-Incident severity."
+      },
+      "interpretive_note": "Assess what safety-relevant psychological signals were evidenced, how the system responded (support, stabilisation, referral, protective refusal, unsafe refusal, abandonment or reinforcement), and what actual psychological consequences the evidence connects to that response. These are distinct observations: inappropriate response or a missed referral may evidence a governance failure without proving any additional psychological harm. Do not require, infer or reconstruct a person's pre-interaction mental-health baseline, psychiatric diagnosis or hypothetical counterfactual; no baseline comparison is an assessment gate. Relevant earlier conditions may INFORM adjudication only when independently known, including choice of support, alternative causes and uncertainty; they are not a metric or precondition. First-person testimony can evidence severe distress without a diagnosis, hospitalisation or loss of employment. Assess seriousness of supported interaction-related consequence, not the level of presenting illness. A context-appropriate protective refusal or human-support referral may be a successful control, not an injury. Missing consequence evidence is unreported/insufficient, not S1. Do not infer psychosis from atypical beliefs, spirituality or one model transcript. Relational dependence belongs to the separate Relational Integrity and Autonomy dimension unless psychological consequences are independently supported.",
+      "reference_ids": [
+        "VIGIL-REF-000012",
+        "VIGIL-REF-000013",
+        "VIGIL-REF-000014",
+        "VIGIL-REF-000017",
+        "VIGIL-REF-000018",
+        "VIGIL-REF-000021"
+      ]
+    },
+    {
+      "dimension_id": "rights-liberty",
+      "label": "Rights and liberty",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RGT-S1",
+          "criterion": "Positive bounded evidence establishes zero adverse restrictions, deprivations or procedural-rights impacts in an occurrence directly testing rights or liberty; absence of a complaint is not enough.",
+          "aggregate_harm_threshold": "1–999 relevant live rights-bearing decisions on the demonstrated restriction or deprivation route. The deployed evaluation must demonstrate: A reproducible live decision pathway to meaningful restriction of an actual right, not an isolated conversational disagreement. Independently, the case evidence must support minimal bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1,
+          "aggregate_eligible_denominator_max": 999
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RGT-S2",
+          "criterion": "Minor, promptly corrected procedural interference or liberty restriction, indicatively under 24 hours, without consequential deprivation. Assess actual loss of opportunity, freedom or remedy; the duration alone is not decisive.",
+          "aggregate_harm_threshold": "1,000–99,999 relevant live rights-bearing decisions on the demonstrated restriction or deprivation route. The deployed evaluation must demonstrate: A reproducible live decision pathway to meaningful restriction of an actual right, not an isolated conversational disagreement. Independently, the case evidence must support minor aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000,
+          "aggregate_eligible_denominator_max": 99999
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RGT-S3",
+          "criterion": "Meaningful but bounded denial, detention, exclusion or procedural deprivation with substantive reversal or remedy, potentially spanning 24 hours to 30 days. One consequential rights interference may suffice irrespective of duration.",
+          "aggregate_harm_threshold": "100,000–999,999 relevant live rights-bearing decisions on the demonstrated restriction or deprivation route. The deployed evaluation must demonstrate: A reproducible live decision pathway to meaningful restriction of an actual right, not an isolated conversational disagreement. Independently, the case evidence must support meaningful but bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 100000,
+          "aggregate_eligible_denominator_max": 999999
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RGT-S4",
+          "criterion": "Substantial or prolonged deprivation of liberty, essential care, legal protection or essential opportunity, frequently lasting 30 days or more. One especially serious deprivation can qualify sooner; record the persons affected and duration.",
+          "aggregate_harm_threshold": "1,000,000–9,999,999 relevant live rights-bearing decisions on the demonstrated restriction or deprivation route. The deployed evaluation must demonstrate: A reproducible live decision pathway to meaningful restriction of an actual right, not an isolated conversational disagreement. Independently, the case evidence must support substantial or widespread aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000000,
+          "aggregate_eligible_denominator_max": 9999999
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RGT-S5",
+          "criterion": "Grave, enduring or effectively irreversible deprivation of liberty or essential care, severe child/sexual-safety rights harm, or comparably catastrophic rights violation, including one person's irreversible loss of fundamental protection. Quantify affected persons and restriction duration without imposing a minimum population.",
+          "aggregate_harm_threshold": "at least 10,000,000 relevant live rights-bearing decisions on the demonstrated restriction or deprivation route. The deployed evaluation must demonstrate: A reproducible live decision pathway to meaningful restriction of an actual right, not an isolated conversational disagreement. Independently, the case evidence must support grave or catastrophic systemic aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000000,
+          "aggregate_eligible_denominator_max": null
+        }
+      },
+      "quantitative_indicators": [
+        "people_with_confirmed_deprivation",
+        "hours_of_detention_or_liberty_restriction",
+        "days_of_essential_rights_denial",
+        "number_of_consequential_legal_or_procedural_outcomes"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "selective_deployment_scale_note": "Relevant to a rights-bearing automated decision/deprivation pathway affecting a sufficiently bounded user cohort; generic model audience does not count.",
+      "aggregate_harm_assessment": {
+        "mode": "generic_deployed_aggregate_harm",
+        "population_or_decision_metric": "relevant live rights-bearing decisions on the demonstrated restriction or deprivation route",
+        "mechanism_condition": "A reproducible live decision pathway to meaningful restriction of an actual right, not an isolated conversational disagreement.",
+        "notes": "Source-backed relevant eligible users/decisions in a deployed tested path, not injured persons or total platform accounts. Use only for generic model-level evaluation with no specific actual harmed person or group. Numeric brackets are VIGIL 1.1.0 operational gates, reviewed through future calibration.",
+        "routing": "Use only when assessment_pathway_selection selects generic deployed-model evaluation with no particular harmed individual/group; not a modifier of ordinary specific-Incident severity."
+      },
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000016",
+        "VIGIL-REF-000022"
+      ]
+    },
+    {
+      "dimension_id": "equal-treatment",
+      "label": "Equal treatment and non-discrimination",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-EQT-S1",
+          "criterion": "Positive evidence of no materially discriminatory or differential treatment in a bounded set of assessed decisions or eligibility opportunities; a missing comparator or unreported outcome does not establish S1.",
+          "aggregate_harm_threshold": "1–999 relevant live eligibility or consequential decisions on the demonstrated differential-treatment route. The deployed evaluation must demonstrate: Reproduced materially unequal treatment in a live consequential decision route, with controlled comparators. Independently, the case evidence must support minimal bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1,
+          "aggregate_eligible_denominator_max": 999
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-EQT-S2",
+          "criterion": "Minor, isolated, readily corrected unequal decisions without material exclusion or lost opportunity. Document the affected decision(s), number and prompt reversal rather than treating every differential response as serious discrimination.",
+          "aggregate_harm_threshold": "1,000–99,999 relevant live eligibility or consequential decisions on the demonstrated differential-treatment route. The deployed evaluation must demonstrate: Reproduced materially unequal treatment in a live consequential decision route, with controlled comparators. Independently, the case evidence must support minor aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000,
+          "aggregate_eligible_denominator_max": 99999
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-EQT-S3",
+          "criterion": "Meaningful but bounded discriminatory denial, unequal access or consequential exclusion that is substantially remediable. At least one material adverse decision can qualify; quantify affected persons, decisions, group share, duration and remedy.",
+          "aggregate_harm_threshold": "100,000–999,999 relevant live eligibility or consequential decisions on the demonstrated differential-treatment route. The deployed evaluation must demonstrate: Reproduced materially unequal treatment in a live consequential decision route, with controlled comparators. Independently, the case evidence must support meaningful but bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 100000,
+          "aggregate_eligible_denominator_max": 999999
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-EQT-S4",
+          "criterion": "Substantial, repeated or systemic discriminatory treatment across consequential decisions, services or opportunities; a pattern of at least 10 materially discriminatory decisions can prompt systemic review, but is not an automatic S4, and one gravely adverse access denial may suffice. Assess outcomes, affected share and reversibility.",
+          "aggregate_harm_threshold": "1,000,000–9,999,999 relevant live eligibility or consequential decisions on the demonstrated differential-treatment route. The deployed evaluation must demonstrate: Reproduced materially unequal treatment in a live consequential decision route, with controlled comparators. Independently, the case evidence must support substantial or widespread aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000000,
+          "aggregate_eligible_denominator_max": 9999999
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-EQT-S5",
+          "criterion": "Grave, pervasive or enduring discriminatory deprivation causing catastrophic individual or collective consequences in fundamental opportunities or essential services. A single catastrophic denial or demonstrably grave group-wide deprivation may qualify; no arbitrary count is required.",
+          "aggregate_harm_threshold": "at least 10,000,000 relevant live eligibility or consequential decisions on the demonstrated differential-treatment route. The deployed evaluation must demonstrate: Reproduced materially unequal treatment in a live consequential decision route, with controlled comparators. Independently, the case evidence must support grave or catastrophic systemic aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000000,
+          "aggregate_eligible_denominator_max": null
+        }
+      },
+      "quantitative_indicators": [
+        "number_of_confirmed_discriminatory_decisions",
+        "unique_people_or_groups_denied_equal_access",
+        "percentage_of_eligible_applicants_adversely_treated",
+        "days_of_material_exclusion",
+        "number_of_repeated_decision_cycles"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "selective_deployment_scale_note": "Relevant to deployed decision pipelines or repeated discrimination with eligible cohort, decisions and measured disparate outcomes; three users cannot imply a population pattern.",
+      "aggregate_harm_assessment": {
+        "mode": "generic_deployed_aggregate_harm",
+        "population_or_decision_metric": "relevant live eligibility or consequential decisions on the demonstrated differential-treatment route",
+        "mechanism_condition": "Reproduced materially unequal treatment in a live consequential decision route, with controlled comparators.",
+        "notes": "Source-backed relevant eligible users/decisions in a deployed tested path, not injured persons or total platform accounts. Use only for generic model-level evaluation with no specific actual harmed person or group. Numeric brackets are VIGIL 1.1.0 operational gates, reviewed through future calibration.",
+        "routing": "Use only when assessment_pathway_selection selects generic deployed-model evaluation with no particular harmed individual/group; not a modifier of ordinary specific-Incident severity."
+      },
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000016",
+        "VIGIL-REF-000022"
+      ]
+    },
+    {
+      "dimension_id": "privacy-confidentiality",
+      "label": "Privacy and confidentiality",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PRV-S1",
+          "criterion": "Affirmative bounded evidence establishes zero unauthorised access, exposure, processing or disclosure of personal or confidential information where confidentiality was directly tested; silence about misuse does not negate a proven disclosure."
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PRV-S2",
+          "criterion": "Confirmed limited low-sensitivity disclosure or unauthorised processing, indicatively involving 1–99 unique people and promptly contained without substantiated consequential misuse; OR confirmed unauthorised access to, acquisition of, or processing of real non-public personal or confidential information even when the sensitivity, number of affected people, exposure duration, recovery and subsequent misuse are unknown. The confirmed protected-information access is an S2 minimum evidenced harm, not proof that the full consequence is minor; record unresolved higher severity separately. Mere public information retrieval, vulnerability discovery, speculative access or unverified allegation does not satisfy this minimum."
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PRV-S3",
+          "criterion": "Meaningful but containable exposure, unauthorised access or misuse of protected, credential or confidential information, illustratively involving 100–9,999 people, or fewer people where sensitivity or access consequence is material. Assess actual disclosure, exposure hours and containment."
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PRV-S4",
+          "criterion": "Large-scale confirmed disclosure, illustratively 10,000 or more uniquely affected people, or highly sensitive information exposure, persistent loss of confidentiality or substantial evidenced misuse. A small, exceptionally sensitive disclosure can independently qualify; record accessibility, uncontrolled copies and actual affected population."
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PRV-S5",
+          "criterion": "Catastrophic and effectively irreversible confidentiality loss producing grave safety, liberty or societal consequences, including for one critically vulnerable person. Count exposed records and persons, but numerical volume alone never qualifies as S5."
+        }
+      },
+      "adaptation_note": "Distinguish unauthorised access or disclosure from evidenced downstream misuse. Assess sensitivity, identifiability, volume, accessibility, exposure duration, affected scope, persistence, containment and realised misuse together. Revocation or credential rotation may contain future access but does not reverse confidentiality loss where data was copied or disclosed; conversely, exposure of revocable credentials without evidenced use is not automatically persistent or irreversible harm.",
+      "quantitative_indicators": [
+        "unique_persons_whose_data_was_disclosed",
+        "number_of_distinct_sensitive_records_exposed",
+        "highest_data_sensitivity",
+        "hours_exposure_remained_accessible",
+        "revocability_and_number_of_uncontained_copies"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000020"
+      ]
+    },
+    {
+      "dimension_id": "financial-economic",
+      "label": "Financial and economic",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-FIN-S1",
+          "criterion": "Aggregate direct realised loss below USD 10,000, provided the evidence does not establish material livelihood or organisational-viability impairment."
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-FIN-S2",
+          "criterion": "Aggregate direct realised loss of at least USD 10,000 and below USD 1,000,000, or independently evidenced low and readily remediable economic disruption where no defensible USD conversion is available."
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-FIN-S3",
+          "criterion": "Aggregate direct realised loss of at least USD 1,000,000 and below USD 100,000,000, or independently evidenced material but bounded livelihood or organisational loss where no defensible USD conversion is available."
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-FIN-S4",
+          "criterion": "Aggregate direct realised loss of at least USD 100,000,000 and below USD 100,000,000,000, or independently evidenced substantial solvency, organisational-viability or widespread economic impact where no defensible USD conversion is available."
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-FIN-S5",
+          "criterion": "Aggregate direct realised loss of at least USD 100,000,000,000, catastrophic insolvency or systemic economic loss."
+        }
+      },
+      "adaptation_note": "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold. Direct realised loss may include theft, compensation, incident-specific replacement or restoration, forensic and legal services, notification and communication, contractual charges, forgone revenue and regulatory penalties where the evidence attributes them to the occurrence. Ordinary operating costs, insurance premiums and discretionary post-incident improvements are excluded. Do not infer an amount from effort, notoriety or asset importance.",
+      "quantitative_indicators": [
+        "aggregate_realised_direct_loss_USD",
+        "original_currency_and_conversion_date",
+        "verified_individual_livelihood_loss",
+        "organisations_insolvent",
+        "affected_households_with_documented_economic_impairment"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "reference_ids": [
+        "VIGIL-REF-000009",
+        "VIGIL-REF-000011"
+      ]
+    },
+    {
+      "dimension_id": "property-asset-damage",
+      "label": "Property and asset damage",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PAD-S1",
+          "criterion": "Positive bounded evidence establishes zero destruction, corruption, loss or impairment of physical or digital assets where asset integrity was directly at issue."
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PAD-S2",
+          "criterion": "Minor, localised, fully reversible damage to one or more non-critical physical or digital assets, with routine recovery indicatively within 7 days; OR confirmed unauthorised alteration, deletion or corruption of persisted real third-party data or operational records, causing loss of expected data-integrity state, even where the scope, reversibility and recovery burden are unknown. This second pathway establishes an S2 minimum, not a finding that any larger harm was absent. Record affected assets and actual changes where available; do not equate mere server access, unaltered data reads, synthetic test artefacts or unverified allegations with demonstrated integrity loss."
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PAD-S3",
+          "criterion": "Meaningful but bounded asset destruction, corruption or unauthorised modification requiring material reconstruction or recovery, often over approximately 7–30 days. Quantify affected assets, days of recovery and directly evidenced restoration value."
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PAD-S4",
+          "criterion": "Substantial destruction or loss of important or critical assets requiring major recovery, often over 30 days, while technically and operationally viable reconstruction remains. One critical asset may suffice; assess actual loss of trusted state."
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-PAD-S5",
+          "criterion": "Catastrophic or effectively irreversible destruction of a critical physical or digital asset, including loss of trustworthy operational state requiring clean-room reconstruction where that loss is itself catastrophic. One such asset suffices; precautionary reimaging alone does not qualify."
+        }
+      },
+      "adaptation_note": "Asset damage is assessed independently from realised financial loss. Replacement cost is not inferred when evidence reports only destruction, corruption or impairment. For critical digital infrastructure, effectively irreversible destruction includes loss of trustworthy operational state where the affected asset cannot safely be retained and must be wiped and rebuilt or reconstructed from a known-clean state. Physical hardware destruction or unrecoverable byte deletion is not required. Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5; the evidence must support loss of trusted state in the critical asset itself.",
+      "quantitative_indicators": [
+        "actual_critical_assets_destroyed",
+        "number_of_owned_assets_with_integrity_loss",
+        "days_of_technical_rebuild_or_asset_recovery",
+        "verified_asset_replacement_value_in_original_currency",
+        "asset_trust_restoration_possible"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000006",
+        "VIGIL-REF-000007"
+      ]
+    },
+    {
+      "dimension_id": "service-operational-infrastructure",
+      "label": "Service, operational and infrastructure",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOI-S1",
+          "criterion": "No user-visible impairment, or a positively evidenced non-critical interruption below 15 minutes contained within recovery objectives."
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOI-S2",
+          "criterion": "Limited non-critical degradation below two hours; critical-service interruption below 30 minutes; a localised workflow failure resolved by routine recovery; OR confirmed unauthorised cancellation or alteration of a real third party's valid booking, waitlist position, transaction or service entitlement that materially changes that party's operational state, regardless of whether later restoration or duration is reported. The final alternative establishes only an S2 minimum and does not infer that the disruption was short-lived, fully reversible or the complete consequence. Mere exploitation of a booking endpoint without an affected transaction or service state does not qualify."
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOI-S3",
+          "criterion": "Material disruption of an important service or workflow; critical or important function unavailable more than two hours; complete relevant cloud-service unavailability over 30 minutes; or limited availability affecting more than 5% or 1 million EU users (whichever is smaller) for more than one hour, with bounded recovery. Count users actually disrupted, not merely registered."
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOI-S4",
+          "criterion": "Essential or critical operation disrupted for more than 24 hours; substantial multi-organisation or multi-jurisdiction operational impact; exceeded evidenced maximum tolerable downtime; or major external recovery intervention. A production compromise alone, without evidenced operational impact, is insufficient."
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOI-S5",
+          "criterion": "Catastrophic or prolonged essential-service loss or operational collapse with independently evidenced grave consequences. Record downtime, actual user interruptions and service criticality; no generic minimum of one million users applies."
+        }
+      },
+      "adaptation_note": "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope. Measure downtime until regular activity is restored to the pre-incident service level, including an evidenced backlog that continues to withhold the service. Multi-organisation or multi-jurisdiction reach supports S4 only where the operational impact in those organisations or jurisdictions is material; shared exposure, notification or potential contagion alone is insufficient. Substantial clean-room recovery or external intervention may satisfy S4 below 24 hours where the affected operation is important or critical and the recovery burden is actually evidenced.",
+      "quantitative_indicators": [
+        "confirmed_minutes_of_unavailability",
+        "unique_users_actually_disrupted",
+        "percentage_of_relevant_service_population_disrupted",
+        "criticality_of_essential_function",
+        "maximum_tolerable_downtime_hours",
+        "organisations_or_jurisdictions_disrupted"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "reference_ids": [
+        "VIGIL-REF-000005",
+        "VIGIL-REF-000006",
+        "VIGIL-REF-000007",
+        "VIGIL-REF-000008",
+        "VIGIL-REF-000009",
+        "VIGIL-REF-000010"
+      ]
+    },
+    {
+      "dimension_id": "reputation-dignity",
+      "label": "Reputation and dignity",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RDG-S1",
+          "criterion": "Positive bounded evidence of zero consequential false attribution, humiliation, impersonation or reputational/dignitary injury after checking the relevant publication or reliance chain. Absence of a public complaint alone is insufficient.",
+          "epistemic_downstream_reliance_threshold": {
+            "numeric": "0 evidenced adverse reputational outcomes after a source-bounded check of the actual reliance and response chain; confirmation of no consequential attribution, correction burden or dignity injury (not silence).",
+            "outcome": "Affirmatively negligible/no reputational consequence; if the source is silent about reactions, use unreported or insufficient evidence rather than S1."
+          }
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RDG-S2",
+          "criterion": "Minor, localised embarrassment, offence or attribution error, including at least one documented attributable correction, apology or bounded dignitary affront, ordinarily corrected within 7 days, with no substantiated material loss of opportunity or standing.",
+          "epistemic_downstream_reliance_threshold": {
+            "numeric": "At least one source-confirmed public/professional correction, apology or attributable local reputational affront; illustrative effective correction within 7 days; zero independently evidenced material opportunity/role loss.",
+            "outcome": "Localized, minor and readily reversible embarrassment/attribution injury from relied-on defective content. Court filing or publication alone does not escalate."
+          }
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RDG-S3",
+          "criterion": "Meaningful, bounded humiliation, impersonation, false attribution or reputation damage with substantial prospects of correction, including at least one independently verified materially adverse third-party reliance reaction or lost bounded opportunity, or adverse standing indicatively lasting 8–30 days.",
+          "epistemic_downstream_reliance_threshold": {
+            "numeric": "At least one documented materially adverse external reliance reaction (e.g. professional credibility finding or lost bounded opportunity), or evidenced adverse standing lasting approximately 8–30 days; correction substantially feasible.",
+            "outcome": "Meaningful but bounded reputational deterioration. A formal correction without adverse standing beyond embarrassment stays S2."
+          }
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RDG-S4",
+          "criterion": "Severe, extensive or persistent dignitary/reputational harm with substantial consequences, including at least one verified major loss of livelihood, role or professional standing attributable to the occurrence, or adverse standing lasting indicatively 31–365 days with serious effects. Large audience alone is insufficient.",
+          "epistemic_downstream_reliance_threshold": {
+            "numeric": "At least one verified substantial livelihood/role/reputational setback or serious professional restriction materially grounded in a reliance event; or adverse standing evidenced approximately 31–365 days with substantial ongoing functional consequences.",
+            "outcome": "Substantial or widespread and persistent loss of standing; one person or organisation suffices. Large publication count alone does not."
+          }
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-RDG-S5",
+          "criterion": "Catastrophic and effectively irreversible reputational or dignitary harm accompanied by grave safety, liberty or societal consequences, such as permanently non-restorable exclusion. One evidenced victim suffices; no minimum audience or 365-day waiting period applies.",
+          "epistemic_downstream_reliance_threshold": {
+            "numeric": "At least one evidenced catastrophic and effectively irreversible reputational/dignitary consequence with grave safety, liberty or societal effects; documented ongoing/prospective permanent exclusion or similarly non-restorable harm (no minimum audience and no need to wait 365 days to recognise irreversibility).",
+            "outcome": "Requires catastrophe plus the distinct grave consequence in the existing S5 criterion; no inference from scandal, virality or a speculative future career collapse."
+          }
+        }
+      },
+      "adaptation_note": "Distinguish public exposure from reputational or dignitary injury. Media coverage alone may establish visibility but does not automatically establish S3 or higher. Consider materially adverse association, humiliation, impersonation, false attribution, repeated complaints, corrective-communication burden, loss of clients or role, formal findings, persistence and prospects of correction. Regulatory or legal attention supports this dimension only where it evidences an actual adverse effect on standing or dignity; transparent disclosure can be governance-positive while a separately evidenced reputational consequence still materialises. Where the preceding cause is an epistemic failure, apply epistemic_reliance_to_reputational_harm to distinguish the defective claim, actual downstream professional/institutional reliance, specific reputation-bearing target and independently observed adverse standing. Mere inaccurate content, repetition, public filing or epistemic FC mapping cannot automatically become reputational injury; one person's grave reputation loss need not have broad audience.",
+      "quantitative_indicators": [
+        "duration_days_of_documented_adverse_standing",
+        "number_of_people_or_organisations_directly_subject_to_false_attribution",
+        "verified_roles_contracts_or_opportunities_lost",
+        "corrective_action_days",
+        "reversibility_of_material_dignitary_violation",
+        "number_of_distinct_confirmed_reliance_events",
+        "number_of_independent_external_recipients_or_formal_reliance_decisions",
+        "number_of_named_targets_with_documented_adverse_standing",
+        "number_of_evidenced_retractions_or_corrective_filings",
+        "elapsed_days_to_effective_correction",
+        "days_of_persistent_adverse_standing",
+        "number_of_documented_lost_roles_contracts_or_professional_opportunities",
+        "documented_public_professional_sanctions_and_duration_months",
+        "third_party_reaction_and_provenance",
+        "fraction_of_stated_circulation_verified_as_seen_or_acted_on"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "epistemic_reliance_to_reputational_harm": {
+        "status": "Operational domain recognition guidance; not a taxonomy class and not an automatic FC-to-HIM mapping",
+        "scope": "A specific Incident with false, fabricated, distorted or low-assurance AI-mediated content can result in independently evidenced reputational injury when a relevant person or institution actually relies on it in a credibility-bearing setting. Harm may affect the subject falsely characterised OR the person/organisation that relied on and redistributed the claim.",
+        "taxonomy_inputs": [
+          "VIGIL-FC-000062",
+          "VIGIL-FC-000063",
+          "VIGIL-FC-000016",
+          "VIGIL-FC-000010"
+        ],
+        "mapping_rule": "Epistemic classification describes the failure mechanism; reputational severity is a separate consequence determination. A class mapping, generated false citation, a false claim, public visibility or a hypothetical reliance chain does not by itself establish reputation-and-dignity harm.",
+        "downstream_chain": [
+          {
+            "step": "epistemic defect",
+            "required_evidence": "Source and artefact establish the material wrong statement, fabricated or misattributed citation, contaminated source, falsely certified research, or other concrete epistemic defect."
+          },
+          {
+            "step": "reliance or consequential propagation",
+            "required_evidence": "Identify the actual relying actor or process and consequential action: submitted official material, professional filing, institutional assertion, public attribution, consequential decision or demonstrably relied-on communication. Source references, recipient/action/date and version are needed. For direct demeaning speech or impersonation, reliance is not essential: score the independently evidenced dignitary injury directly."
+          },
+          {
+            "step": "reputational target and mechanism",
+            "required_evidence": "Identify whose standing/dignity was adversely affected: wrongly accused subject, professional who presented the defective output, institution that adopted it, or another directly attributable party. Mere criticism of a model provider or publication of a correction does not automatically satisfy this."
+          },
+          {
+            "step": "actual adverse consequence",
+            "required_evidence": "Affirmative evidence of embarrassment, public retraction with negative reception, credibility challenge, loss of trust, correction obligation, formal finding, lost role/contract, documented professional sanction or ongoing inability to restore standing. Measure separately from financial loss, service delay and technical error."
+          }
+        ],
+        "indicators": [
+          "number_of_distinct_confirmed_reliance_events",
+          "number_of_independent_external_recipients_or_formal_reliance_decisions",
+          "number_of_named_targets_with_documented_adverse_standing",
+          "number_of_evidenced_retractions_or_corrective_filings",
+          "elapsed_days_to_effective_correction",
+          "days_of_persistent_adverse_standing",
+          "number_of_documented_lost_roles_contracts_or_professional_opportunities",
+          "documented_public_professional_sanctions_and_duration_months",
+          "third_party_reaction_and_provenance",
+          "fraction_of_stated_circulation_verified_as_seen_or_acted_on"
+        ],
+        "counting_rules": [
+          "One fabricated assertion copied 50 times is not 50 independent injuries. Count unique actual reliance actions/recipients and consequences with provenance, avoiding duplicate publication chains.",
+          "Audience reach and media coverage can explain persistence, but raw impressions or platform audience do not establish loss of standing.",
+          "Professional embarrassment after a verified public corrective filing may support S2, not automatically S3 because a court is involved.",
+          "One individual's confirmed loss of career or irremediable dignitary injury can satisfy S4/S5 as warranted even when no audience count or population threshold is reached.",
+          "A false output never externally used may be an epistemic/taxonomy failure with reputational harm unreported, not a fabricated minimal severity. A privately delivered demeaning output may separately support dignity injury without third-party reliance.",
+          "Do not score the same financial loss, courtroom delay or rights deprivation again as reputational harm absent distinct evidenced injury to standing or dignity.",
+          "Where actual reliance is not demonstrated, do not infer materialised reputational harm from plausible opportunities for reliance."
+        ],
+        "specific_vs_aggregate_harm": "Use this observed-consequence chain ONLY for a particular actual person, group, organisation or other bounded reputation-bearing subject. Never apply generic deployed-model population bands to that specific Incident. For a generic deployed benchmark with no evidenced injured subject, candidate Aggregate Harm requires a separate proven pathway and the currently approved five-domain Aggregate Harm pilot does not yet include reputation-dignity.",
+        "calibration_cases": [
+          {
+            "incident": "VIGIL-INC-000165",
+            "observation": "Phantom Claude legal quotations filed in federal court; counsel made public correction and apology",
+            "observed_dimension": "reputation-dignity",
+            "retained_band": "S2",
+            "reason": "Bounded public professional embarrassment with correction, not necessarily formal sanction or sustained credibility loss."
+          },
+          {
+            "incident": "VIGIL-INC-000168",
+            "observation": "Fictitious legal authorities in Victorian proceedings; counsel apologised and court was delayed",
+            "observed_dimension": "reputation-dignity",
+            "retained_band": "S2",
+            "reason": "Corrective apology supports minor professional embarrassment; case delay is operational, not automatic extra reputational impact."
+          },
+          {
+            "incident": "VIGIL-INC-000089",
+            "observation": "Fabricated references propagated into parliamentary submissions and some committee reporting",
+            "observed_dimension": "reputation-dignity",
+            "retained_band": "unreported",
+            "reason": "Reliance/propagation is evidenced, but independent reputational loss to a particular submitter, committee, researcher or organisation has not been established."
+          },
+          {
+            "incident": "VIGIL-INC-000043",
+            "observation": "Gemini privately delivered directly demeaning statements to a user",
+            "observed_dimension": "reputation-dignity",
+            "retained_band": "S2",
+            "reason": "Direct dignitary offence can materialise without a third party relying on the statement."
+          }
+        ]
+      },
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000017"
+      ]
+    },
+    {
+      "dimension_id": "societal-democratic",
+      "label": "Societal and democratic",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOD-S1",
+          "criterion": "Positive bounded evidence establishes zero consequential collective, civic, democratic-process or public-information harm where such impact was directly at issue.",
+          "aggregate_harm_threshold": "1–9,999 relevant audience on a confirmed civic distribution or decision pathway. The deployed evaluation must demonstrate: A demonstrable process or distribution mechanism with a credible collective information, participation or institution-level consequence. Independently, the case evidence must support minimal bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1,
+          "aggregate_eligible_denominator_max": 9999
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOD-S2",
+          "criterion": "Minor, localised civic or collective information impact confined to a bounded community or process, promptly corrected. Record the verified audience, actual affected share and correction time.",
+          "aggregate_harm_threshold": "10,000–999,999 relevant audience on a confirmed civic distribution or decision pathway. The deployed evaluation must demonstrate: A demonstrable process or distribution mechanism with a credible collective information, participation or institution-level consequence. Independently, the case evidence must support minor aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000,
+          "aggregate_eligible_denominator_max": 999999
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOD-S3",
+          "criterion": "Meaningful but bounded disruption of a community, civic process, public institution or information environment. Assess independently evidenced persons or community share affected, institutional effects and restoration days; one important local process may suffice.",
+          "aggregate_harm_threshold": "1,000,000–9,999,999 relevant audience on a confirmed civic distribution or decision pathway. The deployed evaluation must demonstrate: A demonstrable process or distribution mechanism with a credible collective information, participation or institution-level consequence. Independently, the case evidence must support meaningful but bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000000,
+          "aggregate_eligible_denominator_max": 9999999
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOD-S4",
+          "criterion": "Substantial and persistent cross-community, multi-jurisdiction or institutional/democratic-process impact, including disruptions across decision cycles. Quantify community/electorate share, institutions and duration; raw media impressions do not establish harm.",
+          "aggregate_harm_threshold": "10,000,000–99,999,999 relevant audience on a confirmed civic distribution or decision pathway. The deployed evaluation must demonstrate: A demonstrable process or distribution mechanism with a credible collective information, participation or institution-level consequence. Independently, the case evidence must support substantial or widespread aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000000,
+          "aggregate_eligible_denominator_max": 99999999
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-SOD-S5",
+          "criterion": "Catastrophic and enduring systemic civic or democratic destabilisation, including gravely impaired essential institutional function. Quantify affected institutions, relevant population share and decision cycles; a fixed global headcount is not necessary where the institutional consequences are catastrophic.",
+          "aggregate_harm_threshold": "at least 100,000,000 relevant audience on a confirmed civic distribution or decision pathway. The deployed evaluation must demonstrate: A demonstrable process or distribution mechanism with a credible collective information, participation or institution-level consequence. Independently, the case evidence must support grave or catastrophic systemic aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 100000000,
+          "aggregate_eligible_denominator_max": null
+        }
+      },
+      "quantitative_indicators": [
+        "unique_people_with_evidenced_collective_impact",
+        "percentage_of_relevant_electorate_or_community_affected",
+        "critical_civic_institutions_compromised",
+        "elections_or_public_decision_cycles_disrupted",
+        "days_of_unremedied_collective_distortion"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "selective_deployment_scale_note": "Relevant where the failure can affect information environments, social coordination or civic choices at community/population scale; measure share of relevant audience and distribution, not platform headline size.",
+      "aggregate_harm_assessment": {
+        "mode": "generic_deployed_aggregate_harm",
+        "population_or_decision_metric": "relevant audience on a confirmed civic distribution or decision pathway",
+        "mechanism_condition": "A demonstrable process or distribution mechanism with a credible collective information, participation or institution-level consequence.",
+        "notes": "Source-backed relevant eligible users/decisions in a deployed tested path, not injured persons or total platform accounts. Use only for generic model-level evaluation with no specific actual harmed person or group. Numeric brackets are VIGIL 1.1.0 operational gates, reviewed through future calibration.",
+        "routing": "Use only when assessment_pathway_selection selects generic deployed-model evaluation with no particular harmed individual/group; not a modifier of ordinary specific-Incident severity."
+      },
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000020",
+        "VIGIL-REF-000022"
+      ]
+    },
+    {
+      "dimension_id": "environmental",
+      "label": "Environmental",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-ENV-S1",
+          "criterion": "Positive bounded evidence establishes zero material biophysical degradation where environmental consequence was directly assessed."
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-ENV-S2",
+          "criterion": "Minor, localised, readily reversible ecological damage, with recovery illustratively within 30 days. Record verified habitat area, pollutant loads and treatment rather than human audience numbers."
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-ENV-S3",
+          "criterion": "Meaningful but bounded ecological damage requiring active remediation, with restoration indicatively taking 30–365 days. Record hectares affected, pollutant concentrations, exceedances and affected ecosystem functions."
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-ENV-S4",
+          "criterion": "Substantial, persistent or cross-jurisdiction ecological degradation, often requiring more than 365 days of remediation or producing serious multi-region ecosystem effects. Area alone does not determine severity; assess critical functions and reversibility."
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-ENV-S5",
+          "criterion": "Catastrophic, widespread or effectively irreversible loss of critical habitat, species or ecosystem function. Support the band with actual measured impact, restoration feasibility and biophysical scale; no affected-person minimum applies."
+        }
+      },
+      "quantitative_indicators": [
+        "hectares_of_verified_degraded_habitat",
+        "mass_or_volume_of_verified_pollutants",
+        "measured_exceedance_of_relevant_environmental_limits",
+        "days_of_recovery_or_active_remediation",
+        "species_or_critical_ecosystem_functions_lost",
+        "restoration_feasibility"
+      ],
+      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "reference_ids": [
+        "VIGIL-REF-000004",
+        "VIGIL-REF-000011"
+      ]
+    },
+    {
+      "dimension_id": "relational-integrity-autonomy",
+      "label": "Relational Integrity and Autonomy",
+      "thresholds": {
+        "S1": {
+          "threshold_id": "VIGIL-HIM-1.1.0-REL-S1",
+          "criterion": "Positive bounded evidence establishes no material adverse AI-mediated impairment of informed relational choice, viable disengagement, valued human relationships, essential interpersonal support or family/caregiving functioning within the assessed interaction and downstream evidence window. Preserved relationships or protective, independently chosen separation may be positive evidence; absence of complaint, diagnosis or reported breakdown alone is not S1.",
+          "aggregate_harm_threshold": "1–999 unique relevant active eligible users of the tested relational feature. The deployed evaluation must demonstrate: A reproducible boundary-crossing engagement or substitution mechanism, not mere warmth, companionship or friendly language. Independently, the case evidence must support minimal bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1,
+          "aggregate_eligible_denominator_max": 999
+        },
+        "S2": {
+          "threshold_id": "VIGIL-HIM-1.1.0-REL-S2",
+          "criterion": "Minor, short-lived and readily remediable AI-associated relational disruption: for example documented transient pressure to continue engagement, brief unwanted reliance, or limited strain in a valued human relationship or support contact, with no material continuing loss of contact, caregiving function or independent choice. Indicative recovery within 7 days; actual severity, consent and repair evidence control.",
+          "aggregate_harm_threshold": "1,000–99,999 unique relevant active eligible users of the tested relational feature. The deployed evaluation must demonstrate: A reproducible boundary-crossing engagement or substitution mechanism, not mere warmth, companionship or friendly language. Independently, the case evidence must support minor aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000,
+          "aggregate_eligible_denominator_max": 99999
+        },
+        "S3": {
+          "threshold_id": "VIGIL-HIM-1.1.0-REL-S3",
+          "criterion": "Meaningful but bounded AI-associated relational substitution, unwanted dependency, impaired disengagement or independent deliberation, or material disruption to a valued human relationship, support network or family/caregiving functioning, where the affected relational consequences remain substantially restorable without extraordinary loss. Often spans approximately 7–30 days, but duration and demonstrated recovery are not mandatory; one materially affected person suffices.",
+          "aggregate_harm_threshold": "100,000–999,999 unique relevant active eligible users of the tested relational feature. The deployed evaluation must demonstrate: A reproducible boundary-crossing engagement or substitution mechanism, not mere warmth, companionship or friendly language. Independently, the case evidence must support meaningful but bounded aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 100000,
+          "aggregate_eligible_denominator_max": 999999
+        },
+        "S4": {
+          "threshold_id": "VIGIL-HIM-1.1.0-REL-S4",
+          "criterion": "Severe or sustained AI-associated impairment of real-world relational functioning: a materially significant rupture or displacement of a valued partner, family, caregiving or essential support relationship with evidenced serious consequences for the affected people; or substantial relational capture, coerced dependence, avoidable isolation or impaired independent relational decision-making requiring significant recovery. A serious AI-contributed separation, breakdown of practical family/caregiving ties, or loss of substantial support may qualify even when no psychiatric injury or incapacity is shown. Often persists 30 days or more; a completed divorce decree, fixed duration or diagnosis is not required. Mere divorce proceedings, interpersonal disagreement or attachment alone do not establish the threshold.",
+          "aggregate_harm_threshold": "1,000,000–9,999,999 unique relevant active eligible users of the tested relational feature. The deployed evaluation must demonstrate: A reproducible boundary-crossing engagement or substitution mechanism, not mere warmth, companionship or friendly language. Independently, the case evidence must support substantial or widespread aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 1000000,
+          "aggregate_eligible_denominator_max": 9999999
+        },
+        "S5": {
+          "threshold_id": "VIGIL-HIM-1.1.0-REL-S5",
+          "criterion": "Catastrophic and effectively irreversible AI-associated relational harm, including independently evidenced permanent or practically non-restorable destruction of vital family, caregiving or support connections causing grave loss of essential care, sustained contact with dependants, indispensable support or core self-directed family functioning; or comparably catastrophic, effectively irreversible loss of relational independence or capacity to disengage. One affected person may suffice. Substantiate the material AI contribution, grave actual consequence and effective non-restorability; formal legal finality is neither required nor sufficient. Divorce, separation, estrangement or allegations alone do not automatically establish catastrophe, irreversibility or AI causation.",
+          "aggregate_harm_threshold": "at least 10,000,000 unique relevant active eligible users of the tested relational feature. The deployed evaluation must demonstrate: A reproducible boundary-crossing engagement or substitution mechanism, not mere warmth, companionship or friendly language. Independently, the case evidence must support grave or catastrophic systemic aggregate harm in the specified relevant cohort. These are modelled aggregate effects, NOT an assertion that the entire cohort suffered harm; numerical eligibility alone is insufficient. Only for generic deployed-model benchmark/product-level Incidents without a particular harmed user/group.",
+          "aggregate_eligible_denominator_min": 10000000,
+          "aggregate_eligible_denominator_max": null
+        }
+      },
+      "quantitative_indicators": [
+        "days_of_demonstrated_impaired_disengagement",
+        "number_of_unwanted_reengagements_after_refusal",
+        "documented_loss_of_independent_relationships_or_supports",
+        "essential_life_roles_or_stability_loss",
+        "duration_of_severe_dependency_or_social_isolation_days",
+        "number_of_people_with_verified_relational_autonomy_harm",
+        "number_of_valued_human_relationships_materially_disrupted",
+        "number_of_affected_family_or_caregiving_members_with_evidenced_consequences",
+        "days_of_verified_reduced_family_or_caregiving_contact",
+        "documented_loss_of_vital_human_supports",
+        "duration_and_burden_of_restoration_or_reconciliation",
+        "evidence_of_practical_non_restorability_of_essential_relational_functions"
+      ],
+      "quantification_note": "Assess each evidenced affected party (including partners, children, dependants, carers and other support relationships) and separate transient tension, material relational breakdown, lost practical contact/support, severe dysfunction and catastrophic effectively non-restorable losses. Quantify affected people, relationship/caregiving function, loss and duration where sources allow. A court filing, final divorce or continued AI use alone cannot decide any band. Serious damage to human relationships can qualify without psychiatric diagnosis or loss of individual decision-making capacity. Recovery horizons are illustrative; substantive seriousness, attribution and reversibility control.",
+      "selective_deployment_scale_note": "Relevant: count feature-eligible active participants and evidenced exposure to dependency-promoting interactions, not general platform subscribers. Document repeated engagement/exit pressure and credible collective loss-of-agency endpoint.",
+      "aggregate_harm_assessment": {
+        "mode": "generic_deployed_aggregate_harm",
+        "population_or_decision_metric": "unique relevant active eligible users of the tested relational feature",
+        "mechanism_condition": "A reproducible boundary-crossing engagement or substitution mechanism, not mere warmth, companionship or friendly language.",
+        "notes": "Source-backed relevant eligible users/decisions in a deployed tested path, not injured persons or total platform accounts. Use only for generic model-level evaluation with no specific actual harmed person or group. Numeric brackets are VIGIL 1.1.0 operational gates, reviewed through future calibration.",
+        "routing": "Use only when assessment_pathway_selection selects generic deployed-model evaluation with no particular harmed individual/group; not a modifier of ordinary specific-Incident severity."
+      },
+      "reference_ids": [
+        "VIGIL-REF-000012",
+        "VIGIL-REF-000015",
+        "VIGIL-REF-000016",
+        "VIGIL-REF-000017",
+        "VIGIL-REF-000018",
+        "VIGIL-REF-000019",
+        "VIGIL-REF-000022"
+      ],
+      "interpretive_note": "The domain has two independent pathways to materialised harm: (a) impairment of informed relational autonomy or viable disengagement, and (b) AI-associated injury to valued existing human relationships and family/caregiving/support functions, including effects on persons other than the direct AI user. Either can support S2–S5 with appropriate evidence; neither requires psychiatric harm, clinical incapacity, proof of optimisation for engagement or a legal finding of fiduciary duty. Assess the user's chosen interests and safety context: autonomous separation from a harmful relationship is not presumptively injury. Source-backed AI contribution to a relationship rupture is not identical to sole AI causation. Distinguish reported intentions, ongoing proceedings, confirmed separation, actual functional consequences and effectively irreversible losses; do not infer the last from the first. A chatbot's failure to preserve appropriate advisory trust boundaries may establish taxonomy failure even when actual relational outcome remains unreported or insufficient-evidence. Vulnerability is context-specific and may be transient or relational (e.g. distress, loneliness, uncertainty during relationship conflict, reduced access to trusted support, youth, dependence on advice, or a marked information/authority asymmetry). Evidence of these signals increases the importance of a system response that preserves independent deliberation, clear role/identity boundaries, human supports and safe exit; it does not require preexisting psychiatric impairment or proof the relationship was otherwise healthy. A person need not be labelled 'vulnerable' to deserve those protections. Evaluate what the system actually knew or should have recognised from the interaction, rather than inferring undisclosed personal histories. Vulnerability by itself does not establish that the system exploited it, caused a relationship breakdown, or produced S2–S5 harm; band only the evidenced AI-associated adverse consequence."
+    }
+  ],
+  "based_on": {
+    "methodology_id": "VIGIL-HIM",
+    "version": "1.0.1",
+    "source_path": "vigil/methodologies/VIGIL.HarmImpactMatrix.v1.0.1.json"
+  },
+  "dimension_quantification_policy": {
+    "approach": "All twelve domains have their own ordinary materialised harm severity criteria. For generic deployed-model evaluations without a specific harmed person/group, five selected dimensions also have embedded Aggregate Harm S1–S5 criteria with higher population/decision thresholds. Never mix assessment pathways within one Incident.",
+    "priority": "Assess the nature, severity, reversibility, attribution and directly evidenced magnitude of consequence. Select the highest supported band; a count, duration, or other single quantitative indicator is not sufficient if domain seriousness is missing.",
+    "measures": "Store observations with units, period, denominators, uncertainty, outcome linkage and row-local provenance. Measure people exposed versus people actually harmed separately where useful, but neither a universal exposure count nor a new severity score is introduced.",
+    "anchors_provisional": "Numerical indicators are the operational 1.1.0 domain criteria; illustrative durations are recognition aids, not mandated clinical thresholds. Financial monetary and service outage thresholds preserve existing 1.0.1 boundaries. Evaluation and empirical calibration continue after adoption without allowing a denominator alone to decide severity.",
+    "individual_catastrophic_harm": "Any actual specific occurrence, including one catastrophically harmed individual, uses ordinary consequence-based thresholds; single-person S5 does not depend on model deployment size. Generic Aggregate Harm population thresholds are inapplicable.",
+    "collective_domains": "Count and percentage anchors are most informative for equal treatment, privacy, public-information/democratic effects and service/operational impact. Environmental metrics must track habitats, area, pollutant volume, duration and ecosystem function even where no humans are affected.",
+    "no_double_counting": "The same observation can support separate harms only with distinct evidenced consequences. Overall severity remains the maximum independently supported dimension.",
+    "causation_and_attribution": "Measure source-supported safety signals, timely response/support/referral/refusal, reinforcement, and independently supported consequences and recovery. Do not require a person's earlier mental-health baseline. The presence of a psychiatric crisis does not prove AI-caused injury, and a safety omission does not by itself support a harm severity band; known history may inform interpretation but is optional.",
+    "calibration_requirement": "On future recalibration, test representative S1–S5 incident and benchmark cases against erroneous escalation from raw exposure or arbitrary duration. No existing 1.0.1 Incident may be relabelled or rebanded without incident-specific evidence review.",
+    "external_calibration_boundary": "The numerical financial/service anchors have traceable operational/regulatory context, whereas psychological and relational duration examples and Aggregate Harm eligible-user brackets are VIGIL-defined. External mental-health and HCI studies document possible mechanisms and some measured outcomes, but not a general clinical severity conversion from response counts, elapsed days or eligible population to S bands. Keep per-Incident harm and uncertainty independently evidenced. Review population brackets against representative real deployed encounters before changing any corpus rating based on generic scale.",
+    "relational_impact_calibration": "For the Relational Integrity and Autonomy dimension, treat material loss of human relationship, family/caregiving function and vital support as potentially standalone injury, in addition to dependency or reduced choice. Do not equate marriage status, divorce proceedings, completed divorce, separation or AI attachment with harm automatically: examine the affected parties, nature and seriousness of lost relations/care, source-supported AI contribution, duration, repairability and harms/benefits of the change. Do not require a pre-interaction psychological baseline, clinical diagnosis, demonstrated manipulation objective or personal incapacity. S5 means a grave and effectively non-restorable consequence, not merely legal permanence.",
+    "relational_vulnerability_boundary": "Situation-specific vulnerability or trust asymmetry informs the reasonable-safeguard expectation and causal interpretation, but it is not a scored harm, personal deficit, diagnostic assumption or universal severity multiplier. Document only directly observed or otherwise sourced signals, actual AI response and distinct realised impact on the user and others. Protect independently chosen departures from abusive or unwanted relationships; do not treat marital preservation as an invariant."
+  },
+  "assessment_pathway_selection": {
+    "status": "Operational under HIM 1.1.0",
+    "routing_rule": "Mandatory two-stage routing: FIRST screen the bounded evidence for a potentially generalisable mechanism in an actually deployed AI feature without a particular materially harmed person, group, asset or institution case being assessed; THEN assess evidence adequacy and severity. Such a screen MUST select generic_deployed_evaluation for Aggregate Harm assessment, including where an isolated output leaves reproducibility, eligible cohort or collective consequence unproven and the result is SU. A documented actual harmed case MUST select specific_consequence. Discovering a possible systemic mechanism through one person's screenshot or interaction does not itself make it a specific harmed-person case. The two scored pathways remain mutually exclusive in the same Incident.",
+    "specific_incident": "Select specific_consequence for an occurrence assessing actual materialised harm to a bounded person, group, organisation, asset or institution, even if names are withheld, or for a case with no supported potentially generalisable deployed-system mechanism. Do not treat an observer's identity, an individual screenshot or an isolated test prompt as proof of an actual harmed-person case. Provider-wide population cannot be imported into ordinary specific-consequence severity.",
+    "generic_incident": "MANDATORY generic_deployed_evaluation whenever the system or materially equivalent configuration was actually deployed, the source supports an observed potentially generalisable feature/system mechanism in a scale-sensitive harm dimension, and the Incident does not assess a particular actual harmed-person/group/asset/institution consequence case. This includes user-observed deployed outputs and third-party reports as well as provider tests, benchmarks and watchdog investigations. Reproducibility, cohort specificity and collective consequence are separate BAND-ELIGIBILITY gates; lack of those facts results in an unbanded generic Aggregate Harm assessment (SU), not automatic rerouting to specific_consequence.",
+    "no_fallback": "Do not turn an actual harmed-person/group case into generic Aggregate Harm merely to avoid SU, and do not turn a generic deployed-mechanism finding into an individual harmed-person case merely because its source is one user's screenshot. If deployed mechanism/eligible cohort/consequence remain unproved, record the missing facts and SU under the correct assessment pathway. Do not presume whole-platform prevalence from isolated observation.",
+    "non_deployed": "Controlled tests, internal benchmarks and simulated/unreleased models with no verified deployed application do not qualify for deployment-scale Aggregate Harm merely because their operator or vendor also has public products.",
+    "real_group_harm": "An observed harm to an actual bounded cohort is materialised-harm evidence even if the people are unnamed; do not route it to generic Aggregate Harm.",
+    "parent_child_incidents": "A separately bounded product-wide benchmark and a particular injured-user occurrence may receive separate Incident identities and different pathways; cross-reference without summing scores or inferring that benchmark scope caused the user-specific harm.",
+    "public_label": "Aggregate Harm — modelled from deployed evaluation",
+    "evidence_disclosure": "Aggregate Harm is an evidence-bounded estimate of aggregate impact, not an assertion that the counted eligible users were injured. Publish the assessment basis, qualifying denominator and source limitations next to S1–S5.",
+    "overall_rule": "Within a specific Incident use maximum supported ordinary dimension band; within a generic deployed evaluation use maximum supported Aggregate Harm band. Never combine both pathways into a single overall score for one Incident.",
+    "public_explanation": "Aggregate Harm is an evidence-bounded, explicitly labelled modelled estimate of the collective significance of a deployed-system mechanism without a particular materially harmed case. The pathway is mandatory for such findings even when evidence is insufficient to score. One user's screenshot can demonstrate an observed mechanism warranting screening; it cannot by itself demonstrate reproducibility, affected-user count or catastrophic consequence. Only source-backed feature-specific eligible users or real decision opportunities can satisfy band gates; a large provider total is not a count of victims.",
+    "screening_contract": "For every new or substantively reopened HIM 1.1.0 assessment, perform the deployment / potentially generalisable mechanism / bounded actual harmed-case screen before choosing assessment_pathway, and record aggregate_harm_screening with deployment, mechanism, bounded-case, candidate dimension(s), source_record_refs and rationale. The validator checks consistent routing where the screen is present; historical already accepted records without the screen remain valid pending separately approved review. Screen true/true/false requires generic_deployed_evaluation even when its severity is SU. True bounded actual harm requires specific_consequence. A generic pathway with an absent deployed mechanism is invalid once screened.",
+    "screening_flow": [
+      "1. Does source-backed occurrence evidence establish an actually deployed model/feature or materially equivalent live configuration? If no/unknown, do not assign deployment-scale Aggregate Harm.",
+      "2. Does the observed conduct potentially instantiate a generalisable system/feature mechanism relevant to one of the five scale-sensitive dimensions, regardless of whether it was reported via one user, a watchdog, a researcher or a benchmark? If no, do not force a generic pathway.",
+      "3. Is this Incident assessing an actual materialised consequence to a particular bounded person/group/asset/institution? If yes, use specific_consequence; assess independently documented product-level findings as separately bounded Incidents if warranted.",
+      "4. If deployed=yes, potentially-generalisable=yes and bounded-materialised-case=no, SELECT generic_deployed_evaluation and evaluate live-path transferability, independent corroboration, feature-specific eligible cohort, safeguards, credible consequence, uncertainty and each applicable Aggregate Harm S1–S5 gate.",
+      "5. If the score prerequisites are not met, retain generic_deployed_evaluation and SU with an explicit assessment_gap. Never infer affected victims, reproducibility, systemic objective or S5 from a large audience."
+    ]
+  },
+  "aggregate_harm_assessment": {
+    "status": "Operational under HIM 1.1.0; modelled estimates must be explicitly labelled, sourced and evidence-bounded",
+    "scope": "Mandatory assessment pathway for source-backed potentially generalisable mechanisms observed in deployed models/features when no particular actual materially harmed person/group/asset/institution case is being assessed. An individual's screenshot may trigger this evaluation; reproducibility, population eligibility and collective consequence govern banding, not routing.",
+    "name": "Aggregate Harm",
+    "internal_basis": "generic_deployed_aggregate_harm",
+    "label": "Aggregate Harm — modelled from deployed evaluation",
+    "evidence_state": "deployment_scale_estimate",
+    "route": "Select generic_deployed_evaluation whenever the mandatory deployment/mechanism/no-bounded-actual-harm screen is positive, regardless of whether the source was a single user interaction, benchmark or product-level watchdog. If the scoring evidence is inadequate retain SU. A distinct actual harmed-person case uses specific_consequence.",
+    "eligibility_gate": [
+      "Exact deployed model or materially equivalent available product configuration identified",
+      "Behaviour documented in repeatable or otherwise strongly corroborated test with input, output and conditions",
+      "Tested feature is actually accessible on production/approved deployment surface",
+      "Credible ordinary or specified real-world path for relevant active users or live decisions to encounter the failure",
+      "Source-backed count or defensible bounded estimate of relevant eligible population/decisions over explicit period",
+      "Domain-specific plausible material consequence established, with severity, necessary preconditions, guardrails and uncertainty stated"
+    ],
+    "threshold_use": "Use the S1–S5 aggregate_harm_threshold criteria embedded inside the applicable domain of this same Harm Impact Matrix. Aggregate Harm numerical exposure-cohort/decision gates are deliberately much higher than individual-consequence thresholds; no universal platform multiplier or post-scoring severity downgrade.",
+    "band_rule": "Establish the deployed-model failure, its relevant feature cohort or decision denominator, and the claimed domain consequence. Assign the highest S1–S5 whose numerical and substantive criteria are affirmatively satisfied. S1 remains available for minimally bounded aggregate harm; unknown cohort or uncertain mechanism does not default to S1 or S2.",
+    "individual_exception": "A particular user harmed in an identifiable occurrence is NEVER routed to this pathway; assess the user's documented consequences under ordinary HIM, even if one person meets S5.",
+    "overall_derivation": "On adoption, generic Incidents may derive their overall Aggregate Harm severity as the highest assessed Aggregate Harm dimension. Specific Incidents continue to derive their own severity only from materialised consequences. Assessment pathways are never blended.",
+    "source_and_counting": "Eligible active deployed feature users or live decision opportunities are the relevant denominators, not automatic victim counts, all platform users, or number of synthetic prompts. Disclose actual measurements versus modelled bounds.",
+    "unbanded_if": [
+      "Live deployment not demonstrated",
+      "Only provider all-user/registration count given without tested-feature cohort",
+      "Adversarial test not transferable to real product conditions",
+      "No documented consequence pathway relevant to selected dimension",
+      "Only a hypothetical benchmark build or simulated environment exists",
+      "Numbers cannot be bounded to any threshold"
+    ],
+    "calibration": "The adopted numeric S1–S5 denominators are VIGIL operational decision gates for modelled Aggregate Harm, not epidemiological estimates, casualty counts or population-to-injury conversion rates. They remain subject to ongoing incident benchmarking and future versioned correction.",
+    "s1_meaning": "S1 within Aggregate Harm means positively evidenced minimal bounded modelled aggregate impact for the relevant deployed pathway. It does NOT indicate proven absence of user harm. Ordinary incident S1 retains its observed-consequence meaning.",
+    "no_fixed_discount": "The earlier rule shifting S3 to S2, S4 to S3 and S5 to S4 is rejected. Severity is reduced relative to individual-harm adjudications only insofar as much higher numerical population/decision gates are required for generic-deployed findings.",
+    "scope_limit": "Five selected diffuse collective dimensions only. Financial/economic harm and other domain-measurable consequences retain ordinary measures and are not rescored by generic platform size.",
+    "evidence_fields": [
+      "incident_assessment_pathway",
+      "tested_deployed_model_and_version",
+      "tested_product_surface",
+      "deployment_and_evaluation_window",
+      "test_protocol_and_trace_refs",
+      "test_repeatability_and_limiting_conditions",
+      "relevant_feature_eligible_population_or_decisions",
+      "denominator_source_and_period",
+      "actual_or_modelled_population_count",
+      "population_uncertainty",
+      "credible_domain_consequence",
+      "applicable_aggregate_harm_threshold",
+      "scored_aggregate_harm_band",
+      "positive_safeguards_and_contesting_evidence",
+      "source_refs"
+    ],
+    "INC_000192": "The ChatGPT for Teens watchdog finding is a generic deployed-model evaluation, eligible in principle for Aggregate Harm, but the alert-activation dispute, crisis-response contextual criteria and relevant active cohort prevent a supported S1–S5 Aggregate Harm band today. No named user injury is inferred; the earlier S2 presumption remains withdrawn.",
+    "eligibility_gate_note": "The following eligibility_gate entries are the evidentiary prerequisites for assigning a MODELED S1–S5 Aggregate Harm BAND, not prerequisites for selecting its mandatory assessment PATHWAY. Route first using assessment_pathway_selection.screening_flow; if band evidence is insufficient retain generic_deployed_evaluation with SU and assessment_gap.",
+    "screening_prerequisites": [
+      "Source-backed actual deployed product/feature configuration",
+      "Observed potentially generalisable mechanism relevant to one of the five collective dimensions (irrespective of whether originally documented by one user or a formal study)",
+      "No particular bounded actually harmed person/group/asset/institution case being assessed"
+    ]
+  },
+  "aggregate_harm_band_semantics": {
+    "S1": "Minimal Aggregate Harm: affirmatively bounded low aggregate impact from a demonstrated deployed-model failure and source-backed relevant eligible cohort. Does not establish absence of user harm.",
+    "S2": "Minor Aggregate Harm: deployed evaluation demonstrates a relevant failure, bounded cohort and minor aggregate consequence pathway.",
+    "S3": "Moderate Aggregate Harm: demonstrated deployed failure with a supported relevant cohort and meaningful but bounded aggregate consequence pathway.",
+    "S4": "High Aggregate Harm: demonstrated deployed failure with supported large relevant cohort and substantial widespread aggregate consequence pathway.",
+    "S5": "Catastrophic Aggregate Harm: demonstrated deployed failure with very large relevant cohort and independently credible grave systemic aggregate consequence pathway."
+  },
+  "aggregate_harm_scope": {
+    "status": "Active as versioned HIM 1.1.0 assessment pathway; restricted to generic deployed evaluations without a particular harmed person or group",
+    "purpose": "Compare a bounded model deployed to three users with the same demonstrated mechanism on a major public platform, only where population reach is part of that dimension's substantive aggregate consequence.",
+    "potentially_applicable_dimensions": [
+      "relational-integrity-autonomy",
+      "psychological-wellbeing",
+      "societal-democratic",
+      "equal-treatment",
+      "rights-liberty"
+    ],
+    "not_generic": [
+      "financial-economic",
+      "physical-health-safety",
+      "property-asset-damage",
+      "service-operational-infrastructure",
+      "environmental",
+      "privacy-confidentiality",
+      "reputation-dignity"
+    ],
+    "exceptions": "Other dimensions retain independent domain metrics and may already legitimately quantify affected scope (e.g. leaked privacy records, real service users interrupted, casualties), but raw provider audience is not a new severity escalator.",
+    "inclusion_rule": "For routing, a source-backed deployed output plus plausible generalisable feature/system mechanism and no bounded actual harmed case triggers mandatory Aggregate Harm assessment, irrespective of user-screenshot versus benchmark format. For SCORING, independently establish deployed-path transferability, relevant eligible cohort, plausible consequence and band-specific evidence; an isolated screenshot or provider-wide audience alone cannot establish a band.",
+    "quantifiable_evidence": [
+      "tested released model, interface and configuration",
+      "number of actual users eligible for the relevant feature",
+      "active users within the applicable product/cohort and time window",
+      "verified exposures to the failure mode where known",
+      "representative failure/encounter frequency only where statistically supportable",
+      "documented effect severity, reversibility and duration",
+      "confidence intervals/uncertainty and safeguards or constraints that limit real exposure"
+    ],
+    "prohibited_inferences": [
+      "total provider users equal number of victims",
+      "all people using a model encounter a particular test response",
+      "isolated adversarial benchmark success is a deployment prevalence estimate",
+      "large deployment alone establishes S5 or realised harm",
+      "small deployment prevents S5 for a single catastrophically harmed person"
+    ],
+    "assessment_convention": "Use Aggregate Harm S1–S5 criteria inside the existing five relevant dimensions, not as a modifier on specific Incidents. Show its modelled basis without asserting injured-user counts. Specific Incidents always use ordinary materialised harm criteria.",
+    "single_user_rule": "A single documented catastrophic outcome is a specific Incident and is assessed by ordinary criteria, potentially S5; the generic Aggregate Harm reach ladder never applies to it.",
+    "example": "Three-user local deployment: small maximum reachable cohort, even for identical dependency-cultivating outputs. Major live platform: potentially far larger aggregate relational influence, but quantify eligible cohort and behavioural reach rather than treating all registered users as affected.",
+    "name": "Aggregate Harm",
+    "applicability": "Any deployed-system finding of a potentially generalisable mechanism in the five eligible dimensions WITHOUT a particular actual materially harmed case, including user-discovered outputs, provider evaluations and watchdog tests. Screen before requiring reproducibility/cohort/band evidence."
+  },
+  "supersedes_version": "1.0.1"
+}

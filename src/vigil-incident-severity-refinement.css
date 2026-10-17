@@ -520,3 +520,22 @@ The structured severity panel deliberately mirrors the calm card hierarchy used 
 
 
 /* Harm methodology hierarchy: matrix interpretation stays with the matrix; evidence-state definitions live with Case Files guidance. */
+/* Domain guidance stays expandable so the complete criteria remain readable on small screens. */
+.vigil-harm-guidance-detail {
+  border-top: 1px solid hsl(35 12% 65% / 0.35);
+  padding: 0.9rem 0;
+}
+.vigil-harm-guidance-detail summary {
+  cursor: pointer;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.vigil-harm-guidance-detail p,
+.vigil-harm-guidance-detail ul,
+.vigil-harm-guidance-detail dl {
+  margin-top: 0.8rem;
+  line-height: 1.65;
+}
+.vigil-harm-guidance-detail dd {
+  margin: 0.3rem 0 1rem;
+}

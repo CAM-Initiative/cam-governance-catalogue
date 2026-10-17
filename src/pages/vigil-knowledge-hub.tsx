@@ -216,9 +216,9 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-harm-heading">How VIGIL assesses materialised harm and severity.</h2>
               </div>
               <div className="document-reading">
-                <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews eleven harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
+                <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews twelve harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
                 <ReadingGuide section="harm-impact" />
-                <p className="vigil-knowledge-meta">VIGIL-HIM 1.0.1 · methodology reference</p>
+                <p className="vigil-knowledge-meta">VIGIL-HIM 1.1.0 · methodology reference</p>
               </div>
               <div className="cam-action-row">
                 <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>

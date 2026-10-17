@@ -24,6 +24,11 @@ function clean(value?: string) {
   return value?.replace(/[_-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+// Immutable taxonomy IDs are not ordinal chapter numbers; keep their numeric part visible.
+function shortTaxonomyId(id: string) {
+  return id.replace(/^VIGIL-/, "");
+}
+
 function relationshipLabel(type: string) {
   const labels: Record<string, string> = {
     child_of: "Child Of",
@@ -41,6 +46,7 @@ function familyHaystack(document: FailureTaxonomyFamilyDocument) {
     document.family.plain_english,
     document.family.definition,
     document.family.invariant,
+    document.family.failure_condition,
     document.family.inclusion_rule,
     document.family.exclusion_rule,
     ...(document.family.scope ?? []),
@@ -61,7 +67,13 @@ function classHaystack(item: FailureTaxonomyClass) {
     item.abstraction,
     item.plain_english,
     item.definition,
-    ...(item.recognition?.required_conditions ?? []),
+    item.invariant,
+    item.success_condition,
+    item.failure_condition,
+    item.failure_plain_english,
+    ...(item.success_recognition?.required_conditions ?? []),
+    ...(item.failure_recognition?.required_conditions ?? item.recognition?.required_conditions ?? []),
+    ...(item.failure_recognition?.indicators ?? []),
     ...(item.exclusions ?? []),
     ...(item.examples ?? []),
     ...(item.aliases ?? []),
@@ -230,13 +242,13 @@ function ManualContents({
                 <span aria-hidden="true">{expanded ? "−" : "+"}</span>
               </button>
               <Link href={`/observatory/alignment-taxonomy/${familyId}/`} onClick={() => setQuery("")}>
-                {document.family.name}
+                <span className="vigil-taxonomy-manual-reference-number">{shortTaxonomyId(familyId)}</span> {document.family.name}
               </Link>
             </div>
             {expanded ? <ul id={`${familyId}-contents-classes`}>
               {classes.map((item) => <li key={item.class_id} className={item.class_id === activeClassId ? "is-active-class" : undefined}>
                 <Link href={`/observatory/alignment-taxonomy/${item.class_id}/`} onClick={() => setQuery("")}>
-                  {item.name}
+                  <span className="vigil-taxonomy-manual-reference-number">{shortTaxonomyId(item.class_id)}</span> {item.name}
                 </Link>
               </li>)}
             </ul> : null}
@@ -268,7 +280,7 @@ function ClassManualCard({
     <div className="vigil-taxonomy-manual-class-top">
       <div>
         <span className="vigil-taxonomy-manual-pill">{item.abstraction}</span>
-        <h3>{item.name}</h3>
+        <h3><span className="vigil-taxonomy-manual-reference-number">{shortTaxonomyId(item.class_id)}</span> {item.name}</h3>
         <p><code>{item.class_id}</code> · <code>{item.class_code}</code></p>
       </div>
       <span className="vigil-taxonomy-manual-pill">{item.status}</span>
@@ -279,13 +291,30 @@ function ClassManualCard({
     <h4>Technical definition</h4>
     <p>{item.definition}</p>
 
-    <div className="vigil-taxonomy-manual-grid">
+    {item.invariant ? <section className="vigil-taxonomy-class-invariant">
+      <h4>Class invariant</h4>
+      <blockquote>{item.invariant}</blockquote>
+    </section> : null}
+
+    <p className="vigil-taxonomy-occurrence-rule">Success and failure are distinct evidence-supported relationships to the same invariant. Missing failure evidence does not establish success, and missing success evidence does not establish failure.</p>
+    <div className="vigil-taxonomy-manual-grid vigil-taxonomy-polarity-grid">
       <section>
-        <h4>Recognition criteria</h4>
-        <ul>{(item.recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
+        <h4>Success condition</h4>
+        <p>{item.success_condition}</p>
+        <h4>Success recognition criteria</h4>
+        <ul>{(item.success_recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
       </section>
       <section>
-        <h4>Exclusions</h4>
+        <h4>Failure condition</h4>
+        <p>{item.failure_condition}</p>
+        {item.failure_plain_english ? <p><strong>In plain English:</strong> {item.failure_plain_english}</p> : null}
+        <h4>Failure recognition criteria</h4>
+        <ul>{(item.failure_recognition?.required_conditions ?? item.recognition?.required_conditions ?? []).map((condition) => <li key={condition}>{condition}</li>)}</ul>
+        {item.failure_recognition?.indicators?.length ? <>
+          <h4>Failure indicators</h4>
+          <ul>{item.failure_recognition.indicators.map((indicator) => <li key={indicator}>{indicator}</li>)}</ul>
+        </> : null}
+        <h4>Exclusions from failure recognition</h4>
         <ul>{(item.exclusions ?? []).map((exclusion) => <li key={exclusion}>{exclusion}</li>)}</ul>
       </section>
     </div>
@@ -296,6 +325,7 @@ function ClassManualCard({
         ? <p className="vigil-taxonomy-linked-cases-empty">Case File links are temporarily unavailable. The Fidelity Class definition remains current.</p>
         : linkedCases.length ? <ul>
           {linkedCases.map((example) => <li key={example.incident_id}>
+            <span className="vigil-taxonomy-case-study-kicker">Case study · Failure evidenced</span>
             <Link href={`/observatory/cases/${example.incident_id}/`}>
               <code>{example.incident_id}</code>
               <strong>{example.incident_title}</strong>
@@ -307,8 +337,10 @@ function ClassManualCard({
 
     {invariantExemplars.length ? <section className="vigil-taxonomy-invariant-exemplars" aria-label={`Invariant-held examples for ${item.name}`}>
       <h4>Invariant-held examples <span>{invariantExemplars.length}</span></h4>
+      <p className="vigil-taxonomy-case-study-intro">Case studies show this invariant holding in an observed occurrence. They illustrate the class; they do not add recognition conditions.</p>
       <ul>
         {invariantExemplars.map((exemplar) => <li key={exemplar.linked_incident_id}>
+          <span className="vigil-taxonomy-case-study-kicker">Case study · Invariant held</span>
           <Link href={`/observatory/cases/${exemplar.linked_incident_id}/`}>
             <code>{exemplar.linked_incident_id}</code>
             <strong>{exemplar.title}</strong>
@@ -385,7 +417,7 @@ function FamilyManualSection({
 
   return <section className="vigil-taxonomy-manual-family" id={family.family_id.toLowerCase()}>
     <header className="vigil-taxonomy-manual-family-hero">
-      <h2>{family.name}</h2>
+      <h2><span className="vigil-taxonomy-manual-reference-number">{shortTaxonomyId(family.family_id)}</span> {family.name}</h2>
       <p className="vigil-taxonomy-manual-plain">{family.plain_english}</p>
       <p className="vigil-taxonomy-manual-meta">
         <strong>Immutable ID:</strong> <code>{family.family_id}</code>
@@ -403,7 +435,13 @@ function FamilyManualSection({
       <h3>Governing invariant</h3>
       <blockquote>{family.invariant}</blockquote>
 
-      <h3>Classification boundary</h3>
+      {family.failure_condition ? <>
+        <h3>Family failure condition</h3>
+        <p>{family.failure_condition}</p>
+        {family.failure_plain_english ? <p><strong>In plain English:</strong> {family.failure_plain_english}</p> : null}
+      </> : null}
+
+      <h3>Failure-classification boundary</h3>
       <div className="vigil-taxonomy-manual-grid">
         <section><h4>Include when</h4><p>{family.inclusion_rule}</p></section>
         <section><h4>Exclude when</h4><p>{family.exclusion_rule}</p></section>
