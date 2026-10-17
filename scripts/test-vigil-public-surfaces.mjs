@@ -90,7 +90,7 @@ test("CAM Initiative Knowledge Base uses the Home-menu editorial masthead and ex
   assert.match(hub, /href="\/observatory\/cases\/"/);
   assert.match(hub, /href="\/observatory\/ai-governance-standards\/"/);
   assert.match(hub, /href="\/observatory\/harm-impact-assessment\/"[\s\S]*Open Harm Impact Assessment/);
-  assert.match(hub, /VIGIL-HIM 1\.0\.1/);
+  assert.match(hub, /VIGIL-HIM 1\.1\.0/);
   assert.match(hub, /href="\/datasets\/"/);
   assert.doesNotMatch(hub, /CollectionCard/);
 });
@@ -275,7 +275,7 @@ test("Observatory index pages share the canonical illustrated masthead", async (
   assert.match(mastheadCss, /vigil-observatory-masthead-description[\s\S]*font-family: var\(--app-font-sans\)/);
   assert.match(taxonomy, /description="Governance boundaries for AI systems, organised into Fidelity Families and Fidelity Classes\."/);
   assert.match(cases, /description="Detailed analysis of real-world AI incidents using a consistent evidence-to-conclusion method for comparison and adjudication\."/);
-  assert.match(harm, /description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology\."/);
+  assert.match(harm, /description="Assessing supported materialised harm across twelve dimensions using the VIGIL Harm Impact Methodology\."/);
   assert.match(policy, /description="Public policy proposals and consultation submissions translating CAM governance architecture into institutional, legal and administrative design\."/);
   assert.match(standards, /description="A curated library of AI governance laws, standards, frameworks and technical guidance used to support VIGIL analysis\."/);
   assert.doesNotMatch(masthead, /Archive|LibraryBig|Landmark|ShieldCheck|<Visual/);
@@ -749,7 +749,7 @@ test("site has one canonical About surface plus visible licensing and severity m
   assert.doesNotMatch(about, /<p className="vigil-library-kicker">Purpose<\/p>|Severity measures supported consequence|Harm & severity/);
   assert.doesNotMatch(about, /Knowledge Base[\s\S]*How the public VIGIL surfaces fit together/);
   assert.match(licensing, /VIGIL Observatory Proprietary Licence/);
-  assert.match(severity, /VIGIL-HIM 1\.0\.1/);
+  assert.match(severity, /VIGIL-HIM \{harmMethodology.version\}/);
   assert.match(severity, /vigil-severity-methodology-document/);
   assert.doesNotMatch(severity, /severity-alignment-heading/);
   assert.doesNotMatch(home, /Open AI Governance|Open AI governance infrastructure/);
@@ -784,14 +784,15 @@ test("harm methodology consolidates evidence-state definitions into the derivati
     read("src/vigil-incident-severity-refinement.css"),
     read("src/home-menu-pages.css"),
   ]);
+  const canonical = await read("src/data/vigil-harm-methodology.json");
   assert.match(matrix, /Interpretive notes/);
   assert.match(matrix, /adaptation_note/);
-  assert.match(matrix, /must be wiped and rebuilt or reconstructed from a known-clean state/);
-  assert.match(matrix, /Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5/);
-  assert.match(matrix, /Distinguish unauthorised access or disclosure from evidenced downstream misuse/);
-  assert.match(matrix, /Direct realised loss may include theft, compensation, incident-specific replacement or restoration/);
-  assert.match(matrix, /Measure downtime until regular activity is restored to the pre-incident service level/);
-  assert.match(matrix, /Distinguish public exposure from reputational or dignitary injury/);
+  assert.match(canonical, /must be wiped and rebuilt or reconstructed from a known-clean state/);
+  assert.match(canonical, /Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5/);
+  assert.match(canonical, /Distinguish unauthorised access or disclosure from evidenced downstream misuse/);
+  assert.match(canonical, /Direct realised loss may include theft, compensation, incident-specific replacement or restoration/);
+  assert.match(canonical, /Measure downtime until regular activity is restored to the pre-incident service level/);
+  assert.match(canonical, /Distinguish public exposure from reputational or dignitary injury/);
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable/);
   assert.doesNotMatch(methodSection, /<dt>SU — Unassessed<\/dt>/);
@@ -854,11 +855,12 @@ test("About, Privacy and licensing use open rail documents while methodology kee
 
 test("severity methodology exposes the registered source trail after the derivation method", async () => {
   const severity = await read("src/pages/vigil-severity-methodology.tsx");
+  const references = await read("src/data/vigil-harm-references.json");
   assert.match(severity, /Methodology source trail/);
-  assert.match(severity, /VIGIL-REF-000001/);
-  assert.match(severity, /VIGIL-REF-000011/);
-  assert.match(severity, /AI Incident Tracker: Harm Taxonomy/);
-  assert.match(severity, /Prioritization of Risks from Artificial Intelligence/);
+  assert.match(references, /VIGIL-REF-000001/);
+  assert.match(references, /VIGIL-REF-000011/);
+  assert.match(references, /AI Incident Tracker: Harm Taxonomy/);
+  assert.match(references, /Prioritization of Risks from Artificial Intelligence/);
   assert.ok(severity.indexOf('id="severity-principles-heading"') < severity.indexOf('id="severity-references-heading"'));
   assert.doesNotMatch(severity, /href: "#case-files"/);
   assert.match(severity, /vigil-methodology-reference-list/);
@@ -893,8 +895,8 @@ test("Alignment Taxonomy PDF uses the canonical public naming", async () => {
 test("Datasets prioritise the public Harm Impact Matrix over the internal reference registry", async () => {
   const datasets = await read("src/pages/datasets.tsx");
   assert.match(datasets, /title="Harm Impact Matrix"/);
-  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.0\.1\.json/);
-  assert.match(datasets, /11 harm dimensions/);
+  assert.match(datasets, /VIGIL\.HarmImpactMatrix\.v1\.1\.0\.json/);
+  assert.match(datasets, /12 harm dimensions/);
   assert.match(datasets, /Open JSON matrix/);
   assert.doesNotMatch(datasets, /title="Observatory Reference Registry"/);
   assert.doesNotMatch(datasets, /VIGIL\.ObservatoryReferenceRegistry\.(?:json|csv)/);
@@ -1287,7 +1289,7 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and defines Dispu
   ]);
   assert.match(hub, /Assessment<\/strong> contains the incident breakdown, external assessments and the <strong>Harm Impact Assessment<\/strong>/);
   assert.match(hub, /VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
-  assert.match(hub, /reviews eleven harm dimensions/);
+  assert.match(hub, /reviews twelve harm dimensions/);
   assert.match(hub, /Harm Impact Assessment describes materialised consequence and severity/);
   assert.match(hub, /does not require litigation or a formal legal dispute/);
   assert.match(hub, /affected party expressly denying the alleged conduct/);

@@ -4,6 +4,12 @@ The **CAM Governance Interface** is the public Web UX layer for the CAM Initiati
 
 The interface is a presentation layer. Canonical governance instruments, VIGIL Observatory records, taxonomies, schemas and generated registries remain authoritative in their source repositories.
 
+## Harm Impact methodology publication
+
+The Harm Impact Assessment page publishes VIGIL-HIM 1.1.0 from the canonical Vigil `main` methodology and reference registry. Run `pnpm run sync:harm` to refresh the committed snapshots in `src/data/`. The reference matrix, quantitative indicators, aggregate criteria and static HTML use those same snapshots. Fetch or contract errors stop the sync before either snapshot is replaced.
+
+`pnpm run build` and both Pages workflows run the sync before compilation. `pnpm run test:vigil` verifies canonical threshold and indicator fidelity in the rendered matrix and generated HTML. Historical Case File assessments retain their recorded methodology versions and bands.
+
 ## Public surfaces
 
 The site currently provides:
