@@ -1357,3 +1357,23 @@ test("privacy source of truth feeds both React and crawlable HTML", async () => 
   assert.match(publicationScript, /privacyPolicy\.sections\.map\(section =>/);
   assert.match(publicationScript, /privacyPolicy\.lastUpdated/);
 });
+
+
+test("taxonomy textbook distinguishes case-study examples from governing class text", async () => {
+  const [taxonomy, css] = await Promise.all([
+    read("src/pages/vigil-failure-taxonomy.tsx"),
+    read("src/vigil-observatory-instrument-experiment.css"),
+  ]);
+
+  // Both kinds of case study have the same explicit editorial identity.
+  assert.match(taxonomy, /vigil-taxonomy-case-study-kicker">Case study · Failure evidenced/);
+  assert.match(taxonomy, /vigil-taxonomy-case-study-kicker">Case study · Invariant held/);
+  assert.match(taxonomy, /Case studies show this invariant holding in an observed occurrence/);
+  assert.match(taxonomy, /They illustrate the class; they do not add recognition conditions/);
+
+  // The later workbench stylesheet must not flatten exemplar cards into
+  // ordinary taxonomy prose; its specific rules restore the shared card.
+  assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-linked-cases li,\s*\.vigil-taxonomy-manual-page \.vigil-taxonomy-invariant-exemplars li \{[\s\S]*?border-radius: 0\.62rem/);
+  assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-invariant-exemplars li \{[\s\S]*?background: hsl\(var\(--status-success-surface\) \/ 0\.7\)/);
+  assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-invariant-exemplars \.vigil-taxonomy-case-study-kicker/);
+});
