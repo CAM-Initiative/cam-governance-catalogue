@@ -1,3 +1,4 @@
+import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
 import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
@@ -34,6 +35,7 @@ type ExternalEvidence = {
 };
 
 type IncidentArtefact = {
+  mediaKind?: "image" | "video" | "document";
   id: string;
   title?: string;
   permalink?: string;
@@ -156,7 +158,10 @@ function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
     if (!isObject(artefact)) return [];
     const renderUrl = text(artefact.render_url ?? artefact.image_url ?? artefact.url);
     if (!renderUrl) return [];
+    const mediaKind = incidentArtefactMediaKind(renderUrl, text(artefact.media_type));
+    if (!mediaKind) return [];
     return [{
+      mediaKind,
       id: text(artefact.artefact_id) ?? `${record.id}-artefact-${index + 1}`,
       title: text(artefact.title),
       permalink: text(artefact.permalink),
@@ -387,7 +392,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
               {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
                 <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
-                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                  {artefact.mediaKind === "image"
+                    ? <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                    : <span>{artefact.mediaKind === "video" ? "Open preserved video" : "Open preserved document (PDF)"}</span>}
                 </a>
                 {(artefact.title || artefact.sourceUrl) && <figcaption>
                   {artefact.title && <strong>{artefact.title}</strong>}
@@ -399,6 +406,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
                         ? <a className="report-inline-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
                         : null;
                   })()}
+                  {artefact.caption && <p>{artefact.caption}</p>}
                 </figcaption>}
               </figure>)}
             </section>}

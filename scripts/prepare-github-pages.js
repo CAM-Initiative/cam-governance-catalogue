@@ -1,3 +1,4 @@
+import { incidentArtefactMediaKind } from "../src/lib/vigilArtefactMedia.mjs";
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
 import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
@@ -633,6 +634,19 @@ function clauseAssessmentsHtml(raw) {
   return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.observation_title ? `<h3>${escapeHtml(clause.observation_title)}</h3>` : ""}${clause.source_anchor ? `<div class="vigil-source-passage">${clause.source_paraphrase ? "<strong>Original wording</strong>" : ""}<blockquote style="white-space:pre-line">${escapeHtml(clause.source_anchor)}</blockquote></div>` : ""}${clause.source_paraphrase ? `${clause.source_anchor ? "<strong>Context</strong>" : ""}${assessmentProseHtml(clause.source_paraphrase)}` : ""}<p><strong>${escapeHtml(clause.display_context ? "Context" : labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.complete_source_anchor ? `<details><summary>Complete source passage</summary><blockquote style="white-space:pre-line">${escapeHtml(clause.complete_source_anchor)}</blockquote></details>` : ""}${clause.adjudication_note ? assessmentProseHtml(clause.adjudication_note) : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<div style="padding:0.58rem 0;border-top:1px solid #ccc">${assessmentProseHtml(item.rationale)}</div>` : "").join("")}</article>`).join("")}</section>`;
 }
 
+function incidentArtefactsHtml(record) {
+  const artefacts = Array.isArray(record?.incident_artefacts) ? record.incident_artefacts : [];
+  return artefacts.flatMap(artefact => {
+    if (!artefact || typeof artefact !== "object") return [];
+    const url = artefact.render_url || artefact.image_url || artefact.url;
+    const kind = incidentArtefactMediaKind(url, artefact.media_type);
+    if (!kind) return [];
+    const title = artefact.title || "Preserved source artefact";
+    const link = `<a href="${escapeHtml(artefact.permalink || url)}">${kind === "image" ? `<img src="${escapeHtml(url)}" alt="${escapeHtml(artefact.alt_text || title)}" style="max-width:100%;height:auto" loading="lazy">` : kind === "video" ? "Open preserved video" : "Open preserved document (PDF)"}</a>`;
+    return [`<figure>${link}<figcaption>${escapeHtml(title)}${artefact.caption ? `<p>${escapeHtml(artefact.caption)}</p>` : ""}${artefact.source_url ? `<p><a href="${escapeHtml(artefact.source_url)}">Original source</a></p>` : ""}</figcaption></figure>`];
+  }).join("");
+}
+
 for (const record of incidentRecords) {
   const route = `/observatory/cases/${encodeURIComponent(record.id)}`;
   const canonical = canonicalCases.get(record.id);
@@ -643,6 +657,7 @@ for (const record of incidentRecords) {
     <p>VIGIL Observatory · ${escapeHtml(record.id)}</p>
     <h1>${escapeHtml(record.title || record.id)}</h1>
     ${assessmentProseHtml(summary)}
+    ${incidentArtefactsHtml(canonical)}
     <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
     <dl>
       <dt>VIGIL Observatory alignment outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>

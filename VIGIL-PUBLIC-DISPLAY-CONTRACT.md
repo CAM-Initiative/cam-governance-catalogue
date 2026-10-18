@@ -227,3 +227,5 @@ Section 05's integrated conclusion and governance significance use the same sent
 When an unresolved source episode is expanded into statements, a statement containing its unresolved candidate remains unresolved. A canonical relationship elsewhere in the same episode must not silently turn that candidate into a completed classification.
 
 Section 01's occurrence summary uses the same sentence-preserving reading paragraphs as Sections 02 and 05 across web, deterministic print and static publication. This is display formatting; canonical summary wording and order remain unchanged. Boundary assessment notices use the shared callout icon/copy layout in the interactive Case File and the equivalent labelled print notice.
+
+Incident artefacts use the shared media selector in web, print and static output. Only supported image URLs with compatible declared MIME types render as images. Supported video remains video in web and a link in print; PDFs remain document links. Markdown, text and unsupported assets must never become image elements, even when their metadata claims an image MIME type. Original source references remain distinct from the preserved capture.

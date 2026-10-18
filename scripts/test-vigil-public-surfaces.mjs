@@ -1474,3 +1474,29 @@ test("occurrence summaries use reading paragraphs and boundary notices retain th
   assert.match(boundary, /vigil-exemplar-callout-copy/);
   assert.match(boundary, /aria-labelledby="vigil-boundary-heading"/);
 });
+
+
+test("artefact media selection rejects text and Markdown, including misleading image MIME declarations", async () => {
+  const { incidentArtefactMediaKind: kind } = await import("../src/lib/vigilArtefactMedia.mjs");
+  assert.equal(kind("https://example.org/note.md", "text/markdown"), undefined);
+  assert.equal(kind("https://example.org/note.md", "image/png"), undefined);
+  assert.equal(kind("https://example.org/note.txt"), undefined);
+  assert.equal(kind("https://example.org/source.png", "image/png"), "image");
+  assert.equal(kind("https://example.org/source.PNG?raw=1#page"), "image");
+  assert.equal(kind("https://example.org/source.png", "text/markdown"), undefined);
+  assert.equal(kind("https://example.org/capture.pdf", "application/pdf"), "document");
+  assert.equal(kind("https://example.org/capture.pdf", "image/png"), undefined);
+  assert.equal(kind("https://example.org/recording.mp4", "video/mp4"), "video");
+  assert.equal(kind("javascript:source.png"), undefined);
+});
+
+test("web, print and static publication use the same artefact media selection", async () => {
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx", "scripts/prepare-github-pages.js"]) {
+    const source = await read(path);
+    assert.match(source, /incidentArtefactMediaKind/);
+    assert.match(source, /Open preserved document \(PDF\)/);
+  }
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    assert.match(await read(path), /artefact.mediaKind === "image"/);
+  }
+});
