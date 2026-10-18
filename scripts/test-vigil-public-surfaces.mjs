@@ -1,3 +1,4 @@
+import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
 import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
@@ -1400,6 +1401,7 @@ test("static source clauses retain quotations, context, rationale order and esca
   assert.ok(start >= 0 && end > start);
   const render = runInNewContext(pages.slice(start, end) + "\nclauseAssessmentsHtml", {
     assessmentParagraphs,
+    clauseAssessmentRows,
     escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   });
   const html = render({ vigil_assessment: { source_clause_analysis: { clauses: [
@@ -1421,4 +1423,21 @@ test("assessment reading paragraphs preserve sentences, source order and explici
   assert.ok(paragraphs.some(value => value.includes("Dr. Smith recorded 3.5 units.")));
   assert.equal(paragraphs.at(-1), "A separate paragraph remains separate.");
   assert.deepEqual(assessmentParagraphs(undefined), []);
+});
+
+
+test("statement projection preserves event context and every distinct ordered analysis", () => {
+  const relationships = [{canonical_taxonomy_mapping:true,rationale:"Identity analysis"},{canonical_taxonomy_mapping:true,rationale:"Choice analysis"}];
+  const analysis = {pre_compaction_context:{source_paraphrase:"Unknown earlier frame",rationale:"Context limits"},clauses:[{episode_id:"E001",source_anchor:"Complete passage",source_paraphrase:"One handoff",taxonomy_relationships:relationships,statement_analysis:[{statement_id:"S001",title:"Identity",source_anchor:"Identity wording",taxonomy_relationship_indices:[0]},{statement_id:"S002",title:"Choice",source_anchor:"Choice wording",taxonomy_relationship_indices:[1]}]}]};
+  const rows = clauseAssessmentRows(analysis);
+  assert.equal(rows.length,4);
+  assert.equal(rows[0].source_paraphrase,"Unknown earlier frame");
+  assert.equal(rows[1].complete_source_anchor,"Complete passage");
+  assert.equal(rows[2].taxonomy_relationships[0].rationale,"Identity analysis");
+  assert.equal(rows[3].taxonomy_relationships[0].rationale,"Choice analysis");
+  assert.equal(analysis.clauses.length,1);
+  assert.equal(analysis.clauses[0].episode_id,"E001");
+  const malformed = structuredClone(analysis);
+  malformed.clauses[0].statement_analysis[1].taxonomy_relationship_indices=[0];
+  assert.equal(clauseAssessmentRows(malformed)[1],malformed.clauses[0],"invalid bindings retain the whole source episode instead of hiding analysis");
 });

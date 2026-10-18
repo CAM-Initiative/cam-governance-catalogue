@@ -1,3 +1,4 @@
+import { clauseAssessmentRows } from "@/lib/vigilClauseRows.mjs";
 import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
 import type { ReactNode } from "react";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
@@ -9,6 +10,9 @@ type ClauseRelationship = {
 };
 
 type ClauseAssessment = {
+  title?: string;
+  contextOnly?: boolean;
+  completeSourceAnchor?: string;
   sourceAnchor?: string;
   sourceParaphrase?: string;
   recoveredInvariant?: string;
@@ -36,9 +40,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
   const sourceClauseAnalysis = vigilAssessment && isObject(vigilAssessment.source_clause_analysis)
     ? vigilAssessment.source_clause_analysis
     : undefined;
-  const clauses = sourceClauseAnalysis && Array.isArray(sourceClauseAnalysis.clauses)
-    ? sourceClauseAnalysis.clauses
-    : [];
+  const clauses = clauseAssessmentRows(sourceClauseAnalysis);
 
   return clauses.flatMap((value) => {
     if (!isObject(value)) return [];
@@ -58,7 +60,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
     const recoveredInvariant = text(value.recovered_invariant_interpretation);
     if (!sourceAnchor && !sourceParaphrase && !recoveredInvariant) return [];
 
-    return [{ sourceAnchor, sourceParaphrase, recoveredInvariant, relationships, status: text(value.adjudication_status), note: text(value.adjudication_note) }];
+    return [{ title: text(value.observation_title), contextOnly: value.display_context === true, completeSourceAnchor: text(value.complete_source_anchor), sourceAnchor, sourceParaphrase, recoveredInvariant, relationships, status: text(value.adjudication_status), note: text(value.adjudication_note) }];
   });
 }
 
@@ -103,6 +105,7 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
 
 function SourceClause({ clause }: { clause: ClauseAssessment }) {
   return <div className="vigil-taxonomy-source-wording">
+    {clause.title && <strong className="vigil-source-observation-title">{clause.title}</strong>}
     {clause.sourceAnchor ? <div className="vigil-source-passage">
       {clause.sourceParaphrase && <strong className="vigil-source-label">Original wording</strong>}
       <q>{clause.sourceAnchor}</q>
@@ -111,6 +114,7 @@ function SourceClause({ clause }: { clause: ClauseAssessment }) {
       {clause.sourceAnchor && <strong className="vigil-source-label">Context</strong>}
       {assessmentParagraphs(clause.sourceParaphrase).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
     </div> : null}
+    {clause.completeSourceAnchor && <details className="vigil-complete-source-passage"><summary>Complete source passage</summary><q>{clause.completeSourceAnchor}</q></details>}
     {!clause.sourceAnchor && !clause.sourceParaphrase
       ? <span>Source language is not separately published for this clause.</span>
       : null}
@@ -168,7 +172,7 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
         </thead>
         <tbody>
           {clauses.map((clause, index) => {
-            const classificationState = clauseClassificationState(clause.status);
+            const classificationState = clause.contextOnly ? { label: "Context", detail: undefined, tone: "reviewed" } : clauseClassificationState(clause.status);
             // "Reviewed — no current class" is a completed class-fit decision.
             // Preserve its source-grounded interpretation in the visible analysis
             // when no separate adjudication note was authored.
