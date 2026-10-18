@@ -1,3 +1,11 @@
+## Branch and pull request continuity
+
+Before changing code, inspect the existing branches and open pull requests for the task. Reuse the relevant active branch and pull request for follow-up, repair, reconciliation, and overlapping work.
+
+Do not create a new branch or pull request merely because a task is ambiguous, underspecified, or arrives in a new conversation. Investigate first. If the intended branch or scope remains materially ambiguous, ask the maintainer before creating a branch or pull request. A request to investigate, review, reconcile, or fix does not by itself authorize a separate pull request.
+
+Preserve existing work during reconciliation. Keep preview branch selection and source loading functional, and keep experimental work separate from production unless its inclusion is explicitly requested. Do not delete branches or discard unique commits as routine cleanup.
+
 ## Public-interface and third-party authoring rules
 
 This repository publishes material for external readers. Public pages, labels, summaries, datasets, generated reports, and other visitor-facing surfaces must be written for a third party who has no access to the authoring conversation, agent handoff, repository work plan, migration history, or maintainer context.

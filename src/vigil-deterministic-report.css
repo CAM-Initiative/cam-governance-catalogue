@@ -2790,3 +2790,21 @@
     padding: 2.2mm 2.4mm !important;
   }
 }
+
+/* Match Assessment reading groups and Classification dividers in print. */
+.vigil-deterministic-report-host .vigil-assessment-prose,
+.vigil-deterministic-report-host .vigil-source-passage { display: grid; gap: 0.5rem; }
+.vigil-deterministic-report-host .vigil-assessment-prose > p { margin: 0; }
+.vigil-deterministic-report-host .vigil-source-label { font-size: 0.82rem; color: hsl(var(--report-muted)); }
+.vigil-deterministic-report-host .vigil-source-passage q { white-space: pre-line; font-weight: 500; }
+.vigil-deterministic-report-host .vigil-classification-taxonomy-list li { padding: 0.4rem 0; }
+.vigil-deterministic-report-host .vigil-classification-taxonomy-list li:first-child { padding-top: 0; }
+.vigil-deterministic-report-host .vigil-classification-taxonomy-list li:last-child { padding-bottom: 0; }
+.vigil-deterministic-report-host .vigil-classification-taxonomy-list li + li {
+  margin-top: 0;
+  border-top: 1px solid hsl(var(--report-rule) / 0.55);
+}
+
+.vigil-deterministic-report-host .vigil-source-observation-title { display: block; font-size: 1rem; line-height: 1.45; }
+.vigil-deterministic-report-host .vigil-complete-source-passage summary { cursor: pointer; font-weight: 600; }
+.vigil-deterministic-report-host .vigil-complete-source-passage q { display: block; margin-top: 0.6rem; white-space: pre-line; }

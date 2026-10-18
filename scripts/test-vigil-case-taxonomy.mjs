@@ -33,7 +33,7 @@ const clauseAssessmentComponent = await readFile(
   "utf8",
 );
 assert.match(clauseAssessmentComponent, /clause\.status === "resolved-no-mapping" \? clause\.recoveredInvariant : undefined/);
-assert.match(clauseAssessmentComponent, /analysisText && <p>\{analysisText\}<\/p>/);
+assert.match(clauseAssessmentComponent, /analysisText &&[\s\S]*assessmentParagraphs\(analysisText\)/);
 assert.match(clauseAssessmentComponent, /!analysisText && <span>—<\/span>/);
 assert.match(clauseAssessmentComponent, /status === "taxonomy-gap"/);
 assert.match(clauseAssessmentComponent, /status === "unresolved"/);

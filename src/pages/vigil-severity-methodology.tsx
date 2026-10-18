@@ -1,82 +1,17 @@
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, highlightedThreshold } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
-const methodologyReferences = [
-  {
-    id: "VIGIL-REF-000001",
-    title: "AI Incident Tracker: Harm Taxonomy",
-    publisher: "MIT FutureTech",
-    url: "https://airisk.mit.edu/ai-incident-tracker/harm-taxonomy",
-  },
-  {
-    id: "VIGIL-REF-000002",
-    title: "AI Incident Tracker",
-    publisher: "MIT FutureTech",
-    url: "https://airisk.mit.edu/ai-incident-tracker",
-  },
-  {
-    id: "VIGIL-REF-000003",
-    title: "AI Incident Tracker June 2026 Update",
-    publisher: "MIT FutureTech",
-    url: "https://airisk.mit.edu/blog/ai-incident-tracker-june-2026-update",
-  },
-  {
-    id: "VIGIL-REF-000004",
-    title: "Adding Structure to AI Harm: An Introduction to CSET's AI Harm Framework",
-    publisher: "Center for Security and Emerging Technology, Georgetown University",
-    url: "https://cset.georgetown.edu/wp-content/uploads/20230022-Adding-structure-to-AI-Harm-FINAL.pdf",
-  },
-  {
-    id: "VIGIL-REF-000005",
-    title: "Federal Incident Notification Guidelines",
-    publisher: "Cybersecurity and Infrastructure Security Agency",
-    url: "https://www.cisa.gov/federal-incident-notification-guidelines",
-  },
-  {
-    id: "VIGIL-REF-000006",
-    title: "CISA National Cyber Incident Scoring System",
-    publisher: "Cybersecurity and Infrastructure Security Agency",
-    url: "https://www.cisa.gov/news-events/news/cisa-national-cyber-incident-scoring-system-nciss",
-  },
-  {
-    id: "VIGIL-REF-000007",
-    title: "Contingency Planning Guide for Federal Information Systems (SP 800-34 Rev. 1)",
-    publisher: "National Institute of Standards and Technology",
-    url: "https://csrc.nist.gov/pubs/sp/800/34/r1/final",
-  },
-  {
-    id: "VIGIL-REF-000008",
-    title: "Commission Implementing Regulation (EU) 2024/2690",
-    publisher: "European Commission",
-    url: "https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=OJ:L_202402690",
-  },
-  {
-    id: "VIGIL-REF-000009",
-    title: "Commission Delegated Regulation (EU) 2024/1772",
-    publisher: "European Commission",
-    url: "https://eur-lex.europa.eu/eli/reg_del/2024/1772/oj/eng",
-  },
-  {
-    id: "VIGIL-REF-000010",
-    title: "Cyber Incident Management Arrangements for Australian Governments",
-    publisher: "Australian Signals Directorate, Australian Cyber Security Centre",
-    url: "https://www.cyber.gov.au/business-government/detecting-responding-to-threats/cyber-security-incident-response/cyber-incident-management-arrangements-for-australian-governments",
-  },
-  {
-    id: "VIGIL-REF-000011",
-    title: "Prioritization of Risks from Artificial Intelligence: A Delphi Study of 272 International Experts",
-    publisher: "MIT FutureTech",
-    url: "https://futuretech.mit.edu/publication/prioritization-of-risks-from-artificial-intelligence-a-delphi-study-of-272-international-experts",
-  },
-] as const;
+import { HARM_BANDS, harmDimensions, harmMethodology, harmMethodologyUrl, harmReferences as methodologyReferences } from "@/lib/vigilHarmReference";
 
 const harmImpactRail = [
   { href: "#matrix", label: "Reference matrix" },
   { href: "#method", label: "Method" },
+  { href: "#pathways", label: "Assessment pathways" },
+  { href: "#aggregate", label: "Aggregate Harm" },
   { href: "#references", label: "References" },
 ];
 
@@ -88,15 +23,15 @@ export default function VigilSeverityMethodology() {
         titleId="harm-impact-assessment-heading"
         kicker="VIGIL Observatory · Harm Impact Assessment"
         title="Harm Impact Assessment"
-        description="Assessing supported materialised harm across eleven dimensions using the VIGIL Harm Impact Methodology."
+        description="Assessing supported materialised harm across twelve dimensions using the VIGIL Harm Impact Methodology."
         artworkSrc={VIGIL_MASTHEAD_ARTWORK.harm}
         contextLabel="Methodology context"
         mode="reference"
         visual="harm"
         metadata={[
           { label: "Method", value: "VIGIL-HIM", mono: true },
-          { label: "Version", value: "1.0.1", mono: true },
-          { label: "Dimensions", value: "11" },
+          { label: "Version", value: harmMethodology.version, mono: true },
+          { label: "Dimensions", value: String(harmDimensions.length) },
           { label: "Severity bands", value: "S1–S5 · SU", mono: true },
         ]}
       />
@@ -148,25 +83,48 @@ export default function VigilSeverityMethodology() {
 
               <div className="vigil-severity-method-row">
                 <h3>Overall severity</h3>
-                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
+                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. For a modelled Aggregate Harm assessment, the highest supported aggregate dimension band controls instead. Never combine ordinary and aggregate bands within one assessment. Individual Case Files do not repeat this entire reference matrix. They show the incident-specific evidence state, supported band, threshold ID and assessment basis for each relevant dimension, together with any observed quantitative values and the dimension or dimensions controlling the overall severity.</p>
               </div>
             </div>
           </section>
 
+          <section id="pathways" className="document-section vigil-severity-methodology-section" aria-labelledby="harm-pathways-heading">
+            <div className="document-section-heading"><p>Assessment pathways</p><h2 id="harm-pathways-heading">Select the pathway before scoring</h2></div>
+            <div className="document-reading">
+              <p><strong>Specific consequence.</strong> Assess materialised consequences to a bounded person, group, organisation or asset using the ordinary domain criteria above. One grave individual outcome can support a high band. Provider-wide user totals do not raise that score.</p>
+              <p><strong>Aggregate Harm — modelled from deployed evaluation.</strong> Use this separate pathway when an actually deployed feature shows a potentially generalisable mechanism and the assessment does not concern a particular actual harmed person, group, organisation or asset. A single observed interaction may warrant this screening; it does not establish reproducibility, cohort size or injury.</p>
+              <ol>{harmMethodology.assessment_pathway_selection.screening_flow.map(step => <li key={step}>{step.replace(/^\d+\. /, "")}</li>)}</ol>
+              <p>{harmMethodology.assessment_pathway_selection.overall_rule}</p>
+              <p>{harmMethodology.assessment_pathway_selection.no_fallback}</p>
+            </div>
+          </section>
+          <section id="aggregate" className="document-section vigil-severity-methodology-section" aria-labelledby="harm-aggregate-heading">
+            <div className="document-section-heading"><p>Aggregate Harm</p><h2 id="harm-aggregate-heading">Evidence gates and separate severity criteria</h2></div>
+            <div className="document-reading">
+              <p>Aggregate Harm is an explicitly labelled, modelled estimate. Source-backed feature-specific eligible users or real decision opportunities are not a count of injured people. Population size alone cannot establish a band. Reproducibility, a supported consequence pathway, safeguards and uncertainty must also be assessed.</p>
+              <p>Five dimensions have Aggregate Harm criteria. Other dimensions retain their ordinary consequence criteria. If the correct aggregate pathway lacks the facts needed to score, retain that pathway and SU; do not switch pathways to obtain a score.</p>
+              <p>The numerical brackets are VIGIL operational criteria subject to calibration. They are not externally validated clinical severity conversions. The duration examples in the ordinary matrix are recognition aids, not automatic scoring thresholds.</p>
+              {harmDimensions.filter(dimension => HARM_BANDS.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => <details className="vigil-harm-guidance-detail" key={dimension.dimension_id}>
+                <summary>{dimension.label}</summary>
+                <dl>{HARM_BANDS.map(band => <div key={band}><dt><strong>{band}</strong></dt><dd>{highlightedThreshold(dimension.thresholds[band].aggregate_harm_threshold || "")}</dd></div>)}</dl>
+              </details>)}
+            </div>
+          </section>
           <section id="references" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-references-heading">
             <div className="document-section-heading">
               <p>References</p>
               <h2 id="severity-references-heading">Methodology source trail</h2>
             </div>
             <div className="document-reading">
-              <p>The references below are the external sources registered against VIGIL-HIM 1.0.1.</p>
+              <p>The references below are the external sources registered against VIGIL-HIM {harmMethodology.version}. Reference inclusion does not establish endorsement, equivalence or clinical validation.</p>
+              <p><a href={harmMethodologyUrl} target="_blank" rel="noreferrer">Download the canonical VIGIL-HIM {harmMethodology.version} methodology (JSON)</a></p>
             </div>
             <ol className="vigil-methodology-reference-list">
-              {methodologyReferences.map((reference, index) => <li key={reference.id} className="vigil-methodology-reference-item">
+              {methodologyReferences.map((reference, index) => <li key={reference.reference_id} className="vigil-methodology-reference-item">
                 <span className="vigil-methodology-reference-number">[{index + 1}]</span>
                 <span className="vigil-methodology-reference-copy">
                   <strong>{reference.title}</strong>
-                  <span className="vigil-methodology-reference-meta"> — {reference.publisher} · {reference.id}</span>
+                  <span className="vigil-methodology-reference-meta"> — {reference.publisher}</span>
                   <br />
                   <a href={reference.url} target="_blank" rel="noreferrer" className="vigil-methodology-reference-url">{reference.url}</a>
                 </span>

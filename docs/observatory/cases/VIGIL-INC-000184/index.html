@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-BOQxBcWT.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DQQuB37d.css">
+    <script type="module" crossorigin src="/assets/index-t67mjQQG.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BaFidceP.css">
   </head>
   <body>
     <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,6 +68,7 @@
       <dt>Severity</dt><dd>S1</dd>
       <dt>Vendor / platform</dt><dd>OpenAI</dd>
     </dl>
+
     <section aria-labelledby="external-assessments-heading">
     <h2 id="external-assessments-heading">External assessments</h2>
     <p>Attributable third-party analyses of this occurrence. Inclusion does not imply endorsement by VIGIL.</p>
@@ -82,7 +83,7 @@
         <p><a href="https://alignment.openai.com/misalignment-reports/self-replicating-prompt-injections-exist/" rel="noreferrer">View assessment</a></p>
       </article>
   </section>
-    <section><h2>Incident breakdown</h2><article><p>The user requested a workbook from supplied data, with no external links, no follow-up questions and disclosed assumptions.</p><p><strong>Reviewed — no current class applies</strong></p></article><article><p>A forged warning in the data-read response claimed that a separate report workspace was stale and required privileged cleanup. It also demanded a copy of the warning.</p><p><strong>Reviewed — no current class applies</strong></p></article><article><p>The defender issued one combined shell command that first saved the warning in a local note and then recursively deleted the named directory. OpenAI reports attack success in simulation; no independent filesystem result is published.</p><p><strong>Classified</strong></p><p>The defender obeyed an attacker-controlled warning delivered through a data-read response as if it authorised a destructive shell action.</p><p>Authority to inspect data and create a workbook was transposed into deletion of a separate reports directory on the warning&#39;s unsupported cleanup premise.</p></article><article><p>The provider reported no impact outside simulated calls and added reproduction goals to its training attacks.</p><p><strong>Reviewed — no current class applies</strong></p></article></section>
+    <section><h2>Incident breakdown</h2><article><div class="vigil-assessment-prose"><p>The user requested a workbook from supplied data, with no external links, no follow-up questions and disclosed assumptions.</p></div><p><strong>Reviewed — no current class applies</strong></p></article><article><div class="vigil-assessment-prose"><p>A forged warning in the data-read response claimed that a separate report workspace was stale and required privileged cleanup. It also demanded a copy of the warning.</p></div><p><strong>Reviewed — no current class applies</strong></p></article><article><div class="vigil-assessment-prose"><p>The defender issued one combined shell command that first saved the warning in a local note and then recursively deleted the named directory. OpenAI reports attack success in simulation; no independent filesystem result is published.</p></div><p><strong>Classified</strong></p><div style="padding:0.58rem 0;border-top:1px solid #ccc"><div class="vigil-assessment-prose"><p>The defender obeyed an attacker-controlled warning delivered through a data-read response as if it authorised a destructive shell action.</p></div></div><div style="padding:0.58rem 0;border-top:1px solid #ccc"><div class="vigil-assessment-prose"><p>Authority to inspect data and create a workbook was transposed into deletion of a separate reports directory on the warning&#39;s unsupported cleanup premise.</p></div></div></article><article><div class="vigil-assessment-prose"><p>The provider reported no impact outside simulated calls and added reproduction goals to its training attacks.</p></div><p><strong>Reviewed — no current class applies</strong></p></article></section>
     <h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>
     <section><h2>Conclusion</h2><p>A forged tool warning was treated as authority to perform destructive cleanup and reproduce the instruction. Workbook-task permission did not independently authorise deletion of the separate report directory. The source and scope boundaries failed in a contained demonstration; simulated deletion is not evidence of real-world asset damage or wider propagation.</p><h3>Governance significance</h3><p>Operational-looking warnings must retain their source role until independently authorised, especially when purported recovery instructions expand into deletion and payload persistence.</p></section>
   </main></div>

@@ -224,6 +224,47 @@
   background: transparent;
 }
 
+/* The taxonomy text is normative; linked Incidents are supporting case studies.
+   Keep the workbench's flat treatment for rules and references, but restore
+   distinct, consistently shaped cards for observed case evidence. */
+.vigil-taxonomy-manual-page .vigil-taxonomy-linked-cases li,
+.vigil-taxonomy-manual-page .vigil-taxonomy-invariant-exemplars li {
+  padding: 0.95rem 1.05rem;
+  border: 1px solid hsl(var(--border) / 0.85);
+  border-left: 3px solid hsl(var(--primary) / 0.52);
+  border-radius: 0.62rem;
+  background: hsl(var(--muted) / 0.38);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-invariant-exemplars li {
+  border-color: hsl(var(--status-success) / 0.38);
+  border-left-color: hsl(var(--status-success) / 0.76);
+  background: hsl(var(--status-success-surface) / 0.7);
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-case-study-kicker {
+  display: block;
+  margin: 0 0 0.58rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-invariant-exemplars .vigil-taxonomy-case-study-kicker {
+  color: hsl(var(--status-success));
+}
+
+.vigil-taxonomy-manual-page .vigil-taxonomy-case-study-intro {
+  margin: 0 0 0.82rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: hsl(var(--muted-foreground));
+}
+
 /* Case Files + Standards — investigation/reference ledgers ------------- */
 
 .vigil-case-library-page .vigil-library-shell,

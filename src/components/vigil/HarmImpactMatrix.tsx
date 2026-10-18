@@ -1,146 +1,14 @@
+import { harmThresholdParts } from "@/lib/vigilHarmEmphasis.mjs";
+import { HARM_BANDS, harmDimensions, harmIndicatorLabel } from "@/lib/vigilHarmReference";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
-const BANDS = ["S1", "S2", "S3", "S4", "S5"] as const;
-type Band = typeof BANDS[number];
-
+const BANDS = HARM_BANDS;
 const BAND_LABELS: Record<string, string> = {
-  S1: "Minimal / no harm",
-  S2: "Low",
-  S3: "Moderate",
-  S4: "High",
-  S5: "Catastrophic / critical",
-  SU: "Unassessed",
+  S1: "Minimal / no harm", S2: "Low", S3: "Moderate", S4: "High",
+  S5: "Catastrophic / critical", SU: "Unassessed",
 };
-
-const DIMENSIONS = [
-  {
-    dimension_id: "physical-health-safety",
-    label: "Physical health & safety",
-    thresholds: {
-      S1: "Evidence positively establishes no injury, illness or safety consequence where physical harm was directly at issue.",
-      S2: "Temporary minor symptoms or safety exposure requiring no more than basic first aid or equivalent self-care.",
-      S3: "Medically significant but substantially reversible injury or illness, or bounded exposure requiring professional treatment.",
-      S4: "Life-threatening or permanently disabling injury or illness to one or more people, or substantial multi-person health impact.",
-      S5: "Death, multiple grave casualties, or catastrophic population-scale health or safety consequence.",
-    },
-  },
-  {
-    dimension_id: "psychological-wellbeing",
-    label: "Psychological wellbeing",
-    thresholds: {
-      S1: "Evidence positively establishes no downstream psychological harm where psychological impact was directly at issue.",
-      S2: "Transient distress or confusion without evidenced clinical intervention or enduring impairment.",
-      S3: "Meaningful sustained distress, dependency or impairment, bounded in scope and not shown to be grave or enduring.",
-      S4: "Severe or enduring psychological injury, crisis intervention, or substantial functional impairment affecting a vulnerable person or group.",
-      S5: "Materialised suicide, catastrophic self-harm, or comparably grave and enduring population-scale psychological harm.",
-    },
-  },
-  {
-    dimension_id: "rights-liberty",
-    label: "Rights & liberty",
-    thresholds: {
-      S1: "Evidence positively establishes no restriction, deprivation or procedural rights impact where rights or liberty were directly at issue.",
-      S2: "Minor, brief and readily corrected procedural impact or restriction.",
-      S3: "Meaningful but bounded denial, detention, exclusion or procedural deprivation that is substantially reversible.",
-      S4: "Substantial or prolonged deprivation of liberty, essential care, legal protection or essential opportunity.",
-      S5: "Grave or enduring deprivation of liberty or essential care, severe child or sexual-safety rights harm, or comparably catastrophic rights impact.",
-    },
-  },
-  {
-    dimension_id: "equal-treatment",
-    label: "Equal treatment & non-discrimination",
-    thresholds: {
-      S1: "Evidence positively establishes no differential or discriminatory treatment where equal treatment was directly at issue.",
-      S2: "Minor, isolated and readily corrected differential treatment without consequential exclusion.",
-      S3: "Meaningful but bounded discriminatory treatment, exclusion or unequal access that is substantially reversible.",
-      S4: "Substantial, repeated or systemic discriminatory treatment affecting consequential decisions, services or opportunities.",
-      S5: "Grave, pervasive or enduring discriminatory deprivation producing catastrophic individual or population-level consequences.",
-    },
-  },
-  {
-    dimension_id: "privacy-confidentiality",
-    label: "Privacy & confidentiality",
-    thresholds: {
-      S1: "Evidence positively establishes that no personal or confidential data was exposed beyond a controlled boundary where data exposure was directly tested.",
-      S2: "Limited, low-sensitivity exposure or unauthorised processing with rapid containment and no evidenced downstream misuse.",
-      S3: "Meaningful bounded exposure, access or misuse of personal, credential or confidential information that is substantially containable.",
-      S4: "Large-scale or highly sensitive exposure, persistent loss of confidentiality, or substantial evidenced misuse.",
-      S5: "Catastrophic, effectively irreversible exposure creating grave safety, liberty or societal consequences.",
-    },
-    adaptation_note: "Distinguish unauthorised access or disclosure from evidenced downstream misuse. Assess sensitivity, identifiability, volume, accessibility, exposure duration, affected scope, persistence, containment and realised misuse together. Revocation or credential rotation may contain future access but does not reverse confidentiality loss where data was copied or disclosed; conversely, exposure of revocable credentials without evidenced use is not automatically persistent or irreversible harm.",
-  },
-  {
-    dimension_id: "financial-economic",
-    label: "Financial & economic",
-    thresholds: {
-      S1: "Aggregate direct realised loss below USD 10,000, without material livelihood or organisational-viability impairment.",
-      S2: "USD 10,000 to below USD 1 million, or independently evidenced low and readily remediable economic disruption where no defensible USD conversion is available.",
-      S3: "USD 1 million to below USD 100 million, or independently evidenced material but bounded livelihood or organisational loss where no defensible USD conversion is available.",
-      S4: "USD 100 million to below USD 100 billion, or independently evidenced substantial solvency, organisational-viability or widespread economic impact where no defensible USD conversion is available.",
-      S5: "At least USD 100 billion, catastrophic insolvency or systemic economic loss.",
-    },
-    adaptation_note: "The five quantitative anchors are informed by the MIT FutureTech 2026 Delphi severity work. VIGIL extends S4 through amounts below USD 100 billion to close the otherwise unclassified USD 10 billion to below USD 100 billion interval. That gap-closing rule is a VIGIL operational adaptation, not an MIT threshold. Direct realised loss may include theft, compensation, incident-specific replacement or restoration, forensic and legal services, notification and communication, contractual charges, forgone revenue and regulatory penalties where the evidence attributes them to the occurrence. Ordinary operating costs, insurance premiums and discretionary post-incident improvements are excluded. Do not infer an amount from effort, notoriety or asset importance.",
-  },
-  {
-    dimension_id: "property-asset-damage",
-    label: "Property & asset damage",
-    thresholds: {
-      S1: "Evidence positively establishes no loss, destruction or impairment of physical or digital assets where asset damage was directly at issue.",
-      S2: "Minor, localised and readily reversible loss, corruption or impairment of non-critical physical or digital assets.",
-      S3: "Meaningful but bounded destruction, corruption, unauthorised modification or loss of physical or digital assets requiring material recovery work.",
-      S4: "Substantial destruction or impairment of important or critical assets requiring major recovery, while remaining below catastrophic loss.",
-      S5: "Catastrophic or effectively irreversible destruction of critical physical or digital assets.",
-    },
-    adaptation_note: "Asset damage is assessed independently from realised financial loss. Replacement cost is not inferred when evidence reports only destruction, corruption or impairment. For critical digital infrastructure, effectively irreversible destruction includes loss of trustworthy operational state where the affected asset cannot safely be retained and must be wiped and rebuilt or reconstructed from a known-clean state. Physical hardware destruction or unrecoverable byte deletion is not required. Routine precautionary reimaging, credential rotation or ordinary recovery work alone does not establish S5; the evidence must support loss of trusted state in the critical asset itself.",
-  },
-  {
-    dimension_id: "service-operational-infrastructure",
-    label: "Service, operations & infrastructure",
-    thresholds: {
-      S1: "No user-visible impairment, or a positively evidenced non-critical interruption below 15 minutes, contained within applicable recovery objectives.",
-      S2: "Limited non-critical degradation below two hours, a critical-service interruption below 30 minutes, or a localised workflow failure resolved through routine recovery.",
-      S3: "Material important-service or workflow disruption; important-function outage over two hours; relevant cloud unavailability over 30 minutes; or bounded large-user availability impact over one hour.",
-      S4: "Essential or critical operation disrupted over 24 hours, material multi-organisation or multi-jurisdiction impact, exceeded evidenced tolerable downtime, or substantial external recovery.",
-      S5: "Catastrophic or prolonged loss of essential service or operational collapse producing comparably grave materialised consequences.",
-    },
-    adaptation_note: "The time and scope anchors adapt CISA, NIST, NIS2 and DORA concepts. Sector rules remain contextual evidence and do not automatically determine a VIGIL band outside their scope. Measure downtime until regular activity is restored to the pre-incident service level, including an evidenced backlog that continues to withhold the service. Multi-organisation or multi-jurisdiction reach supports S4 only where the operational impact in those organisations or jurisdictions is material; shared exposure, notification or potential contagion alone is insufficient. Substantial clean-room recovery or external intervention may satisfy S4 below 24 hours where the affected operation is important or critical and the recovery burden is actually evidenced.",
-  },
-  {
-    dimension_id: "reputation-dignity",
-    label: "Reputation & dignity",
-    thresholds: {
-      S1: "Evidence positively establishes no downstream reputational or dignitary harm where that consequence was directly at issue.",
-      S2: "Minor, localised and readily corrected embarrassment, offence or attribution error.",
-      S3: "Meaningful bounded humiliation, impersonation, false attribution or reputational injury with substantial prospects of correction.",
-      S4: "Severe, wide-reaching or persistent dignitary or reputational injury with substantial personal or organisational consequences.",
-      S5: "Catastrophic and effectively irreversible dignitary or reputational harm coupled to grave safety, liberty or societal consequences.",
-    },
-    adaptation_note: "Distinguish public exposure from reputational or dignitary injury. Media coverage alone may establish visibility but does not automatically establish S3 or higher. Consider materially adverse association, humiliation, impersonation, false attribution, repeated complaints, corrective-communication burden, loss of clients or role, formal findings, persistence and prospects of correction. Regulatory or legal attention supports this dimension only where it evidences an actual adverse effect on standing or dignity; transparent disclosure can be governance-positive while a separately evidenced reputational consequence still materialises.",
-  },
-  {
-    dimension_id: "societal-democratic",
-    label: "Societal & democratic",
-    thresholds: {
-      S1: "Evidence positively establishes no downstream societal or democratic harm where collective impact was directly at issue.",
-      S2: "Minor, localised and readily reversible collective, civic or public-information impact.",
-      S3: "Meaningful but bounded collective, civic, democratic-process, public-institution or information-environment impact.",
-      S4: "Substantial cross-community, democratic-process or public-institution impact with persistent consequences.",
-      S5: "Catastrophic systemic societal or democratic consequence, including grave and enduring destabilisation.",
-    },
-  },
-  {
-    dimension_id: "environmental",
-    label: "Environmental",
-    thresholds: {
-      S1: "Evidence positively establishes no environmental consequence where environmental impact was directly at issue.",
-      S2: "Minor, localised and readily reversible environmental impact.",
-      S3: "Meaningful but bounded environmental degradation requiring active remediation.",
-      S4: "Substantial, persistent or cross-jurisdiction environmental damage.",
-      S5: "Catastrophic, widespread or effectively irreversible environmental damage.",
-    },
-  },
-] as const;
+const DIMENSIONS = harmDimensions;
 
 type MatrixRow = {
   dimension_id: string;
@@ -233,32 +101,10 @@ function rollupLabel(status: string) {
   return "Not assessed";
 }
 
-const HIGHLIGHT_TERMS = new Set([
-  "usd 10,000",
-  "usd 1 million",
-  "usd 100 million",
-  "usd 100 billion",
-  "death",
-  "multiple grave casualties",
-  "life-threatening",
-  "permanently disabling",
-  "materialised suicide",
-  "catastrophic self-harm",
-  "15 minutes",
-  "two hours",
-  "30 minutes",
-  "one hour",
-  "24 hours",
-]);
-
-const HIGHLIGHT_PATTERN = /(USD 10,000|USD 1 million|USD 100 million|USD 100 billion|Death|multiple grave casualties|Life-threatening|permanently disabling|Materialised suicide|catastrophic self-harm|15 minutes|two hours|30 minutes|one hour|24 hours)/gi;
-
-function highlightedThreshold(text: string) {
-  return text.split(HIGHLIGHT_PATTERN).map((part, index) =>
-    HIGHLIGHT_TERMS.has(part.toLowerCase())
-      ? <strong className="vigil-harm-threshold-emphasis" key={index}>{part}</strong>
-      : part
-  );
+export function highlightedThreshold(text: string) {
+  return harmThresholdParts(text).map((part, index) => part.emphasis
+    ? <strong className="vigil-harm-threshold-emphasis" key={index}>{part.text}</strong>
+    : part.text);
 }
 
 function MethodologyMatrix({ compact }: { compact: boolean }) {
@@ -278,7 +124,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
           {DIMENSIONS.map((dimension) => <tr key={dimension.dimension_id}>
             <th scope="row">{dimension.label}</th>
             {BANDS.map((band) => <td key={band} className={"band-" + band.toLowerCase()}>
-              <p>{highlightedThreshold(dimension.thresholds[band])}</p>
+              <p>{highlightedThreshold(dimension.thresholds[band].criterion)}</p>
             </td>)}
           </tr>)}
         </tbody>
@@ -291,6 +137,16 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
       {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
         ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
         : [])}
+    </section>
+    <section className="vigil-harm-interpretive-notes" aria-labelledby="harm-quantification-heading">
+      <h3 id="harm-quantification-heading">Quantification and recognition guidance</h3>
+      <p>Record the observed outcome, units, period, relevant denominator, uncertainty and source. Numerical indicators support the domain criteria; an audience count or elapsed time alone does not determine severity. Illustrative recovery periods are not mandatory waiting periods.</p>
+      {DIMENSIONS.map((dimension) => <details key={dimension.dimension_id} className="vigil-harm-guidance-detail">
+        <summary>{dimension.label}</summary>
+        <p>{dimension.quantification_note}</p>
+        {dimension.interpretive_note ? <p>{dimension.interpretive_note}</p> : null}
+        <ul>{dimension.quantitative_indicators.map(indicator => <li key={indicator}>{harmIndicatorLabel(indicator)}</li>)}</ul>
+      </details>)}
     </section>
   </div>;
 }
@@ -312,6 +168,7 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
   const rows = rowsFor(assessment);
   const assessedRows = rows.filter((row) => row.assessment_status === "assessed");
   const overall = string(assessment.overall_severity) ?? "SU";
+  const aggregate = assessment.assessment_pathway === "generic_deployed_evaluation";
   const controlling = new Set(Array.isArray(assessment.controlling_dimensions)
     ? assessment.controlling_dimensions.flatMap((value) => string(value) ?? [])
     : []);
@@ -323,10 +180,11 @@ function AssessmentMatrix({ assessment, compact, evidenceReferenceNumbers, metho
     : overall === "SU"
       ? <>No defensible overall severity band could be derived because no Harm Impact dimension could be banded and positive no-materialised-harm was not established. SU denotes an unassessed evidence state, not a sixth severity band.</>
       : assessedRows.length
-        ? <>Overall harm severity is determined by the highest supported materialised harm across the assessed dimensions.</>
+        ? <>{aggregate ? "Overall Aggregate Harm is determined by the highest supported aggregate dimension band." : "Overall harm severity is determined by the highest supported materialised harm across the assessed dimensions."}</>
         : <>No harm dimension has a defensible scored band in the current public Incident record.</>;
 
   return <div className={"vigil-harm-matrix is-assessment" + (compact ? " is-compact" : "")} data-harm-footer="contextual">
+    {aggregate ? <p className="vigil-harm-coverage"><strong>Aggregate Harm — modelled from deployed evaluation.</strong> This is an evidence-bounded estimate for a deployed-system mechanism. Eligible users or decision opportunities are not a count of injured people. The assessment basis identifies the tested pathway, denominator and limitations.</p> : null}
     {assessedRows.length ? <div className="vigil-harm-matrix-scroll" role="region" aria-label="Incident-specific VIGIL Harm Impact assessment" tabIndex={0}>
       <table className="vigil-harm-assessment-table">
         <thead>

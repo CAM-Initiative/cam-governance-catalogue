@@ -119,8 +119,16 @@
   padding-left: 1.15rem;
 }
 
+.vigil-case-file-page .vigil-classification-taxonomy-list li {
+  padding: 0.58rem 0;
+}
+
+.vigil-case-file-page .vigil-classification-taxonomy-list li:first-child { padding-top: 0; }
+.vigil-case-file-page .vigil-classification-taxonomy-list li:last-child { padding-bottom: 0; }
+
 .vigil-case-file-page .vigil-classification-taxonomy-list li + li {
-  margin-top: 0.42rem;
+  margin-top: 0;
+  border-top: 1px solid hsl(var(--border) / 0.48);
 }
 
 .vigil-case-file-page .vigil-classification-class-chip {
