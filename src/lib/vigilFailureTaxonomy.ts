@@ -1,5 +1,4 @@
 import { getSelectedVigilBranch, vigilRawRoot, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
-
 export type FailureTaxonomyIndexFamily = {
   family_id: string;
   family_code: string;
@@ -76,6 +75,8 @@ export type FailureTaxonomySubtype = {
   plain_english?: string;
   definition?: string;
   recognition?: FailureTaxonomyRecognition;
+  failure_recognition?: FailureTaxonomyRecognition;
+  success_recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   aliases?: string[];
@@ -94,12 +95,11 @@ export type FailureTaxonomyClass = {
   definition: string;
   invariant?: string;
   success_condition?: string;
-  success_plain_english?: string;
-  success_recognition?: FailureTaxonomyRecognition;
   failure_condition?: string;
   failure_plain_english?: string;
-  failure_recognition?: FailureTaxonomyRecognition;
   recognition?: FailureTaxonomyRecognition;
+  failure_recognition?: FailureTaxonomyRecognition;
+  success_recognition?: FailureTaxonomyRecognition;
   exclusions?: string[];
   examples?: string[];
   relationships?: FailureTaxonomyRelationship[];

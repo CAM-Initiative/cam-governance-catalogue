@@ -1,3 +1,7 @@
+import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
+import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
+import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
 import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
 import {
@@ -13,6 +17,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repoRoot = dirname(dirname(fileURLToPath(import.meta.url)));
+const harmMethodology = JSON.parse(readFileSync(join(repoRoot, "src", "data", "vigil-harm-methodology.json"), "utf8"));
+const harmReferences = JSON.parse(readFileSync(join(repoRoot, "src", "data", "vigil-harm-references.json"), "utf8"));
 const privacyPolicy = JSON.parse(readFileSync(join(repoRoot, "src", "lib", "privacyPolicy.json"), "utf8"));
 const docsDir = join(repoRoot, "docs");
 const indexPath = join(docsDir, "index.html");
@@ -39,6 +45,27 @@ function escapeHtml(value = "") {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function harmThresholdHtml(text) {
+  return harmThresholdParts(text).map(part => part.emphasis
+    ? `<strong class="vigil-harm-threshold-emphasis">${escapeHtml(part.text)}</strong>`
+    : escapeHtml(part.text)).join("");
+}
+
+function harmReferenceHtml() {
+  const bands = ["S1", "S2", "S3", "S4", "S5"];
+  const rows = harmMethodology.dimensions.map(dimension => `<tr><th scope="row">${escapeHtml(dimension.label)}</th>${bands.map(band => `<td>${harmThresholdHtml(dimension.thresholds[band].criterion)}</td>`).join("")}</tr>`).join("");
+  const guidance = harmMethodology.dimensions.map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary>${[dimension.adaptation_note, dimension.interpretive_note, dimension.quantification_note].filter(Boolean).map(note => `<p>${escapeHtml(note)}</p>`).join("")}<ul>${dimension.quantitative_indicators.map(metric => `<li>${escapeHtml(metric.replaceAll("_", " "))}</li>`).join("")}</ul></details>`).join("");
+  const aggregate = harmMethodology.dimensions.filter(dimension => bands.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary><dl>${bands.map(band => `<dt>${band}</dt><dd>${harmThresholdHtml(dimension.thresholds[band].aggregate_harm_threshold || "")}</dd>`).join("")}</dl></details>`).join("");
+  const sources = harmReferences.map(reference => `<li><a href="${escapeHtml(reference.url)}">${escapeHtml(reference.title)}</a> — ${escapeHtml(reference.publisher)}</li>`).join("");
+  return `<p>VIGIL-HIM ${escapeHtml(harmMethodology.version)} reviews twelve harm dimensions using five severity bands, S1 to S5. The highest supported band on the selected assessment pathway determines overall severity. SU means no defensible band can be assigned; it does not establish no harm.</p>
+    <section id="matrix"><h2>Specific-consequence reference matrix</h2><div style="overflow-x:auto"><table><thead><tr><th>Harm dimension</th>${bands.map(band => `<th scope="col">${band}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section>
+    <section id="quantification"><h2>Quantification and recognition guidance</h2><p>Record source-backed outcome, units, period, denominator, uncertainty and consequence. Numerical indicators support the domain criteria; counts and illustrative durations do not determine severity alone.</p>${guidance}</section>
+    <section id="method"><h2>Evidence states and overall severity</h2><dl>${Object.entries(harmMethodology.assessment_statuses).map(([label, description]) => `<dt>${escapeHtml(label.replaceAll("-", " "))}</dt><dd>${escapeHtml(description)}</dd>`).join("")}</dl><p>${escapeHtml(harmMethodology.derivation_statement)}</p></section>
+    <section id="pathways"><h2>Select the assessment pathway before scoring</h2><ol>${harmMethodology.assessment_pathway_selection.screening_flow.map(step => `<li>${escapeHtml(step.replace(/^\d+\. /, ""))}</li>`).join("")}</ol><p>${escapeHtml(harmMethodology.assessment_pathway_selection.overall_rule)}</p><p>${escapeHtml(harmMethodology.assessment_pathway_selection.no_fallback)}</p></section>
+    <section id="aggregate"><h2>Aggregate Harm — modelled from deployed evaluation</h2><p>Eligible users and decision opportunities are not a count of injured people. Population size alone does not establish a band. These VIGIL operational criteria remain subject to calibration; they are not externally validated clinical severity conversions.</p>${aggregate}</section>
+    <section id="references"><h2>Methodology source trail</h2><p>Reference inclusion does not establish endorsement, equivalence or clinical validation.</p><ol>${sources}</ol><p><a href="https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v${escapeHtml(harmMethodology.version)}.json">Canonical methodology (JSON)</a></p></section>`;
 }
 
 function routeUrl(route) {
@@ -212,7 +239,7 @@ const staticRoutes = [
   ["/privacy", "CAM Initiative Privacy", "Privacy information for the CAM Initiative website."],
   ["/knowledge-base", "CAM Initiative Knowledge Base", "Reference material across CAM Initiative, including VIGIL Observatory Case File methods and classification, AI governance standards, datasets, policy and the CAELESTIS Architecture Model."],
   ["/observatory", "VIGIL Observatory", "VIGIL Observatory is the CAM Initiative's evidence-to-repair AI governance observatory, providing a public AI incident database through its canonical Case File registry."],
-  ["/observatory/harm-impact-assessment", "VIGIL Observatory Harm Impact Assessment", "The current VIGIL-HIM harm dimensions, evidence states and S1-S5 severity thresholds used in VIGIL Observatory Case Files."],
+  ["/observatory/harm-impact-assessment", "VIGIL Observatory Harm Impact Assessment", "VIGIL-HIM 1.1.0: twelve harm dimensions, quantified S1–S5 criteria, evidence states and Aggregate Harm assessment pathways."],
   ["/observatory/cases", "VIGIL Observatory Case Files — AI Incident Database", "Browse the VIGIL Observatory AI incident database: documented Case Files with evidence, assessment, alignment classification, compliance and references."],
   ["/observatory/alignment-taxonomy", "VIGIL Observatory Alignment Taxonomy", "The maintained VIGIL Observatory Alignment Taxonomy for evidence-based classification against AI governance invariants, retaining stable Fidelity Families and Fidelity Classes with recognition criteria, exclusions and governing invariants."],
   ["/observatory/ai-governance-standards", "VIGIL Observatory AI Governance Standards", "External governance standards and source material used by VIGIL Observatory."],
@@ -236,6 +263,7 @@ const staticRouteBodies = new Map([
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
     <h1>Knowledge Base</h1>
+    ${disputedAssessmentHtml()}
     <p>Reference material for the VIGIL Observatory, including Case Files, the Alignment Taxonomy, the Harm Impact Assessment methodology, AI governance standards and CAM Initiative datasets.</p>
     <nav aria-label="Knowledge Base resources"><ul>
       <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
@@ -245,21 +273,6 @@ const staticRouteBodies = new Map([
       <li><a href="/datasets/">Datasets</a></li>
       <li><a href="/policy/">Policy</a></li>
     </ul></nav>
-    <section id="admission">
-      <h2>Incident Admission Principle</h2>
-      <p>VIGIL admits sufficiently evidenced, bounded occurrences in which an AI system materially participates in behaviour, decisions, actions, interactions or consequences relevant to the evaluation of AI governance and alignment.</p>
-      <p>Admission does not require a failed invariant, realised harm or adverse security outcome. Failed boundaries, successfully preserved invariants, mixed outcomes and unresolved questions are assessed independently after admission.</p>
-      <h3>Admission criteria</h3>
-      <ul>
-        <li>An identifiable, actual occurrence or observed evaluation rather than a hypothetical risk.</li>
-        <li>Material AI participation rather than incidental tool use.</li>
-        <li>An evidence-based governance question about the behaviour or control boundary.</li>
-        <li>Traceable sources, bounded claims and explicit uncertainty.</li>
-      </ul>
-      <h3>Security scope</h3>
-      <p>Security incidents involving AI actions, manipulation, boundary crossings or successful containment can qualify. Human misuse of AI can also qualify when AI materially contributed, without automatically implying misalignment by the model. Ordinary cyberattacks and non-AI automation failures are not admitted solely because they involve software.</p>
-      <p>VIGIL crosschecks existing and withdrawn Case Files before admitting a distinct occurrence. Incident admission, Alignment Taxonomy classification, Harm Impact and external requirement assessment remain separate decisions.</p>
-    </section>
     ${knowledgeReadingGuideHtml("taxonomy", "Alignment Taxonomy")}
     ${knowledgeReadingGuideHtml("harm-impact", "Harm Impact Assessment")}
     ${knowledgeReadingGuideHtml("standards", "AI Governance Standards")}
@@ -278,7 +291,7 @@ const staticRouteBodies = new Map([
   ["/observatory/harm-impact-assessment", `<main data-static-crawl-fallback="vigil-harm-impact" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory</p>
     <h1>Harm Impact Assessment</h1>
-    <p>VIGIL-HIM reviews eleven harm dimensions using five severity bands, S1 to S5. The highest defensible materialised-harm threshold determines the overall severity reported in a Case File.</p>
+    ${harmReferenceHtml()}
     <p><a href="/observatory/cases/">Browse Case Files using the methodology</a> · <a href="/knowledge-base/">Return to the Knowledge Base</a></p>
   </main>`],
   ["/observatory/ai-governance-standards", `<main data-static-crawl-fallback="vigil-governance-standards" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -353,11 +366,6 @@ if (taxonomyFamilies.length) {
     <p>VIGIL Observatory</p>
     <h1>VIGIL Observatory Alignment Taxonomy</h1>
     <p>A structured alignment taxonomy for recurring AI governance boundaries, organised through stable Fidelity Families and selectable Fidelity Classes.</p>
-    <section aria-labelledby="taxonomy-reading-heading">
-      <h2 id="taxonomy-reading-heading">How to read a Fidelity Class</h2>
-      <p>A Fidelity Class defines a governed property rather than a failure outcome. Occurrence evidence may establish that the invariant held, that the failure condition occurred, or that the evidence materially engages the boundary without establishing either polarity.</p>
-      <p>Both success and failure require affirmative evidence; absence of evidence for one state does not establish the other.</p>
-    </section>
     <h2>Fidelity families</h2>
     <ul>${taxonomyFamilies.map(({ document }) => {
       const family = document?.family;
@@ -370,7 +378,7 @@ if (taxonomyFamilies.length) {
     pageHtml({
       route: "/observatory/alignment-taxonomy",
       title: "VIGIL Observatory Alignment Taxonomy",
-      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and neutral Fidelity Classes, governed invariants and explicit occurrence conditions.",
+      description: "The maintained VIGIL Observatory Alignment Taxonomy for classifying evidence against recurring AI governance boundaries, with stable Fidelity Families and Fidelity Classes, recognition criteria, exclusions and governing invariants.",
       body: taxonomyIndexBody,
     }),
   );
@@ -477,8 +485,7 @@ function taxonomyCaseLinkHtml(example) {
 }
 
 function taxonomyInvariantExemplarHtml(exemplar, classId) {
-  const label = exemplar?.exemplar_type === "ambiguous-boundary" ? "Boundary engaged" : "Invariant held";
-  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>${label} · <a href="/observatory/alignment-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
+  return `<li><a href="/observatory/cases/${encodeURIComponent(exemplar.linked_incident_id)}"><code>${escapeHtml(exemplar.linked_incident_id)}</code> — ${escapeHtml(exemplar.title || exemplar.linked_incident_id)}</a> <span>Invariant held · <a href="/observatory/alignment-taxonomy/${encodeURIComponent(classId)}"><code>${escapeHtml(classId)}</code></a></span></li>`;
 }
 
 function taxonomyExternalReferenceHtml(reference) {
@@ -545,12 +552,6 @@ for (const { document } of taxonomyFamilies) {
     );
     const classCaseExamples = taxonomyCaseExamplesForClass(item.class_id);
     const classInvariantExemplars = Array.isArray(item.invariant_exemplars) ? item.invariant_exemplars : [];
-    const classSuccessfulExemplars = classInvariantExemplars.filter((exemplar) => exemplar?.exemplar_type === "successful-invariant");
-    const classAmbiguousExemplars = classInvariantExemplars.filter((exemplar) => exemplar?.exemplar_type === "ambiguous-boundary");
-    const classSuccessRecognition = Array.isArray(item.success_recognition?.required_conditions) ? item.success_recognition.required_conditions : [];
-    const classFailureRecognition = Array.isArray(item.failure_recognition?.required_conditions)
-      ? item.failure_recognition.required_conditions
-      : Array.isArray(item.recognition?.required_conditions) ? item.recognition.required_conditions : [];
     const classExternalReferences = Array.isArray(item.external_references) ? item.external_references : [];
     const classBody = `<main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
       <p>VIGIL Observatory Alignment Taxonomy</p>
@@ -564,15 +565,14 @@ for (const { document } of taxonomyFamilies) {
       </dl>
       <h2>Technical definition</h2>
       <p>${escapeHtml(item.definition || "Not stated.")}</p>
-      ${item.invariant ? `<h2>Governing invariant</h2><blockquote>${escapeHtml(item.invariant)}</blockquote>` : ""}
-      ${item.success_condition || item.success_plain_english || classSuccessRecognition.length ? `<h2>Invariant held</h2><h3>Success condition</h3>${item.success_plain_english ? `<p><strong>${escapeHtml(item.success_plain_english)}</strong></p>` : ""}${item.success_condition ? `<p>${escapeHtml(item.success_condition)}</p>` : ""}${classSuccessRecognition.length ? `<h3>Positive recognition</h3>${listHtml(classSuccessRecognition)}` : ""}` : ""}
-      ${item.failure_condition || item.failure_plain_english || classFailureRecognition.length ? `<h2>Failure established</h2><h3>Failure condition</h3>${item.failure_plain_english ? `<p><strong>${escapeHtml(item.failure_plain_english)}</strong></p>` : ""}${item.failure_condition ? `<p>${escapeHtml(item.failure_condition)}</p>` : ""}${classFailureRecognition.length ? `<h3>Failure recognition</h3>${listHtml(classFailureRecognition)}` : ""}` : ""}
-      ${Array.isArray(item.exclusions) && item.exclusions.length ? `<h2>Exclusions from failure recognition</h2>${listHtml(item.exclusions)}` : ""}
-      <h2>Failure occurrences</h2>
+      <h2>Recognition criteria</h2>
+      ${listHtml(item.recognition?.required_conditions)}
+      <h2>Exclusions</h2>
+      ${listHtml(item.exclusions)}
+      <h2>Linked Case Files</h2>
       ${classCaseExamples.length ? `<ul>${classCaseExamples.map(taxonomyCaseLinkHtml).join("")}</ul>` : "<p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>"}
-      ${classSuccessfulExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classSuccessfulExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
-      ${classAmbiguousExemplars.length ? `<h2>Ambiguous-boundary examples</h2><ul>${classAmbiguousExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
-      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
+      ${classInvariantExemplars.length ? `<h2>Invariant-held examples</h2><ul>${classInvariantExemplars.map((exemplar) => taxonomyInvariantExemplarHtml(exemplar, item.class_id)).join("")}</ul>` : ""}
+      ${classExternalReferences.length ? `<h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul>${classExternalReferences.map(taxonomyExternalReferenceHtml).join("")}</ul>` : ""}
     </main>`;
     writeRoute(
       classRoute,
@@ -621,10 +621,16 @@ function occurrenceAssessmentsHtml(raw) {
   const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td>${escapeHtml(row.resultLabel)}</td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
   return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table}</section>`;
 }
+function disputedAssessmentHtml() {
+  return `<section><p>${escapeHtml(VIGIL_DISPUTED_COPY.kicker)}</p><h2>${escapeHtml(VIGIL_DISPUTED_COPY.heading)}</h2><p>${escapeHtml(VIGIL_DISPUTED_COPY.explanation)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.boundary)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.qualification)}</p></section>`;
+}
+function assessmentProseHtml(value) {
+  return `<div class="vigil-assessment-prose">${assessmentParagraphs(value).map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div>`;
+}
 function clauseAssessmentsHtml(raw) {
-  const clauses = raw.vigil_assessment?.source_clause_analysis?.clauses || [];
+  const clauses = clauseAssessmentRows(raw.vigil_assessment?.source_clause_analysis);
   const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
-  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article><p>${escapeHtml(clause.source_anchor || clause.source_paraphrase || "")}</p><p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? `<p>${escapeHtml(clause.adjudication_note)}</p>` : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<p>${escapeHtml(item.rationale)}</p>` : "").join("")}</article>`).join("")}</section>`;
+  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.observation_title ? `<h3>${escapeHtml(clause.observation_title)}</h3>` : ""}${clause.source_anchor ? `<div class="vigil-source-passage">${clause.source_paraphrase ? "<strong>Original wording</strong>" : ""}<blockquote style="white-space:pre-line">${escapeHtml(clause.source_anchor)}</blockquote></div>` : ""}${clause.source_paraphrase ? `${clause.source_anchor ? "<strong>Context</strong>" : ""}${assessmentProseHtml(clause.source_paraphrase)}` : ""}<p><strong>${escapeHtml(clause.display_context ? "Context" : labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.complete_source_anchor ? `<details><summary>Complete source passage</summary><blockquote style="white-space:pre-line">${escapeHtml(clause.complete_source_anchor)}</blockquote></details>` : ""}${clause.adjudication_note ? assessmentProseHtml(clause.adjudication_note) : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<div style="padding:0.58rem 0;border-top:1px solid #ccc">${assessmentProseHtml(item.rationale)}</div>` : "").join("")}</article>`).join("")}</section>`;
 }
 
 for (const record of incidentRecords) {
@@ -645,6 +651,7 @@ for (const record of incidentRecords) {
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
+    ${publicAlignmentOutcome(record) === "Disputed" ? disputedAssessmentHtml() : ""}
     ${externalAssessmentsHtml(canonical)}
     ${clauseAssessmentsHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}

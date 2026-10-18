@@ -52,8 +52,8 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-DXuY3ZZU.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-f3HH9bLf.css">
+    <script type="module" crossorigin src="/assets/index-Dwf3A9dF.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BDutj9Ip.css">
   </head>
   <body>
     <div id="root"><main data-static-crawl-fallback="vigil-taxonomy-class" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
@@ -68,15 +68,14 @@
       </dl>
       <h2>Technical definition</h2>
       <p>The property by which verification status remains bound to the specific verified content, state, version, configuration, target and scope, with suspension or invalidation and fresh validation across material post-verification mutations.</p>
-      <h2>Governing invariant</h2><blockquote>Any material mutation to verified state, version, content, configuration, target, or scope must invalidate or suspend the inherited verification status until fresh verification covers the changed state.</blockquote>
-      <h2>Invariant held</h2><h3>Success condition</h3><p>Available occurrence evidence establishes the following bounded outcome: Assurance is suspended or invalidated for the mutation and restored only through adequate fresh verification.</p><h3>Positive recognition</h3><ul><li>Verified content or state undergoes a material subsequent mutation.</li><li>Assurance is suspended or invalidated for the mutation and restored only through adequate fresh verification.</li><li>Versioned mutation, verification and reliance records demonstrate that assurance follows the particular current state.</li></ul>
-      <h2>Failure established</h2><h3>Failure condition</h3><p><strong>The system verifies one version, changes it afterwards, and still calls the changed version verified.</strong></p><p>A failure in which content, state, configuration, code, data, or an execution artefact is materially changed after verification while retaining or inheriting the verification status of the earlier state without revalidation.</p><h3>Failure recognition</h3><ul><li>A specific state or artefact is verified.</li><li>A material mutation occurs after that verification.</li><li>The mutated state is represented or consumed as verified without a fresh check covering the mutation.</li></ul>
-      <h2>Exclusions from failure recognition</h2><ul><li>The post-verification change is immaterial to the verified property.</li><li>The changed state is reverified before reliance.</li><li>The system clearly invalidates the earlier verification status after mutation.</li></ul>
-      <h2>Failure occurrences</h2>
+      <h2>Recognition criteria</h2>
+      <p>None stated.</p>
+      <h2>Exclusions</h2>
+      <ul><li>The post-verification change is immaterial to the verified property.</li><li>The changed state is reverified before reliance.</li><li>The system clearly invalidates the earlier verification status after mutation.</li></ul>
+      <h2>Linked Case Files</h2>
       <p>No classified Case Files currently have a failure-occurrence mapping to this class.</p>
 
-
-      <h2>Supporting evidence</h2><p>External sources supporting this governed property, its evidentiary boundaries or its recognition criteria.</p><ul><li><p>The MITRE Corporation · 2026-04-30 · authoritative guidance</p><p><strong><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noreferrer">CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Changed state invalidates earlier assurance. Does not require every inherited verification status to be suspended. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>IEEE Standards Association · 2021-09-15 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7000/6781/" rel="noreferrer">IEEE 7000-2021, clause 10.3(e)(8)</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual. Verification and monitoring identify when changed context/priorities require design revision. Design iteration is not a required fresh verification of every material post-verification mutation. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
+      <h2>Supporting evidence</h2><p>External sources supporting this Fidelity Class definition, boundary or recognition criteria.</p><ul><li><p>The MITRE Corporation · 2026-04-30 · authoritative guidance</p><p><strong><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noreferrer">CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual-nonrequirement-citation. Changed state invalidates earlier assurance. Does not require every inherited verification status to be suspended. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li><li><p>IEEE Standards Association · 2021-09-15 · standards evidence</p><p><strong><a href="https://standards.ieee.org/ieee/7000/6781/" rel="noreferrer">IEEE 7000-2021, clause 10.3(e)(8)</a></strong></p><p><strong>Evidence note.</strong> Taxonomy/standards review 2026-10-02: retain-contextual. Verification and monitoring identify when changed context/priorities require design revision. Design iteration is not a required fresh verification of every material post-verification mutation. Historical annotation is preserved in vigil/docs/reviews/2026-10-01-taxonomy-standards-alignment/historical-reference-dispositions.json.</p></li></ul>
     </main></div>
   </body>
 </html>

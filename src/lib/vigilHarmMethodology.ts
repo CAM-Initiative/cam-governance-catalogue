@@ -69,6 +69,9 @@ export type HarmMethodologyDimension = {
   label: string;
   thresholds: Record<string, HarmMethodologyThreshold>;
   adaptation_note?: string;
+  interpretive_note?: string;
+  quantification_note?: string;
+  quantitative_indicators?: string[];
 };
 
 export type HarmMethodologyDefinition = HarmMethodologyMetadata & {
@@ -115,6 +118,9 @@ export async function loadCurrentHarmMethodologyDefinition(fetcher: FetchLike = 
         label: dim.label,
         thresholds,
         adaptation_note: typeof dim.adaptation_note === "string" ? dim.adaptation_note : undefined,
+        interpretive_note: typeof dim.interpretive_note === "string" ? dim.interpretive_note : undefined,
+        quantification_note: typeof dim.quantification_note === "string" ? dim.quantification_note : undefined,
+        quantitative_indicators: Array.isArray(dim.quantitative_indicators) ? dim.quantitative_indicators.filter((value): value is string => typeof value === "string") : [],
       });
     }
     if (dimensions.length < 11) return undefined;

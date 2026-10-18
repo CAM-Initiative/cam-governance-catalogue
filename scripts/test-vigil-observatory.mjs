@@ -144,3 +144,10 @@ test("active routes and sync source have no retired registry-class machinery", a
   assert.match(app, /path="\/observatory\/alignment-taxonomy"/);
   assert.doesNotMatch(app, /path="\/observatory\/knowledge-base\/failure-taxonomy"/);
 });
+test("compact taxonomy navigation permits identity and role but rejects embedded adjudication", async () => {
+  const { validateNavigationMapping } = await import("./validate-vigil-registry-sources.mjs");
+  const mapping = { class_id: "VIGIL-FC-000003", family_id: "VIGIL-FF-0001", classification_role: "failure-occurrence" };
+  assert.doesNotThrow(() => validateNavigationMapping(mapping));
+  assert.throws(() => validateNavigationMapping({ ...mapping, classification_basis: "Full occurrence diagnosis" }), /adjudication detail/);
+  assert.throws(() => validateNavigationMapping({ ...mapping, classification_role: "unknown" }), /alignment role/);
+});

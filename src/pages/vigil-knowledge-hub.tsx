@@ -1,3 +1,4 @@
+import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
@@ -8,7 +9,6 @@ import { VigilAlignmentLegend } from "@/components/vigil/CaseTaxonomyClassificat
 import { loadVigilIncidentRecords } from "@/lib/vigilRegistry";
 import { loadExternalRequirements, loadExternalSources } from "@/lib/vigilExternalKnowledge";
 import { loadFailureTaxonomyIndex } from "@/lib/vigilFailureTaxonomy";
-import { loadCurrentHarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 
 function ReadingGuide({ section }: { section: string }) {
   return <>{vigilReadingGuide.filter(item => item.section === section).map(item => <section key={item.title}>
@@ -26,7 +26,6 @@ type HubState = {
   taxonomyFamilies?: number;
   taxonomyClasses?: number;
   taxonomyAvailable?: boolean;
-  harmMethodologyVersion?: string;
 };
 
 const CASE_FILE_STAGES = [
@@ -86,7 +85,7 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "disputed",
     label: "Disputed",
-    description: "Material facts needed to establish the occurrence or its taxonomy classification are contested. This can include an affected party expressly denying the alleged conduct, materially incompatible accounts from involved parties, or evidence that does not independently resolve the conflict. It does not require litigation or a formal legal dispute. VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported.",
+    description: [VIGIL_DISPUTED_COPY.explanation, VIGIL_DISPUTED_COPY.boundary, VIGIL_DISPUTED_COPY.qualification].join(" "),
   },
   {
     key: "unclassified",
@@ -97,7 +96,6 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
 
 const knowledgeRail = [
   { href: "#overview", label: "Overview" },
-  { href: "#admission", label: "Incident admission" },
   { href: "#cases", label: "Case File method" },
   { href: "#taxonomy", label: "Classification" },
   { href: "#harm-impact", label: "Harm Impact Assessment" },
@@ -112,8 +110,8 @@ export default function VigilKnowledgeHub() {
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex(), loadCurrentHarmMethodologyMetadata()])
-      .then(([incidents, clauses, sources, taxonomy, harmMethodology]) => {
+    Promise.all([loadVigilIncidentRecords(), loadExternalRequirements(), loadExternalSources(), loadFailureTaxonomyIndex()])
+      .then(([incidents, clauses, sources, taxonomy]) => {
         if (cancelled) return;
         setState({
           caseFiles: incidents.records.length,
@@ -126,7 +124,6 @@ export default function VigilKnowledgeHub() {
           taxonomyFamilies: taxonomy.status === "ready" ? taxonomy.data.families.length : undefined,
           taxonomyClasses: taxonomy.status === "ready" ? taxonomy.data.families.reduce((sum, family) => sum + family.class_count, 0) : undefined,
           taxonomyAvailable: taxonomy.status === "ready",
-          harmMethodologyVersion: harmMethodology?.version,
         });
       })
       .catch(() => !cancelled && setState({}));
@@ -158,30 +155,6 @@ export default function VigilKnowledgeHub() {
               <p>Reference material across CAM Initiative: VIGIL Observatory Case Files and methods, AI governance standards, public datasets, policy material and the CAELESTIS Architecture Model.</p>
             </header>
 
-            <section id="admission" className="document-section vigil-about-section" aria-labelledby="knowledge-admission-heading">
-              <div className="document-section-heading">
-                <p>Incident admission</p>
-                <h2 id="knowledge-admission-heading">What qualifies as a VIGIL Incident?</h2>
-              </div>
-              <div className="document-reading">
-                <p><strong>Incident Admission Principle.</strong> VIGIL admits sufficiently evidenced, bounded occurrences in which an AI system materially participates in behaviour, decisions, actions, interactions or consequences relevant to the evaluation of AI governance and alignment.</p>
-                <p><strong>Admission is not a finding of misalignment.</strong> An Incident may demonstrate a failed governance boundary, a successfully preserved invariant, mixed outcomes or an unresolved question. It need not involve realised harm, a security breach or a model that disobeyed instructions. Classification and Harm Impact are separate assessments made after the occurrence is established.</p>
-                <h3>How an occurrence qualifies</h3>
-                <ul>
-                  <li><strong>A bounded occurrence:</strong> identifiable actors or systems, actions, sequence and context, including an actual observed evaluation or successful containment. A hypothetical attack or general risk description is not an Incident.</li>
-                  <li><strong>Material AI participation:</strong> the AI system's output, decision, interaction, action or control response meaningfully contributed to what occurred. Incidental use of an AI tool is insufficient.</li>
-                  <li><strong>A governance-relevant question:</strong> the evidence illuminates a material boundary of authority, safety, reliability, deception, privacy, security, oversight or another AI governance property. A matching Fidelity Class need not already exist.</li>
-                  <li><strong>Traceable evidence:</strong> sources support the claimed occurrence, AI contribution and material chronology with explicit limits. Independent or first-party artefacts are preferred; allegations remain attributed, and unresolved facts are not presented as established.</li>
-                </ul>
-                <h3>Security incidents and malicious use</h3>
-                <p><strong>AI security behaviour is in scope</strong> where the AI was manipulated, crossed an access or authority boundary, exposed information, attempted an unauthorised action or successfully resisted such pressure. An observed protective response can be as informative as a breach.</p>
-                <p><strong>Malicious human use of AI can be in scope</strong> when AI generation or action was a material part of an evidenced intrusion, impersonation, fraud or other harmful pathway. A perpetrator's objective is not automatically the model's objective, and the existence of a crime is not evidence by itself that the AI violated its governing invariant.</p>
-                <p><strong>Incidental AI use is not enough.</strong> An ordinary cyberattack, software malfunction or rule-based automation failure does not qualify solely because it involved technology or was described as AI-related. Historical algorithmic systems require the same independent examination of system nature and material involvement; uncertainty remains a research question, not an automatic admission or rejection.</p>
-                <h3>Admission is separate from diagnosis</h3>
-                <p>Before creating a new Case File, VIGIL checks whether the occurrence is already represented, including by a differently titled, superseded or formerly withdrawn record. Distinct events are not merged merely because they share a technique or affected technology. Admission does not establish legal liability, compliance, a taxonomy verdict, severity or exemplar status. Historical external requirements are not applied retrospectively merely because they are now included in the governance library.</p>
-              </div>
-            </section>
-
             <section id="cases" className="document-section vigil-about-section" aria-labelledby="knowledge-cases-heading">
               <div className="document-section-heading">
                 <p>Case File method</p>
@@ -212,7 +185,6 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-taxonomy-heading">Mappings classify individual boundaries. The Case File index summarises the Incident.</h2>
               </div>
               <div className="document-reading">
-                <p>The maintained VIGIL Observatory Alignment Taxonomy provides shared classification language for recurring AI governance boundaries. Broad <strong>Fidelity Families</strong> define integrity domains; individual <strong>Fidelity Classes</strong> define governed properties that can be evidenced as held, failed or unresolved at a boundary. Stable FF/FC identifiers preserve continuity across adjudications.</p>
                 <ReadingGuide section="taxonomy" />
                 <p className="vigil-knowledge-meta">{taxonomyMeta}</p>
               </div>
@@ -245,16 +217,9 @@ export default function VigilKnowledgeHub() {
                 <h2 id="knowledge-harm-heading">How VIGIL assesses materialised harm and severity.</h2>
               </div>
               <div className="document-reading">
-                <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews eleven harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
+                <p>The <strong>Harm Impact Assessment</strong> is the Case File assessment of materialised harm. It uses the <strong>VIGIL Harm Impact Methodology (VIGIL-HIM)</strong>, which reviews twelve harm dimensions, records the available evidence state for each dimension and applies the published S1–S5 severity thresholds where the evidence supports a band.</p>
                 <ReadingGuide section="harm-impact" />
-                <h3>HIM 1.1.0 — proposed assessment clarification</h3>
-                <p><strong>Proposal under review, not the current scoring standard.</strong> HIM 1.1.0 would add Relational Integrity and Autonomy as a twelfth dimension and make its quantitative threshold interpretation more explicit. The current published matrix above and existing Case Files remain governed by HIM 1.0.1 until VIGIL adopts the new methodology, updates its schema and validates its corpus.</p>
-                <p><strong>Specific Harm:</strong> a bounded Incident involving an actual person, group, organisation, asset or institution is assessed against its <em>documented consequences</em> using the ordinary S1–S5 dimensional thresholds. An actual harmed group does not need to be publicly named. The provider's overall deployment size must never modify a specific Incident's severity.</p>
-                <p><strong>Aggregate Harm:</strong> the proposed alternative is restricted to <em>generic Incidents and tests of deployed models</em> for which no particular harmed person or group is established. Five relevant dimensions carry their own, substantially higher S1–S5 eligible-population or decision thresholds. This is a modelled, evidence-bounded aggregate assessment, <em>not</em> a declaration that the whole eligible population suffered harm. S1 remains available; missing evidence is not automatically S1 or S2.</p>
-                <p><strong>Epistemic reliance and reputation:</strong> an incorrect claim, fabricated citation or contaminated source may lead to reputational harm when someone relies on it. The assessment must establish the defective artefact, the actual reliance or consequential propagation, whose standing or dignity was affected, and a distinct observed adverse consequence. A failure classification does not automatically establish reputational injury. Each reputation-and-dignity band has proposed, independently testable S1–S5 indicators; actual specific incidents continue to use the ordinary harm pathway.</p>
-                <p><strong>Publication boundary:</strong> the website must not display proposed Aggregate Harm severity as an observed injury or mix the two assessment pathways for the same Incident. The twelfth dimension and new thresholds should become authoritative only after the VIGIL methodology, record schema, validator and Case File presentation are migrated together.</p>
-                <p>Read the <a href="https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/methodologies/proposals/VIGIL.HarmImpactMatrix.v1.1.0-proposal.json" target="_blank" rel="noreferrer">proposed HIM 1.1.0 matrix</a> and its <a href="https://github.com/CAM-Initiative/Vigil/blob/agent/incident-ecosystem-ingestion/vigil/docs/reviews/2026-10-10-him-12-dimension-scale-exposure-proposal.md" target="_blank" rel="noreferrer">dimension-specific threshold rationale</a>. Both are drafts, not currently applicable to canonical Incident severity.</p>
-                <p className="vigil-knowledge-meta">{state.harmMethodologyVersion ? `VIGIL-HIM ${state.harmMethodologyVersion}` : "Current VIGIL-HIM"} · methodology reference</p>
+                <p className="vigil-knowledge-meta">VIGIL-HIM 1.1.0 · methodology reference</p>
               </div>
               <div className="cam-action-row">
                 <Link className="cam-action cam-action-secondary" href="/observatory/harm-impact-assessment/">Open Harm Impact Assessment <ArrowRight aria-hidden="true" /></Link>

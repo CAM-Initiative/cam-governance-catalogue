@@ -832,3 +832,14 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 .vigil-case-file-page .vigil-case-print-button {
   margin-top: 0.9rem;
 }
+
+/* Assessment reading structure preserves the complete stored prose. */
+.vigil-case-file-page .vigil-assessment-prose,
+.vigil-case-file-page .vigil-source-passage { display: grid; gap: 0.7rem; }
+.vigil-case-file-page .vigil-assessment-prose > p { margin: 0; }
+.vigil-case-file-page .vigil-source-label { font-size: 0.82rem; color: hsl(var(--muted-foreground)); }
+.vigil-case-file-page .vigil-source-passage q { white-space: pre-line; font-weight: 500; }
+
+.vigil-case-file-page .vigil-source-observation-title { display: block; font-size: 1rem; line-height: 1.45; }
+.vigil-case-file-page .vigil-complete-source-passage summary { cursor: pointer; font-weight: 600; }
+.vigil-case-file-page .vigil-complete-source-passage q { display: block; margin-top: 0.6rem; white-space: pre-line; }

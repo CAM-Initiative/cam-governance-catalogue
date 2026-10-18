@@ -222,3 +222,13 @@ Literal adopted wording MUST remain in the canonical record and detail view; it 
 ## Stage 05 prose and publication parity
 
 Section 05 renders `vigil_assessment.governance_interpretation` as Conclusion and `significance_to_cam` as Governance significance. No Discussion panel is derived by splitting those fields; a separate approved and populated canonical field is a prerequisite. Web, deterministic print/PDF and crawlable Case Files use the same requirement labels and retain occurrence evidence limitations. Clause statuses remain explicit: classified, reviewed with no current class, unresolved or taxonomy coverage gap.
+
+## Disputed assessments and wording-dependent evidence
+
+Use `VIGIL_DISPUTED_COPY` for the shared Case File, deterministic report and Knowledge Base explanation. Disputed can concern conflicting occurrence accounts or differing assessments of what the evidence establishes. Missing information may prevent resolution; missing information alone does not establish a dispute. Identify the particular disagreement in the canonical record. Do not imply litigation, denial of the occurrence, or settled factual truth from a classification disagreement. Keep attributed allegations distinct from observed facts.
+
+When a source clause supplies both `source_anchor` and `source_paraphrase`, publish both in stored episode order: exact quotation followed by its context. Static output must preserve the same evidence and context as the interactive Case File and report. Several interpretations of one passage do not create separate events.
+
+Assessment factual basis, source context and analytical explanations use short display paragraphs without deleting or rewriting source text. Keep authored paragraph boundaries and sentence order. Label original quotations separately from context when both are present; do not mechanically re-paragraph original quotations. Recognition criteria use the same thin separators as Incident analysis entries in the Case File and printable report.
+
+Statement-level adjudication may use optional `statement_analysis` within a source episode. Render `pre_compaction_context` first when supplied, then the shared episode context and each statement in stored order. Bind each statement to its parent's `taxonomy_relationships` with zero-based `taxonomy_relationship_indices`. Preserve every relationship exactly once; invalid or incomplete bindings fall back to the complete original episode. Statement rows are analytical units, not invented occurrence episodes. Preserve the full original passage in an accessible source disclosure. Web, print and static output use the same projection.

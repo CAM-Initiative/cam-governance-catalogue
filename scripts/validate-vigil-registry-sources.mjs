@@ -30,10 +30,10 @@ for (const file of activeFiles) {
 }
 
 const loader = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
-assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Incident registry fetch must use cache busting");
+assert(loader.includes("cacheBustUrl(liveRegistryUrl)") || loader.includes("cacheBustUrl(resolvedLiveUrl)"), "Incident registry fetch must use cache busting");
 assert(loader.includes('record.record_type !== "incident"'), "Registry loader must exclude non-Incident records");
 assert(loader.includes("if (record.path)"), "Canonical record links must prefer durable record paths");
-assert(loader.includes("VIGIL_REGISTRY_SOURCE.branch"), "Canonical record paths must resolve against the configured canonical branch");
+assert(loader.includes("VIGIL_REGISTRY_SOURCE.branch") || (loader.includes("getSelectedVigilBranch") && loader.includes("VIGIL_DEFAULT_BRANCH")), "Canonical record paths must resolve against the configured canonical branch");
 
 const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
 assert(Array.isArray(fallback.records) && fallback.records.length > 0, "VIGIL fallback must contain Incident records");
@@ -43,8 +43,6 @@ for (const forbidden of [
   "severity_assessment",
   "severity_assessment_basis",
   "harm_impact_assessment",
-  "primary_classification",
-  "secondary_classifications",
   "diagnostic_provenance_summary",
   "interpretive_provenance_summary",
   "evidence_access_summary",
@@ -52,6 +50,21 @@ for (const forbidden of [
   "legacy_provenance",
 ]) {
   assert(fallback.records.every((record) => !(forbidden in record)), `VIGIL fallback must not embed canonical detail field ${forbidden}`);
+}
+// The lightweight index carries navigation identity and mapping role, not full
+// canonical classification explanations, confidence or evidence payloads.
+export function validateNavigationMapping(mapping) {
+  assert(mapping && typeof mapping === "object" && !Array.isArray(mapping), "Navigation mapping must be an object");
+  const fields = new Set(["class_id", "family_id", "classification_role"]);
+  assert(Object.keys(mapping).every(key => fields.has(key)), "Navigation mapping must not embed canonical adjudication detail");
+  assert(/^VIGIL-FC-\d{6}$/.test(mapping.class_id), "Navigation mapping needs a canonical class ID");
+  assert(/^VIGIL-FF-\d{4}$/.test(mapping.family_id), "Navigation mapping needs a canonical family ID");
+  assert(["failure-occurrence", "successful-invariant", "ambiguous-boundary"].includes(mapping.classification_role), "Navigation mapping needs a governed alignment role");
+}
+for (const record of fallback.records) {
+  if (record.primary_classification) validateNavigationMapping(record.primary_classification);
+  assert(!record.secondary_classifications || Array.isArray(record.secondary_classifications), "Secondary navigation mappings must be an array");
+  for (const mapping of record.secondary_classifications || []) validateNavigationMapping(mapping);
 }
 assert(fallback.records.every((record) => typeof record.path === "string" && typeof record.raw_url === "string"), "VIGIL fallback must retain canonical record routing");
 assert(fallback.records.every((record) => record.raw_url.includes("/CAM-Initiative/Vigil/main/")), "Published VIGIL fallback raw URLs must target canonical main, never a retired working branch");
