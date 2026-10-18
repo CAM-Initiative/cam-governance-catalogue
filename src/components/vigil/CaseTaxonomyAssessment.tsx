@@ -1,3 +1,4 @@
+import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
 import type { ReactNode } from "react";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 
@@ -102,8 +103,14 @@ function taxonomyAssessmentSummary(relationships: ClauseRelationship[]) {
 
 function SourceClause({ clause }: { clause: ClauseAssessment }) {
   return <div className="vigil-taxonomy-source-wording">
-    {clause.sourceAnchor ? <q>{clause.sourceAnchor}</q> : null}
-    {clause.sourceParaphrase ? <p>{clause.sourceParaphrase}</p> : null}
+    {clause.sourceAnchor ? <div className="vigil-source-passage">
+      {clause.sourceParaphrase && <strong className="vigil-source-label">Original wording</strong>}
+      <q>{clause.sourceAnchor}</q>
+    </div> : null}
+    {clause.sourceParaphrase ? <div className="vigil-assessment-prose">
+      {clause.sourceAnchor && <strong className="vigil-source-label">Context</strong>}
+      {assessmentParagraphs(clause.sourceParaphrase).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+    </div> : null}
     {!clause.sourceAnchor && !clause.sourceParaphrase
       ? <span>Source language is not separately published for this clause.</span>
       : null}
@@ -174,11 +181,11 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
                 {classificationState.detail && <span className="vigil-taxonomy-clause-state-detail">{classificationState.detail}</span>}
               </td>
               <td data-label="Incident analysis" className="vigil-taxonomy-incident-analysis">
-                {analysisText && <p>{analysisText}</p>}
+                {analysisText && <div className="vigil-assessment-prose">{assessmentParagraphs(analysisText).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>}
                 {clause.relationships.length > 0
                   ? <RelationshipStack
                       relationships={clause.relationships}
-                      render={(relationship) => relationship.rationale ?? taxonomyAssessmentSummary([relationship])}
+                      render={(relationship) => <div className="vigil-assessment-prose">{assessmentParagraphs(relationship.rationale ?? taxonomyAssessmentSummary([relationship])).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>}
                     />
                   : !analysisText && <span>—</span>}
               </td>

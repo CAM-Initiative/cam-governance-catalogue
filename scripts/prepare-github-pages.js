@@ -1,3 +1,4 @@
+import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
@@ -622,10 +623,13 @@ function occurrenceAssessmentsHtml(raw) {
 function disputedAssessmentHtml() {
   return `<section><p>${escapeHtml(VIGIL_DISPUTED_COPY.kicker)}</p><h2>${escapeHtml(VIGIL_DISPUTED_COPY.heading)}</h2><p>${escapeHtml(VIGIL_DISPUTED_COPY.explanation)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.boundary)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.qualification)}</p></section>`;
 }
+function assessmentProseHtml(value) {
+  return `<div class="vigil-assessment-prose">${assessmentParagraphs(value).map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div>`;
+}
 function clauseAssessmentsHtml(raw) {
   const clauses = raw.vigil_assessment?.source_clause_analysis?.clauses || [];
   const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
-  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.source_anchor ? `<blockquote>${escapeHtml(clause.source_anchor)}</blockquote>` : ""}${clause.source_paraphrase ? `<p>${escapeHtml(clause.source_paraphrase)}</p>` : ""}<p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? `<p>${escapeHtml(clause.adjudication_note)}</p>` : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<p>${escapeHtml(item.rationale)}</p>` : "").join("")}</article>`).join("")}</section>`;
+  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.source_anchor ? `<div class="vigil-source-passage">${clause.source_paraphrase ? "<strong>Original wording</strong>" : ""}<blockquote style="white-space:pre-line">${escapeHtml(clause.source_anchor)}</blockquote></div>` : ""}${clause.source_paraphrase ? `${clause.source_anchor ? "<strong>Context</strong>" : ""}${assessmentProseHtml(clause.source_paraphrase)}` : ""}<p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? assessmentProseHtml(clause.adjudication_note) : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<div style="padding:0.58rem 0;border-top:1px solid #ccc">${assessmentProseHtml(item.rationale)}</div>` : "").join("")}</article>`).join("")}</section>`;
 }
 
 for (const record of incidentRecords) {

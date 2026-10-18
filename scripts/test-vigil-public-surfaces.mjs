@@ -1,3 +1,4 @@
+import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -1394,10 +1395,11 @@ test("shared disputed assessment copy distinguishes evidence conflicts, assessme
 
 test("static source clauses retain quotations, context, rationale order and escaping", async () => {
   const pages = await read("scripts/prepare-github-pages.js");
-  const start = pages.indexOf("function clauseAssessmentsHtml(raw) {");
+  const start = pages.indexOf("function assessmentProseHtml(value) {");
   const end = pages.indexOf("\nfor (const record of incidentRecords)", start);
   assert.ok(start >= 0 && end > start);
   const render = runInNewContext(pages.slice(start, end) + "\nclauseAssessmentsHtml", {
+    assessmentParagraphs,
     escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   });
   const html = render({ vigil_assessment: { source_clause_analysis: { clauses: [
@@ -1408,4 +1410,15 @@ test("static source clauses retain quotations, context, rationale order and esca
   for (const text of texts) assert.ok(html.includes(text), text);
   for (let i = 1; i < texts.length; i++) assert.ok(html.indexOf(texts[i - 1]) < html.indexOf(texts[i]));
   assert.doesNotMatch(html, /<instruction>/);
+});
+
+
+test("assessment reading paragraphs preserve sentences, source order and explicit paragraph breaks", () => {
+  const text = 'Dr. Smith recorded 3.5 units. The source states “Keep the limit.” A later response followed. The outcome remains bounded.\n\nA separate paragraph remains separate.';
+  const paragraphs = assessmentParagraphs(text);
+  assert.ok(paragraphs.length >= 3);
+  assert.equal(paragraphs.map(value => value.trim()).join(" ").replace(/\s+/g, " "), text.replace(/\s+/g, " "));
+  assert.ok(paragraphs.some(value => value.includes("Dr. Smith recorded 3.5 units.")));
+  assert.equal(paragraphs.at(-1), "A separate paragraph remains separate.");
+  assert.deepEqual(assessmentParagraphs(undefined), []);
 });

@@ -1,3 +1,4 @@
+import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
@@ -643,7 +644,7 @@ export default function VigilCaseFile() {
     {(incident || governanceConclusion) ? <article className="vigil-diagnosis-view">
       {incident && <div className="vigil-diagnosis-mechanism">
         <section className="vigil-diagnosis-definition" aria-label="Factual basis">
-          <p className="vigil-diagnosis-factual-basis">{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p>
+          <div className="vigil-diagnosis-factual-basis vigil-assessment-prose">{assessmentParagraphs(factualBasis ?? "A separate factual-basis statement is not yet published for this Incident.").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
           <aside className="vigil-diagnosis-metadata-panel" aria-label="Governance assessment provenance">
             <p className="vigil-diagnostic-meta-label">GOVERNANCE ASSESSMENT PROVENANCE</p>
             <dl className="vigil-evidence-review-meta">

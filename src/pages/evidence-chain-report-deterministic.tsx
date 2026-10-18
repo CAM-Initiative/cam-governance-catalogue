@@ -1,3 +1,4 @@
+import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
@@ -409,7 +410,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           <section className="report-intro">
             <p className="vigil-evidence-kicker">GOVERNANCE ASSESSMENT</p>
             <div className="report-assessment-details">
-              <section><h4 className="report-substantive-label">Factual basis</h4><p>{factualBasis ?? "A separate factual-basis statement is not yet published for this Incident."}</p></section>
+              <section><h4 className="report-substantive-label">Factual basis</h4><div className="vigil-assessment-prose">{assessmentParagraphs(factualBasis ?? "A separate factual-basis statement is not yet published for this Incident.").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div></section>
             </div>
           </section>
 
