@@ -1,6 +1,6 @@
 import { incidentArtefactMediaKind } from "../src/lib/vigilArtefactMedia.mjs";
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
-import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
@@ -626,7 +626,7 @@ function disputedAssessmentHtml() {
   return `<section><p>${escapeHtml(VIGIL_DISPUTED_COPY.kicker)}</p><h2>${escapeHtml(VIGIL_DISPUTED_COPY.heading)}</h2><p>${escapeHtml(VIGIL_DISPUTED_COPY.explanation)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.boundary)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.qualification)}</p></section>`;
 }
 function assessmentProseHtml(value) {
-  return `<div class="vigil-assessment-prose">${assessmentParagraphs(value).map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div>`;
+  return `<div class="vigil-assessment-prose">${assessmentBlocks(value).map(block => block.kind === "heading" ? `<h4 class="vigil-discussion-heading">${escapeHtml(block.text)}</h4>` : `<p>${escapeHtml(block.text)}</p>`).join("")}</div>`;
 }
 function clauseAssessmentsHtml(raw) {
   const clauses = clauseAssessmentRows(raw.vigil_assessment?.source_clause_analysis);

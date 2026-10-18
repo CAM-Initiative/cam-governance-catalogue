@@ -843,3 +843,5 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 .vigil-case-file-page .vigil-source-observation-title { display: block; font-size: 1rem; line-height: 1.45; }
 .vigil-case-file-page .vigil-complete-source-passage summary { cursor: pointer; font-weight: 600; }
 .vigil-case-file-page .vigil-complete-source-passage q { display: block; margin-top: 0.6rem; white-space: pre-line; }
+
+.vigil-case-file-page .vigil-discussion-heading { margin: 1rem 0 0; font-size: 1rem; font-weight: 600; line-height: 1.45; break-after: avoid; }

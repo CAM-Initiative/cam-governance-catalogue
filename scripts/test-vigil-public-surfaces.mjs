@@ -1,5 +1,5 @@
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
-import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -1401,6 +1401,7 @@ test("static source clauses retain quotations, context, rationale order and esca
   assert.ok(start >= 0 && end > start);
   const render = runInNewContext(pages.slice(start, end) + "\nclauseAssessmentsHtml", {
     assessmentParagraphs,
+    assessmentBlocks,
     clauseAssessmentRows,
     escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   });
@@ -1451,7 +1452,7 @@ test("integrated conclusion and significance use the same reading paragraphs in 
   for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
     const source = await read(path);
     assert.match(source, /assessmentParagraphs\(governanceConclusion\)/);
-    assert.match(source, /assessmentParagraphs\(governanceSignificance \?\?/);
+    assert.match(source, /assessmentBlocks\(governanceSignificance \?\?/);
   }
   const pages = await read("scripts/prepare-github-pages.js");
   assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
@@ -1498,5 +1499,34 @@ test("web, print and static publication use the same artefact media selection", 
   }
   for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
     assert.match(await read(path), /artefact.mediaKind === "image"/);
+  }
+});
+
+
+test("explicit discussion headings retain their role and complete prose in shared renderers", async () => {
+  const heading = "Discussion — Normative framing (unverified hypothesis)";
+  const prose = "A preceding conclusion.\n\n" + heading + "\n\nFirst hypothesis sentence. A qualification follows. A third sentence remains.";
+  const blocks = assessmentBlocks(prose);
+  assert.equal(blocks.filter(block => block.kind === "heading").length, 1);
+  assert.equal(blocks[1].text, heading);
+  assert.equal(blocks.map(block => block.text.trim()).join(" ").replace(/\s+/g, " "), prose.replace(/\s+/g, " "));
+  assert.equal(assessmentBlocks("Discussion — Example: this is an inline paragraph.")[0].kind, "paragraph");
+  assert.equal(assessmentBlocks("The source said: Discussion — Example.")[0].kind, "paragraph");
+  assert.deepEqual(assessmentBlocks(undefined), []);
+  const pages = await read("scripts/prepare-github-pages.js");
+  const start = pages.indexOf("function assessmentProseHtml(value) {");
+  const end = pages.indexOf("\nfunction clauseAssessmentsHtml", start);
+  const render = runInNewContext(pages.slice(start, end) + "\nassessmentProseHtml", {
+    assessmentBlocks,
+    escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
+  });
+  const html = render(prose);
+  assert.ok(html.includes(`<h4 class="vigil-discussion-heading">${heading}</h4>`));
+  assert.ok(html.indexOf("A preceding conclusion.") < html.indexOf(heading));
+  assert.ok(html.indexOf(heading) < html.indexOf("First hypothesis sentence."));
+  assert.ok(render("Discussion — <script>\n\nBody.").includes("&lt;script&gt;"));
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    assert.match(source, /block.kind === "heading" \? <h4 className="vigil-discussion-heading"/);
   }
 });

@@ -1,5 +1,5 @@
 import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
-import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
@@ -474,7 +474,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               <div className="vigil-case-subheading">
                 <h3>Governance significance</h3>
               </div>
-              <div className="vigil-assessment-prose">{assessmentParagraphs(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
+              <div className="vigil-assessment-prose">{assessmentBlocks(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((block, index) => block.kind === "heading" ? <h4 className="vigil-discussion-heading" key={index}>{block.text}</h4> : <p key={index}>{block.text}</p>)}</div>
             </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
         </Stage>

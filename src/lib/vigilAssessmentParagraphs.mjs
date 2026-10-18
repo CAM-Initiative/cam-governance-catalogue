@@ -14,3 +14,14 @@ export function assessmentParagraphs(value) {
     return groups;
   });
 }
+
+// Only an explicitly separated Discussion heading is structural. Inline labels,
+// source quotations and ordinary colon-bearing prose remain paragraphs.
+export function assessmentBlocks(value) {
+  if (typeof value !== "string" || !value.trim()) return [];
+  return value.split(/\n\s*\n/).flatMap(block => {
+    const text = block.trim();
+    if (/^Discussion — [^:\n]+$/.test(text)) return [{ kind: "heading", text }];
+    return assessmentParagraphs(block).map(text => ({ kind: "paragraph", text }));
+  });
+}
