@@ -346,7 +346,16 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /data-label="Evidence and classification basis"/);
+  assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
+  assert.doesNotMatch(classification, /<th scope="col">Recognition criteria<\/th>/);
+  assert.match(classification, /Current taxonomy recognition tests \(reference only\)/);
+  assert.match(classification, /item\.role === "ambiguous-boundary"/);
+  assert.match(classification, /<strong>Failure-side conditions<\/strong>/);
+  assert.match(classification, /<strong>Success-side conditions<\/strong>/);
+  assert.match(classification, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
+  assert.match(classification, /currentTaxonomyVersion=\{taxonomy\.data\.index\.standard\.version\}/);
   assert.doesNotMatch(classification, /<th scope="col">Incident analysis<\/th>/);
   assert.match(classification, /Further adjudication required/);
   assert.match(classification, /This Case File has not yet been fully adjudicated\. The incident observations below still require a final taxonomy determination\./);
