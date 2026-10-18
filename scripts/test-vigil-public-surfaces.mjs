@@ -372,7 +372,7 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(classification, /vigil-classification-class-title/);
   assert.match(classification, /vigil-classification-class-explanation/);
   assert.match(classification, /classificationClass\?\.plain_english \?\? family\?\.plain_english/);
-  assert.match(classification, /classificationClass\?\.success_recognition/);
+  assert.match(classification, /classificationClass\.success_recognition/);
   assert.doesNotMatch(classification, /const incidentAnalysis = evidence\.map\(\(entry\) => entry\.rationale\)/);
 
   assert.match(classification, /export function CaseTaxonomyCompliance/);
