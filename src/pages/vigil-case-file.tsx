@@ -571,7 +571,7 @@ export default function VigilCaseFile() {
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
       {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-label="Incident summary">
-        <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+        <div className="vigil-assessment-prose">{assessmentParagraphs(incident?.summary ?? incident?.publicDisplay.finding).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
         {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
           {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
             {isVideoArtefact(artefact)
@@ -838,9 +838,13 @@ export default function VigilCaseFile() {
       ]}
     />
 
-    {isBoundaryUnresolved && <section className="vigil-exemplar-callout is-combination" aria-label="Unresolved governance boundary">
-      <h2>A governance boundary remains unresolved.</h2>
-      <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
+    {isBoundaryUnresolved && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-boundary-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Boundary assessment</p>
+        <h2 id="vigil-boundary-heading">A governance boundary remains unresolved.</h2>
+        <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
+      </div>
     </section>}
 
     {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">

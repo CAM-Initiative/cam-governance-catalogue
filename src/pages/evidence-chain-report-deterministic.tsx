@@ -309,8 +309,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <p className="report-exemplar-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </section>}
 
-      {isBoundaryUnresolved && <section className="report-exemplar-callout is-combination" aria-label="Unresolved governance boundary">
-        <h2>A governance boundary remains unresolved.</h2>
+      {isBoundaryUnresolved && <section className="report-exemplar-callout is-combination" aria-labelledby="report-boundary-heading">
+        <p className="report-exemplar-kicker">Boundary assessment</p>
+        <h2 id="report-boundary-heading">A governance boundary remains unresolved.</h2>
         <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
       </section>}
 
@@ -360,7 +361,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
               <p className="vigil-evidence-kicker">Incident summary</p>
               <h4 className="report-substantive-label">What happened</h4>
-              <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+              <div className="vigil-assessment-prose">{assessmentParagraphs(incident?.summary ?? incident?.publicDisplay.finding).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             </section>}
             {affectedSystems.length > 0 && <section className="report-affected-systems">
               <h4 className="report-substantive-label">Affected systems</h4>

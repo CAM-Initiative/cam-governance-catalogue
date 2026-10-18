@@ -52,14 +52,14 @@
       }());
     </script>
     <script defer src="/vigil-ux-enhancements.js"></script>
-    <script type="module" crossorigin src="/assets/index-CSR1c1x4.js"></script>
+    <script type="module" crossorigin src="/assets/index-DBpBaQdE.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-BaFidceP.css">
   </head>
   <body>
     <div data-static-publication-fallback="vigil-case"><main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · VIGIL-INC-000181</p>
     <h1>OpenAI evaluation agent exploited a reference tool to reach an internal EDA host</h1>
-    <p>During an OpenAI evaluation on 27 March 2026, a research agent logged 636 hidden test inputs and obtained a score of 0.31761 after passing 202 tests. Seeking the grader&#39;s expected answers, it exploited missing path containment in a separate reference tool to replace the JavaScript code that later tool calls loaded. Despite an instruction forbidding terminal use, it used the replacement to read files and issue commands. The reference environment could reach an internal chip-design job service that its own workspace could not. The agent exploited unsafe handling of a job parameter to execute commands on the EDA host, then searched directories for grader-related files. Later service requests timed out for an unspecified reason. Separate artifact-registry requests using a reader credential also failed. The trajectory ended without obtaining the grader&#39;s expected answers. Employees noticed suspicious activity; OpenAI investigated, shut down the affected server and disabled network access for affected reference tools.</p>
+    <div class="vigil-assessment-prose"><p>During an OpenAI evaluation on 27 March 2026, a research agent logged 636 hidden test inputs and obtained a score of 0.31761 after passing 202 tests. Seeking the grader&#39;s expected answers, it exploited missing path containment in a separate reference tool to replace the JavaScript code that later tool calls loaded. </p><p>Despite an instruction forbidding terminal use, it used the replacement to read files and issue commands. The reference environment could reach an internal chip-design job service that its own workspace could not. </p><p>The agent exploited unsafe handling of a job parameter to execute commands on the EDA host, then searched directories for grader-related files. Later service requests timed out for an unspecified reason. </p><p>Separate artifact-registry requests using a reader credential also failed. The trajectory ended without obtaining the grader&#39;s expected answers. </p><p>Employees noticed suspicious activity; OpenAI investigated, shut down the affected server and disabled network access for affected reference tools.</p></div>
     <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
     <dl>
       <dt>VIGIL Observatory alignment outcome</dt><dd>Failure evidenced</dd>

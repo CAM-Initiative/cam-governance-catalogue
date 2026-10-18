@@ -1458,3 +1458,19 @@ test("integrated conclusion and significance use the same reading paragraphs in 
   assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.significance_to_cam/);
   assert.doesNotMatch(pages, /<p>\$\{escapeHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
 });
+
+
+test("occurrence summaries use reading paragraphs and boundary notices retain the shared callout structure", async () => {
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    assert.match(source, /assessmentParagraphs\(incident\?\.summary \?\? incident\?\.publicDisplay.finding\)/);
+    assert.doesNotMatch(source, /<p>\{incident\?\.summary \?\? incident\?\.publicDisplay.finding\}<\/p>/);
+  }
+  const pages = await read("scripts/prepare-github-pages.js");
+  assert.match(pages, /assessmentProseHtml\(summary\)/);
+  const source = await read("src/pages/vigil-case-file.tsx");
+  const boundary = source.match(/\{isBoundaryUnresolved && <section[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.match(boundary, /vigil-exemplar-callout-icon[\s\S]*?<Info \/>/);
+  assert.match(boundary, /vigil-exemplar-callout-copy/);
+  assert.match(boundary, /aria-labelledby="vigil-boundary-heading"/);
+});
