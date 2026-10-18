@@ -267,3 +267,40 @@ assert.match(reportCss, /\.vigil-taxonomy-assessment-intro \{[\s\S]*margin: 0 0 
 assert.match(caseFile, /<ExternalAlignmentClassification assessments=\{externalAssessments\} \/>/);
 assert.match(report, /<ExternalAlignmentClassification assessments=\{externalAssessments\} \/>/);
 assert.match(taxonomyAssessment, /Incident breakdown/);
+
+// Evidence links are admitted, mapping-local relationships, not inferred from
+// source order, candidate similarity or the Incident's aggregate role.
+const { mappingEvidence } = await import("../src/lib/vigilMappingEvidence.mjs");
+const evidenceFixture = {
+  source_records: [{ source_title: "Origin", source_url: "https://example.org/origin" }],
+  vigil_assessment: { source_clause_analysis: { clauses: [
+    { episode_id: "E001", source_record_refs: ["source_records[0]", "source_records[99]"], taxonomy_relationships: [
+      { class_id: "C1", canonical_taxonomy_mapping: true, relationship: "failure-occurrence", rationale: "Earlier signal stalled." },
+      { class_id: "C2", canonical_taxonomy_mapping: true, relationship: "successful-invariant", rationale: "Unrelated mechanism." },
+    ] },
+    { episode_id: "E002", source_record_refs: ["source_records[0]"], taxonomy_relationships: [
+      { class_id: "C1", canonical_taxonomy_mapping: true, relationship: "successful-invariant", rationale: "Later signal reached its owner." },
+    ] },
+    { episode_id: "E003", taxonomy_relationships: [{ class_id: "C1", canonical_taxonomy_mapping: false, relationship: "candidate boundary" }] },
+  ] } },
+};
+const linked = mappingEvidence(evidenceFixture, "C1");
+assert.deepEqual(linked.map(item => item.episodeId), ["E001", "E002"]);
+assert.deepEqual(linked.map(item => item.relationships[0].role), ["failure-occurrence", "successful-invariant"]);
+assert.equal(linked[0].sources.length, 1);
+assert.equal(linked[1].relationships[0].rationale, "Later signal reached its owner.");
+assert.deepEqual(mappingEvidence(evidenceFixture, "unmapped"), []);
+assert.deepEqual(mappingEvidence({}, undefined), []);
+const legacy = structuredClone(evidenceFixture);
+delete legacy.vigil_assessment.source_clause_analysis.clauses[0].episode_id;
+assert.equal(mappingEvidence(legacy, "C1")[0].href, undefined);
+const classificationComponent = await readFile(new URL("../src/components/vigil/CaseTaxonomyClassification.tsx", import.meta.url), "utf8");
+assert.match(classificationComponent, /mappingEvidence\(raw, classId\)/);
+assert.match(classificationComponent, /<MappingEvidence raw=\{raw\} classId=\{classId\}/);
+assert.match(classificationComponent, /item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
+assert.match(classificationComponent, /Current taxonomy recognition tests \(reference only\)/);
+assert.match(classificationComponent, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
+
+assert.match(caseFile, /setPendingEpisodeTarget\(href\.slice\(1\)\)/);
+assert.match(caseFile, /setActiveStage\("diagnose"\)/);
+assert.match(classificationComponent, /role\?\.startsWith\("ambiguous-boundary"\)/);

@@ -407,6 +407,7 @@ export default function VigilCaseFile() {
   const sourceId = decodeURIComponent(caseParams?.recordId ?? "").trim();
   const [state, setState] = useState<CaseState>({ status: "loading" });
   const [activeStage, setActiveStage] = useState<StageId>("observe");
+  const [pendingEpisodeTarget, setPendingEpisodeTarget] = useState<string>();
   const [pendingReferenceTarget, setPendingReferenceTarget] = useState<string>();
   const [taxonomyReferences, setTaxonomyReferences] = useState<TaxonomyReferenceTarget[]>([]);
   const [harmMethodologyMetadata, setHarmMethodologyMetadata] = useState<HarmMethodologyMetadata>();
@@ -414,8 +415,10 @@ export default function VigilCaseFile() {
   useEffect(() => {
     const syncReferenceHash = () => {
       const target = caseReferenceTargetFromHash(window.location.hash);
+      const episode = /^#vigil-source-episode-[^#]+$/.test(window.location.hash) ? window.location.hash.slice(1) : undefined;
+      setPendingEpisodeTarget(episode);
       setPendingReferenceTarget(target);
-      setActiveStage(target ? "references" : "observe");
+      setActiveStage(episode ? "diagnose" : target ? "references" : "observe");
     };
     syncReferenceHash();
     window.addEventListener("hashchange", syncReferenceHash);
@@ -433,10 +436,30 @@ export default function VigilCaseFile() {
     return () => window.cancelAnimationFrame(frame);
   }, [activeStage, pendingReferenceTarget, state.status, taxonomyReferences.length]);
 
+  useEffect(() => {
+    if (activeStage !== "diagnose" || !pendingEpisodeTarget || state.status !== "ready") return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(pendingEpisodeTarget);
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      target.focus({ preventScroll: true });
+      setPendingEpisodeTarget(undefined);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeStage, pendingEpisodeTarget, state.status]);
+
   const handleCaseReferenceClick = (event: MouseEvent<HTMLDivElement>) => {
     const origin = event.target instanceof Element ? event.target : null;
     const link = origin?.closest<HTMLAnchorElement>('a[href^="#vigil-"]');
-    const targetId = caseReferenceTargetFromHash(link?.getAttribute("href") ?? "");
+    const href = link?.getAttribute("href") ?? "";
+    if (/^#vigil-source-episode-[^#]+$/.test(href)) {
+      event.preventDefault();
+      window.history.replaceState(null, "", href);
+      setPendingEpisodeTarget(href.slice(1));
+      setActiveStage("diagnose");
+      return;
+    }
+    const targetId = caseReferenceTargetFromHash(href);
     if (!targetId) return;
     event.preventDefault();
     window.history.replaceState(null, "", `#${targetId}`);

@@ -18,6 +18,7 @@ export function clauseAssessmentRows(analysis) {
       source_paraphrase: clause.source_paraphrase,
       complete_source_anchor: statements.some(item => item.source_anchor === clause.source_anchor) ? undefined : clause.source_anchor,
       observation_title: "Shared source context",
+      episode_id: clause.episode_id,
       adjudication_note: clause.adjudication_note,
       display_context: true,
     });

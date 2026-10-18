@@ -1,3 +1,4 @@
+import { mappingEvidence } from "../src/lib/vigilMappingEvidence.mjs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { AlignmentIcon, alignmentIconKind } from "../src/lib/vigilAlignmentIcon.mjs";
@@ -318,12 +319,14 @@ for (const [route, title, description] of staticRoutes) {
 }
 
 let taxonomyFamilies = [];
+let currentTaxonomyVersion;
 let taxonomyCaseFileExamples = { classes: {} };
 try {
   const [index, caseFileExamples] = await Promise.all([
     fetchJson(`${vigilTaxonomyRoot}/VIGIL.FailureTaxonomy.Index.json`),
     fetchJson(`${vigilTaxonomyRoot}/generated/VIGIL.FailureTaxonomy.CaseFileExamples.json`),
   ]);
+  currentTaxonomyVersion = index.standard?.version;
   taxonomyCaseFileExamples = caseFileExamples && typeof caseFileExamples === "object" ? caseFileExamples : { classes: {} };
   taxonomyFamilies = await Promise.all((index.families || []).map(async (entry) => ({
     entry,
@@ -634,7 +637,22 @@ function assessmentProseHtml(value) {
 function clauseAssessmentsHtml(raw) {
   const clauses = clauseAssessmentRows(raw.vigil_assessment?.source_clause_analysis);
   const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
-  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.observation_title ? `<h3>${escapeHtml(clause.observation_title)}</h3>` : ""}${clause.source_anchor ? `<div class="vigil-source-passage">${clause.source_paraphrase ? "<strong>Original wording</strong>" : ""}<blockquote style="white-space:pre-line">${escapeHtml(clause.source_anchor)}</blockquote></div>` : ""}${clause.source_paraphrase ? `${clause.source_anchor ? "<strong>Context</strong>" : ""}${assessmentProseHtml(clause.source_paraphrase)}` : ""}<p><strong>${escapeHtml(clause.display_context ? "Context" : labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.complete_source_anchor ? `<details><summary>Complete source passage</summary><blockquote style="white-space:pre-line">${escapeHtml(clause.complete_source_anchor)}</blockquote></details>` : ""}${clause.adjudication_note ? assessmentProseHtml(clause.adjudication_note) : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<div style="padding:0.58rem 0;border-top:1px solid #ccc">${assessmentProseHtml(item.rationale)}</div>` : "").join("")}</article>`).join("")}</section>`;
+  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article${clause.episode_id ? ` id="vigil-source-episode-${escapeHtml(encodeURIComponent(clause.episode_id))}"` : ""}>${clause.observation_title ? `<h3>${escapeHtml(clause.observation_title)}</h3>` : ""}${clause.source_anchor ? `<div class="vigil-source-passage">${clause.source_paraphrase ? "<strong>Original wording</strong>" : ""}<blockquote style="white-space:pre-line">${escapeHtml(clause.source_anchor)}</blockquote></div>` : ""}${clause.source_paraphrase ? `${clause.source_anchor ? "<strong>Context</strong>" : ""}${assessmentProseHtml(clause.source_paraphrase)}` : ""}<p><strong>${escapeHtml(clause.display_context ? "Context" : labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.complete_source_anchor ? `<details><summary>Complete source passage</summary><blockquote style="white-space:pre-line">${escapeHtml(clause.complete_source_anchor)}</blockquote></details>` : ""}${clause.adjudication_note ? assessmentProseHtml(clause.adjudication_note) : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<div style="padding:0.58rem 0;border-top:1px solid #ccc">${assessmentProseHtml(item.rationale)}</div>` : "").join("")}</article>`).join("")}</section>`;
+}
+
+function classificationHtml(raw) {
+  const taxonomy = raw?.taxonomy_classification || {};
+  const mappings = [taxonomy.primary_classification, ...(taxonomy.secondary_classifications || [])].filter(Boolean);
+  const outcome = role => role?.startsWith("successful-invariant") ? "Invariant held" : role?.startsWith("ambiguous-boundary") ? "Boundary unresolved" : "Failure occurred";
+  const state = `<p>Classification status: ${escapeHtml(taxonomy.classification_status || "unclassified")}. ${taxonomy.adjudication_coverage?.status === "partial" ? "Adjudication incomplete; mapping findings do not establish a whole-Incident outcome." : ""}</p>`;
+  return `<section aria-label="Section 03 Classification"><h2>03 Classification</h2>${state}${mappings.length ? mappings.map(mapping => {
+    const item = taxonomyFamilies.flatMap(family => family.document.classes || []).find(item => item.class_id === mapping.class_id);
+    const evidence = mappingEvidence(raw, mapping.class_id);
+    const conditions = mapping.classification_role === "ambiguous-boundary"
+      ? `<h4>Failure-side conditions</h4>${listHtml((item?.failure_recognition || item?.recognition)?.required_conditions)}<h4>Success-side conditions</h4>${listHtml(item?.success_recognition?.required_conditions)}`
+      : listHtml((mapping.classification_role === "successful-invariant" ? item?.success_recognition : item?.failure_recognition || item?.recognition)?.required_conditions);
+    return `<article><h3>${escapeHtml(item?.name || mapping.class_id)}</h3><p>${escapeHtml(mapping.class_id)} · ${escapeHtml(outcome(mapping.classification_role))}</p>${item ? assessmentProseHtml(item.plain_english || item.definition) : ""}<h4>Evidence and classification basis</h4>${assessmentProseHtml(mapping.classification_basis || "No occurrence-specific classification basis recorded.")}<p>Confidence: ${escapeHtml(mapping.classification_confidence || "Not separately stated")}</p><details><summary>Supporting source episodes (${evidence.length})</summary>${evidence.map(episode => `<section><strong>${episode.href ? `<a href="${escapeHtml(episode.href)}">${escapeHtml(episode.label)} · Section 02</a>` : escapeHtml(episode.label)}</strong>${episode.relationships.map(relationship => `<p>${escapeHtml(outcome(relationship.role))}</p>${assessmentProseHtml(relationship.rationale || "No separate episode rationale recorded.")}`).join("")}${episode.sources.map(source => `<p><a href="${escapeHtml(source.url)}">${escapeHtml(source.title)}</a></p>`).join("")}</section>`).join("")}</details><details><summary>Current taxonomy recognition tests (reference only)</summary><p>Shared class criteria are not occurrence evidence. The recorded adjudication version may differ.</p>${conditions}<h4>Exclusions</h4>${listHtml(item?.exclusions)}</details></article>`;
+  }).join("") : assessmentProseHtml(taxonomy.classification_basis || "No canonical mapping recorded.")}<p>Taxonomy versions: recorded Incident adjudication ${escapeHtml(taxonomy.taxonomy_version || "not recorded")}; current reference ${escapeHtml(currentTaxonomyVersion || "unavailable")}.</p></section>`;
 }
 
 function incidentArtefactsHtml(record) {
@@ -672,6 +690,7 @@ for (const record of incidentRecords) {
     ${publicAlignmentOutcome(record) === "Disputed" ? disputedAssessmentHtml() : ""}
     ${externalAssessmentsHtml(canonical)}
     ${clauseAssessmentsHtml(canonical)}
+    ${classificationHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}
     <section><h2>Conclusion</h2>${assessmentProseHtml(canonical.vigil_assessment?.governance_interpretation || "")}<h3>Governance significance</h3>${assessmentProseHtml(canonical.vigil_assessment?.significance_to_cam || "")}</section>
   </main>`;
