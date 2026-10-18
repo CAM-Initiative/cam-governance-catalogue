@@ -21,9 +21,9 @@ test("interactive and static methodology preserve every canonical criterion and 
         const criterion = dimension.thresholds[band].criterion;
         // Threshold emphasis can insert strong tags without altering canonical wording.
         assert.ok(rendered.replace(/<\/?strong[^>]*>/g, "").replaceAll("&#x27;", "&#39;").includes(escape(criterion)), `${dimension.dimension_id}/${band}: interactive criterion`);
-        assert.ok(published.includes(escape(criterion)), `${dimension.dimension_id}/${band}: static criterion`);
+        assert.ok(published.replace(/<\/?strong[^>]*>/g, "").includes(escape(criterion)), `${dimension.dimension_id}/${band}: static criterion`);
         const aggregate = dimension.thresholds[band].aggregate_harm_threshold;
-        if (aggregate) assert.ok(published.includes(escape(aggregate)), `${dimension.dimension_id}/${band}: static aggregate criterion`);
+        if (aggregate) assert.ok(published.replace(/<\/?strong[^>]*>/g, "").includes(escape(aggregate)), `${dimension.dimension_id}/${band}: static aggregate criterion`);
       }
       for (const indicator of dimension.quantitative_indicators) {
         const label = escape(indicator.replaceAll("_", " "));
@@ -57,5 +57,21 @@ test("methodology source trail covers every registered reference and separates m
     assert.doesNotMatch(html, /vigil-harm-methodology-table/);
   } finally {
     await server.close();
+  }
+});
+
+
+test("threshold emphasis preserves wording and highlights quantitative and outcome boundaries", async () => {
+  const { harmThresholdParts } = await import("../src/lib/vigilHarmEmphasis.mjs");
+  const methodology = JSON.parse(await read("src/data/vigil-harm-methodology.json"));
+  for (const dimension of methodology.dimensions) {
+    for (const threshold of Object.values(dimension.thresholds)) {
+      for (const text of [threshold.criterion, threshold.aggregate_harm_threshold].filter(Boolean)) {
+        assert.equal(harmThresholdParts(text).map(part => part.text).join(""), text);
+      }
+    }
+  }
+  for (const text of ["at least USD 1,000,000", "more than 5%", "approximately 7–30 days", "professional treatment", "major loss of livelihood, role or professional standing", "not an automatic S4"]) {
+    assert.deepEqual(harmThresholdParts(text), [{ text, emphasis: true }]);
   }
 });

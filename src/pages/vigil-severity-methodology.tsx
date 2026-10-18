@@ -1,6 +1,6 @@
 import { DocumentRail } from "@/components/DocumentRail";
 import { Shell } from "@/components/layout/Shell";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, highlightedThreshold } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
@@ -106,7 +106,7 @@ export default function VigilSeverityMethodology() {
               <p>The numerical brackets are VIGIL operational criteria subject to calibration. They are not externally validated clinical severity conversions. The duration examples in the ordinary matrix are recognition aids, not automatic scoring thresholds.</p>
               {harmDimensions.filter(dimension => HARM_BANDS.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => <details className="vigil-harm-guidance-detail" key={dimension.dimension_id}>
                 <summary>{dimension.label}</summary>
-                <dl>{HARM_BANDS.map(band => <div key={band}><dt><strong>{band}</strong></dt><dd>{dimension.thresholds[band].aggregate_harm_threshold}</dd></div>)}</dl>
+                <dl>{HARM_BANDS.map(band => <div key={band}><dt><strong>{band}</strong></dt><dd>{highlightedThreshold(dimension.thresholds[band].aggregate_harm_threshold || "")}</dd></div>)}</dl>
               </details>)}
             </div>
           </section>

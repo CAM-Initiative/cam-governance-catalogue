@@ -1,3 +1,4 @@
+import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
 import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
 import {
@@ -43,11 +44,17 @@ function escapeHtml(value = "") {
     .replaceAll("'", "&#39;");
 }
 
+function harmThresholdHtml(text) {
+  return harmThresholdParts(text).map(part => part.emphasis
+    ? `<strong class="vigil-harm-threshold-emphasis">${escapeHtml(part.text)}</strong>`
+    : escapeHtml(part.text)).join("");
+}
+
 function harmReferenceHtml() {
   const bands = ["S1", "S2", "S3", "S4", "S5"];
-  const rows = harmMethodology.dimensions.map(dimension => `<tr><th scope="row">${escapeHtml(dimension.label)}</th>${bands.map(band => `<td>${escapeHtml(dimension.thresholds[band].criterion)}</td>`).join("")}</tr>`).join("");
+  const rows = harmMethodology.dimensions.map(dimension => `<tr><th scope="row">${escapeHtml(dimension.label)}</th>${bands.map(band => `<td>${harmThresholdHtml(dimension.thresholds[band].criterion)}</td>`).join("")}</tr>`).join("");
   const guidance = harmMethodology.dimensions.map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary>${[dimension.adaptation_note, dimension.interpretive_note, dimension.quantification_note].filter(Boolean).map(note => `<p>${escapeHtml(note)}</p>`).join("")}<ul>${dimension.quantitative_indicators.map(metric => `<li>${escapeHtml(metric.replaceAll("_", " "))}</li>`).join("")}</ul></details>`).join("");
-  const aggregate = harmMethodology.dimensions.filter(dimension => bands.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary><dl>${bands.map(band => `<dt>${band}</dt><dd>${escapeHtml(dimension.thresholds[band].aggregate_harm_threshold)}</dd>`).join("")}</dl></details>`).join("");
+  const aggregate = harmMethodology.dimensions.filter(dimension => bands.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary><dl>${bands.map(band => `<dt>${band}</dt><dd>${harmThresholdHtml(dimension.thresholds[band].aggregate_harm_threshold || "")}</dd>`).join("")}</dl></details>`).join("");
   const sources = harmReferences.map(reference => `<li><a href="${escapeHtml(reference.url)}">${escapeHtml(reference.title)}</a> — ${escapeHtml(reference.publisher)}</li>`).join("");
   return `<p>VIGIL-HIM ${escapeHtml(harmMethodology.version)} reviews twelve harm dimensions using five severity bands, S1 to S5. The highest supported band on the selected assessment pathway determines overall severity. SU means no defensible band can be assigned; it does not establish no harm.</p>
     <section id="matrix"><h2>Specific-consequence reference matrix</h2><div style="overflow-x:auto"><table><thead><tr><th>Harm dimension</th>${bands.map(band => `<th scope="col">${band}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section>

@@ -761,9 +761,10 @@ test("harm methodology emphasizes scan targets and rejects legacy microtype outs
     read("src/vigil-incident-severity-refinement.css"),
   ]);
   assert.match(matrix, /vigil-harm-threshold-emphasis/);
-  assert.match(matrix, /USD 100 billion/);
-  assert.match(matrix, /multiple grave casualties/);
-  assert.match(matrix, /Materialised suicide/);
+  const emphasis = await read("src/lib/vigilHarmEmphasis.mjs");
+  assert.match(emphasis, /USD/);
+  assert.match(emphasis, /multiple grave casualties/);
+  assert.match(emphasis, /death by suicide/);
   assert.match(css, /vigil-harm-threshold-emphasis/);
   assert.match(css, /font-size: 9\.5pt/);
   assert.doesNotMatch(css, /font-size: (?:6\.6|7|7\.2|8)pt/);

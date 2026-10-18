@@ -1,3 +1,4 @@
+import { harmThresholdParts } from "@/lib/vigilHarmEmphasis.mjs";
 import { HARM_BANDS, harmDimensions, harmIndicatorLabel } from "@/lib/vigilHarmReference";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
@@ -100,32 +101,10 @@ function rollupLabel(status: string) {
   return "Not assessed";
 }
 
-const HIGHLIGHT_TERMS = new Set([
-  "usd 10,000",
-  "usd 1 million",
-  "usd 100 million",
-  "usd 100 billion",
-  "death",
-  "multiple grave casualties",
-  "life-threatening",
-  "permanently disabling",
-  "materialised suicide",
-  "catastrophic self-harm",
-  "15 minutes",
-  "two hours",
-  "30 minutes",
-  "one hour",
-  "24 hours",
-]);
-
-const HIGHLIGHT_PATTERN = /(USD 10,000|USD 1 million|USD 100 million|USD 100 billion|Death|multiple grave casualties|Life-threatening|permanently disabling|Materialised suicide|catastrophic self-harm|15 minutes|two hours|30 minutes|one hour|24 hours)/gi;
-
-function highlightedThreshold(text: string) {
-  return text.split(HIGHLIGHT_PATTERN).map((part, index) =>
-    HIGHLIGHT_TERMS.has(part.toLowerCase())
-      ? <strong className="vigil-harm-threshold-emphasis" key={index}>{part}</strong>
-      : part
-  );
+export function highlightedThreshold(text: string) {
+  return harmThresholdParts(text).map((part, index) => part.emphasis
+    ? <strong className="vigil-harm-threshold-emphasis" key={index}>{part.text}</strong>
+    : part.text);
 }
 
 function MethodologyMatrix({ compact }: { compact: boolean }) {
