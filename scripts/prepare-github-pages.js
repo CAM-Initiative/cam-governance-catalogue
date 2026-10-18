@@ -1,5 +1,9 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { AlignmentIcon, alignmentIconKind } from "../src/lib/vigilAlignmentIcon.mjs";
+import { incidentArtefactMediaKind } from "../src/lib/vigilArtefactMedia.mjs";
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
-import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
@@ -618,19 +622,32 @@ for (let start = 0; start < incidentRecords.length; start += 8) {
 function occurrenceAssessmentsHtml(raw) {
   const rows = occurrenceRequirementRows(raw, occurrenceRequirements);
   if (!rows.length) return "<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>";
-  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td>${escapeHtml(row.resultLabel)}</td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
+  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td><span class="vigil-compliance-result is-${row.alignmentResult}">${renderToStaticMarkup(createElement(AlignmentIcon, { kind: alignmentIconKind(row.alignmentResult) }))}<span>${escapeHtml(row.resultLabel)}</span></span></td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
   return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table}</section>`;
 }
 function disputedAssessmentHtml() {
   return `<section><p>${escapeHtml(VIGIL_DISPUTED_COPY.kicker)}</p><h2>${escapeHtml(VIGIL_DISPUTED_COPY.heading)}</h2><p>${escapeHtml(VIGIL_DISPUTED_COPY.explanation)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.boundary)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.qualification)}</p></section>`;
 }
 function assessmentProseHtml(value) {
-  return `<div class="vigil-assessment-prose">${assessmentParagraphs(value).map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("")}</div>`;
+  return `<div class="vigil-assessment-prose">${assessmentBlocks(value).map(block => block.kind === "heading" ? `<h4 class="vigil-discussion-heading">${escapeHtml(block.text)}</h4>` : `<p>${escapeHtml(block.text)}</p>`).join("")}</div>`;
 }
 function clauseAssessmentsHtml(raw) {
   const clauses = clauseAssessmentRows(raw.vigil_assessment?.source_clause_analysis);
   const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
   return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.observation_title ? `<h3>${escapeHtml(clause.observation_title)}</h3>` : ""}${clause.source_anchor ? `<div class="vigil-source-passage">${clause.source_paraphrase ? "<strong>Original wording</strong>" : ""}<blockquote style="white-space:pre-line">${escapeHtml(clause.source_anchor)}</blockquote></div>` : ""}${clause.source_paraphrase ? `${clause.source_anchor ? "<strong>Context</strong>" : ""}${assessmentProseHtml(clause.source_paraphrase)}` : ""}<p><strong>${escapeHtml(clause.display_context ? "Context" : labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.complete_source_anchor ? `<details><summary>Complete source passage</summary><blockquote style="white-space:pre-line">${escapeHtml(clause.complete_source_anchor)}</blockquote></details>` : ""}${clause.adjudication_note ? assessmentProseHtml(clause.adjudication_note) : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<div style="padding:0.58rem 0;border-top:1px solid #ccc">${assessmentProseHtml(item.rationale)}</div>` : "").join("")}</article>`).join("")}</section>`;
+}
+
+function incidentArtefactsHtml(record) {
+  const artefacts = Array.isArray(record?.incident_artefacts) ? record.incident_artefacts : [];
+  return artefacts.flatMap(artefact => {
+    if (!artefact || typeof artefact !== "object") return [];
+    const url = artefact.render_url || artefact.image_url || artefact.url;
+    const kind = incidentArtefactMediaKind(url, artefact.media_type);
+    if (!kind) return [];
+    const title = artefact.title || "Preserved source artefact";
+    const link = `<a href="${escapeHtml(artefact.permalink || url)}">${kind === "image" ? `<img src="${escapeHtml(url)}" alt="${escapeHtml(artefact.alt_text || title)}" style="max-width:100%;height:auto" loading="lazy">` : kind === "video" ? "Open preserved video" : "Open preserved document (PDF)"}</a>`;
+    return [`<figure>${link}<figcaption>${escapeHtml(title)}${artefact.caption ? `<p>${escapeHtml(artefact.caption)}</p>` : ""}${artefact.source_url ? `<p><a href="${escapeHtml(artefact.source_url)}">Original source</a></p>` : ""}</figcaption></figure>`];
+  }).join("");
 }
 
 for (const record of incidentRecords) {
@@ -642,7 +659,8 @@ for (const record of incidentRecords) {
   const body = `<main data-static-crawl-fallback="vigil-case" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>VIGIL Observatory · ${escapeHtml(record.id)}</p>
     <h1>${escapeHtml(record.title || record.id)}</h1>
-    <p>${escapeHtml(summary)}</p>
+    ${assessmentProseHtml(summary)}
+    ${incidentArtefactsHtml(canonical)}
     <nav aria-label="VIGIL Observatory resources"><p><a href="/observatory/cases/">All Case Files</a> · <a href="/observatory/alignment-taxonomy/">Alignment Taxonomy</a> · <a href="/observatory/ai-governance-standards/">AI Governance Standards</a></p></nav>
     <dl>
       <dt>VIGIL Observatory alignment outcome</dt><dd>${escapeHtml(publicAlignmentOutcome(record))}</dd>
@@ -655,7 +673,7 @@ for (const record of incidentRecords) {
     ${externalAssessmentsHtml(canonical)}
     ${clauseAssessmentsHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}
-    <section><h2>Conclusion</h2><p>${escapeHtml(canonical.vigil_assessment?.governance_interpretation || "")}</p><h3>Governance significance</h3><p>${escapeHtml(canonical.vigil_assessment?.significance_to_cam || "")}</p></section>
+    <section><h2>Conclusion</h2>${assessmentProseHtml(canonical.vigil_assessment?.governance_interpretation || "")}<h3>Governance significance</h3>${assessmentProseHtml(canonical.vigil_assessment?.significance_to_cam || "")}</section>
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }

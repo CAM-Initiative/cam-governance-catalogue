@@ -28,7 +28,9 @@ export function clauseAssessmentRows(analysis) {
         observation_title: statement.title,
         source_record_refs: clause.source_record_refs,
         taxonomy_relationships: selected,
-        adjudication_status: selected.some(item => item.canonical_taxonomy_mapping === true) ? "mapped" : "resolved-no-mapping",
+        adjudication_status: clause.adjudication_status === "unresolved" && selected.some(item => item.canonical_taxonomy_mapping !== true && String(item.relationship || "").includes("candidate"))
+          ? "unresolved"
+          : selected.some(item => item.canonical_taxonomy_mapping === true) ? "mapped" : "resolved-no-mapping",
       });
     }
   }

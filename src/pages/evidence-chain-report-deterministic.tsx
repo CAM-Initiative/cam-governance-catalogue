@@ -1,4 +1,5 @@
-import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
+import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
@@ -34,6 +35,7 @@ type ExternalEvidence = {
 };
 
 type IncidentArtefact = {
+  mediaKind?: "image" | "video" | "document";
   id: string;
   title?: string;
   permalink?: string;
@@ -156,7 +158,10 @@ function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
     if (!isObject(artefact)) return [];
     const renderUrl = text(artefact.render_url ?? artefact.image_url ?? artefact.url);
     if (!renderUrl) return [];
+    const mediaKind = incidentArtefactMediaKind(renderUrl, text(artefact.media_type));
+    if (!mediaKind) return [];
     return [{
+      mediaKind,
       id: text(artefact.artefact_id) ?? `${record.id}-artefact-${index + 1}`,
       title: text(artefact.title),
       permalink: text(artefact.permalink),
@@ -309,8 +314,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         <p className="report-exemplar-boundary">Alignment classification does not by itself determine harm severity. Materialised impact is assessed separately under the VIGIL Harm Impact Assessment.</p>
       </section>}
 
-      {isBoundaryUnresolved && <section className="report-exemplar-callout is-combination" aria-label="Unresolved governance boundary">
-        <h2>A governance boundary remains unresolved.</h2>
+      {isBoundaryUnresolved && <section className="report-exemplar-callout is-combination" aria-labelledby="report-boundary-heading">
+        <p className="report-exemplar-kicker">Boundary assessment</p>
+        <h2 id="report-boundary-heading">A governance boundary remains unresolved.</h2>
         <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
       </section>}
 
@@ -360,7 +366,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="report-observation-summary">
               <p className="vigil-evidence-kicker">Incident summary</p>
               <h4 className="report-substantive-label">What happened</h4>
-              <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+              <div className="vigil-assessment-prose">{assessmentParagraphs(incident?.summary ?? incident?.publicDisplay.finding).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             </section>}
             {affectedSystems.length > 0 && <section className="report-affected-systems">
               <h4 className="report-substantive-label">Affected systems</h4>
@@ -386,7 +392,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
             {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
               {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
                 <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
-                  <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                  {artefact.mediaKind === "image"
+                    ? <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="eager" />
+                    : <span>{artefact.mediaKind === "video" ? "Open preserved video" : "Open preserved document (PDF)"}</span>}
                 </a>
                 {(artefact.title || artefact.sourceUrl) && <figcaption>
                   {artefact.title && <strong>{artefact.title}</strong>}
@@ -398,6 +406,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
                         ? <a className="report-inline-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
                         : null;
                   })()}
+                  {artefact.caption && <p>{artefact.caption}</p>}
                 </figcaption>}
               </figure>)}
             </section>}
@@ -459,13 +468,13 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           {(governanceConclusion || governanceSignificance) ? <section className="report-intro">
             {governanceConclusion && <>
               <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
-              <p className="report-intro-copy">{governanceConclusion}</p>
+              <div className="vigil-assessment-prose">{assessmentParagraphs(governanceConclusion).map((paragraph, index) => <p className="report-intro-copy" key={index}>{paragraph}</p>)}</div>
             </>}
             <div className="report-governance-significance">
               <div className="vigil-case-subheading">
                 <h3>Governance significance</h3>
               </div>
-              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+              <div className="vigil-assessment-prose">{assessmentBlocks(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((block, index) => block.kind === "heading" ? <h4 className="vigil-discussion-heading" key={index}>{block.text}</h4> : <p key={index}>{block.text}</p>)}</div>
             </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
         </Stage>

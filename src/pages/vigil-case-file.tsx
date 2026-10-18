@@ -1,4 +1,5 @@
-import { assessmentParagraphs } from "@/lib/vigilAssessmentParagraphs.mjs";
+import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
@@ -49,6 +50,7 @@ type ExternalEvidence = {
 };
 
 type IncidentArtefact = {
+  mediaKind?: "image" | "video" | "document";
   id: string;
   type?: string;
   title?: string;
@@ -61,7 +63,7 @@ type IncidentArtefact = {
 };
 
 function isVideoArtefact(artefact: IncidentArtefact) {
-  return artefact.mediaType?.toLowerCase().startsWith("video/") ?? false;
+  return artefact.mediaKind === "video";
 }
 
 type TaxonomyEvidenceReference = {
@@ -197,7 +199,10 @@ function incidentArtefactsFor(record: VigilIndexRecord): IncidentArtefact[] {
     if (!isObject(artefact)) return [];
     const renderUrl = text(artefact.render_url ?? artefact.image_url ?? artefact.url);
     if (!renderUrl) return [];
+    const mediaKind = incidentArtefactMediaKind(renderUrl, text(artefact.media_type));
+    if (!mediaKind) return [];
     return [{
+      mediaKind,
       id: text(artefact.artefact_id) ?? `${record.id}-artefact-${index + 1}`,
       type: text(artefact.artefact_type),
       title: text(artefact.title),
@@ -571,7 +576,7 @@ export default function VigilCaseFile() {
   const renderStageContent = (stageId: StageId): ReactNode => {
     if (stageId === "observe") return <>
       {(incident?.summary ?? incident?.publicDisplay.finding) && <section className="vigil-observation-summary" aria-label="Incident summary">
-        <p>{incident?.summary ?? incident?.publicDisplay.finding}</p>
+        <div className="vigil-assessment-prose">{assessmentParagraphs(incident?.summary ?? incident?.publicDisplay.finding).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
         {incidentArtefacts.length > 0 && <div className="vigil-incident-artefacts">
           {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="vigil-incident-artefact">
             {isVideoArtefact(artefact)
@@ -585,9 +590,9 @@ export default function VigilCaseFile() {
                   <source src={artefact.renderUrl} type={artefact.mediaType} />
                   Your browser cannot play this video. <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer">Open the incident source video.</a>
                 </video>
-              : <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
+              : artefact.mediaKind === "image" ? <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">
                   <img src={artefact.renderUrl} alt={artefact.altText ?? artefact.title ?? "Incident source artefact"} loading="lazy" />
-                </a>}
+                </a> : <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="vigil-incident-artefact-link">Open preserved document (PDF)</a>}
             {(artefact.title || artefact.sourceUrl) && <figcaption>
               {artefact.title && <strong>{artefact.title}</strong>}
               {(() => {
@@ -598,6 +603,7 @@ export default function VigilCaseFile() {
                     ? <a className="vigil-incident-artefact-reference" href={artefact.sourceUrl} target="_blank" rel="noreferrer">Source</a>
                     : null;
               })()}
+              {artefact.caption && <p>{artefact.caption}</p>}
             </figcaption>}
           </figure>)}
         </div>}
@@ -704,12 +710,12 @@ export default function VigilCaseFile() {
 
     if (stageId === "conclusion") return (governanceConclusion || governanceSignificance) ? <article className="vigil-diagnosis-view vigil-conclusion-stack">
       <section className="vigil-diagnosis-definition vigil-conclusion-content">
-        {governanceConclusion && <p className="vigil-diagnosis-assessment-summary">{governanceConclusion}</p>}
+        {governanceConclusion && <div className="vigil-assessment-prose">{assessmentParagraphs(governanceConclusion).map((paragraph, index) => <p className="vigil-diagnosis-assessment-summary" key={index}>{paragraph}</p>)}</div>}
         <div className="vigil-conclusion-governance-significance">
           <div className="vigil-case-subheading">
             <h3 className="vigil-case-editorial-subheading">Governance significance</h3>
           </div>
-          <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+          <div className="vigil-assessment-prose">{assessmentBlocks(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((block, index) => block.kind === "heading" ? <h4 className="vigil-discussion-heading" key={index}>{block.text}</h4> : <p key={index}>{block.text}</p>)}</div>
         </div>
       </section>
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
@@ -838,9 +844,13 @@ export default function VigilCaseFile() {
       ]}
     />
 
-    {isBoundaryUnresolved && <section className="vigil-exemplar-callout is-combination" aria-label="Unresolved governance boundary">
-      <h2>A governance boundary remains unresolved.</h2>
-      <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
+    {isBoundaryUnresolved && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-boundary-heading">
+      <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
+      <div className="vigil-exemplar-callout-copy">
+        <p className="vigil-exemplar-callout-kicker">Boundary assessment</p>
+        <h2 id="vigil-boundary-heading">A governance boundary remains unresolved.</h2>
+        <p>The assessed evidence establishes neither failure nor successful holding at this boundary. This finding is specific to the boundary and conditions assessed.</p>
+      </div>
     </section>}
 
     {isCombination && <section className="vigil-exemplar-callout is-combination" aria-labelledby="vigil-combination-heading">

@@ -133,10 +133,10 @@ test("governance interpretation is projected only in Conclusion across web and d
   const reportAssessment = report.match(/<Stage number="02" label="Assessment">[\s\S]*?<Stage number="03" label="Classification">/)?.[0] ?? "";
   const reportConclusion = report.match(/<Stage number="05" label="Conclusion">[\s\S]*?<Stage number="06" label="References">/)?.[0] ?? "";
 
-  assert.doesNotMatch(caseAssessment, /\{governanceConclusion\}/);
-  assert.match(caseConclusion, /\{governanceConclusion\}/);
-  assert.doesNotMatch(reportAssessment, /\{governanceConclusion\}/);
-  assert.match(reportConclusion, /\{governanceConclusion\}/);
+  assert.doesNotMatch(caseAssessment, /assessmentParagraphs\(governanceConclusion\)/);
+  assert.match(caseConclusion, /assessmentParagraphs\(governanceConclusion\)/);
+  assert.doesNotMatch(reportAssessment, /assessmentParagraphs\(governanceConclusion\)/);
+  assert.match(reportConclusion, /assessmentParagraphs\(governanceConclusion\)/);
   assert.match(sections, /id: "conclusion",[\s\S]*number: "05",[\s\S]*label: "Conclusion"/);
   assert.match(sections, /id: "references",[\s\S]*number: "06",[\s\S]*label: "References"/);
 });
@@ -195,7 +195,7 @@ test("Incident Case File retains evidence context and moves governance interpret
   assert.match(source, /vigil_assessment\.governance_interpretation/);
   assert.match(source, /vigil-diagnosis-factual-basis/);
   assert.doesNotMatch(conclusionRenderer, /VIGIL Observatory conclusion/);
-  assert.match(conclusionRenderer, /\{governanceConclusion\}/);
+  assert.match(conclusionRenderer, /assessmentParagraphs\(governanceConclusion\)/);
 });
 
 test("Incident Case File projects taxonomy-derived compliance crosswalk, not implementation state", async () => {

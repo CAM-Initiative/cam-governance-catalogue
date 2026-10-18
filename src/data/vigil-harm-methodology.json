@@ -673,27 +673,37 @@
     },
     {
       "dimension_id": "environmental",
-      "label": "Environmental",
+      "label": "Environmental and animal welfare",
       "thresholds": {
         "S1": {
           "threshold_id": "VIGIL-HIM-1.1.0-ENV-S1",
-          "criterion": "Positive bounded evidence establishes zero material biophysical degradation where environmental consequence was directly assessed."
+          "criterion": "For every ecological or animal-welfare pathway directly at issue, positive bounded evidence establishes no material biophysical degradation, injury, suffering or impairment. Source silence is not S1.",
+          "ecological_criterion": "Positive bounded evidence establishes zero material biophysical degradation where environmental consequence was directly assessed.",
+          "animal_welfare_criterion": "Positive bounded evidence establishes no material injury, suffering or impairment where animal welfare was directly at issue."
         },
         "S2": {
           "threshold_id": "VIGIL-HIM-1.1.0-ENV-S2",
-          "criterion": "Minor, localised, readily reversible ecological damage, with recovery illustratively within 30 days. Record verified habitat area, pollutant loads and treatment rather than human audience numbers."
+          "criterion": "Ecological pathway: Minor, localised, readily reversible ecological damage, with recovery illustratively within 30 days. Record verified habitat area, pollutant loads and treatment rather than human audience numbers. Animal-welfare alternative: Minor, temporary pain, distress or injury, with straightforward recovery and no lasting impairment.",
+          "ecological_criterion": "Minor, localised, readily reversible ecological damage, with recovery illustratively within 30 days. Record verified habitat area, pollutant loads and treatment rather than human audience numbers.",
+          "animal_welfare_criterion": "Minor, temporary pain, distress or injury, with straightforward recovery and no lasting impairment."
         },
         "S3": {
           "threshold_id": "VIGIL-HIM-1.1.0-ENV-S3",
-          "criterion": "Meaningful but bounded ecological damage requiring active remediation, with restoration indicatively taking 30–365 days. Record hectares affected, pollutant concentrations, exceedances and affected ecosystem functions."
+          "criterion": "Ecological pathway: Meaningful but bounded ecological damage requiring active remediation, with restoration indicatively taking 30–365 days. Record hectares affected, pollutant concentrations, exceedances and affected ecosystem functions. Animal-welfare alternative: Serious but recoverable injury, illness or suffering requiring substantial treatment or rehabilitation.",
+          "ecological_criterion": "Meaningful but bounded ecological damage requiring active remediation, with restoration indicatively taking 30–365 days. Record hectares affected, pollutant concentrations, exceedances and affected ecosystem functions.",
+          "animal_welfare_criterion": "Serious but recoverable injury, illness or suffering requiring substantial treatment or rehabilitation."
         },
         "S4": {
           "threshold_id": "VIGIL-HIM-1.1.0-ENV-S4",
-          "criterion": "Substantial, persistent or cross-jurisdiction ecological degradation, often requiring more than 365 days of remediation or producing serious multi-region ecosystem effects. Area alone does not determine severity; assess critical functions and reversibility."
+          "criterion": "Ecological pathway: Substantial, persistent or cross-jurisdiction ecological degradation, often requiring more than 365 days of remediation or producing serious multi-region ecosystem effects. Area alone does not determine severity; assess critical functions and reversibility. Animal-welfare alternative: Death, permanent major impairment, or severe prolonged suffering affecting an individual animal or a bounded group.",
+          "ecological_criterion": "Substantial, persistent or cross-jurisdiction ecological degradation, often requiring more than 365 days of remediation or producing serious multi-region ecosystem effects. Area alone does not determine severity; assess critical functions and reversibility.",
+          "animal_welfare_criterion": "Death, permanent major impairment, or severe prolonged suffering affecting an individual animal or a bounded group."
         },
         "S5": {
           "threshold_id": "VIGIL-HIM-1.1.0-ENV-S5",
-          "criterion": "Catastrophic, widespread or effectively irreversible loss of critical habitat, species or ecosystem function. Support the band with actual measured impact, restoration feasibility and biophysical scale; no affected-person minimum applies."
+          "criterion": "Ecological pathway: Catastrophic, widespread or effectively irreversible loss of critical habitat, species or ecosystem function. Support the band with actual measured impact, restoration feasibility and biophysical scale; no affected-person minimum applies. Animal-welfare alternative: Catastrophic animal-welfare consequences, such as widespread mortality or severe suffering, assessed against the affected population and context.",
+          "ecological_criterion": "Catastrophic, widespread or effectively irreversible loss of critical habitat, species or ecosystem function. Support the band with actual measured impact, restoration feasibility and biophysical scale; no affected-person minimum applies.",
+          "animal_welfare_criterion": "Catastrophic animal-welfare consequences, such as widespread mortality or severe suffering, assessed against the affected population and context."
         }
       },
       "quantitative_indicators": [
@@ -702,9 +712,14 @@
         "measured_exceedance_of_relevant_environmental_limits",
         "days_of_recovery_or_active_remediation",
         "species_or_critical_ecosystem_functions_lost",
-        "restoration_feasibility"
+        "restoration_feasibility",
+        "animals_with_substantiated_injury_or_illness",
+        "animals_with_substantiated_death",
+        "severity_and_duration_of_substantiated_suffering",
+        "permanent_impairment_and_treatment_or_rehabilitation",
+        "affected_population_and_context"
       ],
-      "quantification_note": "Numerical durations, event counts and population measures are evidence-tested domain anchors within each S1–S5 criterion, not independent automatic scores. Judge seriousness, causal contribution and reversibility; a grave individual outcome needs no large exposed population.",
+      "quantification_note": "Assess the ecological and animal-welfare pathways independently and use the highest supported band within this dimension. Require actual consequence and material AI contribution. Consider seriousness, suffering, reversibility, scope and affected population/context together; counts and elapsed days alone do not determine severity. Individual death is S4 under the animal-welfare pathway; catastrophic collective consequences are S5. Do not translate animal injury into a human-health band, assume legal liability or treat complaint allegations as established clinical findings. Ecological recovery durations remain illustrative. Missing consequence or attribution evidence remains unreported or insufficient-evidence, not S1.",
       "reference_ids": [
         "VIGIL-REF-000004",
         "VIGIL-REF-000011"
@@ -934,5 +949,14 @@
     "name": "Aggregate Harm",
     "applicability": "Any deployed-system finding of a potentially generalisable mechanism in the five eligible dimensions WITHOUT a particular actual materially harmed case, including user-discovered outputs, provider evaluations and watchdog tests. Screen before requiring reproducibility/cohort/band evidence."
   },
-  "supersedes_version": "1.0.1"
+  "supersedes_version": "1.0.1",
+  "working_amendments": [
+    {
+      "adopted_on": "2026-10-18",
+      "scope": "Environmental and animal welfare; twelve existing dimension IDs retained.",
+      "authority": "vigil/docs/reviews/2026-10-18-issue-126-maintainer-decisions.md",
+      "implementation_audit": "vigil/docs/reviews/2026-10-18-issue-126-him-reassessments/METHOD-AMENDMENT.md",
+      "historical_boundary": "Working 1.1.0 amendment, as with the recorded 11 October minimum-harm amendment. No automatic reinterpretation or migration of previously assessed Incidents; new animal criteria apply only on substantive review."
+    }
+  ]
 }

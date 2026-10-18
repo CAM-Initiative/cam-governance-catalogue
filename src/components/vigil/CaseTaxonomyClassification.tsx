@@ -1,6 +1,6 @@
 import { CaseRequirementAssessments } from "./CaseRequirementAssessments";
 import { useEffect, useMemo, useState } from "react";
-import { Check, CircleMinus, X } from "lucide-react";
+import { AlignmentIcon } from "@/lib/vigilAlignmentIcon.mjs";
 import {
   loadFailureTaxonomy,
   type FailureTaxonomyClass,
@@ -250,7 +250,7 @@ function mappingOutcome(role?: ClassificationRole) {
 function MappingOutcome({ role }: { role?: ClassificationRole }) {
   const outcome = mappingOutcome(role);
   return <span className={`vigil-classification-outcome is-${outcome.kind}`} aria-label={outcome.label} title={outcome.label}>
-    {outcome.kind === "held" ? <Check aria-hidden="true" /> : outcome.kind === "failed" ? <X aria-hidden="true" /> : <CircleMinus aria-hidden="true" />}
+    <AlignmentIcon kind={outcome.kind} />
     <span className="sr-only">{outcome.label}</span>
   </span>;
 }
