@@ -1,3 +1,4 @@
+import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
 import { Link, useRoute } from "wouter";
@@ -863,10 +864,11 @@ export default function VigilCaseFile() {
     {isDisputed && <section className="vigil-exemplar-callout is-disputed" aria-labelledby="vigil-disputed-heading">
       <div className="vigil-exemplar-callout-icon" aria-hidden="true"><Info /></div>
       <div className="vigil-exemplar-callout-copy">
-        <p className="vigil-exemplar-callout-kicker">Disputed evidence state</p>
-        <h2 id="vigil-disputed-heading">Material facts remain contested.</h2>
-        <p><strong>Disputed</strong> does not mean that litigation or a formal legal dispute exists. It means that material facts needed to establish the occurrence or its taxonomy classification are contested—for example, an affected party expressly denies the alleged conduct, involved parties give materially incompatible accounts, or the available evidence does not independently resolve the conflict.</p>
-        <p className="vigil-exemplar-callout-boundary">VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported. A denial does not itself establish that an allegation is false, and a taxonomy mapping does not convert a disputed allegation into settled fact.</p>
+        <p className="vigil-exemplar-callout-kicker">{VIGIL_DISPUTED_COPY.kicker}</p>
+        <h2 id="vigil-disputed-heading">{VIGIL_DISPUTED_COPY.heading}</h2>
+        <p>{VIGIL_DISPUTED_COPY.explanation}</p>
+        <p className="vigil-exemplar-callout-boundary">{VIGIL_DISPUTED_COPY.boundary}</p>
+        <p>{VIGIL_DISPUTED_COPY.qualification}</p>
       </div>
     </section>}
 

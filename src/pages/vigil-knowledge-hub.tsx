@@ -1,3 +1,4 @@
+import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "wouter";
@@ -84,7 +85,7 @@ const CASE_FILE_INDEX_CLASSIFICATIONS = [
   {
     key: "disputed",
     label: "Disputed",
-    description: "Material facts needed to establish the occurrence or its taxonomy classification are contested. This can include an affected party expressly denying the alleged conduct, materially incompatible accounts from involved parties, or evidence that does not independently resolve the conflict. It does not require litigation or a formal legal dispute. VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported.",
+    description: [VIGIL_DISPUTED_COPY.explanation, VIGIL_DISPUTED_COPY.boundary, VIGIL_DISPUTED_COPY.qualification].join(" "),
   },
   {
     key: "unclassified",

@@ -1,3 +1,4 @@
+import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
@@ -320,10 +321,11 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
       </section>}
 
       {isDisputed && <section className="report-exemplar-callout is-disputed" aria-labelledby="report-disputed-heading">
-        <p className="report-exemplar-kicker">Disputed evidence state</p>
-        <h2 id="report-disputed-heading">Material facts remain contested.</h2>
-        <p><strong>Disputed</strong> does not mean that litigation or a formal legal dispute exists. It means that material facts needed to establish the occurrence or its taxonomy classification are contested—for example, an affected party expressly denies the alleged conduct, involved parties give materially incompatible accounts, or the available evidence does not independently resolve the conflict.</p>
-        <p className="report-exemplar-boundary">VIGIL takes a legally conservative approach: disputed allegations remain attributed and are not presented as established fact unless independently supported. A denial does not itself establish that an allegation is false, and a taxonomy mapping does not convert a disputed allegation into settled fact.</p>
+        <p className="report-exemplar-kicker">{VIGIL_DISPUTED_COPY.kicker}</p>
+        <h2 id="report-disputed-heading">{VIGIL_DISPUTED_COPY.heading}</h2>
+        <p>{VIGIL_DISPUTED_COPY.explanation}</p>
+        <p className="report-exemplar-boundary">{VIGIL_DISPUTED_COPY.boundary}</p>
+        <p>{VIGIL_DISPUTED_COPY.qualification}</p>
       </section>}
 
       {adjudicationIncomplete && <section className="report-exemplar-callout is-incomplete-adjudication" aria-labelledby="report-adjudication-incomplete-heading">

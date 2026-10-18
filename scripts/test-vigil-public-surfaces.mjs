@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import test from "node:test";
+import { runInNewContext } from "node:vm";
+import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
@@ -447,9 +449,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(caseFile, /Different assessed boundaries have different outcomes/);
   assert.doesNotMatch(caseFile, /Compliance shows the external standards, regulations and guidance connected to the governance issues identified in this Case File/);
   assert.match(caseFile, /const isDisputed = classification === "Disputed"/);
-  assert.match(caseFile, /Material facts remain contested\./);
-  assert.match(caseFile, /does not mean that litigation or a formal legal dispute exists/);
-  assert.match(caseFile, /VIGIL takes a legally conservative approach/);
+  assert.match(caseFile, /VIGIL_DISPUTED_COPY/);
   assert.match(contract, /informational mixed-record affordance/);
 });
 
@@ -538,8 +538,7 @@ test("Knowledge Base withholds whole-Incident classification until adjudication 
   assert.match(hub, /only after adjudication coverage is complete[\s\S]*Adjudication incomplete/);
   assert.match(hub, /does not assign a whole-Incident alignment classification until adjudication coverage is complete/);
   assert.match(hub, /One or more material incident observations still require a final taxonomy determination/);
-  assert.match(hub, /It does not require litigation or a formal legal dispute/);
-  assert.match(hub, /VIGIL takes a legally conservative approach/);
+  assert.match(hub, /VIGIL_DISPUTED_COPY/);
   assert.match(hub, /CASE_FILE_INDEX_CLASSIFICATIONS\.map/);
   assert.match(css, /\.vigil-knowledge-index-classifications[\s\S]*\.vigil-knowledge-index-state \{[\s\S]*background: hsl\(var\(--primary\) \/ 0\.045\)/);
   assert.doesNotMatch(css, /\.vigil-knowledge-index-state\.is-(?:failure|exemplar|mixed|disputed|unclassified)/);
@@ -1282,7 +1281,7 @@ test("Case File stage navigation has one workbench owner and preserves wrapped m
   assert.match(harm, /\.vigil-case-file-page \.vigil-harm-assessment-table tbody tr \{[\s\S]*border-radius: 0\.68rem/);
 });
 
-test("Knowledge Base introduces Harm Impact Assessment plainly and defines Disputed conservatively", async () => {
+test("Knowledge Base introduces Harm Impact Assessment plainly and distinguishes disputed facts from differing assessments", async () => {
   const [hub, caseFile, report] = await Promise.all([
     read("src/pages/vigil-knowledge-hub.tsx"),
     read("src/pages/vigil-case-file.tsx"),
@@ -1292,13 +1291,9 @@ test("Knowledge Base introduces Harm Impact Assessment plainly and defines Dispu
   assert.match(hub, /VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /reviews twelve harm dimensions/);
   assert.match(hub, /Harm Impact Assessment describes materialised consequence and severity/);
-  assert.match(hub, /does not require litigation or a formal legal dispute/);
-  assert.match(hub, /affected party expressly denying the alleged conduct/);
-  assert.match(hub, /VIGIL takes a legally conservative approach/);
-  assert.match(caseFile, /<strong>Disputed<\/strong> does not mean that litigation or a formal legal dispute exists/);
-  assert.match(caseFile, /A denial does not itself establish that an allegation is false/);
-  assert.match(report, /Material facts remain contested\./);
-  assert.match(report, /VIGIL takes a legally conservative approach/);
+  assert.match(hub, /VIGIL_DISPUTED_COPY/);
+  assert.match(caseFile, /VIGIL_DISPUTED_COPY/);
+  assert.match(report, /VIGIL_DISPUTED_COPY/);
   assert.doesNotMatch(hub, /classify materialised harm/);
 });
 
@@ -1379,4 +1374,38 @@ test("taxonomy textbook distinguishes case-study examples from governing class t
   assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-linked-cases li,\s*\.vigil-taxonomy-manual-page \.vigil-taxonomy-invariant-exemplars li \{[\s\S]*?border-radius: 0\.62rem/);
   assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-invariant-exemplars li \{[\s\S]*?background: hsl\(var\(--status-success-surface\) \/ 0\.7\)/);
   assert.match(css, /\.vigil-taxonomy-manual-page \.vigil-taxonomy-invariant-exemplars \.vigil-taxonomy-case-study-kicker/);
+});
+
+
+test("shared disputed assessment copy distinguishes evidence conflicts, assessment differences and gaps", async () => {
+  assert.match(VIGIL_DISPUTED_COPY.explanation, /conflicting accounts/);
+  assert.match(VIGIL_DISPUTED_COPY.explanation, /differing assessments/);
+  assert.match(VIGIL_DISPUTED_COPY.explanation, /does not require litigation/);
+  assert.match(VIGIL_DISPUTED_COPY.boundary, /without disputing that the reported event occurred/);
+  assert.match(VIGIL_DISPUTED_COPY.qualification, /Missing information alone does not make a record Disputed/);
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    for (const field of ["heading", "explanation", "boundary", "qualification"]) assert.ok(source.includes(`VIGIL_DISPUTED_COPY.${field}`), `${path}: ${field}`);
+  }
+  const pages = await read("scripts/prepare-github-pages.js");
+  assert.match(pages, /publicAlignmentOutcome\(record\) === "Disputed" \? disputedAssessmentHtml/);
+  assert.match(pages, /<h1>Knowledge Base<\/h1>[\s\S]*?disputedAssessmentHtml/);
+});
+
+test("static source clauses retain quotations, context, rationale order and escaping", async () => {
+  const pages = await read("scripts/prepare-github-pages.js");
+  const start = pages.indexOf("function clauseAssessmentsHtml(raw) {");
+  const end = pages.indexOf("\nfor (const record of incidentRecords)", start);
+  assert.ok(start >= 0 && end > start);
+  const render = runInNewContext(pages.slice(start, end) + "\nclauseAssessmentsHtml", {
+    escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
+  });
+  const html = render({ vigil_assessment: { source_clause_analysis: { clauses: [
+    { source_anchor: "Original <instruction>", source_paraphrase: "Task context & attribution", taxonomy_relationships: [{ rationale: "First analysis" }, { rationale: "Second analysis" }] },
+    { source_paraphrase: "Later response", taxonomy_relationships: [] },
+  ] } } });
+  const texts = ["Original &lt;instruction&gt;", "Task context &amp; attribution", "First analysis", "Second analysis", "Later response"];
+  for (const text of texts) assert.ok(html.includes(text), text);
+  for (let i = 1; i < texts.length; i++) assert.ok(html.indexOf(texts[i - 1]) < html.indexOf(texts[i]));
+  assert.doesNotMatch(html, /<instruction>/);
 });

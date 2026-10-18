@@ -211,3 +211,9 @@ Literal adopted wording MUST remain in the canonical record and detail view; it 
 ## Stage 05 prose and publication parity
 
 Section 05 renders `vigil_assessment.governance_interpretation` as Conclusion and `significance_to_cam` as Governance significance. No Discussion panel is derived by splitting those fields; a separate approved and populated canonical field is a prerequisite. Web, deterministic print/PDF and crawlable Case Files use the same requirement labels and retain occurrence evidence limitations. Clause statuses remain explicit: classified, reviewed with no current class, unresolved or taxonomy coverage gap.
+
+## Disputed assessments and wording-dependent evidence
+
+Use `VIGIL_DISPUTED_COPY` for the shared Case File, deterministic report and Knowledge Base explanation. Disputed can concern conflicting occurrence accounts or differing assessments of what the evidence establishes. Missing information may prevent resolution; missing information alone does not establish a dispute. Identify the particular disagreement in the canonical record. Do not imply litigation, denial of the occurrence, or settled factual truth from a classification disagreement. Keep attributed allegations distinct from observed facts.
+
+When a source clause supplies both `source_anchor` and `source_paraphrase`, publish both in stored episode order: exact quotation followed by its context. Static output must preserve the same evidence and context as the interactive Case File and report. Several interpretations of one passage do not create separate events.

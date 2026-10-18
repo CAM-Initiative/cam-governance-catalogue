@@ -1,3 +1,4 @@
+import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
 import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
@@ -260,6 +261,7 @@ const staticRouteBodies = new Map([
   ["/knowledge-base", `<main data-static-crawl-fallback="knowledge-base" style="max-width:72rem;margin:0 auto;padding:2rem;font-family:system-ui,sans-serif">
     <p>CAM Initiative</p>
     <h1>Knowledge Base</h1>
+    ${disputedAssessmentHtml()}
     <p>Reference material for the VIGIL Observatory, including Case Files, the Alignment Taxonomy, the Harm Impact Assessment methodology, AI governance standards and CAM Initiative datasets.</p>
     <nav aria-label="Knowledge Base resources"><ul>
       <li><a href="/observatory/cases/">VIGIL Observatory Case Files</a></li>
@@ -617,10 +619,13 @@ function occurrenceAssessmentsHtml(raw) {
   const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td>${escapeHtml(row.resultLabel)}</td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
   return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table}</section>`;
 }
+function disputedAssessmentHtml() {
+  return `<section><p>${escapeHtml(VIGIL_DISPUTED_COPY.kicker)}</p><h2>${escapeHtml(VIGIL_DISPUTED_COPY.heading)}</h2><p>${escapeHtml(VIGIL_DISPUTED_COPY.explanation)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.boundary)}</p><p>${escapeHtml(VIGIL_DISPUTED_COPY.qualification)}</p></section>`;
+}
 function clauseAssessmentsHtml(raw) {
   const clauses = raw.vigil_assessment?.source_clause_analysis?.clauses || [];
   const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
-  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article><p>${escapeHtml(clause.source_anchor || clause.source_paraphrase || "")}</p><p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? `<p>${escapeHtml(clause.adjudication_note)}</p>` : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<p>${escapeHtml(item.rationale)}</p>` : "").join("")}</article>`).join("")}</section>`;
+  return `<section><h2>Incident breakdown</h2>${clauses.map(clause => `<article>${clause.source_anchor ? `<blockquote>${escapeHtml(clause.source_anchor)}</blockquote>` : ""}${clause.source_paraphrase ? `<p>${escapeHtml(clause.source_paraphrase)}</p>` : ""}<p><strong>${escapeHtml(labels[clause.adjudication_status] || "Adjudication status not stated")}</strong></p>${clause.adjudication_note ? `<p>${escapeHtml(clause.adjudication_note)}</p>` : ""}${(clause.taxonomy_relationships || []).map(item => item.rationale ? `<p>${escapeHtml(item.rationale)}</p>` : "").join("")}</article>`).join("")}</section>`;
 }
 
 for (const record of incidentRecords) {
@@ -641,6 +646,7 @@ for (const record of incidentRecords) {
       <dt>Severity</dt><dd>${escapeHtml(record.severity || "not stated")}</dd>
       <dt>Vendor / platform</dt><dd>${escapeHtml(record.platform_or_vendor || "not stated")}</dd>
     </dl>
+    ${publicAlignmentOutcome(record) === "Disputed" ? disputedAssessmentHtml() : ""}
     ${externalAssessmentsHtml(canonical)}
     ${clauseAssessmentsHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}
