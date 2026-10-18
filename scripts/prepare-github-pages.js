@@ -1,3 +1,6 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { AlignmentIcon, alignmentIconKind } from "../src/lib/vigilAlignmentIcon.mjs";
 import { incidentArtefactMediaKind } from "../src/lib/vigilArtefactMedia.mjs";
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
 import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
@@ -619,7 +622,7 @@ for (let start = 0; start < incidentRecords.length; start += 8) {
 function occurrenceAssessmentsHtml(raw) {
   const rows = occurrenceRequirementRows(raw, occurrenceRequirements);
   if (!rows.length) return "<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>";
-  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td>${escapeHtml(row.resultLabel)}</td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
+  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td><span class="vigil-compliance-result is-${row.alignmentResult}">${renderToStaticMarkup(createElement(AlignmentIcon, { kind: alignmentIconKind(row.alignmentResult) }))}<span>${escapeHtml(row.resultLabel)}</span></span></td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
   return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table}</section>`;
 }
 function disputedAssessmentHtml() {

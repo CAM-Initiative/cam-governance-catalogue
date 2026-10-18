@@ -1,3 +1,4 @@
+import { AlignmentIcon, alignmentIconKind } from "@/lib/vigilAlignmentIcon.mjs";
 import { useEffect, useState } from "react";
 import { loadExternalRequirementDetails, type ExternalRequirementDetail } from "@/lib/vigilExternalKnowledge";
 import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO, type RequirementRow } from "@/lib/vigilOccurrenceRequirements.mjs";
@@ -15,7 +16,7 @@ function RequirementTable({ items, title }: { items: RequirementRow[]; title: st
       </tr></thead>
       <tbody>{items.map(row => <tr key={row.key}>
         <td data-label="Assessment result" className="vigil-compliance-result-cell">
-          <span className={`vigil-compliance-result is-${row.alignmentResult}`}>{row.resultLabel}</span>
+          <span className={`vigil-compliance-result is-${row.alignmentResult}`}><AlignmentIcon kind={alignmentIconKind(row.alignmentResult)} /><span>{row.resultLabel}</span></span>
         </td>
         <td data-label="External requirement">
           <strong>{row.url ? <a href={row.url}>{row.title}</a> : row.title}</strong>

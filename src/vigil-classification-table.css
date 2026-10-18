@@ -717,3 +717,6 @@
   display: block;
   margin-top: 0.16rem;
 }
+
+.vigil-case-file-page .vigil-compliance-result { display: inline-flex; align-items: center; gap: 0.4rem; }
+.vigil-case-file-page .vigil-compliance-result svg { width: 1.15rem; height: 1.15rem; flex: none; stroke-width: 2.35; }
