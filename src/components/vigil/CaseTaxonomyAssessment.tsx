@@ -10,6 +10,7 @@ type ClauseRelationship = {
 };
 
 type ClauseAssessment = {
+  episodeId?: string;
   title?: string;
   contextOnly?: boolean;
   completeSourceAnchor?: string;
@@ -60,7 +61,7 @@ function parseAssessment(raw: UnknownRecord): ClauseAssessment[] {
     const recoveredInvariant = text(value.recovered_invariant_interpretation);
     if (!sourceAnchor && !sourceParaphrase && !recoveredInvariant) return [];
 
-    return [{ title: text(value.observation_title), contextOnly: value.display_context === true, completeSourceAnchor: text(value.complete_source_anchor), sourceAnchor, sourceParaphrase, recoveredInvariant, relationships, status: text(value.adjudication_status), note: text(value.adjudication_note) }];
+    return [{ episodeId: text(value.episode_id), title: text(value.observation_title), contextOnly: value.display_context === true, completeSourceAnchor: text(value.complete_source_anchor), sourceAnchor, sourceParaphrase, recoveredInvariant, relationships, status: text(value.adjudication_status), note: text(value.adjudication_note) }];
   });
 }
 
@@ -178,7 +179,7 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
             // when no separate adjudication note was authored.
             const analysisText = clause.note
               ?? (clause.status === "resolved-no-mapping" ? clause.recoveredInvariant : undefined);
-            return <tr key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
+            return <tr tabIndex={clause.episodeId ? -1 : undefined} id={clause.episodeId ? `vigil-source-episode-${encodeURIComponent(clause.episodeId)}` : undefined} key={`${clause.sourceAnchor ?? clause.sourceParaphrase ?? "clause"}-${index}`}>
               <td data-label="Incident observation"><SourceClause clause={clause} /></td>
               <td data-label="Classification" className="vigil-taxonomy-clause-classification">
                 <span className={`vigil-taxonomy-clause-state is-${classificationState.tone}`}>{classificationState.label}</span>

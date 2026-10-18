@@ -397,7 +397,7 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 16%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 40%; \}/);
   assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 72rem;/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 96rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 0;[\s\S]*table-layout: fixed;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-class-chip/);

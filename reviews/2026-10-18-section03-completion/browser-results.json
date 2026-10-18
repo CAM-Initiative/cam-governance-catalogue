@@ -1,0 +1,134 @@
+{
+  "results": [
+    {
+      "incident": 1,
+      "surface": "interactive",
+      "mappings": 7,
+      "result": "pass"
+    },
+    {
+      "incident": 2,
+      "surface": "interactive",
+      "mappings": 3,
+      "result": "pass"
+    },
+    {
+      "incident": 3,
+      "surface": "interactive",
+      "mappings": 18,
+      "result": "pass"
+    },
+    {
+      "incident": 4,
+      "surface": "interactive",
+      "mappings": 7,
+      "result": "pass"
+    },
+    {
+      "incident": 6,
+      "surface": "interactive",
+      "mappings": 3,
+      "result": "pass"
+    },
+    {
+      "incident": 126,
+      "surface": "interactive",
+      "mappings": 1,
+      "result": "pass"
+    },
+    {
+      "incident": 129,
+      "surface": "interactive",
+      "mappings": 6,
+      "result": "pass"
+    },
+    {
+      "incident": 139,
+      "surface": "interactive",
+      "mappings": 0,
+      "result": "pass"
+    },
+    {
+      "incident": 144,
+      "surface": "interactive",
+      "mappings": 0,
+      "result": "pass"
+    },
+    {
+      "incident": 197,
+      "surface": "interactive",
+      "mappings": 2,
+      "result": "pass"
+    },
+    {
+      "incident": 198,
+      "surface": "interactive",
+      "mappings": 2,
+      "result": "pass"
+    },
+    {
+      "surface": "episode navigation to mounted Assessment and keyboard focus",
+      "result": "pass"
+    },
+    {
+      "surface": "390px responsive classification",
+      "client": 356,
+      "scroll": 356,
+      "result": "pass"
+    },
+    {
+      "incident": 1,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 2,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 3,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 4,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 6,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 126,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 129,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 139,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "incident": 144,
+      "surface": "deterministic/print report",
+      "result": "pass"
+    },
+    {
+      "surface": "A4 PDF produced from Chromium print media",
+      "result": "pass"
+    }
+  ],
+  "pageErrors": [],
+  "limitations": [
+    "External decorative images and Google fonts blocked; local fallback fonts used.",
+    "Canonical network responses supplied from the exact adjudication working tree; no deployment."
+  ]
+}
