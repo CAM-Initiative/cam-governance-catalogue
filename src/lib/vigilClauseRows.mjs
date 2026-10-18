@@ -18,6 +18,7 @@ export function clauseAssessmentRows(analysis) {
       source_paraphrase: clause.source_paraphrase,
       complete_source_anchor: statements.some(item => item.source_anchor === clause.source_anchor) ? undefined : clause.source_anchor,
       observation_title: "Shared source context",
+      episode_id: clause.episode_id,
       adjudication_note: clause.adjudication_note,
       display_context: true,
     });
@@ -28,7 +29,9 @@ export function clauseAssessmentRows(analysis) {
         observation_title: statement.title,
         source_record_refs: clause.source_record_refs,
         taxonomy_relationships: selected,
-        adjudication_status: selected.some(item => item.canonical_taxonomy_mapping === true) ? "mapped" : "resolved-no-mapping",
+        adjudication_status: clause.adjudication_status === "unresolved" && selected.some(item => item.canonical_taxonomy_mapping !== true && String(item.relationship || "").includes("candidate"))
+          ? "unresolved"
+          : selected.some(item => item.canonical_taxonomy_mapping === true) ? "mapped" : "resolved-no-mapping",
       });
     }
   }

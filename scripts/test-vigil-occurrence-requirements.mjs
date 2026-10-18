@@ -1,3 +1,6 @@
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { AlignmentIcon, alignmentIconKind } from "../src/lib/vigilAlignmentIcon.mjs";
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { occurrenceRequirementRows } from '../src/lib/vigilOccurrenceRequirements.mjs';
@@ -49,6 +52,7 @@ const staticSource = await readFile(new URL('./prepare-github-pages.js', import.
 const htmlFunction = staticSource.slice(staticSource.indexOf('function occurrenceAssessmentsHtml'), staticSource.indexOf('function clauseAssessmentsHtml'));
 const html = vm.runInNewContext(`${htmlFunction}; occurrenceAssessmentsHtml`, {
  occurrenceRequirementRows,
+ createElement, renderToStaticMarkup, AlignmentIcon, alignmentIconKind,
  occurrenceRequirements: [requirement],
  REQUIREMENT_ASSESSMENT_INTRO: 'Occurrence assessments',
  escapeHtml: value => String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;'),
@@ -63,4 +67,25 @@ test('Static Case Files publish all results, normative force, basis, date and ev
 });
 test('Static zero-row Case Files make no positive compliance claim',()=>{
  assert.equal(html({external_requirement_assessments:[]}),'<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>');
+});
+
+
+test('Compliance and classification share the same three icon components', async () => {
+ for (const [result, role, kind, css] of [
+  ['aligned','successful-invariant','held','lucide-check'],
+  ['not-aligned','failure-occurrence','failed','lucide-x'],
+  ['boundary','ambiguous-boundary','ambiguous','lucide-circle-minus'],
+ ]) {
+  assert.equal(alignmentIconKind(result),kind);
+  assert.equal(alignmentIconKind(role),kind);
+  const svg=renderToStaticMarkup(createElement(AlignmentIcon,{kind}));
+  assert.ok(svg.includes(css)); assert.ok(svg.includes('aria-hidden="true"'));
+  const output=html({...raw,external_requirement_assessments:[{...assessment,alignment_result:result}]});
+  assert.ok(output.includes(svg),'static output uses the identical icon markup');
+ }
+ assert.equal(alignmentIconKind('unknown'),undefined);
+ for (const file of ['CaseTaxonomyClassification.tsx','CaseRequirementAssessments.tsx']) {
+  const source=await readFile(new URL('../src/components/vigil/'+file,import.meta.url),'utf8');
+  assert.match(source,/import \{[^}]*AlignmentIcon[^}]*\} from "@\/lib\/vigilAlignmentIcon.mjs"/);
+ }
 });

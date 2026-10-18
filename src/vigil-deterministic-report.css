@@ -2808,3 +2808,28 @@
 .vigil-deterministic-report-host .vigil-source-observation-title { display: block; font-size: 1rem; line-height: 1.45; }
 .vigil-deterministic-report-host .vigil-complete-source-passage summary { cursor: pointer; font-weight: 600; }
 .vigil-deterministic-report-host .vigil-complete-source-passage q { display: block; margin-top: 0.6rem; white-space: pre-line; }
+
+.vigil-deterministic-report-host .vigil-discussion-heading { margin: 1rem 0 0; font-size: 1rem; font-weight: 600; line-height: 1.45; break-after: avoid; }
+
+.vigil-deterministic-report-host .vigil-compliance-result { display: inline-flex; align-items: center; gap: 0.4rem; }
+.vigil-deterministic-report-host .vigil-compliance-result svg { width: 1.15rem; height: 1.15rem; flex: none; stroke-width: 2.35; }
+
+/* Section 03 has four columns; preserve words in outcome and metadata labels. */
+@media print {
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 17% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 25% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 44% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 14% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th {
+    font-size: 7pt !important;
+    letter-spacing: 0 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
+  .vigil-deterministic-report-host .vigil-primary-classification-table td:first-child,
+  .vigil-deterministic-report-host .vigil-primary-classification-table td:first-child strong {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+}

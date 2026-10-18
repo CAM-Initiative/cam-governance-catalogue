@@ -1,5 +1,5 @@
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
-import { assessmentParagraphs } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -346,7 +346,16 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /data-label="Evidence and classification basis"/);
+  assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
+  assert.doesNotMatch(classification, /<th scope="col">Recognition criteria<\/th>/);
+  assert.match(classification, /Current taxonomy recognition tests \(reference only\)/);
+  assert.match(classification, /item\.role === "ambiguous-boundary"/);
+  assert.match(classification, /<strong>Failure-side conditions<\/strong>/);
+  assert.match(classification, /<strong>Success-side conditions<\/strong>/);
+  assert.match(classification, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
+  assert.match(classification, /currentTaxonomyVersion=\{taxonomy\.data\.index\.standard\.version\}/);
   assert.doesNotMatch(classification, /<th scope="col">Incident analysis<\/th>/);
   assert.match(classification, /Further adjudication required/);
   assert.match(classification, /This Case File has not yet been fully adjudicated\. The incident observations below still require a final taxonomy determination\./);
@@ -388,7 +397,7 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 16%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 40%; \}/);
   assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 72rem;/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 96rem;[\s\S]*table-layout: auto;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 0;[\s\S]*table-layout: fixed;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-class-chip/);
@@ -1401,6 +1410,7 @@ test("static source clauses retain quotations, context, rationale order and esca
   assert.ok(start >= 0 && end > start);
   const render = runInNewContext(pages.slice(start, end) + "\nclauseAssessmentsHtml", {
     assessmentParagraphs,
+    assessmentBlocks,
     clauseAssessmentRows,
     escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   });
@@ -1437,7 +1447,95 @@ test("statement projection preserves event context and every distinct ordered an
   assert.equal(rows[3].taxonomy_relationships[0].rationale,"Choice analysis");
   assert.equal(analysis.clauses.length,1);
   assert.equal(analysis.clauses[0].episode_id,"E001");
+  const unresolved = structuredClone(analysis);
+  unresolved.clauses[0].adjudication_status = "unresolved";
+  unresolved.clauses[0].taxonomy_relationships[1] = {canonical_taxonomy_mapping:false,relationship:"candidate boundary",rationale:"Missing receiving-side evidence"};
+  assert.equal(clauseAssessmentRows(unresolved)[3].adjudication_status,"unresolved","statement expansion retains the unresolved candidate disposition");
   const malformed = structuredClone(analysis);
   malformed.clauses[0].statement_analysis[1].taxonomy_relationship_indices=[0];
   assert.equal(clauseAssessmentRows(malformed)[1],malformed.clauses[0],"invalid bindings retain the whole source episode instead of hiding analysis");
+});
+
+
+test("integrated conclusion and significance use the same reading paragraphs in web, print and static output", async () => {
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    assert.match(source, /assessmentParagraphs\(governanceConclusion\)/);
+    assert.match(source, /assessmentBlocks\(governanceSignificance \?\?/);
+  }
+  const pages = await read("scripts/prepare-github-pages.js");
+  assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
+  assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.significance_to_cam/);
+  assert.doesNotMatch(pages, /<p>\$\{escapeHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
+});
+
+
+test("occurrence summaries use reading paragraphs and boundary notices retain the shared callout structure", async () => {
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    assert.match(source, /assessmentParagraphs\(incident\?\.summary \?\? incident\?\.publicDisplay.finding\)/);
+    assert.doesNotMatch(source, /<p>\{incident\?\.summary \?\? incident\?\.publicDisplay.finding\}<\/p>/);
+  }
+  const pages = await read("scripts/prepare-github-pages.js");
+  assert.match(pages, /assessmentProseHtml\(summary\)/);
+  const source = await read("src/pages/vigil-case-file.tsx");
+  const boundary = source.match(/\{isBoundaryUnresolved && <section[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.match(boundary, /vigil-exemplar-callout-icon[\s\S]*?<Info \/>/);
+  assert.match(boundary, /vigil-exemplar-callout-copy/);
+  assert.match(boundary, /aria-labelledby="vigil-boundary-heading"/);
+});
+
+
+test("artefact media selection rejects text and Markdown, including misleading image MIME declarations", async () => {
+  const { incidentArtefactMediaKind: kind } = await import("../src/lib/vigilArtefactMedia.mjs");
+  assert.equal(kind("https://example.org/note.md", "text/markdown"), undefined);
+  assert.equal(kind("https://example.org/note.md", "image/png"), undefined);
+  assert.equal(kind("https://example.org/note.txt"), undefined);
+  assert.equal(kind("https://example.org/source.png", "image/png"), "image");
+  assert.equal(kind("https://example.org/source.PNG?raw=1#page"), "image");
+  assert.equal(kind("https://example.org/source.png", "text/markdown"), undefined);
+  assert.equal(kind("https://example.org/capture.pdf", "application/pdf"), "document");
+  assert.equal(kind("https://example.org/capture.pdf", "image/png"), undefined);
+  assert.equal(kind("https://example.org/recording.mp4", "video/mp4"), "video");
+  assert.equal(kind("javascript:source.png"), undefined);
+});
+
+test("web, print and static publication use the same artefact media selection", async () => {
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx", "scripts/prepare-github-pages.js"]) {
+    const source = await read(path);
+    assert.match(source, /incidentArtefactMediaKind/);
+    assert.match(source, /Open preserved document \(PDF\)/);
+  }
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    assert.match(await read(path), /artefact.mediaKind === "image"/);
+  }
+});
+
+
+test("explicit discussion headings retain their role and complete prose in shared renderers", async () => {
+  const heading = "Discussion — Normative framing (unverified hypothesis)";
+  const prose = "A preceding conclusion.\n\n" + heading + "\n\nFirst hypothesis sentence. A qualification follows. A third sentence remains.";
+  const blocks = assessmentBlocks(prose);
+  assert.equal(blocks.filter(block => block.kind === "heading").length, 1);
+  assert.equal(blocks[1].text, heading);
+  assert.equal(blocks.map(block => block.text.trim()).join(" ").replace(/\s+/g, " "), prose.replace(/\s+/g, " "));
+  assert.equal(assessmentBlocks("Discussion — Example: this is an inline paragraph.")[0].kind, "paragraph");
+  assert.equal(assessmentBlocks("The source said: Discussion — Example.")[0].kind, "paragraph");
+  assert.deepEqual(assessmentBlocks(undefined), []);
+  const pages = await read("scripts/prepare-github-pages.js");
+  const start = pages.indexOf("function assessmentProseHtml(value) {");
+  const end = pages.indexOf("\nfunction clauseAssessmentsHtml", start);
+  const render = runInNewContext(pages.slice(start, end) + "\nassessmentProseHtml", {
+    assessmentBlocks,
+    escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
+  });
+  const html = render(prose);
+  assert.ok(html.includes(`<h4 class="vigil-discussion-heading">${heading}</h4>`));
+  assert.ok(html.indexOf("A preceding conclusion.") < html.indexOf(heading));
+  assert.ok(html.indexOf(heading) < html.indexOf("First hypothesis sentence."));
+  assert.ok(render("Discussion — <script>\n\nBody.").includes("&lt;script&gt;"));
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    assert.match(source, /block.kind === "heading" \? <h4 className="vigil-discussion-heading"/);
+  }
 });
