@@ -350,10 +350,14 @@ function ClassificationTable({
   rows,
   taxonomyReferenceNumber,
   taxonomyReferenceHref,
+  recordedTaxonomyVersion,
+  currentTaxonomyVersion,
 }: {
   rows: ClassificationTableRow[];
   taxonomyReferenceNumber?: number;
   taxonomyReferenceHref?: string;
+  recordedTaxonomyVersion?: string;
+  currentTaxonomyVersion?: string;
 }) {
   const hasUnresolved = rows.some(({ item }) =>
     (item.classId && !item.class) || (item.familyId && !item.family)
@@ -367,7 +371,7 @@ function ClassificationTable({
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
-            <th scope="col">Recognition criteria</th>
+            <th scope="col">Evidence and classification basis</th>
             <th scope="col">Confidence</th>
           </tr>
         </thead>
@@ -392,11 +396,25 @@ function ClassificationTable({
                 <strong className="vigil-classification-class-title">{classTitle}</strong>
                 {plainEnglish ? <p className="vigil-classification-class-explanation">{plainEnglish}</p> : null}
               </td>
-              <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy">
-                <TaxonomyList
-                  values={(item.role === "successful-invariant" ? classificationClass?.success_recognition : classificationClass?.failure_recognition ?? classificationClass?.recognition)?.required_conditions}
-                  empty="No separate recognition criteria are currently published for this Fidelity Class."
-                />
+              <td data-label="Evidence and classification basis" className="vigil-classification-basis">
+                <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
+                {classificationClass ? <details className="vigil-classification-reference-criteria">
+                  <summary>Current taxonomy recognition tests (reference only)</summary>
+                  <p>These are shared class criteria from the currently published taxonomy, not proof that a condition was satisfied in this Incident. The recorded adjudication version may differ.</p>
+                  {item.role === "ambiguous-boundary" ? <>
+                    <strong>Failure-side conditions</strong>
+                    <TaxonomyList values={(classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate failure recognition conditions published." />
+                    <strong>Success-side conditions</strong>
+                    <TaxonomyList values={classificationClass.success_recognition?.required_conditions} empty="No separate success recognition conditions published." />
+                  </> : <>
+                    <strong>{item.role === "successful-invariant" ? "Success-side conditions" : "Failure-side conditions"}</strong>
+                    <TaxonomyList values={(item.role === "successful-invariant" ? classificationClass.success_recognition : classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate recognition conditions published." />
+                  </>}
+                  {classificationClass.exclusions?.length ? <>
+                    <strong>Exclusions</strong>
+                    <TaxonomyList values={classificationClass.exclusions} empty="No exclusions recorded." />
+                  </> : null}
+                </details> : null}
               </td>
               <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
             </tr>;
@@ -405,6 +423,9 @@ function ClassificationTable({
       </table>
     </div>
     <VigilAlignmentLegend />
+    {recordedTaxonomyVersion || currentTaxonomyVersion ? <p className="vigil-taxonomy-reference-note">
+      <strong>Taxonomy versions:</strong> Recorded Incident adjudication {recordedTaxonomyVersion ? `v${recordedTaxonomyVersion}` : "version not recorded"}; current reference {currentTaxonomyVersion ? `v${currentTaxonomyVersion}` : "version unavailable"}. Current recognition wording must not be presented as the original adjudication-time test unless the versions are verified to match.
+    </p> : null}
     {taxonomyReferenceNumber && taxonomyReferenceHref ? <p className="vigil-taxonomy-reference-note">Fidelity Classes and their recognition criteria are defined in the <a href={taxonomyReferenceHref}>VIGIL Observatory Alignment Taxonomy [{taxonomyReferenceNumber}]</a>.</p> : null}
     {hasUnresolved && <p className="vigil-case-empty">The Incident contains an immutable taxonomy identifier that is not present in the current published VIGIL Observatory taxonomy. No legacy taxonomy fallback has been applied.</p>}
   </>;
@@ -613,7 +634,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
     {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} />
+    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard
