@@ -655,7 +655,7 @@ for (const record of incidentRecords) {
     ${externalAssessmentsHtml(canonical)}
     ${clauseAssessmentsHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}
-    <section><h2>Conclusion</h2><p>${escapeHtml(canonical.vigil_assessment?.governance_interpretation || "")}</p><h3>Governance significance</h3><p>${escapeHtml(canonical.vigil_assessment?.significance_to_cam || "")}</p></section>
+    <section><h2>Conclusion</h2>${assessmentProseHtml(canonical.vigil_assessment?.governance_interpretation || "")}<h3>Governance significance</h3>${assessmentProseHtml(canonical.vigil_assessment?.significance_to_cam || "")}</section>
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }

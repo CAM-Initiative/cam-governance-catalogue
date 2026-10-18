@@ -459,13 +459,13 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
           {(governanceConclusion || governanceSignificance) ? <section className="report-intro">
             {governanceConclusion && <>
               <p className="vigil-evidence-kicker">VIGIL Observatory conclusion</p>
-              <p className="report-intro-copy">{governanceConclusion}</p>
+              <div className="vigil-assessment-prose">{assessmentParagraphs(governanceConclusion).map((paragraph, index) => <p className="report-intro-copy" key={index}>{paragraph}</p>)}</div>
             </>}
             <div className="report-governance-significance">
               <div className="vigil-case-subheading">
                 <h3>Governance significance</h3>
               </div>
-              <p>{governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident."}</p>
+              <div className="vigil-assessment-prose">{assessmentParagraphs(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             </div>
           </section> : <Empty>No integrated governance conclusion is currently published for this Incident.</Empty>}
         </Stage>

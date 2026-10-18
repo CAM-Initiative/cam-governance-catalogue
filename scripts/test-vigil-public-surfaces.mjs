@@ -1437,7 +1437,24 @@ test("statement projection preserves event context and every distinct ordered an
   assert.equal(rows[3].taxonomy_relationships[0].rationale,"Choice analysis");
   assert.equal(analysis.clauses.length,1);
   assert.equal(analysis.clauses[0].episode_id,"E001");
+  const unresolved = structuredClone(analysis);
+  unresolved.clauses[0].adjudication_status = "unresolved";
+  unresolved.clauses[0].taxonomy_relationships[1] = {canonical_taxonomy_mapping:false,relationship:"candidate boundary",rationale:"Missing receiving-side evidence"};
+  assert.equal(clauseAssessmentRows(unresolved)[3].adjudication_status,"unresolved","statement expansion retains the unresolved candidate disposition");
   const malformed = structuredClone(analysis);
   malformed.clauses[0].statement_analysis[1].taxonomy_relationship_indices=[0];
   assert.equal(clauseAssessmentRows(malformed)[1],malformed.clauses[0],"invalid bindings retain the whole source episode instead of hiding analysis");
+});
+
+
+test("integrated conclusion and significance use the same reading paragraphs in web, print and static output", async () => {
+  for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
+    const source = await read(path);
+    assert.match(source, /assessmentParagraphs\(governanceConclusion\)/);
+    assert.match(source, /assessmentParagraphs\(governanceSignificance \?\?/);
+  }
+  const pages = await read("scripts/prepare-github-pages.js");
+  assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
+  assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.significance_to_cam/);
+  assert.doesNotMatch(pages, /<p>\$\{escapeHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
 });
