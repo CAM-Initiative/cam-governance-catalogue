@@ -161,7 +161,8 @@ export function CaseTaxonomyAssessment({ raw, taxonomyReferenceNumber, taxonomyR
         ? <a href={taxonomyReferenceHref}>VIGIL Alignment Taxonomy [{taxonomyReferenceNumber}]</a>
         : "VIGIL Alignment Taxonomy"} for formal adjudication.
     </p>
-    <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" tabIndex={0}>
+    <p className="vigil-taxonomy-assessment-scroll-hint" id="vigil-taxonomy-assessment-scroll-hint">Swipe sideways to view all table columns →</p>
+    <div className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap" role="region" aria-label="VIGIL Observatory incident breakdown table" aria-describedby="vigil-taxonomy-assessment-scroll-hint" tabIndex={0}>
       <table className="vigil-external-assessment-table vigil-taxonomy-assessment-table">
         <caption className="sr-only">VIGIL Observatory Incident observations and occurrence-specific analysis mapped to the VIGIL Alignment Taxonomy for formal adjudication.</caption>
         <thead>
