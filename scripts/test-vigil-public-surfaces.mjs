@@ -1410,7 +1410,7 @@ test("privacy source of truth feeds both React and crawlable HTML", async () => 
     read("src/lib/privacyPolicy.json"),
   ]);
   const policy = JSON.parse(policyJson);
-  assert.match(policy.lastUpdated, /^\\d{1,2} [A-Z][a-z]+ 20\\d{2}$/);
+  assert.match(policy.lastUpdated, /^[0-9]{1,2} [A-Z][a-z]+ 20[0-9]{2}$/);
   for (const id of ["case-file-form-data", "case-file-processing", "case-file-review-retention", "advertising-and-editorial-independence"]) {
     assert.ok(policy.sections.some(section => section.id === id));
   }
