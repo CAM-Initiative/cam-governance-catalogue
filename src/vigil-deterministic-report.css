@@ -1400,14 +1400,16 @@
   font-size: 0.78rem;
 }
 
-.vigil-deterministic-report-host .vigil-compliance-counts {
+.vigil-deterministic-report-host .vigil-compliance-counts,
+.vigil-deterministic-report-host .vigil-classification-counts {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem 0.5rem;
   margin: 0 0 0.7rem;
 }
 
-.vigil-deterministic-report-host .vigil-compliance-counts > span {
+.vigil-deterministic-report-host .vigil-compliance-counts > span,
+.vigil-deterministic-report-host .vigil-classification-counts > span {
   padding: 0.18rem 0.4rem;
   border: 1px solid hsl(var(--report-rule) / 0.72);
   border-radius: 999px;

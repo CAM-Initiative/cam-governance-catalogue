@@ -100,20 +100,37 @@
   line-height: 1.35;
   overflow-wrap: break-word;
 }
+/* Confidence is epistemic strength, not success/failure or harm severity.
+   Keep all three levels in one cool blue/slate colour family. */
 .vigil-classification-confidence-chip.is-high {
-  color: hsl(var(--status-high));
-  background: hsl(var(--status-high-surface));
-  border-color: hsl(var(--status-high) / 0.38);
+  color: hsl(224 49% 33%);
+  background: hsl(225 42% 92%);
+  border-color: hsl(223 35% 70%);
 }
 .vigil-classification-confidence-chip.is-medium {
-  color: hsl(var(--status-moderate));
-  background: hsl(var(--status-moderate-surface));
-  border-color: hsl(var(--status-moderate) / 0.38);
+  color: hsl(221 32% 40%);
+  background: hsl(220 33% 95%);
+  border-color: hsl(218 25% 77%);
 }
 .vigil-classification-confidence-chip.is-low {
-  color: hsl(var(--status-low));
-  background: hsl(var(--status-low-surface));
-  border-color: hsl(var(--status-low) / 0.38);
+  color: hsl(216 21% 44%);
+  background: hsl(213 19% 96%);
+  border-color: hsl(214 17% 82%);
+}
+html[data-theme="dark"] .vigil-classification-confidence-chip.is-high {
+  color: hsl(221 79% 83%);
+  background: hsl(222 37% 23%);
+  border-color: hsl(220 42% 46%);
+}
+html[data-theme="dark"] .vigil-classification-confidence-chip.is-medium {
+  color: hsl(218 51% 80%);
+  background: hsl(219 26% 23%);
+  border-color: hsl(218 29% 41%);
+}
+html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
+  color: hsl(215 29% 79%);
+  background: hsl(218 17% 23%);
+  border-color: hsl(218 20% 38%);
 }
 .vigil-classification-confidence-chip.is-unspecified {
   color: hsl(var(--status-neutral));
@@ -432,14 +449,16 @@
   text-decoration: none;
 }
 
-.vigil-case-file-page .vigil-compliance-counts {
+.vigil-case-file-page .vigil-compliance-counts,
+.vigil-case-file-page .vigil-classification-counts {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem 0.7rem;
   margin: 0 0 1.1rem;
 }
 
-.vigil-case-file-page .vigil-compliance-counts > span {
+.vigil-case-file-page .vigil-compliance-counts > span,
+.vigil-case-file-page .vigil-classification-counts > span {
   display: inline-flex;
   gap: 0.35rem;
   align-items: baseline;
@@ -451,7 +470,8 @@
   line-height: 1.3;
 }
 
-.vigil-case-file-page .vigil-compliance-counts strong {
+.vigil-case-file-page .vigil-compliance-counts strong,
+.vigil-case-file-page .vigil-classification-counts strong {
   color: hsl(var(--foreground));
 }
 

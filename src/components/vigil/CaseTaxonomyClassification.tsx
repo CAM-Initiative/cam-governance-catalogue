@@ -634,12 +634,27 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
       mapping: "Secondary" as const,
     })),
   ];
+  // Count admitted mapping-level results, not source-episode relationships.
+  // Partial adjudication is explicitly labelled elsewhere; this is not a
+  // whole-Incident finding or a count of failed versus successful episodes.
+  const mappedClasses = tableRows.filter(({ item }) => Boolean(item.classId));
+  const classificationCounts = [
+    { role: "failure-occurrence", label: "Failure occurred" },
+    { role: "successful-invariant", label: "Invariant held" },
+    { role: "ambiguous-boundary", label: "Boundary unresolved" },
+  ] as const;
 
   return <div className="vigil-taxonomy-classification-view">
     {parsed.coverageStatus === "partial" && <p className="vigil-case-empty"><strong>Adjudication incomplete.</strong> No whole-Incident alignment classification is assigned until adjudication coverage is complete. Resolved mapping-level findings are shown below for transparency.</p>}
     {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
+    <div className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes">
+      {classificationCounts.map(({ role, label }) => <span key={role}>
+        <strong>{mappedClasses.filter(({ item }) => item.role === role).length}</strong>{" "}
+        {label}
+      </span>)}
+    </div>
     <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
 
     <div className="vigil-classification-report-cards">

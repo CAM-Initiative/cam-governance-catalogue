@@ -305,6 +305,9 @@ assert.doesNotMatch(classificationComponent, /Shared taxonomy criteria, not an a
 assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(4\) \{ width: 30%; \}/);
 assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\)/);
 assert.match(classificationComponent, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
+assert.match(classificationComponent, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
+assert.match(classificationComponent, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
+assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-counts > span/);
 assert.doesNotMatch(classificationComponent, /<details className="vigil-classification-evidence"|vigil-classification-episode-index/);
 assert.match(classificationComponent, /className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests"/);
 assert.doesNotMatch(classificationComponent, /<details className="vigil-classification-reference-criteria"/);

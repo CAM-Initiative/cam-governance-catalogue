@@ -351,6 +351,12 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.doesNotMatch(primaryTable, /<th scope="col">Confidence<\/th>|<td data-label="Confidence"/);
   assert.match(primaryTable, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
   assert.match(classification, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
+  assert.match(classification, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
+  assert.match(classification, /const mappedClasses = tableRows\.filter\(\(\{ item \}\) => Boolean\(item\.classId\)\)/);
+  assert.match(classification, /"failure-occurrence", label: "Failure occurred"/);
+  assert.match(classification, /"successful-invariant", label: "Invariant held"/);
+  assert.match(classification, /"ambiguous-boundary", label: "Boundary unresolved"/);
+  assert.match(classification, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
   assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
   assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
@@ -420,6 +426,10 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-classification-confidence-chip\.is-high/);
   assert.match(css, /\.vigil-classification-confidence-chip\.is-medium/);
   assert.match(css, /\.vigil-classification-confidence-chip\.is-low/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-high \{\s*color: hsl\(224 49% 33%\)/);
+  assert.match(css, /html\[data-theme="dark"\] \.vigil-classification-confidence-chip\.is-high/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-classification-counts > span/);
+  assert.doesNotMatch(css, /\.vigil-classification-confidence-chip\.is-high \{\s*color: hsl\(var\(--status-high\)\)/);
   assert.match(css, /scrollbar-gutter: stable;/);
   assert.match(css, /\.vigil-classification-recognition-tests/);
   assert.doesNotMatch(css, /\.vigil-classification-evidence summary|\.vigil-classification-episode-index/);
