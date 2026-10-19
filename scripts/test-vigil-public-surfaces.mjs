@@ -1542,23 +1542,23 @@ test("web, print and static publication use the same artefact media selection", 
 
 test("INC-129-style Discussion is a sibling Section 05 subsection with source-preserving web, PDF and static output", async () => {
   const heading = "Discussion — AI-generated normative convergence (unverified hypothesis)";
-  const prose = "Initial governance significance. The evidentiary limit remains.\\n\\n" + heading + "\\n\\nAn unverified hypothesis follows. A matched experiment would be required. This is not a demonstrated causal account.";
+  const prose = "Initial governance significance. The evidentiary limit remains.\n\n" + heading + "\n\nAn unverified hypothesis follows. A matched experiment would be required. This is not a demonstrated causal account.";
   const blocks = assessmentBlocks(prose);
   assert.equal(blocks.filter(block => block.kind === "heading").length, 1);
   const parts = assessmentSections(prose);
   assert.deepEqual(parts.map(part => part.kind), ["significance", "discussion"]);
   assert.deepEqual(parts.map(part => part.heading), ["Governance significance", heading]);
   assert.equal(parts.flatMap(part => part.paragraphs).join(" ").includes("not a demonstrated causal account"), true);
-  assert.equal([parts[0].paragraphs.join(" "), parts[1].heading, parts[1].paragraphs.join(" ")].join(" ").replace(/\\s+/g, " "), prose.replace(/\\s+/g, " "));
+  assert.equal([parts[0].paragraphs.join(" "), parts[1].heading, parts[1].paragraphs.join(" ")].join(" ").replace(/\s+/g, " "), prose.replace(/\s+/g, " "));
   assert.deepEqual(assessmentSections("No separately headed Discussion." ).map(part => part.kind), ["significance"]);
   assert.deepEqual(assessmentSections("Discussion — Example: this is ordinary prose.").map(part => part.kind), ["significance"]);
   assert.deepEqual(assessmentSections("The source said: Discussion — Example.").map(part => part.kind), ["significance"]);
   assert.deepEqual(assessmentSections(undefined), []);
   const pages = await read("scripts/prepare-github-pages.js");
   const start = pages.indexOf("function assessmentProseHtml(value) {");
-  const end = pages.indexOf("\\nfunction clauseAssessmentsHtml", start);
+  const end = pages.indexOf("\nfunction clauseAssessmentsHtml", start);
   assert.ok(start >= 0 && end > start);
-  const render = runInNewContext(pages.slice(start, end) + "\\nconclusionSignificanceHtml", {
+  const render = runInNewContext(pages.slice(start, end) + "\nconclusionSignificanceHtml", {
     assessmentBlocks, assessmentSections,
     escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   });
@@ -1567,7 +1567,7 @@ test("INC-129-style Discussion is a sibling Section 05 subsection with source-pr
   assert.ok(html.includes(`<section class="vigil-conclusion-subsection is-discussion"><h3 class="vigil-discussion-heading">${heading}</h3>`));
   assert.ok(html.indexOf("Initial governance significance.") < html.indexOf(heading));
   assert.ok(html.indexOf(heading) < html.indexOf("An unverified hypothesis follows."));
-  assert.ok(render("Discussion — <script>\\n\\nBody.").includes("&lt;script&gt;"));
+  assert.ok(render("Discussion — <script>\n\nBody.").includes("&lt;script&gt;"));
   for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
     const renderer = await read(path);
     assert.match(renderer, /assessmentSections\(governanceSignificance \?\?/);
