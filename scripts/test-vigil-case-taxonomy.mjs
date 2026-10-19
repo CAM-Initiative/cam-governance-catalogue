@@ -298,6 +298,8 @@ const classificationComponent = await readFile(new URL("../src/components/vigil/
 assert.doesNotMatch(classificationComponent, /mappingEvidence\(raw, classId\)|<MappingEvidence|Supporting source episodes \(/);
 assert.match(classificationComponent, /item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
 assert.match(classificationComponent, /<th scope="col">Recognition tests/);
+assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\) \{ width: 7%; \}/);
+assert.doesNotMatch(classificationComponent, /vigil-classification-evidence|vigil-classification-episode-index/);
 assert.match(classificationComponent, /className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests"/);
 assert.doesNotMatch(classificationComponent, /<details className="vigil-classification-reference-criteria"/);
 assert.match(classificationComponent, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
