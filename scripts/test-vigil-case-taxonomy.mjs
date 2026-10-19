@@ -245,6 +245,10 @@ assert.match(assessmentLayoutCss, /\.report-document \.report-governance-signifi
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*min-width: 72rem/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table[\s\S]*table-layout: fixed/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table-wrap[\s\S]*overflow-x: auto/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment \{ min-width: 0; max-width: 100%; \}/);
+assert.match(polishCss, /\.vigil-taxonomy-assessment-table-wrap \{[\s\S]*max-width: 100%;[\s\S]*overflow-x: auto;[\s\S]*touch-action: pan-x pan-y;/);
+assert.match(taxonomyAssessment, /Swipe sideways to view all table columns/);
+assert.match(taxonomyAssessment, /aria-describedby="vigil-taxonomy-assessment-scroll-hint"/);
 assert.match(polishCss, /vigil-taxonomy-assessment-table td:first-child[\s\S]*white-space: normal/);
 assert.match(reportCss, /Incident breakdown table mirrors the External assessments table/);
 
@@ -306,6 +310,12 @@ assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child
 assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\)/);
 assert.match(classificationComponent, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
 assert.match(classificationComponent, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
+assert.match(classificationComponent, /className="vigil-classification-intro"/);
+assert.match(classificationComponent, /whole-system alignment, general model safety or regulatory compliance/);
+const outcomeCell = classificationComponent.match(/<td data-label="Alignment"[\s\S]*?<\/td>/)?.[0] ?? "";
+const basisCell = classificationComponent.match(/<td data-label="Evidence and classification basis"[\s\S]*?<\/td>/)?.[0] ?? "";
+assert.doesNotMatch(outcomeCell, /vigil-classification-confidence-chip/);
+assert.match(basisCell, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
 assert.match(classificationComponent, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-counts > span/);
 assert.doesNotMatch(classificationComponent, /<details className="vigil-classification-evidence"|vigil-classification-episode-index/);
