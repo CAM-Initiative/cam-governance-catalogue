@@ -247,6 +247,16 @@ function mappingOutcome(role?: string) {
   return { label: "Failure occurred", kind: "failed" as const };
 }
 
+function mappingConfidence(confidence?: string) {
+  const original = confidence?.trim();
+  const level = original?.toLowerCase().replace(/[\s_-]+confidence$/, "").trim();
+  if (level === "high") return { label: "high confidence", kind: "high" as const };
+  if (level === "medium") return { label: "medium confidence", kind: "medium" as const };
+  if (level === "low") return { label: "low confidence", kind: "low" as const };
+  // Unknown or unusual recorded values are retained without assigning a confidence tier.
+  return { label: original ? `${original} confidence` : "Confidence not stated", kind: "unspecified" as const };
+}
+
 function MappingOutcome({ role }: { role?: ClassificationRole }) {
   const outcome = mappingOutcome(role);
   return <span className={`vigil-classification-outcome is-${outcome.kind}`} aria-label={outcome.label} title={outcome.label}>
@@ -373,7 +383,6 @@ function ClassificationTable({
             <th scope="col">Fidelity class</th>
             <th scope="col">Evidence and classification basis</th>
             <th scope="col">Recognition criteria</th>
-            <th scope="col">Confidence</th>
           </tr>
         </thead>
         <tbody>
@@ -382,6 +391,7 @@ function ClassificationTable({
             const classificationClass = item.class;
             const classId = classificationClass?.class_id ?? item.classId;
             const outcome = mappingOutcome(item.role);
+            const confidence = mappingConfidence(item.confidence);
             const classTitle = classificationClass?.name ?? family?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned");
             const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
 
@@ -390,6 +400,7 @@ function ClassificationTable({
                 <span className="vigil-classification-outcome-detail">
                   <MappingOutcome role={item.role} />
                   <strong>{outcome.label}</strong>
+                  <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>
                 </span>
               </td>
               <td data-label="Fidelity class" className="vigil-classification-class-cell">
@@ -412,7 +423,6 @@ function ClassificationTable({
                       />
                     : <span>Recognition criteria unavailable for this class.</span>}
               </td>
-              <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
             </tr>;
           })}
         </tbody>

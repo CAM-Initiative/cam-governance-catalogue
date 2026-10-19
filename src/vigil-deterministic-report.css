@@ -1339,14 +1339,13 @@
   color: hsl(var(--report-muted));
 }
 
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 9%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 20%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 38%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 26%; }
-.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(5) { width: 7%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 14%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 22%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 34%; }
+.vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 30%; }
 
-/* Section 03 keeps confidence while showing the recognition reference beside
-   occurrence-specific reasoning. The source-episode analysis remains in Section 02. */
+/* Section 03 shows confidence beneath the alignment finding in a four-column table;
+   detailed source-episode analysis remains in Section 02. */
 
 .vigil-deterministic-report-host .vigil-external-alignment-classification {
   margin-top: 1rem;
@@ -2316,11 +2315,10 @@
     min-width: 0 !important;
   }
 
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 9% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 20% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 38% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 26% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(5) { width: 7% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 14% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 22% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 34% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 30% !important; }
   .vigil-deterministic-report-host .vigil-primary-classification-table tbody td {
     font-size: 9pt !important;
     line-height: 1.42 !important;
@@ -2824,18 +2822,26 @@
 .vigil-deterministic-report-host .vigil-compliance-result { display: inline-flex; align-items: center; gap: 0.4rem; }
 .vigil-deterministic-report-host .vigil-compliance-result svg { width: 1.15rem; height: 1.15rem; flex: none; stroke-width: 2.35; }
 
-/* Section 03 has four columns; preserve words in outcome and metadata labels. */
+/* Print keeps four columns; the confidence chip stays below each outcome. */
 @media print {
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 17% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 25% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 44% !important; }
-  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 14% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(1) { width: 14% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(2) { width: 22% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(3) { width: 34% !important; }
+  .vigil-deterministic-report-host .vigil-primary-classification-table thead th:nth-child(4) { width: 30% !important; }
   .vigil-deterministic-report-host .vigil-primary-classification-table thead th {
     font-size: 7pt !important;
     letter-spacing: 0 !important;
     overflow-wrap: normal !important;
     word-break: normal !important;
   }
+  .vigil-deterministic-report-host .vigil-primary-classification-table .vigil-classification-confidence-chip {
+    max-width: 100%;
+    padding: 1mm 1.5mm !important;
+    font-size: 7pt !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+  }
+
   .vigil-deterministic-report-host .vigil-primary-classification-table td:first-child,
   .vigil-deterministic-report-host .vigil-primary-classification-table td:first-child strong {
     overflow-wrap: normal !important;

@@ -58,19 +58,21 @@
 
 /* Section 03 synthesises each mapping; Section 02 retains the detailed analysis. */
 .vigil-case-file-page .vigil-primary-classification-table {
-  min-width: 0;
+  /* Scroll horizontally rather than squeezing recognition criteria. */
+  min-width: 80rem;
   table-layout: fixed;
 }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { width: 9%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { width: 21%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 37%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 25%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { width: 8%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { width: 16%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { width: 22%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 31%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 31%; }
 
 .vigil-case-file-page .vigil-primary-classification-table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 
 .vigil-case-file-page .vigil-classification-outcome-detail {
@@ -82,6 +84,41 @@
 .vigil-case-file-page .vigil-classification-outcome-detail > strong {
   font-size: 0.92rem;
   line-height: 1.35;
+}
+
+.vigil-classification-confidence-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+.vigil-classification-confidence-chip.is-high {
+  color: hsl(var(--status-high));
+  background: hsl(var(--status-high-surface));
+  border-color: hsl(var(--status-high) / 0.38);
+}
+.vigil-classification-confidence-chip.is-medium {
+  color: hsl(var(--status-moderate));
+  background: hsl(var(--status-moderate-surface));
+  border-color: hsl(var(--status-moderate) / 0.38);
+}
+.vigil-classification-confidence-chip.is-low {
+  color: hsl(var(--status-low));
+  background: hsl(var(--status-low-surface));
+  border-color: hsl(var(--status-low) / 0.38);
+}
+.vigil-classification-confidence-chip.is-unspecified {
+  color: hsl(var(--status-neutral));
+  background: hsl(var(--status-neutral-surface));
+  border-color: hsl(var(--border));
 }
 
 .vigil-case-file-page .vigil-classification-evidence-stack {
@@ -752,6 +789,5 @@
   font-size: 0.7rem;
   letter-spacing: 0.015em;
 }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 37%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 25%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { width: 8%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 31%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 31%; }

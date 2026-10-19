@@ -346,7 +346,11 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition criteria[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>/);
+  const primaryTable = classification.match(/<table className="vigil-classification-table vigil-primary-classification-table">[\s\S]*?<\/table>/)?.[0] ?? "";
+  assert.doesNotMatch(primaryTable, /<th scope="col">Confidence<\/th>|<td data-label="Confidence"/);
+  assert.match(primaryTable, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(classification, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
   assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
   assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
@@ -404,7 +408,7 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 16%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 40%; \}/);
   assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 72rem;/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 0;[\s\S]*table-layout: fixed;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 80rem;[\s\S]*table-layout: fixed;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-class-chip/);
@@ -412,7 +416,11 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-classification-class-explanation/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
-  assert.match(css, /\.vigil-primary-classification-table thead th:nth-child\(5\) \{ width: 8%; \}/);
+  assert.match(css, /\.vigil-primary-classification-table thead th:nth-child\(4\) \{ width: 31%; \}/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-high/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-medium/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-low/);
+  assert.match(css, /scrollbar-gutter: stable;/);
   assert.match(css, /\.vigil-classification-recognition-tests/);
   assert.doesNotMatch(css, /\.vigil-classification-evidence summary|\.vigil-classification-episode-index/);
   assert.doesNotMatch(css, /\.vigil-classification-incident-analysis/);
