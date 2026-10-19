@@ -430,8 +430,9 @@ test("Classification and Compliance tables keep readable body and legend typogra
   assert.match(css, /\.vigil-case-file-page \.vigil-compliance-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
   assert.match(css, /\.vigil-alignment-legend \{[\s\S]*font-size: 0\.92rem[\s\S]*line-height: 1\.5/);
   assert.match(css, /\.vigil-alignment-legend-item > span:last-child > strong \{[\s\S]*font-size: 0\.92rem/);
-  assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\)[\s\S]*display: none !important/);
-  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 11%; \}[\s\S]*nth-child\(2\) \{ width: 30%; \}[\s\S]*nth-child\(3\) \{ width: 44%; \}[\s\S]*nth-child\(4\) \{ width: 15%; \}/);
+  assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\) \{[^}]*display: none !important/);
+  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 9%; \}[\s\S]*nth-child\(2\) \{ width: 20%; \}[\s\S]*nth-child\(3\) \{ width: 38%; \}[\s\S]*nth-child\(4\) \{ width: 26%; \}[\s\S]*nth-child\(5\) \{ width: 7%; \}/);
+  assert.match(reportCss, /\.vigil-primary-classification-table tbody td \{[\s\S]*font-size: 9pt !important/);
 });
 
 
