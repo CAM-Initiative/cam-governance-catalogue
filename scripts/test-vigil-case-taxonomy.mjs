@@ -315,7 +315,12 @@ assert.match(classificationComponent, /whole-system alignment, general model saf
 const outcomeCell = classificationComponent.match(/<td data-label="Alignment"[\s\S]*?<\/td>/)?.[0] ?? "";
 const basisCell = classificationComponent.match(/<td data-label="Evidence and classification basis"[\s\S]*?<\/td>/)?.[0] ?? "";
 assert.doesNotMatch(outcomeCell, /vigil-classification-confidence-chip/);
-assert.match(basisCell, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+assert.match(basisCell, /item.role !== "ambiguous-boundary" && <span/);
+assert.ok(classificationComponent.includes('<Meta label="Confidence" value={item.role === "ambiguous-boundary" ? undefined : item.confidence} />'));
+assert.ok(classificationComponent.includes('{ role: "successful-invariant", label: "Aligned" }'));
+assert.ok(classificationComponent.includes("Failure occurred and Aligned describe findings"));
+assert.ok(classificationComponent.indexOf('className="vigil-classification-intro"') < classificationComponent.indexOf('className="vigil-classification-state-note"'));
+assert.ok(!classificationComponent.includes('<p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification'));
 assert.match(classificationComponent, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
 assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-classification-counts > span/);
 assert.doesNotMatch(classificationComponent, /<details className="vigil-classification-evidence"|vigil-classification-episode-index/);
