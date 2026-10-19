@@ -1,4 +1,3 @@
-import { mappingEvidence } from "@/lib/vigilMappingEvidence.mjs";
 import { CaseRequirementAssessments } from "./CaseRequirementAssessments";
 import { useEffect, useMemo, useState } from "react";
 import { AlignmentIcon } from "@/lib/vigilAlignmentIcon.mjs";
@@ -248,6 +247,16 @@ function mappingOutcome(role?: string) {
   return { label: "Failure occurred", kind: "failed" as const };
 }
 
+function mappingConfidence(confidence?: string) {
+  const original = confidence?.trim();
+  const level = original?.toLowerCase().replace(/[\s_-]+confidence$/, "").trim();
+  if (level === "high") return { label: "high confidence", kind: "high" as const };
+  if (level === "medium") return { label: "medium confidence", kind: "medium" as const };
+  if (level === "low") return { label: "low confidence", kind: "low" as const };
+  // Unknown or unusual recorded values are retained without assigning a confidence tier.
+  return { label: original ? `${original} confidence` : "Confidence not stated", kind: "unspecified" as const };
+}
+
 function MappingOutcome({ role }: { role?: ClassificationRole }) {
   const outcome = mappingOutcome(role);
   return <span className={`vigil-classification-outcome is-${outcome.kind}`} aria-label={outcome.label} title={outcome.label}>
@@ -347,36 +356,13 @@ function TaxonomyList({
   </ul>;
 }
 
-function MappingEvidence({ raw, classId }: { raw?: UnknownRecord; classId?: string }) {
-  const episodes = mappingEvidence(raw, classId);
-  if (!episodes.length) return <p className="vigil-taxonomy-reference-note">No supporting source episode is explicitly linked to this mapping in the record.</p>;
-  return <>
-    <p className="vigil-classification-episode-index">Supporting source episodes: {episodes.map((episode, index) => <span key={`${episode.label}-${index}`}>
-      {index > 0 ? "; " : ""}{episode.href ? <a href={episode.href}>{episode.label}</a> : episode.label}
-    </span>)}. See Section 02 for the detailed analysis.</p>
-    <details className="vigil-classification-evidence">
-    <summary>Supporting source episodes ({episodes.length})</summary>
-    <p>These recorded relationships may include different outcomes at different points in the occurrence.</p>
-    {episodes.map((episode, index) => <section key={`${episode.label}-${index}`}>
-      <strong>{episode.href ? <a href={episode.href}>{episode.label} · Section 02</a> : episode.label}</strong>
-      {episode.relationships.map((relationship, relationshipIndex) => <div key={relationshipIndex}>
-        <span>{mappingOutcome(relationship.role as ClassificationRole).label}</span>
-        <p>{relationship.rationale ?? "No separate episode rationale recorded."}</p>
-      </div>)}
-      {episode.sources.length > 0 && <ul>{episode.sources.map(source => <li key={source.ref}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul>}
-    </section>)}
-  </details></>;
-}
-
 function ClassificationTable({
-  raw,
   rows,
   taxonomyReferenceNumber,
   taxonomyReferenceHref,
   recordedTaxonomyVersion,
   currentTaxonomyVersion,
 }: {
-  raw?: UnknownRecord;
   rows: ClassificationTableRow[];
   taxonomyReferenceNumber?: number;
   taxonomyReferenceHref?: string;
@@ -390,13 +376,13 @@ function ClassificationTable({
   return <>
     <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table vigil-primary-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings with class meaning, recognition criteria and confidence.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with occurrence-specific classification basis, role-relevant recognition criteria and confidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Evidence and classification basis</th>
-            <th scope="col">Confidence</th>
+            <th scope="col">Recognition criteria</th>
           </tr>
         </thead>
         <tbody>
@@ -405,6 +391,7 @@ function ClassificationTable({
             const classificationClass = item.class;
             const classId = classificationClass?.class_id ?? item.classId;
             const outcome = mappingOutcome(item.role);
+            const confidence = mappingConfidence(item.confidence);
             const classTitle = classificationClass?.name ?? family?.name ?? (classId ? "Unresolved fidelity class" : "No canonical class assigned");
             const plainEnglish = classificationClass?.plain_english ?? family?.plain_english;
 
@@ -421,27 +408,21 @@ function ClassificationTable({
                 {plainEnglish ? <p className="vigil-classification-class-explanation">{plainEnglish}</p> : null}
               </td>
               <td data-label="Evidence and classification basis" className="vigil-classification-basis">
+                <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>
                 <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
-                <MappingEvidence raw={raw} classId={classId} />
-                {classificationClass ? <details className="vigil-classification-reference-criteria">
-                  <summary>Current taxonomy recognition tests (reference only)</summary>
-                  <p>These are shared class criteria from the currently published taxonomy, not proof that a condition was satisfied in this Incident. The recorded adjudication version may differ.</p>
-                  {item.role === "ambiguous-boundary" ? <>
-                    <strong>Failure-side conditions</strong>
-                    <TaxonomyList values={(classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate failure recognition conditions published." />
-                    <strong>Success-side conditions</strong>
-                    <TaxonomyList values={classificationClass.success_recognition?.required_conditions} empty="No separate success recognition conditions published." />
-                  </> : <>
-                    <strong>{item.role === "successful-invariant" ? "Success-side conditions" : "Failure-side conditions"}</strong>
-                    <TaxonomyList values={(item.role === "successful-invariant" ? classificationClass.success_recognition : classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate recognition conditions published." />
-                  </>}
-                  {classificationClass.exclusions?.length ? <>
-                    <strong>Exclusions</strong>
-                    <TaxonomyList values={classificationClass.exclusions} empty="No exclusions recorded." />
-                  </> : null}
-                </details> : null}
               </td>
-              <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
+              <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
+                {item.role === "ambiguous-boundary"
+                  ? <span className="vigil-classification-boundary-criteria">Unresolved — see classification basis.</span>
+                  : classificationClass
+                    ? <TaxonomyList
+                        values={(item.role === "successful-invariant"
+                          ? classificationClass.success_recognition
+                          : classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions}
+                        empty="No separate recognition conditions published."
+                      />
+                    : <span>Recognition criteria unavailable for this class.</span>}
+              </td>
             </tr>;
           })}
         </tbody>
@@ -653,13 +634,29 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
       mapping: "Secondary" as const,
     })),
   ];
+  // Count admitted mapping-level results, not source-episode relationships.
+  // Partial adjudication is explicitly labelled elsewhere; this is not a
+  // whole-Incident finding or a count of failed versus successful episodes.
+  const mappedClasses = tableRows.filter(({ item }) => Boolean(item.classId));
+  const classificationCounts = [
+    { role: "failure-occurrence", label: "Failure occurred" },
+    { role: "successful-invariant", label: "Invariant held" },
+    { role: "ambiguous-boundary", label: "Boundary unresolved" },
+  ] as const;
 
   return <div className="vigil-taxonomy-classification-view">
     {parsed.coverageStatus === "partial" && <p className="vigil-case-empty"><strong>Adjudication incomplete.</strong> No whole-Incident alignment classification is assigned until adjudication coverage is complete. Resolved mapping-level findings are shown below for transparency.</p>}
     {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationTable raw={raw} rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
+    <p className="vigil-classification-intro">These classifications assess evidence from this occurrence against VIGIL's Fidelity Class recognition criteria. Failure occurred and Invariant held describe findings at specific governance boundaries. Boundary unresolved means the evidence engages a class but does not establish whether its invariant failed or held. Findings are limited to this occurrence; they do not establish whole-system alignment, general model safety or regulatory compliance.</p>
+    <div className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes">
+      {classificationCounts.map(({ role, label }) => <span key={role}>
+        <strong>{mappedClasses.filter(({ item }) => item.role === role).length}</strong>{" "}
+        {label}
+      </span>)}
+    </div>
+    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard

@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { AlignmentIcon, alignmentIconKind } from "../src/lib/vigilAlignmentIcon.mjs";
 import { incidentArtefactMediaKind } from "../src/lib/vigilArtefactMedia.mjs";
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
-import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks, assessmentSections } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
@@ -634,6 +634,11 @@ function disputedAssessmentHtml() {
 function assessmentProseHtml(value) {
   return `<div class="vigil-assessment-prose">${assessmentBlocks(value).map(block => block.kind === "heading" ? `<h4 class="vigil-discussion-heading">${escapeHtml(block.text)}</h4>` : `<p>${escapeHtml(block.text)}</p>`).join("")}</div>`;
 }
+function conclusionSignificanceHtml(value) {
+  return assessmentSections(value).map(part =>
+    `<section class="vigil-conclusion-subsection is-${part.kind}"><h3 class="${part.kind === "discussion" ? "vigil-discussion-heading" : "vigil-case-editorial-subheading"}">${escapeHtml(part.heading)}</h3><div class="vigil-assessment-prose">${part.paragraphs.map(text => `<p>${escapeHtml(text)}</p>`).join("")}</div></section>`
+  ).join("");
+}
 function clauseAssessmentsHtml(raw) {
   const clauses = clauseAssessmentRows(raw.vigil_assessment?.source_clause_analysis);
   const labels = { mapped: "Classified", "resolved-no-mapping": "Reviewed — no current class applies", unresolved: "Unresolved", "taxonomy-gap": "Taxonomy coverage gap" };
@@ -692,7 +697,7 @@ for (const record of incidentRecords) {
     ${clauseAssessmentsHtml(canonical)}
     ${classificationHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}
-    <section><h2>Conclusion</h2>${assessmentProseHtml(canonical.vigil_assessment?.governance_interpretation || "")}<h3>Governance significance</h3>${assessmentProseHtml(canonical.vigil_assessment?.significance_to_cam || "")}</section>
+    <section><h2>Conclusion</h2>${assessmentProseHtml(canonical.vigil_assessment?.governance_interpretation || "")}${conclusionSignificanceHtml(canonical.vigil_assessment?.significance_to_cam || "")}</section>
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }

@@ -1,4 +1,10 @@
 import registrySources from "@/config/registrySources.json";
+import {
+  getSelectedVigilBranch,
+  vigilGithubBlobUrl,
+  vigilRawUrl,
+  VIGIL_DEFAULT_BRANCH,
+} from "@/lib/vigilBranchSource";
 
 export type UnknownRecord = Record<string, unknown>;
 
@@ -14,7 +20,6 @@ export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>
 
 export const VIGIL_REGISTRY_SOURCE = registrySources.vigil;
 const VIGIL_BUILD_ENV = (import.meta as ImportMeta & { readonly env?: ImportMetaEnv }).env;
-const VIGIL_PREVIEW_BRANCH = VIGIL_BUILD_ENV?.VITE_VIGIL_RECORD_BRANCH?.trim();
 export const VIGIL_INCIDENT_REGISTRY_URL =
   VIGIL_BUILD_ENV?.VITE_VIGIL_REGISTRY_URL?.trim() || VIGIL_REGISTRY_SOURCE.incident_registry_index_url;
 export const VIGIL_FALLBACK_URL = `${import.meta.env.BASE_URL}data/vigil-registry-fallback.json`;
@@ -47,7 +52,12 @@ export async function loadVigilIncidentRecords(
   liveRegistryUrl = VIGIL_INCIDENT_REGISTRY_URL,
   fallbackRegistryUrl = VIGIL_FALLBACK_URL,
 ): Promise<RegistryLoadResult> {
-  const attemptedUrl = cacheBustUrl(liveRegistryUrl);
+  const selectedBranch = getSelectedVigilBranch();
+  const useDynamicSource = liveRegistryUrl === VIGIL_INCIDENT_REGISTRY_URL;
+  const resolvedLiveUrl = useDynamicSource
+    ? await vigilRawUrl("vigil/VIGIL.Incidents.Index.json", fetcher)
+    : liveRegistryUrl;
+  const attemptedUrl = cacheBustUrl(resolvedLiveUrl);
 
   try {
     const data = await fetchJson(fetcher, attemptedUrl);
@@ -55,7 +65,8 @@ export async function loadVigilIncidentRecords(
     if (!records.length) throw new Error("Incident registry contains no canonical Incident records");
     return { data, attemptedUrl, loadedFromFallback: false, records };
   } catch (liveError) {
-    if (!fallbackRegistryUrl) {
+    const allowCanonicalFallback = selectedBranch === VIGIL_DEFAULT_BRANCH;
+    if (!fallbackRegistryUrl || !allowCanonicalFallback) {
       throw new Error(`VIGIL Incident registry could not be loaded from ${attemptedUrl}. ${(liveError as Error).message}`);
     }
     try {
@@ -76,26 +87,14 @@ export async function loadVigilIncidentRecords(
 }
 
 export function githubBlobUrlForRecord(record: { github_blob_url?: string; path?: string }) {
-  if (VIGIL_PREVIEW_BRANCH && record.path) {
-    return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
-  }
-  // A canonical path is more durable than an embedded branch URL. Cached registries can
-  // outlive short-lived working branches, so production always resolves paths against the
-  // configured canonical branch.
-  if (record.path) {
-    return `https://github.com/${VIGIL_REGISTRY_SOURCE.repo}/blob/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
-  }
+  if (record.path) return vigilGithubBlobUrl(record.path);
   return record.github_blob_url;
 }
 
 export function rawUrlForRecord(record: { raw_url?: string; path?: string }) {
-  if (VIGIL_PREVIEW_BRANCH && record.path) {
-    return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_PREVIEW_BRANCH}/${record.path}`;
-  }
-  // Never let a stale fallback pin a production Case File to a deleted feature branch when
-  // the canonical record path is available; production routing follows the configured branch.
   if (record.path) {
-    return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${VIGIL_REGISTRY_SOURCE.branch}/${record.path}`;
+    const branch = getSelectedVigilBranch();
+    return `https://raw.githubusercontent.com/${VIGIL_REGISTRY_SOURCE.repo}/${branch}/${record.path}`;
   }
   return record.raw_url;
 }
@@ -104,10 +103,12 @@ export async function loadVigilRecordDetail(
   record: UnknownRecord,
   fetcher: FetchLike = fetch,
 ): Promise<UnknownRecord> {
-  const detailUrl = rawUrlForRecord({
-    raw_url: typeof record.raw_url === "string" ? record.raw_url : undefined,
-    path: typeof record.path === "string" ? record.path : undefined,
-  });
+  const detailUrl = typeof record.path === "string" && record.path.trim()
+    ? await vigilRawUrl(record.path, fetcher)
+    : typeof record.raw_url === "string"
+      ? record.raw_url
+      : undefined;
+
   if (!detailUrl) throw new Error("VIGIL Incident could not be loaded because its index entry has no usable raw_url or path.");
 
   try {

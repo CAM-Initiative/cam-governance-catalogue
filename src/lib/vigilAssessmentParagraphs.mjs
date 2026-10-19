@@ -25,3 +25,21 @@ export function assessmentBlocks(value) {
     return assessmentParagraphs(block).map(text => ({ kind: "paragraph", text }));
   });
 }
+
+// Only author-separated Discussion headings create peer editorial subsections.
+// This is presentation grouping of the EXISTING significance field: preserve
+// every paragraph, order, qualification and heading without inventing evidence.
+export function assessmentSections(value) {
+  const sections = [];
+  let current = { kind: "significance", heading: "Governance significance", paragraphs: [] };
+  for (const block of assessmentBlocks(value)) {
+    if (block.kind === "heading") {
+      if (current.paragraphs.length) sections.push(current);
+      current = { kind: "discussion", heading: block.text, paragraphs: [] };
+    } else {
+      current.paragraphs.push(block.text);
+    }
+  }
+  if (current.paragraphs.length || current.kind === "discussion") sections.push(current);
+  return sections;
+}

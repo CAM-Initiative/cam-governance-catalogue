@@ -118,7 +118,10 @@ test("Governance significance is integrated under Conclusion while taxonomy asse
   assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>/);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
-  assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3 className="vigil-case-editorial-subheading">Governance significance<\/h3>/);
+  assert.match(conclusionRenderer, /assessmentSections\(governanceSignificance \?\?/);
+  assert.match(conclusionRenderer, /vigil-conclusion-subsection is-/);
+  assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3 className=\{`vigil-case-editorial-subheading/);
+  assert.match(conclusionRenderer, /\{part.heading\}<\/h3>/);
   assert.doesNotMatch(conclusionRenderer, /vigil-governance-significance-card/);
 });
 
@@ -430,8 +433,10 @@ test("Classification and Compliance tables keep readable body and legend typogra
   assert.match(css, /\.vigil-case-file-page \.vigil-compliance-table tbody td \{[\s\S]*font-size: 1\.02rem[\s\S]*line-height: 1\.62/);
   assert.match(css, /\.vigil-alignment-legend \{[\s\S]*font-size: 0\.92rem[\s\S]*line-height: 1\.5/);
   assert.match(css, /\.vigil-alignment-legend-item > span:last-child > strong \{[\s\S]*font-size: 0\.92rem/);
-  assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\)[\s\S]*display: none !important/);
-  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 11%; \}[\s\S]*nth-child\(2\) \{ width: 30%; \}[\s\S]*nth-child\(3\) \{ width: 44%; \}[\s\S]*nth-child\(4\) \{ width: 15%; \}/);
+  assert.doesNotMatch(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(5\) \{/);
+  assert.match(reportCss, /\.vigil-primary-classification-table thead th:nth-child\(1\) \{ width: 14%; \}[\s\S]*nth-child\(2\) \{ width: 22%; \}[\s\S]*nth-child\(3\) \{ width: 34%; \}[\s\S]*nth-child\(4\) \{ width: 30%; \}/);
+  assert.match(reportCss, /\.vigil-primary-classification-table \.vigil-classification-confidence-chip \{/);
+  assert.match(reportCss, /\.vigil-primary-classification-table tbody td \{[\s\S]*font-size: 9pt !important/);
 });
 
 
@@ -493,6 +498,9 @@ test("mobile Assessment prose stays viewport-bound while Case File harm stacks a
 
   assert.match(polishCss, /@media \(max-width: 820px\)[\s\S]*#case-diagnose[\s\S]*min-width: 0;[\s\S]*max-width: 100%;/);
   assert.match(polishCss, /\.vigil-diagnosis-assessment-details p,[\s\S]*white-space: normal;[\s\S]*overflow-wrap: anywhere;/);
+  assert.match(polishCss, /\.vigil-taxonomy-assessment \{ min-width: 0; max-width: 100%; \}/);
+  assert.match(polishCss, /\.vigil-taxonomy-assessment-table-wrap \{[\s\S]*width: 100%;[\s\S]*max-width: 100%;[\s\S]*overflow-x: auto;[\s\S]*touch-action: pan-x pan-y;/);
+  assert.match(polishCss, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-taxonomy-assessment-scroll-hint \{[\s\S]*display: block;/);
 
   assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-severity-methodology-page \.vigil-harm-matrix-scroll \{[\s\S]*overflow-x: auto;[\s\S]*-webkit-overflow-scrolling: touch;/);
   assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-severity-methodology-page \.vigil-harm-methodology-table \{[\s\S]*min-width: 1080px;/);

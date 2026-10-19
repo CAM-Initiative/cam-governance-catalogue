@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { loadCurrentHarmMethodologyDefinition, type HarmMethodologyDefinition } from "@/lib/vigilHarmMethodology";
 import { harmThresholdParts } from "@/lib/vigilHarmEmphasis.mjs";
 import { HARM_BANDS, harmDimensions, harmIndicatorLabel } from "@/lib/vigilHarmReference";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
@@ -108,6 +110,13 @@ export function highlightedThreshold(text: string) {
 }
 
 function MethodologyMatrix({ compact }: { compact: boolean }) {
+  const [definition, setDefinition] = useState<HarmMethodologyDefinition>();
+  useEffect(() => {
+    let active = true;
+    loadCurrentHarmMethodologyDefinition().then(value => { if (active && value) setDefinition(value); });
+    return () => { active = false; };
+  }, []);
+  const dimensions = definition?.dimensions ?? DIMENSIONS;
   return <div className={"vigil-harm-matrix is-methodology" + (compact ? " is-compact" : "")}>
     <div className="vigil-harm-matrix-scroll" role="region" aria-label="VIGIL Harm Impact Matrix severity threshold reference" tabIndex={0}>
       <table className="vigil-harm-methodology-table">
@@ -121,7 +130,7 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
           </tr>
         </thead>
         <tbody>
-          {DIMENSIONS.map((dimension) => <tr key={dimension.dimension_id}>
+          {dimensions.map((dimension) => <tr key={dimension.dimension_id}>
             <th scope="row">{dimension.label}</th>
             {BANDS.map((band) => <td key={band} className={"band-" + band.toLowerCase()}>
               <p>{highlightedThreshold(dimension.thresholds[band].criterion)}</p>
@@ -134,18 +143,18 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
     {/* Canonical methodology adaptation notes sit outside the threshold cells so they remain readable and citable. */}
     <section className="vigil-harm-interpretive-notes" aria-labelledby="vigil-harm-interpretive-notes-heading">
       <h3 id="vigil-harm-interpretive-notes-heading">Interpretive notes</h3>
-      {DIMENSIONS.flatMap((dimension) => dimension.adaptation_note
+      {dimensions.flatMap((dimension) => dimension.adaptation_note
         ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {dimension.adaptation_note}</p>]
         : [])}
     </section>
     <section className="vigil-harm-interpretive-notes" aria-labelledby="harm-quantification-heading">
       <h3 id="harm-quantification-heading">Quantification and recognition guidance</h3>
       <p>Record the observed outcome, units, period, relevant denominator, uncertainty and source. Numerical indicators support the domain criteria; an audience count or elapsed time alone does not determine severity. Illustrative recovery periods are not mandatory waiting periods.</p>
-      {DIMENSIONS.map((dimension) => <details key={dimension.dimension_id} className="vigil-harm-guidance-detail">
+      {dimensions.map((dimension) => <details key={dimension.dimension_id} className="vigil-harm-guidance-detail">
         <summary>{dimension.label}</summary>
         <p>{dimension.quantification_note}</p>
         {dimension.interpretive_note ? <p>{dimension.interpretive_note}</p> : null}
-        <ul>{dimension.quantitative_indicators.map(indicator => <li key={indicator}>{harmIndicatorLabel(indicator)}</li>)}</ul>
+        <ul>{(dimension.quantitative_indicators ?? []).map(indicator => <li key={indicator}>{harmIndicatorLabel(indicator)}</li>)}</ul>
       </details>)}
     </section>
   </div>;

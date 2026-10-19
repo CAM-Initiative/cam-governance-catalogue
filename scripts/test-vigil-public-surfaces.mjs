@@ -1,5 +1,5 @@
 import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
-import { assessmentParagraphs, assessmentBlocks } from "../src/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentBlocks, assessmentSections } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -339,6 +339,20 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
+test("Section 02 Incident breakdown stays bounded and horizontally swipeable on mobile", async () => {
+  const [assessment, css] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyAssessment.tsx"),
+    read("src/vigil-case-file-polish.css"),
+  ]);
+  assert.match(assessment, /className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap"/);
+  assert.match(assessment, /Swipe sideways to view all table columns/);
+  assert.match(assessment, /aria-describedby="vigil-taxonomy-assessment-scroll-hint"/);
+  assert.match(css, /\.vigil-taxonomy-assessment \{ min-width: 0; max-width: 100%; \}/);
+  assert.match(css, /\.vigil-taxonomy-assessment-table-wrap \{[\s\S]*width: 100%;[\s\S]*max-width: 100%;[\s\S]*overflow-x: auto;[\s\S]*touch-action: pan-x pan-y;/);
+  assert.match(css, /\.vigil-taxonomy-assessment-table \{[\s\S]*min-width: 72rem;/);
+  assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-taxonomy-assessment-scroll-hint \{[\s\S]*display: block;/);
+});
+
 test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
@@ -346,14 +360,37 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>/);
+  const primaryTable = classification.match(/<table className="vigil-classification-table vigil-primary-classification-table">[\s\S]*?<\/table>/)?.[0] ?? "";
+  assert.doesNotMatch(primaryTable, /<th scope="col">Confidence<\/th>|<td data-label="Confidence"/);
+  assert.match(primaryTable, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  const outcomeCell = primaryTable.match(/<td data-label="Alignment"[\s\S]*?<\/td>/)?.[0] ?? "";
+  const basisCell = primaryTable.match(/<td data-label="Evidence and classification basis"[\s\S]*?<\/td>/)?.[0] ?? "";
+  assert.doesNotMatch(outcomeCell, /vigil-classification-confidence-chip/);
+  assert.match(basisCell, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(classification, /className="vigil-classification-intro"[\s\S]*These classifications assess evidence from this occurrence against VIGIL/);
+  assert.match(classification, /whole-system alignment, general model safety or regulatory compliance/);
+  assert.match(classification, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
+  assert.match(classification, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
+  assert.match(classification, /const mappedClasses = tableRows\.filter\(\(\{ item \}\) => Boolean\(item\.classId\)\)/);
+  assert.match(classification, /"failure-occurrence", label: "Failure occurred"/);
+  assert.match(classification, /"successful-invariant", label: "Invariant held"/);
+  assert.match(classification, /"ambiguous-boundary", label: "Boundary unresolved"/);
+  assert.match(classification, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
   assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
-  assert.doesNotMatch(classification, /<th scope="col">Recognition criteria<\/th>/);
-  assert.match(classification, /Current taxonomy recognition tests \(reference only\)/);
+  assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
+  assert.match(classification, /data-label="Recognition criteria"/);
+  assert.doesNotMatch(classification, /Shared taxonomy criteria, not an assessment of this occurrence/);
+  assert.match(classification, /className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests"/);
+  assert.doesNotMatch(classification, /<details className="vigil-classification-reference-criteria"/);
+  assert.doesNotMatch(classification, /<MappingEvidence|Supporting source episodes \(/);
   assert.match(classification, /item\.role === "ambiguous-boundary"/);
-  assert.match(classification, /<strong>Failure-side conditions<\/strong>/);
-  assert.match(classification, /<strong>Success-side conditions<\/strong>/);
+  assert.match(classification, /Unresolved — see classification basis\./);
+  assert.match(classification, /item\.role === "successful-invariant"/);
+  assert.match(classification, /classificationClass\.success_recognition/);
+  assert.match(classification, /classificationClass\.failure_recognition \?\? classificationClass\.recognition/);
+  assert.doesNotMatch(classification, /<strong>Failure-side conditions<\/strong>|<strong>Success-side conditions<\/strong>/);
   assert.match(classification, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
   assert.match(classification, /currentTaxonomyVersion=\{taxonomy\.data\.index\.standard\.version\}/);
   assert.doesNotMatch(classification, /<th scope="col">Incident analysis<\/th>/);
@@ -397,7 +434,7 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(3\) \{ width: 16%; \}/);
   assert.match(css, /\.vigil-compliance-table thead th:nth-child\(4\) \{ width: 40%; \}/);
   assert.match(css, /\.vigil-compliance-table \{[\s\S]*min-width: 72rem;/);
-  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 0;[\s\S]*table-layout: fixed;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*min-width: 80rem;[\s\S]*table-layout: fixed;/);
   assert.match(css, /\.vigil-primary-classification-table-wrap \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.vigil-classification-web-table \{[\s\S]*overflow-x: auto;/);
   assert.match(css, /\.vigil-classification-class-chip/);
@@ -405,6 +442,19 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-classification-class-explanation/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
+  assert.match(css, /\.vigil-primary-classification-table thead th:nth-child\(4\) \{ width: 31%; \}/);
+  assert.match(css, /\.vigil-classification-basis > \.vigil-classification-confidence-chip/);
+  assert.match(css, /\.vigil-classification-intro \{/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-high/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-medium/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-low/);
+  assert.match(css, /\.vigil-classification-confidence-chip\.is-high \{\s*color: hsl\(224 49% 33%\)/);
+  assert.match(css, /html\[data-theme="dark"\] \.vigil-classification-confidence-chip\.is-high/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-classification-counts > span/);
+  assert.doesNotMatch(css, /\.vigil-classification-confidence-chip\.is-high \{\s*color: hsl\(var\(--status-high\)\)/);
+  assert.match(css, /scrollbar-gutter: stable;/);
+  assert.match(css, /\.vigil-classification-recognition-tests/);
+  assert.doesNotMatch(css, /\.vigil-classification-evidence summary|\.vigil-classification-episode-index/);
   assert.doesNotMatch(css, /\.vigil-classification-incident-analysis/);
   assert.match(css, /\.vigil-further-adjudication-table/);
   assert.match(css, /\.vigil-further-adjudication-table th:nth-child\(1\) \{ width: 38%; \}/);
@@ -1461,11 +1511,11 @@ test("integrated conclusion and significance use the same reading paragraphs in 
   for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
     const source = await read(path);
     assert.match(source, /assessmentParagraphs\(governanceConclusion\)/);
-    assert.match(source, /assessmentBlocks\(governanceSignificance \?\?/);
+    assert.match(source, /assessmentSections\(governanceSignificance \?\?/);
   }
   const pages = await read("scripts/prepare-github-pages.js");
   assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
-  assert.match(pages, /assessmentProseHtml\(canonical\.vigil_assessment\?\.significance_to_cam/);
+  assert.match(pages, /conclusionSignificanceHtml\(canonical\.vigil_assessment\?\.significance_to_cam/);
   assert.doesNotMatch(pages, /<p>\$\{escapeHtml\(canonical\.vigil_assessment\?\.governance_interpretation/);
 });
 
@@ -1512,30 +1562,44 @@ test("web, print and static publication use the same artefact media selection", 
 });
 
 
-test("explicit discussion headings retain their role and complete prose in shared renderers", async () => {
-  const heading = "Discussion — Normative framing (unverified hypothesis)";
-  const prose = "A preceding conclusion.\n\n" + heading + "\n\nFirst hypothesis sentence. A qualification follows. A third sentence remains.";
+test("INC-129-style Discussion is a sibling Section 05 subsection with source-preserving web, PDF and static output", async () => {
+  const heading = "Discussion — AI-generated normative convergence (unverified hypothesis)";
+  const prose = "Initial governance significance. The evidentiary limit remains.\n\n" + heading + "\n\nAn unverified hypothesis follows. A matched experiment would be required. This is not a demonstrated causal account.";
   const blocks = assessmentBlocks(prose);
   assert.equal(blocks.filter(block => block.kind === "heading").length, 1);
-  assert.equal(blocks[1].text, heading);
-  assert.equal(blocks.map(block => block.text.trim()).join(" ").replace(/\s+/g, " "), prose.replace(/\s+/g, " "));
-  assert.equal(assessmentBlocks("Discussion — Example: this is an inline paragraph.")[0].kind, "paragraph");
-  assert.equal(assessmentBlocks("The source said: Discussion — Example.")[0].kind, "paragraph");
-  assert.deepEqual(assessmentBlocks(undefined), []);
+  const parts = assessmentSections(prose);
+  assert.deepEqual(parts.map(part => part.kind), ["significance", "discussion"]);
+  assert.deepEqual(parts.map(part => part.heading), ["Governance significance", heading]);
+  assert.equal(parts.flatMap(part => part.paragraphs).join(" ").includes("not a demonstrated causal account"), true);
+  assert.equal([parts[0].paragraphs.join(" "), parts[1].heading, parts[1].paragraphs.join(" ")].join(" ").replace(/\s+/g, " "), prose.replace(/\s+/g, " "));
+  assert.deepEqual(assessmentSections("No separately headed Discussion." ).map(part => part.kind), ["significance"]);
+  assert.deepEqual(assessmentSections("Discussion — Example: this is ordinary prose.").map(part => part.kind), ["significance"]);
+  assert.deepEqual(assessmentSections("The source said: Discussion — Example.").map(part => part.kind), ["significance"]);
+  assert.deepEqual(assessmentSections(undefined), []);
   const pages = await read("scripts/prepare-github-pages.js");
   const start = pages.indexOf("function assessmentProseHtml(value) {");
   const end = pages.indexOf("\nfunction clauseAssessmentsHtml", start);
-  const render = runInNewContext(pages.slice(start, end) + "\nassessmentProseHtml", {
-    assessmentBlocks,
+  assert.ok(start >= 0 && end > start);
+  const render = runInNewContext(pages.slice(start, end) + "\nconclusionSignificanceHtml", {
+    assessmentBlocks, assessmentSections,
     escapeHtml: value => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
   });
   const html = render(prose);
-  assert.ok(html.includes(`<h4 class="vigil-discussion-heading">${heading}</h4>`));
-  assert.ok(html.indexOf("A preceding conclusion.") < html.indexOf(heading));
-  assert.ok(html.indexOf(heading) < html.indexOf("First hypothesis sentence."));
+  assert.ok(html.includes('<section class="vigil-conclusion-subsection is-significance">'));
+  assert.ok(html.includes(`<section class="vigil-conclusion-subsection is-discussion"><h3 class="vigil-discussion-heading">${heading}</h3>`));
+  assert.ok(html.indexOf("Initial governance significance.") < html.indexOf(heading));
+  assert.ok(html.indexOf(heading) < html.indexOf("An unverified hypothesis follows."));
   assert.ok(render("Discussion — <script>\n\nBody.").includes("&lt;script&gt;"));
   for (const path of ["src/pages/vigil-case-file.tsx", "src/pages/evidence-chain-report-deterministic.tsx"]) {
-    const source = await read(path);
-    assert.match(source, /block.kind === "heading" \? <h4 className="vigil-discussion-heading"/);
+    const renderer = await read(path);
+    assert.match(renderer, /assessmentSections\(governanceSignificance \?\?/);
+    assert.match(renderer, /<section className=\{\`vigil-conclusion-subsection is-\$\{part.kind\}\`\}/);
+    assert.match(renderer, /<h3 className=[\s\S]*\{part.heading\}<\/h3>/);
+    assert.doesNotMatch(renderer, /block.kind === "heading" \? <h4 className="vigil-discussion-heading"/);
   }
+  const [webCss, reportCss] = await Promise.all([
+    read("src/vigil-case-file-polish.css"), read("src/vigil-deterministic-report.css"),
+  ]);
+  assert.match(webCss, /\.vigil-case-file-page \.vigil-conclusion-subsection\.is-discussion/);
+  assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-conclusion-subsection\.is-discussion/);
 });

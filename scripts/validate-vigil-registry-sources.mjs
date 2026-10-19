@@ -30,10 +30,10 @@ for (const file of activeFiles) {
 }
 
 const loader = await readFile(resolve(repoRoot, "src/lib/vigilRegistry.ts"), "utf8");
-assert(loader.includes("cacheBustUrl(liveRegistryUrl)"), "Incident registry fetch must use cache busting");
+assert(loader.includes("cacheBustUrl(liveRegistryUrl)") || loader.includes("cacheBustUrl(resolvedLiveUrl)"), "Incident registry fetch must use cache busting");
 assert(loader.includes('record.record_type !== "incident"'), "Registry loader must exclude non-Incident records");
 assert(loader.includes("if (record.path)"), "Canonical record links must prefer durable record paths");
-assert(loader.includes("VIGIL_REGISTRY_SOURCE.branch"), "Canonical record paths must resolve against the configured canonical branch");
+assert(loader.includes("VIGIL_REGISTRY_SOURCE.branch") || (loader.includes("getSelectedVigilBranch") && loader.includes("VIGIL_DEFAULT_BRANCH")), "Canonical record paths must resolve against the configured canonical branch");
 
 const fallback = JSON.parse(await readFile(resolve(repoRoot, "docs/data/vigil-registry-fallback.json"), "utf8"));
 assert(Array.isArray(fallback.records) && fallback.records.length > 0, "VIGIL fallback must contain Incident records");
