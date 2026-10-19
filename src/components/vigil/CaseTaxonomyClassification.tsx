@@ -400,7 +400,6 @@ function ClassificationTable({
                 <span className="vigil-classification-outcome-detail">
                   <MappingOutcome role={item.role} />
                   <strong>{outcome.label}</strong>
-                  <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>
                 </span>
               </td>
               <td data-label="Fidelity class" className="vigil-classification-class-cell">
@@ -409,6 +408,7 @@ function ClassificationTable({
                 {plainEnglish ? <p className="vigil-classification-class-explanation">{plainEnglish}</p> : null}
               </td>
               <td data-label="Evidence and classification basis" className="vigil-classification-basis">
+                <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>
                 <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
               </td>
               <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
@@ -649,6 +649,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
     {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
+    <p className="vigil-classification-intro">These classifications assess evidence from this occurrence against VIGIL's Fidelity Class recognition criteria. Failure occurred and Invariant held describe findings at specific governance boundaries. Boundary unresolved means the evidence engages a class but does not establish whether its invariant failed or held. Findings are limited to this occurrence; they do not establish whole-system alignment, general model safety or regulatory compliance.</p>
     <div className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes">
       {classificationCounts.map(({ role, label }) => <span key={role}>
         <strong>{mappedClasses.filter(({ item }) => item.role === role).length}</strong>{" "}
