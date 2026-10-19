@@ -1,0 +1,67 @@
+/* Wide-screen, editorially separate ad inventory. No layout changes without
+   a validated, explicitly enabled publisher and ad-unit configuration. */
+.site-ad-rail {
+  display: none;
+}
+
+@media (min-width: 1600px) {
+  .site-main.site-main--with-ad-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 160px;
+    align-items: start;
+    column-gap: 24px;
+    padding-inline-end: 24px;
+  }
+
+  .site-main--with-ad-rail > :not(.site-ad-rail) {
+    min-width: 0;
+  }
+
+  .site-ad-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 160px;
+    margin-top: 24px;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .site-ad-rail-label {
+    width: 100%;
+    font-family: var(--app-font-mono), monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .site-ad-rail-unit {
+    flex: 0 0 600px;
+    width: 160px;
+    height: 600px;
+    overflow: hidden;
+  }
+
+  .site-ad-rail-disclosure {
+    margin: 0;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1600px) and (min-height: 780px) {
+  .site-ad-rail {
+    position: sticky;
+    top: 4.5rem;
+  }
+}
+
+@media print {
+  .site-ad-rail { display: none !important; }
+  .site-main.site-main--with-ad-rail {
+    display: flex !important;
+    padding-inline-end: 0 !important;
+  }
+}
