@@ -1572,7 +1572,12 @@ test("INC-129-style Discussion is a sibling Section 05 subsection with source-pr
     const renderer = await read(path);
     assert.match(renderer, /assessmentSections\(governanceSignificance \?\?/);
     assert.match(renderer, /<section className=\{\`vigil-conclusion-subsection is-\$\{part.kind\}\`\}/);
-    assert.match(renderer, /<h3 className=/);
-    assert.doesNotMatch(renderer, /block.kind === "heading" \? <h4 className="vigil-discussion-heading"/);
+    assert.match(renderer, /<h3 className=[\\s\\S]*\\{part.heading\\}<\\/h3>/);
+    assert.doesNotMatch(renderer, /block.kind === "heading" \\? <h4 className="vigil-discussion-heading"/);
   }
+  const [webCss, reportCss] = await Promise.all([
+    read("src/vigil-case-file-polish.css"), read("src/vigil-deterministic-report.css"),
+  ]);
+  assert.match(webCss, /\\.vigil-case-file-page \\.vigil-conclusion-subsection\\.is-discussion/);
+  assert.match(reportCss, /\\.vigil-deterministic-report-host \\.vigil-conclusion-subsection\\.is-discussion/);
 });
