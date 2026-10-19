@@ -772,10 +772,14 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 }
 
 /* Taxonomy reasoning remains a subsection of Governance assessment. */
+/* Constrain the section instead of allowing the wide table to grow its mobile grid track. */
+.vigil-case-file-page .vigil-taxonomy-assessment { min-width: 0; max-width: 100%; }
 .vigil-case-file-page .vigil-taxonomy-assessment-table {
   width: 100%;
+  min-width: 72rem;
   table-layout: fixed;
 }
+.vigil-case-file-page .vigil-taxonomy-assessment-scroll-hint { display: none; }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table th,
 .vigil-case-file-page .vigil-taxonomy-assessment-table td {
@@ -789,12 +793,28 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 
 /* Taxonomy assessment table outline and header treatment match Classification and real-world harm. */
 .vigil-case-file-page .vigil-taxonomy-assessment-table-wrap {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-inline: contain;
+  touch-action: pan-x pan-y;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
   border: 1px solid hsl(var(--border) / 0.74);
   border-radius: 0.58rem;
   background: hsl(var(--background));
+}
+@media (max-width: 820px) {
+  .vigil-case-file-page .vigil-taxonomy-assessment-scroll-hint {
+    display: block;
+    margin: 0 0 0.55rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
 }
 
 .vigil-case-file-page .vigil-taxonomy-assessment-table thead th {
