@@ -346,11 +346,15 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition tests[\s\S]*<th scope="col">Confidence<\/th>/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
   assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
   assert.doesNotMatch(classification, /<th scope="col">Recognition criteria<\/th>/);
-  assert.match(classification, /Current taxonomy recognition tests \(reference only\)/);
+  assert.match(classification, /current taxonomy · reference only/);
+  assert.match(classification, /data-label="Recognition tests \(current taxonomy · reference only\)"/);
+  assert.match(classification, /className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests"/);
+  assert.doesNotMatch(classification, /<details className="vigil-classification-reference-criteria"/);
+  assert.doesNotMatch(classification, /<MappingEvidence|Supporting source episodes \(/);
   assert.match(classification, /item\.role === "ambiguous-boundary"/);
   assert.match(classification, /<strong>Failure-side conditions<\/strong>/);
   assert.match(classification, /<strong>Success-side conditions<\/strong>/);
@@ -405,6 +409,9 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-classification-class-explanation/);
   assert.match(css, /\.vigil-classification-evidence-stack/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
+  assert.match(css, /\.vigil-primary-classification-table thead th:nth-child\(5\) \{ width: 8%; \}/);
+  assert.match(css, /\.vigil-classification-recognition-tests/);
+  assert.doesNotMatch(css, /\.vigil-classification-evidence summary|\.vigil-classification-episode-index/);
   assert.doesNotMatch(css, /\.vigil-classification-incident-analysis/);
   assert.match(css, /\.vigil-further-adjudication-table/);
   assert.match(css, /\.vigil-further-adjudication-table th:nth-child\(1\) \{ width: 38%; \}/);

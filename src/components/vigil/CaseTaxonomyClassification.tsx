@@ -1,4 +1,3 @@
-import { mappingEvidence } from "@/lib/vigilMappingEvidence.mjs";
 import { CaseRequirementAssessments } from "./CaseRequirementAssessments";
 import { useEffect, useMemo, useState } from "react";
 import { AlignmentIcon } from "@/lib/vigilAlignmentIcon.mjs";
@@ -347,36 +346,13 @@ function TaxonomyList({
   </ul>;
 }
 
-function MappingEvidence({ raw, classId }: { raw?: UnknownRecord; classId?: string }) {
-  const episodes = mappingEvidence(raw, classId);
-  if (!episodes.length) return <p className="vigil-taxonomy-reference-note">No supporting source episode is explicitly linked to this mapping in the record.</p>;
-  return <>
-    <p className="vigil-classification-episode-index">Supporting source episodes: {episodes.map((episode, index) => <span key={`${episode.label}-${index}`}>
-      {index > 0 ? "; " : ""}{episode.href ? <a href={episode.href}>{episode.label}</a> : episode.label}
-    </span>)}. See Section 02 for the detailed analysis.</p>
-    <details className="vigil-classification-evidence">
-    <summary>Supporting source episodes ({episodes.length})</summary>
-    <p>These recorded relationships may include different outcomes at different points in the occurrence.</p>
-    {episodes.map((episode, index) => <section key={`${episode.label}-${index}`}>
-      <strong>{episode.href ? <a href={episode.href}>{episode.label} · Section 02</a> : episode.label}</strong>
-      {episode.relationships.map((relationship, relationshipIndex) => <div key={relationshipIndex}>
-        <span>{mappingOutcome(relationship.role as ClassificationRole).label}</span>
-        <p>{relationship.rationale ?? "No separate episode rationale recorded."}</p>
-      </div>)}
-      {episode.sources.length > 0 && <ul>{episode.sources.map(source => <li key={source.ref}><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a></li>)}</ul>}
-    </section>)}
-  </details></>;
-}
-
 function ClassificationTable({
-  raw,
   rows,
   taxonomyReferenceNumber,
   taxonomyReferenceHref,
   recordedTaxonomyVersion,
   currentTaxonomyVersion,
 }: {
-  raw?: UnknownRecord;
   rows: ClassificationTableRow[];
   taxonomyReferenceNumber?: number;
   taxonomyReferenceHref?: string;
@@ -390,12 +366,13 @@ function ClassificationTable({
   return <>
     <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table vigil-primary-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings with class meaning, recognition criteria and confidence.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with occurrence-specific classification basis, separate taxonomy recognition tests and confidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Evidence and classification basis</th>
+            <th scope="col">Recognition tests <span className="vigil-reference-criteria-heading-note">(current taxonomy · reference only)</span></th>
             <th scope="col">Confidence</th>
           </tr>
         </thead>
@@ -422,10 +399,10 @@ function ClassificationTable({
               </td>
               <td data-label="Evidence and classification basis" className="vigil-classification-basis">
                 <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
-                <MappingEvidence raw={raw} classId={classId} />
-                {classificationClass ? <details className="vigil-classification-reference-criteria">
-                  <summary>Current taxonomy recognition tests (reference only)</summary>
-                  <p>These are shared class criteria from the currently published taxonomy, not proof that a condition was satisfied in this Incident. The recorded adjudication version may differ.</p>
+              </td>
+              <td data-label="Recognition tests (current taxonomy · reference only)" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
+                {classificationClass ? <>
+                  <p className="vigil-classification-taxonomy-note">Shared taxonomy criteria, not an assessment of this occurrence. The recorded version may differ.</p>
                   {item.role === "ambiguous-boundary" ? <>
                     <strong>Failure-side conditions</strong>
                     <TaxonomyList values={(classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate failure recognition conditions published." />
@@ -439,7 +416,7 @@ function ClassificationTable({
                     <strong>Exclusions</strong>
                     <TaxonomyList values={classificationClass.exclusions} empty="No exclusions recorded." />
                   </> : null}
-                </details> : null}
+                </> : <span>Current recognition tests are unavailable for this mapping.</span>}
               </td>
               <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
             </tr>;
@@ -659,7 +636,7 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
     {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <ClassificationTable raw={raw} rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
+    <ClassificationTable rows={tableRows} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref={taxonomyReferenceHref} recordedTaxonomyVersion={parsed.taxonomyVersion} currentTaxonomyVersion={taxonomy.data.index.standard.version} />
 
     <div className="vigil-classification-report-cards">
       <ClassificationCard

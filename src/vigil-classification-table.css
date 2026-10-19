@@ -61,10 +61,11 @@
   min-width: 0;
   table-layout: fixed;
 }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { width: 12%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { width: 26%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 50%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 12%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(1) { width: 9%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(2) { width: 21%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 37%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 25%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { width: 8%; }
 
 .vigil-case-file-page .vigil-primary-classification-table-wrap {
   overflow-x: auto;
@@ -715,29 +716,32 @@
 .vigil-case-file-page .vigil-compliance-result { display: inline-flex; align-items: center; gap: 0.4rem; }
 .vigil-case-file-page .vigil-compliance-result svg { width: 1.15rem; height: 1.15rem; flex: none; stroke-width: 2.35; }
 
-.vigil-classification-evidence, .vigil-classification-reference-criteria {
-  margin-top: 0.8rem;
-  overflow-wrap: anywhere;
+.vigil-reference-criteria-heading-note {
+  display: block;
+  margin-top: 0.2rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
 }
-.vigil-classification-evidence summary, .vigil-classification-reference-criteria summary {
-  cursor: pointer;
-  font-weight: 600;
+.vigil-classification-recognition-tests {
+  overflow-wrap: break-word;
 }
-.vigil-classification-evidence summary:focus-visible, .vigil-classification-reference-criteria summary:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
+.vigil-classification-recognition-tests > strong {
+  display: block;
+  margin-top: 0.75rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.9em;
 }
-.vigil-classification-evidence section { margin: 0.8rem 0; }
+.vigil-classification-recognition-tests > strong:first-of-type { margin-top: 0.4rem; }
+.vigil-classification-taxonomy-note {
+  margin: 0 0 0.65rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.85em;
+  line-height: 1.45;
+}
 [id^="vigil-source-episode-"] { scroll-margin-top: 6rem; }
 @media print {
-  .vigil-classification-evidence { break-inside: auto; }
-  .vigil-classification-evidence section { break-inside: auto; }
-  .vigil-classification-basis { overflow-wrap: anywhere; }
-}
-.vigil-classification-episode-index { display: none; }
-@media print {
-  .vigil-classification-evidence { display: none !important; }
-  .vigil-classification-episode-index { display: block !important; }
+  .vigil-classification-basis, .vigil-classification-recognition-tests { overflow-wrap: break-word; }
 }
 
 @media screen and (max-width: 760px) {
@@ -765,5 +769,6 @@
   font-size: 0.7rem;
   letter-spacing: 0.015em;
 }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 48%; }
-.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 14%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(3) { width: 37%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(4) { width: 25%; }
+.vigil-case-file-page .vigil-primary-classification-table thead th:nth-child(5) { width: 8%; }

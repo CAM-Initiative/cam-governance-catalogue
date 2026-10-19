@@ -295,10 +295,11 @@ const legacy = structuredClone(evidenceFixture);
 delete legacy.vigil_assessment.source_clause_analysis.clauses[0].episode_id;
 assert.equal(mappingEvidence(legacy, "C1")[0].href, undefined);
 const classificationComponent = await readFile(new URL("../src/components/vigil/CaseTaxonomyClassification.tsx", import.meta.url), "utf8");
-assert.match(classificationComponent, /mappingEvidence\(raw, classId\)/);
-assert.match(classificationComponent, /<MappingEvidence raw=\{raw\} classId=\{classId\}/);
+assert.doesNotMatch(classificationComponent, /mappingEvidence\(raw, classId\)|<MappingEvidence|Supporting source episodes \(/);
 assert.match(classificationComponent, /item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
-assert.match(classificationComponent, /Current taxonomy recognition tests \(reference only\)/);
+assert.match(classificationComponent, /<th scope="col">Recognition tests/);
+assert.match(classificationComponent, /className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests"/);
+assert.doesNotMatch(classificationComponent, /<details className="vigil-classification-reference-criteria"/);
 assert.match(classificationComponent, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
 
 assert.match(caseFile, /setPendingEpisodeTarget\(href\.slice\(1\)\)/);
