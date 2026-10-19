@@ -350,6 +350,12 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   const primaryTable = classification.match(/<table className="vigil-classification-table vigil-primary-classification-table">[\s\S]*?<\/table>/)?.[0] ?? "";
   assert.doesNotMatch(primaryTable, /<th scope="col">Confidence<\/th>|<td data-label="Confidence"/);
   assert.match(primaryTable, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  const outcomeCell = primaryTable.match(/<td data-label="Alignment"[\s\S]*?<\/td>/)?.[0] ?? "";
+  const basisCell = primaryTable.match(/<td data-label="Evidence and classification basis"[\s\S]*?<\/td>/)?.[0] ?? "";
+  assert.doesNotMatch(outcomeCell, /vigil-classification-confidence-chip/);
+  assert.match(basisCell, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(classification, /className="vigil-classification-intro"[\s\S]*These classifications assess evidence from this occurrence against VIGIL/);
+  assert.match(classification, /whole-system alignment, general model safety or regulatory compliance/);
   assert.match(classification, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
   assert.match(classification, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
   assert.match(classification, /const mappedClasses = tableRows\.filter\(\(\{ item \}\) => Boolean\(item\.classId\)\)/);
@@ -423,6 +429,8 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(css, /\.vigil-classification-evidence-stack/);
   assert.match(css, /\.vigil-classification-taxonomy-list/);
   assert.match(css, /\.vigil-primary-classification-table thead th:nth-child\(4\) \{ width: 31%; \}/);
+  assert.match(css, /\.vigil-classification-basis > \.vigil-classification-confidence-chip/);
+  assert.match(css, /\.vigil-classification-intro \{/);
   assert.match(css, /\.vigil-classification-confidence-chip\.is-high/);
   assert.match(css, /\.vigil-classification-confidence-chip\.is-medium/);
   assert.match(css, /\.vigil-classification-confidence-chip\.is-low/);
