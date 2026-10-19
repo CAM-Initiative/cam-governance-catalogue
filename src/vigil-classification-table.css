@@ -222,6 +222,15 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
   line-height: 1.62;
 }
 
+/* Disputed mapping notes follow the standard introduction without a box. */
+.vigil-case-file-page .vigil-classification-state-note {
+  margin: 0 0 1rem;
+  max-width: 72rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
+
 /* External classifications preserve the external assessor's own scheme rather
    than translating it into VIGIL alignment roles. */
 .vigil-case-file-page .vigil-external-alignment-classification {

@@ -363,18 +363,21 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>/);
   const primaryTable = classification.match(/<table className="vigil-classification-table vigil-primary-classification-table">[\s\S]*?<\/table>/)?.[0] ?? "";
   assert.doesNotMatch(primaryTable, /<th scope="col">Confidence<\/th>|<td data-label="Confidence"/);
-  assert.match(primaryTable, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(primaryTable, /item.role !== "ambiguous-boundary" && <span/);
   const outcomeCell = primaryTable.match(/<td data-label="Alignment"[\s\S]*?<\/td>/)?.[0] ?? "";
   const basisCell = primaryTable.match(/<td data-label="Evidence and classification basis"[\s\S]*?<\/td>/)?.[0] ?? "";
   assert.doesNotMatch(outcomeCell, /vigil-classification-confidence-chip/);
-  assert.match(basisCell, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(basisCell, /item.role !== "ambiguous-boundary" && <span/);
+  assert.ok(classification.includes('<Meta label="Confidence" value={item.role === "ambiguous-boundary" ? undefined : item.confidence} />'));
+  assert.ok(classification.indexOf('className="vigil-classification-intro"') < classification.indexOf('className="vigil-classification-state-note"'));
+  assert.match(css, /\.vigil-classification-state-note \{/);
   assert.match(classification, /className="vigil-classification-intro"[\s\S]*These classifications assess evidence from this occurrence against VIGIL/);
   assert.match(classification, /whole-system alignment, general model safety or regulatory compliance/);
   assert.match(classification, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
   assert.match(classification, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
   assert.match(classification, /const mappedClasses = tableRows\.filter\(\(\{ item \}\) => Boolean\(item\.classId\)\)/);
   assert.match(classification, /"failure-occurrence", label: "Failure occurred"/);
-  assert.match(classification, /"successful-invariant", label: "Invariant held"/);
+  assert.match(classification, /"successful-invariant", label: "Aligned"/);
   assert.match(classification, /"ambiguous-boundary", label: "Boundary unresolved"/);
   assert.match(classification, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
@@ -514,7 +517,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(contract, /informational mixed-record affordance/);
 });
 
-test("Case Files make invariant-held alignment outcomes unmistakable across public surfaces", async () => {
+test("Case Files make aligned outcomes unmistakable across public surfaces", async () => {
   const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
@@ -543,10 +546,10 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
-  assert.match(classification, /alignment finding · invariant held/i);
-  assert.match(classification, /The relevant governance boundary was tested and held/);
-  assert.match(classification, /Primary alignment finding · invariant held/);
-  assert.match(classification, /Secondary alignment finding · invariant held/);
+  assert.match(classification, /alignment finding · aligned/i);
+  assert.match(classification, /The evidence supports that the relevant governance invariant held/);
+  assert.match(classification, /Primary alignment finding · aligned/);
+  assert.match(classification, /Secondary alignment finding · aligned/);
   assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
   assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
   assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
@@ -593,7 +596,7 @@ test("Knowledge Base withholds whole-Incident classification until adjudication 
   ]);
   assert.match(hub, /Mappings classify individual boundaries\. The Case File index summarises the Incident\./);
   assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
-  assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
+  assert.match(classification, /Failure occurred[\s\S]*Aligned[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
   assert.match(hub, /only after adjudication coverage is complete[\s\S]*Adjudication incomplete/);
