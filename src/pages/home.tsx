@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { Shell } from "@/components/layout/Shell";
-import { VigilBranchSelector } from "@/components/vigil/VigilBranchSelector";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
@@ -451,7 +450,6 @@ export default function Home() {
   return (
     <Shell>
       <main className="home-page premium-home">
-        <VigilBranchSelector />
         <PremiumHero />
         <PatternField />
         <AdjudicationFrameworkSection />
