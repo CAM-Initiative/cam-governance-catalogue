@@ -79,6 +79,9 @@ jobs:
         env:
           VITE_VIGIL_CHALLENGE_ENDPOINT: ${{ vars.VITE_VIGIL_CHALLENGE_ENDPOINT }}
           VITE_VIGIL_TURNSTILE_SITE_KEY: ${{ vars.VITE_VIGIL_TURNSTILE_SITE_KEY }}
+          VITE_ADSENSE_CLIENT_ID: ${{ vars.VITE_ADSENSE_CLIENT_ID }}
+          VITE_ADSENSE_SLOT: ${{ vars.VITE_ADSENSE_SLOT }}
+          VITE_ADSENSE_ENABLED: ${{ vars.VITE_ADSENSE_ENABLED }}
           VIGIL_FEATURE_REGISTRY: https://raw.githubusercontent.com/CAM-Initiative/Vigil/chore/remove-aeon-governance-lab-public-references/vigil/VIGIL.Incidents.Index.json
         run: |
           rm -rf docs/assets

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "9 October 2026",
-  "intro": "Plain-language privacy information for the CAM Initiative public website, email correspondence and VIGIL Case File issue-reporting forms. It describes current site behaviour and does not claim legal certification or regulatory compliance.",
+  "lastUpdated": "19 October 2026",
+  "intro": "Plain-language privacy information for the CAM Initiative public website, email correspondence, VIGIL Case File issue-reporting forms and optional advertising. It describes current and conditional site behaviour and does not claim legal certification or regulatory compliance.",
   "sections": [
     {
       "id": "overview",
@@ -46,6 +46,11 @@
       "id": "public-record-review",
       "title": "Public-record review",
       "body": "Material received by email is not automatically a public VIGIL Observatory record. Any later publication is subject to maintainer review, classification, evidence assessment, and redaction where appropriate. Contact details should not be published without explicit agreement unless already public and materially relevant."
+    },
+    {
+      "id": "advertising-and-editorial-independence",
+      "title": "Optional advertising and editorial independence",
+      "body": "Where advertising is enabled, selected wide-screen website pages may display clearly labelled Google AdSense advertising in a separate sidebar. Google and participating advertising partners may process device, cookie, usage and technical information for ad delivery, measurement and fraud prevention, subject to applicable disclosures and consent choices. CAM Initiative will not activate AdSense before reviewing appropriate privacy and consent arrangements, including Google-certified consent management requirements where applicable. When advertising is disabled, the site does not load the AdSense advertising script. Advertising revenue does not determine VIGIL incident selection, sources, taxonomy decisions, assessments or conclusions. An advert is not an endorsement by CAM Initiative. For more information on Google's data practices and ad preferences, see https://policies.google.com/technologies/ads and https://myadcenter.google.com/."
     },
     {
       "id": "third-party-services",
