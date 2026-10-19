@@ -346,18 +346,21 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
     read("src/lib/vigilFailureTaxonomy.ts"),
   ]);
 
-  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition tests[\s\S]*<th scope="col">Confidence<\/th>/);
+  assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition criteria[\s\S]*<th scope="col">Confidence<\/th>/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
   assert.match(classification, /\{item\.basis \?\? "The current Incident record does not contain an occurrence-specific classification basis/);
-  assert.doesNotMatch(classification, /<th scope="col">Recognition criteria<\/th>/);
-  assert.match(classification, /current taxonomy · reference only/);
-  assert.match(classification, /data-label="Recognition tests \(current taxonomy · reference only\)"/);
+  assert.match(classification, /<th scope="col">Recognition criteria<\/th>/);
+  assert.match(classification, /data-label="Recognition criteria"/);
+  assert.doesNotMatch(classification, /Shared taxonomy criteria, not an assessment of this occurrence/);
   assert.match(classification, /className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests"/);
   assert.doesNotMatch(classification, /<details className="vigil-classification-reference-criteria"/);
   assert.doesNotMatch(classification, /<MappingEvidence|Supporting source episodes \(/);
   assert.match(classification, /item\.role === "ambiguous-boundary"/);
-  assert.match(classification, /<strong>Failure-side conditions<\/strong>/);
-  assert.match(classification, /<strong>Success-side conditions<\/strong>/);
+  assert.match(classification, /Unresolved — see classification basis\./);
+  assert.match(classification, /item\.role === "successful-invariant"/);
+  assert.match(classification, /classificationClass\.success_recognition/);
+  assert.match(classification, /classificationClass\.failure_recognition \?\? classificationClass\.recognition/);
+  assert.doesNotMatch(classification, /<strong>Failure-side conditions<\/strong>|<strong>Success-side conditions<\/strong>/);
   assert.match(classification, /recordedTaxonomyVersion=\{parsed\.taxonomyVersion\}/);
   assert.match(classification, /currentTaxonomyVersion=\{taxonomy\.data\.index\.standard\.version\}/);
   assert.doesNotMatch(classification, /<th scope="col">Incident analysis<\/th>/);

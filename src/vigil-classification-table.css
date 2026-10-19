@@ -716,28 +716,11 @@
 .vigil-case-file-page .vigil-compliance-result { display: inline-flex; align-items: center; gap: 0.4rem; }
 .vigil-case-file-page .vigil-compliance-result svg { width: 1.15rem; height: 1.15rem; flex: none; stroke-width: 2.35; }
 
-.vigil-reference-criteria-heading-note {
-  display: block;
-  margin-top: 0.2rem;
-  font-weight: 500;
-  letter-spacing: normal;
-  text-transform: none;
-}
 .vigil-classification-recognition-tests {
   overflow-wrap: break-word;
 }
-.vigil-classification-recognition-tests > strong {
-  display: block;
-  margin-top: 0.75rem;
-  margin-bottom: 0.3rem;
-  font-size: 0.9em;
-}
-.vigil-classification-recognition-tests > strong:first-of-type { margin-top: 0.4rem; }
-.vigil-classification-taxonomy-note {
-  margin: 0 0 0.65rem;
+.vigil-classification-boundary-criteria {
   color: hsl(var(--muted-foreground));
-  font-size: 0.85em;
-  line-height: 1.45;
 }
 [id^="vigil-source-episode-"] { scroll-margin-top: 6rem; }
 @media print {

@@ -366,13 +366,13 @@ function ClassificationTable({
   return <>
     <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table vigil-primary-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings with occurrence-specific classification basis, separate taxonomy recognition tests and confidence.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with occurrence-specific classification basis, role-relevant recognition criteria and confidence.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
             <th scope="col">Fidelity class</th>
             <th scope="col">Evidence and classification basis</th>
-            <th scope="col">Recognition tests <span className="vigil-reference-criteria-heading-note">(current taxonomy · reference only)</span></th>
+            <th scope="col">Recognition criteria</th>
             <th scope="col">Confidence</th>
           </tr>
         </thead>
@@ -400,23 +400,17 @@ function ClassificationTable({
               <td data-label="Evidence and classification basis" className="vigil-classification-basis">
                 <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
               </td>
-              <td data-label="Recognition tests (current taxonomy · reference only)" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
-                {classificationClass ? <>
-                  <p className="vigil-classification-taxonomy-note">Shared taxonomy criteria, not an assessment of this occurrence. The recorded version may differ.</p>
-                  {item.role === "ambiguous-boundary" ? <>
-                    <strong>Failure-side conditions</strong>
-                    <TaxonomyList values={(classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate failure recognition conditions published." />
-                    <strong>Success-side conditions</strong>
-                    <TaxonomyList values={classificationClass.success_recognition?.required_conditions} empty="No separate success recognition conditions published." />
-                  </> : <>
-                    <strong>{item.role === "successful-invariant" ? "Success-side conditions" : "Failure-side conditions"}</strong>
-                    <TaxonomyList values={(item.role === "successful-invariant" ? classificationClass.success_recognition : classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions} empty="No separate recognition conditions published." />
-                  </>}
-                  {classificationClass.exclusions?.length ? <>
-                    <strong>Exclusions</strong>
-                    <TaxonomyList values={classificationClass.exclusions} empty="No exclusions recorded." />
-                  </> : null}
-                </> : <span>Current recognition tests are unavailable for this mapping.</span>}
+              <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
+                {item.role === "ambiguous-boundary"
+                  ? <span className="vigil-classification-boundary-criteria">Unresolved — see classification basis.</span>
+                  : classificationClass
+                    ? <TaxonomyList
+                        values={(item.role === "successful-invariant"
+                          ? classificationClass.success_recognition
+                          : classificationClass.failure_recognition ?? classificationClass.recognition)?.required_conditions}
+                        empty="No separate recognition conditions published."
+                      />
+                    : <span>Recognition criteria unavailable for this class.</span>}
               </td>
               <td data-label="Confidence">{item.confidence ?? "Not separately stated"}</td>
             </tr>;
