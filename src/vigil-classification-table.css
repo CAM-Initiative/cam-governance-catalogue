@@ -211,6 +211,16 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
 .vigil-case-file-page .vigil-classification-basis {
   color: hsl(var(--foreground) / 0.9) !important;
 }
+.vigil-case-file-page .vigil-classification-basis > .vigil-classification-confidence-chip {
+  margin: 0 0 0.6rem;
+}
+.vigil-case-file-page .vigil-classification-intro {
+  margin: 0 0 0.85rem;
+  max-width: 72rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.94rem;
+  line-height: 1.62;
+}
 
 /* External classifications preserve the external assessor's own scheme rather
    than translating it into VIGIL alignment roles. */
