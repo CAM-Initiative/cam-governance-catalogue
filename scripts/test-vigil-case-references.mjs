@@ -498,6 +498,9 @@ test("mobile Assessment prose stays viewport-bound while Case File harm stacks a
 
   assert.match(polishCss, /@media \(max-width: 820px\)[\s\S]*#case-diagnose[\s\S]*min-width: 0;[\s\S]*max-width: 100%;/);
   assert.match(polishCss, /\.vigil-diagnosis-assessment-details p,[\s\S]*white-space: normal;[\s\S]*overflow-wrap: anywhere;/);
+  assert.match(polishCss, /\.vigil-taxonomy-assessment \{ min-width: 0; max-width: 100%; \}/);
+  assert.match(polishCss, /\.vigil-taxonomy-assessment-table-wrap \{[\s\S]*width: 100%;[\s\S]*max-width: 100%;[\s\S]*overflow-x: auto;[\s\S]*touch-action: pan-x pan-y;/);
+  assert.match(polishCss, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-taxonomy-assessment-scroll-hint \{[\s\S]*display: block;/);
 
   assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-severity-methodology-page \.vigil-harm-matrix-scroll \{[\s\S]*overflow-x: auto;[\s\S]*-webkit-overflow-scrolling: touch;/);
   assert.match(harmCss, /@media \(max-width: 760px\)[\s\S]*\.vigil-severity-methodology-page \.vigil-harm-methodology-table \{[\s\S]*min-width: 1080px;/);
