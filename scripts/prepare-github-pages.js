@@ -39,6 +39,16 @@ if (!existsSync(indexPath)) {
 }
 
 mkdirSync(docsDir, { recursive: true });
+// AdSense ownership / authorised-seller verification can be published ahead of
+// ad activation. Never commit a fake publisher ID or retain a stale ads.txt.
+const adsTxtPath = join(docsDir, "ads.txt");
+const adsenseClientId = String(process.env.VITE_ADSENSE_CLIENT_ID || "").trim();
+if (/^ca-pub-\d{16}$/.test(adsenseClientId)) {
+  const publisherId = adsenseClientId.slice(3);
+  writeFileSync(adsTxtPath, `google.com, ${publisherId}, DIRECT, f08c47fec0942fa0\n`);
+} else {
+  rmSync(adsTxtPath, { force: true });
+}
 copyFileSync(indexPath, fallbackPath);
 writeFileSync(nojekyllPath, "");
 
