@@ -339,6 +339,20 @@ test("Case File stages use visible editorial headings without duplicate descript
   assert.match(css, /vigil-case-editorial-heading[\s\S]*border-top: 1px solid[\s\S]*font-family: var\(--app-font-serif\)/);
 });
 
+test("Section 02 Incident breakdown stays bounded and horizontally swipeable on mobile", async () => {
+  const [assessment, css] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyAssessment.tsx"),
+    read("src/vigil-case-file-polish.css"),
+  ]);
+  assert.match(assessment, /className="vigil-external-assessment-table-wrap vigil-taxonomy-assessment-table-wrap"/);
+  assert.match(assessment, /Swipe sideways to view all table columns/);
+  assert.match(assessment, /aria-describedby="vigil-taxonomy-assessment-scroll-hint"/);
+  assert.match(css, /\\.vigil-taxonomy-assessment \\{ min-width: 0; max-width: 100%; \\}/);
+  assert.match(css, /\\.vigil-taxonomy-assessment-table-wrap \\{[\\s\\S]*width: 100%;[\\s\\S]*max-width: 100%;[\\s\\S]*overflow-x: auto;[\\s\\S]*touch-action: pan-x pan-y;/);
+  assert.match(css, /\\.vigil-taxonomy-assessment-table \\{[\\s\\S]*min-width: 72rem;/);
+  assert.match(css, /@media \\(max-width: 820px\\) \\{[\\s\\S]*\\.vigil-taxonomy-assessment-scroll-hint \\{[\\s\\S]*display: block;/);
+});
+
 test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
