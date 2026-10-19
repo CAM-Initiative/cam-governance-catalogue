@@ -844,4 +844,19 @@ aside[aria-label="Explore AI governance"] .home-governance-card > span:first-chi
 .vigil-case-file-page .vigil-complete-source-passage summary { cursor: pointer; font-weight: 600; }
 .vigil-case-file-page .vigil-complete-source-passage q { display: block; margin-top: 0.6rem; white-space: pre-line; }
 
-.vigil-case-file-page .vigil-discussion-heading { margin: 1rem 0 0; font-size: 1rem; font-weight: 600; line-height: 1.45; break-after: avoid; }
+/* A canonically authored, standalone Discussion heading is a peer subsection,
+   not a small note embedded in the Governance significance paragraphs. */
+.vigil-case-file-page .vigil-conclusion-subsection.is-discussion {
+  margin-top: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid hsl(var(--border) / 0.7);
+}
+.vigil-case-file-page .vigil-conclusion-subsection .vigil-case-subheading { margin-bottom: 0.75rem; }
+.vigil-case-file-page .vigil-discussion-heading {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 650;
+  line-height: 1.42;
+  overflow-wrap: break-word;
+  break-after: avoid;
+}

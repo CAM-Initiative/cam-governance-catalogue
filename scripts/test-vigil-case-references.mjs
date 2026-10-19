@@ -118,6 +118,8 @@ test("Governance significance is integrated under Conclusion while taxonomy asse
   assert.match(assessmentRenderer, /<CaseTaxonomyAssessment raw=\{incident\.raw\} taxonomyReferenceNumber=\{taxonomyReferenceNumber\} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" \/>/);
   assert.doesNotMatch(assessmentRenderer, /Governance significance/);
   assert.match(conclusionRenderer, /vigil-conclusion-governance-significance/);
+  assert.match(conclusionRenderer, /assessmentSections\(governanceSignificance \?\?/);
+  assert.match(conclusionRenderer, /vigil-conclusion-subsection is-/);
   assert.match(conclusionRenderer, /vigil-case-subheading[\s\S]*<h3 className="vigil-case-editorial-subheading">Governance significance<\/h3>/);
   assert.doesNotMatch(conclusionRenderer, /vigil-governance-significance-card/);
 });

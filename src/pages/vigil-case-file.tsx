@@ -1,5 +1,5 @@
 import { incidentArtefactMediaKind } from "@/lib/vigilArtefactMedia.mjs";
-import { assessmentParagraphs, assessmentBlocks } from "@/lib/vigilAssessmentParagraphs.mjs";
+import { assessmentParagraphs, assessmentSections } from "@/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "@/lib/vigilDisputedCopy.mjs";
 import { useEffect, useMemo, useState, type MouseEvent, type ReactNode } from "react";
 import { ArrowLeft, Blend, CircleCheckBig, CircleX, FileText, Info } from "lucide-react";
@@ -735,10 +735,12 @@ export default function VigilCaseFile() {
       <section className="vigil-diagnosis-definition vigil-conclusion-content">
         {governanceConclusion && <div className="vigil-assessment-prose">{assessmentParagraphs(governanceConclusion).map((paragraph, index) => <p className="vigil-diagnosis-assessment-summary" key={index}>{paragraph}</p>)}</div>}
         <div className="vigil-conclusion-governance-significance">
-          <div className="vigil-case-subheading">
-            <h3 className="vigil-case-editorial-subheading">Governance significance</h3>
-          </div>
-          <div className="vigil-assessment-prose">{assessmentBlocks(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((block, index) => block.kind === "heading" ? <h4 className="vigil-discussion-heading" key={index}>{block.text}</h4> : <p key={index}>{block.text}</p>)}</div>
+          {assessmentSections(governanceSignificance ?? "Governance significance is not yet separately stated in the canonical Incident.").map((part, index) => <section className={`vigil-conclusion-subsection is-${part.kind}`} key={`${part.kind}-${index}`}>
+            <div className="vigil-case-subheading">
+              <h3 className={`vigil-case-editorial-subheading${part.kind === "discussion" ? " vigil-discussion-heading" : ""}`}>{part.heading}</h3>
+            </div>
+            <div className="vigil-assessment-prose">{part.paragraphs.map((paragraph, paragraphIndex) => <p key={paragraphIndex}>{paragraph}</p>)}</div>
+          </section>)}
         </div>
       </section>
     </article> : <p className="vigil-case-empty">No integrated governance conclusion is currently published for this Incident.</p>;
