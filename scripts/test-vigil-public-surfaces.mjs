@@ -517,7 +517,7 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(contract, /informational mixed-record affordance/);
 });
 
-test("Case Files make invariant-held alignment outcomes unmistakable across public surfaces", async () => {
+test("Case Files make aligned outcomes unmistakable across public surfaces", async () => {
   const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
     read("src/pages/vigil-cases.tsx"),
     read("src/pages/vigil-case-file.tsx"),
@@ -546,10 +546,10 @@ test("Case Files make invariant-held alignment outcomes unmistakable across publ
   assert.match(caseFile, /VIGIL Harm Impact Assessment/);
   assert.match(caseFile, /vigil-exemplar-callout-boundary/);
   assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
-  assert.match(classification, /alignment finding · invariant held/i);
-  assert.match(classification, /The relevant governance boundary was tested and held/);
-  assert.match(classification, /Primary alignment finding · invariant held/);
-  assert.match(classification, /Secondary alignment finding · invariant held/);
+  assert.match(classification, /alignment finding · aligned/i);
+  assert.match(classification, /The evidence supports that the relevant governance invariant held/);
+  assert.match(classification, /Primary alignment finding · aligned/);
+  assert.match(classification, /Secondary alignment finding · aligned/);
   assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
   assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
   assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
