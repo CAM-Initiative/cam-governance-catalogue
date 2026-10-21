@@ -353,6 +353,22 @@ test("Section 02 Incident breakdown stays bounded and horizontally swipeable on 
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-taxonomy-assessment-scroll-hint \{[\s\S]*display: block;/);
 });
 
+test("Section 03 Classification stays a horizontally swipeable four-column table on mobile", async () => {
+  const [classification, css, published] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/vigil-classification-table.css"),
+    read("docs/assets/index-D22tRVqj.css"),
+  ]);
+  assert.match(classification, /className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region"[^>]*tabIndex=\{0\}/);
+  assert.match(classification, /<table className="vigil-classification-table vigil-primary-classification-table">/);
+  assert.match(css, /@media screen and \(max-width: 760px\) \{[\s\S]*?\.vigil-primary-classification-table-wrap \{[\s\S]*?overflow-x: auto;[\s\S]*?-webkit-overflow-scrolling: touch;[\s\S]*?touch-action: pan-x pan-y;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*?display: table;[\s\S]*?min-width: 72rem;/);
+  assert.match(css, /\.vigil-primary-classification-table-wrap::before \{[\s\S]*?Swipe sideways to view all classification columns/);
+  assert.doesNotMatch(css, /\.vigil-primary-classification-table tbody \{ display: block; \}/);
+  assert.match(published, /Section 03 mobile scrolling parity/);
+  assert.match(published, /\.vigil-primary-classification-table\{display:table;width:100%;min-width:72rem/);
+});
+
 test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
