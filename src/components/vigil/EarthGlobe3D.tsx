@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
-import { Compass, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import * as THREE from "three";
 
 type Location = { id: string; name: string; lat: number; lon: number; count: number };
@@ -321,10 +321,8 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
         onContextMenu={event => event.preventDefault()}
       />
       {!ready && <div className="vigil-dashboard-three-loading" role="status">Loading satellite view…</div>}
-      <div className="vigil-dashboard-globe-hint"><Compass size={13} aria-hidden="true" /> Drag to rotate · select countries below</div>
       <button type="button" className="vigil-dashboard-reset-rotation" onClick={reset} aria-label="Reset 3D Earth rotation" title="Reset globe rotation"><RotateCcw size={15} /></button>
       {hoverLabel && <span className="vigil-dashboard-globe-tooltip">{hoverLabel}</span>}
-      <span className="vigil-dashboard-globe-credit">Satellite texture: NASA Blue Marble</span>
     </div>
   );
 }
