@@ -7,13 +7,7 @@
 .vigil-dashboard-case-column .vigil-case-table { margin: 0; }
 .vigil-dashboard-section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; padding: 1.2rem 1.25rem .35rem; }
 .vigil-dashboard-section-heading h2 { margin: 0; font-size: clamp(1.1rem,1.3vw,1.35rem); font-weight: 720; color: hsl(var(--foreground)); }
-.vigil-dashboard-section-heading span { font-size: .78rem; color: hsl(var(--muted-foreground)); }
 .vigil-dashboard-summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .6rem; padding: .2rem 1.25rem 1.05rem; }
-.vigil-dashboard-summary > div { display: flex; flex-direction: column; gap: .18rem; border: 1px solid hsl(var(--border) / .7); background: hsl(var(--card) / .48); border-radius: 10px; padding: .85rem .95rem; min-width: 0; }
-.vigil-dashboard-summary strong { font-size: clamp(1.32rem,1.8vw,1.82rem); font-weight: 760; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1.12; color: hsl(var(--foreground)); }
-.vigil-dashboard-summary span { color: hsl(var(--muted-foreground)); font-size: .74rem; line-height: 1.4; }
-.vigil-dashboard-summary > div:nth-child(2) strong { color: #c57838; }
-.vigil-dashboard-summary > div:nth-child(3) strong { color: #009ba7; }
 .vigil-dashboard-sidebar { display: flex; flex-direction: column; gap: .95rem; min-width: 0; font-family: var(--app-font-sans), sans-serif; }
 .vigil-dashboard-panel { --vigil-panel-ink: #eaf7ff; position: relative; overflow: hidden; border: 1px solid #1a617c; border-radius: 14px; background: linear-gradient(154deg,#061e32 0%,#031628 72%,#021324 100%); box-shadow: 0 14px 35px rgba(0,22,44,.14); padding: 1.1rem 1.1rem 1.05rem; color: var(--vigil-panel-ink); }
 .vigil-dashboard-panel::before { content: ""; position: absolute; top: 0; inset-inline: 16px; height: 1px; background: linear-gradient(90deg,transparent,#44b8d3 47%,transparent); opacity: .5; pointer-events: none; }
@@ -51,7 +45,6 @@
 .vigil-dashboard-donut-legend { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .25rem .35rem; }
 .vigil-dashboard-donut-legend button { display: grid; grid-template-columns: 9px 1fr auto; align-items: center; gap: .38rem; text-align: left; border: 1px solid transparent; border-radius: 6px; background: transparent; color: #c1dce7; padding: .42rem .25rem; font-size: .69rem; cursor: pointer; min-width: 0; }
 .vigil-dashboard-donut-legend button:hover,.vigil-dashboard-donut-legend button.is-selected { background: #0f3e55; border-color: #2f7186; }
-.vigil-dashboard-donut-legend strong { font-weight: 730; color: #fff; font-variant-numeric: tabular-nums; }
 .vigil-dashboard-legend-dot { width: 9px; height: 9px; border-radius: 50%; }
 .vigil-dashboard-failure-list { list-style: none; margin: .8rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .45rem; }
 .vigil-dashboard-failure-list li { min-width: 0; }
@@ -133,17 +126,178 @@
   bottom: 14px;
   z-index: 3;
 }
-.vigil-dashboard-globe-credit {
-  position: absolute;
-  display: block;
-  top: 4px;
-  left: 0;
-  right: 0;
-  color: #a9ccdc;
-  font-size: .62rem;
-  text-align: center;
-  pointer-events: none;
-}
+
 @media (prefers-reduced-motion: reduce) {
   .vigil-dashboard-globe-three { transition: none; }
+}
+
+/* CAM palette integration: inherit institutional parchment/gold by theme.
+   The satellite Earth itself stays richly blue; supporting cards do not. */
+.vigil-case-library-page .vigil-dashboard-panel {
+  --vd-ink: hsl(var(--foreground));
+  --vd-muted: hsl(var(--muted-foreground));
+  --vd-accent: hsl(var(--primary));
+  --vd-rule: hsl(var(--border) / .78);
+  --vd-raised: hsl(var(--secondary) / .52);
+  --vd-surface: hsl(var(--card));
+  --vigil-panel-ink: var(--vd-ink);
+  color: var(--vd-ink);
+  background: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--background)) 100%);
+  border: 1px solid var(--vd-rule);
+  box-shadow: var(--shadow-sm);
+}
+.vigil-case-library-page .vigil-dashboard-panel::before {
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / .45), transparent);
+  opacity: .8;
+}
+.vigil-case-library-page .vigil-dashboard-kicker,
+.vigil-case-library-page .vigil-dashboard-panel-heading h2 svg {
+  color: var(--vd-accent);
+}
+.vigil-case-library-page .vigil-dashboard-panel-heading h2 { color: var(--vd-ink); }
+.vigil-case-library-page .vigil-dashboard-panel-note,
+.vigil-case-library-page .vigil-dashboard-globe-guidance,
+.vigil-case-library-page .vigil-dashboard-chart-instruction,
+.vigil-case-library-page .vigil-dashboard-source-note,
+.vigil-case-library-page .vigil-dashboard-empty {
+  color: var(--vd-muted);
+}
+.vigil-case-library-page .vigil-dashboard-region-select select {
+  background: hsl(var(--background));
+  color: var(--vd-ink);
+  border: 1px solid var(--vd-rule);
+}
+.vigil-case-library-page .vigil-dashboard-region-select select:disabled { opacity: .76; cursor: not-allowed; }
+.vigil-case-library-page .vigil-dashboard-region-chips button {
+  color: var(--vd-ink);
+  background: var(--vd-raised);
+  border-color: var(--vd-rule);
+}
+.vigil-case-library-page .vigil-dashboard-region-chips button[aria-pressed="true"] {
+  color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+.vigil-case-library-page .vigil-dashboard-region-chips b { color: inherit; }
+.vigil-case-library-page .vigil-dashboard-reset-rotation {
+  background: hsl(var(--card) / .95);
+  border: 1px solid hsl(var(--primary) / .45);
+  color: hsl(var(--primary));
+  box-shadow: var(--shadow-sm);
+}
+.vigil-case-library-page .vigil-dashboard-region-select select:focus-visible,
+.vigil-case-library-page .vigil-dashboard-region-chips button:focus-visible,
+.vigil-case-library-page .vigil-dashboard-donut-segment:focus-visible,
+.vigil-case-library-page .vigil-dashboard-severity-callout:focus-visible,
+.vigil-case-library-page .vigil-dashboard-failure-list button:focus-visible,
+.vigil-case-library-page .vigil-dashboard-reset-rotation:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+.vigil-case-library-page .vigil-dashboard-geo-stats div {
+  background: var(--vd-raised);
+  border: 1px solid var(--vd-rule);
+}
+.vigil-case-library-page .vigil-dashboard-geo-stats strong { color: var(--vd-accent); }
+.vigil-case-library-page .vigil-dashboard-geo-stats span { color: var(--vd-muted); }
+.vigil-dashboard-globe-guidance,
+.vigil-dashboard-chart-instruction {
+  display: flex;
+  gap: .36rem;
+  align-items: flex-start;
+  font-size: .7rem;
+  line-height: 1.45;
+  margin: .1rem 0 .65rem;
+}
+.vigil-dashboard-globe-guidance svg { flex-shrink: 0; margin-top: .05rem; }
+.vigil-dashboard-attribution {
+  margin: .85rem 0 0;
+  border-top: 1px solid hsl(var(--border) / .58);
+  padding: .7rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: .67rem;
+  line-height: 1.48;
+}
+.vigil-case-library-page .vigil-dashboard-three-loading {
+  color: var(--vd-muted);
+  background: radial-gradient(circle, hsl(var(--secondary) / .65), transparent 71%);
+}
+.vigil-dashboard-donut { width: 100%; max-width: 335px; margin: .2rem auto 0; }
+.vigil-dashboard-donut svg { width: 100%; display: block; overflow: visible; }
+.vigil-case-library-page .vigil-dashboard-donut-track {
+  stroke: hsl(var(--border) / .78);
+}
+.vigil-case-library-page .vigil-dashboard-donut-count { fill: var(--vd-ink); }
+.vigil-case-library-page .vigil-dashboard-donut-caption { fill: var(--vd-muted); }
+.vigil-dashboard-severity-callout { cursor: pointer; transition: opacity .15s ease; }
+.vigil-dashboard-severity-callout:hover { opacity: .78; }
+.vigil-dashboard-severity-label { font: 750 12px var(--app-font-sans), sans-serif; letter-spacing: .01em; }
+.vigil-case-library-page .vigil-dashboard-severity-name {
+  font: 500 10.5px var(--app-font-sans), sans-serif;
+  fill: var(--vd-ink);
+}
+.vigil-dashboard-chart-instruction { justify-content: center; text-align: center; margin-top: -.1rem; }
+.vigil-case-library-page .vigil-dashboard-failure-list button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--vd-rule);
+  background: var(--vd-raised);
+  color: var(--vd-ink);
+}
+.vigil-case-library-page .vigil-dashboard-failure-list button:hover,
+.vigil-case-library-page .vigil-dashboard-failure-list button.is-selected {
+  border-color: hsl(var(--primary) / .85);
+  background: hsl(var(--primary) / .095);
+}
+.vigil-dashboard-failure-bar {
+  position: absolute;
+  z-index: 0;
+  inset: 0 auto 0 0;
+  height: 100%;
+  pointer-events: none;
+  border-right: 2px solid hsl(var(--primary) / .45);
+  background: linear-gradient(90deg, hsl(var(--primary) / .19), hsl(var(--primary) / .08));
+}
+.vigil-dashboard-failure-list button > :not(.vigil-dashboard-failure-bar) { position: relative; z-index: 1; }
+.vigil-case-library-page .vigil-dashboard-failure-rank,
+.vigil-case-library-page .vigil-dashboard-failure-name span { color: var(--vd-accent); }
+.vigil-case-library-page .vigil-dashboard-failure-name strong { color: var(--vd-ink); }
+.vigil-case-library-page .vigil-dashboard-failure-count { color: var(--vd-accent); }
+
+/* Mobile: one readable column, no 290px rail, no three-across KPI tiles.
+   Keep filters/table first; dashboards follow and each receives full width.
+   The map is bounded to the screen, with source notes outside the canvas. */
+@media (max-width: 1140px) {
+  .vigil-case-library-page .vigil-dashboard-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-location-panel {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+  .vigil-case-library-page .vigil-dashboard-globe-scene { max-width: 355px; }
+}
+@media (max-width: 720px) {
+  .vigil-case-library-page .vigil-dashboard-sidebar { display: flex; flex-direction: column; }
+  .vigil-case-library-page .vigil-dashboard-panel { width: 100%; padding: 1rem; }
+  .vigil-case-library-page .vigil-dashboard-globe-scene { width: min(100%, 350px); }
+  .vigil-case-library-page .vigil-dashboard-donut { max-width: 330px; }
+  .vigil-case-library-page .vigil-dashboard-region-chips button { min-height: 38px; }
+}
+@media (max-width: 380px) {
+  .vigil-case-library-page .vigil-dashboard-panel { padding: .82rem; }
+  .vigil-case-library-page .vigil-dashboard-geo-stats { grid-template-columns: 1fr 1fr; gap: .38rem; }
+  .vigil-case-library-page .vigil-dashboard-geo-stats div { padding: .55rem; }
+  .vigil-case-library-page .vigil-dashboard-geo-stats strong { font-size: 1.12rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-dashboard-severity-callout { transition: none; }
 }
