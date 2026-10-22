@@ -47,4 +47,4 @@ Prior to implementation, check the VIGIL schema, canonical validation rules, ind
 - Rotatable WebGL Earth with satellite surface texture and a 2D fallback. Graphic is geographically illustrative, not a claim of incident geolocation.
 - Conservative country matching refuses unestablished or explicitly compound country strings. It accepts explicit national or locality-qualified country names, and provides a clearly separate unmapped count.
 - Preview-branch switching retains the existing guard against combining a selected VIGIL branch with a main-only geography projection.
-- The browser requests a texture from a versioned third-party CDN. For a fully independent production deployment, mirror a properly licensed NASA Blue Marble equirectangular image into CAM-controlled static assets and retain an attribution.
+- The 3D viewer preferentially requests a **bundled local** Blue Marble texture, verified during one-time asset vendoring by its Git blob fingerprint. External hosted imagery is fallback only. Attribution is retained.
