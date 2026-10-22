@@ -15,6 +15,7 @@ on:
       - "scripts/sync-vigil-records.mjs"
       - "scripts/sync-vigil-dashboard-jurisdictions.mjs"
       - "scripts/test-vigil-dashboard.mjs"
+      - "scripts/test-vigil-dashboard-jurisdictions.mjs"
       - "scripts/test-vigil-public-surfaces.mjs"
       - "scripts/test-vigil-observatory.mjs"
       # A test-only change can advance the PR while an earlier build is pushing.
@@ -104,7 +105,7 @@ jobs:
         run: pnpm run test:vigil
 
       - name: Verify dashboard classification counting
-        run: node --test scripts/test-vigil-dashboard.mjs
+        run: node --test scripts/test-vigil-dashboard.mjs scripts/test-vigil-dashboard-jurisdictions.mjs
 
       - name: Commit rebuilt docs output
         id: publish
