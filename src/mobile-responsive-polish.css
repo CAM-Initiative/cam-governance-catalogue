@@ -263,3 +263,28 @@ html[data-theme="dark"] .adjudication-doom-stamp::after {
   opacity: 0.12 !important;
   mix-blend-mode: normal !important;
 }
+
+/* Narrow-phone orbit bounds: the radial side controls were centred near the
+ * gear's outer edge, so their active panels extended beyond the viewport.
+ * Keep the mechanical dial and all wider-screen layouts exactly as they are.
+ * Expanded controls still use the existing centred tap-to-read presentation. */
+@media (max-width: 480px) {
+  .diagnostic-orbit-v2 .diagnostic-node-2,
+  .diagnostic-orbit-v2 .diagnostic-node-3 {
+    left: 75%;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node-5,
+  .diagnostic-orbit-v2 .diagnostic-node-6 {
+    left: 25%;
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node:not(.is-expanded) {
+    max-width: min(48vw, 11.5rem);
+  }
+
+  .diagnostic-orbit-v2 .diagnostic-node:not(.is-expanded) .diagnostic-node-label {
+    font-size: clamp(0.61rem, 2.9vw, 0.75rem);
+    letter-spacing: 0.1em;
+  }
+}
