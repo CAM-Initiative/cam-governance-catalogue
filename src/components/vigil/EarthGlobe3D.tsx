@@ -48,7 +48,8 @@ type SceneState = {
   haloMaterial: THREE.ShaderMaterial;
   markers: THREE.Group;
   targets: THREE.Mesh[];
-  lightMaterials: THREE.MeshBasicMaterial[];
+  lightMaterials: THREE.SpriteMaterial[];
+  glowTexture: THREE.CanvasTexture;
   lightGroups: THREE.Group[];
   targetTilt: number;
   targetSpin: number;
@@ -152,6 +153,21 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       });
       tilt.add(new THREE.Mesh(haloGeometry, haloMaterial));
 
+      const glowCanvas = document.createElement("canvas");
+      glowCanvas.width = glowCanvas.height = 96;
+      const glowContext = glowCanvas.getContext("2d");
+      if (!glowContext) throw new Error("Canvas glow texture unavailable");
+      const gradient = glowContext.createRadialGradient(48, 48, 0, 48, 48, 48);
+      gradient.addColorStop(0, "rgba(255,255,255,1)");
+      gradient.addColorStop(.15, "rgba(255,255,255,.92)");
+      gradient.addColorStop(.38, "rgba(255,255,255,.35)");
+      gradient.addColorStop(.67, "rgba(255,255,255,.08)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
+      glowContext.fillStyle = gradient;
+      glowContext.fillRect(0, 0, 96, 96);
+      const glowTexture = new THREE.CanvasTexture(glowCanvas);
+      glowTexture.colorSpace = THREE.SRGBColorSpace;
+
       const markers = new THREE.Group();
       markers.name = "Confirmed jurisdiction markers";
       earth.add(markers);
@@ -172,7 +188,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       state = {
         renderer, scene, camera, tilt, earth, earthGeometry, earthMaterial, haloGeometry, haloMaterial,
-        markers, targets: [], lightMaterials: [], lightGroups: [], targetSpin: earth.rotation.y, targetTilt: tilt.rotation.x,
+        markers, targets: [], lightMaterials: [], lightGroups: [], glowTexture, targetSpin: earth.rotation.y, targetTilt: tilt.rotation.x,
         lastInteraction: Date.now(), frame: 0, resize,
       };
       sceneRef.current = state;
@@ -237,10 +253,11 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
           if (object instanceof THREE.Mesh) {
             object.geometry.dispose();
             (object.material as THREE.Material).dispose();
-          }
+          } else if (object instanceof THREE.Sprite) { object.material.dispose(); }
         });
       }
       state.texture?.dispose();
+      state.glowTexture.dispose();
       state.earthGeometry.dispose();
       state.earthMaterial.dispose();
       state.haloGeometry.dispose();
@@ -261,7 +278,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
         if (object instanceof THREE.Mesh) {
           object.geometry.dispose();
           (object.material as THREE.Material).dispose();
-        }
+        } else if (object instanceof THREE.Sprite) { object.material.dispose(); }
       });
     }
     state.targets = [];
@@ -277,25 +294,23 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       const beacon = new THREE.Group();
       beacon.position.copy(toGlobeVector(location.lat, location.lon, GLOBE_RADIUS + .019));
 
-      // Soft additive layers mimic city lights from a satellite, without
-      // manufacturing individual event coordinates or network connections.
+      // Feathered billboard bloom, not an opaque coloured dot. All gradients
+      // share one procedural texture (no remote image, no fake incident sites).
       const color = selectedLocation ? 0xffe6a1 : intensity >= .75 ? 0xffc774 : 0x63ecff;
-      const haloGeometry = new THREE.SphereGeometry(coreSize * (3.4 + intensity * .5), 16, 12);
-      const haloMaterial = new THREE.MeshBasicMaterial({
-        color, transparent: true, opacity: .09 + intensity * .12,
-        blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false
-      });
-      haloMaterial.userData.baseOpacity = haloMaterial.opacity;
-      beacon.add(new THREE.Mesh(haloGeometry, haloMaterial));
-      state.lightMaterials.push(haloMaterial);
-
-      const bloomMaterial = new THREE.MeshBasicMaterial({
-        color, transparent: true, opacity: .26 + intensity * .2,
-        blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false
-      });
-      bloomMaterial.userData.baseOpacity = bloomMaterial.opacity;
-      beacon.add(new THREE.Mesh(new THREE.SphereGeometry(coreSize * 1.9, 14, 10), bloomMaterial));
-      state.lightMaterials.push(bloomMaterial);
+      const makeGlow = (scale: number, opacity: number) => {
+        const material = new THREE.SpriteMaterial({
+          map: state.glowTexture, color, transparent: true, opacity,
+          blending: THREE.AdditiveBlending, depthTest: true,
+          depthWrite: false, toneMapped: false
+        });
+        material.userData.baseOpacity = opacity;
+        const sprite = new THREE.Sprite(material);
+        sprite.scale.set(scale, scale, 1);
+        beacon.add(sprite);
+        state.lightMaterials.push(material);
+      };
+      makeGlow(coreSize * (7.5 + 2.5 * intensity), .3 + intensity * .22);
+      makeGlow(coreSize * (3.6 + intensity), .43 + intensity * .26);
 
       const light = new THREE.Mesh(
         new THREE.SphereGeometry(coreSize, 14, 10),
