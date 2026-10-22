@@ -1094,7 +1094,12 @@ test("Case File Stage 01 groups Incident Context, preserves evidence and aligns 
   assert.ok(context.includes("source_records"), "citations are derived from canonical source records");
   assert.ok(context.includes("#vigil-evidence-reference-"), "source references link to bibliography");
   assert.ok(context.includes("hasStructuredGeography"), "legacy geography differs from reviewed geography");
-  assert.ok(context.includes("legacy descriptions above must not be treated as verified occurrence locations"));
+  assert.ok(context.includes("Legacy jurisdiction descriptions must not be treated as verified occurrence locations."), "legacy caveat persists in Section 06 limitations");
+  assert.ok(context.includes("export function IncidentContextLimitations"), "the limitation block has a separate renderer");
+  assert.ok(web.includes("<IncidentContextLimitations raw={incident.raw}"), "interactive Section 06 receives the context limits");
+  assert.ok(report.includes("<IncidentContextLimitations raw={incident.raw}"), "print Section 06 receives the same limits");
+  assert.ok(!context.includes("vigil-context-group-number"), "subsections are unnumbered");
+  assert.ok(!context.includes("Occurrence metadata"), "the metadata kicker has been removed");
   assert.ok(context.includes("A jurisdictional association does not establish"), "regulatory topics are not findings");
   assert.ok(context.includes("knownParties"), "parties are resolved by canonical identifiers");
   assert.ok(dossierCss.includes("@media (max-width: 700px)"), "mobile layout is explicit");
