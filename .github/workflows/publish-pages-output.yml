@@ -13,6 +13,8 @@ on:
       - "scripts/prepare-github-pages.js"
       - "scripts/sync-cam-governance.mjs"
       - "scripts/sync-vigil-records.mjs"
+      - "scripts/sync-vigil-dashboard-jurisdictions.mjs"
+      - "scripts/test-vigil-dashboard.mjs"
       - "scripts/test-vigil-public-surfaces.mjs"
       - "scripts/test-vigil-observatory.mjs"
       # A test-only change can advance the PR while an earlier build is pushing.
@@ -75,6 +77,9 @@ jobs:
             pnpm run sync:vigil
           fi
 
+      - name: Project explicit case jurisdictions
+        run: pnpm run sync:geo
+
       - name: Rebuild published site
         env:
           VITE_VIGIL_CHALLENGE_ENDPOINT: ${{ vars.VITE_VIGIL_CHALLENGE_ENDPOINT }}
@@ -97,6 +102,9 @@ jobs:
 
       - name: Test VIGIL Observatory
         run: pnpm run test:vigil
+
+      - name: Verify dashboard classification counting
+        run: node --test scripts/test-vigil-dashboard.mjs
 
       - name: Commit rebuilt docs output
         id: publish
