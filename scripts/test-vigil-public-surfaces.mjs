@@ -1067,18 +1067,38 @@ test("Case File stage and subsection headings share one editorial scale", async 
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 });
 
-test("Case File Incident content aligns to the document edge without legacy card indentation", async () => {
-  const [narrativeCss, dossierCss, instrumentCss] = await Promise.all([
+test("Case File Stage 01 groups Incident Context, preserves evidence and aligns printable report", async () => {
+  const [narrativeCss, dossierCss, context, web, report] = await Promise.all([
     read("src/vigil-case-file-narrative-cards.css"),
     read("src/vigil-case-file-dossier.css"),
-    read("src/vigil-observatory-instrument-experiment.css"),
+    read("src/components/vigil/IncidentContextSection.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
   ]);
-
-  assert.match(narrativeCss, /\.vigil-observation-summary > p \{[\s\S]*padding: 0\.65rem 0 1\.4rem/);
-  assert.match(narrativeCss, /\.vigil-observation-summary \.vigil-case-subheading \{[\s\S]*padding: 1\.15rem 0 0\.85rem/);
-  assert.match(dossierCss, /\.vigil-affected-systems \.vigil-case-subheading \{[\s\S]*padding: 1\.15rem 0 0\.85rem/);
-  assert.match(dossierCss, /\.vigil-affected-system-grid > article \{[\s\S]*padding: 0\.65rem 0 1\.4rem/);
-  assert.doesNotMatch(instrumentCss, /\.vigil-observation-summary \.vigil-case-subheading,[\s\S]*\.vigil-affected-systems \.vigil-case-subheading/);
+  assert.ok(narrativeCss.includes(".vigil-observation-summary > p"));
+  assert.ok(dossierCss.includes(".vigil-case-file-page .vigil-incident-context"));
+  const headings = [
+    "Systems & Technology",
+    "Operational Environment",
+    "Affected Parties & Institutions",
+    "Geographic & Jurisdictional Context",
+    "Regulatory Context",
+  ];
+  const positions = headings.map(title => context.indexOf(`title="${title}"`));
+  assert.ok(positions.every(pos => pos >= 0), "all five approved subsections must render");
+  assert.deepEqual(positions, [...positions].sort((a, b) => a - b), "subsections keep approved reading order");
+  assert.ok(web.includes("<IncidentContextSection raw={incident.raw}"), "opened Case File uses shared component");
+  assert.ok(report.includes("<IncidentContextSection raw={incident.raw}"), "print/PDF route uses same component");
+  assert.ok(!web.includes('<section className="vigil-affected-systems"'));
+  assert.ok(!report.includes('<section className="report-affected-systems"'));
+  assert.ok(context.includes("source_records"), "citations are derived from canonical source records");
+  assert.ok(context.includes("#vigil-evidence-reference-"), "source references link to bibliography");
+  assert.ok(context.includes("hasStructuredGeography"), "legacy geography differs from reviewed geography");
+  assert.ok(context.includes("legacy descriptions above must not be treated as verified occurrence locations"));
+  assert.ok(context.includes("A jurisdictional association does not establish"), "regulatory topics are not findings");
+  assert.ok(context.includes("knownParties"), "parties are resolved by canonical identifiers");
+  assert.ok(dossierCss.includes("@media (max-width: 700px)"), "mobile layout is explicit");
+  assert.ok(dossierCss.includes("@media print"), "print layout retains the evidence groups");
 });
 
 test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {
