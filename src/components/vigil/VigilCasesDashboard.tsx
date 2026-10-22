@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
 import { Compass, Globe2, Layers3, RotateCcw, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
@@ -6,6 +6,8 @@ import { getSelectedVigilBranch, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchS
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
+
+const EarthGlobe3D = lazy(() => import("./EarthGlobe3D"));
 
 type Country = { id: string; name: string; lat: number; lon: number };
 type Location = Country & { count: number };
@@ -215,6 +217,14 @@ function Globe({ locations, selected, onSelect }: { locations: Location[]; selec
     </div>
   );
 }
+function GlobeView({ locations, selected, onSelect }: { locations: Location[]; selected: string; onSelect: (id: string) => void }) {
+  const [unavailable, setUnavailable] = useState(false);
+  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} />;
+  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} />}>
+    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onUnavailable={() => setUnavailable(true)} />
+  </Suspense>;
+}
+
 const SEVERITIES = [
   { code: "S1", label: "Minimal", color: "#62d7ae" },
   { code: "S2", label: "Low", color: "#21b8da" },
@@ -291,7 +301,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Global lens</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
         <p className="vigil-dashboard-panel-note">Primary jurisdiction recorded for each case—not a precise incident location.</p>
         <label className="vigil-dashboard-region-select"><span className="sr-only">Filter by jurisdiction</span><select value={jurisdiction} onChange={event=>onJurisdiction(event.target.value)}><option value="">All recorded jurisdictions</option>{locations.regions.map(item=><option key={item.id} value={item.id}>{item.name} · {item.count}</option>)}{jurisdiction && !locations.regions.some(item=>item.id===jurisdiction)&&<option value={jurisdiction}>{byId.get(jurisdiction)?.name??jurisdiction}</option>}</select></label>
-        <Globe locations={locations.regions} selected={jurisdiction} onSelect={onJurisdiction}/>
+        <GlobeView locations={locations.regions} selected={jurisdiction} onSelect={onJurisdiction}/>
         <div className="vigil-dashboard-geo-stats"><div><strong>{isMainSource?locations.regions.length:"—"}</strong><span>Jurisdictions mapped</span></div><div><strong>{isMainSource?locations.unmapped:"—"}</strong><span>Not geographically mapped</span></div></div>
         {isMainSource && locations.regions.length>0 && <div className="vigil-dashboard-region-chips">{locations.regions.slice(0,5).map(item=><button type="button" key={item.id} onClick={()=>onJurisdiction(jurisdiction===item.id?"":item.id)} aria-pressed={jurisdiction===item.id}>{item.name}<b>{item.count}</b></button>)}</div>}
         {!isMainSource && <p className="vigil-dashboard-source-note">Geographic projection is available for the published main corpus, not preview branches.</p>}
