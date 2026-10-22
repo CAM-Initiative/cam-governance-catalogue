@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Coffee, Github, Mail, Newspaper } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AdSenseRail, adsenseRailEnabled, adRailEligibleRoute } from "@/components/advertising/AdSenseRail";
 
 const mobileLinks = [
   { href: "/", label: "Home", internal: true },
@@ -42,6 +43,10 @@ export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isKnowledgeBaseHome = location === "/knowledge-base/";
+  // Case Files landing hosts a clearly separated ad beneath its dashboard insights;
+  // opened Case Files retain their existing wide-screen advertising rail.
+  const dashboardLanding = ["/observatory", "/observatory/cases"].includes(location.replace(/\/+$/, "") || "/");
+  const showAdRail = adsenseRailEnabled && adRailEligibleRoute(location) && !dashboardLanding;
   const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/" || isKnowledgeBaseHome;
   const isVigilActive = !isKnowledgeBaseHome && (location === "/observatory/" || location.startsWith("/observatory/"));
   const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");
@@ -148,8 +153,9 @@ export function Shell({ children }: { children: ReactNode }) {
         )}
       </header>
 
-      <main className="site-main">
+      <main className={showAdRail ? "site-main site-main--with-ad-rail" : "site-main"}>
         {children}
+        {showAdRail && <AdSenseRail />}
       </main>
 
       <footer className="site-footer">
