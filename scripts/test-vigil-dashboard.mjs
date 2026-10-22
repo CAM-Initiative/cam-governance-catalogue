@@ -52,3 +52,17 @@ test("Donut labels show bracketed counts, with dimensional layers and keyboard f
   assert.ok(dashboard.includes("vigil-donut-shade-"));
   assert.ok(dashboard.includes("onKeyDown={event=>"), "Interactive chart remains keyboard operable");
 });
+
+test("Case Files result count, Clear filters, and pagination retain readable side gutters", async () => {
+  const [styles, page] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.css"),
+    source("src/pages/vigil-cases.tsx"),
+  ]);
+  assert.match(page, /className="vigil-result-summary"/);
+  assert.match(page, /Clear filters/);
+  assert.match(page, /className="vigil-pagination"/);
+  assert.match(styles, /\.vigil-dashboard-case-column \.vigil-result-summary \{\s*padding-inline: clamp\(0\.8rem, 2vw, 1\.25rem\)/);
+  assert.match(styles, /\.vigil-dashboard-case-column \.vigil-result-summary button \{\s*margin-inline-start: auto/);
+  assert.match(styles, /\.vigil-dashboard-case-column \.vigil-pagination \{\s*padding-inline: clamp\(0\.9rem, 2vw, 1\.25rem\)/);
+  assert.match(styles, /@media \(max-width: 540px\) \{[\s\S]*?\.vigil-dashboard-case-column \.vigil-result-summary/);
+});
