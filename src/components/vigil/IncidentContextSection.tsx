@@ -100,12 +100,13 @@ function locationText(value: unknown): string {
   return [locality, subdivision, country].filter(Boolean).join(" · ");
 }
 
-function RelationshipCard({ relation, index, numbers }: {
-  relation: UnknownRecord; index: number; numbers: Record<string, number>;
+function RelationshipCard({ relation, index, numbers, knownParties }: {
+  relation: UnknownRecord; index: number; numbers: Record<string, number>; knownParties: UnknownRecord[];
 }) {
   const status = words(relation.evidence_state);
   const places = list(relation.locations);
-  const parties = list(relation.party_refs).map(words).filter((value): value is string => Boolean(value));
+  const parties = list(relation.party_refs).map(words).filter((value): value is string => Boolean(value))
+    .map((partyId) => words(knownParties.find((party) => party.party_id === partyId)?.name) ?? partyId);
   return <article className="vigil-context-relationship">
     <div className="vigil-context-relationship-top">
       <strong>{label(relation.role) ?? ("Relationship " + (index + 1))}</strong>
@@ -224,7 +225,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
       {otherRelationships.length > 0 && <div className="vigil-context-relationship-list">
         {otherRelationships.map((relation, index) =>
           <RelationshipCard key={words(relation.relationship_id) ?? String(index)}
-            relation={relation} index={index} numbers={sourceReferenceNumbers} />)}
+            relation={relation} index={index} numbers={sourceReferenceNumbers} knownParties={parties} />)}
       </div>}
     </Group>
 
@@ -238,7 +239,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
       {regulatoryRelationships.length > 0 && <div className="vigil-context-relationship-list">
         {regulatoryRelationships.map((relation, index) =>
           <RelationshipCard key={words(relation.relationship_id) ?? String(index)}
-            relation={relation} index={index} numbers={sourceReferenceNumbers} />)}
+            relation={relation} index={index} numbers={sourceReferenceNumbers} knownParties={parties} />)}
       </div>}
       {!regulatoryTopics && !words(jurisdiction.sector) && !regulatoryRelationships.length &&
         <p className="vigil-context-muted">No specific regulatory context has been recorded in this Incident metadata.</p>}
