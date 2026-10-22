@@ -32,7 +32,7 @@ const CASE_FILE_STAGES = [
   {
     number: "01",
     label: "Incident",
-    description: "Record what happened, the affected systems and the public evidence supporting the occurrence.",
+    description: "Record what happened, the technology and operating conditions, participating and affected parties, geographic and governance context, and public evidence supporting the occurrence.",
   },
   {
     number: "02",
