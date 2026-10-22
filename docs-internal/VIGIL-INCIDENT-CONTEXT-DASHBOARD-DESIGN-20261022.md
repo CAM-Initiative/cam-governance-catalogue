@@ -38,7 +38,7 @@ No synthetic statistics, fabricated geographic coordinates, inferred country fro
 └─────────────────────────────────────┴───────────────────────────────────────┘
 ```
 
-Preserve the current approved navy/cyan panel identity, legible black case-list typography, compact role chips and yellow risk/severity chip contrast. Avoid inventing new chart data. Retain existing ad rail on OPENED Case Files; on the landing place eligible advertising below the right-hand insight panels, not floating over the globe.
+**Revised by maintainer's 22 October live-preview feedback:** surrounding insight cards MUST use the CAM parchment/warm gold institution palette in light mode, and its corresponding warm dark-mode variables. Do NOT force navy/cyan backgrounds on those cards. The photorealistic Earth alone keeps its deep-blue atmosphere. Keep the legible case list, semantically coloured Harm Impact severity slices and existing risk/severity chips. Avoid inventing chart data. Retain the existing ad rail on opened Case Files; on landing put eligible advertising beneath insight panels, not over the globe.
 
 ### 1B. Stage 01 opened Case File (conceptual wireframe)
 
@@ -181,3 +181,18 @@ The above is a **shape example only**, not an adjudicated content claim or actua
 ## 7. Separately gated work sequence
 
 **Design completed here** means the intended layout and interaction contract are specified, not built. **Gate 1** canonical schema/validator already committed. **Gate 2**: perform a source-first representative pilot, present record-local before/after proposals, and stop for human approval before bulk edits. After approved migration, wire role-aware projection and the site. No one should treat a draft PR or a green structural validator as evidence that all 200 Incidents were source-adjudicated.
+
+## 8. Maintainer preview corrections — applied 22 October 2026
+
+The maintainer reviewed desktop light/dark screenshots and explicitly requested adjustments to the *existing working branch*. The changes have been implemented as an intermediate presentation pass and **must survive** future role-chip/canonical-index integration.
+
+1. **Remove duplicate overview bar:** the block headed "Explore the case library" with three number cards ("Documented case files", "High / critical severity", "Cases with evidenced failures") was redundant to the main masthead and was removed. Do not reintroduce it as an unrelated "summary menu" during Stage 01 or globe redesign.
+2. **Respect CAM light/dark palette:** all insight panels use existing `--card`, `--background`, `--foreground`, `--muted-foreground`, `--border`, `--primary` tokens with distinct warm light and dark inherited appearance. The photorealistic NASA Earth remains blue, but it is not surrounded by a permanent navy card. The selector, counts, failures and border treatment inherit CAM theme values, not inline hard-coded teal colours.
+3. **Harm severity label callouts:** the interactive doughnut now uses leader lines from each nonzero coloured arc to adjacent code, count and label outside the ring, rather than a detached legend. Retain clickable/tappable and keyboard-accessible arcs and labels, keep central distinct-Incident total, handle narrow widths and slice-collision positioning.
+4. **Failures mini bars:** "Most frequent failures" retains readable rank, class ID/name and unique case count; the proportional horizontal fill is now a visual bar, not merely a flat card list. The source data and click-to-filter semantics remain unchanged.
+5. **NASA credit and drag hint:** imagery attribution **must sit below the globe/at the bottom of the globe panel**, not over the Earth. Keep globe interior free of permanent overlay prose. Drag guidance is a one-line note outside the sphere. Keep the rotation reset affordance and all valid underlying attribution.
+6. **Responsive layout:** at tablet/mobile breakpoints collapse the two-column main layout; show a full-width jurisdiction panel then severity/failures in two columns only when adequately wide, and a single readable column on phones. The library remains first in document order; at narrow widths supply an accessible in-page "Explore the globe & insights" jump from the case count rather than forcing the user to scroll past 18 paginated case files. Avoid fixed-height clipped map content, tiny labels and offscreen panel controls. Advertising is not placed on or over the globe and remains hidden where already required on mobile.
+7. **Preview geography:** never interpret a missing/mismatched branch-specific jurisdiction index as zero mapped cases. Preview UI should display unavailable/unsynchronized, not an invented mapping statistic. The future relationship-aware v2 index must be matched to the selected VIGIL branch and record versions; do not sidestep this by falling back to unqualified text matches.
+8. **Verification:** site GitHub Pages build green for the presentation pass. A true visual/a11y review at 375px, 768px and full desktop in both modes is STILL required when the preview is available. Future Work migration must preserve these changes and retest all cross-filter behaviour.
+
+**Files already updated on the catalogue branch:** `src/pages/vigil-cases.tsx`, `src/components/vigil/VigilCasesDashboard.tsx`, `src/components/vigil/VigilCasesDashboard.css`, `src/components/vigil/EarthGlobe3D.tsx`. This presentation pass does **not** implement the new canonical role chips or reviewed geographic data feed.
