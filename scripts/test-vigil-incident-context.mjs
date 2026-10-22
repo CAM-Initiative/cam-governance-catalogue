@@ -140,6 +140,7 @@ test("unresolved relationship must not receive an invented location, regulator o
   const raw = {
     jurisdictional_context: {
       primary_jurisdiction: "Not established",
+      regulatory_surface: ["Example candidate regulatory context"],
       normalized_geography: {
         scope: "not-established",
         relations: [{
