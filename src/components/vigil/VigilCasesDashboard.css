@@ -301,3 +301,26 @@
 @media (prefers-reduced-motion: reduce) {
   .vigil-dashboard-severity-callout { transition: none; }
 }
+
+/* Mobile in-page route to the insight rail: no duplicate map or data request. */
+.vigil-dashboard-mobile-insights-link { display: none; }
+@media (max-width: 1140px) {
+  .vigil-dashboard-mobile-insights-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    margin-inline-start: auto;
+    color: hsl(var(--primary));
+    font-size: .74rem;
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+  .vigil-dashboard-mobile-insights-link:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+}
+@media (max-width: 430px) {
+  .vigil-dashboard-mobile-insights-link { font-size: .7rem; }
+}
