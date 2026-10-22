@@ -1,0 +1,248 @@
+import type { ReactNode } from "react";
+import type { UnknownRecord } from "@/lib/vigilRegistry";
+import type { AffectedSystem } from "@/lib/vigilAffectedSystems";
+
+type Props = {
+  raw: UnknownRecord;
+  affectedSystems: AffectedSystem[];
+  sourceReferenceNumbers: Record<string, number>;
+};
+
+function object(value: unknown): UnknownRecord {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as UnknownRecord : {};
+}
+
+function list(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : [];
+}
+
+function words(value: unknown): string | undefined {
+  if (typeof value === "string") return value.trim() || undefined;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  return undefined;
+}
+
+function join(value: unknown): string | undefined {
+  const values = (Array.isArray(value) ? value : value == null ? [] : [value])
+    .map(words).filter((value): value is string => Boolean(value));
+  return values.length ? values.join(" · ") : undefined;
+}
+
+function label(value: unknown): string | undefined {
+  const source = words(value);
+  if (!source) return undefined;
+  return source.replace(/[_-]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function Field({ title, value, wide = false }: { title: string; value?: string; wide?: boolean }) {
+  if (!value) return null;
+  return <div className={"vigil-context-field" + (wide ? " is-wide" : "")}>
+    <dt>{title}</dt><dd>{value}</dd>
+  </div>;
+}
+
+function Group({ id, number, title, description, children }: {
+  id: string; number: string; title: string; description: string; children: ReactNode;
+}) {
+  return <section className="vigil-context-group" aria-labelledby={id}>
+    <div className="vigil-context-group-heading">
+      <span className="vigil-context-group-number" aria-hidden="true">{number}</span>
+      <div><h4 id={id}>{title}</h4><p>{description}</p></div>
+    </div>
+    <div className="vigil-context-group-body">{children}</div>
+  </section>;
+}
+
+function SourceLinks({ refs, numbers }: { refs: unknown; numbers: Record<string, number> }) {
+  const values = list(refs).filter((ref): ref is string =>
+    typeof ref === "string" && /^source_records\[\d+\]$/.test(ref));
+  if (!values.length) return null;
+  return <div className="vigil-context-sources" aria-label="Supporting evidence references">
+    <span>Evidence</span>
+    {values.map((ref) => {
+      const n = numbers[ref];
+      return n
+        ? <a key={ref} href={"#vigil-evidence-reference-" + n} title={"View reference " + n}>
+            {"Source [" + n + "]"}
+          </a>
+        : <span key={ref} className="vigil-context-source-unlinked">{ref.replace("source_records", "Source record")}</span>;
+    })}
+  </div>;
+}
+
+function EvidenceBasis({ text, refs, numbers, heading = "Evidence basis" }: {
+  text?: string; refs: unknown; numbers: Record<string, number>; heading?: string;
+}) {
+  if (!text && !list(refs).length) return null;
+  return <details className="vigil-context-evidence">
+    <summary>{heading}</summary>
+    {text && <p>{text}</p>}
+    <SourceLinks refs={refs} numbers={numbers} />
+  </details>;
+}
+
+const COUNTRY_NAMES: Record<string, string> = {
+  AU: "Australia", US: "United States", GB: "United Kingdom", CA: "Canada",
+  FR: "France", DE: "Germany", IN: "India", JP: "Japan", CN: "China",
+  KR: "South Korea", NZ: "New Zealand", NL: "Netherlands", ES: "Spain",
+  BR: "Brazil", IE: "Ireland", SG: "Singapore", IL: "Israel", RU: "Russia",
+  UA: "Ukraine", HK: "Hong Kong", TW: "Taiwan", CH: "Switzerland",
+  SE: "Sweden", AE: "United Arab Emirates",
+};
+
+function locationText(value: unknown): string {
+  const location = object(value);
+  const countryCode = words(location.country_code);
+  const country = countryCode ? (COUNTRY_NAMES[countryCode] ?? countryCode) : "Location not established";
+  const subdivision = words(location.subdivision_code);
+  const locality = words(location.locality);
+  return [locality, subdivision, country].filter(Boolean).join(" · ");
+}
+
+function RelationshipCard({ relation, index, numbers }: {
+  relation: UnknownRecord; index: number; numbers: Record<string, number>;
+}) {
+  const status = words(relation.evidence_state);
+  const places = list(relation.locations);
+  const parties = list(relation.party_refs).map(words).filter((value): value is string => Boolean(value));
+  return <article className="vigil-context-relationship">
+    <div className="vigil-context-relationship-top">
+      <strong>{label(relation.role) ?? ("Relationship " + (index + 1))}</strong>
+      {status && <span className="vigil-context-state">{label(status)}</span>}
+    </div>
+    {places.length > 0
+      ? <ul className="vigil-context-locations">{places.map((place, i) =>
+          <li key={i}>{locationText(place)}</li>
+        )}</ul>
+      : <p className="vigil-context-muted">No confirmed geographic location is recorded for this relationship.</p>}
+    {parties.length > 0 && <p className="vigil-context-association">Linked entities: {parties.join(", ")}</p>}
+    {words(relation.evidence_basis) && <p className="vigil-context-basis">{words(relation.evidence_basis)}</p>}
+    <SourceLinks refs={relation.source_record_refs} numbers={numbers} />
+  </article>;
+}
+
+/**
+ * Public Stage 01 projection. Do not interpret the absence of reviewed
+ * structured geography as a finding that an incident has no location.
+ * Legacy jurisdiction text is not incident-location or legal applicability.
+ */
+export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNumbers }: Props) {
+  const system = object(raw.system_context);
+  const agent = object(system.agent_context);
+  const environment = object(system.occurrence_environment);
+  const jurisdiction = object(raw.jurisdictional_context);
+  const parties = list(object(raw.affected_party_context).entities)
+    .filter((item): item is UnknownRecord => Boolean(item) && typeof item === "object" && !Array.isArray(item));
+  const hasStructuredGeography = Object.prototype.hasOwnProperty.call(jurisdiction, "normalized_geography");
+  const geography = object(jurisdiction.normalized_geography);
+  const relationships = list(geography.relations)
+    .filter((item): item is UnknownRecord => Boolean(item) && typeof item === "object" && !Array.isArray(item));
+  const regulatoryRelationships = relationships.filter((relation) => relation.role === "regulatory-context");
+  const otherRelationships = relationships.filter((relation) => relation.role !== "regulatory-context");
+  const legacyPrimary = words(jurisdiction.primary_jurisdiction);
+  const legacySecondary = join(jurisdiction.secondary_jurisdictions);
+  const legacyCrossBorder = words(jurisdiction.cross_border_relevance);
+  const regulatoryTopics = join(jurisdiction.regulatory_surface);
+  const primarySystem = affectedSystems[0];
+
+  return <section className="vigil-incident-context" aria-labelledby="vigil-incident-context-heading">
+    <header className="vigil-incident-context-heading">
+      <p className="vigil-incident-context-kicker">Occurrence metadata</p>
+      <h3 id="vigil-incident-context-heading">Incident Context</h3>
+      <p>Technology, operating conditions, participating institutions and geographic relationships recorded for this occurrence.</p>
+    </header>
+
+    <Group id="vigil-context-systems" number="01" title="Systems & Technology"
+      description="Platforms, products, runtimes and architectural components named in the evidence.">
+      <dl className="vigil-context-fields">
+        <Field title="Provider / platform" value={primarySystem?.provider ?? words(system.platform_or_vendor)} />
+        <Field title="Product / service" value={primarySystem?.product ?? words(system.product_or_service)} />
+        <Field title="Model / runtime" value={primarySystem?.model ?? words(system.specific_model_or_runtime)} wide />
+        <Field title="System type" value={primarySystem?.systemType ?? words(system.system_type)} />
+        <Field title="Interface surfaces" value={primarySystem?.interfaceSurface ?? join(system.interface_surface)} wide />
+        <Field title="Architectural component roles" value={join(system.component_role)} wide />
+        <Field title="Deployment context" value={primarySystem?.deploymentContext ?? words(system.deployment_context)} wide />
+      </dl>
+      {!Object.keys(system).length && <p className="vigil-context-muted">System metadata has not been recorded for this case.</p>}
+    </Group>
+
+    <Group id="vigil-context-operational" number="02" title="Operational Environment"
+      description="How the system was configured, what activity occurred and whether its actions reached external systems.">
+      <dl className="vigil-context-fields">
+        <Field title="Agent configuration" value={primarySystem?.agentConfiguration ?? label(agent.agentic_status)} />
+        <Field title="Agent count" value={primarySystem?.agentCount} />
+        <Field title="Deployment state" value={primarySystem?.deploymentState ?? label(environment.deployment_state)} />
+        <Field title="Activity context" value={primarySystem?.activityContexts ?? join(list(environment.activity_contexts).map(label))} />
+        <Field title="External reach" value={primarySystem?.externalReach ?? label(environment.external_reach)} />
+        <Field title="Activity actor" value={primarySystem?.activityActor ?? label(environment.activity_actor)} />
+        <Field title="Occurrence setting (legacy)" value={primarySystem?.occurrenceSetting} />
+        <Field title="Testing actor (legacy)" value={primarySystem?.testingActor} />
+        <Field title="Occurrence environment" value={words(environment.environment_detail)} wide />
+      </dl>
+      <div className="vigil-context-evidence-grid">
+        <EvidenceBasis heading="Agent configuration — evidence and limitations"
+          text={words(agent.evidence_basis)} refs={agent.source_record_refs} numbers={sourceReferenceNumbers} />
+        <EvidenceBasis heading="Operational environment — evidence and limitations"
+          text={words(environment.evidence_basis)} refs={environment.source_record_refs} numbers={sourceReferenceNumbers} />
+      </div>
+      <p className="vigil-context-qualifier">Deployment state and external reach describe different conditions; interaction with a live service does not by itself mean the model was publicly deployed.</p>
+    </Group>
+
+    <Group id="vigil-context-parties" number="03" title="Affected Parties & Institutions"
+      description="Evidence-linked entities and their distinct relationships to the incident. Participation does not by itself establish harm.">
+      {parties.length > 0
+        ? <div className="vigil-context-entity-list">{parties.map((party, index) =>
+            <article className="vigil-context-entity" key={words(party.party_id) ?? String(index)}>
+              <div className="vigil-context-relationship-top">
+                <strong>{words(party.name) ?? "Unnamed entity"}</strong>
+                {words(party.evidence_state) && <span className="vigil-context-state">{label(party.evidence_state)}</span>}
+              </div>
+              <dl className="vigil-context-fields">
+                <Field title="Entity type" value={label(party.kind)} />
+                <Field title="Relationship roles" value={join(list(party.roles).map(label))} />
+              </dl>
+              {words(party.evidence_basis) && <p className="vigil-context-basis">{words(party.evidence_basis)}</p>}
+              <SourceLinks refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
+            </article>
+          )}</div>
+        : <p className="vigil-context-muted">Structured institutional and affected-party relationships have not yet been reviewed for this Incident. The narrative and cited evidence may identify parties without establishing a canonical relationship.</p>}
+    </Group>
+
+    <Group id="vigil-context-geography" number="04" title="Geographic & Jurisdictional Context"
+      description="Why each location is relevant—not a claim that the incident physically occurred at a mapped country centre.">
+      <dl className="vigil-context-fields">
+        <Field title="Recorded primary jurisdiction (legacy)" value={legacyPrimary} wide />
+        <Field title="Other recorded jurisdictions (legacy)" value={legacySecondary} wide />
+        <Field title="Cross-border relevance" value={legacyCrossBorder} wide />
+        {hasStructuredGeography && <Field title="Reviewed geographic scope" value={label(geography.scope)} />}
+        <Field title="Jurisdiction notes" value={words(jurisdiction.notes)} wide />
+      </dl>
+      {!hasStructuredGeography && <p className="vigil-context-notice">Geographic roles have not yet been structurally assessed. The legacy descriptions above must not be treated as verified occurrence locations.</p>}
+      {hasStructuredGeography && otherRelationships.length === 0 &&
+        <p className="vigil-context-muted">No country-specific non-regulatory geographic relationship is asserted in the reviewed structured metadata. See the recorded scope and evidence limitations.</p>}
+      {otherRelationships.length > 0 && <div className="vigil-context-relationship-list">
+        {otherRelationships.map((relation, index) =>
+          <RelationshipCard key={words(relation.relationship_id) ?? String(index)}
+            relation={relation} index={index} numbers={sourceReferenceNumbers} />)}
+      </div>}
+    </Group>
+
+    <Group id="vigil-context-regulatory" number="05" title="Regulatory Context"
+      description="Potential governance topics and regulatory geographic associations, not compliance or legal-applicability findings.">
+      <dl className="vigil-context-fields">
+        <Field title="Sector / institutional context" value={words(jurisdiction.sector)} wide />
+        <Field title="Governance topics recorded" value={regulatoryTopics} wide />
+        <Field title="Public-interest relevance" value={words(jurisdiction.public_interest_relevance)} />
+      </dl>
+      {regulatoryRelationships.length > 0 && <div className="vigil-context-relationship-list">
+        {regulatoryRelationships.map((relation, index) =>
+          <RelationshipCard key={words(relation.relationship_id) ?? String(index)}
+            relation={relation} index={index} numbers={sourceReferenceNumbers} />)}
+      </div>}
+      {!regulatoryTopics && !words(jurisdiction.sector) && !regulatoryRelationships.length &&
+        <p className="vigil-context-muted">No specific regulatory context has been recorded in this Incident metadata.</p>}
+      <p className="vigil-context-qualifier">A jurisdictional association does not establish whether a regulation applies, whether an obligation was breached, or what any authority has determined. Consult 04 Compliance for separately adjudicated requirements.</p>
+    </Group>
+  </section>;
+}
