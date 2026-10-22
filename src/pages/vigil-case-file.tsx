@@ -26,6 +26,7 @@ import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
+import { IncidentContextSection } from "@/components/vigil/IncidentContextSection";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 import {
@@ -299,13 +300,8 @@ function incidentTimingLabel(raw?: UnknownRecord) {
   return precision === "reported-date" ? `Reported ${value}` : value;
 }
 
-function Field({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
-  if (!value) return null;
-  return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
-}
-
 const CASE_STAGE_HEADINGS: Record<string, string> = {
-  "case-observe": "Incident evidence and affected systems",
+  "case-observe": "Incident evidence and context",
   "case-diagnose": "Governance, external and harm impact assessment",
   "case-classify": "Alignment classification",
   "case-compliance": "Standards adjudication summary",
@@ -631,28 +627,7 @@ export default function VigilCaseFile() {
           </figure>)}
         </div>}
       </section>}
-      {affectedSystems.length > 0 && <section className="vigil-affected-systems" aria-labelledby="affected-systems-heading">
-        <div className="vigil-case-subheading"><h3 className="vigil-case-editorial-subheading" id="affected-systems-heading">Affected systems — Platforms, products and runtimes named in the evidence</h3></div>
-        <div className="vigil-affected-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`}>
-          <span>{compactId(system.recordId)}</span>
-          <dl>
-            <Field label="Provider / platform" value={system.provider} />
-            <Field label="Product / service" value={system.product} />
-            <Field label="Model / runtime" value={system.model} />
-            <Field label="System type" value={system.systemType} />
-            <Field label="Agent configuration" value={system.agentConfiguration} />
-            <Field label="Agent count" value={system.agentCount} />
-            <Field label="Interface" value={system.interfaceSurface} />
-            <Field label="Deployment state" value={system.deploymentState} />
-            <Field label="Activity context" value={system.activityContexts} />
-            <Field label="External reach" value={system.externalReach} />
-            <Field label="Activity actor" value={system.activityActor} />
-            <Field label="Occurrence setting" value={system.occurrenceSetting} />
-            <Field label="Testing conducted by" value={system.testingActor} />
-            <Field label="Deployment context" value={system.deploymentContext} />
-          </dl>
-        </article>)}</div>
-      </section>}
+      {incident && <IncidentContextSection raw={incident.raw} affectedSystems={affectedSystems} sourceReferenceNumbers={harmEvidenceReferenceNumbers} />}
       {incidentDetail?.evidence.length ? <div className="vigil-evidence-list">{incidentDetail.evidence.map((evidence, index) => <EvidenceCard key={`${evidence.title}-${index}`} evidence={evidence} />)}</div> : null}
       {!incidentDetail?.evidence.length && externalSources.length > 0 && <p className="vigil-case-empty">{externalSources.length} external evidence source{externalSources.length === 1 ? " is" : "s are"} recorded for this investigation. The full bibliography is available under References.</p>}
       {affectedSystems.length === 0 && !incidentDetail?.evidence.length && externalSources.length === 0 && <p className="vigil-case-empty">No structured evidence is available in the current public projection.</p>}
