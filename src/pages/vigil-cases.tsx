@@ -265,15 +265,6 @@ export default function VigilCases() {
 
             <div className="vigil-dashboard-layout">
               <div className="vigil-dashboard-case-column">
-                <div className="vigil-dashboard-section-heading">
-                  <h2>Explore the case library</h2>
-                  <span>Evidence-led investigations</span>
-                </div>
-                <div className="vigil-dashboard-summary" aria-label="Case library overview">
-                  <div><strong>{state.status === "ready" ? records.length : "—"}</strong><span>Documented case files</span></div>
-                  <div><strong>{state.status === "ready" ? records.filter(record => ["S4", "S5"].includes(severityCode(record))).length : "—"}</strong><span>High / critical severity</span></div>
-                  <div><strong>{state.status === "ready" ? records.filter(record => failureClassIds(record.raw).length > 0).length : "—"}</strong><span>Cases with evidenced failures</span></div>
-                </div>
             <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
               <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
               <div className="vigil-search-row vigil-case-table-search">
