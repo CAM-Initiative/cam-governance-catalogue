@@ -19,6 +19,7 @@ import {
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
+import { IncidentContextSection } from "@/components/vigil/IncidentContextSection";
 
 type ReportState =
   | { status: "loading" }
@@ -368,27 +369,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               <h4 className="report-substantive-label">What happened</h4>
               <div className="vigil-assessment-prose">{assessmentParagraphs(incident?.summary ?? incident?.publicDisplay.finding).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             </section>}
-            {affectedSystems.length > 0 && <section className="report-affected-systems">
-              <h4 className="report-substantive-label">Affected systems</h4>
-              <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
-                <dl className="report-metadata-grid report-metadata-grid--2">
-                  <Field label="Provider / platform" value={system.provider} />
-                  <Field label="Product / service" value={system.product} />
-                  <Field label="Model / runtime" value={system.model} />
-                  <Field label="System type" value={system.systemType} />
-                  <Field label="Agent configuration" value={system.agentConfiguration} />
-                  <Field label="Agent count" value={system.agentCount} />
-                  <Field label="Interface" value={system.interfaceSurface} />
-                  <Field label="Deployment state" value={system.deploymentState} />
-                  <Field label="Activity context" value={system.activityContexts} />
-                  <Field label="External reach" value={system.externalReach} />
-                  <Field label="Activity actor" value={system.activityActor} />
-                  <Field label="Occurrence setting" value={system.occurrenceSetting} />
-                  <Field label="Testing conducted by" value={system.testingActor} />
-                  <Field label="Deployment context" value={system.deploymentContext} />
-                </dl>
-              </article>)}</div>
-            </section>}
+            {incident && <div className="vigil-case-file-page vigil-report-incident-context">
+              <IncidentContextSection raw={incident.raw} affectedSystems={affectedSystems} sourceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            </div>}
             {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
               {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
                 <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
