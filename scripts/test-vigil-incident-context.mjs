@@ -25,7 +25,7 @@ const diagnostics = output.diagnostics ?? [];
 assert.equal(diagnostics.filter(item => item.category === ts.DiagnosticCategory.Error).length, 0);
 const exports = {};
 new Function("exports", "require", output.outputText)(exports, require);
-const { IncidentContextSection } = exports;
+const { IncidentContextSection, IncidentContextLimitations } = exports;
 
 const references = { "source_records[0]": 1, "source_records[1]": 2 };
 function render(raw, affectedSystems = []) {
@@ -33,9 +33,14 @@ function render(raw, affectedSystems = []) {
     raw, affectedSystems, sourceReferenceNumbers: references,
   }));
 }
+function renderLimits(raw) {
+  return renderToStaticMarkup(React.createElement(IncidentContextLimitations, {
+    raw, sourceReferenceNumbers: references,
+  }));
+}
 
-test("Section 01 groups legacy system and jurisdiction facts without pretending geographic review", () => {
-  const html = render({
+test("Section 01 groups legacy context without competing numbers or one-line descriptions", () => {
+  const raw = {
     system_context: {
       platform_or_vendor: "OpenAI",
       product_or_service: "Other",
@@ -64,18 +69,23 @@ test("Section 01 groups legacy system and jurisdiction facts without pretending 
       regulatory_surface: ["NSW cybersecurity", "public sector data governance"],
       sector: "Government digital services",
     },
-  });
+  };
+  const html = render(raw);
+  const limits = renderLimits(raw);
   for (const heading of [
     "Incident Context", "Systems &amp; Technology", "Operational Environment",
     "Affected Parties &amp; Institutions", "Geographic &amp; Jurisdictional Context",
     "Regulatory Context",
   ]) assert.ok(html.includes(heading), heading);
   assert.match(html, /An internal training run reached a live public service/);
-  assert.match(html, /Architecture and instance count were not disclosed/);
+  assert.doesNotMatch(html, /Architecture and instance count were not disclosed/);
+  assert.match(limits, /Architecture and instance count were not disclosed/);
   assert.match(html, /Provider-internal model reached a live Australian service/);
   assert.match(html, /Source \[1\]/);
   assert.match(html, /#vigil-evidence-reference-1/);
-  assert.match(html, /Geographic roles have not yet been structurally assessed/);
+  assert.doesNotMatch(html, /Geographic roles have not yet been structurally assessed/);
+  assert.match(limits, /Geographic roles have not yet been structurally assessed/);
+  assert.doesNotMatch(html, /vigil-context-group-number|Platforms, products, runtimes and architectural components|Occurrence metadata/);
   assert.doesNotMatch(html, /Affected systems — Platforms/);
 });
 
@@ -127,7 +137,7 @@ test("reviewed entities and geographic relations retain roles, separate countrie
 });
 
 test("unresolved relationship must not receive an invented location, regulator outcome or link", () => {
-  const html = render({
+  const raw = {
     jurisdictional_context: {
       primary_jurisdiction: "Not established",
       normalized_geography: {
@@ -142,10 +152,14 @@ test("unresolved relationship must not receive an invented location, regulator o
         }],
       },
     },
-  });
+  };
+  const html = render(raw);
+  const limits = renderLimits(raw);
   assert.match(html, /Location not established|No confirmed geographic location/);
-  assert.match(html, /where the execution occurred/);
-  assert.match(html, /Consult 04 Compliance/);
+  assert.doesNotMatch(html, /where the execution occurred/);
+  assert.match(limits, /where the execution occurred/);
+  assert.doesNotMatch(html, /Consult 04 Compliance/);
+  assert.match(limits, /Consult 04 Compliance/);
   assert.doesNotMatch(html, /<a [^>]*href="#vigil-evidence-reference/);
 });
 
@@ -155,4 +169,17 @@ test("the five subsection controls remain in their own Stage 01 renderer, not a 
   assert.match(page, /<IncidentContextSection raw=\{incident\.raw\}/);
   assert.match(page, /"case-observe": "Incident evidence and context"/);
   assert.doesNotMatch(page, /Affected systems — Platforms, products and runtimes named in the evidence/);
+});
+
+test("Both interactive Case File and print report consolidate Incident Context limits within 06 References", async () => {
+  const [caseFile, report] = await Promise.all([
+    readFile(resolve(root, "src/pages/vigil-case-file.tsx"), "utf8"),
+    readFile(resolve(root, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+  ]);
+  assert.match(caseFile, /if \(stageId === "references"\)[\s\S]*<IncidentContextLimitations raw=\{incident\.raw\}/);
+  assert.match(caseFile, /Limits of the assessment/);
+  assert.match(report, /<Stage number="06" label="References">[\s\S]*<IncidentContextLimitations raw=\{incident\.raw\}/);
+  assert.match(report, /Limits of the assessment/);
+  assert.match(report, /STANDARD_VIGIL_ASSESSMENT_LIMITS/);
+  assert.match(report, /nonAssessedHarmDimensionLimitItems/);
 });
