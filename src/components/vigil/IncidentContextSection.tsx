@@ -161,7 +161,7 @@ function RelationshipCard({ relation, index, numbers, knownParties }: {
     .map((partyId) => words(knownParties.find((party) => party.party_id === partyId)?.name) ?? partyId);
   return <article className="vigil-context-relationship">
     <div className="vigil-context-relationship-top">
-      <strong>{label(relation.role) ?? ("Relationship " + (index + 1))}</strong>
+      <strong>{label(relation.role) ?? "Geographic relationship"}</strong>
       {status && <span className="vigil-context-state">{label(status)}</span>}
     </div>
     {places.length > 0
