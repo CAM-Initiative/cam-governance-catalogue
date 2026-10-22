@@ -7,7 +7,7 @@ const countries = [
   { id: "CN", name: "China" }, { id: "CA", name: "Canada" },
   { id: "GB", name: "United Kingdom" }, { id: "HK", name: "Hong Kong" },
   { id: "FR", name: "France" }, { id: "SG", name: "Singapore" },
-  { id: "NO", name: "Norway" },
+  { id: "NO", name: "Norway" }, { id: "TH", name: "Thailand" },
 ];
 const aliases = { US: ["usa"], AU: ["new south wales"], GB: ["wales"] };
 const match = value => countryFromJurisdictionString(value, countries, aliases)?.id;
