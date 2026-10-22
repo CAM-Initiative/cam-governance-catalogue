@@ -298,6 +298,7 @@ export default function VigilCases() {
               </div>
               <div className="vigil-result-summary">
                 <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
+                <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
                 {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); setJurisdiction(""); setFailureClass(""); }}>Clear filters</button>}
               </div>
             </section>
