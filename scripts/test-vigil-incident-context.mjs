@@ -156,7 +156,9 @@ test("unresolved relationship must not receive an invented location, regulator o
   };
   const html = render(raw);
   const limits = renderLimits(raw);
-  assert.match(html, /Location not established|No confirmed geographic location/);
+  assert.match(html, /aria-label="Location not recorded"/);
+  assert.doesNotMatch(html, /No confirmed geographic location is recorded for this relationship/);
+  assert.match(limits, /No confirmed geographic location is recorded for this relationship/);
   assert.doesNotMatch(html, /where the execution occurred/);
   assert.match(limits, /where the execution occurred/);
   assert.doesNotMatch(html, /Consult 04 Compliance/);
