@@ -42,14 +42,11 @@ function Field({ title, value, wide = false }: { title: string; value?: string; 
   </div>;
 }
 
-function Group({ id, number, title, description, children }: {
-  id: string; number: string; title: string; description: string; children: ReactNode;
+function Group({ id, title, children }: {
+  id: string; title: string; children: ReactNode;
 }) {
   return <section className="vigil-context-group" aria-labelledby={id}>
-    <div className="vigil-context-group-heading">
-      <span className="vigil-context-group-number" aria-hidden="true">{number}</span>
-      <div><h4 id={id}>{title}</h4><p>{description}</p></div>
-    </div>
+    <h4 id={id} className="vigil-context-group-title">{title}</h4>
     <div className="vigil-context-group-body">{children}</div>
   </section>;
 }
@@ -71,15 +68,70 @@ function SourceLinks({ refs, numbers }: { refs: unknown; numbers: Record<string,
   </div>;
 }
 
-function EvidenceBasis({ text, refs, numbers, heading = "Evidence basis" }: {
-  text?: string; refs: unknown; numbers: Record<string, number>; heading?: string;
-}) {
-  if (!text && !list(refs).length) return null;
-  return <details className="vigil-context-evidence">
-    <summary>{heading}</summary>
-    {text && <p>{text}</p>}
-    <SourceLinks refs={refs} numbers={numbers} />
-  </details>;
+/** A record-local evidence note may contain an explicit uncertainty statement.
+ * Preserve it verbatim and present that limit with the other Section 06 limits;
+ * factual relationship bases remain beside the relationship being described.
+ */
+function isEvidenceLimit(value: unknown): boolean {
+  const text = words(value);
+  return Boolean(text && /\b(?:not (?:disclosed|established|known|verified|confirmed|documented|available|identified|reported)|unknown|uncertain|insufficient|undisclosed|unverified|unresolved|cannot (?:confirm|infer|establish|determine)|does not (?:establish|confirm|identify)|no (?:evidence|information|identified|confirmed|recorded)|lack of (?:evidence|information))\b/i.test(text));
+}
+
+type ContextLimit = { label?: string; text: string; refs?: unknown };
+
+function limitsForContext(raw: UnknownRecord): ContextLimit[] {
+  const system = object(raw.system_context);
+  const agent = object(system.agent_context);
+  const environment = object(system.occurrence_environment);
+  const jurisdiction = object(raw.jurisdictional_context);
+  const parties = list(object(raw.affected_party_context).entities).map(object);
+  const structured = Object.prototype.hasOwnProperty.call(jurisdiction, "normalized_geography");
+  const relationships = list(object(jurisdiction.normalized_geography).relations).map(object);
+  const result: ContextLimit[] = [];
+  const add = (text?: string, label?: string, refs?: unknown) => {
+    if (text && !result.some(item => item.text === text)) result.push({ text, label, refs });
+  };
+  // Full canonical bases are preserved as written, whether they describe
+  // supporting evidence or a reporting limit. They no longer interrupt §01.
+  add(words(agent.evidence_basis), "Agent configuration — evidence scope", agent.source_record_refs);
+  add(words(environment.evidence_basis), "Operational environment — evidence scope", environment.source_record_refs);
+  if (Object.keys(environment).length) {
+    add("Deployment state and external reach describe different conditions; interaction with a live service does not by itself mean the model was publicly deployed.");
+  }
+  if (!parties.length) add("Not recorded in the structured context.");
+  for (const party of parties) {
+    if (isEvidenceLimit(party.evidence_basis)) add(words(party.evidence_basis), "Affected party — evidence limit", party.source_record_refs);
+  }
+  if (!structured) {
+    add("Geographic roles have not yet been structurally assessed. Legacy jurisdiction descriptions must not be treated as verified occurrence locations.");
+  } else if (!relationships.some(relation => relation.role !== "regulatory-context")) {
+    add("No country-specific non-regulatory geographic relationship is asserted in the reviewed structured metadata.");
+  }
+  for (const relation of relationships) {
+    if (isEvidenceLimit(relation.evidence_basis)) add(words(relation.evidence_basis), "Geographic relationship — evidence limit", relation.source_record_refs);
+    if (!list(relation.locations).length) {
+      add("No confirmed geographic location is recorded for this relationship.");
+    }
+  }
+  if (words(jurisdiction.regulatory_surface) || list(jurisdiction.regulatory_surface).length ||
+    relationships.some(relation => relation.role === "regulatory-context")) {
+    add("A jurisdictional association does not establish whether a regulation applies, whether an obligation was breached, or what any authority has determined. Consult 04 Compliance for separately adjudicated requirements.");
+  }
+  return result;
+}
+
+/** Reuse identical limitations in the interactive Case File and the print report. */
+export function IncidentContextLimitations({ raw, sourceReferenceNumbers }: Pick<Props, "raw" | "sourceReferenceNumbers">) {
+  const items = limitsForContext(raw);
+  if (!items.length) return null;
+  return <div className="vigil-context-limitations" aria-label="Incident Context evidence limits">
+    <h5>Incident Context — evidence scope and limitations</h5>
+    <ul>{items.map((item, i) => <li key={i}>
+      {item.label && <strong>{item.label}: </strong>}
+      <span>{item.text}</span>
+      <SourceLinks refs={item.refs} numbers={sourceReferenceNumbers} />
+    </li>)}</ul>
+  </div>;
 }
 
 const COUNTRY_NAMES: Record<string, string> = {
@@ -118,7 +170,7 @@ function RelationshipCard({ relation, index, numbers, knownParties }: {
         )}</ul>
       : <p className="vigil-context-muted">No confirmed geographic location is recorded for this relationship.</p>}
     {parties.length > 0 && <p className="vigil-context-association">Linked entities: {parties.join(", ")}</p>}
-    {words(relation.evidence_basis) && <p className="vigil-context-basis">{words(relation.evidence_basis)}</p>}
+    {words(relation.evidence_basis) && !isEvidenceLimit(relation.evidence_basis) && <p className="vigil-context-basis">{words(relation.evidence_basis)}</p>}
     <SourceLinks refs={relation.source_record_refs} numbers={numbers} />
   </article>;
 }
@@ -149,13 +201,10 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
 
   return <section className="vigil-incident-context" aria-labelledby="vigil-incident-context-heading">
     <header className="vigil-incident-context-heading">
-      <p className="vigil-incident-context-kicker">Occurrence metadata</p>
       <h3 id="vigil-incident-context-heading">Incident Context</h3>
-      <p>Technology, operating conditions, participating institutions and geographic relationships recorded for this occurrence.</p>
     </header>
 
-    <Group id="vigil-context-systems" number="01" title="Systems & Technology"
-      description="Platforms, products, runtimes and architectural components named in the evidence.">
+    <Group id="vigil-context-systems" title="Systems & Technology">
       <dl className="vigil-context-fields">
         <Field title="Provider / platform" value={primarySystem?.provider ?? words(system.platform_or_vendor)} />
         <Field title="Product / service" value={primarySystem?.product ?? words(system.product_or_service)} />
@@ -168,8 +217,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
       {!Object.keys(system).length && <p className="vigil-context-muted">System metadata has not been recorded for this case.</p>}
     </Group>
 
-    <Group id="vigil-context-operational" number="02" title="Operational Environment"
-      description="How the system was configured, what activity occurred and whether its actions reached external systems.">
+    <Group id="vigil-context-operational" title="Operational Environment">
       <dl className="vigil-context-fields">
         <Field title="Agent configuration" value={primarySystem?.agentConfiguration ?? label(agent.agentic_status)} />
         <Field title="Agent count" value={primarySystem?.agentCount} />
@@ -181,17 +229,13 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
         <Field title="Testing actor (legacy)" value={primarySystem?.testingActor} />
         <Field title="Occurrence environment" value={words(environment.environment_detail)} wide />
       </dl>
-      <div className="vigil-context-evidence-grid">
-        <EvidenceBasis heading="Agent configuration — evidence and limitations"
-          text={words(agent.evidence_basis)} refs={agent.source_record_refs} numbers={sourceReferenceNumbers} />
-        <EvidenceBasis heading="Operational environment — evidence and limitations"
-          text={words(environment.evidence_basis)} refs={environment.source_record_refs} numbers={sourceReferenceNumbers} />
+      <div className="vigil-context-operational-sources">
+        <SourceLinks refs={agent.source_record_refs} numbers={sourceReferenceNumbers} />
+        <SourceLinks refs={environment.source_record_refs} numbers={sourceReferenceNumbers} />
       </div>
-      <p className="vigil-context-qualifier">Deployment state and external reach describe different conditions; interaction with a live service does not by itself mean the model was publicly deployed.</p>
     </Group>
 
-    <Group id="vigil-context-parties" number="03" title="Affected Parties & Institutions"
-      description="Evidence-linked entities and their distinct relationships to the incident. Participation does not by itself establish harm.">
+    <Group id="vigil-context-parties" title="Affected Parties & Institutions">
       {parties.length > 0
         ? <div className="vigil-context-entity-list">{parties.map((party, index) =>
             <article className="vigil-context-entity" key={words(party.party_id) ?? String(index)}>
@@ -203,15 +247,14 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
                 <Field title="Entity type" value={label(party.kind)} />
                 <Field title="Relationship roles" value={join(list(party.roles).map(label))} />
               </dl>
-              {words(party.evidence_basis) && <p className="vigil-context-basis">{words(party.evidence_basis)}</p>}
+              {words(party.evidence_basis) && !isEvidenceLimit(party.evidence_basis) && <p className="vigil-context-basis">{words(party.evidence_basis)}</p>}
               <SourceLinks refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
             </article>
           )}</div>
         : <p className="vigil-context-muted">Structured institutional and affected-party relationships have not yet been reviewed for this Incident. The narrative and cited evidence may identify parties without establishing a canonical relationship.</p>}
     </Group>
 
-    <Group id="vigil-context-geography" number="04" title="Geographic & Jurisdictional Context"
-      description="Why each location is relevant—not a claim that the incident physically occurred at a mapped country centre.">
+    <Group id="vigil-context-geography" title="Geographic & Jurisdictional Context">
       <dl className="vigil-context-fields">
         <Field title="Recorded primary jurisdiction (legacy)" value={legacyPrimary} wide />
         <Field title="Other recorded jurisdictions (legacy)" value={legacySecondary} wide />
@@ -219,9 +262,8 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
         {hasStructuredGeography && <Field title="Reviewed geographic scope" value={label(geography.scope)} />}
         <Field title="Jurisdiction notes" value={words(jurisdiction.notes)} wide />
       </dl>
-      {!hasStructuredGeography && <p className="vigil-context-notice">Geographic roles have not yet been structurally assessed. The legacy descriptions above must not be treated as verified occurrence locations.</p>}
       {hasStructuredGeography && otherRelationships.length === 0 &&
-        <p className="vigil-context-muted">No country-specific non-regulatory geographic relationship is asserted in the reviewed structured metadata. See the recorded scope and evidence limitations.</p>}
+        <p className="vigil-context-muted">No further geographic relationship recorded.</p>}
       {otherRelationships.length > 0 && <div className="vigil-context-relationship-list">
         {otherRelationships.map((relation, index) =>
           <RelationshipCard key={words(relation.relationship_id) ?? String(index)}
@@ -229,8 +271,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
       </div>}
     </Group>
 
-    <Group id="vigil-context-regulatory" number="05" title="Regulatory Context"
-      description="Potential governance topics and regulatory geographic associations, not compliance or legal-applicability findings.">
+    <Group id="vigil-context-regulatory" title="Regulatory Context">
       <dl className="vigil-context-fields">
         <Field title="Sector / institutional context" value={words(jurisdiction.sector)} wide />
         <Field title="Governance topics recorded" value={regulatoryTopics} wide />
@@ -243,7 +284,6 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
       </div>}
       {!regulatoryTopics && !words(jurisdiction.sector) && !regulatoryRelationships.length &&
         <p className="vigil-context-muted">No specific regulatory context has been recorded in this Incident metadata.</p>}
-      <p className="vigil-context-qualifier">A jurisdictional association does not establish whether a regulation applies, whether an obligation was breached, or what any authority has determined. Consult 04 Compliance for separately adjudicated requirements.</p>
     </Group>
   </section>;
 }
