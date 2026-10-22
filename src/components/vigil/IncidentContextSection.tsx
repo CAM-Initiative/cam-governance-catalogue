@@ -91,6 +91,7 @@ function limitsForContext(raw: UnknownRecord): ContextLimit[] {
   const add = (text?: string, label?: string, refs?: unknown) => {
     if (text && !result.some(item => item.text === text)) result.push({ text, label, refs });
   };
+  if (!Object.keys(system).length) add("System metadata has not been recorded for this case.");
   // Full canonical bases are preserved as written, whether they describe
   // supporting evidence or a reporting limit. They no longer interrupt §01.
   add(words(agent.evidence_basis), "Agent configuration — evidence scope", agent.source_record_refs);
@@ -98,7 +99,7 @@ function limitsForContext(raw: UnknownRecord): ContextLimit[] {
   if (Object.keys(environment).length) {
     add("Deployment state and external reach describe different conditions; interaction with a live service does not by itself mean the model was publicly deployed.");
   }
-  if (!parties.length) add("Not recorded in the structured context.");
+  if (!parties.length) add("Structured institutional and affected-party relationships have not yet been reviewed for this Incident. The narrative and cited evidence may identify parties without establishing a canonical relationship.");
   for (const party of parties) {
     if (isEvidenceLimit(party.evidence_basis)) add(words(party.evidence_basis), "Affected party — evidence limit", party.source_record_refs);
   }
@@ -168,7 +169,7 @@ function RelationshipCard({ relation, index, numbers, knownParties }: {
       ? <ul className="vigil-context-locations">{places.map((place, i) =>
           <li key={i}>{locationText(place)}</li>
         )}</ul>
-      : <p className="vigil-context-muted">No confirmed geographic location is recorded for this relationship.</p>}
+      : <p className="vigil-context-muted" aria-label="Location not recorded">—</p>}
     {parties.length > 0 && <p className="vigil-context-association">Linked entities: {parties.join(", ")}</p>}
     {words(relation.evidence_basis) && !isEvidenceLimit(relation.evidence_basis) && <p className="vigil-context-basis">{words(relation.evidence_basis)}</p>}
     <SourceLinks refs={relation.source_record_refs} numbers={numbers} />
@@ -214,7 +215,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
         <Field title="Architectural component roles" value={join(system.component_role)} wide />
         <Field title="Deployment context" value={primarySystem?.deploymentContext ?? words(system.deployment_context)} wide />
       </dl>
-      {!Object.keys(system).length && <p className="vigil-context-muted">System metadata has not been recorded for this case.</p>}
+      {!Object.keys(system).length && <p className="vigil-context-muted" aria-label="System identity not recorded">—</p>}
     </Group>
 
     <Group id="vigil-context-operational" title="Operational Environment">
@@ -251,7 +252,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
               <SourceLinks refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
             </article>
           )}</div>
-        : <p className="vigil-context-muted">Structured institutional and affected-party relationships have not yet been reviewed for this Incident. The narrative and cited evidence may identify parties without establishing a canonical relationship.</p>}
+        : <p className="vigil-context-muted" aria-label="Affected parties not reviewed">—</p>}
     </Group>
 
     <Group id="vigil-context-geography" title="Geographic & Jurisdictional Context">
@@ -263,7 +264,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
         <Field title="Jurisdiction notes" value={words(jurisdiction.notes)} wide />
       </dl>
       {hasStructuredGeography && otherRelationships.length === 0 &&
-        <p className="vigil-context-muted">No further geographic relationship recorded.</p>}
+        <p className="vigil-context-muted" aria-label="No further geographic relationship">—</p>}
       {otherRelationships.length > 0 && <div className="vigil-context-relationship-list">
         {otherRelationships.map((relation, index) =>
           <RelationshipCard key={words(relation.relationship_id) ?? String(index)}
@@ -283,7 +284,7 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
             relation={relation} index={index} numbers={sourceReferenceNumbers} knownParties={parties} />)}
       </div>}
       {!regulatoryTopics && !words(jurisdiction.sector) && !regulatoryRelationships.length &&
-        <p className="vigil-context-muted">No specific regulatory context has been recorded in this Incident metadata.</p>}
+        <p className="vigil-context-muted" aria-label="Regulatory context not recorded">—</p>}
     </Group>
   </section>;
 }
