@@ -129,7 +129,13 @@ jobs:
             # exact generated output being committed. Skip automatic CI on the
             # bot commit to avoid an un-runnable pull_request check owned by the bot.
             git commit -m "chore: rebuild GitHub Pages output [skip ci]"
-            git push
+            if ! git push; then
+              # Another authorised branch edit may have arrived during the
+              # build. Preserve it: rebase the generated output without force.
+              git fetch origin "$GITHUB_REF_NAME"
+              git rebase "origin/$GITHUB_REF_NAME"
+              git push
+            fi
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi
 
