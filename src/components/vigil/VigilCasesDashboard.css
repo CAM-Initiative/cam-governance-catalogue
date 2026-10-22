@@ -483,3 +483,30 @@
     font-size: .69rem;
   }
 }
+
+/* Case Files result-toolbar inset restoration.
+   The dashboard library card no longer has the old outer gutter, so the
+   matching-case count and Clear filters must not sit against its border.
+   Scope this to the landing dashboard; dossier navigation is unchanged. */
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-result-summary {
+  padding-inline: clamp(0.8rem, 2vw, 1.25rem);
+  gap: 0.55rem 0.85rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-result-summary button {
+  margin-inline-start: auto;
+  white-space: nowrap;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-pagination {
+  padding-inline: clamp(0.9rem, 2vw, 1.25rem);
+  box-sizing: border-box;
+}
+@media (max-width: 540px) {
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-result-summary {
+    padding-inline: 0.8rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-pagination {
+    padding-inline: 0.75rem;
+  }
+}
