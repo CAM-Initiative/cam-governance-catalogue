@@ -26,7 +26,7 @@ import { deriveIncidentPublicDetail } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
-import { IncidentContextSection } from "@/components/vigil/IncidentContextSection";
+import { IncidentContextSection, IncidentContextLimitations } from "@/components/vigil/IncidentContextSection";
 import { loadHarmMethodologyMetadata, type HarmMethodologyMetadata } from "@/lib/vigilHarmMethodology";
 import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 import {
@@ -811,6 +811,7 @@ export default function VigilCaseFile() {
         {assessmentLimitItems.length > 0 && <div className="vigil-reference-assessment-limits">
           <h4 className="vigil-reference-limits-label">Limits of the assessment</h4>
           <TextList items={assessmentLimitItems} />
+          {incident && <IncidentContextLimitations raw={incident.raw} sourceReferenceNumbers={harmEvidenceReferenceNumbers} />}
         </div>}
       </section>
     </div> : <p className="vigil-case-empty">No references are currently available for this Case File.</p>;
