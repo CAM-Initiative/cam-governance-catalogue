@@ -11,6 +11,9 @@ import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from 
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import VigilCasesDashboard, { countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
+import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
+import { getSelectedVigilBranch, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 
 type PageState =
   | { status: "loading" }
@@ -144,6 +147,9 @@ export default function VigilCases() {
   const [search, setSearch] = useState("");
   const [classification, setClassification] = useState("");
   const [severity, setSeverity] = useState("");
+  const [jurisdiction, setJurisdiction] = useState("");
+  const [failureClass, setFailureClass] = useState("");
+  const [countryByCase, setCountryByCase] = useState<Map<string, string>>(new Map());
   const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
   const [page, setPage] = useState(1);
 
@@ -158,6 +164,23 @@ export default function VigilCases() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    if (getSelectedVigilBranch() !== VIGIL_DEFAULT_BRANCH) return;
+    let active = true;
+    fetch(`${import.meta.env.BASE_URL}data/vigil-dashboard-jurisdictions.json`)
+      .then(response => { if (!response.ok) throw new Error("Jurisdiction index unavailable"); return response.json(); })
+      .then((data: { records?: Array<{ id: string; jurisdiction: string; version?: string }> }) => {
+        if (!active) return;
+        const lookup = new Map<string, string>();
+        for (const entry of data.records ?? []) {
+          const code = countryFromJurisdiction(entry.jurisdiction)?.id;
+          if (code) lookup.set(entry.id, code);
+        }
+        setCountryByCase(lookup);
+      }).catch(() => { /* Missing geography must never block the Case File index. */ });
+    return () => { active = false; };
+  }, []);
+
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
   const severityStates = useMemo(() => severityCounts(records), [records]);
@@ -166,16 +189,27 @@ export default function VigilCases() {
     return dates.length ? dates[dates.length - 1] : undefined;
   }, [records]);
 
-  const filtered = useMemo(() => records.filter((record) => {
+  // Scope each instrument independently of the facet it selects.
+  const baseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
     if (classification && canonicalComparisonKey(classificationStatusLabel(record)) !== classification) return false;
-    if (severity && severityCode(record) !== severity) return false;
+    if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
     return true;
-  }), [classification, records, search, severity]);
+  }), [classification, failureClass, records, search]);
+
+  const mapRecords = useMemo(() => baseCases.filter(record =>
+    !severity || severityCode(record) === severity
+  ), [baseCases, severity]);
+  const distributionRecords = useMemo(() => baseCases.filter(record =>
+    !jurisdiction || countryByCase.get(record.id) === jurisdiction
+  ), [baseCases, countryByCase, jurisdiction]);
+  const filtered = useMemo(() => distributionRecords.filter(record =>
+    !severity || severityCode(record) === severity
+  ), [distributionRecords, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classification, severity, sort]);
+  useEffect(() => setPage(1), [search, classification, severity, jurisdiction, failureClass, sort]);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -228,6 +262,17 @@ export default function VigilCases() {
               ]}
             />
 
+            <div className="vigil-dashboard-layout">
+              <div className="vigil-dashboard-case-column">
+                <div className="vigil-dashboard-section-heading">
+                  <h2>Explore the case library</h2>
+                  <span>Evidence-led investigations</span>
+                </div>
+                <div className="vigil-dashboard-summary" aria-label="Case library overview">
+                  <div><strong>{state.status === "ready" ? records.length : "—"}</strong><span>Documented case files</span></div>
+                  <div><strong>{state.status === "ready" ? records.filter(record => ["S4", "S5"].includes(severityCode(record))).length : "—"}</strong><span>High / critical severity</span></div>
+                  <div><strong>{state.status === "ready" ? records.filter(record => failureClassIds(record.raw).length > 0).length : "—"}</strong><span>Cases with evidenced failures</span></div>
+                </div>
             <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
               <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
               <div className="vigil-search-row vigil-case-table-search">
@@ -261,7 +306,7 @@ export default function VigilCases() {
               </div>
               <div className="vigil-result-summary">
                 <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
-                {(search || classification || severity) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); }}>Clear filters</button>}
+                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); setJurisdiction(""); setFailureClass(""); }}>Clear filters</button>}
               </div>
             </section>
 
@@ -352,6 +397,19 @@ export default function VigilCases() {
                 ><ChevronsRight aria-hidden="true" /></button>
               </nav>
             )}
+              </div>
+              <VigilCasesDashboard
+                mapRecords={mapRecords}
+                distributionRecords={distributionRecords}
+                filteredRecords={filtered}
+                severity={severity}
+                jurisdiction={jurisdiction}
+                failureClass={failureClass}
+                onSeverity={setSeverity}
+                onJurisdiction={setJurisdiction}
+                onFailureClass={setFailureClass}
+              />
+            </div>
           </section>
         </div>
       </main>
