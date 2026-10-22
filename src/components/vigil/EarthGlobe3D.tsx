@@ -62,10 +62,12 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<SceneState | null>(null);
   const callbackRef = useRef(onSelect);
+  const selectedRef = useRef(selected);
   const unavailableRef = useRef(onUnavailable);
   const [ready, setReady] = useState(false);
   const [hoverLabel, setHoverLabel] = useState<string | null>(null);
   callbackRef.current = onSelect;
+  selectedRef.current = selected;
   unavailableRef.current = onUnavailable;
 
   const reset = useCallback(() => {
@@ -177,7 +179,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
         state.earth.rotation.y += (state.targetSpin - state.earth.rotation.y) * smoothness;
         state.tilt.rotation.x += (state.targetTilt - state.tilt.rotation.x) * smoothness;
         // Gentle ambient motion, disabled entirely for reduced-motion users.
-        if (!prefersReducedMotion && !state.dragStart && !selected &&
+        if (!prefersReducedMotion && !state.dragStart && !selectedRef.current &&
           Date.now() - state.lastInteraction > 7000) {
           state.targetSpin += 0.00048;
         }
