@@ -570,7 +570,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   ]);
   assert.match(hub, /const CASE_FILE_STAGES = \[/);
   assert.match(hub, /One evidence-to-conclusion structure for every Incident/);
-  assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
+  assert.ok(hub.includes("Record what happened, the technology and operating conditions, participating and affected parties, geographic and governance context, and public evidence supporting the occurrence."));
   assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
   assert.match(hub, /Assess relevant external requirements independently against the occurrence evidence/);
