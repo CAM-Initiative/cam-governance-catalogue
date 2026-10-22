@@ -48,6 +48,8 @@ type SceneState = {
   haloMaterial: THREE.ShaderMaterial;
   markers: THREE.Group;
   targets: THREE.Mesh[];
+  lightMaterials: THREE.MeshBasicMaterial[];
+  lightGroups: THREE.Group[];
   targetTilt: number;
   targetSpin: number;
   dragStart?: { x: number; y: number; tilt: number; spin: number };
@@ -66,6 +68,8 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
   const unavailableRef = useRef(onUnavailable);
   const [ready, setReady] = useState(false);
   const [hoverLabel, setHoverLabel] = useState<string | null>(null);
+  const [overBeacon, setOverBeacon] = useState(false);
+  const hoverIdRef = useRef<string | null>(null);
   callbackRef.current = onSelect;
   selectedRef.current = selected;
   unavailableRef.current = onUnavailable;
@@ -168,7 +172,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       state = {
         renderer, scene, camera, tilt, earth, earthGeometry, earthMaterial, haloGeometry, haloMaterial,
-        markers, targets: [], targetSpin: earth.rotation.y, targetTilt: tilt.rotation.x,
+        markers, targets: [], lightMaterials: [], lightGroups: [], targetSpin: earth.rotation.y, targetTilt: tilt.rotation.x,
         lastInteraction: Date.now(), frame: 0, resize,
       };
       sceneRef.current = state;
@@ -182,6 +186,16 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
         if (!prefersReducedMotion && !state.dragStart && !selectedRef.current &&
           Date.now() - state.lastInteraction > 7000) {
           state.targetSpin += 0.00048;
+        }
+        // Breathing satellite beacons. Intensity represents case density,
+        // never a location for an individual Incident.
+        if (!prefersReducedMotion) {
+          const phase = Date.now() * 0.00135;
+          for (let i = 0; i < state.lightMaterials.length; i++) {
+            const mat = state.lightMaterials[i];
+            const base = Number(mat.userData.baseOpacity ?? 0.18);
+            mat.opacity = base * (0.87 + 0.13 * Math.sin(phase + i * 1.47));
+          }
         }
         renderer.render(scene, camera);
         state.frame = window.requestAnimationFrame(animate);
@@ -217,9 +231,14 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       if (!state) return;
       window.cancelAnimationFrame(state.frame);
       state.resize.disconnect();
-      for (const item of state.targets) {
-        item.geometry.dispose();
-        (item.material as THREE.Material).dispose();
+      for (const group of state.lightGroups) {
+        state.markers.remove(group);
+        group.traverse(object => {
+          if (object instanceof THREE.Mesh) {
+            object.geometry.dispose();
+            (object.material as THREE.Material).dispose();
+          }
+        });
       }
       state.texture?.dispose();
       state.earthGeometry.dispose();
@@ -236,22 +255,66 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
   useEffect(() => {
     const state = sceneRef.current;
     if (!state) return;
-    for (const target of state.targets) {
-      state.markers.remove(target);
-      target.geometry.dispose();
-      (target.material as THREE.Material).dispose();
+    for (const group of state.lightGroups) {
+      state.markers.remove(group);
+      group.traverse(object => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          (object.material as THREE.Material).dispose();
+        }
+      });
     }
-    state.targets = locations.map(location => {
-      const active = selected === location.id;
-      const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(active ? .065 : .042, 12, 10),
-        new THREE.MeshBasicMaterial({ color: active ? 0xffcf78 : 0x73fff3, toneMapped: false })
+    state.targets = [];
+    state.lightGroups = [];
+    state.lightMaterials = [];
+    const maximum = Math.max(1, ...locations.map(location => location.count));
+    for (const location of locations) {
+      const selectedLocation = selected === location.id;
+      // Logarithmic scaling prevents a high-volume jurisdiction from drowning
+      // out smaller ones; these are source-field-derived COUNTRY anchors.
+      const intensity = Math.log1p(location.count) / Math.log1p(maximum);
+      const coreSize = (selectedLocation ? .041 : .029) + intensity * .013;
+      const beacon = new THREE.Group();
+      beacon.position.copy(toGlobeVector(location.lat, location.lon, GLOBE_RADIUS + .019));
+
+      // Soft additive layers mimic city lights from a satellite, without
+      // manufacturing individual event coordinates or network connections.
+      const color = selectedLocation ? 0xffe6a1 : intensity >= .75 ? 0xffc774 : 0x63ecff;
+      const haloGeometry = new THREE.SphereGeometry(coreSize * (3.4 + intensity * .5), 16, 12);
+      const haloMaterial = new THREE.MeshBasicMaterial({
+        color, transparent: true, opacity: .09 + intensity * .12,
+        blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false
+      });
+      haloMaterial.userData.baseOpacity = haloMaterial.opacity;
+      beacon.add(new THREE.Mesh(haloGeometry, haloMaterial));
+      state.lightMaterials.push(haloMaterial);
+
+      const bloomMaterial = new THREE.MeshBasicMaterial({
+        color, transparent: true, opacity: .26 + intensity * .2,
+        blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false
+      });
+      bloomMaterial.userData.baseOpacity = bloomMaterial.opacity;
+      beacon.add(new THREE.Mesh(new THREE.SphereGeometry(coreSize * 1.9, 14, 10), bloomMaterial));
+      state.lightMaterials.push(bloomMaterial);
+
+      const light = new THREE.Mesh(
+        new THREE.SphereGeometry(coreSize, 14, 10),
+        new THREE.MeshBasicMaterial({ color: selectedLocation ? 0xffffff : 0xe0fbff, toneMapped: false })
       );
-      dot.position.copy(toGlobeVector(location.lat, location.lon, GLOBE_RADIUS + .026));
-      dot.userData = { id: location.id, label: location.name, count: location.count };
-      state.markers.add(dot);
-      return dot;
-    });
+      beacon.add(light);
+
+      // Transparent enlarged hit sphere: easy to target on touch and mouse;
+      // only accepted on the visible hemisphere by the shared hit test.
+      const hit = new THREE.Mesh(
+        new THREE.SphereGeometry(Math.max(.088, coreSize * 2.1), 12, 10),
+        new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+      );
+      hit.userData = { id: location.id, label: location.name, count: location.count };
+      beacon.add(hit);
+      state.targets.push(hit);
+      state.markers.add(beacon);
+      state.lightGroups.push(beacon);
+    }
   }, [locations, selected, ready]);
 
   useEffect(() => {
@@ -264,29 +327,9 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
     state.lastInteraction = Date.now();
   }, [selected, locations, ready]);
 
-  const pointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
+  const hoveredBeacon = (event: PointerEvent<HTMLCanvasElement>) => {
     const state = sceneRef.current;
-    if (!state) return;
-    state.dragStart = { x: event.clientX, y: event.clientY, tilt: state.targetTilt, spin: state.targetSpin };
-    state.lastInteraction = Date.now();
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-  const pointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
-    const state = sceneRef.current;
-    if (!state) return;
-    const drag = state.dragStart;
-    if (!drag) return;
-    state.targetSpin = drag.spin + (event.clientX - drag.x) * .008;
-    state.targetTilt = THREE.MathUtils.clamp(drag.tilt + (event.clientY - drag.y) * .004, -1.1, 1.1);
-    state.lastInteraction = Date.now();
-  };
-  const pointerUp = (event: PointerEvent<HTMLCanvasElement>) => {
-    const state = sceneRef.current;
-    if (!state) return;
-    const drag = state.dragStart;
-    state.dragStart = undefined;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    if (!drag || Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) return;
+    if (!state || !state.targets.length) return null;
     const rect = event.currentTarget.getBoundingClientRect();
     const mouse = new THREE.Vector2(
       ((event.clientX - rect.left) / rect.width) * 2 - 1,
@@ -295,34 +338,71 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, state.camera);
     state.scene.updateMatrixWorld(true);
-    const hits = raycaster.intersectObjects(state.targets, false);
-    // Only accept a pin on the visible hemisphere; reject back-of-Earth hits.
-    const hit = hits.find(result => {
+    const matches = raycaster.intersectObjects(state.targets, false);
+    // Reject back-of-globe lights that are geometrically nearer along a ray.
+    return matches.find(hit => {
       const position = new THREE.Vector3();
-      result.object.getWorldPosition(position);
+      hit.object.getWorldPosition(position);
       return position.z > 0.2;
-    });
+    })?.object.userData as { id: string; label: string; count: number } | undefined;
+  };
+
+  const pointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
+    const state = sceneRef.current;
+    if (!state) return;
+    state.dragStart = { x: event.clientX, y: event.clientY, tilt: state.targetTilt, spin: state.targetSpin };
+    state.lastInteraction = Date.now();
+    setOverBeacon(false);
+    setHoverLabel(null);
+    hoverIdRef.current = null;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+  const pointerMove = (event: PointerEvent<HTMLCanvasElement>) => {
+    const state = sceneRef.current;
+    if (!state) return;
+    const drag = state.dragStart;
+    if (drag) {
+      state.targetSpin = drag.spin + (event.clientX - drag.x) * .008;
+      state.targetTilt = THREE.MathUtils.clamp(drag.tilt + (event.clientY - drag.y) * .004, -1.1, 1.1);
+      state.lastInteraction = Date.now();
+      return;
+    }
+    const hover = hoveredBeacon(event);
+    if (hoverIdRef.current === (hover?.id ?? null)) return;
+    hoverIdRef.current = hover?.id ?? null;
+    setOverBeacon(Boolean(hover));
+    setHoverLabel(hover ? `${hover.label} · ${hover.count} case${hover.count === 1 ? "" : "s"}` : null);
+  };
+  const pointerUp = (event: PointerEvent<HTMLCanvasElement>) => {
+    const state = sceneRef.current;
+    if (!state) return;
+    const drag = state.dragStart;
+    state.dragStart = undefined;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    if (!drag || Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) return;
+    const hit = hoveredBeacon(event);
     if (hit) {
-      const id = hit.object.userData.id as string;
-      callbackRef.current(selected === id ? "" : id);
+      callbackRef.current(selectedRef.current === hit.id ? "" : hit.id);
+      setOverBeacon(false);
       setHoverLabel(null);
+      hoverIdRef.current = null;
     }
   };
 
   return (
     <div ref={hostRef} className="vigil-dashboard-globe-scene vigil-dashboard-three-scene">
       <canvas
-        ref={canvasRef} className="vigil-dashboard-globe-three"
+        ref={canvasRef} className={`vigil-dashboard-globe-three${overBeacon ? " is-over-beacon" : ""}`}
         aria-hidden="true"
         style={{ opacity: ready ? 1 : 0 }}
         onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp}
         onPointerCancel={() => { if (sceneRef.current) sceneRef.current.dragStart = undefined; }}
-        onPointerLeave={() => setHoverLabel(null)}
+        onPointerLeave={() => { setHoverLabel(null); setOverBeacon(false); hoverIdRef.current = null; }}
         onContextMenu={event => event.preventDefault()}
       />
       {!ready && <div className="vigil-dashboard-three-loading" role="status">Loading satellite view…</div>}
       <button type="button" className="vigil-dashboard-reset-rotation" onClick={reset} aria-label="Reset 3D Earth rotation" title="Reset globe rotation"><RotateCcw size={15} /></button>
-      {hoverLabel && <span className="vigil-dashboard-globe-tooltip">{hoverLabel}</span>}
+      {hoverLabel && <span className="vigil-dashboard-globe-tooltip" role="status">{hoverLabel}</span>}
     </div>
   );
 }
