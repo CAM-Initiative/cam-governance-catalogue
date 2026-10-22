@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import { RotateCcw } from "lucide-react";
 import * as THREE from "three";
+import { globePosition, globeRotationForLongitude } from "@/lib/vigilGlobeCoordinates.mjs";
 
 type Location = { id: string; name: string; lat: number; lon: number; count: number };
 type GlobeProps = {
@@ -21,14 +22,8 @@ const START_LONGITUDE = 18;
 const VIEW_DISTANCE = 4.3;
 
 function toGlobeVector(lat: number, lon: number, radius: number) {
-  const latitude = lat * RAD;
-  const longitude = lon * RAD;
-  // Three's SphereGeometry uses u=.5 (Greenwich) on the -Z meridian.
-  return new THREE.Vector3(
-    radius * Math.cos(latitude) * Math.sin(longitude),
-    radius * Math.sin(latitude),
-    -radius * Math.cos(latitude) * Math.cos(longitude)
-  );
+  const point = globePosition(lat, lon, radius);
+  return new THREE.Vector3(point.x, point.y, point.z);
 }
 
 function nearestAngle(current: number, target: number) {
@@ -44,8 +39,6 @@ type SceneState = {
   earth: THREE.Group;
   earthGeometry: THREE.SphereGeometry;
   earthMaterial: THREE.MeshPhongMaterial;
-  haloGeometry: THREE.SphereGeometry;
-  haloMaterial: THREE.ShaderMaterial;
   markers: THREE.Group;
   targets: THREE.Mesh[];
   lightMaterials: THREE.SpriteMaterial[];
@@ -78,7 +71,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
   const reset = useCallback(() => {
     const state = sceneRef.current;
     if (!state) return;
-    state.targetSpin = nearestAngle(state.earth.rotation.y, Math.PI - START_LONGITUDE * RAD);
+    state.targetSpin = nearestAngle(state.earth.rotation.y, globeRotationForLongitude(START_LONGITUDE));
     state.targetTilt = 0.19;
     state.lastInteraction = Date.now();
   }, []);
@@ -110,7 +103,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       scene.add(tilt);
       tilt.add(earth);
       tilt.rotation.x = .19;
-      earth.rotation.y = Math.PI - START_LONGITUDE * RAD;
+      earth.rotation.y = globeRotationForLongitude(START_LONGITUDE);
 
       scene.add(new THREE.AmbientLight(0x87afd4, 1.0));
       const sunlight = new THREE.DirectionalLight(0xfff0d7, 2.35);
@@ -127,31 +120,6 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       const sphere = new THREE.Mesh(earthGeometry, earthMaterial);
       sphere.name = "Satellite-textured Earth";
       earth.add(sphere);
-
-      const haloGeometry = new THREE.SphereGeometry(GLOBE_RADIUS * 1.095, 64, 48);
-      const haloMaterial = new THREE.ShaderMaterial({
-        vertexShader: `
-          varying vec3 vNormal;
-          varying vec3 vPosition;
-          void main() {
-            vNormal = normalize(normalMatrix * normal);
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            vPosition = mvPosition.xyz;
-            gl_Position = projectionMatrix * mvPosition;
-          }
-        `,
-        fragmentShader: `
-          varying vec3 vNormal;
-          varying vec3 vPosition;
-          void main() {
-            float intensity = pow(1.0 - max(0.0, dot(normalize(vNormal), normalize(-vPosition))), 2.8);
-            gl_FragColor = vec4(0.18, 0.71, 1.0, intensity * 0.53);
-          }
-        `,
-        transparent: true, depthWrite: false,
-        blending: THREE.AdditiveBlending, side: THREE.BackSide,
-      });
-      tilt.add(new THREE.Mesh(haloGeometry, haloMaterial));
 
       const glowCanvas = document.createElement("canvas");
       glowCanvas.width = glowCanvas.height = 96;
@@ -187,7 +155,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
 
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       state = {
-        renderer, scene, camera, tilt, earth, earthGeometry, earthMaterial, haloGeometry, haloMaterial,
+        renderer, scene, camera, tilt, earth, earthGeometry, earthMaterial,
         markers, targets: [], lightMaterials: [], lightGroups: [], glowTexture, targetSpin: earth.rotation.y, targetTilt: tilt.rotation.x,
         lastInteraction: Date.now(), frame: 0, resize,
       };
@@ -260,8 +228,6 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
       state.glowTexture.dispose();
       state.earthGeometry.dispose();
       state.earthMaterial.dispose();
-      state.haloGeometry.dispose();
-      state.haloMaterial.dispose();
       state.renderer.dispose();
       state.renderer.forceContextLoss();
       sceneRef.current = null;
@@ -296,7 +262,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
 
       // Feathered billboard bloom, not an opaque coloured dot. All gradients
       // share one procedural texture (no remote image, no fake incident sites).
-      const color = selectedLocation ? 0xffe6a1 : intensity >= .75 ? 0xffc774 : 0x63ecff;
+      const color = selectedLocation ? 0xffe6a1 : 0xffbd59;
       const makeGlow = (scale: number, opacity: number) => {
         const material = new THREE.SpriteMaterial({
           map: state.glowTexture, color, transparent: true, opacity,
@@ -314,7 +280,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
 
       const light = new THREE.Mesh(
         new THREE.SphereGeometry(coreSize, 14, 10),
-        new THREE.MeshBasicMaterial({ color: selectedLocation ? 0xffffff : 0xe0fbff, toneMapped: false })
+        new THREE.MeshBasicMaterial({ color: selectedLocation ? 0xfff4d1 : 0xffd58a, toneMapped: false })
       );
       beacon.add(light);
 
@@ -337,7 +303,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
     if (!state || !selected) return;
     const marker = locations.find(location => location.id === selected);
     if (!marker) return;
-    state.targetSpin = nearestAngle(state.earth.rotation.y, Math.PI - marker.lon * RAD);
+    state.targetSpin = nearestAngle(state.earth.rotation.y, globeRotationForLongitude(marker.lon));
     state.targetTilt = THREE.MathUtils.clamp(marker.lat * RAD, -0.95, 0.95);
     state.lastInteraction = Date.now();
   }, [selected, locations, ready]);
@@ -354,7 +320,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onUnavaila
     raycaster.setFromCamera(mouse, state.camera);
     state.scene.updateMatrixWorld(true);
     const matches = raycaster.intersectObjects(state.targets, false);
-    // Reject back-of-globe lights that are geometrically nearer along a ray.
+    // Reject back-of-globe lights; they remain in the same rotating Earth group.
     return matches.find(hit => {
       const position = new THREE.Vector3();
       hit.object.getWorldPosition(position);
