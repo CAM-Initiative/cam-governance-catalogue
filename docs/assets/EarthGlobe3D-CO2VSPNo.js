@@ -1,4 +1,4 @@
-import{r as Ct,j as In,R as Go}from"./index-D-eP5Jos.js";/**
+import{r as Ct,j as In,R as Go}from"./index-BXouAm4V.js";/**
  * @license
  * Copyright 2010-2025 Three.js Authors
  * SPDX-License-Identifier: MIT
