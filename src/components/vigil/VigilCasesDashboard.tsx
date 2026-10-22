@@ -4,6 +4,7 @@ import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { getSelectedVigilBranch, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
+import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
 
@@ -93,35 +94,7 @@ const ALIASES: Record<string, string[]> = {
 };
 const byId = new Map(COUNTRIES.map(country => [country.id, country]));
 export function countryFromJurisdiction(value: string) {
-  const text = value.trim().toLowerCase();
-  if (!text || /^(global|international|cross-border|multi-jurisdictional|unspecified|unknown|not established|not applicable)/i.test(text)) return undefined;
-  // The jurisdiction field sometimes contains a locality before the country
-  // ("Perth, Western Australia, Australia"). A suffix is explicit evidence;
-  // never guess from a city or from the search index.
-  const matches = COUNTRIES.filter(country => {
-    const aliases = [country.name.toLowerCase(), ...(ALIASES[country.id] ?? [])];
-    return aliases.some(name =>
-      text === name ||
-      text.startsWith(name + " ") ||
-      text.startsWith(name + " /") ||
-      text.startsWith(name + " —") ||
-      text.startsWith(name + ",") ||
-      text.startsWith(name + " (") ||
-      text.endsWith(", " + name) ||
-      text.endsWith(" / " + name)
-    );
-  });
-  // A genuinely multinational primary-jurisdiction string cannot be placed
-  // on a single country's pin without creating a misleading location.
-  // Catch additional named jurisdictions in slash-separated segments, even if
-  // the second country is followed by a qualifier such as "-linked entities".
-  if (matches.length !== 1) return undefined;
-  const primary = matches[0];
-  const extraCountries = COUNTRIES.filter(country => country.id !== primary.id && [
-    country.name.toLowerCase(),
-    ...(ALIASES[country.id] ?? []),
-  ].some(name => text.includes(" / " + name + " ") || text.includes(" / " + name + " /") || text.includes(" / " + name + "-")));
-  return extraCountries.length === 0 ? primary : undefined;
+  return countryFromJurisdictionString(value, COUNTRIES, ALIASES);
 }
 
 const DEG = Math.PI / 180;
