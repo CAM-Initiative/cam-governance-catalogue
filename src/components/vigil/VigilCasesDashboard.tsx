@@ -77,6 +77,8 @@ const COUNTRIES: Country[] = [
   { id: "VN", name: "Vietnam", lat: 16, lon: 108 },
   { id: "EE", name: "Estonia", lat: 59, lon: 25 },
   { id: "PK", name: "Pakistan", lat: 30, lon: 69 },
+  { id: "HK", name: "Hong Kong", lat: 22, lon: 114 },
+  { id: "TH", name: "Thailand", lat: 16, lon: 101 },
 ];
 const ALIASES: Record<string, string[]> = {
   US: ["united states", "usa", "u.s.", "us federal"],
@@ -90,12 +92,26 @@ const ALIASES: Record<string, string[]> = {
 const byId = new Map(COUNTRIES.map(country => [country.id, country]));
 export function countryFromJurisdiction(value: string) {
   const text = value.trim().toLowerCase();
-  if (!text || /^(global|international|cross-border|multi-jurisdictional|unspecified|unknown|not established)/.test(text)) return undefined;
-  for (const country of COUNTRIES) {
-    const names = [country.name.toLowerCase(), ...(ALIASES[country.id] ?? [])];
-    if (names.some(name => text === name || text.startsWith(name + " ") || text.startsWith(name + " /") || text.startsWith(name + " —") || text.startsWith(name + ",") || text.startsWith(name + " ("))) return country;
-  }
-  return undefined;
+  if (!text || /^(global|international|cross-border|multi-jurisdictional|unspecified|unknown|not established|not applicable)/i.test(text)) return undefined;
+  // The jurisdiction field sometimes contains a locality before the country
+  // ("Perth, Western Australia, Australia"). A suffix is explicit evidence;
+  // never guess from a city or from the search index.
+  const matches = COUNTRIES.filter(country => {
+    const aliases = [country.name.toLowerCase(), ...(ALIASES[country.id] ?? [])];
+    return aliases.some(name =>
+      text === name ||
+      text.startsWith(name + " ") ||
+      text.startsWith(name + " /") ||
+      text.startsWith(name + " —") ||
+      text.startsWith(name + ",") ||
+      text.startsWith(name + " (") ||
+      text.endsWith(", " + name) ||
+      text.endsWith(" / " + name)
+    );
+  });
+  // A genuinely multinational primary-jurisdiction string cannot be placed
+  // on a single country's pin without creating a misleading location.
+  return matches.length === 1 ? matches[0] : undefined;
 }
 
 const DEG = Math.PI / 180;
