@@ -543,3 +543,38 @@
 .vigil-case-library-page .vigil-dashboard-donut-segment[aria-pressed="true"] {
   filter: drop-shadow(0 0 4px rgba(186, 137, 59, 0.32));
 }
+
+/* Search-field and filter-card spacing; deliberately scoped to Case Files landing. */
+/* The row beneath was padded in the previous pass, but the actual input row
+   still touched the card edge. Give all three input boxes the same inset as
+   the match-count toolbar while keeping their grid and responsive behaviour. */
+.vigil-case-library-page .vigil-dashboard-case-column > .vigil-library-toolbar {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1.1rem clamp(1rem, 2vw, 1.35rem) 0.85rem;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-search {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-search > label {
+  min-width: 0;
+}
+
+/* The glyph is already an "i" in the markup, but some inherited typography
+   uppercases it. Explicitly render the conventional lowercase info symbol. */
+.vigil-case-library-page .vigil-dashboard-geo-disclosure > summary {
+  text-transform: lowercase;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: .86rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+}
+
+@media (max-width: 650px) {
+  .vigil-case-library-page .vigil-dashboard-case-column > .vigil-library-toolbar {
+    padding: 0.9rem 0.85rem 0.8rem;
+  }
+}
