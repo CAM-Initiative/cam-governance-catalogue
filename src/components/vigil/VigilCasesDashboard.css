@@ -93,3 +93,57 @@
   .vigil-dashboard-donut-segment, .vigil-globe-pin circle { transition: none; }
 }
 @media print { .vigil-dashboard-sidebar { display: none; } .vigil-dashboard-layout { display: block; } }
+
+/* Photorealistic 3D Earth: WebGL scene is isolated to the dashboard rail. */
+.vigil-dashboard-three-scene {
+  height: auto;
+  aspect-ratio: 1;
+  isolation: isolate;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.vigil-dashboard-globe-three {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  transition: opacity .25s ease;
+}
+.vigil-dashboard-globe-three:active { cursor: grabbing; }
+.vigil-dashboard-three-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: .77rem;
+  color: #b5d7e5;
+  background: radial-gradient(circle, #15405d 0%, #072139 51%, transparent 68%);
+  pointer-events: none;
+}
+.vigil-dashboard-three-scene .vigil-dashboard-globe-hint {
+  left: 14px;
+  bottom: 19px;
+  z-index: 2;
+  text-shadow: 0 2px 4px #01101a;
+}
+.vigil-dashboard-three-scene .vigil-dashboard-reset-rotation {
+  right: 13px;
+  bottom: 14px;
+  z-index: 3;
+}
+.vigil-dashboard-globe-credit {
+  position: absolute;
+  display: block;
+  top: 4px;
+  left: 0;
+  right: 0;
+  color: #a9ccdc;
+  font-size: .62rem;
+  text-align: center;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vigil-dashboard-globe-three { transition: none; }
+}
