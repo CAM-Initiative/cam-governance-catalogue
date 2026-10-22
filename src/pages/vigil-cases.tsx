@@ -197,9 +197,10 @@ export default function VigilCases() {
     return true;
   }), [classification, failureClass, records, search]);
 
-  const mapRecords = useMemo(() => baseCases.filter(record =>
-    !severity || severityCode(record) === severity
-  ), [baseCases, severity]);
+  const mapRecords = useMemo(() => baseCases.filter(record => {
+    if (severity && severityCode(record) !== severity) return false;
+    return true;
+  }), [baseCases, severity]);
   const distributionRecords = useMemo(() => baseCases.filter(record =>
     !jurisdiction || countryByCase.get(record.id) === jurisdiction
   ), [baseCases, countryByCase, jurisdiction]);
