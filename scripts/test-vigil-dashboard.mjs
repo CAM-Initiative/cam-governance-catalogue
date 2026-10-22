@@ -134,3 +134,19 @@ test("Interactive doughnut has no rectangular black SVG focus borders and retain
   assert.match(css, /\.vigil-dashboard-donut-segment:focus-visible \{\s*filter: drop-shadow/);
   assert.match(css, /\.vigil-dashboard-severity-callout:focus-visible \{\s*filter: drop-shadow/);
 });
+
+test("Case Files search and both filters have card-edge inset, and globe info glyph is lowercase", async () => {
+  const [css, dashboard, page] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.css"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/pages/vigil-cases.tsx"),
+  ]);
+  assert.match(page, /<section className="vigil-library-toolbar"/);
+  assert.match(page, /className="vigil-search-row vigil-case-table-search"/);
+  assert.match(page, /<span>Classification<\/span>/);
+  assert.match(page, /<span>Severity<\/span>/);
+  assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-case-column > \.vigil-library-toolbar \{[\s\S]*?padding: 1\.1rem clamp\(1rem, 2vw, 1\.35rem\) 0\.85rem;/);
+  assert.match(css, /@media \(max-width: 650px\) \{[\s\S]*?\.vigil-dashboard-case-column > \.vigil-library-toolbar \{\s*padding: 0\.9rem 0\.85rem 0\.8rem;/);
+  assert.match(dashboard, /<summary aria-label="Globe data and imagery information" title="Globe data information">i<\/summary>/);
+  assert.match(css, /\.vigil-dashboard-geo-disclosure > summary \{\s*text-transform: lowercase;/);
+});
