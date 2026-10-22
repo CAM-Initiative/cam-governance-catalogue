@@ -13,7 +13,8 @@ import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import VigilCasesDashboard, { countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
 import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
-import { getSelectedVigilBranch, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
+import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
+import { countryLookupFromProjection } from "@/lib/vigilDashboardGeography.mjs";
 
 type PageState =
   | { status: "loading" }
@@ -150,6 +151,8 @@ export default function VigilCases() {
   const [jurisdiction, setJurisdiction] = useState("");
   const [failureClass, setFailureClass] = useState("");
   const [countryByCase, setCountryByCase] = useState<Map<string, string>>(new Map());
+  const [geographyAvailable, setGeographyAvailable] = useState(false);
+  const [geographyNote, setGeographyNote] = useState("Geographic index is loading.");
   const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
   const [page, setPage] = useState(1);
 
@@ -165,21 +168,58 @@ export default function VigilCases() {
   }, []);
 
   useEffect(() => {
-    if (getSelectedVigilBranch() !== VIGIL_DEFAULT_BRANCH) return;
+    if (state.status !== "ready") return;
     let active = true;
-    fetch(`${import.meta.env.BASE_URL}data/vigil-dashboard-jurisdictions.json`)
-      .then(response => { if (!response.ok) throw new Error("Jurisdiction index unavailable"); return response.json(); })
-      .then((data: { records?: Array<{ id: string; jurisdiction: string; version?: string }> }) => {
-        if (!active) return;
-        const lookup = new Map<string, string>();
-        for (const entry of data.records ?? []) {
-          const code = countryFromJurisdiction(entry.jurisdiction)?.id;
-          if (code) lookup.set(entry.id, code);
+    const records = state.records;
+    const selectedBranch = getSelectedVigilBranch();
+
+    async function loadGeography() {
+      let projection: unknown;
+      let legacy = false;
+      try {
+        const url = await vigilRawUrl("vigil/VIGIL.Incidents.Jurisdictions.Index.json");
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error("Current VIGIL branch has no published geography index");
+        projection = await response.json();
+      } catch {
+        // A working VIGIL branch must NEVER silently borrow the default
+        // branch's cached geography or manufacture a physical location.
+        if (selectedBranch !== VIGIL_DEFAULT_BRANCH) {
+          if (active) {
+            setCountryByCase(new Map());
+            setGeographyAvailable(false);
+            setGeographyNote("This VIGIL working branch has no matching geography index. Country pins are unavailable; Case Files remain accessible.");
+          }
+          return;
         }
-        setCountryByCase(lookup);
-      }).catch(() => { /* Missing geography must never block the Case File index. */ });
+        try {
+          const response = await fetch(`${import.meta.env.BASE_URL}data/vigil-dashboard-jurisdictions.json`);
+          if (!response.ok) throw new Error("Cached jurisdiction projection is unavailable");
+          projection = await response.json();
+          legacy = true;
+        } catch {
+          if (active) {
+            setCountryByCase(new Map());
+            setGeographyAvailable(false);
+            setGeographyNote("No current jurisdiction projection is available. Case Files remain accessible.");
+          }
+          return;
+        }
+      }
+      if (!active) return;
+      const countryMap = countryLookupFromProjection(
+        records, projection,
+        (value: unknown) => countryFromJurisdiction(typeof value === "string" ? value : "")
+      );
+      setCountryByCase(countryMap);
+      setGeographyAvailable(true);
+      setGeographyNote(legacy
+        ? "Legacy primary-jurisdiction descriptions (not independently verified event locations)."
+        : "VIGIL source-field-derived country associations; not verified physical occurrence locations. Unlocated, multi-country and global cases remain in the library.");
+    }
+    void loadGeography();
     return () => { active = false; };
-  }, []);
+  }, [state]);
 
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
@@ -401,6 +441,9 @@ export default function VigilCases() {
                 onSeverity={setSeverity}
                 onJurisdiction={setJurisdiction}
                 onFailureClass={setFailureClass}
+                countryByCase={countryByCase}
+                geographyAvailable={geographyAvailable}
+                geographyNote={geographyNote}
               />
             </div>
           </section>

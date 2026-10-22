@@ -1,8 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Compass, Globe2, Layers3, RotateCcw, ShieldAlert } from "lucide-react";
+import { Layers3, RotateCcw, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
-import { getSelectedVigilBranch, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
 import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
@@ -12,7 +11,6 @@ const EarthGlobe3D = lazy(() => import("./EarthGlobe3D"));
 
 type Country = { id: string; name: string; lat: number; lon: number };
 type Location = Country & { count: number };
-type JurisdictionIndex = { records: Array<{ id: string; version?: string; jurisdiction: string }> };
 type Props = {
   /** Case counts in the globe follow all other filters, excluding the globe selection. */
   mapRecords: VigilIndexRecord[];
@@ -26,6 +24,9 @@ type Props = {
   onSeverity: (code: string) => void;
   onJurisdiction: (id: string) => void;
   onFailureClass: (id: string) => void;
+  countryByCase: Map<string, string>;
+  geographyAvailable: boolean;
+  geographyNote: string;
 };
 
 // Display pins indicate broad primary jurisdictions, NOT where an incident happened.
@@ -251,12 +252,32 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
   return <div className="vigil-dashboard-outcomes">
     <div className="vigil-dashboard-donut">
       <svg viewBox="0 0 320 258" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or its connected label to filter.`}>
-        <circle cx="160" cy="128" r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="22"/>
+        <defs>
+          <filter id="vigil-donut-dimensional-shadow" x="-35%" y="-35%" width="170%" height="170%">
+            <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".35"/>
+          </filter>
+          <radialGradient id="vigil-donut-face" cx="38%" cy="27%" r="85%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity=".07"/>
+            <stop offset="72%" stopColor="#ffffff" stopOpacity=".015"/>
+            <stop offset="100%" stopColor="#001829" stopOpacity=".10"/>
+          </radialGradient>
+          {SEVERITIES.map(entry => <linearGradient id={`vigil-donut-shade-${entry.code}`} key={entry.code} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={entry.color} stopOpacity="1"/>
+            <stop offset="48%" stopColor={entry.color} stopOpacity=".88"/>
+            <stop offset="100%" stopColor={entry.color} stopOpacity=".68"/>
+          </linearGradient>)}
+        </defs>
+        <g filter="url(#vigil-donut-dimensional-shadow)">
+          <circle cx="160" cy="128" r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
+          <circle cx="160" cy="128" r="57" fill="url(#vigil-donut-face)"/>
+        </g>
         {distribution.map(item => {
           const start = elapsed; elapsed += item.count;
           const color = SEVERITIES.find(sev => sev.code===item.code)?.color ?? "#8b9cad";
-          return total && item.count ? <circle key={item.code} cx="160" cy="128" r="70" fill="none" stroke={color} strokeWidth={selected===item.code?28:22} strokeDasharray={`${(item.count/total)*circumference} ${circumference}`} strokeDashoffset={-(start/total)*circumference} transform="rotate(-90 160 128)" onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}} tabIndex={0} role="button" aria-label={`${item.code} ${item.count} case files; filter`} aria-pressed={selected===item.code} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} case files</title></circle> : null;
+          return total && item.count ? <circle key={item.code} cx="160" cy="128" r="70" fill="none" stroke={`url(#vigil-donut-shade-${item.code})`} strokeWidth={selected===item.code?29:24} strokeDasharray={`${(item.count/total)*circumference} ${circumference}`} strokeDashoffset={-(start/total)*circumference} transform="rotate(-90 160 128)" onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}} tabIndex={0} role="button" aria-label={`${item.code} ${item.count} case files; filter`} aria-pressed={selected===item.code} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} case files</title></circle> : null;
         })}
+        <circle cx="160" cy="128" r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
+        <circle cx="160" cy="128" r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
         <text x="160" y="124" textAnchor="middle" className="vigil-dashboard-donut-count">{total}</text>
         <text x="160" y="143" textAnchor="middle" className="vigil-dashboard-donut-caption">CASE FILES</text>
         {labels.map(item => {
@@ -269,7 +290,7 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           return <g key={item.code} className="vigil-dashboard-severity-callout" role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
             <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={item.color} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
             <circle cx={x0} cy={y0} r="2.7" fill={item.color}/>
-            <text x={xText} y={item.y-3} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} · {item.count}</text>
+            <text x={xText} y={item.y-3} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} ({item.count})</text>
             <text x={xText} y={item.y+11} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
           </g>;
         })}
@@ -279,17 +300,10 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdiction,failureClass,onSeverity,onJurisdiction,onFailureClass}: Props) {
-  const [geo, setGeo] = useState<JurisdictionIndex | null>(null);
-  const [geoError, setGeoError] = useState(false);
+export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdiction,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
-  const isMainSource = getSelectedVigilBranch() === VIGIL_DEFAULT_BRANCH;
   useEffect(() => {
     let active = true;
-    fetch(`${import.meta.env.BASE_URL}data/vigil-dashboard-jurisdictions.json`)
-      .then(response => { if (!response.ok) throw new Error("No jurisdiction projection"); return response.json(); })
-      .then((value: JurisdictionIndex) => { if (active) setGeo(value); })
-      .catch(() => { if (active) setGeoError(true); });
     loadFailureTaxonomy().then(result => {
       if (!active || result.status !== "ready") return;
       const names: Record<string, string> = {};
@@ -299,7 +313,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     return () => { active = false; };
   }, []);
 
-  const jurisdictionById = useMemo(() => new Map(isMainSource ? (geo?.records ?? []).map(item => [item.id, countryFromJurisdiction(item.jurisdiction)?.id]) : []), [geo, isMainSource]);
+  const jurisdictionById = countryByCase;
   const locations = useMemo(() => {
     const counts = new Map<string,number>();
     let unmapped = 0;
@@ -311,21 +325,28 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     const regions = [...counts].flatMap(([id,count]) => { const c=byId.get(id);return c?[{...c,count}]:[]; }).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
     return {regions,unmapped,mapped:mapRecords.length-unmapped};
   }, [mapRecords,jurisdictionById]);
-  const geographyAvailable = isMainSource && Boolean(geo?.records?.length) && !geoError;
   const failures = useMemo(()=>topFailureClasses(filteredRecords),[filteredRecords]);
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Global lens</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
-        <p className="vigil-dashboard-panel-note">Country associations in the available source data, not physical incident coordinates.</p>
-        <label className="vigil-dashboard-region-select"><span className="sr-only">Filter by jurisdiction</span><select value={jurisdiction} disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)}><option value="">{geographyAvailable?"All recorded jurisdictions":"Geography not available in this preview"}</option>{locations.regions.map(item=><option key={item.id} value={item.id}>{item.name} · {item.count}</option>)}{jurisdiction && !locations.regions.some(item=>item.id===jurisdiction)&&<option value={jurisdiction}>{byId.get(jurisdiction)?.name??jurisdiction}</option>}</select></label>
-        <GlobeView locations={locations.regions} selected={jurisdiction} onSelect={onJurisdiction}/>
-        <p className="vigil-dashboard-globe-guidance"><Compass size={13} aria-hidden="true"/> Drag to explore the Earth; choose a country from the list when available.</p>
-        <div className="vigil-dashboard-geo-stats"><div><strong>{geographyAvailable?locations.regions.length:"—"}</strong><span>Jurisdictions mapped</span></div><div><strong>{geographyAvailable?locations.unmapped:"—"}</strong><span>Not geographically mapped</span></div></div>
-        {geographyAvailable && locations.regions.length>0 && <div className="vigil-dashboard-region-chips">{locations.regions.slice(0,5).map(item=><button type="button" key={item.id} onClick={()=>onJurisdiction(jurisdiction===item.id?"":item.id)} aria-pressed={jurisdiction===item.id}>{item.name}<b>{item.count}</b></button>)}</div>}
-        {!isMainSource && <p className="vigil-dashboard-source-note">This preview has no synchronized geography index. Mapping counts are unavailable, not zero.</p>}
-        {isMainSource && geoError && <p className="vigil-dashboard-source-note">Jurisdiction data is temporarily unavailable; no locations are inferred.</p>}
-        <p className="vigil-dashboard-attribution">Earth imagery: NASA Blue Marble. Country markers, when available, represent jurisdiction associations.</p>
+        <h2 id="vigil-dashboard-geography" className="sr-only">Jurisdiction coverage — interactive globe</h2>
+        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction}/>
+        <label className="vigil-dashboard-country-keyboard">
+          <span className="sr-only">Choose country using a keyboard-accessible list</span>
+          <select value={jurisdiction} disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Select jurisdiction using keyboard">
+            <option value="">All recorded jurisdictions</option>
+            {locations.regions.map(item=><option key={item.id} value={item.id}>{item.name} ({item.count})</option>)}
+            {jurisdiction && !locations.regions.some(item=>item.id===jurisdiction)&&<option value={jurisdiction}>{byId.get(jurisdiction)?.name??jurisdiction}</option>}
+          </select>
+        </label>
+        <details className="vigil-dashboard-geo-disclosure">
+          <summary aria-label="Globe data and imagery information" title="Globe data information">i</summary>
+          <div className="vigil-dashboard-geo-disclosure-body">
+            <p>{geographyNote}</p>
+            <p>Country beacons show relative case counts for recorded jurisdiction associations, not incident coordinates. Earth imagery: NASA Blue Marble.</p>
+            {!geographyAvailable && <p>Geographic data is unavailable for the selected source. Case Files remain searchable.</p>}
+          </div>
+        </details>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-severity-panel" aria-labelledby="vigil-dashboard-severity">
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Risk profile</span><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} /> Harm severity</h2></div></div>

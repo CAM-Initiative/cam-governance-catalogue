@@ -570,3 +570,292 @@
   width: fit-content;
   margin-top: 1.35rem;
 }
+
+
+/* Stage 01 — Incident Context: separate system, operational, institutional and
+   geographic meanings without elevating source associations to legal findings. */
+.vigil-case-file-page .vigil-incident-context {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  min-width: 0;
+}
+
+.vigil-case-file-page .vigil-incident-context-heading {
+  padding: 1rem 0 1.25rem;
+  border-bottom: 1px solid hsl(var(--border) / 0.65);
+  background: transparent;
+}
+
+
+.vigil-case-file-page .vigil-incident-context-heading h3 {
+  margin: 0;
+  font: 700 clamp(1.2rem, 1.6vw, 1.55rem)/1.25 var(--app-font-sans);
+  color: hsl(var(--foreground));
+}
+
+
+.vigil-case-file-page .vigil-context-group {
+  padding: 1.25rem 0 1.45rem;
+  min-width: 0;
+}
+
+.vigil-case-file-page .vigil-context-group + .vigil-context-group {
+  border-top: 1px solid hsl(var(--border) / 0.55);
+}
+
+.vigil-case-file-page .vigil-context-group-title {
+  margin: 0 0 1rem;
+  font: 690 1.06rem/1.36 var(--app-font-sans);
+  color: hsl(var(--foreground));
+}
+
+
+
+
+
+.vigil-case-file-page .vigil-context-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(1.4rem, 3vw, 3.2rem);
+  row-gap: 1.04rem;
+  margin: 0;
+}
+
+.vigil-case-file-page .vigil-context-field {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-context-field.is-wide {
+  grid-column: 1 / -1;
+}
+
+.vigil-case-file-page .vigil-context-field dt {
+  margin: 0;
+  color: var(--vigil-case-label);
+  font: 650 0.72rem/1.4 var(--app-font-sans);
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.vigil-case-file-page .vigil-context-field dd {
+  margin: 0.35rem 0 0;
+  color: hsl(var(--foreground) / 0.92);
+  font: 0.96rem/1.6 var(--app-font-sans);
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-context-operational-sources {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.95rem;
+}
+
+.vigil-case-file-page .vigil-context-evidence {
+  min-width: 0;
+  border: 1px solid hsl(var(--border) / 0.65);
+  border-radius: 0.65rem;
+  padding: 0.8rem 1rem;
+  background: hsl(var(--card) / 0.30);
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-context-evidence summary {
+  font: 650 0.88rem/1.5 var(--app-font-sans);
+  color: hsl(var(--foreground) / 0.9);
+  cursor: pointer;
+}
+
+.vigil-case-file-page .vigil-context-evidence > p,
+.vigil-case-file-page .vigil-context-basis {
+  margin: 0.6rem 0 0;
+  font: 0.93rem/1.62 var(--app-font-sans);
+  color: hsl(var(--foreground) / 0.88);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-context-qualifier,
+.vigil-case-file-page .vigil-context-notice,
+.vigil-case-file-page .vigil-context-muted {
+  margin: 0.9rem 0 0;
+  font: 0.9rem/1.62 var(--app-font-sans);
+  color: hsl(var(--foreground) / 0.78);
+}
+
+.vigil-case-file-page .vigil-context-notice {
+  border-left: 3px solid hsl(var(--primary) / 0.52);
+  padding: 0.55rem 0 0.55rem 0.85rem;
+  background: hsl(var(--card) / 0.30);
+}
+
+.vigil-case-file-page .vigil-context-qualifier {
+  padding-top: 0.8rem;
+  border-top: 1px solid hsl(var(--border) / 0.45);
+}
+
+.vigil-case-file-page .vigil-context-entity-list,
+.vigil-case-file-page .vigil-context-relationship-list {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+
+.vigil-case-file-page .vigil-context-entity,
+.vigil-case-file-page .vigil-context-relationship {
+  min-width: 0;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid hsl(var(--border) / 0.7);
+  border-radius: 0.74rem;
+  background: hsl(var(--card) / 0.28);
+  overflow-wrap: anywhere;
+}
+
+.vigil-case-file-page .vigil-context-entity .vigil-context-fields {
+  margin-top: 0.9rem;
+}
+
+.vigil-case-file-page .vigil-context-relationship-top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.vigil-case-file-page .vigil-context-relationship-top strong {
+  font: 650 0.98rem/1.5 var(--app-font-sans);
+  color: hsl(var(--foreground));
+}
+
+.vigil-case-file-page .vigil-context-state {
+  padding: 0.18rem 0.55rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  font: 600 0.72rem/1.35 var(--app-font-sans);
+  color: hsl(var(--foreground) / 0.8);
+  background: hsl(var(--background) / 0.82);
+}
+
+.vigil-case-file-page .vigil-context-locations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vigil-case-file-page .vigil-context-locations li {
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.4rem;
+  border: 1px solid hsl(var(--border) / 0.7);
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font: 0.84rem/1.4 var(--app-font-sans);
+}
+
+.vigil-case-file-page .vigil-context-association {
+  margin-top: 0.65rem;
+  font: 0.8rem/1.6 var(--app-font-sans);
+  color: hsl(var(--foreground) / 0.75);
+}
+
+.vigil-case-file-page .vigil-context-sources {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-top: 0.75rem;
+  font: 0.8rem/1.5 var(--app-font-sans);
+  color: hsl(var(--foreground) / 0.7);
+}
+
+.vigil-case-file-page .vigil-context-sources a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  text-underline-offset: 0.16rem;
+}
+
+.vigil-case-file-page .vigil-context-sources a:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 3px;
+  border-radius: 0.15rem;
+}
+
+.vigil-case-file-page .vigil-context-source-unlinked {
+  font-family: var(--app-font-mono);
+  font-size: 0.73rem;
+}
+
+@media (max-width: 700px) {
+  .vigil-case-file-page .vigil-context-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.95rem;
+  }
+
+  .vigil-case-file-page .vigil-context-group {
+    padding-top: 1.15rem;
+    padding-bottom: 1.25rem;
+  }
+
+}
+
+@media print {
+  .vigil-case-file-page .vigil-incident-context {
+    box-shadow: none;
+  }
+  .vigil-case-file-page .vigil-context-group,
+  .vigil-case-file-page .vigil-context-entity,
+  .vigil-case-file-page .vigil-context-relationship {
+    break-inside: avoid;
+  }
+  .vigil-case-file-page .vigil-context-evidence p {
+    display: block;
+  }
+}
+
+
+/* Section 06 — qualifications and source evidence consolidated at the end. */
+.vigil-case-file-page .vigil-context-limitations {
+  margin-top: 1rem;
+  padding-top: .9rem;
+  border-top: 1px solid hsl(var(--border) / .55);
+}
+.vigil-case-file-page .vigil-context-limitations h5 {
+  margin: 0 0 .75rem;
+  font: 690 .92rem/1.4 var(--app-font-sans);
+  color: hsl(var(--foreground));
+}
+.vigil-case-file-page .vigil-context-limitations ul,
+.report-assessment-limit-list {
+  padding-left: 1.35rem;
+  margin: .5rem 0 0;
+  list-style: disc;
+}
+.vigil-case-file-page .vigil-context-limitations li,
+.report-assessment-limit-list li {
+  margin-bottom: .65rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.vigil-case-file-page .vigil-context-limitations li strong {
+  font-weight: 700;
+}
+.vigil-case-file-page .vigil-context-limitations .vigil-context-sources {
+  margin-top: .32rem;
+}
+.report-assessment-limits {
+  margin-top: 1.5rem;
+}
+.vigil-report-limits .vigil-context-limitations {
+  margin-top: 1.2rem;
+}
+@media print {
+  .vigil-case-file-page .vigil-context-limitations li {
+    break-inside: avoid;
+  }
+}
