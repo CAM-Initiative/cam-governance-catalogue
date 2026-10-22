@@ -6,7 +6,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -19,7 +19,8 @@ import {
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
-import { IncidentContextSection } from "@/components/vigil/IncidentContextSection";
+import { IncidentContextSection, IncidentContextLimitations } from "@/components/vigil/IncidentContextSection";
+import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 
 type ReportState =
   | { status: "loading" }
@@ -465,6 +466,21 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         </Stage>
 
         <Stage number="06" label="References">
+          <section className="report-reference-group report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
+            <h3 id="report-assessment-limits-heading" className="report-substantive-label">Limits of the assessment</h3>
+            <ul className="report-assessment-limit-list">
+              {[...STANDARD_VIGIL_ASSESSMENT_LIMITS, ...(
+                incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : []
+              ), ...(
+                incident && isObject(incident.raw.harm_impact_assessment)
+                  ? nonAssessedHarmDimensionLimitItems(incident.raw.harm_impact_assessment)
+                  : []
+              )].map((item, index) => <li key={index}>{item}</li>)}
+            </ul>
+            {incident && <div className="vigil-case-file-page vigil-report-limits">
+              <IncidentContextLimitations raw={incident.raw} sourceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            </div>}
+          </section>
           {(evidenceReferences.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>
