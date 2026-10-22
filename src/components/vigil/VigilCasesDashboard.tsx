@@ -111,7 +111,15 @@ export function countryFromJurisdiction(value: string) {
   });
   // A genuinely multinational primary-jurisdiction string cannot be placed
   // on a single country's pin without creating a misleading location.
-  return matches.length === 1 ? matches[0] : undefined;
+  // Catch additional named jurisdictions in slash-separated segments, even if
+  // the second country is followed by a qualifier such as "-linked entities".
+  if (matches.length !== 1) return undefined;
+  const primary = matches[0];
+  const extraCountries = COUNTRIES.filter(country => country.id !== primary.id && [
+    country.name.toLowerCase(),
+    ...(ALIASES[country.id] ?? []),
+  ].some(name => text.includes(" / " + name + " ") || text.includes(" / " + name + " /") || text.includes(" / " + name + "-")));
+  return extraCountries.length === 0 ? primary : undefined;
 }
 
 const DEG = Math.PI / 180;
