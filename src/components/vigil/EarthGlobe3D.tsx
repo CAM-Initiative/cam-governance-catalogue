@@ -12,8 +12,8 @@ type GlobeProps = {
 
 // The equirectangular image is a publicly served Blue Marble Earth composite.
 // Source attribution: NASA Blue Marble, distributed with three-globe.
-// We use a fixed version rather than a floating CDN tag.
-const EARTH_TEXTURE = "https://unpkg.com/three-globe@2.45.2/example/img/earth-blue-marble.jpg";
+// The pinned, checksummed image is served from our own GitHub Pages assets.
+const EARTH_TEXTURE = `${import.meta.env.BASE_URL}assets/earth-blue-marble.jpg`;
 const BACKUP_TEXTURE = "https://raw.githubusercontent.com/vasturiano/three-globe/master/example/img/earth-blue-marble.jpg";
 const RAD = Math.PI / 180;
 const GLOBE_RADIUS = 1.36;
