@@ -468,3 +468,18 @@
 @media (prefers-reduced-motion: reduce) {
   .vigil-dashboard-donut-segment { transition: none; }
 }
+
+/* Preserve a generous visual globe on narrow screens without reintroducing
+   visible country statistics or instructions. */
+@media (max-width: 720px) {
+  .vigil-case-library-page .vigil-dashboard-location-panel {
+    padding: .55rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-location-panel > .vigil-dashboard-globe-scene {
+    width: min(100%, 350px);
+    margin: .15rem auto;
+  }
+  .vigil-dashboard-globe-tooltip {
+    font-size: .69rem;
+  }
+}
