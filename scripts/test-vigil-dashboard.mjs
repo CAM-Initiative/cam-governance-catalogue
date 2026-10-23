@@ -211,3 +211,22 @@ test("Case Files uses all reviewed country associations for globe beacons and fi
   assert.match(helper, /row\.reviewed_country_codes/);
   assert.match(helper, /row\?\.map_eligible/);
 });
+
+test("Insight panels stay compact while donut severity labels remain readable and selectable", async () => {
+  const [dashboard, css] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+  ]);
+  // Keep the requested concise presentation in every filter state.
+  assert.ok(!dashboard.includes("filter active. Select that segment again"));
+  assert.ok(!dashboard.includes("Select a coloured segment or label to filter cases."));
+  assert.ok(!dashboard.includes("Incident-level assessments across the current selection."));
+  assert.ok(!dashboard.includes("Number of case files with each explicitly evidenced failure occurrence;"));
+  assert.match(dashboard, /aria-pressed=\{selected===item\.code\}/);
+  assert.match(dashboard, /donutSegmentAppearance\(start, item\.count, total, isSelected, Boolean\(selected\)\)/);
+  assert.match(dashboard, /const gap = 39, lower = 30, upper = 225/);
+  assert.match(css, /\.vigil-dashboard-severity-label \{ font: 800 18\.5px/);
+  assert.match(css, /\.vigil-dashboard-severity-name \{\s*font: 650 16\.5px/);
+  assert.match(css, /\.vigil-dashboard-severity-callout\.is-muted \{ opacity: \.76/);
+  assert.match(css, /\.vigil-dashboard-failures-panel \.vigil-dashboard-failure-list \{ margin-top: \.5rem/);
+});
