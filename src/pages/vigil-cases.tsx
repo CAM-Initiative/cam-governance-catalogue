@@ -158,7 +158,7 @@ export default function VigilCases() {
     setJurisdiction("");
     setFailureClass("");
   };
-  const [countryByCase, setCountryByCase] = useState<Map<string, string>>(new Map());
+  const [countryByCase, setCountryByCase] = useState<Map<string, string[]>>(new Map());
   const [geographyAvailable, setGeographyAvailable] = useState(false);
   const [geographyNote, setGeographyNote] = useState("Geographic index is loading.");
   const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
@@ -250,7 +250,7 @@ export default function VigilCases() {
     return true;
   }), [baseCases, severity]);
   const distributionRecords = useMemo(() => baseCases.filter(record =>
-    !jurisdiction || countryByCase.get(record.id) === jurisdiction
+    !jurisdiction || countryByCase.get(record.id)?.includes(jurisdiction)
   ), [baseCases, countryByCase, jurisdiction]);
   const filtered = useMemo(() => distributionRecords.filter(record =>
     !severity || severityCode(record) === severity
