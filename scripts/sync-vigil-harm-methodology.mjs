@@ -14,6 +14,24 @@ async function load(source) {
 
 const methodology = await load(process.env.VIGIL_HARM_METHODOLOGY_SOURCE || `${upstream}/methodologies/VIGIL.HarmImpactMatrix.v${version}.json`);
 const registry = await load(process.env.VIGIL_HARM_REFERENCES_SOURCE || `${upstream}/references/VIGIL.ObservatoryReferenceRegistry.json`);
+
+// Public cache mirrors the canonical scoring contract, not internal maintainer
+// working notes from older upstream snapshots. The canonical VIGIL release is
+// updated separately; this boundary prevents a stale source reintroducing them.
+for (const internalField of ["working_amendments", "adjudication_guidance", "dimension_quantification_policy"]) {
+  delete methodology[internalField];
+}
+if (methodology.assessment_pathway_selection) {
+  delete methodology.assessment_pathway_selection.screening_contract;
+}
+for (const dimension of methodology.dimensions ?? []) {
+  if (typeof dimension.adaptation_note === "string") {
+    dimension.adaptation_note = dimension.adaptation_note.replaceAll("epistemic_reliance_to_reputational_harm", "downstream reliance and resulting reputational harm");
+  }
+  if (typeof dimension.interpretive_note === "string") {
+    dimension.interpretive_note = dimension.interpretive_note.replaceAll("INFORM adjudication", "inform interpretation");
+  }
+}
 if (methodology.methodology_id !== "VIGIL-HIM" || methodology.version !== version || !methodology.dimensions?.length) {
   throw new Error("Invalid or unexpected VIGIL-HIM methodology release");
 }
