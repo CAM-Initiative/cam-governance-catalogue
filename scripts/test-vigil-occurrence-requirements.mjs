@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { AlignmentIcon, alignmentIconKind } from "../src/lib/vigilAlignmentIcon.mjs";
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { occurrenceRequirementRows } from '../src/lib/vigilOccurrenceRequirements.mjs';
+import { occurrenceRequirementRows, publicRequirementEvidenceSources } from '../src/lib/vigilOccurrenceRequirements.mjs';
 const requirement = { requirement_id: 'R1', external_source_id: 'IEEE 7014', clause_or_control: '4.3', requirement_summary: 'A bounded requirement', normative_force: 'voluntary-consensus-standard', vigil_source_id: 'IEEE-7014', source_version: '2024' };
 const assessment = { requirement_id: 'R1', alignment_result: 'aligned', assessment_basis: 'The observed gate rejected the request.', assessed_on: '2026-10-04', source_record_refs: ['source_records[0]'] };
 const raw = { taxonomy_classification: { primary_classification: { classification_role: 'failure-occurrence' } }, source_records: [{ source_title: 'Observed trace', source_url: 'https://example.org/trace' }], external_requirement_assessments: [assessment] };
@@ -35,6 +35,38 @@ test('Evidence references resolve within this occurrence and omit invalid refere
  const row=occurrenceRequirementRows({...raw,external_requirement_assessments:[{...assessment,source_record_refs:['source_records[0]','source_records[9]','https://example.org']}]},[requirement])[0];
  assert.equal(row.evidence.length,1);assert.equal(row.evidence[0].url,'#vigil-evidence-reference-1');
 });
+test('Compliance evidence citations use Section 06 numbering, not raw source indexes', () => {
+ const sources = [
+  {source_title:'Confidential internal note',source_residence:'cam-internal',source_url:'https://internal.example/'},
+  {source_title:'Public trace',source_url:'https://example.org/trace'},
+  {source_title:'Public trace',source_url:'https://example.org/trace'},
+  {source_title:'Second public account',source_url:'https://example.org/second'},
+  {source_title:'Internal working note',source_residence:'internal'},
+  {source_url:'https://example.org/untitled'},
+ ];
+ const record = {...raw, source_records:sources, external_requirement_assessments:[{
+  ...assessment, source_record_refs:['source_records[0]','source_records[1]','source_records[2]','source_records[3]','source_records[4]','source_records[5]','source_records[99]']
+ }]};
+ const bibliography = publicRequirementEvidenceSources(record);
+ assert.deepEqual(bibliography.map(s=>({title:s.title,refs:s.sourceRecordRefs,number:s.referenceNumber})),[
+  {title:'Public trace',refs:['source_records[1]','source_records[2]'],number:1},
+  {title:'Second public account',refs:['source_records[3]'],number:2},
+ ]);
+ const numbers = Object.fromEntries(bibliography.flatMap(s=>s.sourceRecordRefs.map(ref=>[ref,s.referenceNumber])));
+ assert.deepEqual(occurrenceRequirementRows(record,[requirement],numbers)[0].evidence,[
+  {title:'Public trace',referenceNumber:1,url:'#vigil-evidence-reference-1'},
+  {title:'Second public account',referenceNumber:2,url:'#vigil-evidence-reference-2'},
+ ]);
+ assert.deepEqual(occurrenceRequirementRows(record,[requirement],{})[0].evidence,[],
+  'Unpublished or unresolved source references must not fall back to raw index numbers');
+});
+test('Compliance retains its assessment basis where no public references are linked', () => {
+ const record = {...raw, external_requirement_assessments:[{...assessment,source_record_refs:[]}]};
+ const row = occurrenceRequirementRows(record,[requirement],{});
+ assert.equal(row[0].assessmentBasis, assessment.assessment_basis);
+ assert.deepEqual(row[0].evidence,[]);
+});
+
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
 const classificationSource=await readFile(new URL('../src/lib/vigilTaxonomyClassification.ts',import.meta.url),'utf8');
@@ -51,7 +83,7 @@ import vm from 'node:vm';
 const staticSource = await readFile(new URL('./prepare-github-pages.js', import.meta.url), 'utf8');
 const htmlFunction = staticSource.slice(staticSource.indexOf('function occurrenceAssessmentsHtml'), staticSource.indexOf('function clauseAssessmentsHtml'));
 const html = vm.runInNewContext(`${htmlFunction}; occurrenceAssessmentsHtml`, {
- occurrenceRequirementRows,
+ occurrenceRequirementRows, publicRequirementEvidenceSources,
  createElement, renderToStaticMarkup, AlignmentIcon, alignmentIconKind,
  occurrenceRequirements: [requirement],
  REQUIREMENT_ASSESSMENT_INTRO: 'Occurrence assessments',
@@ -62,8 +94,10 @@ test('Static Case Files publish all results, normative force, basis, date and ev
  for(const value of ['Aligned','Not aligned','Boundary','Normative force','Voluntary consensus standard',assessment.assessment_basis,assessment.assessed_on,'#vigil-evidence-reference-1'])assert.ok(output.includes(value),value);
  assert.equal((output.match(/<tr>/g)||[]).length,4);
  assert.doesNotMatch(output,/Applicability|Not met|undefined|https:\/\/example.org/);
- assert.match(output,/>\[1\]<\/a>/);
- assert.doesNotMatch(output,/>Observed trace<\/a>/);
+ assert.match(output,/>\[1\] Observed trace<\/a>/);
+ assert.match(output,/<strong>Supporting evidence<\/strong>/);
+ assert.match(staticSource, /<li id="vigil-evidence-reference-\$\{source.referenceNumber\}"/);
+ assert.doesNotMatch(output, /href="#vigil-evidence-reference-2"/);
 });
 test('Static zero-row Case Files make no positive compliance claim',()=>{
  assert.equal(html({external_requirement_assessments:[]}),'<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>');
