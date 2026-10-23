@@ -74,6 +74,7 @@ export default function VigilSeverityMethodology() {
               <div className="vigil-severity-method-row">
                 <h3>Overall severity</h3>
                 <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. For a modelled Aggregate Harm assessment, the highest supported aggregate dimension band controls instead. Never combine ordinary and aggregate bands within one assessment.</p>
+                <p>SU — Unassessed applies when no harm dimension has a defensible band and the evidence does not positively establish no materialised downstream harm. SU is an evidence state, not a sixth severity band.</p>
               </div>
             </div>
           </section>
