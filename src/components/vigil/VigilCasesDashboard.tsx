@@ -243,7 +243,7 @@ function severityCallouts(entries: Array<{ code: string; count: number }>, total
   for (const side of ["left", "right"] as const) {
     const group = labels.filter(item => item.side === side).sort((a,b) => a.idealY - b.idealY);
     if (!group.length) continue;
-    const gap = 33, lower = 27, upper = 231;
+    const gap = 39, lower = 30, upper = 225;
     group.forEach((item, i) => { item.y = Math.max(item.idealY, i ? group[i-1].y + gap : lower); });
     if (group[group.length-1].y > upper) {
       const excess = group[group.length-1].y - upper;
@@ -309,19 +309,18 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           const dx = Math.cos(item.midAngle), dy = Math.sin(item.midAngle);
           const x0 = 180 + dx * (selected === item.code ? 105 : 84), y0 = 128 + dy * (selected === item.code ? 105 : 84);
           const x1 = item.side === "left" ? 99 : 261;
-          const x2 = item.side === "left" ? 85 : 275;
-          const xText = item.side === "left" ? 78 : 282;
+          const x2 = item.side === "left" ? 93 : 267;
+          const xText = item.side === "left" ? 88 : 272;
           const anchor = item.side === "left" ? "end" : "start";
           return <g key={item.code} className={`vigil-dashboard-severity-callout${selected === item.code ? " is-selected" : selected ? " is-muted" : ""}`} role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
             <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={item.color} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
             <circle cx={x0} cy={y0} r="2.7" fill={item.color}/>
-            <text x={xText} y={item.y-3} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} ({item.count})</text>
-            <text x={xText} y={item.y+11} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
+            <text x={xText} y={item.y-5} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} ({item.count})</text>
+            <text x={xText} y={item.y+15} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
           </g>;
         })}
       </svg>
     </div>
-    <p className="vigil-dashboard-chart-instruction">{selected ? `${selected} filter active. Select that segment again to clear it.` : "Select a coloured segment or label to filter cases."}</p>
   </div>;
 }
 
@@ -377,12 +376,10 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-severity-panel" aria-labelledby="vigil-dashboard-severity">
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Risk profile</span><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} /> Harm severity</h2></div></div>
-        <p className="vigil-dashboard-panel-note">Incident-level assessments across the current selection. Select a segment to filter.</p>
         <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-failures-panel" aria-labelledby="vigil-dashboard-failures">
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Taxonomy intelligence</span><h2 id="vigil-dashboard-failures"><Layers3 size={19} /> Most frequent failures</h2></div></div>
-        <p className="vigil-dashboard-panel-note">Number of case files with each explicitly evidenced failure occurrence; successful invariants and unresolved boundaries are excluded.</p>
         <ol className="vigil-dashboard-failure-list">
           {failures.map((entry,index)=><li key={entry.id}>
             <button type="button" onClick={()=>onFailureClass(failureClass===entry.id?"":entry.id)} className={failureClass===entry.id?"is-selected":""} aria-pressed={failureClass===entry.id} title="Filter case files by this failure class">
