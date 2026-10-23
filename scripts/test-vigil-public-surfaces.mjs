@@ -10,6 +10,15 @@ import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
+
+test("Case File Section 02 keeps its assessment provenance renderer defined", async () => {
+  const caseFile = await read("src/pages/vigil-case-file.tsx");
+  assert.match(caseFile, /function Field\(\{ label, value, mono = false \}/);
+  assert.match(caseFile, /if \(stageId === "diagnose"\)/);
+  assert.match(caseFile, /<Field label="Assessed" value=\{diagnostic\?\.diagnosticDate\}/);
+});
+
+
 test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
   const [main, css] = await Promise.all([
     read("src/main.tsx"),
