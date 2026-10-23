@@ -188,9 +188,10 @@ function RelationshipCard({ relation, index, numbers, knownParties }: {
       ? <p className="vigil-context-basis">{words(relation.evidence_basis)}
           <SourceCitations refs={relation.source_record_refs} numbers={numbers} />
         </p>
-      : <p className="vigil-context-citation-fallback">
-          <SourceCitations refs={relation.source_record_refs} numbers={numbers} />
-        </p>}
+      : list(relation.source_record_refs).length > 0 &&
+          <p className="vigil-context-citation-fallback">
+            <SourceCitations refs={relation.source_record_refs} numbers={numbers} />
+          </p>}
   </article>;
 }
 
@@ -282,9 +283,10 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
                 ? <p className="vigil-context-basis">{words(party.evidence_basis)}
                     <SourceCitations refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
                   </p>
-                : <p className="vigil-context-citation-fallback">
-                    <SourceCitations refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
-                  </p>}
+                : list(party.source_record_refs).length > 0 &&
+                    <p className="vigil-context-citation-fallback">
+                      <SourceCitations refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
+                    </p>}
             </article>
           )}</div>
         : <p className="vigil-context-muted" aria-label="Affected parties not reviewed">—</p>}
