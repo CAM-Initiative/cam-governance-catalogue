@@ -209,5 +209,5 @@ test("Case Files uses all reviewed country associations for globe beacons and fi
   assert.match(dashboard, /for \(const id of new Set\(countryIds\)\)/);
   assert.match(page, /countryByCase\.get\(record\.id\)\?\.includes\(jurisdiction\)/);
   assert.match(helper, /row\.reviewed_country_codes/);
-  assert.match(helper, /row\.map_eligible/);
+  assert.match(helper, /row\?\.map_eligible/);
 });
