@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 const source = file => readFile(new URL(`../${file}`, import.meta.url), "utf8");
 import { globePosition, globeRotationForLongitude } from "../src/lib/vigilGlobeCoordinates.mjs";
 import { failureClassIds, topFailureClasses, severityDistribution } from "../src/lib/vigilDashboardMetrics.mjs";
+import { donutSegmentAppearance } from "../src/lib/vigilDonutSelection.mjs";
 
 test("counts only explicitly failure-role mappings, once per Incident", () => {
   const raw = {
@@ -51,7 +52,49 @@ test("Donut labels show bracketed counts, with dimensional layers and keyboard f
   assert.ok(dashboard.includes("vigil-donut-dimensional-shadow"));
   assert.ok(dashboard.includes("vigil-donut-face"));
   assert.ok(dashboard.includes("vigil-donut-shade-"));
-  assert.ok(dashboard.includes("onKeyDown={event=>"), "Interactive chart remains keyboard operable");
+  assert.match(dashboard, /onKeyDown=\{event\s*=>/, "Interactive chart remains keyboard operable");
+});
+
+test("Globe reset clears the same dashboard filters as the toolbar in both rendering modes", async () => {
+  const [page, dashboard, globe] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/EarthGlobe3D.tsx"),
+  ]);
+  const clear = page.match(/const clearFilters = \(\) => \{([\s\S]*?)\};/)?.[1] ?? "";
+  for (const setter of ["setSearch", "setClassification", "setSeverity", "setJurisdiction", "setFailureClass"]) {
+    assert.ok(clear.includes(setter + '("");'), setter + " is cleared by the globe and toolbar");
+  }
+  assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
+  assert.match(page, /onClearFilters=\{clearFilters\}/);
+  assert.match(dashboard, /<EarthGlobe3D[^>]*onClearFilters=\{onClearFilters\}/);
+  assert.match(dashboard, /setRotation\(15\); onClearFilters\(\)/);
+  assert.match(dashboard, /Reset globe view and clear filters/);
+  assert.match(globe, /const reset = useCallback\(\(\) => \{\s*onClearFilters\(\)/);
+  assert.match(globe, /onClick=\{reset\} aria-label="Reset globe view and clear filters"/);
+});
+
+test("Donut selection physically separates the chosen severity and keeps angular proportions", async () => {
+  const active = donutSegmentAppearance(18, 12, 60, true, true);
+  const neighbour = donutSegmentAppearance(18, 12, 60, false, true);
+  const idle = donutSegmentAppearance(18, 12, 60, false, false);
+  assert.ok(Math.hypot(active.offsetX, active.offsetY) >= 9.9, "Selected arc visibly moves outward");
+  assert.equal(Math.hypot(neighbour.offsetX, neighbour.offsetY), 0);
+  assert.ok(active.radius + active.strokeWidth / 2 > neighbour.radius + neighbour.strokeWidth / 2 + 8);
+  assert.equal(active.opacity, 1);
+  assert.ok(neighbour.opacity < 0.65);
+  assert.equal(idle.opacity, 1);
+  const [dashboard, css] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+  ]);
+  assert.ok(dashboard.includes("donutSegmentAppearance(start, item.count, total, isSelected, Boolean(selected))"));
+  assert.ok(dashboard.includes("const circumference = 2 * Math.PI * appearance.radius;"), "Arc share must use actual selected radius");
+  assert.match(dashboard, /className="vigil-dashboard-donut-slice" transform=/);
+  assert.match(dashboard, /selectedCount \?\? total/);
+  assert.match(dashboard, /SELECTED/);
+  assert.match(css, /\.vigil-dashboard-severity-callout\.is-muted/);
+  assert.match(css, /\.vigil-dashboard-severity-callout\.is-selected/);
 });
 
 test("Case Files result count, Clear filters, and pagination retain readable side gutters", async () => {
