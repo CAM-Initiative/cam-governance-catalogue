@@ -300,6 +300,12 @@ function incidentTimingLabel(raw?: UnknownRecord) {
   return precision === "reported-date" ? `Reported ${value}` : value;
 }
 
+
+function Field({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
+  if (!value) return null;
+  return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
+}
+
 const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and context",
   "case-diagnose": "Governance, external and harm impact assessment",
