@@ -1037,6 +1037,22 @@ test("Case File stage and subsection headings share one editorial scale", async 
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 });
 
+test("All Case File evidence links use compact Section 02 style [n] notation", async () => {
+  const [component, style, rule, harm] = await Promise.all([
+    read("src/components/vigil/IncidentContextSection.tsx"),
+    read("src/vigil-case-file-dossier.css"),
+    read("docs-internal/VIGIL-CASE-FILE-REFERENCE-FORMATTING.md"),
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
+  ]);
+  assert.match(component, /function SourceCitations\(/);
+  assert.match(component, /#vigil-evidence-reference-/);
+  assert.doesNotMatch(component, /Source \[|<span>Evidence<\/span>|function SourceLinks\(/);
+  assert.match(style, /\.vigil-case-file-page \.vigil-context-citations \{/);
+  assert.match(harm, /vigil-harm-inline-references/);
+  assert.match(rule, /Place the citation immediately after/);
+  assert.match(rule, /Deduplicate identical bibliography references/);
+});
+
 test("Case File Stage 01 groups Incident Context, preserves evidence and aligns printable report", async () => {
   const [narrativeCss, dossierCss, context, web, report] = await Promise.all([
     read("src/vigil-case-file-narrative-cards.css"),
