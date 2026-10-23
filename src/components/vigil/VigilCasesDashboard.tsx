@@ -26,13 +26,13 @@ type Props = {
   onJurisdiction: (id: string) => void;
   onFailureClass: (id: string) => void;
   onClearFilters: () => void;
-  countryByCase: Map<string, string>;
+  countryByCase: Map<string, string[]>;
   geographyAvailable: boolean;
   geographyNote: string;
 };
 
-// Display pins indicate broad primary jurisdictions, NOT where an incident happened.
-// No location is inferred from a vendor's headquarters or a place named in prose.
+// Display pins indicate explicitly reviewed jurisdiction associations, NOT where an
+// incident happened. Countries are never inferred from an organization or prose.
 const COUNTRIES: Country[] = [
   { id: "AU", name: "Australia", lat: -25, lon: 134 },
   { id: "US", name: "United States", lat: 39, lon: -98 },
@@ -84,6 +84,18 @@ const COUNTRIES: Country[] = [
   { id: "EE", name: "Estonia", lat: 59, lon: 25 },
   { id: "PK", name: "Pakistan", lat: 30, lon: 69 },
   { id: "HK", name: "Hong Kong", lat: 22, lon: 114 },
+  { id: "IR", name: "Iran", lat: 32, lon: 53 },
+  { id: "BG", name: "Bulgaria", lat: 43, lon: 25 },
+  { id: "BW", name: "Botswana", lat: -22, lon: 24 },
+  { id: "CO", name: "Colombia", lat: 4, lon: -74 },
+  { id: "EC", name: "Ecuador", lat: -1, lon: -78 },
+  { id: "KH", name: "Cambodia", lat: 13, lon: 105 },
+  { id: "KZ", name: "Kazakhstan", lat: 48, lon: 68 },
+  { id: "LK", name: "Sri Lanka", lat: 7, lon: 81 },
+  { id: "LT", name: "Lithuania", lat: 55, lon: 24 },
+  { id: "NA", name: "Namibia", lat: -22, lon: 17 },
+  { id: "PR", name: "Puerto Rico", lat: 18, lon: -66 },
+  { id: "ZW", name: "Zimbabwe", lat: -19, lon: 30 },
   { id: "TH", name: "Thailand", lat: 16, lon: 101 },
 ];
 const ALIASES: Record<string, string[]> = {
@@ -331,9 +343,11 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     const counts = new Map<string,number>();
     let unmapped = 0;
     for (const record of mapRecords) {
-      const countryId = jurisdictionById.get(record.id);
-      if (!countryId) { unmapped++; continue; }
-      counts.set(countryId,(counts.get(countryId)??0)+1);
+      // Multi-country associations count once for each reviewed country, while
+      // each country still counts an Incident only once.
+      const countryIds = (jurisdictionById.get(record.id) ?? []).filter(id => byId.has(id));
+      if (!countryIds.length) { unmapped++; continue; }
+      for (const id of new Set(countryIds)) counts.set(id, (counts.get(id) ?? 0) + 1);
     }
     const regions = [...counts].flatMap(([id,count]) => { const c=byId.get(id);return c?[{...c,count}]:[]; }).sort((a,b)=>b.count-a.count||a.name.localeCompare(b.name));
     return {regions,unmapped,mapped:mapRecords.length-unmapped};
@@ -356,7 +370,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
           <summary aria-label="Globe data and imagery information" title="Globe data information">i</summary>
           <div className="vigil-dashboard-geo-disclosure-body">
             <p>{geographyNote}</p>
-            <p>Country beacons show relative case counts for recorded jurisdiction associations, not incident coordinates. Earth imagery: NASA Blue Marble.</p>
+            <p>Country beacons show relative case counts for reviewed jurisdiction associations, not incident coordinates. A cross-border case may contribute once to more than one country. Earth imagery: NASA Blue Marble.</p>
             {!geographyAvailable && <p>Geographic data is unavailable for the selected source. Case Files remain searchable.</p>}
           </div>
         </details>
