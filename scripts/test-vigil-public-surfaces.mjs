@@ -1664,7 +1664,7 @@ test("Preview branch retains live VIGIL branch choice while inheriting main Case
   assert.match(home, /<VigilBranchSelector \/>/);
   assert.match(selector, /listVigilBranches\(\)/);
   assert.match(selector, /setSelectedVigilBranch\(branch\)/);
-  assert.match(selector, /aria-label="Select VIGIL branch"/);
+  assert.match(selector, /<span className="sr-only">Select VIGIL branch<\/span>/);
   assert.match(resolver, /searchParams\.get\("vigilBranch"\)/);
   assert.match(resolver, /VIGIL_BRANCH_STORAGE_KEY/);
   assert.match(resolver, /VIGIL_BRANCH_CHANGE_EVENT/);
