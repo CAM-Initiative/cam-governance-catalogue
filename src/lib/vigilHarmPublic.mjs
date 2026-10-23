@@ -28,6 +28,8 @@ export function aggregateHarmBandSummary(criterion) {
   return `${parts.coverage}. The evidence must also support ${parts.outcome}.`;
 }
 
+export const HARM_PUBLIC_DERIVATION_STATEMENT = "First determine whether the evidence concerns harm to a specific person, group, organisation or asset, or a potentially generalisable mechanism in an actually deployed AI feature without a specific harmed case. Assess the first using ordinary consequence criteria. Use Aggregate Harm for the second, even when the evidence is insufficient to assign a band. Overall severity is the highest independently supported dimension band on the selected pathway. Do not count eligible users as injured people or increase specific-case severity using provider-wide audience totals.";
+
 export const HARM_PATHWAY_STEPS = [
   "Identify whether the model or feature was actually deployed. A simulated or unreleased test does not establish deployment-scale Aggregate Harm.",
   "Check whether the evidence shows a potentially generalisable mechanism in one of the five dimensions that permit Aggregate Harm assessment.",
