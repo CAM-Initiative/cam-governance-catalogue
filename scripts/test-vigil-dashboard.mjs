@@ -197,3 +197,17 @@ test("Case Files search and both filters have card-edge inset, and globe info gl
   assert.match(dashboard, /<summary aria-label="Globe data and imagery information" title="Globe data information">i<\/summary>/);
   assert.match(css, /\.vigil-dashboard-geo-disclosure > summary \{\s*text-transform: lowercase;/);
 });
+
+// Guard against silent zero-beacon regressions as VIGIL's geography schema evolves.
+test("Case Files uses all reviewed country associations for globe beacons and filtering", async () => {
+  const [dashboard, page, helper] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/pages/vigil-cases.tsx"),
+    source("src/lib/vigilDashboardGeography.mjs"),
+  ]);
+  assert.match(dashboard, /countryByCase: Map<string, string\[\]>/);
+  assert.match(dashboard, /for \(const id of new Set\(countryIds\)\)/);
+  assert.match(page, /countryByCase\.get\(record\.id\)\?\.includes\(jurisdiction\)/);
+  assert.match(helper, /row\.reviewed_country_codes/);
+  assert.match(helper, /row\?\.map_eligible/);
+});
