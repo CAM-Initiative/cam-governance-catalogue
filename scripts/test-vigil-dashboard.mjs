@@ -230,3 +230,5 @@ test("Insight panels stay compact while donut severity labels remain readable an
   assert.match(css, /\.vigil-dashboard-severity-callout\.is-muted \{ opacity: \.76/);
   assert.match(css, /\.vigil-dashboard-failures-panel \.vigil-dashboard-failure-list \{ margin-top: \.5rem/);
 });
+
+// Touch this regression test to regenerate publication assets from the final review branch head.
