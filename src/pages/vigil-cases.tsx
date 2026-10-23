@@ -150,6 +150,14 @@ export default function VigilCases() {
   const [severity, setSeverity] = useState("");
   const [jurisdiction, setJurisdiction] = useState("");
   const [failureClass, setFailureClass] = useState("");
+  // The result-toolbar and globe reset share a single source of truth.
+  const clearFilters = () => {
+    setSearch("");
+    setClassification("");
+    setSeverity("");
+    setJurisdiction("");
+    setFailureClass("");
+  };
   const [countryByCase, setCountryByCase] = useState<Map<string, string>>(new Map());
   const [geographyAvailable, setGeographyAvailable] = useState(false);
   const [geographyNote, setGeographyNote] = useState("Geographic index is loading.");
@@ -339,7 +347,7 @@ export default function VigilCases() {
               <div className="vigil-result-summary">
                 <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
                 <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
-                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); setJurisdiction(""); setFailureClass(""); }}>Clear filters</button>}
+                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={clearFilters}>Clear filters</button>}
               </div>
             </section>
 
@@ -441,6 +449,7 @@ export default function VigilCases() {
                 onSeverity={setSeverity}
                 onJurisdiction={setJurisdiction}
                 onFailureClass={setFailureClass}
+                onClearFilters={clearFilters}
                 countryByCase={countryByCase}
                 geographyAvailable={geographyAvailable}
                 geographyNote={geographyNote}

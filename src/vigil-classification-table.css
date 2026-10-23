@@ -443,7 +443,7 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
 }
 
 .vigil-case-file-page .vigil-compliance-table td:nth-child(2) > strong a:hover,
-.vigil-case-file-page .vigil-compliance-evidence-links a:hover {
+.vigil-case-file-page .vigil-compliance-inline-references a:hover {
   text-decoration: underline;
   text-underline-offset: 0.14em;
 }
@@ -458,14 +458,14 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
   font-size: 0.82rem;
 }
 
-.vigil-case-file-page .vigil-compliance-evidence-links {
-  color: hsl(var(--muted-foreground));
-  font-size: 0.9rem;
-}
-
-.vigil-case-file-page .vigil-compliance-evidence-links a {
+.vigil-case-file-page .vigil-compliance-inline-references a {
   color: hsl(var(--primary));
   text-decoration: none;
+  margin-inline-end: 0.16rem;
+}
+.vigil-case-file-page .vigil-compliance-inline-references a:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 .vigil-case-file-page .vigil-compliance-counts,

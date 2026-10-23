@@ -222,7 +222,7 @@
   color: var(--vd-muted);
   background: radial-gradient(circle, hsl(var(--secondary) / .65), transparent 71%);
 }
-.vigil-dashboard-donut { width: 100%; max-width: 335px; margin: .2rem auto 0; }
+.vigil-dashboard-donut { width: 100%; max-width: 360px; margin: .2rem auto 0; }
 .vigil-dashboard-donut svg { width: 100%; display: block; overflow: visible; }
 .vigil-case-library-page .vigil-dashboard-donut-track {
   stroke: hsl(var(--border) / .78);
@@ -468,6 +468,19 @@
 @media (prefers-reduced-motion: reduce) {
   .vigil-dashboard-donut-segment { transition: none; }
 }
+
+/* Selection has physical separation, a wider band and muted neighbours.
+   Keep callouts legible and avoid relying on colour or a glow alone. */
+.vigil-dashboard-donut-slice { pointer-events: none; }
+.vigil-dashboard-donut-slice .vigil-dashboard-donut-segment { pointer-events: auto; }
+.vigil-dashboard-donut-segment[aria-pressed="true"] {
+  filter: drop-shadow(0 2px 5px rgba(7, 34, 49, .4));
+}
+.vigil-dashboard-severity-callout.is-muted { opacity: .56; }
+.vigil-dashboard-severity-callout.is-muted:hover,
+.vigil-dashboard-severity-callout.is-muted:focus-visible { opacity: 1; }
+.vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-label { font-weight: 850; }
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-name { font-weight: 750; }
 
 /* Preserve a generous visual globe on narrow screens without reintroducing
    visible country statistics or instructions. */
