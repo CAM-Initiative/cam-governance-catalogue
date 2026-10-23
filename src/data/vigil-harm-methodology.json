@@ -4,7 +4,7 @@
   "effective_on": "2026-10-10",
   "title": "VIGIL Harm Impact Matrix 1.1.0 — twelve-dimensional severity assessment",
   "derivation_rule": "highest-supported-harm-on-exclusive-incident-assessment-pathway",
-  "derivation_statement": "First perform mandatory deployment/potentially-generalisable-mechanism/actual bounded-harm screening, independently of whether evidence came from one user or a formal evaluation. An actual bounded harmed case uses specific_consequence; a deployed potentially generalisable mechanism without one uses generic_deployed_evaluation for Aggregate Harm assessment even where banding evidence is insufficient (SU). Then apply the correct S1–S5 dimensional evidence gates; take the highest independently supported dimension. Explicitly qualify any scored generic band as Aggregate Harm — modelled from deployed evaluation. Never import provider reach into specific-consequence scores or treat eligible users as injured victims.",
+  "derivation_statement": "First determine whether the evidence concerns harm to a specific person, group, organisation or asset, or a potentially generalisable mechanism in an actually deployed AI feature without a specific harmed case. Assess the first using ordinary consequence criteria. Use Aggregate Harm for the second, even when the evidence is insufficient to assign a band. Overall severity is the highest independently supported dimension band on the selected pathway. Do not count eligible users as injured people or increase specific-case severity using provider-wide audience totals.",
   "reference_ids": [
     "VIGIL-REF-000001",
     "VIGIL-REF-000002",
@@ -805,15 +805,14 @@
       "1. Does source-backed occurrence evidence establish an actually deployed model/feature or materially equivalent live configuration? If no/unknown, do not assign deployment-scale Aggregate Harm.",
       "2. Does the observed conduct potentially instantiate a generalisable system/feature mechanism relevant to one of the five scale-sensitive dimensions, regardless of whether it was reported via one user, a watchdog, a researcher or a benchmark? If no, do not force a generic pathway.",
       "3. Is this Incident assessing an actual materialised consequence to a particular bounded person/group/asset/institution? If yes, use specific_consequence; assess independently documented product-level findings as separately bounded Incidents if warranted.",
-      "4. If deployed=yes, potentially-generalisable=yes and bounded-materialised-case=no, SELECT generic_deployed_evaluation and evaluate live-path transferability, independent corroboration, feature-specific eligible cohort, safeguards, credible consequence, uncertainty and each applicable Aggregate Harm S1–S5 gate.",
-      "5. If the score prerequisites are not met, retain generic_deployed_evaluation and SU with an explicit assessment_gap. Never infer affected victims, reproducibility, systemic objective or S5 from a large audience."
+      "4. If deployed=yes, potentially-generalisable=yes and bounded-materialised-case=no, use the Aggregate Harm pathway and evaluate live-path transferability, independent corroboration, feature-specific eligible cohort, safeguards, credible consequence, uncertainty and each applicable Aggregate Harm S1–S5 gate.",
+      "5. If the score prerequisites are not met, retain the Aggregate Harm pathway and report SU, naming the evidence gap. Never infer affected victims, reproducibility, systemic objective or S5 from a large audience."
     ]
   },
   "aggregate_harm_assessment": {
     "status": "Operational under HIM 1.1.0; modelled estimates must be explicitly labelled, sourced and evidence-bounded",
     "scope": "Mandatory assessment pathway for source-backed potentially generalisable mechanisms observed in deployed models/features when no particular actual materially harmed person/group/asset/institution case is being assessed. An individual's screenshot may trigger this evaluation; reproducibility, population eligibility and collective consequence govern banding, not routing.",
     "name": "Aggregate Harm",
-    "internal_basis": "generic_deployed_aggregate_harm",
     "label": "Aggregate Harm — modelled from deployed evaluation",
     "evidence_state": "deployment_scale_estimate",
     "route": "Select generic_deployed_evaluation whenever the mandatory deployment/mechanism/no-bounded-actual-harm screen is positive, regardless of whether the source was a single user interaction, benchmark or product-level watchdog. If the scoring evidence is inadequate retain SU. A distinct actual harmed-person case uses specific_consequence.",
@@ -842,24 +841,6 @@
     "s1_meaning": "S1 within Aggregate Harm means positively evidenced minimal bounded modelled aggregate impact for the relevant deployed pathway. It does NOT indicate proven absence of user harm. Ordinary incident S1 retains its observed-consequence meaning.",
     "no_fixed_discount": "The earlier rule shifting S3 to S2, S4 to S3 and S5 to S4 is rejected. Severity is reduced relative to individual-harm adjudications only insofar as much higher numerical population/decision gates are required for generic-deployed findings.",
     "scope_limit": "Five selected diffuse collective dimensions only. Financial/economic harm and other domain-measurable consequences retain ordinary measures and are not rescored by generic platform size.",
-    "evidence_fields": [
-      "incident_assessment_pathway",
-      "tested_deployed_model_and_version",
-      "tested_product_surface",
-      "deployment_and_evaluation_window",
-      "test_protocol_and_trace_refs",
-      "test_repeatability_and_limiting_conditions",
-      "relevant_feature_eligible_population_or_decisions",
-      "denominator_source_and_period",
-      "actual_or_modelled_population_count",
-      "population_uncertainty",
-      "credible_domain_consequence",
-      "applicable_aggregate_harm_threshold",
-      "scored_aggregate_harm_band",
-      "positive_safeguards_and_contesting_evidence",
-      "source_refs"
-    ],
-    "INC_000192": "The ChatGPT for Teens watchdog finding is a generic deployed-model evaluation, eligible in principle for Aggregate Harm, but the alert-activation dispute, crisis-response contextual criteria and relevant active cohort prevent a supported S1–S5 Aggregate Harm band today. No named user injury is inferred; the earlier S2 presumption remains withdrawn.",
     "eligibility_gate_note": "The following eligibility_gate entries are the evidentiary prerequisites for assigning a MODELED S1–S5 Aggregate Harm BAND, not prerequisites for selecting its mandatory assessment PATHWAY. Route first using assessment_pathway_selection.screening_flow; if band evidence is insufficient retain generic_deployed_evaluation with SU and assessment_gap.",
     "screening_prerequisites": [
       "Source-backed actual deployed product/feature configuration",
