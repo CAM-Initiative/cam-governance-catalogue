@@ -35,10 +35,13 @@ function label(value: unknown): string | undefined {
   return source.replace(/[_-]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function Field({ title, value, wide = false }: { title: string; value?: string; wide?: boolean }) {
+function Field({ title, value, wide = false, citationRefs, citationNumbers }: {
+  title: string; value?: string; wide?: boolean;
+  citationRefs?: unknown; citationNumbers?: Record<string, number>;
+}) {
   if (!value) return null;
   return <div className={"vigil-context-field" + (wide ? " is-wide" : "")}>
-    <dt>{title}</dt><dd>{value}</dd>
+    <dt>{title}</dt><dd>{value}<SourceCitations refs={citationRefs} numbers={citationNumbers ?? {}} /></dd>
   </div>;
 }
 
@@ -51,21 +54,32 @@ function Group({ id, title, children }: {
   </section>;
 }
 
-function SourceLinks({ refs, numbers }: { refs: unknown; numbers: Record<string, number> }) {
-  const values = list(refs).filter((ref): ref is string =>
+/**
+ * Case File citation presentation contract:
+ * citation markers are inline, bracketed, linked to 06 References, and never
+ * prefixed by "Evidence" or "Source". This mirrors 02 Assessment.
+ * De-duplicate by resolved bibliography number; never invent one for a
+ * source record that is not present in the published bibliography.
+ */
+function SourceCitations({ refs, numbers }: { refs: unknown; numbers: Record<string, number> }) {
+  const sourceRefs = list(refs).filter((ref): ref is string =>
     typeof ref === "string" && /^source_records\[\d+\]$/.test(ref));
-  if (!values.length) return null;
-  return <div className="vigil-context-sources" aria-label="Supporting evidence references">
-    <span>Evidence</span>
-    {values.map((ref) => {
-      const n = numbers[ref];
-      return n
-        ? <a key={ref} href={"#vigil-evidence-reference-" + n} title={"View reference " + n}>
-            {"Source [" + n + "]"}
-          </a>
-        : <span key={ref} className="vigil-context-source-unlinked">{ref.replace("source_records", "Source record")}</span>;
-    })}
-  </div>;
+  const unique = [...new Set(sourceRefs)];
+  const numbersFound = [...new Set(unique.map(ref => numbers[ref]).filter((n): n is number =>
+    Number.isInteger(n) && n > 0))];
+  const unavailable = unique.filter(ref => !numbers[ref]);
+  if (!numbersFound.length && !unavailable.length) return null;
+  return <span className="vigil-context-citations" aria-label="Evidence references">
+    {" "}
+    {numbersFound.map((n) => <a key={n}
+      href={`#vigil-evidence-reference-${n}`}
+      aria-label={`Evidence reference ${n}`}
+      title={`View reference ${n}`}>[{n}]</a>)}
+    {unavailable.map(ref => <span key={ref} className="vigil-context-citation-unlinked"
+      title={`Referenced source is absent from the published bibliography: ${ref}`}>
+      [source reference unavailable]
+    </span>)}
+  </span>;
 }
 
 /** A record-local evidence note may contain an explicit uncertainty statement.
@@ -129,8 +143,7 @@ export function IncidentContextLimitations({ raw, sourceReferenceNumbers }: Pick
     <h5>Incident Context — evidence scope and limitations</h5>
     <ul>{items.map((item, i) => <li key={i}>
       {item.label && <strong>{item.label}: </strong>}
-      <span>{item.text}</span>
-      <SourceLinks refs={item.refs} numbers={sourceReferenceNumbers} />
+      <span>{item.text}<SourceCitations refs={item.refs} numbers={sourceReferenceNumbers} /></span>
     </li>)}</ul>
   </div>;
 }
@@ -171,8 +184,14 @@ function RelationshipCard({ relation, index, numbers, knownParties }: {
         )}</ul>
       : <p className="vigil-context-muted" aria-label="Location not recorded">—</p>}
     {parties.length > 0 && <p className="vigil-context-association">Linked entities: {parties.join(", ")}</p>}
-    {words(relation.evidence_basis) && !isEvidenceLimit(relation.evidence_basis) && <p className="vigil-context-basis">{words(relation.evidence_basis)}</p>}
-    <SourceLinks refs={relation.source_record_refs} numbers={numbers} />
+    {words(relation.evidence_basis) && !isEvidenceLimit(relation.evidence_basis)
+      ? <p className="vigil-context-basis">{words(relation.evidence_basis)}
+          <SourceCitations refs={relation.source_record_refs} numbers={numbers} />
+        </p>
+      : list(relation.source_record_refs).length > 0 &&
+          <p className="vigil-context-citation-fallback">
+            <SourceCitations refs={relation.source_record_refs} numbers={numbers} />
+          </p>}
   </article>;
 }
 
@@ -199,6 +218,18 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
   const legacyCrossBorder = words(jurisdiction.cross_border_relevance);
   const regulatoryTopics = join(jurisdiction.regulatory_surface);
   const primarySystem = affectedSystems[0];
+  // Agent configuration and operating-environment refs frequently resolve to
+  // the same bibliography item. One citation set avoids the duplicate [1] [1].
+  const operationalSourceRefs = [...new Set([
+    ...list(agent.source_record_refs),
+    ...list(environment.source_record_refs),
+  ].filter((value): value is string => typeof value === "string"))];
+  const environmentDescription = words(environment.environment_detail);
+  const operationalCitationField = environmentDescription ? "Occurrence environment"
+    : (primarySystem?.externalReach ?? label(environment.external_reach)) ? "External reach"
+    : (primarySystem?.deploymentState ?? label(environment.deployment_state)) ? "Deployment state"
+    : (primarySystem?.agentConfiguration ?? label(agent.agentic_status)) ? "Agent configuration"
+    : undefined;
 
   return <section className="vigil-incident-context" aria-labelledby="vigil-incident-context-heading">
     <header className="vigil-incident-context-heading">
@@ -220,20 +251,20 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
 
     <Group id="vigil-context-operational" title="Operational Environment">
       <dl className="vigil-context-fields">
-        <Field title="Agent configuration" value={primarySystem?.agentConfiguration ?? label(agent.agentic_status)} />
+        <Field title="Agent configuration" value={primarySystem?.agentConfiguration ?? label(agent.agentic_status)} citationRefs={operationalCitationField === "Agent configuration" ? operationalSourceRefs : undefined} citationNumbers={sourceReferenceNumbers} />
         <Field title="Agent count" value={primarySystem?.agentCount} />
-        <Field title="Deployment state" value={primarySystem?.deploymentState ?? label(environment.deployment_state)} />
+        <Field title="Deployment state" value={primarySystem?.deploymentState ?? label(environment.deployment_state)} citationRefs={operationalCitationField === "Deployment state" ? operationalSourceRefs : undefined} citationNumbers={sourceReferenceNumbers} />
         <Field title="Activity context" value={primarySystem?.activityContexts ?? join(list(environment.activity_contexts).map(label))} />
-        <Field title="External reach" value={primarySystem?.externalReach ?? label(environment.external_reach)} />
+        <Field title="External reach" value={primarySystem?.externalReach ?? label(environment.external_reach)} citationRefs={operationalCitationField === "External reach" ? operationalSourceRefs : undefined} citationNumbers={sourceReferenceNumbers} />
         <Field title="Activity actor" value={primarySystem?.activityActor ?? label(environment.activity_actor)} />
         <Field title="Occurrence setting (legacy)" value={primarySystem?.occurrenceSetting} />
         <Field title="Testing actor (legacy)" value={primarySystem?.testingActor} />
-        <Field title="Occurrence environment" value={words(environment.environment_detail)} wide />
+        <Field title="Occurrence environment" value={words(environment.environment_detail)} citationRefs={operationalCitationField === "Occurrence environment" ? operationalSourceRefs : undefined} citationNumbers={sourceReferenceNumbers} wide />
       </dl>
-      <div className="vigil-context-operational-sources">
-        <SourceLinks refs={agent.source_record_refs} numbers={sourceReferenceNumbers} />
-        <SourceLinks refs={environment.source_record_refs} numbers={sourceReferenceNumbers} />
-      </div>
+      {!operationalCitationField && operationalSourceRefs.length > 0 &&
+        <p className="vigil-context-citation-fallback">
+          <SourceCitations refs={operationalSourceRefs} numbers={sourceReferenceNumbers} />
+        </p>}
     </Group>
 
     <Group id="vigil-context-parties" title="Affected Parties & Institutions">
@@ -248,8 +279,14 @@ export function IncidentContextSection({ raw, affectedSystems, sourceReferenceNu
                 <Field title="Entity type" value={label(party.kind)} />
                 <Field title="Relationship roles" value={join(list(party.roles).map(label))} />
               </dl>
-              {words(party.evidence_basis) && !isEvidenceLimit(party.evidence_basis) && <p className="vigil-context-basis">{words(party.evidence_basis)}</p>}
-              <SourceLinks refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
+              {words(party.evidence_basis) && !isEvidenceLimit(party.evidence_basis)
+                ? <p className="vigil-context-basis">{words(party.evidence_basis)}
+                    <SourceCitations refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
+                  </p>
+                : list(party.source_record_refs).length > 0 &&
+                    <p className="vigil-context-citation-fallback">
+                      <SourceCitations refs={party.source_record_refs} numbers={sourceReferenceNumbers} />
+                    </p>}
             </article>
           )}</div>
         : <p className="vigil-context-muted" aria-label="Affected parties not reviewed">—</p>}

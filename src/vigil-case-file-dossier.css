@@ -764,31 +764,36 @@
   color: hsl(var(--foreground) / 0.75);
 }
 
-.vigil-case-file-page .vigil-context-sources {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  align-items: baseline;
-  margin-top: 0.75rem;
-  font: 0.8rem/1.5 var(--app-font-sans);
-  color: hsl(var(--foreground) / 0.7);
+/* Case File reference contract (01–06): bracketed numeric links sit inline
+   after supported prose, exactly as in Section 02 Harm Impact Assessment. */
+.vigil-case-file-page .vigil-context-citations {
+  display: inline;
+  font: inherit;
+  color: inherit;
+  white-space: normal;
 }
-
-.vigil-case-file-page .vigil-context-sources a {
+.vigil-case-file-page .vigil-context-citations a {
+  display: inline;
   color: hsl(var(--primary));
   text-decoration: underline;
-  text-underline-offset: 0.16rem;
+  text-underline-offset: 0.14rem;
+  white-space: nowrap;
+  margin-inline-end: 0.22em;
 }
-
-.vigil-case-file-page .vigil-context-sources a:focus-visible {
+.vigil-case-file-page .vigil-context-citations a:focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 3px;
   border-radius: 0.15rem;
 }
-
-.vigil-case-file-page .vigil-context-source-unlinked {
-  font-family: var(--app-font-mono);
-  font-size: 0.73rem;
+.vigil-case-file-page .vigil-context-citation-unlinked {
+  font-size: 0.85em;
+  color: hsl(var(--muted-foreground));
+}
+.vigil-case-file-page .vigil-context-citation-fallback {
+  display: block;
+  margin: 0.35rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 @media (max-width: 700px) {
@@ -844,9 +849,6 @@
 }
 .vigil-case-file-page .vigil-context-limitations li strong {
   font-weight: 700;
-}
-.vigil-case-file-page .vigil-context-limitations .vigil-context-sources {
-  margin-top: .32rem;
 }
 .report-assessment-limits {
   margin-top: 1.5rem;

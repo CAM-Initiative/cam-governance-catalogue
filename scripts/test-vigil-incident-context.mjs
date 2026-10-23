@@ -81,7 +81,10 @@ test("Section 01 groups legacy context without competing numbers or one-line des
   assert.doesNotMatch(html, /Architecture and instance count were not disclosed/);
   assert.match(limits, /Architecture and instance count were not disclosed/);
   assert.match(html, /Provider-internal model reached a live Australian service/);
-  assert.match(html, /Source \[1\]/);
+  assert.match(html, /An internal training run reached a live public service\.[\s\S]*?href="#vigil-evidence-reference-1"[\s\S]*?>\[1\]<\/a>/);
+  assert.equal((html.match(/href="#vigil-evidence-reference-1"/g) ?? []).length, 1, "one unique operational source should create one citation");
+  assert.doesNotMatch(html, /Source \[1\]|>Evidence<\/span>/);
+  assert.doesNotMatch(html, /class="vigil-context-sources"/);
   assert.match(html, /#vigil-evidence-reference-1/);
   assert.doesNotMatch(html, /Geographic roles have not yet been structurally assessed/);
   assert.match(limits, /Geographic roles have not yet been structurally assessed/);
@@ -133,6 +136,8 @@ test("reviewed entities and geographic relations retain roles, separate countrie
   assert.match(html, /Disputed/);
   assert.match(html, /Publisher described the service affected/);
   assert.match(html, /#vigil-evidence-reference-2/);
+  assert.match(html, /Publisher described the service affected\.[\s\S]*?href="#vigil-evidence-reference-1"[\s\S]*?>\[1\]<\/a>/);
+  assert.doesNotMatch(html, /Source \[|>Evidence<\/span>/);
   assert.doesNotMatch(html, /Geographic roles have not yet been structurally assessed/);
 });
 
@@ -185,4 +190,36 @@ test("Both interactive Case File and print report consolidate Incident Context l
   assert.match(report, /Limits of the assessment/);
   assert.match(report, /STANDARD_VIGIL_ASSESSMENT_LIMITS/);
   assert.match(report, /nonAssessedHarmDimensionLimitItems/);
+});
+
+test("reference formatting follows Section 02 throughout the Case File and print report", async () => {
+  const [assessment, component, css, report] = await Promise.all([
+    readFile(resolve(root, "src/components/vigil/HarmImpactMatrix.tsx"), "utf8"),
+    readFile(resolve(root, "src/components/vigil/IncidentContextSection.tsx"), "utf8"),
+    readFile(resolve(root, "src/vigil-case-file-dossier.css"), "utf8"),
+    readFile(resolve(root, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+  ]);
+  assert.match(assessment, /vigil-harm-inline-references/);
+  assert.match(component, /function SourceCitations\(/);
+  assert.match(component, /aria-label=\{`Evidence reference \$\{n\}`\}/);
+  assert.doesNotMatch(component, /Source \[|<span>Evidence<\/span>|function SourceLinks\(/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-context-citations \{/);
+  assert.match(report, /<IncidentContextSection raw=\{incident\.raw\}/);
+  assert.match(report, /<IncidentContextLimitations raw=\{incident\.raw\}/);
+});
+
+test("unpublished source record refs never produce invented bibliography links", () => {
+  const html = render({
+    affected_party_context: {
+      entities: [{
+        party_id: "PARTY-UNLINKED",
+        name: "Unlinked source",
+        roles: ["affected-service"],
+        evidence_basis: "Relationship described but not indexed.",
+        source_record_refs: ["source_records[94]"],
+      }],
+    },
+  });
+  assert.doesNotMatch(html, /href="#vigil-evidence-reference-94"/);
+  assert.match(html, /source reference unavailable/);
 });
