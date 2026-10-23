@@ -443,7 +443,7 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
 }
 
 .vigil-case-file-page .vigil-compliance-table td:nth-child(2) > strong a:hover,
-.vigil-case-file-page .vigil-compliance-evidence-links a:hover {
+.vigil-case-file-page .vigil-compliance-inline-references a:hover {
   text-decoration: underline;
   text-underline-offset: 0.14em;
 }
@@ -458,50 +458,14 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
   font-size: 0.82rem;
 }
 
-.vigil-case-file-page .vigil-compliance-evidence-links {
-  color: hsl(var(--muted-foreground));
-  font-size: 0.9rem;
-}
-
-.vigil-case-file-page .vigil-compliance-evidence-links a {
+.vigil-case-file-page .vigil-compliance-inline-references a {
   color: hsl(var(--primary));
   text-decoration: none;
+  margin-inline-end: 0.16rem;
 }
-
-/* Evidence remains an explicit, readable list within the fourth column.
-   Numbers link to the same Section 06 bibliography entries as other stages. */
-.vigil-case-file-page .vigil-compliance-evidence-links {
-  margin-top: 0.7rem;
-  padding-top: 0.55rem;
-  border-top: 1px solid hsl(var(--border) / 0.56);
-}
-.vigil-case-file-page .vigil-compliance-evidence-links > strong {
-  display: block;
-  color: hsl(var(--foreground) / 0.88);
-  font-size: 0.83rem;
-  font-weight: 680;
-}
-.vigil-case-file-page .vigil-compliance-evidence-links ul {
-  list-style: none;
-  padding: 0;
-  margin: 0.35rem 0 0;
-}
-.vigil-case-file-page .vigil-compliance-evidence-links li + li {
-  margin-top: 0.25rem;
-}
-.vigil-case-file-page .vigil-compliance-evidence-links a {
-  display: inline;
-  overflow-wrap: anywhere;
-  line-height: 1.5;
-}
-.vigil-case-file-page .vigil-compliance-evidence-links a:focus-visible {
+.vigil-case-file-page .vigil-compliance-inline-references a:focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
-  border-radius: 2px;
-}
-.vigil-case-file-page .vigil-compliance-evidence-links > p {
-  font-size: 0.84rem;
-  font-style: italic;
 }
 
 .vigil-case-file-page .vigil-compliance-counts,

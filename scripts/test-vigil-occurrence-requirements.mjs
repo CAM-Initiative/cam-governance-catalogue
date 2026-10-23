@@ -94,8 +94,8 @@ test('Static Case Files publish all results, normative force, basis, date and ev
  for(const value of ['Aligned','Not aligned','Boundary','Normative force','Voluntary consensus standard',assessment.assessment_basis,assessment.assessed_on,'#vigil-evidence-reference-1'])assert.ok(output.includes(value),value);
  assert.equal((output.match(/<tr>/g)||[]).length,4);
  assert.doesNotMatch(output,/Applicability|Not met|undefined|https:\/\/example.org/);
- assert.match(output,/>\[1\] Observed trace<\/a>/);
- assert.match(output,/<strong>Supporting evidence<\/strong>/);
+ assert.match(output, /The observed gate rejected the request\. <a href="#vigil-evidence-reference-1" aria-label="Evidence reference 1">\[1\]<\/a>/);
+ assert.doesNotMatch(output, /Supporting evidence|Evidence:<\/|Observed trace|No source-record references are linked/);
  assert.match(staticSource, /<li id="vigil-evidence-reference-\$\{source.referenceNumber\}"/);
  assert.doesNotMatch(output, /href="#vigil-evidence-reference-2"/);
 });

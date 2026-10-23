@@ -24,16 +24,10 @@ function RequirementTable({ items, title }: { items: RequirementRow[]; title: st
         </td>
         <td data-label="Normative force" className="vigil-compliance-force">{row.normativeForce}</td>
         <td data-label="Evidence and assessment basis">
-          <p>{row.assessmentBasis}</p>
+          <p>{row.assessmentBasis}{row.evidence.length > 0 ? <span className="vigil-compliance-inline-references"> {row.evidence.map(source =>
+            <a key={source.referenceNumber} href={source.url} aria-label={`Evidence reference ${source.referenceNumber}`}>[{source.referenceNumber}]</a>
+          )}</span> : null}</p>
           {row.assessedOn && <p><strong>Assessed:</strong> <time dateTime={row.assessedOn}>{row.assessedOn}</time></p>}
-          <div className="vigil-compliance-evidence-links">
-            <strong>Supporting evidence</strong>
-            {row.evidence.length
-              ? <ul>{row.evidence.map(source => <li key={source.referenceNumber}>
-                  <a href={source.url} aria-label={`Evidence reference ${source.referenceNumber}: ${source.title}`}>[{source.referenceNumber}] {source.title}</a>
-                </li>)}</ul>
-              : <p>No source-record references are linked to this assessment.</p>}
-          </div>
         </td>
       </tr>)}</tbody>
     </table>

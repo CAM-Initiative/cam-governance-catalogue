@@ -375,18 +375,20 @@ test("Section 03 Classification stays a horizontally swipeable four-column table
   assert.doesNotMatch(css, /\.vigil-primary-classification-table tbody \{ display: block; \}/);
 });
 
-test("Section 04 Compliance lists source-titled citations linked to the shared Case File bibliography", async () => {
-  const [compliance, wrapper, caseFile, report, css] = await Promise.all([
+test("Section 04 Compliance displays only numbered inline citations with Section 06 as bibliography", async () => {
+  const [compliance, wrapper, caseFile, report, css, staticSource] = await Promise.all([
     read("src/components/vigil/CaseRequirementAssessments.tsx"),
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
     read("src/pages/vigil-case-file.tsx"),
     read("src/pages/evidence-chain-report-deterministic.tsx"),
     read("src/vigil-classification-table.css"),
+    read("scripts/prepare-github-pages.js"),
   ]);
-  assert.match(compliance, /<strong>Supporting evidence<\/strong>/);
-  assert.match(compliance, /\[\{source.referenceNumber\}\] \{source.title\}/);
-  assert.match(compliance, /href=\{source.url\}/);
-  assert.match(compliance, /No source-record references are linked to this assessment/);
+  assert.match(compliance, /<p>\{row\.assessmentBasis\}\{row\.evidence\.length > 0/);
+  assert.match(compliance, /className="vigil-compliance-inline-references"/);
+  assert.match(compliance, /aria-label=\{.*Evidence reference/);
+  assert.match(compliance, />\[\{source\.referenceNumber\}\]<\/a>/);
+  assert.doesNotMatch(compliance, /Supporting evidence|Evidence:<\/strong>|No source-record references are linked|>\[\{source\.referenceNumber\}\] \{source\.title\}/);
   assert.match(compliance, /occurrenceRequirementRows\(raw, requirements, sourceReferenceNumbers\)/);
   assert.match(wrapper, /<CaseRequirementAssessments raw=\{raw\} sourceReferenceNumbers=\{sourceReferenceNumbers\}/);
   for (const source of [caseFile, report]) {
@@ -394,7 +396,9 @@ test("Section 04 Compliance lists source-titled citations linked to the shared C
     assert.match(source, /externalSources\.flatMap\(\(source, index\) => source\.sourceRecordRefs\.map/);
     assert.match(source, /vigil-evidence-reference-/);
   }
-  assert.match(css, /\.vigil-case-file-page \.vigil-compliance-evidence-links ul/);
+  assert.match(staticSource, /escapeHtml\(row\.assessmentBasis\)\}\$\{row\.evidence\.map/);
+  assert.doesNotMatch(css, /vigil-compliance-evidence-links/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-compliance-inline-references a/);
 });
 
 test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
