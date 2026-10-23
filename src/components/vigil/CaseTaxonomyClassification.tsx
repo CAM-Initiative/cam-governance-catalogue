@@ -692,6 +692,6 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   </div>;
 }
 
-export function CaseTaxonomyCompliance({ raw }: Props) {
-  return <CaseRequirementAssessments raw={raw} />;
+export function CaseTaxonomyCompliance({ raw, sourceReferenceNumbers }: Props & { sourceReferenceNumbers?: Record<string, number> }) {
+  return <CaseRequirementAssessments raw={raw} sourceReferenceNumbers={sourceReferenceNumbers} />;
 }
