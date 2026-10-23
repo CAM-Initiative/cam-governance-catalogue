@@ -827,12 +827,14 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable/);
   assert.doesNotMatch(methodSection, /<dt>SU — Unassessed<\/dt>/);
-  assert.match(methodSection, /SU — Unassessed remains visually neutral and is used when no defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm; SU is an evidence state, not a sixth severity band/);
-  assert.match(methodSection, /<h3>Severity display<\/h3>[\s\S]*<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity[\s\S]*Individual Case Files do not repeat this entire reference matrix/);
+  assert.match(methodSection, /SU — Unassessed applies when no harm dimension has a defensible band/);
+  assert.match(methodSection, /SU is an evidence state, not a sixth severity band/);
+  assert.match(methodSection, /<h3>Overall severity<\\/h3>[\\s\\S]*highest defensible materialised-harm threshold controls the overall severity/);
+  assert.doesNotMatch(methodSection, /Severity display|Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(methodSection, /vigil-severity-case-file-note/);
   const overallRule = methodSection.match(/<h3>Overall severity<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
   assert.match(overallRule, /Only dimensions with a defensible assessed band/);
-  assert.match(overallRule, /Individual Case Files do not repeat this entire reference matrix/);
+  assert.match(overallRule, /Never combine ordinary and aggregate bands within one assessment/);
   assert.doesNotMatch(severity, /<section id="case-files"|The Incident view shows only the assessment that was actually made/);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
   assert.match(menuCss, /\.vigil-severity-method-row \{[\s\S]*grid-template-columns: minmax\(9rem, 0\.42fr\) minmax\(0, 1fr\)/);
@@ -1221,8 +1223,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
-  assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*The band label carries the severity level; colour is not an ordinal scale/);
-  assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*vigil-severity-method-copy[\s\S]*vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5", "SU"\][\s\S]*VigilStatusChip[\s\S]*<h3>Overall severity<\/h3>/);
+  assert.doesNotMatch(severity, /<h3>Severity display<\\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
+  assert.doesNotMatch(severity, /<h3>Severity display<\\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-method-copy \{[\s\S]*display: grid[\s\S]*gap: 0\.72rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin: 0;[\s\S]*padding: 0;/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
