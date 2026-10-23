@@ -829,7 +829,7 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   assert.doesNotMatch(methodSection, /<dt>SU — Unassessed<\/dt>/);
   assert.match(methodSection, /SU — Unassessed applies when no harm dimension has a defensible band/);
   assert.match(methodSection, /SU is an evidence state, not a sixth severity band/);
-  assert.match(methodSection, /<h3>Overall severity<\\/h3>[\\s\\S]*highest defensible materialised-harm threshold controls the overall severity/);
+  assert.match(methodSection, /<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity/);
   assert.doesNotMatch(methodSection, /Severity display|Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(methodSection, /vigil-severity-case-file-note/);
   const overallRule = methodSection.match(/<h3>Overall severity<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
@@ -1223,8 +1223,8 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
-  assert.doesNotMatch(severity, /<h3>Severity display<\\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
-  assert.doesNotMatch(severity, /<h3>Severity display<\\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
+  assert.doesNotMatch(severity, /<h3>Severity display<\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
+  assert.doesNotMatch(severity, /<h3>Severity display<\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-method-copy \{[\s\S]*display: grid[\s\S]*gap: 0\.72rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin: 0;[\s\S]*padding: 0;/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
