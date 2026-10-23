@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { HARM_PUBLIC_DERIVATION_STATEMENT } from "../src/lib/vigilHarmPublic.mjs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -23,6 +24,12 @@ for (const internalField of ["working_amendments", "adjudication_guidance", "dim
 }
 if (methodology.assessment_pathway_selection) {
   delete methodology.assessment_pathway_selection.screening_contract;
+}
+methodology.derivation_statement = HARM_PUBLIC_DERIVATION_STATEMENT;
+if (methodology.aggregate_harm_assessment) {
+  for (const field of ["internal_basis", "INC_000192", "evidence_fields"]) {
+    delete methodology.aggregate_harm_assessment[field];
+  }
 }
 for (const dimension of methodology.dimensions ?? []) {
   if (typeof dimension.adaptation_note === "string") {
