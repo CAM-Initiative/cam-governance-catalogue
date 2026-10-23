@@ -300,6 +300,12 @@ function incidentTimingLabel(raw?: UnknownRecord) {
   return precision === "reported-date" ? `Reported ${value}` : value;
 }
 
+
+function Field({ label, value, mono = false }: { label: string; value?: string; mono?: boolean }) {
+  if (!value) return null;
+  return <div className="vigil-case-field"><dt>{label}</dt><dd className={mono ? "is-mono" : undefined}>{value}</dd></div>;
+}
+
 const CASE_STAGE_HEADINGS: Record<string, string> = {
   "case-observe": "Incident evidence and context",
   "case-diagnose": "Governance, external and harm impact assessment",
@@ -641,7 +647,7 @@ export default function VigilCaseFile() {
     </>;
 
     if (stageId === "compliance") return <>
-      {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <p className="vigil-case-empty">No occurrence-specific external requirement assessment is available for this Case File.</p>}
+      {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" sourceReferenceNumbers={harmEvidenceReferenceNumbers} /> : <p className="vigil-case-empty">No occurrence-specific external requirement assessment is available for this Case File.</p>}
     </>;
 
     if (stageId === "diagnose") return <>

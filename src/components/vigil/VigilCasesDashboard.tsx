@@ -3,6 +3,7 @@ import { Layers3, RotateCcw, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
+import { donutSegmentAppearance } from "@/lib/vigilDonutSelection.mjs";
 import { countryFromJurisdictionString } from "@/lib/vigilCountryMatching.mjs";
 import { AdSenseRail } from "@/components/advertising/AdSenseRail";
 import "./VigilCasesDashboard.css";
@@ -24,6 +25,7 @@ type Props = {
   onSeverity: (code: string) => void;
   onJurisdiction: (id: string) => void;
   onFailureClass: (id: string) => void;
+  onClearFilters: () => void;
   countryByCase: Map<string, string>;
   geographyAvailable: boolean;
   geographyNote: string;
@@ -141,7 +143,7 @@ function graticule(rotation: number, lon?: number, lat?: number) {
   }
   return drawing;
 }
-function Globe({ locations, selected, onSelect }: { locations: Location[]; selected: string; onSelect: (id: string) => void }) {
+function Globe({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string; onSelect: (id: string) => void; onClearFilters: () => void }) {
   const [rotation, setRotation] = useState(15);
   const pointer = useRef<{ x: number; rotation: number; moved: boolean } | null>(null);
   useEffect(() => {
@@ -187,15 +189,15 @@ function Globe({ locations, selected, onSelect }: { locations: Location[]; selec
         <ellipse cx="174" cy="174" rx="169" ry="164" fill="none" stroke="#39cde2" strokeOpacity=".16" strokeDasharray="4 9" />
       </svg>
       
-      <button type="button" className="vigil-dashboard-reset-rotation" onClick={() => setRotation(15)} aria-label="Reset globe rotation" title="Reset globe rotation"><RotateCcw size={15} /></button>
+      <button type="button" className="vigil-dashboard-reset-rotation" onClick={() => { setRotation(15); onClearFilters(); }} aria-label="Reset globe view and clear filters" title="Reset globe and clear filters"><RotateCcw size={15} /></button>
     </div>
   );
 }
-function GlobeView({ locations, selected, onSelect }: { locations: Location[]; selected: string; onSelect: (id: string) => void }) {
+function GlobeView({ locations, selected, onSelect, onClearFilters }: { locations: Location[]; selected: string; onSelect: (id: string) => void; onClearFilters: () => void }) {
   const [unavailable, setUnavailable] = useState(false);
-  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} />;
-  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} />}>
-    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onUnavailable={() => setUnavailable(true)} />
+  if (unavailable) return <Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />;
+  return <Suspense fallback={<Globe locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} />}>
+    <EarthGlobe3D locations={locations} selected={selected} onSelect={onSelect} onClearFilters={onClearFilters} onUnavailable={() => setUnavailable(true)} />
   </Suspense>;
 }
 
@@ -245,13 +247,13 @@ function severityCallouts(entries: Array<{ code: string; count: number }>, total
 function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRecord[]; selected: string; onSelect: (code: string) => void }) {
   const distribution = severityDistribution(records);
   const total = distribution.reduce((sum, item) => sum + item.count, 0);
-  const circumference = 2 * Math.PI * 70;
   const labels = total ? severityCallouts(distribution, total) : [];
+  const selectedCount = distribution.find(item => item.code === selected)?.count;
   let elapsed = 0;
   const activate = (code: string) => onSelect(selected === code ? "" : code);
   return <div className="vigil-dashboard-outcomes">
     <div className="vigil-dashboard-donut">
-      <svg viewBox="0 0 320 258" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or its connected label to filter.`}>
+      <svg viewBox="0 0 360 258" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or its connected label to filter.`}>
         <defs>
           <filter id="vigil-donut-dimensional-shadow" x="-35%" y="-35%" width="170%" height="170%">
             <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".35"/>
@@ -268,26 +270,37 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           </linearGradient>)}
         </defs>
         <g filter="url(#vigil-donut-dimensional-shadow)">
-          <circle cx="160" cy="128" r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
-          <circle cx="160" cy="128" r="57" fill="url(#vigil-donut-face)"/>
+          <circle cx="180" cy="128" r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
+          <circle cx="180" cy="128" r="57" fill="url(#vigil-donut-face)"/>
         </g>
         {distribution.map(item => {
           const start = elapsed; elapsed += item.count;
-          const color = SEVERITIES.find(sev => sev.code===item.code)?.color ?? "#8b9cad";
-          return total && item.count ? <circle key={item.code} cx="160" cy="128" r="70" fill="none" stroke={`url(#vigil-donut-shade-${item.code})`} strokeWidth={selected===item.code?29:24} strokeDasharray={`${(item.count/total)*circumference} ${circumference}`} strokeDashoffset={-(start/total)*circumference} transform="rotate(-90 160 128)" onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}} tabIndex={0} role="button" aria-label={`${item.code} ${item.count} case files; filter`} aria-pressed={selected===item.code} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} case files</title></circle> : null;
+          const isSelected = selected === item.code;
+          const appearance = donutSegmentAppearance(start, item.count, total, isSelected, Boolean(selected));
+          const circumference = 2 * Math.PI * appearance.radius;
+          return total && item.count ? <g key={item.code} className="vigil-dashboard-donut-slice" transform={isSelected ? `translate(${appearance.offsetX} ${appearance.offsetY})` : undefined}>
+            <circle cx="180" cy="128" r={appearance.radius} fill="none" stroke={`url(#vigil-donut-shade-${item.code})`}
+              strokeWidth={appearance.strokeWidth} opacity={appearance.opacity}
+              strokeDasharray={`${(item.count / total) * circumference} ${circumference}`}
+              strokeDashoffset={-(start / total) * circumference} transform="rotate(-90 180 128)"
+              onClick={() => activate(item.code)} onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); activate(item.code); } }}
+              tabIndex={0} role="button" aria-label={`${item.code}: ${item.count} case files; ${isSelected ? "clear filter" : "filter"}`}
+              aria-pressed={isSelected} className="vigil-dashboard-donut-segment"><title>{item.code}: {item.count} case files</title>
+            </circle>
+          </g> : null;
         })}
-        <circle cx="160" cy="128" r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
-        <circle cx="160" cy="128" r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
-        <text x="160" y="124" textAnchor="middle" className="vigil-dashboard-donut-count">{total}</text>
-        <text x="160" y="143" textAnchor="middle" className="vigil-dashboard-donut-caption">CASE FILES</text>
+        <circle cx="180" cy="128" r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
+        <circle cx="180" cy="128" r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
+        <text x="180" y="124" textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
+        <text x="180" y="143" textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
         {labels.map(item => {
           const dx = Math.cos(item.midAngle), dy = Math.sin(item.midAngle);
-          const x0 = 160 + dx * 83, y0 = 128 + dy * 83;
-          const x1 = item.side === "left" ? 90 : 230;
-          const x2 = item.side === "left" ? 81 : 239;
-          const xText = item.side === "left" ? 76 : 244;
+          const x0 = 180 + dx * (selected === item.code ? 105 : 84), y0 = 128 + dy * (selected === item.code ? 105 : 84);
+          const x1 = item.side === "left" ? 99 : 261;
+          const x2 = item.side === "left" ? 85 : 275;
+          const xText = item.side === "left" ? 78 : 282;
           const anchor = item.side === "left" ? "end" : "start";
-          return <g key={item.code} className="vigil-dashboard-severity-callout" role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
+          return <g key={item.code} className={`vigil-dashboard-severity-callout${selected === item.code ? " is-selected" : selected ? " is-muted" : ""}`} role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
             <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={item.color} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
             <circle cx={x0} cy={y0} r="2.7" fill={item.color}/>
             <text x={xText} y={item.y-3} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} ({item.count})</text>
@@ -296,11 +309,11 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
         })}
       </svg>
     </div>
-    <p className="vigil-dashboard-chart-instruction">Select a coloured segment or label to filter cases.</p>
+    <p className="vigil-dashboard-chart-instruction">{selected ? `${selected} filter active. Select that segment again to clear it.` : "Select a coloured segment or label to filter cases."}</p>
   </div>;
 }
 
-export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdiction,failureClass,onSeverity,onJurisdiction,onFailureClass,countryByCase,geographyAvailable,geographyNote}: Props) {
+export default function VigilCasesDashboard({mapRecords,distributionRecords,filteredRecords,severity,jurisdiction,failureClass,onSeverity,onJurisdiction,onFailureClass,onClearFilters,countryByCase,geographyAvailable,geographyNote}: Props) {
   const [classNames, setClassNames] = useState<Record<string,string>>({});
   useEffect(() => {
     let active = true;
@@ -330,7 +343,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
         <h2 id="vigil-dashboard-geography" className="sr-only">Jurisdiction coverage — interactive globe</h2>
-        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction}/>
+        <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
           <select value={jurisdiction} disabled={!geographyAvailable} onChange={event=>onJurisdiction(event.target.value)} aria-label="Select jurisdiction using keyboard">

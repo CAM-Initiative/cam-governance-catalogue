@@ -11,4 +11,5 @@ export type RequirementRow = {
   assessedOn?: string;
   evidence: Array<{ title: string; referenceNumber?: number; url?: string }>;
 };
-export function occurrenceRequirementRows(raw: Record<string, unknown>, requirements?: Array<unknown>): RequirementRow[];
+export function publicRequirementEvidenceSources(raw: Record<string, unknown>): Array<{ title: string; url?: string; publisher?: string; date?: string; sourceRecordRefs: string[]; referenceNumber: number; href: string }>;
+export function occurrenceRequirementRows(raw: Record<string, unknown>, requirements?: Array<unknown>, sourceReferenceNumbers?: Record<string, number>): RequirementRow[];

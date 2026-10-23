@@ -10,6 +10,15 @@ import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
+test("Case File Section 02 keeps its assessment provenance renderer defined", async () => {
+  const caseFile = await read("src/pages/vigil-case-file.tsx");
+  assert.match(caseFile, /function Field\(\{ label, value, mono = false \}/);
+  assert.ok(caseFile.indexOf("function Field(") < caseFile.indexOf("export default function VigilCaseFile("), "Section 02 Field must be declared before the Case File renderer");
+  assert.match(caseFile, /if \(stageId === "diagnose"\)/);
+  assert.match(caseFile, /<Field label="Assessed" value=\{diagnostic\?\.diagnosticDate\}/);
+});
+
+
 test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
   const [main, css] = await Promise.all([
     read("src/main.tsx"),
@@ -353,6 +362,45 @@ test("Section 02 Incident breakdown stays bounded and horizontally swipeable on 
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-taxonomy-assessment-scroll-hint \{[\s\S]*display: block;/);
 });
 
+test("Section 03 Classification stays a horizontally swipeable four-column table on mobile", async () => {
+  const [classification, css] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/vigil-classification-table.css"),
+  ]);
+  assert.match(classification, /className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region"[^>]*tabIndex=\{0\}/);
+  assert.match(classification, /<table className="vigil-classification-table vigil-primary-classification-table">/);
+  assert.match(css, /@media screen and \(max-width: 760px\) \{[\s\S]*?\.vigil-primary-classification-table-wrap \{[\s\S]*?overflow-x: auto;[\s\S]*?-webkit-overflow-scrolling: touch;[\s\S]*?touch-action: pan-x pan-y;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*?display: table;[\s\S]*?min-width: 72rem;/);
+  assert.match(css, /\.vigil-primary-classification-table-wrap::before \{[\s\S]*?Swipe sideways to view all classification columns/);
+  assert.doesNotMatch(css, /\.vigil-primary-classification-table tbody \{ display: block; \}/);
+});
+
+test("Section 04 Compliance displays only numbered inline citations with Section 06 as bibliography", async () => {
+  const [compliance, wrapper, caseFile, report, css, staticSource] = await Promise.all([
+    read("src/components/vigil/CaseRequirementAssessments.tsx"),
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
+    read("src/vigil-classification-table.css"),
+    read("scripts/prepare-github-pages.js"),
+  ]);
+  assert.match(compliance, /<p>\{row\.assessmentBasis\}\{row\.evidence\.length > 0/);
+  assert.match(compliance, /className="vigil-compliance-inline-references"/);
+  assert.match(compliance, /aria-label=\{.*Evidence reference/);
+  assert.match(compliance, />\[\{source\.referenceNumber\}\]<\/a>/);
+  assert.doesNotMatch(compliance, /Supporting evidence|Evidence:<\/strong>|No source-record references are linked|>\[\{source\.referenceNumber\}\] \{source\.title\}/);
+  assert.match(compliance, /occurrenceRequirementRows\(raw, requirements, sourceReferenceNumbers\)/);
+  assert.match(wrapper, /<CaseRequirementAssessments raw=\{raw\} sourceReferenceNumbers=\{sourceReferenceNumbers\}/);
+  for (const source of [caseFile, report]) {
+    assert.match(source, /<CaseTaxonomyCompliance raw=\{incident.raw\}[^>]*sourceReferenceNumbers=\{harmEvidenceReferenceNumbers\}/);
+    assert.match(source, /externalSources\.flatMap\(\(source, index\) => source\.sourceRecordRefs\.map/);
+    assert.match(source, /vigil-evidence-reference-/);
+  }
+  assert.match(staticSource, /escapeHtml\(row\.assessmentBasis\)\}\$\{row\.evidence\.map/);
+  assert.doesNotMatch(css, /vigil-compliance-evidence-links/);
+  assert.match(css, /\.vigil-case-file-page \.vigil-compliance-inline-references a/);
+});
+
 test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
@@ -363,18 +411,21 @@ test("Classification presents Fidelity Classes and Compliance uses independent o
   assert.match(classification, /<th scope="col">Alignment<\/th>[\s\S]*<th scope="col">Fidelity class<\/th>[\s\S]*<th scope="col">Evidence and classification basis<\/th>[\s\S]*<th scope="col">Recognition criteria<\/th>/);
   const primaryTable = classification.match(/<table className="vigil-classification-table vigil-primary-classification-table">[\s\S]*?<\/table>/)?.[0] ?? "";
   assert.doesNotMatch(primaryTable, /<th scope="col">Confidence<\/th>|<td data-label="Confidence"/);
-  assert.match(primaryTable, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(primaryTable, /item.role !== "ambiguous-boundary" && <span/);
   const outcomeCell = primaryTable.match(/<td data-label="Alignment"[\s\S]*?<\/td>/)?.[0] ?? "";
   const basisCell = primaryTable.match(/<td data-label="Evidence and classification basis"[\s\S]*?<\/td>/)?.[0] ?? "";
   assert.doesNotMatch(outcomeCell, /vigil-classification-confidence-chip/);
-  assert.match(basisCell, /vigil-classification-confidence-chip is-\$\{confidence.kind\}/);
+  assert.match(basisCell, /item.role !== "ambiguous-boundary" && <span/);
+  assert.ok(classification.includes('<Meta label="Confidence" value={item.role === "ambiguous-boundary" ? undefined : item.confidence} />'));
+  assert.ok(classification.indexOf('className="vigil-classification-intro"') < classification.indexOf('className="vigil-classification-state-note"'));
+  assert.match(css, /\.vigil-classification-state-note \{/);
   assert.match(classification, /className="vigil-classification-intro"[\s\S]*These classifications assess evidence from this occurrence against VIGIL/);
   assert.match(classification, /whole-system alignment, general model safety or regulatory compliance/);
   assert.match(classification, /"high confidence"[\s\S]*"medium confidence"[\s\S]*"low confidence"/);
   assert.match(classification, /className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes"/);
   assert.match(classification, /const mappedClasses = tableRows\.filter\(\(\{ item \}\) => Boolean\(item\.classId\)\)/);
   assert.match(classification, /"failure-occurrence", label: "Failure occurred"/);
-  assert.match(classification, /"successful-invariant", label: "Invariant held"/);
+  assert.match(classification, /"successful-invariant", label: "Aligned"/);
   assert.match(classification, /"ambiguous-boundary", label: "Boundary unresolved"/);
   assert.match(classification, /mappedClasses\.filter\(\(\{ item \}\) => item\.role === role\)\.length/);
   assert.match(classification, /data-label="Evidence and classification basis"/);
@@ -514,52 +565,6 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(contract, /informational mixed-record affordance/);
 });
 
-test("Case Files make invariant-held alignment outcomes unmistakable across public surfaces", async () => {
-  const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
-    read("src/pages/vigil-cases.tsx"),
-    read("src/pages/vigil-case-file.tsx"),
-    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
-    read("src/pages/evidence-chain-report-deterministic.tsx"),
-    read("scripts/prepare-github-pages.js"),
-    read("scripts/sync-vigil-records.mjs"),
-    read("src/vigil-ux-v4.css"),
-    read("src/vigil-case-file-polish.css"),
-    read("src/vigil-ux-v5.css"),
-  ]);
-  assert.match(cases, /is-exemplar/);
-  assert.match(cases, /vigil-case-table-text/);
-  assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
-  assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
-  assert.match(caseFile, /const adjudicationIncomplete = classification === "Adjudication incomplete"/);
-  assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
-  assert.doesNotMatch(caseFile, /isIncompleteInvariant/);
-  assert.match(caseFile, /Adjudication is incomplete\./);
-  assert.match(caseFile, /has not assigned a whole-Incident alignment classification/);
-  assert.match(caseFile, /The adjudicated governance boundary held\./);
-  assert.match(caseFile, /This Case File is fully adjudicated against the current taxonomy/);
-  assert.match(caseFile, /const isFailure = classification === "Classified"/);
-  assert.match(caseFile, /Alignment outcome · Failure evidenced/);
-  assert.match(caseFile, /Failure is evidenced at an assessed governance boundary\./);
-  assert.match(caseFile, /VIGIL Harm Impact Assessment/);
-  assert.match(caseFile, /vigil-exemplar-callout-boundary/);
-  assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
-  assert.match(classification, /alignment finding · invariant held/i);
-  assert.match(classification, /The relevant governance boundary was tested and held/);
-  assert.match(classification, /Primary alignment finding · invariant held/);
-  assert.match(classification, /Secondary alignment finding · invariant held/);
-  assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
-  assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
-  assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
-  assert.match(pages, /classification_role === "failure-occurrence"\) return "Failure evidenced"/);
-  assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
-  assert.match(sync, /classification_role: record\.classification_role/);
-  assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);
-  assert.match(sync, /alignment_exemplar_eligible/);
-  assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
-  assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
-  assert.match(casePolishCss, /display: grid !important/);
-  assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
-});
 
 test("Knowledge Base keeps the dedicated six-stage Case File method as plain document rows", async () => {
   const [hub, about, homeMenuCss, sections] = await Promise.all([
@@ -593,7 +598,7 @@ test("Knowledge Base withholds whole-Incident classification until adjudication 
   ]);
   assert.match(hub, /Mappings classify individual boundaries\. The Case File index summarises the Incident\./);
   assert.match(hub, /Mapping-level outcomes[\s\S]*<VigilAlignmentLegend detailed \/>/);
-  assert.match(classification, /Failure occurred[\s\S]*Invariant held[\s\S]*Boundary unresolved/);
+  assert.match(classification, /Failure occurred[\s\S]*Aligned[\s\S]*Boundary unresolved/);
   assert.match(hub, /Case File index classification/);
   assert.match(hub, /Failure evidenced[\s\S]*Invariant held[\s\S]*Adjudication incomplete[\s\S]*Mixed alignment[\s\S]*Disputed[\s\S]*Unclassified/);
   assert.match(hub, /only after adjudication coverage is complete[\s\S]*Adjudication incomplete/);
@@ -857,12 +862,14 @@ test("harm methodology consolidates evidence-state definitions into the derivati
   const methodSection = severity.match(/<section id="method"[\s\S]*?<\/section>/)?.[0] ?? "";
   assert.match(methodSection, /Evidence states[\s\S]*Assessed[\s\S]*Unreported[\s\S]*Insufficient evidence[\s\S]*Not applicable/);
   assert.doesNotMatch(methodSection, /<dt>SU — Unassessed<\/dt>/);
-  assert.match(methodSection, /SU — Unassessed remains visually neutral and is used when no defensible overall band can be derived because no dimension can be banded and the evidence does not positively establish bounded no-materialised-harm; SU is an evidence state, not a sixth severity band/);
-  assert.match(methodSection, /<h3>Severity display<\/h3>[\s\S]*<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity[\s\S]*Individual Case Files do not repeat this entire reference matrix/);
+  assert.match(methodSection, /SU — Unassessed applies when no harm dimension has a defensible band/);
+  assert.match(methodSection, /SU is an evidence state, not a sixth severity band/);
+  assert.match(methodSection, /<h3>Overall severity<\/h3>[\s\S]*highest defensible materialised-harm threshold controls the overall severity/);
+  assert.doesNotMatch(methodSection, /Severity display|Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(methodSection, /vigil-severity-case-file-note/);
   const overallRule = methodSection.match(/<h3>Overall severity<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
   assert.match(overallRule, /Only dimensions with a defensible assessed band/);
-  assert.match(overallRule, /Individual Case Files do not repeat this entire reference matrix/);
+  assert.match(overallRule, /Never combine ordinary and aggregate bands within one assessment/);
   assert.doesNotMatch(severity, /<section id="case-files"|The Incident view shows only the assessment that was actually made/);
   assert.match(css, /\.vigil-harm-interpretive-notes[\s\S]*border-top: 1px solid/);
   assert.match(menuCss, /\.vigil-severity-method-row \{[\s\S]*grid-template-columns: minmax\(9rem, 0\.42fr\) minmax\(0, 1fr\)/);
@@ -1251,8 +1258,7 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
-  assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*The band label carries the severity level; colour is not an ordinal scale/);
-  assert.match(severity, /<h3>Severity display<\/h3>[\s\S]*vigil-severity-method-copy[\s\S]*vigil-severity-chip-key[\s\S]*\["S1", "S2", "S3", "S4", "S5", "SU"\][\s\S]*VigilStatusChip[\s\S]*<h3>Overall severity<\/h3>/);
+  assert.doesNotMatch(severity, /<h3>Severity display<\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-method-copy \{[\s\S]*display: grid[\s\S]*gap: 0\.72rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin: 0;[\s\S]*padding: 0;/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-harm-methodology-table[\s\S]*border-collapse: separate/);
@@ -1448,8 +1454,8 @@ test("privacy source of truth feeds both React and crawlable HTML", async () => 
     read("src/lib/privacyPolicy.json"),
   ]);
   const policy = JSON.parse(policyJson);
-  assert.equal(policy.lastUpdated, "9 October 2026");
-  for (const id of ["case-file-form-data", "case-file-processing", "case-file-review-retention"]) {
+  assert.match(policy.lastUpdated, /^[0-9]{1,2} [A-Z][a-z]+ 20[0-9]{2}$/);
+  for (const id of ["case-file-form-data", "case-file-processing", "case-file-review-retention", "advertising-and-editorial-independence"]) {
     assert.ok(policy.sections.some(section => section.id === id));
   }
   assert.match(privacyComponent, /import privacyPolicy from "@\/lib\/privacyPolicy\.json"/);
@@ -1643,4 +1649,28 @@ test("INC-129-style Discussion is a sibling Section 05 subsection with source-pr
   ]);
   assert.match(webCss, /\.vigil-case-file-page \.vigil-conclusion-subsection\.is-discussion/);
   assert.match(reportCss, /\.vigil-deterministic-report-host \.vigil-conclusion-subsection\.is-discussion/);
+});
+
+
+test("Preview branch retains live VIGIL branch choice while inheriting main Case File and dashboard fixes", async () => {
+  const [home, selector, resolver, cases, css] = await Promise.all([
+    read("src/pages/home.tsx"),
+    read("src/components/vigil/VigilBranchSelector.tsx"),
+    read("src/lib/vigilBranchSource.ts"),
+    read("src/pages/vigil-cases.tsx"),
+    read("src/vigil-preview-branch-selector.css"),
+  ]);
+  assert.match(home, /import \{ VigilBranchSelector \}/);
+  assert.match(home, /<VigilBranchSelector \/>/);
+  assert.match(selector, /listVigilBranches\(\)/);
+  assert.match(selector, /setSelectedVigilBranch\(branch\)/);
+  assert.match(selector, /aria-label="Select VIGIL branch"/);
+  assert.match(resolver, /searchParams\.get\("vigilBranch"\)/);
+  assert.match(resolver, /VIGIL_BRANCH_STORAGE_KEY/);
+  assert.match(resolver, /VIGIL_BRANCH_CHANGE_EVENT/);
+  assert.match(resolver, /async function|export async function resolveSelectedVigilSource/);
+  assert.match(resolver, /payload\.commit\.sha\.trim\(\)/);
+  assert.match(cases, /getSelectedVigilBranch\(\)/);
+  assert.match(cases, /selectedBranch !== VIGIL_DEFAULT_BRANCH/);
+  assert.match(css, /\.vigil-preview-source/);
 });

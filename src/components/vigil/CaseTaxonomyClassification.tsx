@@ -242,7 +242,7 @@ function useTaxonomy(): TaxonomyState {
 }
 
 function mappingOutcome(role?: string) {
-  if (role?.startsWith("successful-invariant")) return { label: "Invariant held", kind: "held" as const };
+  if (role?.startsWith("successful-invariant")) return { label: "Aligned", kind: "held" as const };
   if (role?.startsWith("ambiguous-boundary")) return { label: "Boundary unresolved", kind: "ambiguous" as const };
   return { label: "Failure occurred", kind: "failed" as const };
 }
@@ -267,7 +267,7 @@ function MappingOutcome({ role }: { role?: ClassificationRole }) {
 
 const ALIGNMENT_LEGEND = [
   { role: "failure-occurrence" as const, label: "Failure occurred", description: "The available evidence supports failure at the mapped governance boundary in this occurrence." },
-  { role: "successful-invariant" as const, label: "Invariant held", description: "The relevant governance boundary was tested and held; this mapping records an invariant-held alignment outcome." },
+  { role: "successful-invariant" as const, label: "Aligned", description: "The evidence supports that the relevant governance invariant held at this boundary in this occurrence." },
   { role: "ambiguous-boundary" as const, label: "Boundary unresolved", description: "The evidence engages the boundary but does not establish either failure or invariant holding." },
 ];
 
@@ -376,7 +376,7 @@ function ClassificationTable({
   return <>
     <div className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region" aria-label="VIGIL Observatory alignment classifications" tabIndex={0}>
       <table className="vigil-classification-table vigil-primary-classification-table">
-        <caption className="sr-only">Canonical Alignment Taxonomy mappings with occurrence-specific classification basis, role-relevant recognition criteria and confidence.</caption>
+        <caption className="sr-only">Canonical Alignment Taxonomy mappings with occurrence-specific classification basis, recognition criteria and confidence on decisive outcomes.</caption>
         <thead>
           <tr>
             <th scope="col">Alignment</th>
@@ -408,7 +408,7 @@ function ClassificationTable({
                 {plainEnglish ? <p className="vigil-classification-class-explanation">{plainEnglish}</p> : null}
               </td>
               <td data-label="Evidence and classification basis" className="vigil-classification-basis">
-                <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>
+                {item.role !== "ambiguous-boundary" && <span className={`vigil-classification-confidence-chip is-${confidence.kind}`}>{confidence.label}</span>}
                 <p>{item.basis ?? "The current Incident record does not contain an occurrence-specific classification basis for this mapping. The class definition alone cannot establish the finding."}</p>
               </td>
               <td data-label="Recognition criteria" className="vigil-classification-taxonomy-copy vigil-classification-recognition-tests">
@@ -552,7 +552,7 @@ function ClassificationCard({
           <p>{technicalDefinition}</p>
         </section>}
         {item.basis && <section>
-          <h4 className="vigil-substantive-label">{exemplar ? "Why this invariant held" : "Why this Case File maps here"}</h4>
+          <h4 className="vigil-substantive-label">{exemplar ? "Why alignment was found" : "Why this Case File maps here"}</h4>
           <p>{item.basis}</p>
         </section>}
       </div>
@@ -560,9 +560,9 @@ function ClassificationCard({
       <aside className="vigil-classification-metadata" aria-label={`${label} classification metadata`}>
         <p className="vigil-diagnostic-meta-label">Classification metadata</p>
         <dl>
-          <Meta label="Status" value={exemplar ? "Invariant held" : statusLabel(status)} />
+          <Meta label="Status" value={exemplar ? "Aligned" : statusLabel(status)} />
           <Meta label="Relationship" value={`${relationship} · ${mappingOutcome(item.role).label}`} />
-          <Meta label="Confidence" value={item.confidence} />
+          <Meta label="Confidence" value={item.role === "ambiguous-boundary" ? undefined : item.confidence} />
           <Meta label="Taxonomy version" value={taxonomyVersion} mono />
           <Meta label="Fidelity family" value={family?.name} />
           <Meta label="Family ID" value={family?.family_id ?? item.familyId} mono />
@@ -640,16 +640,16 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   const mappedClasses = tableRows.filter(({ item }) => Boolean(item.classId));
   const classificationCounts = [
     { role: "failure-occurrence", label: "Failure occurred" },
-    { role: "successful-invariant", label: "Invariant held" },
+    { role: "successful-invariant", label: "Aligned" },
     { role: "ambiguous-boundary", label: "Boundary unresolved" },
   ] as const;
 
   return <div className="vigil-taxonomy-classification-view">
     {parsed.coverageStatus === "partial" && <p className="vigil-case-empty"><strong>Adjudication incomplete.</strong> No whole-Incident alignment classification is assigned until adjudication coverage is complete. Resolved mapping-level findings are shown below for transparency.</p>}
-    {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     {parsed.status === "provisionally-classified" && parsed.coverageStatus !== "partial" && <p className="vigil-case-empty">This taxonomy mapping is provisional. It is shown as the current structural assessment and may change after further review.</p>}
 
-    <p className="vigil-classification-intro">These classifications assess evidence from this occurrence against VIGIL's Fidelity Class recognition criteria. Failure occurred and Invariant held describe findings at specific governance boundaries. Boundary unresolved means the evidence engages a class but does not establish whether its invariant failed or held. Findings are limited to this occurrence; they do not establish whole-system alignment, general model safety or regulatory compliance.</p>
+    <p className="vigil-classification-intro">These classifications assess evidence from this occurrence against VIGIL's Fidelity Class recognition criteria. Failure occurred and Aligned describe findings at specific governance boundaries. Boundary unresolved means the evidence engages a class but does not establish whether its invariant failed or held. Boundary unresolved is not assigned a confidence rating; the classification basis should identify whether the uncertainty concerns the evidence or the recognition criteria, where this is known. Findings are limited to this occurrence; they do not establish whole-system alignment, general model safety or regulatory compliance.</p>
+    {parsed.status === "classification-disputed" && parsed.coverageStatus !== "partial" && <p className="vigil-classification-state-note">This is the currently proposed taxonomy mapping for a disputed classification. It is shown for transparency and is not presented as settled.</p>}
     <div className="vigil-classification-counts" aria-label="Mapped Fidelity Class outcomes">
       {classificationCounts.map(({ role, label }) => <span key={role}>
         <strong>{mappedClasses.filter(({ item }) => item.role === role).length}</strong>{" "}
@@ -661,10 +661,10 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
     <div className="vigil-classification-report-cards">
       <ClassificationCard
         item={primary}
-        label={primary.role === "successful-invariant" ? "Primary alignment finding · invariant held" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
+        label={primary.role === "successful-invariant" ? "Primary alignment finding · aligned" : parsed.status === "classification-disputed" ? "Proposed primary structural mechanism" : "Primary structural mechanism"}
         status={parsed.status}
         taxonomyVersion={parsed.taxonomyVersion}
-        relationship={primary.role === "successful-invariant" ? "Primary · invariant held" : "Primary"}
+        relationship={primary.role === "successful-invariant" ? "Primary · aligned" : "Primary"}
         exemplar={primary.role === "successful-invariant"}
       />
 
@@ -678,10 +678,10 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
           {secondaries.map((item, index) => <ClassificationCard
             key={`${item.classId ?? item.familyId ?? index}`}
             item={item}
-            label={item.role === "successful-invariant" ? `Secondary alignment finding · invariant held ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
+            label={item.role === "successful-invariant" ? `Secondary alignment finding · aligned ${index + 1}` : item.role === "ambiguous-boundary" ? `Secondary unresolved boundary ${index + 1}` : `Secondary mechanism ${index + 1}`}
             status={parsed.status}
             taxonomyVersion={parsed.taxonomyVersion}
-            relationship={item.role === "successful-invariant" ? "Secondary · invariant held" : item.role === "ambiguous-boundary" ? "Secondary · boundary unresolved" : "Secondary"}
+            relationship={item.role === "successful-invariant" ? "Secondary · aligned" : item.role === "ambiguous-boundary" ? "Secondary · boundary unresolved" : "Secondary"}
             exemplar={item.role === "successful-invariant"}
           />)}
         </div>
@@ -692,6 +692,6 @@ export function CaseTaxonomyClassification({ raw, taxonomyReferenceNumber, taxon
   </div>;
 }
 
-export function CaseTaxonomyCompliance({ raw }: Props) {
-  return <CaseRequirementAssessments raw={raw} />;
+export function CaseTaxonomyCompliance({ raw, sourceReferenceNumbers }: Props & { sourceReferenceNumbers?: Record<string, number> }) {
+  return <CaseRequirementAssessments raw={raw} sourceReferenceNumbers={sourceReferenceNumbers} />;
 }

@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { HARM_PUBLIC_DERIVATION_STATEMENT } from "../src/lib/vigilHarmPublic.mjs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -14,6 +15,30 @@ async function load(source) {
 
 const methodology = await load(process.env.VIGIL_HARM_METHODOLOGY_SOURCE || `${upstream}/methodologies/VIGIL.HarmImpactMatrix.v${version}.json`);
 const registry = await load(process.env.VIGIL_HARM_REFERENCES_SOURCE || `${upstream}/references/VIGIL.ObservatoryReferenceRegistry.json`);
+
+// Public cache mirrors the canonical scoring contract, not internal maintainer
+// working notes from older upstream snapshots. The canonical VIGIL release is
+// updated separately; this boundary prevents a stale source reintroducing them.
+for (const internalField of ["working_amendments", "adjudication_guidance", "dimension_quantification_policy"]) {
+  delete methodology[internalField];
+}
+if (methodology.assessment_pathway_selection) {
+  delete methodology.assessment_pathway_selection.screening_contract;
+}
+methodology.derivation_statement = HARM_PUBLIC_DERIVATION_STATEMENT;
+if (methodology.aggregate_harm_assessment) {
+  for (const field of ["internal_basis", "INC_000192", "evidence_fields"]) {
+    delete methodology.aggregate_harm_assessment[field];
+  }
+}
+for (const dimension of methodology.dimensions ?? []) {
+  if (typeof dimension.adaptation_note === "string") {
+    dimension.adaptation_note = dimension.adaptation_note.replaceAll("epistemic_reliance_to_reputational_harm", "downstream reliance and resulting reputational harm");
+  }
+  if (typeof dimension.interpretive_note === "string") {
+    dimension.interpretive_note = dimension.interpretive_note.replaceAll("INFORM adjudication", "inform interpretation");
+  }
+}
 if (methodology.methodology_id !== "VIGIL-HIM" || methodology.version !== version || !methodology.dimensions?.length) {
   throw new Error("Invalid or unexpected VIGIL-HIM methodology release");
 }

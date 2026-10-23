@@ -24,18 +24,17 @@ function RequirementTable({ items, title }: { items: RequirementRow[]; title: st
         </td>
         <td data-label="Normative force" className="vigil-compliance-force">{row.normativeForce}</td>
         <td data-label="Evidence and assessment basis">
-          <p>{row.assessmentBasis}</p>
+          <p>{row.assessmentBasis}{row.evidence.length > 0 ? <span className="vigil-compliance-inline-references"> {row.evidence.map(source =>
+            <a key={source.referenceNumber} href={source.url} aria-label={`Evidence reference ${source.referenceNumber}`}>[{source.referenceNumber}]</a>
+          )}</span> : null}</p>
           {row.assessedOn && <p><strong>Assessed:</strong> <time dateTime={row.assessedOn}>{row.assessedOn}</time></p>}
-          {row.evidence.length > 0 && <p className="vigil-compliance-evidence-links"><strong>Evidence:</strong>{" "}
-            {row.evidence.map((source, index) => <span key={source.url ?? index}>{index > 0 ? " · " : ""}<a href={source.url} aria-label={`Reference ${source.referenceNumber}: ${source.title}`}>[{source.referenceNumber}]</a></span>)}
-          </p>}
         </td>
       </tr>)}</tbody>
     </table>
   </div>;
 }
 
-export function CaseRequirementAssessments({ raw }: { raw: UnknownRecord }) {
+export function CaseRequirementAssessments({ raw, sourceReferenceNumbers }: { raw: UnknownRecord; sourceReferenceNumbers?: Record<string, number> }) {
   const [requirements, setRequirements] = useState<ExternalRequirementDetail[]>([]);
   const [status, setStatus] = useState("loading");
   useEffect(() => {
@@ -48,7 +47,7 @@ export function CaseRequirementAssessments({ raw }: { raw: UnknownRecord }) {
     return () => { active = false; };
   }, []);
 
-  const rows = occurrenceRequirementRows(raw, requirements);
+  const rows = occurrenceRequirementRows(raw, requirements, sourceReferenceNumbers);
   if (!rows.length) return <p className="vigil-case-empty">No occurrence-specific external requirement assessment is published for this Case File.</p>;
 
   return <div className="vigil-taxonomy-compliance-view">

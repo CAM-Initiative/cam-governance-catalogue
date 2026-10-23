@@ -445,7 +445,7 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         </Stage>
 
         <Stage number="04" label="Compliance">
-          {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" /> : <Empty>No occurrence-specific external requirement assessment is available for this Case File.</Empty>}
+          {incident ? <CaseTaxonomyCompliance raw={incident.raw} taxonomyReferenceNumber={taxonomyReferenceNumber} taxonomyReferenceHref="#vigil-failure-taxonomy-reference" sourceReferenceNumbers={harmEvidenceReferenceNumbers} /> : <Empty>No occurrence-specific external requirement assessment is available for this Case File.</Empty>}
         </Stage>
 
         <Stage number="05" label="Conclusion">
