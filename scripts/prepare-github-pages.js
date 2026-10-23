@@ -9,7 +9,7 @@ import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
 import { HARM_PATHWAY_STEPS, aggregateHarmSections, aggregateHarmBandSummary, publicHarmIndicatorLabel, publicHarmQuantificationNote, publicHarmInterpretiveNote, HARM_PUBLIC_DERIVATION_STATEMENT } from "../src/lib/vigilHarmPublic.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
-import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
+import { occurrenceRequirementRows, publicRequirementEvidenceSources, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
 import {
   copyFileSync,
   existsSync,
@@ -643,9 +643,13 @@ for (let start = 0; start < incidentRecords.length; start += 8) {
   }));
 }
 function occurrenceAssessmentsHtml(raw) {
-  const rows = occurrenceRequirementRows(raw, occurrenceRequirements);
+  const sources = publicRequirementEvidenceSources(raw);
+  const sourceReferenceNumbers = Object.fromEntries(sources.flatMap(source => source.sourceRecordRefs.map(ref => [ref, source.referenceNumber])));
+  const rows = occurrenceRequirementRows(raw, occurrenceRequirements, sourceReferenceNumbers);
   if (!rows.length) return "<h2>Compliance</h2><p>No occurrence-specific external requirement assessment is published for this Case File.</p>";
-  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td><span class="vigil-compliance-result is-${row.alignmentResult}">${renderToStaticMarkup(createElement(AlignmentIcon, { kind: alignmentIconKind(row.alignmentResult) }))}<span>${escapeHtml(row.resultLabel)}</span></span></td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}${row.evidence.length ? `<p>Evidence: ${row.evidence.map(source => `<a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}]</a>`).join(" · ")}</p>` : ""}</td></tr>`).join("")}</tbody></table>`;
+  const table = `<table><thead><tr><th>Assessment result</th><th>External requirement</th><th>Normative force</th><th>Evidence and assessment basis</th></tr></thead><tbody>${rows.map(row => `<tr><td><span class="vigil-compliance-result is-${row.alignmentResult}">${renderToStaticMarkup(createElement(AlignmentIcon, { kind: alignmentIconKind(row.alignmentResult) }))}<span>${escapeHtml(row.resultLabel)}</span></span></td><td><strong>${row.url ? `<a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>` : escapeHtml(row.title)}</strong><p>${escapeHtml(row.summary)}</p></td><td>${escapeHtml(row.normativeForce)}</td><td><p>${escapeHtml(row.assessmentBasis)}</p>${row.assessedOn ? `<p>Assessed: <time datetime="${escapeHtml(row.assessedOn)}">${escapeHtml(row.assessedOn)}</time></p>` : ""}<div class="vigil-compliance-evidence-links"><strong>Supporting evidence</strong>${row.evidence.length
+      ? `<ul>${row.evidence.map(source => `<li><a href="${escapeHtml(source.url)}" aria-label="${escapeHtml(`Evidence reference ${source.referenceNumber}: ${source.title}`)}">[${source.referenceNumber}] ${escapeHtml(source.title)}</a></li>`).join("")}</ul>`
+      : "<p>No source-record references are linked to this assessment.</p>"}</div></td></tr>`).join("")}</tbody></table>`;
   return `<section><h2>Compliance</h2><p>${escapeHtml(REQUIREMENT_ASSESSMENT_INTRO)}</p>${table}</section>`;
 }
 function disputedAssessmentHtml() {
@@ -718,6 +722,12 @@ for (const record of incidentRecords) {
     ${classificationHtml(canonical)}
     ${occurrenceAssessmentsHtml(canonical)}
     <section><h2>Conclusion</h2>${assessmentProseHtml(canonical.vigil_assessment?.governance_interpretation || "")}${conclusionSignificanceHtml(canonical.vigil_assessment?.significance_to_cam || "")}</section>
+    ${(() => {
+      const references = publicRequirementEvidenceSources(canonical);
+      return references.length
+        ? `<section><h2>References</h2><ol>${references.map(source => `<li id="vigil-evidence-reference-${source.referenceNumber}"><strong>[${source.referenceNumber}] ${escapeHtml(source.title)}</strong>${(source.publisher || source.date) ? `<p>${escapeHtml([source.publisher, source.date].filter(Boolean).join(" · "))}</p>` : ""}${source.url ? `<p><a href="${escapeHtml(source.url)}">${escapeHtml(source.url)}</a></p>` : ""}</li>`).join("")}</ol></section>`
+        : "";
+    })()}
   </main>`;
   writeRoute(route, pageHtml({ route, title, description, body, persistentFallbackKind: "vigil-case" }));
 }
