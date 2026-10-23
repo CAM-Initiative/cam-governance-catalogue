@@ -10,6 +10,15 @@ import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const read = (path) => readFile(resolve(root, path), "utf8");
 
+test("Case File Section 02 keeps its assessment provenance renderer defined", async () => {
+  const caseFile = await read("src/pages/vigil-case-file.tsx");
+  assert.match(caseFile, /function Field\(\{ label, value, mono = false \}/);
+  assert.ok(caseFile.indexOf("function Field(") < caseFile.indexOf("export default function VigilCaseFile("), "Section 02 Field must be declared before the Case File renderer");
+  assert.match(caseFile, /if \(stageId === "diagnose"\)/);
+  assert.match(caseFile, /<Field label="Assessed" value=\{diagnostic\?\.diagnosticDate\}/);
+});
+
+
 test("Observatory instrument experiment keeps tickets and opens the workbench", async () => {
   const [main, css] = await Promise.all([
     read("src/main.tsx"),
@@ -1223,7 +1232,6 @@ test("About, VIGIL navigation, methodology and datasets share the aligned naviga
   assert.match(menuCss, /\.policy-page,[\s\S]*\.vigil-severity-methodology-page[\s\S]*width: min\(100%, 1500px\)[\s\S]*padding-top: 1\.5rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles \{[\s\S]*display: block[\s\S]*border: 0/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-principles > div[\s\S]*display: block[\s\S]*border: 0/);
-  assert.doesNotMatch(severity, /<h3>Severity display<\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
   assert.doesNotMatch(severity, /<h3>Severity display<\/h3>|vigil-severity-chip-key|Individual Case Files do not repeat this entire reference matrix/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-method-copy \{[\s\S]*display: grid[\s\S]*gap: 0\.72rem/);
   assert.match(menuCss, /vigil-severity-methodology-page \.vigil-severity-chip-key \{[\s\S]*display: flex[\s\S]*margin: 0;[\s\S]*padding: 0;/);
