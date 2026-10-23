@@ -6,7 +6,7 @@ import { Link, useRoute } from "wouter";
 import { Shell } from "@/components/layout/Shell";
 import { CaseTaxonomyClassification, CaseTaxonomyCompliance, ExternalAlignmentClassification } from "@/components/vigil/CaseTaxonomyClassification";
 import { CaseTaxonomyAssessment } from "@/components/vigil/CaseTaxonomyAssessment";
-import { HarmImpactMatrix } from "@/components/vigil/HarmImpactMatrix";
+import { HarmImpactMatrix, nonAssessedHarmDimensionLimitItems } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryNav } from "@/components/vigil/VigilObservatoryNav";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 import { loadVigilIncidentRecords, loadVigilRecordDetail, type UnknownRecord } from "@/lib/vigilRegistry";
@@ -19,6 +19,8 @@ import {
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
 import { externalAssessmentDate, externalAssessmentsFrom, externalIncidentReferencesFrom } from "@/lib/vigilExternalAssessments";
 import { dedupeAffectedSystems } from "@/lib/vigilAffectedSystems";
+import { IncidentContextSection, IncidentContextLimitations } from "@/components/vigil/IncidentContextSection";
+import { STANDARD_VIGIL_ASSESSMENT_LIMITS } from "@/lib/vigilAssessmentLimits";
 
 type ReportState =
   | { status: "loading" }
@@ -368,27 +370,9 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
               <h4 className="report-substantive-label">What happened</h4>
               <div className="vigil-assessment-prose">{assessmentParagraphs(incident?.summary ?? incident?.publicDisplay.finding).map((paragraph, index) => <p key={index}>{paragraph}</p>)}</div>
             </section>}
-            {affectedSystems.length > 0 && <section className="report-affected-systems">
-              <h4 className="report-substantive-label">Affected systems</h4>
-              <div className="report-system-grid">{affectedSystems.map((system, index) => <article key={`${system.recordId}-${index}`} className="report-system-record">
-                <dl className="report-metadata-grid report-metadata-grid--2">
-                  <Field label="Provider / platform" value={system.provider} />
-                  <Field label="Product / service" value={system.product} />
-                  <Field label="Model / runtime" value={system.model} />
-                  <Field label="System type" value={system.systemType} />
-                  <Field label="Agent configuration" value={system.agentConfiguration} />
-                  <Field label="Agent count" value={system.agentCount} />
-                  <Field label="Interface" value={system.interfaceSurface} />
-                  <Field label="Deployment state" value={system.deploymentState} />
-                  <Field label="Activity context" value={system.activityContexts} />
-                  <Field label="External reach" value={system.externalReach} />
-                  <Field label="Activity actor" value={system.activityActor} />
-                  <Field label="Occurrence setting" value={system.occurrenceSetting} />
-                  <Field label="Testing conducted by" value={system.testingActor} />
-                  <Field label="Deployment context" value={system.deploymentContext} />
-                </dl>
-              </article>)}</div>
-            </section>}
+            {incident && <div className="vigil-case-file-page vigil-report-incident-context">
+              <IncidentContextSection raw={incident.raw} affectedSystems={affectedSystems} sourceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            </div>}
             {incidentArtefacts.length > 0 && <section className="report-incident-artefacts" aria-label="Incident source artefacts">
               {incidentArtefacts.map((artefact) => <figure key={artefact.id} className="report-incident-artefact">
                 <a href={artefact.permalink ?? artefact.renderUrl} target="_blank" rel="noreferrer" className="report-incident-artefact-link">
@@ -482,6 +466,21 @@ export default function EvidenceChainReportDeterministic({ hasTaxonomyReference 
         </Stage>
 
         <Stage number="06" label="References">
+          <section className="report-reference-group report-assessment-limits" aria-labelledby="report-assessment-limits-heading">
+            <h3 id="report-assessment-limits-heading" className="report-substantive-label">Limits of the assessment</h3>
+            <ul className="report-assessment-limit-list">
+              {[...STANDARD_VIGIL_ASSESSMENT_LIMITS, ...(
+                incident ? firstTextList(incident.raw, ["vigil_assessment.assessment_boundaries"]) : []
+              ), ...(
+                incident && isObject(incident.raw.harm_impact_assessment)
+                  ? nonAssessedHarmDimensionLimitItems(incident.raw.harm_impact_assessment)
+                  : []
+              )].map((item, index) => <li key={index}>{item}</li>)}
+            </ul>
+            {incident && <div className="vigil-case-file-page vigil-report-limits">
+              <IncidentContextLimitations raw={incident.raw} sourceReferenceNumbers={harmEvidenceReferenceNumbers} />
+            </div>}
+          </section>
           {(evidenceReferences.length > 0 || externalIncidentReferences.length > 0 || canonicalReferences.length > 0) ? <>
             {evidenceReferences.length > 0 && <section className="report-reference-group">
               <h3 className="report-substantive-label">Evidence sources</h3>

@@ -5,13 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm run sync:cam && pnpm run sync:vigil && pnpm run sync:harm && rm -rf docs/assets && vite build && node scripts/prepare-github-pages.js",
+    "build": "pnpm run sync:cam && pnpm run sync:vigil && pnpm run sync:geo && pnpm run sync:harm && rm -rf docs/assets && vite build && node scripts/prepare-github-pages.js",
     "deploy:docs": "pnpm run build",
     "validate:catalogue": "node scripts/validate-catalogue-data.js",
     "validate:palette": "node scripts/validate-cam-palette.mjs",
     "sync:vigil": "node scripts/sync-vigil-records.mjs",
+    "sync:geo": "node scripts/sync-vigil-dashboard-jurisdictions.mjs",
     "validate:vigil": "node scripts/validate-vigil-registry-sources.mjs",
-    "test:vigil": "node --test scripts/test-vigil-observatory.mjs scripts/test-vigil-case-references.mjs scripts/test-vigil-case-taxonomy.mjs scripts/test-vigil-public-surfaces.mjs scripts/test-vigil-occurrence-requirements.mjs scripts/test-vigil-challenge.mjs scripts/test-vigil-taxonomy-current-contract.mjs scripts/test-vigil-harm-methodology.mjs",
+    "test:vigil": "node --test scripts/test-vigil-observatory.mjs scripts/test-vigil-case-references.mjs scripts/test-vigil-case-taxonomy.mjs scripts/test-vigil-public-surfaces.mjs scripts/test-vigil-occurrence-requirements.mjs scripts/test-vigil-challenge.mjs scripts/test-vigil-taxonomy-current-contract.mjs scripts/test-vigil-harm-methodology.mjs scripts/test-vigil-incident-context.mjs scripts/test-vigil-dashboard.mjs scripts/test-vigil-dashboard-jurisdictions.mjs scripts/test-vigil-dashboard-geography.mjs",
     "sync:cam": "node scripts/sync-cam-governance.mjs",
     "sync:harm": "node scripts/sync-vigil-harm-methodology.mjs"
   },
@@ -50,7 +51,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwind-merge": "^2.5.4",
-    "wouter": "^3.3.5"
+    "wouter": "^3.3.5",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
@@ -59,10 +61,11 @@
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
     "@tailwindcss/vite": "catalog:",
-    "tailwindcss": "catalog:"
+    "tailwindcss": "catalog:",
+    "@types/three": "^0.180.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "packageManager": "pnpm@10.28.1"
 }

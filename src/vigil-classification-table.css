@@ -803,24 +803,46 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
   .vigil-classification-basis, .vigil-classification-recognition-tests { overflow-wrap: break-word; }
 }
 
+/* Section 03 keeps its genuine four-column table on mobile. A stacked-card
+   override formerly removed the width overflow, so swiping could not scroll. */
 @media screen and (max-width: 760px) {
-  .vigil-case-file-page .vigil-primary-classification-table,
-  .vigil-case-file-page .vigil-primary-classification-table tbody { display: block; }
-  .vigil-case-file-page .vigil-primary-classification-table thead {
-    position: absolute; width: 1px; height: 1px; overflow: hidden;
-    clip-path: inset(50%);
+  .vigil-case-file-page #case-classify,
+  .vigil-case-file-page #case-classify > .vigil-case-section-body {
+    min-width: 0;
+    max-width: 100%;
   }
-  .vigil-case-file-page .vigil-primary-classification-table tbody tr {
-    display: grid; grid-template-columns: minmax(0, 1fr);
-    border-bottom: 2px solid hsl(var(--border));
+
+  .vigil-case-file-page .vigil-primary-classification-table-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+    scrollbar-width: auto;
   }
-  .vigil-case-file-page .vigil-primary-classification-table td {
-    display: block; min-width: 0; width: auto;
-    overflow-wrap: anywhere;
+
+  .vigil-case-file-page .vigil-primary-classification-table-wrap::before {
+    content: "Swipe sideways to view all classification columns →";
+    display: block;
+    position: sticky;
+    left: 0;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: hsl(var(--muted-foreground));
   }
-  .vigil-case-file-page .vigil-primary-classification-table td::before {
-    content: attr(data-label); display: block; font-weight: 600;
-    font-size: 0.8rem; margin-bottom: 0.4rem;
+
+  .vigil-case-file-page .vigil-primary-classification-table {
+    display: table;
+    width: 100%;
+    min-width: 72rem;
+    table-layout: fixed;
   }
 }
 .vigil-case-file-page .vigil-primary-classification-table thead th {

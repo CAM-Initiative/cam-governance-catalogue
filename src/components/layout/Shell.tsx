@@ -43,7 +43,10 @@ export function Shell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isKnowledgeBaseHome = location === "/knowledge-base/";
-  const showAdRail = adsenseRailEnabled && adRailEligibleRoute(location);
+  // Case Files landing hosts a clearly separated ad beneath its dashboard insights;
+  // opened Case Files retain their existing wide-screen advertising rail.
+  const dashboardLanding = ["/observatory", "/observatory/cases"].includes(location.replace(/\/+$/, "") || "/");
+  const showAdRail = adsenseRailEnabled && adRailEligibleRoute(location) && !dashboardLanding;
   const isHomeActive = location === "/" || location === "/about/" || location === "/licensing/" || location === "/privacy/" || isKnowledgeBaseHome;
   const isVigilActive = !isKnowledgeBaseHome && (location === "/observatory/" || location.startsWith("/observatory/"));
   const isDatasetsActive = location === "/datasets/" || location.startsWith("/datasets/");

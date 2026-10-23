@@ -13,6 +13,10 @@ on:
       - "scripts/prepare-github-pages.js"
       - "scripts/sync-cam-governance.mjs"
       - "scripts/sync-vigil-records.mjs"
+      - "scripts/sync-vigil-dashboard-jurisdictions.mjs"
+      - "scripts/vendor-vigil-earth-texture.mjs"
+      - "scripts/test-vigil-dashboard.mjs"
+      - "scripts/test-vigil-dashboard-jurisdictions.mjs"
       - "scripts/test-vigil-public-surfaces.mjs"
       - "scripts/test-vigil-observatory.mjs"
       # A test-only change can advance the PR while an earlier build is pushing.
@@ -49,11 +53,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Sync canonical Harm Impact methodology
         run: pnpm run sync:harm
@@ -74,6 +78,13 @@ jobs:
           else
             pnpm run sync:vigil
           fi
+
+      - name: Project explicit case jurisdictions
+        run: pnpm run sync:geo
+
+      - name: Ensure pinned local satellite texture
+        if: github.ref_name == 'feat/vigil-case-files-dashboard-20261022'
+        run: node scripts/vendor-vigil-earth-texture.mjs
 
       - name: Rebuild published site
         env:
@@ -98,6 +109,9 @@ jobs:
       - name: Test VIGIL Observatory
         run: pnpm run test:vigil
 
+      - name: Verify dashboard classification counting
+        run: node --test scripts/test-vigil-dashboard.mjs scripts/test-vigil-dashboard-jurisdictions.mjs
+
       - name: Commit rebuilt docs output
         id: publish
         env:
@@ -106,6 +120,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs pnpm-lock.yaml
+          if [ -f src/public/assets/earth-blue-marble.jpg ]; then git add src/public/assets/earth-blue-marble.jpg; fi
           if git diff --cached --quiet; then
             echo "Published /docs output is already current."
             echo "published=false" >> "$GITHUB_OUTPUT"
@@ -114,7 +129,13 @@ jobs:
             # exact generated output being committed. Skip automatic CI on the
             # bot commit to avoid an un-runnable pull_request check owned by the bot.
             git commit -m "chore: rebuild GitHub Pages output [skip ci]"
-            git push
+            if ! git push; then
+              # Another authorised branch edit may have arrived during the
+              # build. Preserve it: rebase the generated output without force.
+              git fetch origin "$GITHUB_REF_NAME"
+              git rebase "origin/$GITHUB_REF_NAME"
+              git push
+            fi
             echo "published=true" >> "$GITHUB_OUTPUT"
           fi
 

@@ -11,6 +11,10 @@ import { canonicalComparisonKey, normalizeRecords, type VigilIndexRecord } from 
 import { matchesVigilSearch } from "@/lib/vigilPublicDisplay";
 import { hasStaticPublicationFallback, retireStaticPublicationFallback } from "@/lib/staticPublicationFallback";
 import { taxonomyAlignmentOutcomeLabel, taxonomyFailureTypeLabel } from "@/lib/vigilTaxonomyClassification";
+import VigilCasesDashboard, { countryFromJurisdiction } from "@/components/vigil/VigilCasesDashboard";
+import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
+import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
+import { countryLookupFromProjection } from "@/lib/vigilDashboardGeography.mjs";
 
 type PageState =
   | { status: "loading" }
@@ -144,6 +148,11 @@ export default function VigilCases() {
   const [search, setSearch] = useState("");
   const [classification, setClassification] = useState("");
   const [severity, setSeverity] = useState("");
+  const [jurisdiction, setJurisdiction] = useState("");
+  const [failureClass, setFailureClass] = useState("");
+  const [countryByCase, setCountryByCase] = useState<Map<string, string>>(new Map());
+  const [geographyAvailable, setGeographyAvailable] = useState(false);
+  const [geographyNote, setGeographyNote] = useState("Geographic index is loading.");
   const [sort, setSort] = useState<SortState>({ key: "id", direction: "asc" });
   const [page, setPage] = useState(1);
 
@@ -158,6 +167,60 @@ export default function VigilCases() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    if (state.status !== "ready") return;
+    let active = true;
+    const records = state.records;
+    const selectedBranch = getSelectedVigilBranch();
+
+    async function loadGeography() {
+      let projection: unknown;
+      let legacy = false;
+      try {
+        const url = await vigilRawUrl("vigil/VIGIL.Incidents.Jurisdictions.Index.json");
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) throw new Error("Current VIGIL branch has no published geography index");
+        projection = await response.json();
+      } catch {
+        // A working VIGIL branch must NEVER silently borrow the default
+        // branch's cached geography or manufacture a physical location.
+        if (selectedBranch !== VIGIL_DEFAULT_BRANCH) {
+          if (active) {
+            setCountryByCase(new Map());
+            setGeographyAvailable(false);
+            setGeographyNote("This VIGIL working branch has no matching geography index. Country pins are unavailable; Case Files remain accessible.");
+          }
+          return;
+        }
+        try {
+          const response = await fetch(`${import.meta.env.BASE_URL}data/vigil-dashboard-jurisdictions.json`);
+          if (!response.ok) throw new Error("Cached jurisdiction projection is unavailable");
+          projection = await response.json();
+          legacy = true;
+        } catch {
+          if (active) {
+            setCountryByCase(new Map());
+            setGeographyAvailable(false);
+            setGeographyNote("No current jurisdiction projection is available. Case Files remain accessible.");
+          }
+          return;
+        }
+      }
+      if (!active) return;
+      const countryMap = countryLookupFromProjection(
+        records, projection,
+        (value: unknown) => countryFromJurisdiction(typeof value === "string" ? value : "")
+      );
+      setCountryByCase(countryMap);
+      setGeographyAvailable(true);
+      setGeographyNote(legacy
+        ? "Legacy primary-jurisdiction descriptions (not independently verified event locations)."
+        : "VIGIL source-field-derived country associations; not verified physical occurrence locations. Unlocated, multi-country and global cases remain in the library.");
+    }
+    void loadGeography();
+    return () => { active = false; };
+  }, [state]);
+
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
   const severityStates = useMemo(() => severityCounts(records), [records]);
@@ -166,16 +229,28 @@ export default function VigilCases() {
     return dates.length ? dates[dates.length - 1] : undefined;
   }, [records]);
 
-  const filtered = useMemo(() => records.filter((record) => {
+  // Scope each instrument independently of the facet it selects.
+  const baseCases = useMemo(() => records.filter((record) => {
     if (!matchesVigilSearch(record.searchText, search)) return false;
     if (classification && canonicalComparisonKey(classificationStatusLabel(record)) !== classification) return false;
+    if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
+    return true;
+  }), [classification, failureClass, records, search]);
+
+  const mapRecords = useMemo(() => baseCases.filter(record => {
     if (severity && severityCode(record) !== severity) return false;
     return true;
-  }), [classification, records, search, severity]);
+  }), [baseCases, severity]);
+  const distributionRecords = useMemo(() => baseCases.filter(record =>
+    !jurisdiction || countryByCase.get(record.id) === jurisdiction
+  ), [baseCases, countryByCase, jurisdiction]);
+  const filtered = useMemo(() => distributionRecords.filter(record =>
+    !severity || severityCode(record) === severity
+  ), [distributionRecords, severity]);
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classification, severity, sort]);
+  useEffect(() => setPage(1), [search, classification, severity, jurisdiction, failureClass, sort]);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageRecords = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -228,6 +303,8 @@ export default function VigilCases() {
               ]}
             />
 
+            <div className="vigil-dashboard-layout">
+              <div className="vigil-dashboard-case-column">
             <section className="vigil-library-toolbar" aria-labelledby="case-search-heading">
               <h2 id="case-search-heading" className="sr-only">Search and filter Case Files</h2>
               <div className="vigil-search-row vigil-case-table-search">
@@ -261,7 +338,8 @@ export default function VigilCases() {
               </div>
               <div className="vigil-result-summary">
                 <span>{sorted.length} matching case {sorted.length === 1 ? "file" : "files"}</span>
-                {(search || classification || severity) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); }}>Clear filters</button>}
+                <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
+                {(search || classification || severity || jurisdiction || failureClass) && <button type="button" onClick={() => { setSearch(""); setClassification(""); setSeverity(""); setJurisdiction(""); setFailureClass(""); }}>Clear filters</button>}
               </div>
             </section>
 
@@ -352,6 +430,22 @@ export default function VigilCases() {
                 ><ChevronsRight aria-hidden="true" /></button>
               </nav>
             )}
+              </div>
+              <VigilCasesDashboard
+                mapRecords={mapRecords}
+                distributionRecords={distributionRecords}
+                filteredRecords={filtered}
+                severity={severity}
+                jurisdiction={jurisdiction}
+                failureClass={failureClass}
+                onSeverity={setSeverity}
+                onJurisdiction={setJurisdiction}
+                onFailureClass={setFailureClass}
+                countryByCase={countryByCase}
+                geographyAvailable={geographyAvailable}
+                geographyNote={geographyNote}
+              />
+            </div>
           </section>
         </div>
       </main>

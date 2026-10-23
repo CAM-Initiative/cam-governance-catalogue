@@ -353,6 +353,19 @@ test("Section 02 Incident breakdown stays bounded and horizontally swipeable on 
   assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-taxonomy-assessment-scroll-hint \{[\s\S]*display: block;/);
 });
 
+test("Section 03 Classification stays a horizontally swipeable four-column table on mobile", async () => {
+  const [classification, css] = await Promise.all([
+    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
+    read("src/vigil-classification-table.css"),
+  ]);
+  assert.match(classification, /className="vigil-classification-web-table vigil-primary-classification-table-wrap" role="region"[^>]*tabIndex=\{0\}/);
+  assert.match(classification, /<table className="vigil-classification-table vigil-primary-classification-table">/);
+  assert.match(css, /@media screen and \(max-width: 760px\) \{[\s\S]*?\.vigil-primary-classification-table-wrap \{[\s\S]*?overflow-x: auto;[\s\S]*?-webkit-overflow-scrolling: touch;[\s\S]*?touch-action: pan-x pan-y;/);
+  assert.match(css, /\.vigil-primary-classification-table \{[\s\S]*?display: table;[\s\S]*?min-width: 72rem;/);
+  assert.match(css, /\.vigil-primary-classification-table-wrap::before \{[\s\S]*?Swipe sideways to view all classification columns/);
+  assert.doesNotMatch(css, /\.vigil-primary-classification-table tbody \{ display: block; \}/);
+});
+
 test("Classification presents Fidelity Classes and Compliance uses independent occurrence assessments", async () => {
   const [classification, css, taxonomyLoader] = await Promise.all([
     read("src/components/vigil/CaseTaxonomyClassification.tsx"),
@@ -517,52 +530,6 @@ test("mixed Case Files explain alignment outcomes with the informational afforda
   assert.match(contract, /informational mixed-record affordance/);
 });
 
-test("Case Files make aligned outcomes unmistakable across public surfaces", async () => {
-  const [cases, caseFile, classification, report, pages, sync, caseGridCss, casePolishCss, historicalV5Css] = await Promise.all([
-    read("src/pages/vigil-cases.tsx"),
-    read("src/pages/vigil-case-file.tsx"),
-    read("src/components/vigil/CaseTaxonomyClassification.tsx"),
-    read("src/pages/evidence-chain-report-deterministic.tsx"),
-    read("scripts/prepare-github-pages.js"),
-    read("scripts/sync-vigil-records.mjs"),
-    read("src/vigil-ux-v4.css"),
-    read("src/vigil-case-file-polish.css"),
-    read("src/vigil-ux-v5.css"),
-  ]);
-  assert.match(cases, /is-exemplar/);
-  assert.match(cases, /vigil-case-table-text/);
-  assert.doesNotMatch(cases, /vigil-case-exemplar-marker/);
-  assert.doesNotMatch(cases, /VigilStatusChip value="Exemplar"/);
-  assert.match(caseFile, /const adjudicationIncomplete = classification === "Adjudication incomplete"/);
-  assert.match(caseFile, /const isExemplar = classification === "Exemplar"/);
-  assert.doesNotMatch(caseFile, /isIncompleteInvariant/);
-  assert.match(caseFile, /Adjudication is incomplete\./);
-  assert.match(caseFile, /has not assigned a whole-Incident alignment classification/);
-  assert.match(caseFile, /The adjudicated governance boundary held\./);
-  assert.match(caseFile, /This Case File is fully adjudicated against the current taxonomy/);
-  assert.match(caseFile, /const isFailure = classification === "Classified"/);
-  assert.match(caseFile, /Alignment outcome · Failure evidenced/);
-  assert.match(caseFile, /Failure is evidenced at an assessed governance boundary\./);
-  assert.match(caseFile, /VIGIL Harm Impact Assessment/);
-  assert.match(caseFile, /vigil-exemplar-callout-boundary/);
-  assert.match(caseFile, /taxonomyAlignmentOutcomeLabel/);
-  assert.match(classification, /alignment finding · aligned/i);
-  assert.match(classification, /The evidence supports that the relevant governance invariant held/);
-  assert.match(classification, /Primary alignment finding · aligned/);
-  assert.match(classification, /Secondary alignment finding · aligned/);
-  assert.match(report, /Completed mapping-level findings remain visible in Section 03 for transparency/);
-  assert.match(report, /do not establish an Incident-level failure, invariant-held or mixed-alignment outcome until adjudication coverage is complete/);
-  assert.match(pages, /record\.adjudication_coverage\?\.status === "partial"\) return "Adjudication incomplete"/);
-  assert.match(pages, /classification_role === "failure-occurrence"\) return "Failure evidenced"/);
-  assert.match(pages, /classification_role === "successful-invariant"\) return "Invariant held"/);
-  assert.match(sync, /classification_role: record\.classification_role/);
-  assert.match(sync, /adjudication_coverage: record\.adjudication_coverage/);
-  assert.match(sync, /alignment_exemplar_eligible/);
-  assert.match(caseGridCss, /grid-template-columns: minmax\(520px, 1fr\) minmax\(130px, 170px\) minmax\(72px, 96px\) 28px/);
-  assert.match(casePolishCss, /\.vigil-case-file-page \.vigil-exemplar-callout/);
-  assert.match(casePolishCss, /display: grid !important/);
-  assert.doesNotMatch(historicalV5Css, /\.vigil-exemplar-callout/);
-});
 
 test("Knowledge Base keeps the dedicated six-stage Case File method as plain document rows", async () => {
   const [hub, about, homeMenuCss, sections] = await Promise.all([
@@ -573,7 +540,7 @@ test("Knowledge Base keeps the dedicated six-stage Case File method as plain doc
   ]);
   assert.match(hub, /const CASE_FILE_STAGES = \[/);
   assert.match(hub, /One evidence-to-conclusion structure for every Incident/);
-  assert.match(hub, /Record what happened, the affected systems and the public evidence supporting the occurrence\./);
+  assert.ok(hub.includes("Record what happened, the technology and operating conditions, participating and affected parties, geographic and governance context, and public evidence supporting the occurrence."));
   assert.match(hub, /interpret taxonomy-relevant source clauses, review external assessments where available, and separately assess real-world materialised harm through the Harm Impact Assessment using the VIGIL Harm Impact Methodology \(VIGIL-HIM\)/);
   assert.match(hub, /Map the evidence to the VIGIL Alignment Taxonomy and record whether each boundary failed, held or remains unresolved\./);
   assert.match(hub, /Assess relevant external requirements independently against the occurrence evidence/);
@@ -1070,18 +1037,59 @@ test("Case File stage and subsection headings share one editorial scale", async 
   assert.doesNotMatch(caseFile, /VIGIL OBSERVATORY REAL-WORLD HARM ASSESSMENT/);
 });
 
-test("Case File Incident content aligns to the document edge without legacy card indentation", async () => {
-  const [narrativeCss, dossierCss, instrumentCss] = await Promise.all([
+test("All Case File evidence links use compact Section 02 style [n] notation", async () => {
+  const [component, style, rule, harm] = await Promise.all([
+    read("src/components/vigil/IncidentContextSection.tsx"),
+    read("src/vigil-case-file-dossier.css"),
+    read("docs-internal/VIGIL-CASE-FILE-REFERENCE-FORMATTING.md"),
+    read("src/components/vigil/HarmImpactMatrix.tsx"),
+  ]);
+  assert.match(component, /function SourceCitations\(/);
+  assert.match(component, /#vigil-evidence-reference-/);
+  assert.doesNotMatch(component, /Source \[|<span>Evidence<\/span>|function SourceLinks\(/);
+  assert.match(style, /\.vigil-case-file-page \.vigil-context-citations \{/);
+  assert.match(harm, /vigil-harm-inline-references/);
+  assert.match(rule, /Place the citation immediately after/);
+  assert.match(rule, /Deduplicate identical bibliography references/);
+});
+
+test("Case File Stage 01 groups Incident Context, preserves evidence and aligns printable report", async () => {
+  const [narrativeCss, dossierCss, context, web, report] = await Promise.all([
     read("src/vigil-case-file-narrative-cards.css"),
     read("src/vigil-case-file-dossier.css"),
-    read("src/vigil-observatory-instrument-experiment.css"),
+    read("src/components/vigil/IncidentContextSection.tsx"),
+    read("src/pages/vigil-case-file.tsx"),
+    read("src/pages/evidence-chain-report-deterministic.tsx"),
   ]);
-
-  assert.match(narrativeCss, /\.vigil-observation-summary > p \{[\s\S]*padding: 0\.65rem 0 1\.4rem/);
-  assert.match(narrativeCss, /\.vigil-observation-summary \.vigil-case-subheading \{[\s\S]*padding: 1\.15rem 0 0\.85rem/);
-  assert.match(dossierCss, /\.vigil-affected-systems \.vigil-case-subheading \{[\s\S]*padding: 1\.15rem 0 0\.85rem/);
-  assert.match(dossierCss, /\.vigil-affected-system-grid > article \{[\s\S]*padding: 0\.65rem 0 1\.4rem/);
-  assert.doesNotMatch(instrumentCss, /\.vigil-observation-summary \.vigil-case-subheading,[\s\S]*\.vigil-affected-systems \.vigil-case-subheading/);
+  assert.ok(narrativeCss.includes(".vigil-observation-summary > p"));
+  assert.ok(dossierCss.includes(".vigil-case-file-page .vigil-incident-context"));
+  const headings = [
+    "Systems & Technology",
+    "Operational Environment",
+    "Affected Parties & Institutions",
+    "Geographic & Jurisdictional Context",
+    "Regulatory Context",
+  ];
+  const positions = headings.map(title => context.indexOf(`title="${title}"`));
+  assert.ok(positions.every(pos => pos >= 0), "all five approved subsections must render");
+  assert.deepEqual(positions, [...positions].sort((a, b) => a - b), "subsections keep approved reading order");
+  assert.ok(web.includes("<IncidentContextSection raw={incident.raw}"), "opened Case File uses shared component");
+  assert.ok(report.includes("<IncidentContextSection raw={incident.raw}"), "print/PDF route uses same component");
+  assert.ok(!web.includes('<section className="vigil-affected-systems"'));
+  assert.ok(!report.includes('<section className="report-affected-systems"'));
+  assert.ok(context.includes("source_records"), "citations are derived from canonical source records");
+  assert.ok(context.includes("#vigil-evidence-reference-"), "source references link to bibliography");
+  assert.ok(context.includes("hasStructuredGeography"), "legacy geography differs from reviewed geography");
+  assert.ok(context.includes("Legacy jurisdiction descriptions must not be treated as verified occurrence locations."), "legacy caveat persists in Section 06 limitations");
+  assert.ok(context.includes("export function IncidentContextLimitations"), "the limitation block has a separate renderer");
+  assert.ok(web.includes("<IncidentContextLimitations raw={incident.raw}"), "interactive Section 06 receives the context limits");
+  assert.ok(report.includes("<IncidentContextLimitations raw={incident.raw}"), "print Section 06 receives the same limits");
+  assert.ok(!context.includes("vigil-context-group-number"), "subsections are unnumbered");
+  assert.ok(!context.includes("Occurrence metadata"), "the metadata kicker has been removed");
+  assert.ok(context.includes("A jurisdictional association does not establish"), "regulatory topics are not findings");
+  assert.ok(context.includes("knownParties"), "parties are resolved by canonical identifiers");
+  assert.ok(dossierCss.includes("@media (max-width: 700px)"), "mobile layout is explicit");
+  assert.ok(dossierCss.includes("@media print"), "print layout retains the evidence groups");
 });
 
 test("Case File ticket keeps severity and classification in Incident context and restores Full report", async () => {

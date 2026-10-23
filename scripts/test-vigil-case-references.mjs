@@ -50,13 +50,15 @@ test("External Assessments remain a typed, optional layer distinct from evidence
   assert.match(sync, /external_assessments: Array\.isArray\(record\.external_assessments\)/);
 });
 
-test("Affected systems expose evidence-bounded agent and occurrence metadata in web and PDF", async () => {
-  const [helper, caseFile, report] = await Promise.all([
+test("Incident Context preserves source-bounded system and environment details across web and PDF", async () => {
+  const [helper, caseFile, report, context] = await Promise.all([
     readFile(resolve(repoRoot, "src/lib/vigilAffectedSystems.ts"), "utf8"),
     caseFileSource(),
     readFile(resolve(repoRoot, "src/pages/evidence-chain-report-deterministic.tsx"), "utf8"),
+    readFile(resolve(repoRoot, "src/components/vigil/IncidentContextSection.tsx"), "utf8"),
   ]);
 
+  // The previous evidence-bounded system projection is retained unchanged.
   assert.match(helper, /context\.agent_context/);
   assert.match(helper, /context\.occurrence_environment/);
   assert.match(helper, /count_basis/);
@@ -75,17 +77,28 @@ test("Affected systems expose evidence-bounded agent and occurrence metadata in 
   assert.match(helper, /joinedText\(context\.interface_surface\)/);
   assert.doesNotMatch(helper, /evidence_basis|source_record_refs|environment_detail/);
 
+  // Both presentations must invoke the SAME Incident Context component.
   for (const source of [caseFile, report]) {
     assert.match(source, /dedupeAffectedSystems/);
-    assert.match(source, /label="Agent configuration"/);
-    assert.match(source, /label="Agent count"/);
-    assert.match(source, /label="Deployment state"/);
-    assert.match(source, /label="Activity context"/);
-    assert.match(source, /label="External reach"/);
-    assert.match(source, /label="Activity actor"/);
-    assert.match(source, /label="Occurrence setting"/);
-    assert.match(source, /label="Testing conducted by"/);
+    assert.match(source, /<IncidentContextSection raw=\{incident\.raw\}/);
+    assert.match(source, /sourceReferenceNumbers=\{harmEvidenceReferenceNumbers\}/);
   }
+
+  // The new five-part reading hierarchy keeps the old fields and adds evidence.
+  for (const heading of [
+    "Systems & Technology", "Operational Environment", "Affected Parties & Institutions",
+    "Geographic & Jurisdictional Context", "Regulatory Context",
+  ]) assert.ok(context.includes(heading), heading);
+  for (const field of [
+    "Agent configuration", "Agent count", "Deployment state", "Activity context",
+    "External reach", "Activity actor", "Occurrence setting (legacy)",
+    "Testing actor (legacy)", "Occurrence environment",
+  ]) assert.ok(context.includes('title="' + field + '"'), field);
+  assert.match(context, /environment\.environment_detail/);
+  assert.match(context, /agent\.evidence_basis/);
+  assert.match(context, /environment\.evidence_basis/);
+  assert.match(context, /source_record_refs/);
+  assert.match(context, /jurisdiction\.cross_border_relevance/);
 });
 
 test("Case File source contains no escaped newline text between hero cards", async () => {
