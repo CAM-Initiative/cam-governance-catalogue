@@ -27,7 +27,7 @@ test("interactive and static methodology preserve every canonical criterion and 
         if (aggregate) {
           const sections = aggregateHarmSections(aggregate);
           assert.equal(sections.structured, true, `${dimension.dimension_id}/${band}: canonical aggregate criterion is decomposable`);
-          assert.ok(published.replace(/<\\/?strong[^>]*>/g, "").includes(escape(aggregateHarmBandSummary(aggregate))), `${dimension.dimension_id}/${band}: public band threshold and outcome`);
+          assert.ok(published.replace(/<\/?strong[^>]*>/g, "").includes(escape(aggregateHarmBandSummary(aggregate))), `${dimension.dimension_id}/${band}: public band threshold and outcome`);
           assert.ok(published.includes(escape(sections.mechanism)), `${dimension.dimension_id}/${band}: shared mechanism criterion`);
         }
       }
