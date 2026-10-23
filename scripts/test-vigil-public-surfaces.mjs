@@ -14,6 +14,7 @@ const read = (path) => readFile(resolve(root, path), "utf8");
 test("Case File Section 02 keeps its assessment provenance renderer defined", async () => {
   const caseFile = await read("src/pages/vigil-case-file.tsx");
   assert.match(caseFile, /function Field\(\{ label, value, mono = false \}/);
+  assert.ok(caseFile.indexOf("function Field(") < caseFile.indexOf("export default function VigilCaseFile("), "Section 02 Field must be declared before the Case File renderer");
   assert.match(caseFile, /if \(stageId === "diagnose"\)/);
   assert.match(caseFile, /<Field label="Assessed" value=\{diagnostic\?\.diagnosticDate\}/);
 });
