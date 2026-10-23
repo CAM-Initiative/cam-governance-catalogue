@@ -231,9 +231,9 @@
 .vigil-case-library-page .vigil-dashboard-donut-caption { fill: var(--vd-muted); }
 .vigil-dashboard-severity-callout { cursor: pointer; transition: opacity .15s ease; }
 .vigil-dashboard-severity-callout:hover { opacity: .78; }
-.vigil-dashboard-severity-label { font: 750 12px var(--app-font-sans), sans-serif; letter-spacing: .01em; }
+.vigil-dashboard-severity-label { font: 800 18.5px var(--app-font-sans), sans-serif; letter-spacing: 0; }
 .vigil-case-library-page .vigil-dashboard-severity-name {
-  font: 500 10.5px var(--app-font-sans), sans-serif;
+  font: 650 16.5px var(--app-font-sans), sans-serif;
   fill: var(--vd-ink);
 }
 .vigil-dashboard-chart-instruction { justify-content: center; text-align: center; margin-top: -.1rem; }
@@ -476,7 +476,7 @@
 .vigil-dashboard-donut-segment[aria-pressed="true"] {
   filter: drop-shadow(0 2px 5px rgba(7, 34, 49, .4));
 }
-.vigil-dashboard-severity-callout.is-muted { opacity: .56; }
+.vigil-dashboard-severity-callout.is-muted { opacity: .76; }
 .vigil-dashboard-severity-callout.is-muted:hover,
 .vigil-dashboard-severity-callout.is-muted:focus-visible { opacity: 1; }
 .vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-label { font-weight: 850; }
@@ -591,3 +591,8 @@
     padding: 0.9rem 0.85rem 0.8rem;
   }
 }
+
+/* Compact dashboard insight panels: remove explanatory copy without
+   shrinking the interactive labels, and recover header-to-chart space. */
+.vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-donut { margin-top: -.15rem; }
+.vigil-case-library-page .vigil-dashboard-failures-panel .vigil-dashboard-failure-list { margin-top: .5rem; }
