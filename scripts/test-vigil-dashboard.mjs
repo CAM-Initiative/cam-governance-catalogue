@@ -80,7 +80,11 @@ test("Donut selection physically separates the chosen severity and keeps angular
   const idle = donutSegmentAppearance(18, 12, 60, false, false);
   assert.ok(Math.hypot(active.offsetX, active.offsetY) >= 9.9, "Selected arc visibly moves outward");
   assert.equal(Math.hypot(neighbour.offsetX, neighbour.offsetY), 0);
-  assert.ok(active.radius + active.strokeWidth / 2 > neighbour.radius + neighbour.strokeWidth / 2 + 8);
+  assert.ok(
+    active.radius + active.strokeWidth / 2 + Math.hypot(active.offsetX, active.offsetY) >
+      neighbour.radius + neighbour.strokeWidth / 2 + 15,
+    "A selected segment must visibly extend past the neutral ring including its outward offset"
+  );
   assert.equal(active.opacity, 1);
   assert.ok(neighbour.opacity < 0.65);
   assert.equal(idle.opacity, 1);
