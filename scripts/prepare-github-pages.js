@@ -7,6 +7,7 @@ import { clauseAssessmentRows } from "../src/lib/vigilClauseRows.mjs";
 import { assessmentParagraphs, assessmentBlocks, assessmentSections } from "../src/lib/vigilAssessmentParagraphs.mjs";
 import { VIGIL_DISPUTED_COPY } from "../src/lib/vigilDisputedCopy.mjs";
 import { harmThresholdParts } from "../src/lib/vigilHarmEmphasis.mjs";
+import { HARM_PATHWAY_STEPS, aggregateHarmSections, aggregateHarmBandSummary, publicHarmIndicatorLabel, publicHarmQuantificationNote, publicHarmInterpretiveNote } from "../src/lib/vigilHarmPublic.mjs";
 import { vigilReadingGuide } from "../src/lib/vigilReadingGuide.mjs";
 import { occurrenceRequirementRows, REQUIREMENT_ASSESSMENT_INTRO } from "../src/lib/vigilOccurrenceRequirements.mjs";
 import {
@@ -71,15 +72,24 @@ function harmThresholdHtml(text) {
 function harmReferenceHtml() {
   const bands = ["S1", "S2", "S3", "S4", "S5"];
   const rows = harmMethodology.dimensions.map(dimension => `<tr><th scope="row">${escapeHtml(dimension.label)}</th>${bands.map(band => `<td>${harmThresholdHtml(dimension.thresholds[band].criterion)}</td>`).join("")}</tr>`).join("");
-  const guidance = harmMethodology.dimensions.map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary>${[dimension.adaptation_note, dimension.interpretive_note, dimension.quantification_note].filter(Boolean).map(note => `<p>${escapeHtml(note)}</p>`).join("")}<ul>${dimension.quantitative_indicators.map(metric => `<li>${escapeHtml(metric.replaceAll("_", " "))}</li>`).join("")}</ul></details>`).join("");
-  const aggregate = harmMethodology.dimensions.filter(dimension => bands.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => `<details><summary>${escapeHtml(dimension.label)}</summary><dl>${bands.map(band => `<dt>${band}</dt><dd>${harmThresholdHtml(dimension.thresholds[band].aggregate_harm_threshold || "")}</dd>`).join("")}</dl></details>`).join("");
+  const guidance = harmMethodology.dimensions.map(dimension => {
+    const notes = [dimension.adaptation_note, dimension.interpretive_note, publicHarmQuantificationNote(dimension.quantification_note)]
+      .filter(Boolean).map(note => `<p>${escapeHtml(publicHarmInterpretiveNote(note))}</p>`).join("");
+    const indicators = dimension.quantitative_indicators.map(metric => `<li>${escapeHtml(publicHarmIndicatorLabel(metric))}</li>`).join("");
+    return `<details><summary>${escapeHtml(dimension.label)}</summary>${notes}<p><strong>Relevant indicators</strong></p><ul>${indicators}</ul></details>`;
+  }).join("");
+  const aggregate = harmMethodology.dimensions.filter(dimension => bands.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => {
+    const shared = aggregateHarmSections(dimension.thresholds.S1.aggregate_harm_threshold || "");
+    const mechanism = shared.structured ? `<p><strong>Evidence required for every band:</strong> ${escapeHtml(shared.mechanism)}</p>` : "";
+    return `<details><summary>${escapeHtml(dimension.label)}</summary>${mechanism}<dl>${bands.map(band => `<dt>${band}</dt><dd>${harmThresholdHtml(aggregateHarmBandSummary(dimension.thresholds[band].aggregate_harm_threshold || ""))}</dd>`).join("")}</dl></details>`;
+  }).join("");
   const sources = harmReferences.map(reference => `<li><a href="${escapeHtml(reference.url)}">${escapeHtml(reference.title)}</a> — ${escapeHtml(reference.publisher)}</li>`).join("");
   return `<p>VIGIL-HIM ${escapeHtml(harmMethodology.version)} reviews twelve harm dimensions using five severity bands, S1 to S5. The highest supported band on the selected assessment pathway determines overall severity. SU means no defensible band can be assigned; it does not establish no harm.</p>
     <section id="matrix"><h2>Specific-consequence reference matrix</h2><div style="overflow-x:auto"><table><thead><tr><th>Harm dimension</th>${bands.map(band => `<th scope="col">${band}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section>
     <section id="quantification"><h2>Quantification and recognition guidance</h2><p>Record source-backed outcome, units, period, denominator, uncertainty and consequence. Numerical indicators support the domain criteria; counts and illustrative durations do not determine severity alone.</p>${guidance}</section>
     <section id="method"><h2>Evidence states and overall severity</h2><dl>${Object.entries(harmMethodology.assessment_statuses).map(([label, description]) => `<dt>${escapeHtml(label.replaceAll("-", " "))}</dt><dd>${escapeHtml(description)}</dd>`).join("")}</dl><p>${escapeHtml(harmMethodology.derivation_statement)}</p></section>
-    <section id="pathways"><h2>Select the assessment pathway before scoring</h2><ol>${harmMethodology.assessment_pathway_selection.screening_flow.map(step => `<li>${escapeHtml(step.replace(/^\d+\. /, ""))}</li>`).join("")}</ol><p>${escapeHtml(harmMethodology.assessment_pathway_selection.overall_rule)}</p><p>${escapeHtml(harmMethodology.assessment_pathway_selection.no_fallback)}</p></section>
-    <section id="aggregate"><h2>Aggregate Harm — modelled from deployed evaluation</h2><p>Eligible users and decision opportunities are not a count of injured people. Population size alone does not establish a band. These VIGIL operational criteria remain subject to calibration; they are not externally validated clinical severity conversions.</p>${aggregate}</section>
+    <section id="pathways"><h2>Choose the assessment pathway</h2><ol>${HARM_PATHWAY_STEPS.map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol><p>Use the highest supported band within the selected pathway. Do not combine ordinary and Aggregate Harm bands; where the evidence cannot support a band, report SU.</p></section>
+    <section id="aggregate"><h2>Aggregate Harm — modelled from deployed evaluation</h2><p>Every band requires evidenced collective consequences, not just a qualifying number of users or decisions. Modelled effects are not a count of injured people. These VIGIL-defined brackets are not externally validated clinical severity conversions.</p>${aggregate}</section>
     <section id="references"><h2>Methodology source trail</h2><p>Reference inclusion does not establish endorsement, equivalence or clinical validation.</p><ol>${sources}</ol><p><a href="https://raw.githubusercontent.com/CAM-Initiative/Vigil/main/vigil/methodologies/VIGIL.HarmImpactMatrix.v${escapeHtml(harmMethodology.version)}.json">Canonical methodology (JSON)</a></p></section>`;
 }
 
