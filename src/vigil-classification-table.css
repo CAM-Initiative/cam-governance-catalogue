@@ -468,6 +468,42 @@ html[data-theme="dark"] .vigil-classification-confidence-chip.is-low {
   text-decoration: none;
 }
 
+/* Evidence remains an explicit, readable list within the fourth column.
+   Numbers link to the same Section 06 bibliography entries as other stages. */
+.vigil-case-file-page .vigil-compliance-evidence-links {
+  margin-top: 0.7rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid hsl(var(--border) / 0.56);
+}
+.vigil-case-file-page .vigil-compliance-evidence-links > strong {
+  display: block;
+  color: hsl(var(--foreground) / 0.88);
+  font-size: 0.83rem;
+  font-weight: 680;
+}
+.vigil-case-file-page .vigil-compliance-evidence-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.35rem 0 0;
+}
+.vigil-case-file-page .vigil-compliance-evidence-links li + li {
+  margin-top: 0.25rem;
+}
+.vigil-case-file-page .vigil-compliance-evidence-links a {
+  display: inline;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.vigil-case-file-page .vigil-compliance-evidence-links a:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.vigil-case-file-page .vigil-compliance-evidence-links > p {
+  font-size: 0.84rem;
+  font-style: italic;
+}
+
 .vigil-case-file-page .vigil-compliance-counts,
 .vigil-case-file-page .vigil-classification-counts {
   display: flex;
