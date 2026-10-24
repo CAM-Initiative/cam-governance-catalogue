@@ -16,6 +16,7 @@ import { failureClassIds } from "@/lib/vigilDashboardMetrics.mjs";
 import { getSelectedVigilBranch, vigilRawUrl, VIGIL_DEFAULT_BRANCH } from "@/lib/vigilBranchSource";
 import { countryLookupFromProjection, matchesSelectedCountries, toggleSelectedCountry } from "@/lib/vigilDashboardGeography.mjs";
 import { matchesClassificationSelection, toggleClassificationSelection } from "@/lib/vigilClassificationFilter.mjs";
+import { INDEX_FACETS, NOT_INDEXED, facetOptionLabel, indexFacetOptions, matchesIndexFacets, toggleIndexFacetSelection } from "@/lib/vigilIndexFacets.mjs";
 
 type PageState =
   | { status: "loading" }
@@ -132,6 +133,37 @@ function SortHeading({ label, sortKey, sort, onSort }: { label: string; sortKey:
   </button>;
 }
 
+// The indexed metadata facets share the Classification disclosure affordance.
+// "All" clears that one facet; its checked state does not imply every individual
+// value was explicitly selected. Counts describe the loaded complete corpus.
+function IndexFacet({ id, title, options, total, selected, onToggle, onClear }: {
+  id: string; title: string; options: ClassificationStatusCount[]; total: number;
+  selected: string[]; onToggle: (id: string, value: string) => void; onClear: (id: string) => void;
+}) {
+  return <details className="vigil-dashboard-index-facet" aria-label={`${title} filters`}>
+    <summary className="vigil-dashboard-facet-heading">
+      <span>{title}</span>
+      <span className="vigil-dashboard-facet-state">
+        {selected.length ? `${selected.length} selected` : "All"}
+        <ChevronDown size={15} aria-hidden="true"/>
+      </span>
+    </summary>
+    <div className="vigil-dashboard-facet-options" role="group" aria-label={`Filter by ${title}`}>
+      <label className="vigil-dashboard-facet-option">
+        <input type="checkbox" checked={selected.length === 0} onChange={() => onClear(id)}/>
+        <span className="vigil-dashboard-facet-option-name">All {title.toLowerCase()}</span>
+        <span className="vigil-dashboard-facet-count">{total}</span>
+      </label>
+      {options.map(option => <label className="vigil-dashboard-facet-option" key={option.key}>
+        <input type="checkbox" checked={selected.includes(option.key)}
+          onChange={() => onToggle(id, option.key)}/>
+        <span className="vigil-dashboard-facet-option-name">{option.label}</span>
+        <span className="vigil-dashboard-facet-count">{option.count}</span>
+      </label>)}
+    </div>
+  </details>;
+}
+
 export default function VigilCases() {
   const [state, setState] = useState<PageState>({ status: "loading" });
   const [search, setSearch] = useState("");
@@ -145,6 +177,15 @@ export default function VigilCases() {
   const [jurisdictions, setJurisdictions] = useState<string[]>([]);
   const toggleJurisdiction = (code: string) => setJurisdictions(current => toggleSelectedCountry(current, code));
   const [failureClass, setFailureClass] = useState("");
+  const [indexFacets, setIndexFacets] = useState<Record<string, string[]>>({});
+  const toggleIndexFacet = (id: string, key: string) =>
+    setIndexFacets(current => toggleIndexFacetSelection(current, id, key));
+  const clearIndexFacet = (id: string) =>
+    setIndexFacets(current => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
   // The result-toolbar and globe reset share a single source of truth.
   const clearFilters = () => {
     setSearch("");
@@ -152,6 +193,7 @@ export default function VigilCases() {
     setSeverity("");
     setJurisdictions([]);
     setFailureClass("");
+    setIndexFacets({});
   };
   const [countryByCase, setCountryByCase] = useState<Map<string, string[]>>(new Map());
   const [geographyAvailable, setGeographyAvailable] = useState(false);
@@ -226,6 +268,10 @@ export default function VigilCases() {
 
   const records = state.status === "ready" ? state.records : [];
   const classificationStates = useMemo(() => classificationStatusCounts(records), [records]);
+  const indexedFacetCatalog = useMemo(() => INDEX_FACETS.map(facet => ({
+    ...facet,
+    options: indexFacetOptions(records, facet.id),
+  })).filter(facet => facet.options.some(option => option.key !== NOT_INDEXED)), [records]);
   const updated = useMemo(() => {
     const dates = values(records, (record) => record.record_last_updated ?? record.publicDisplay.dates.lastUpdated ?? record.date_recorded).sort();
     return dates.length ? dates[dates.length - 1] : undefined;
@@ -236,8 +282,9 @@ export default function VigilCases() {
     if (!matchesVigilSearch(record.searchText, search)) return false;
     if (!matchesClassificationSelection(canonicalComparisonKey(classificationStatusLabel(record)), classifications)) return false;
     if (failureClass && !failureClassIds(record.raw).includes(failureClass)) return false;
+    if (!matchesIndexFacets(record, indexFacets)) return false;
     return true;
-  }), [classifications, failureClass, records, search]);
+  }), [classifications, failureClass, indexFacets, records, search]);
 
   const mapRecords = useMemo(() => baseCases.filter(record => {
     if (severity && severityCode(record) !== severity) return false;
@@ -252,8 +299,8 @@ export default function VigilCases() {
 
   const sorted = useMemo(() => [...filtered].sort((a, b) => compareCases(a, b, sort)), [filtered, sort]);
 
-  useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, sort]);
-  const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass);
+  useEffect(() => setPage(1), [search, classifications, severity, jurisdictions, failureClass, indexFacets, sort]);
+  const hasActiveFilters = Boolean(search || classifications.length || severity || jurisdictions.length || failureClass || Object.keys(indexFacets).length);
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   const pageStart = sorted.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
@@ -353,7 +400,10 @@ export default function VigilCases() {
                     )}
                   </div>
                 </details>
-
+                {indexedFacetCatalog.map(facet => <IndexFacet key={facet.id} id={facet.id} title={facet.title}
+                  options={facet.options} total={records.length} selected={indexFacets[facet.id] ?? []}
+                  onToggle={toggleIndexFacet} onClear={clearIndexFacet}/>)}
+                <p className="vigil-dashboard-facet-guidance">Counts reflect the full loaded index. Values not established in the index are shown separately. Select multiple items within or across sections.</p>
               </div>
               {hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection">
                 <span className="vigil-dashboard-selection-caption">Current view</span>
@@ -363,6 +413,12 @@ export default function VigilCases() {
                   {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
                   {jurisdictions.map(code => <button type="button" key={code} className="vigil-dashboard-selection-chip" onClick={() => toggleJurisdiction(code)} aria-label={`Remove ${countryDisplayName(code)} jurisdiction filter`}>Jurisdiction: {countryDisplayName(code)}<X aria-hidden="true" size={13} /></button>)}
                   {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
+                  {Object.entries(indexFacets).flatMap(([id, keys]) => keys.map(key =>
+                    <button type="button" key={`${id}:${key}`} className="vigil-dashboard-selection-chip"
+                      onClick={() => toggleIndexFacet(id, key)} aria-label={`Remove ${INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: ${facetOptionLabel(id,key)} filter`}>
+                      {INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: {facetOptionLabel(id, key)}<X aria-hidden="true" size={13}/>
+                    </button>
+                  ))}
                 </div>
                 <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
                 <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>
