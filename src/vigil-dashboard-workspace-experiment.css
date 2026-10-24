@@ -706,7 +706,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
    sortable table headings and technical counters. */
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-text {
   font-family: var(--app-font-sans);
-  font-size: .82rem;
+  font-size: .84rem;
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: 0;
@@ -1047,14 +1047,14 @@ html[data-theme="dark"] .vigil-case-library-page .vigil-dashboard-harm-type-fill
 }
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy h2 {
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .9rem;
+  font-size: .94rem;
   font-weight: 700;
   line-height: 1.38;
   letter-spacing: -.01em;
 }
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy p {
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .8rem;
+  font-size: .84rem;
   font-weight: 400;
   line-height: 1.48;
   letter-spacing: 0;
