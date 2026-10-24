@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
-import { Layers3, RotateCcw, ShieldAlert } from "lucide-react";
+import { Globe2, Layers3, RotateCcw, ShieldAlert } from "lucide-react";
 import type { VigilIndexRecord } from "@/lib/vigilPresentation";
 import { loadFailureTaxonomy } from "@/lib/vigilFailureTaxonomy";
 import { topFailureClasses, severityDistribution } from "@/lib/vigilDashboardMetrics.mjs";
@@ -359,7 +359,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
-        <h2 id="vigil-dashboard-geography" className="sr-only">Jurisdiction coverage — interactive globe</h2>
+        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Geographic intelligence</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
         <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
