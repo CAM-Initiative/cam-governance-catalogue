@@ -140,27 +140,55 @@ function IndexFacet({ id, title, options, total, selected, onToggle, onClear }: 
   id: string; title: string; options: ClassificationStatusCount[]; total: number;
   selected: string[]; onToggle: (id: string, value: string) => void; onClear: (id: string) => void;
 }) {
-  return <details className="vigil-dashboard-index-facet" aria-label={`${title} filters`}>
+  const isVendor = id === "vendor";
+  const [vendorQuery, setVendorQuery] = useState("");
+  const [vendorExpanded, setVendorExpanded] = useState(false);
+  const query = vendorQuery.trim().toLocaleLowerCase();
+  const matchingOptions = isVendor
+    ? options.filter(option => !query || option.label.toLocaleLowerCase().includes(query))
+      .sort((a,b) => Number(selected.includes(b.key)) - Number(selected.includes(a.key)))
+    : options;
+  const facetClass = [
+    "vigil-dashboard-index-facet",
+    isVendor ? "is-vendor" : "",
+    vendorExpanded ? "is-expanded" : "",
+    query ? "has-query" : "",
+  ].filter(Boolean).join(" ");
+  return <details className={facetClass} aria-label={`${title} filters`}>
     <summary className="vigil-dashboard-facet-heading">
       <span>{title}</span>
       <span className="vigil-dashboard-facet-state">
-        {selected.length ? `${selected.length} selected` : "All"}
+        {selected.length > 0 && <span>{selected.length} selected</span>}
         <ChevronDown size={15} aria-hidden="true"/>
       </span>
     </summary>
-    <div className="vigil-dashboard-facet-options" role="group" aria-label={`Filter by ${title}`}>
+    {isVendor && <label className="vigil-dashboard-vendor-search">
+      <Search size={15} aria-hidden="true"/>
+      <span className="sr-only">Find a platform or vendor</span>
+      <input type="search" value={vendorQuery} onChange={event => setVendorQuery(event.target.value)}
+        placeholder="Find a vendor…" aria-label="Search platform and vendor options"/>
+    </label>}
+    <div className="vigil-dashboard-facet-options" role="group" aria-label={`Filter by ${title}`}
+      tabIndex={isVendor ? 0 : undefined}>
       <label className="vigil-dashboard-facet-option">
         <input type="checkbox" checked={selected.length === 0} onChange={() => onClear(id)}/>
         <span className="vigil-dashboard-facet-option-name">All {title.toLowerCase()}</span>
         <span className="vigil-dashboard-facet-count">{total}</span>
       </label>
-      {options.map(option => <label className="vigil-dashboard-facet-option" key={option.key}>
+      {matchingOptions.map(option => <label
+        className={`vigil-dashboard-facet-option${selected.includes(option.key) ? " is-selected" : ""}`} key={option.key}>
         <input type="checkbox" checked={selected.includes(option.key)}
           onChange={() => onToggle(id, option.key)}/>
         <span className="vigil-dashboard-facet-option-name">{option.label}</span>
         <span className="vigil-dashboard-facet-count">{option.count}</span>
       </label>)}
+      {isVendor && matchingOptions.length === 0 && <p className="vigil-dashboard-facet-no-results">No matching vendors.</p>}
     </div>
+    {isVendor && !query && options.length > 6 && <button type="button"
+      className="vigil-dashboard-vendor-show-more" aria-expanded={vendorExpanded}
+      onClick={() => setVendorExpanded(value => !value)}>
+      {vendorExpanded ? "Show fewer vendors" : `Show all ${options.length} vendors`}
+    </button>}
   </details>;
 }
 
@@ -380,7 +408,7 @@ export default function VigilCases() {
                   <summary className="vigil-dashboard-facet-heading">
                     <span>Classification</span>
                     <span className="vigil-dashboard-facet-state">
-                      {classifications.length ? `${classifications.length} selected` : "All"}
+                      {classifications.length > 0 && <span>{classifications.length} selected</span>}
                       <ChevronDown size={15} aria-hidden="true" />
                     </span>
                   </summary>
