@@ -912,7 +912,12 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub-header h2 { font-weight: 650; }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading { letter-spacing: .025em; }
+/* Let the input shrink beside its search icon and conditional clear button.
+   The short prompt is designed for the 225px minimum desktop rail. */
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control input {
+  min-width: 0;
+  width: 0;
+  flex: 1 1 0%;
   font-family: var(--app-font-serif), Georgia, serif;
   font-size: .87rem;
 }

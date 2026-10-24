@@ -600,7 +600,7 @@ test("Current view and Clear filters sit directly below search and before facet 
     source("src/pages/vigil-cases.tsx"),
     source("src/vigil-dashboard-workspace-experiment.css"),
   ]);
-  const search = page.indexOf('placeholder="Describe the behaviour you’re seeing…"');
+  const search = page.indexOf('placeholder="Search Case Files…"');
   const active = page.indexOf('hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection"');
   const facets = page.indexOf('className="vigil-dashboard-metadata-facets"');
   assert.ok(search >= 0 && active > search && facets > active);
@@ -663,6 +663,19 @@ test("Taxonomy ranking excludes its own active class so clicking a failure does 
   assert.doesNotMatch(dashboard, /topFailureClasses\(filteredRecords\)/);
   assert.match(dashboard, /aria-pressed=\{failureClass===entry\.id\}/);
   assert.match(dashboard, /Selecting a class filters the Case Files and other charts without reordering this list/);
+});
+
+test("Narrow desktop search rail uses concise placeholder without losing the accessible description", async () => {
+  const [page, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.match(page, /<span className="sr-only">Describe the behaviour you’re seeing…<\/span>/);
+  assert.match(page, /placeholder="Search Case Files…"/);
+  assert.doesNotMatch(page, /placeholder="Describe the behaviour you’re seeing…"/);
+  assert.match(css, /grid-template-columns: clamp\(225px, 17\.5vw, 250px\)/);
+  assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-search-control input \{[\s\S]*?min-width: 0;[\s\S]*?width: 0;[\s\S]*?flex: 1 1 0%/);
+  assert.match(page, /onClick=\{\(\) => setSearch\(""\)\} aria-label="Clear search"/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.

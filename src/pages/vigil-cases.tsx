@@ -440,7 +440,7 @@ export default function VigilCases() {
                     type="search"
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Describe the behaviour you’re seeing…"
+                    placeholder="Search Case Files…"
                   />
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
