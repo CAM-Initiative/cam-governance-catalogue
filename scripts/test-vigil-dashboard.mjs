@@ -103,7 +103,7 @@ test("Donut selection physically separates the chosen severity and keeps angular
   assert.match(dashboard, /className="vigil-dashboard-donut-slice" transform=/);
   assert.match(dashboard, /selectedCount \?\? total/);
   assert.match(dashboard, /SELECTED/);
-  assert.ok(dashboard.includes("vigil-dashboard-severity-item"));
+  assert.ok(dashboard.includes("vigil-dashboard-severity-callout"));
   assert.ok(dashboard.includes("aria-pressed={active}"));
 });
 
@@ -337,7 +337,8 @@ test("Mobile Case Files restores overhead filters, one case list, and stacked in
   assert.ok(mobile.includes("position: static"));
   assert.ok(mobile.includes("@media (max-width: 820px)"));
   assert.ok(mobile.includes("@media (max-width: 640px)"));
-  assert.ok(mobile.includes("grid-template-columns: repeat(2, minmax(0, 1fr))"));
+  assert.ok(mobile.includes(".vigil-case-library-page .vigil-dashboard-donut"));
+  assert.ok(!mobile.includes(".vigil-dashboard-severity-key"));
 });
 
 test("Leader-line positions avoid overlapping at extreme proportions", () => {
