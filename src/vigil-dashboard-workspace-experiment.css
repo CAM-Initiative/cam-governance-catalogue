@@ -60,6 +60,15 @@
   box-sizing: border-box;
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-row > * { min-width: 0; }
+/* The donut owns severity selection; allocate its former column to search. */
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-case-table-search {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+}
+@media (max-width: 820px) {
+  .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-case-table-search {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .vigil-case-library-page .vigil-dashboard-shared-selection {
   display: flex;
   align-items: center;
