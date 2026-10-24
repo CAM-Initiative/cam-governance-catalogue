@@ -1045,14 +1045,22 @@ test("footer avoids repeating the header brand lockup", async () => {
 });
 
 
-test("Case File search, classification and severity filters share one desktop row", async () => {
-  const [cases, css] = await Promise.all([read("src/pages/vigil-cases.tsx"), read("src/vigil-ux-v4.css")]);
-  assert.match(cases, /<span>Classification<\/span>[\s\S]*<span>Severity<\/span>/);
-  assert.match(cases, /All severities/);
+test("Case File search and classification share desktop row; donut alone controls severity", async () => {
+  const [cases, dashboard, css, workspace] = await Promise.all([
+    read("src/pages/vigil-cases.tsx"),
+    read("src/components/vigil/VigilCasesDashboard.tsx"),
+    read("src/vigil-ux-v4.css"),
+    read("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.match(cases, /<span>Classification<\/span>/);
+  assert.doesNotMatch(cases, /<span>Severity<\/span>|All severities/);
   assert.match(cases, /severityCode\(record\) !== severity/);
   assert.match(cases, /setSeverity\(""\)/);
+  assert.match(cases, /onSeverity=\{setSeverity\}/);
+  assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
   assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
-  assert.match(css, /@media \(max-width: 820px\) \{[\s\S]*\.vigil-case-table-search,[\s\S]*grid-template-columns: 1fr/);
+  assert.match(workspace, /\.vigil-dashboard-filter-hub \.vigil-case-table-search \{\s*grid-template-columns: minmax\(0, 1fr\) minmax\(220px, 300px\)/);
+  assert.match(workspace, /@media \(max-width: 820px\) \{\s*\.vigil-case-library-page \.vigil-dashboard-filter-hub \.vigil-case-table-search \{\s*grid-template-columns: minmax\(0, 1fr\)/);
 });
 
 test("Case File stage and subsection headings share one editorial scale", async () => {
