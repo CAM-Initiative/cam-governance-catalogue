@@ -484,6 +484,7 @@ export default function VigilCases() {
               <section className="vigil-library-toolbar vigil-dashboard-filter-hub" aria-labelledby="case-filter-heading">
               <div className="vigil-dashboard-filter-hub-header">
                 <div>
+                  <span className="vigil-dashboard-eyebrow">01 / Refine</span>
                   <h2 id="case-filter-heading">Filters</h2>
                 </div>
                 {hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>}
@@ -556,7 +557,13 @@ export default function VigilCases() {
 
             <div className="vigil-dashboard-layout">
               <div className="vigil-dashboard-case-column">
-
+              <header className="vigil-dashboard-register-heading">
+                <div>
+                  <p className="vigil-dashboard-eyebrow">02 / Incident register</p>
+                  <h2>Investigated cases</h2>
+                  <p>Open a Case File to examine the evidence and recorded assessment.</p>
+                </div>
+              </header>
 
              {state.status === "loading" && <div className="vigil-registry-notice">Loading Case Files from {VIGIL_INCIDENT_REGISTRY_URL}…</div>}
             {state.status === "error" && <div className="vigil-registry-notice is-error">{state.message}</div>}
