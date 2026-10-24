@@ -172,7 +172,7 @@
 }
 .vigil-case-library-page .vigil-dashboard-sidebar { gap: .8rem; }
 .vigil-case-library-page .vigil-dashboard-panel { border-radius: 12px; }
-.vigil-case-library-page .vigil-dashboard-panel-heading h2 { font-size: .98rem; }
+.vigil-case-library-page .vigil-dashboard-panel-heading h2 { font-size: 1.06rem; }
 
 /* Light theme ties the filters, library and visual instruments to the warm
    institutional fascia. The globe remains blue for Earth recognisability;
@@ -429,7 +429,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   }
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-sort-heading {
     gap: .3rem;
-    font: 700 .68rem/1.35 var(--app-font-mono), monospace;
+    font: 700 .83rem/1.35 var(--app-font-mono), monospace;
     letter-spacing: .035em;
     white-space: nowrap;
   }
@@ -443,7 +443,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   }
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-id {
     overflow-wrap: anywhere;
-    font-size: .71rem;
+    font-size: .87rem;
   }
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy h2 {
     font-size: .9rem;
@@ -596,7 +596,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   cursor: pointer;
   color: var(--vd-workspace-ink);
   /* Compact sans navigation matches the case-file data. */
-  font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;
+  font: 600 .94rem/1.45 var(--app-font-sans), sans-serif;
   letter-spacing: .055em;
   text-transform: uppercase;
 }
@@ -610,7 +610,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   display: inline-flex;
   align-items: center;
   gap: .32rem;
-  font: 550 .7rem/1.4 var(--app-font-sans), sans-serif;
+  font: 550 .85rem/1.4 var(--app-font-sans), sans-serif;
   letter-spacing: 0;
   text-transform: none;
   color: var(--vd-workspace-muted);
@@ -643,8 +643,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   cursor: pointer;
   color: var(--vd-workspace-ink);
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .82rem;
-  line-height: 1.4;
+  font-size: .94rem;
+  line-height: 1.45;
 }
 .vigil-case-library-page .vigil-dashboard-facet-option:hover {
   background: hsl(var(--primary) / .08);
@@ -666,7 +666,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 }
 .vigil-case-library-page .vigil-dashboard-facet-count {
   font-variant-numeric: tabular-nums;
-  font-size: .72rem;
+  font-size: .87rem;
   color: var(--vd-workspace-muted);
   padding-left: .15rem;
 }
@@ -706,7 +706,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
    sortable table headings and technical counters. */
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-text {
   font-family: var(--app-font-sans);
-  font-size: .84rem;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: 0;
@@ -727,7 +727,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   border-bottom: 1px solid var(--vd-workspace-border);
 }
 .vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-facet-heading {
-  min-height: 26px;
+  min-height: 34px;
 }
 
 @media (min-width: 1320px) {
@@ -908,9 +908,9 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 /* Mono identifies the sidebar; Space Grotesk keeps facet labels legible. */
 .vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
   font-family: var(--app-font-mono), monospace;
-  font-size: .78rem;
-  font-weight: 400;
-  letter-spacing: .055em;
+  font-size: .94rem;
+  font-weight: 500;
+  letter-spacing: .045em;
   text-transform: uppercase;
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading {
@@ -924,8 +924,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   min-width: 0;
   width: 0;
   flex: 1 1 0%;
-  font-family: var(--app-font-serif), Georgia, serif;
-  font-size: .87rem;
+  font-family: var(--app-font-sans), sans-serif;
+  font-size: 1rem;
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub :is(
   .vigil-dashboard-facet-option, .vigil-dashboard-facet-option-name,
@@ -1003,16 +1003,13 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   width: 0;
   flex: 1 1 0%;
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .86rem;
+  font-size: 1rem;
 }
 
-/* Restrained blush from the Observatory's rose-tinted masthead family,
-   scoped to Harm Types instead of changing all dashboard accent colours. */
+/* The Harm Types palette is intentionally theme-specific: restrained blush
+   in light mode, and the original inherited institutional gold in dark mode. */
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-fill {
   background: linear-gradient(90deg, hsl(350 33% 42%), hsl(350 37% 52%));
-}
-html[data-theme="dark"] .vigil-case-library-page .vigil-dashboard-harm-type-fill {
-  background: linear-gradient(90deg, hsl(350 26% 59%), hsl(350 31% 68%));
 }
 
 /* Calm hierarchy: a single sidebar title and consistent sans-serif case text. */
@@ -1042,23 +1039,23 @@ html[data-theme="dark"] .vigil-case-library-page .vigil-dashboard-harm-type-fill
   margin: .38rem 0 .12rem;
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-match-count {
-  font-size: .8rem;
-  font-weight: 500;
+  font-size: .94rem;
+  font-weight: 600;
 }
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy h2 {
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .94rem;
+  font-size: 1.12rem;
   font-weight: 700;
   line-height: 1.38;
   letter-spacing: -.01em;
 }
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy p {
   font-family: var(--app-font-sans), sans-serif;
-  font-size: .84rem;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 1.48;
   letter-spacing: 0;
-  color: hsl(var(--muted-foreground));
+  color: hsl(var(--foreground) / .8);
 }
 /* Compact 3D Earth without shrinking the clickable country beacons or selector. */
 .vigil-case-library-page .vigil-dashboard-sidebar .vigil-dashboard-location-panel {
