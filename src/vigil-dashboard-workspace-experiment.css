@@ -199,12 +199,12 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel {
   --vd-ink: hsl(24 22% 22%);
   --vd-muted: hsl(22 13% 39%);
   --vd-accent: hsl(38 67% 34%);
-  --vd-rule: hsl(19 23% 72% / .8);
-  --vd-raised: hsl(17 30% 91%);
-  --vd-chart-line: hsl(19 18% 58%);
+  --vd-rule: hsl(25 16% 67% / .9);
+  --vd-raised: hsl(27 18% 76%);
+  --vd-chart-line: hsl(23 15% 51%);
   border-color: var(--vd-rule);
-  background: linear-gradient(146deg, hsl(23 34% 98%), hsl(16 30% 94%) 56%, hsl(18 27% 91%));
-  box-shadow: 0 .35rem 1.05rem hsl(22 20% 18% / .055), inset 0 1px hsl(0 0% 100% / .76);
+  background: linear-gradient(150deg, hsl(29 19% 86%), hsl(26 15% 82%) 57%, hsl(27 16% 79%));
+  box-shadow: 0 .35rem 1.05rem hsl(22 20% 18% / .07), inset 0 1px hsl(0 0% 100% / .24);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel::before {
   background: linear-gradient(90deg, transparent, hsl(17 32% 62% / .32), hsl(38 70% 38% / .42), transparent);
@@ -593,9 +593,9 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   list-style: none;
   cursor: pointer;
   color: var(--vd-workspace-ink);
-  /* Editorial labels use Playfair, distinct from the technical case table. */
-  font: 660 .85rem/1.45 var(--app-font-serif), Georgia, serif;
-  letter-spacing: .025em;
+  /* Compact sans navigation matches the case-file data. */
+  font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;
+  letter-spacing: .055em;
   text-transform: uppercase;
 }
 .vigil-case-library-page .vigil-dashboard-facet-heading::-webkit-details-marker { display: none; }
@@ -903,15 +903,19 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   }
 }
 
-/* Playfair is now reserved for the experimental left-rail headings and search.
-   Expanded choices, counts, and vendor tools return to their readable sans face. */
-.vigil-case-library-page .vigil-dashboard-filter-hub-header h2,
-.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading,
-.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-selection-caption {
-  font-family: var(--app-font-serif), Georgia, serif;
+/* Mono identifies the sidebar; Space Grotesk keeps facet labels legible. */
+.vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
+  font-family: var(--app-font-mono), monospace;
+  font-size: .78rem;
+  font-weight: 400;
+  letter-spacing: .055em;
+  text-transform: uppercase;
 }
-.vigil-case-library-page .vigil-dashboard-filter-hub-header h2 { font-weight: 650; }
-.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading { letter-spacing: .025em; }
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading {
+  font-family: var(--app-font-sans), sans-serif;
+  font-weight: 600;
+  letter-spacing: .055em;
+}
 /* Let the input shrink beside its search icon and conditional clear button.
    The short prompt is designed for the 225px minimum desktop rail. */
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control input {
@@ -1006,5 +1010,61 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-col
 @media (max-width: 720px) {
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
     padding: .78rem .85rem;
+  }
+}
+
+/* Calm hierarchy: a single sidebar title and consistent sans-serif case text. */
+.vigil-case-library-page .vigil-dashboard-filter-hub-header {
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: .3rem .5rem;
+  margin-bottom: .45rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
+  min-width: 0;
+  font-weight: 400;
+  line-height: 1.35;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub-header .vigil-dashboard-clear-all {
+  margin-inline-start: auto;
+  font-size: .71rem;
+  white-space: nowrap;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-shared-selection {
+  padding-bottom: .65rem;
+  gap: .45rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-filter-match-count {
+  font-size: .8rem;
+  font-weight: 500;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy h2 {
+  font-family: var(--app-font-sans), sans-serif;
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.38;
+  letter-spacing: -.01em;
+}
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-copy p {
+  font-family: var(--app-font-sans), sans-serif;
+  font-size: .8rem;
+  font-weight: 400;
+  line-height: 1.48;
+  letter-spacing: 0;
+  color: hsl(var(--muted-foreground));
+}
+/* Compact 3D Earth without shrinking the clickable country beacons or selector. */
+.vigil-case-library-page .vigil-dashboard-sidebar .vigil-dashboard-location-panel {
+  padding: .58rem .64rem .46rem;
+}
+.vigil-case-library-page .vigil-dashboard-location-panel .vigil-dashboard-globe-scene {
+  width: min(100%, 222px);
+  max-width: 222px;
+  margin: 0 auto;
+}
+@media (max-width: 720px) {
+  .vigil-case-library-page .vigil-dashboard-location-panel .vigil-dashboard-globe-scene {
+    width: min(100%, 250px);
+    max-width: 250px;
   }
 }
