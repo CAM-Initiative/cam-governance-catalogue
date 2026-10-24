@@ -762,7 +762,7 @@ test("Bar and donut share the exact same distribution and filter handler with ba
   assert.match(dashboard, /SU is unassessed, not another severity band or evidence of minimal harm/);
   const chartStart = dashboard.indexOf('className="vigil-dashboard-severity-chart-area"');
   const toggleStart = dashboard.indexOf('className="vigil-dashboard-severity-view-switch"');
-  const harmTypesStart = dashboard.indexOf('className="vigil-dashboard-harm-types-panel"');
+  const harmTypesStart = dashboard.indexOf('className="vigil-dashboard-panel vigil-dashboard-harm-types-panel"');
   assert.ok(chartStart > 0 && chartStart < toggleStart && toggleStart < harmTypesStart,
     "Bars/Donut switch follows the chart but precedes the next panel");
 });
