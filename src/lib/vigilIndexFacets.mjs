@@ -7,18 +7,12 @@ export const INDEX_FACETS = [
   { id: "year", title: "Year of occurrence" },
   { id: "agentic", title: "Agentic status" },
   { id: "deployment", title: "Deployment state" },
-  { id: "externalReach", title: "External reach" },
   { id: "activity", title: "Activity context" },
   { id: "vendor", title: "Platform / vendor" },
   { id: "adjudication", title: "Adjudication coverage" },
-  { id: "sourceRole", title: "Source role" },
-  { id: "requirements", title: "External requirement assessments" },
   { id: "externalAssessments", title: "External assessments" },
-  { id: "mappedClass", title: "Mapped Fidelity Class" },
 ];
 
-const ROLE_VALUES = new Set(["failure-occurrence", "successful-invariant", "ambiguous-boundary"]);
-const CLASS_ID = /^VIGIL-FC-\d{6}$/i;
 const MISSING_LABEL = "Not established in index";
 
 function asText(value) {
@@ -33,13 +27,6 @@ function plain(value) {
 }
 function textArray(value) {
   return unique((Array.isArray(value) ? value : [value]).flatMap(plain));
-}
-function classIds(raw) {
-  const primary = raw?.primary_classification;
-  const rows = [primary, ...(Array.isArray(raw?.secondary_classifications) ? raw.secondary_classifications : [])];
-  // An unasserted class ID is not a classification. Mapping-local role is required.
-  return unique(rows.filter(x => x && ROLE_VALUES.has(x.classification_role) && CLASS_ID.test(x.class_id ?? ""))
-    .map(x => x.class_id.toUpperCase()));
 }
 function assessmentPresence(value) {
   // Missing is not zero: unknown must not become "none".
@@ -68,25 +55,20 @@ export function indexFacetValues(record, id) {
     case "year": values = occurredYear(raw); break;
     case "agentic": values = plain(raw.agent_context?.agentic_status); break;
     case "deployment": values = plain(raw.occurrence_environment?.deployment_state); break;
-    case "externalReach": values = plain(raw.occurrence_environment?.external_reach); break;
     case "activity": values = textArray(raw.occurrence_environment?.activity_contexts); break;
     case "vendor": values = plain(raw.platform_or_vendor); break;
     case "adjudication": values = plain(raw.adjudication_coverage?.status); break;
-    case "sourceRole": values = textArray(raw.source_roles); break;
-    case "requirements": values = assessmentPresence(raw.external_requirement_assessment_count); break;
     case "externalAssessments": values = assessmentPresence(raw.external_assessment_count); break;
-    case "mappedClass": values = classIds(raw); break;
     default: return [];
   }
   return values.length ? unique(values) : [NOT_INDEXED];
 }
 export function facetOptionLabel(id, value) {
   if (value === NOT_INDEXED) return MISSING_LABEL;
-  if (id === "requirements" || id === "externalAssessments") {
+  if (id === "externalAssessments") {
     return value === "present" ? "One or more assessments" : "None recorded";
   }
   if (id === "year") return value;
-  if (id === "mappedClass") return "FC-" + String(Number(value.slice(-6))).padStart(3, "0");
   const names = {
     "pre-deployment": "Pre-deployment",
     "non-agentic": "Non-agentic",
