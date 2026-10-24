@@ -721,13 +721,15 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor .vigil-dashboard-facet-options {
   max-height: 13rem;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
-  overscroll-behavior-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--vd-workspace-muted) transparent;
+  overscroll-behavior-y: contain;
+  scrollbar-width: auto;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--vd-workspace-accent) var(--vd-workspace-border);
   border-left: 1px solid var(--vd-workspace-border);
   padding-left: .35rem;
+  padding-right: .22rem;
 }
 .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor .vigil-dashboard-facet-options:focus-visible {
   outline: 2px solid hsl(var(--ring));
@@ -798,5 +800,74 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
     .vigil-dashboard-facet-options {
     max-height: min(15rem, 38dvh);
     overflow-y: auto;
+  }
+}
+
+/* ChromeOS and overlay-scrollbar browsers may hide the OS scroll thumb.
+   These buttons are a visible, keyboard-accessible way to scroll the inset
+   without having to hit the narrow scrollbar or scroll the entire left rail. */
+.vigil-case-library-page .vigil-dashboard-index-facet.is-vendor
+  .vigil-dashboard-facet-options::-webkit-scrollbar { width: 12px; }
+.vigil-case-library-page .vigil-dashboard-index-facet.is-vendor
+  .vigil-dashboard-facet-options::-webkit-scrollbar-track {
+  background: var(--vd-workspace-border);
+  border-radius: 7px;
+}
+.vigil-case-library-page .vigil-dashboard-index-facet.is-vendor
+  .vigil-dashboard-facet-options::-webkit-scrollbar-thumb {
+  background: var(--vd-workspace-accent);
+  border: 2px solid var(--vd-workspace-border);
+  border-radius: 7px;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .48rem;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-scroll-caption {
+  color: var(--vd-workspace-muted);
+  font-size: .71rem;
+  line-height: 1.4;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-scroll-buttons {
+  display: flex;
+  gap: .28rem;
+  flex-shrink: 0;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-scroll-buttons button {
+  width: 32px;
+  height: 30px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--vd-workspace-border);
+  border-radius: 5px;
+  color: var(--vd-workspace-ink);
+  background: hsl(var(--background) / .6);
+  cursor: pointer;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-scroll-buttons button:hover:not(:disabled) {
+  color: var(--vd-workspace-accent);
+  border-color: var(--vd-workspace-accent);
+}
+.vigil-case-library-page .vigil-dashboard-vendor-scroll-buttons button:disabled {
+  opacity: .36;
+  cursor: default;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-scroll-buttons button:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+@media (min-width: 1141px) {
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor.is-expanded
+    .vigil-dashboard-facet-options {
+    max-height: none;
+    overflow-y: visible;
+  }
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor
+    .vigil-dashboard-vendor-show-more {
+    display: inline-flex;
   }
 }
