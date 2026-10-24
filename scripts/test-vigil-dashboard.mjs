@@ -5,6 +5,7 @@ const source = file => readFile(new URL(`../${file}`, import.meta.url), "utf8");
 import { globePosition, globeRotationForLongitude } from "../src/lib/vigilGlobeCoordinates.mjs";
 import { failureClassIds, topFailureClasses, severityDistribution } from "../src/lib/vigilDashboardMetrics.mjs";
 import { donutSegmentAppearance } from "../src/lib/vigilDonutSelection.mjs";
+import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "../src/lib/vigilDonutCallouts.mjs";
 
 test("counts only explicitly failure-role mappings, once per Incident", () => {
   const raw = {
@@ -46,14 +47,16 @@ test("Globe-only preview shows heat-like beacons rather than numeric sidebar cap
   assert.ok(!globe.includes("state.targets = locations.map"));
   assert.ok(!globe.includes("Arc3") && !globe.includes("countryConnections"), "Avoid fabricating geographical connections");
 });
-test("Donut uses a fixed severity key, dimensional layers and keyboard filtering", async () => {
+test("Donut restores connected two-sided severity labels and keyboard selection", async () => {
   const dashboard = await source("src/components/vigil/VigilCasesDashboard.tsx");
-  assert.ok(dashboard.includes("vigil-dashboard-severity-key"));
-  assert.ok(dashboard.includes("vigil-dashboard-severity-copy"));
-  assert.doesNotMatch(dashboard, /severityCallouts|vigil-dashboard-severity-callout/);
+  assert.ok(dashboard.includes("layoutSeverityCallouts"));
+  assert.ok(dashboard.includes("vigil-dashboard-severity-callout"));
+  assert.ok(dashboard.includes("vigil-dashboard-severity-name"));
+  assert.ok(dashboard.includes("vigil-dashboard-severity-label"));
   assert.ok(dashboard.includes("vigil-donut-dimensional-shadow"));
   assert.ok(dashboard.includes("vigil-donut-face"));
   assert.ok(dashboard.includes("vigil-donut-shade-"));
+  assert.doesNotMatch(dashboard, /vigil-dashboard-severity-key|vigil-dashboard-severity-item/);
   assert.match(dashboard, /onKeyDown=\{event\s*=>/, "Interactive chart remains keyboard operable");
 });
 
@@ -172,15 +175,16 @@ test("Globe removes blue atmosphere, uses warm gold beacons, and derives selecti
   assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-globe-scene::before \{\s*content: none;\s*display: none;/);
 });
 
-test("Interactive doughnut and aligned severity key support keyboard-only focus", async () => {
+test("Interactive donut and leader-line labels remain keyboard operable", async () => {
   const [dashboard, css] = await Promise.all([
     source("src/components/vigil/VigilCasesDashboard.tsx"),
     source("src/components/vigil/VigilCasesDashboard.css"),
   ]);
   assert.ok(dashboard.includes('tabIndex={0} role="button"'), "ring segments remain keyboard focusable");
-  assert.ok(dashboard.includes('vigil-dashboard-severity-key'), "all severity labels use accessible buttons");
+  assert.ok(dashboard.includes('role="button" tabIndex={0}'), "connected callouts remain keyboard focusable");
   assert.ok(dashboard.includes('aria-pressed={active}'));
   assert.match(css, /\.vigil-dashboard-donut-segment:focus-visible \{\s*filter: drop-shadow/);
+  assert.match(css, /\.vigil-dashboard-severity-callout:focus-visible \{\s*filter: drop-shadow/);
 });
 
 test("Case Files search and classification filter have card-edge inset, and globe info glyph is lowercase", async () => {
@@ -226,13 +230,13 @@ test("Insight panels stay compact while donut severity labels remain readable an
   assert.ok(!dashboard.includes("Number of case files with each explicitly evidenced failure occurrence;"));
   assert.match(dashboard, /aria-pressed=\{active\}/);
   assert.match(dashboard, /donutSegmentAppearance\(start, item\.count, total, isSelected, Boolean\(selected\)\)/);
-  assert.doesNotMatch(dashboard, /severityCallouts|vigil-dashboard-severity-callout/);
-  assert.match(dashboard, /SEVERITIES\.map\(definition =>/);
-  assert.match(dashboard, /disabled=\{!count\}/);
+  assert.match(dashboard, /layoutSeverityCallouts\(/);
+  assert.match(dashboard, /labels\.map\(item =>/);
+  assert.match(dashboard, /strokeWidth=\{active \? 2\.6 : 1\.6\}/);
   assert.match(css, /\.vigil-dashboard-failures-panel \.vigil-dashboard-failure-list \{ margin-top: \.5rem/);
 });
 
-test("All three insight panels retain disclosures and severity key highlights selected rows", async () => {
+test("All three insight panels retain disclosures and selected leader-line labels", async () => {
   const [dashboard, css] = await Promise.all([
     source("src/components/vigil/VigilCasesDashboard.tsx"),
     source("src/components/vigil/VigilCasesDashboard.css"),
@@ -244,8 +248,8 @@ test("All three insight panels retain disclosures and severity key highlights se
   assert.equal((dashboard.match(/Counts are distinct incidents, not mentions or evidence-source citations\./g) ?? []).length, 1);
   assert.doesNotMatch(dashboard, /<p className="vigil-dashboard-source-note">Counts are distinct incidents/);
   assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-panel-info \{\s*position: absolute;\s*z-index: 8;\s*top: \.55rem;\s*right: \.55rem;/);
-  assert.match(dashboard, /className=\{`vigil-dashboard-severity-item\$\{active \? " is-selected"/);
-  assert.match(dashboard, /className="vigil-dashboard-severity-key"/);
+  assert.match(dashboard, /className=\{`vigil-dashboard-severity-callout\$\{active \? " is-selected"/);
+  assert.match(dashboard, /className="vigil-dashboard-severity-name"/);
 });
 
 test("Experimental shared filter hub spans list and all dashboard instruments", async () => {
@@ -334,6 +338,52 @@ test("Mobile Case Files restores overhead filters, one case list, and stacked in
   assert.ok(mobile.includes("@media (max-width: 820px)"));
   assert.ok(mobile.includes("@media (max-width: 640px)"));
   assert.ok(mobile.includes("grid-template-columns: repeat(2, minmax(0, 1fr))"));
+});
+
+test("Leader-line positions avoid overlapping at extreme proportions", () => {
+  const severityCodes = ["S1", "S2", "S3", "S4", "S5", "SU"];
+  const fixtures = [
+    [23, 39, 68, 21, 4, 45],
+    [1, 1, 1, 1, 1, 100],
+    [100, 1, 1, 1, 1, 1],
+    [1, 100, 1, 1, 1, 1],
+    [1, 1, 100, 1, 1, 1],
+    [1, 1, 1, 100, 1, 1],
+    [1, 1, 1, 1, 100, 1],
+    [0, 0, 0, 0, 0, 0],
+  ];
+  for (const counts of fixtures) {
+    const total = counts.reduce((a,b) => a+b, 0);
+    const labels = layoutSeverityCallouts(severityCodes.map((code,index) => ({
+      code, count: counts[index],
+    })), total);
+    assert.equal(labels.length, counts.filter(count => count > 0).length);
+    for (const label of labels) {
+      assert.ok(Number.isFinite(label.y));
+      assert.ok(label.y >= CALLOUT_GEOMETRY.minY - 0.01);
+      assert.ok(label.y <= CALLOUT_GEOMETRY.maxY + 0.01);
+    }
+    for (const side of ["left", "right"]) {
+      const items = labels.filter(item=>item.side===side).sort((a,b)=>a.y-b.y);
+      for (let i=1;i<items.length;i++) {
+        assert.ok(items[i].y - items[i-1].y >= 43,
+          `Overlapping ${side}-hand labels: ${items[i-1].code} and ${items[i].code}`);
+      }
+    }
+  }
+});
+
+test("Experimental light mode uses blush-toned hero-compatible insight cards", async () => {
+  const [styles, masthead] = await Promise.all([
+    source("src/vigil-dashboard-workspace-experiment.css"),
+    source("src/vigil-observatory-masthead.css"),
+  ]);
+  assert.match(masthead, /soft-grey/);
+  assert.match(styles, /Echo the blush \/ warm-grey artwork of the Case Files hero/);
+  assert.match(styles, /hsl\(16 30% 94%\)/);
+  assert.match(styles, /hsl\(18 27% 91%\)/);
+  assert.match(styles, /\.vigil-dashboard-severity-callout\.is-selected/);
+  assert.ok(!styles.includes("grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr)"));
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
