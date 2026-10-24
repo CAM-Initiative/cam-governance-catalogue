@@ -714,3 +714,89 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
     scrollbar-color: var(--vd-workspace-border) transparent;
   }
 }
+
+/* Vendor options stay discoverable in long indexes.
+   Desktop: an explicit, keyboard-scrollable inset. Mobile: only six vendor
+   options initially, with search or Show all to access the full selection. */
+.vigil-case-library-page .vigil-dashboard-index-facet.is-vendor .vigil-dashboard-facet-options {
+  max-height: 13rem;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vd-workspace-muted) transparent;
+  border-left: 1px solid var(--vd-workspace-border);
+  padding-left: .35rem;
+}
+.vigil-case-library-page .vigil-dashboard-index-facet.is-vendor .vigil-dashboard-facet-options:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-search {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .6rem;
+  padding: .35rem .45rem;
+  border: 1px solid var(--vd-workspace-border);
+  border-radius: 4px;
+  color: var(--vd-workspace-muted);
+}
+.vigil-case-library-page .vigil-dashboard-vendor-search:focus-within {
+  border-color: hsl(var(--primary) / .6);
+  outline: 1px solid hsl(var(--ring));
+}
+.vigil-case-library-page .vigil-dashboard-vendor-search input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--vd-workspace-ink);
+  font: 500 .78rem/1.4 var(--app-font-sans), sans-serif;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-search input::placeholder {
+  color: var(--vd-workspace-muted);
+}
+.vigil-case-library-page .vigil-dashboard-facet-no-results {
+  margin: .3rem .1rem;
+  color: var(--vd-workspace-muted);
+  font-size: .76rem;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-show-more {
+  display: none;
+  font-size: .77rem;
+  font-weight: 650;
+  color: var(--vd-workspace-accent);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+  margin-top: .45rem;
+  padding: .3rem 0;
+}
+.vigil-case-library-page .vigil-dashboard-vendor-show-more:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+@media (max-width: 1140px) {
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor:not(.is-expanded):not(.has-query)
+    .vigil-dashboard-facet-option:nth-of-type(n+8):not(.is-selected) {
+    display: none;
+  }
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor:not(.is-expanded):not(.has-query)
+    .vigil-dashboard-facet-options {
+    max-height: none;
+  }
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor
+    .vigil-dashboard-vendor-show-more {
+    display: inline-flex;
+  }
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor.is-expanded
+    .vigil-dashboard-facet-options,
+  .vigil-case-library-page .vigil-dashboard-index-facet.is-vendor.has-query
+    .vigil-dashboard-facet-options {
+    max-height: min(15rem, 38dvh);
+    overflow-y: auto;
+  }
+}
