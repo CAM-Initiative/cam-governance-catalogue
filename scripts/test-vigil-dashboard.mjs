@@ -749,6 +749,8 @@ test("Six-column severity bar comparison preserves ordinal classes and separates
   assert.match(css, /grid-template-columns: repeat\(5, minmax\(0, 1fr\)\) minmax\(0, 1\.18fr\)/);
   assert.match(css, /\.vigil-dashboard-bar-choice\.is-unassessed/);
   assert.match(css, /\.vigil-dashboard-bar-choice:focus-visible/);
+  assert.match(css, /background-image:[\s\S]*?linear-gradient\(105deg/);
+  assert.match(css, /\.vigil-dashboard-bar-fill::after/);
 });
 
 test("Bar and donut share the exact same distribution and filter handler with bars default", async () => {
@@ -838,7 +840,7 @@ test("Severity and Case Files use a restrained common type scale, and harm count
   assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy h2 \{[\s\S]*?font-size: 1\.12rem/);
   assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy p \{[\s\S]*?font-size: 1rem/);
   assert.match(chartStyles, /\.vigil-dashboard-harm-type-label \{[\s\S]*?font-size: \.97rem/);
-  assert.match(dashboard, /\x60Show all \$\{harmTypes\.length\} with S2–S5 findings \(\$\{harmDimensions\.length\} defined\)\x60/);
+  assert.match(dashboard, /showAllHarmTypes \? "Show top six" : "Show all"/);
   assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-size: 1rem/);
   assert.match(caseStyles, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-match-count \{[\s\S]*?font-size: \.94rem/);
   assert.match(chartStyles, /\.vigil-dashboard-failure-name strong \{[\s\S]*?font-size: \.96rem/);
@@ -847,6 +849,8 @@ test("Severity and Case Files use a restrained common type scale, and harm count
   assert.ok(caseStyles.includes("hsl(350 33% 42%), hsl(350 37% 52%)"), "Light mode retains blush bars");
   assert.doesNotMatch(caseStyles, /html\[data-theme="dark"\] \.vigil-case-library-page \.vigil-dashboard-harm-type-fill/, "Dark mode restores the existing gold bar token");
   assert.match(chartStyles, /\.vigil-case-library-page \.vigil-dashboard-harm-type-fill \{[\s\S]*?background: var\(--vd-accent\)/);
+  assert.match(chartStyles, /\.vigil-dashboard-harm-type-fill::before/);
+  assert.match(chartStyles, /\.vigil-dashboard-failure-list button:hover \.vigil-dashboard-failure-bar/);
 });
 
 test("Harm Types cross-filter every existing instrument but preserves its own ranking order", async () => {
