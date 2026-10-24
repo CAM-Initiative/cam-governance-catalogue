@@ -302,4 +302,38 @@ test("Three-column desktop workbench keeps one filter source and accessible read
 
 });
 
+
+test("Combined jurisdiction results display one distinct total and the visible page range", async () => {
+  const page = await source("src/pages/vigil-cases.tsx");
+  assert.match(page, /matchesSelectedCountries\(countryByCase\.get\(record\.id\), jurisdictions\)/);
+  assert.match(page, /const sorted = useMemo\(\(\) => \[\.\.\.filtered\]\.sort/);
+  assert.match(page, /const pageStart = sorted\.length \? \(currentPage - 1\) \* PAGE_SIZE \+ 1 : 0/);
+  assert.match(page, /const pageEnd = Math\.min\(currentPage \* PAGE_SIZE, sorted\.length\)/);
+  assert.match(page, /\{sorted\.length\} \{jurisdictions\.length \? "unique matching" : "matching"\}/);
+  assert.match(page, /Across \$\{jurisdictions\.length\} selected/);
+  assert.match(page, /Showing \$\{pageStart\}–\$\{pageEnd\} on this page/);
+  assert.equal((page.match(/vigil-dashboard-case-match-count/g) ?? []).length, 1,
+    "Do not add a competing or duplicated total");
+});
+
+test("Mobile Case Files restores overhead filters, one case list, and stacked insights beneath", async () => {
+  const [page, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  const filter = page.indexOf('className="vigil-library-toolbar vigil-dashboard-filter-hub"');
+  const cases = page.indexOf('className="vigil-dashboard-case-column"');
+  const insights = page.indexOf('<VigilCasesDashboard');
+  assert.ok(filter >= 0 && cases > filter && insights > cases,
+    "DOM order remains filters then Case Files then geographic/harm/taxonomy insights");
+  const mobile = css.slice(css.lastIndexOf("/* Preserve the original mobile reading experience"));
+  assert.ok(mobile.includes("@media (max-width: 1140px)"));
+  assert.ok(mobile.includes("grid-template-columns: minmax(0, 1fr)"));
+  assert.ok(mobile.includes("flex-direction: column"));
+  assert.ok(mobile.includes("position: static"));
+  assert.ok(mobile.includes("@media (max-width: 820px)"));
+  assert.ok(mobile.includes("@media (max-width: 640px)"));
+  assert.ok(mobile.includes("grid-template-columns: repeat(2, minmax(0, 1fr))"));
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.
