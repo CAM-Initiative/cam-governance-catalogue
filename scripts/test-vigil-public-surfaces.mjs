@@ -1063,7 +1063,7 @@ test("Case File search and classification share desktop row; donut alone control
   assert.match(cases, /onSeverity=\{setSeverity\}/);
   assert.match(dashboard, /<SeverityDonut records=\{distributionRecords\} selected=\{severity\} onSelect=\{onSeverity\}/);
   assert.match(css, /\.vigil-case-table-search \{[\s\S]*grid-template-columns: minmax\(320px, 1fr\) minmax\(220px, 300px\) minmax\(190px, 260px\)/);
-  assert.match(workspace, /\.vigil-dashboard-filter-hub \.vigil-case-table-search \{\s*grid-template-columns: minmax\(0, 1fr\) minmax\(220px, 300px\)/);
+  assert.match(workspace, /\.vigil-dashboard-filter-hub \.vigil-case-table-search \{\s*grid-template-columns: minmax\(0, 1fr\)/);
   assert.match(workspace, /@media \(max-width: 820px\) \{\s*\.vigil-case-library-page \.vigil-dashboard-filter-hub \.vigil-case-table-search \{\s*grid-template-columns: minmax\(0, 1fr\)/);
 });
 

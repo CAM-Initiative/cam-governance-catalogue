@@ -437,7 +437,35 @@ export default function VigilCases() {
                   {search && <button type="button" onClick={() => setSearch("")} aria-label="Clear search"><X /></button>}
                 </label>
 
+              {hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection">
+                <div className="vigil-dashboard-selection-header">
+                  <span className="vigil-dashboard-selection-caption">Current view</span>
+                  <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>
+                </div>
+                <div className="vigil-dashboard-selection-chips">
+                  {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
+                  {classifications.map(key => <button type="button" key={key} className="vigil-dashboard-selection-chip" onClick={() => toggleClassification(key)} aria-label={`Remove ${classificationStates.find(entry => entry.key === key)?.label ?? key} classification filter`}>Classification: {classificationStates.find(entry => entry.key === key)?.label ?? key}<X aria-hidden="true" size={13} /></button>)}
+                  {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
+                  {jurisdictions.map(code => <button type="button" key={code} className="vigil-dashboard-selection-chip" onClick={() => toggleJurisdiction(code)} aria-label={`Remove ${countryDisplayName(code)} jurisdiction filter`}>Jurisdiction: {countryDisplayName(code)}<X aria-hidden="true" size={13} /></button>)}
+                  {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
+                  {Object.entries(indexFacets).flatMap(([id, keys]) => keys.map(key =>
+                    <button type="button" key={`${id}:${key}`} className="vigil-dashboard-selection-chip"
+                      onClick={() => toggleIndexFacet(id, key)} aria-label={`Remove ${INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: ${facetOptionLabel(id,key)} filter`}>
+                      {INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: {facetOptionLabel(id, key)}<X aria-hidden="true" size={13}/>
+                    </button>
+                  ))}
+                </div>
+                <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
+              </div>}
                 <div className="vigil-dashboard-metadata-facets">
+                  <div className="vigil-dashboard-facet-help-row">
+                    <details className="vigil-dashboard-facet-help">
+                      <summary aria-label="About filter counts" title="About filter counts">i</summary>
+                      <div className="vigil-dashboard-facet-help-body">
+                        <p>Counts reflect the full loaded index. Values not established in the index are shown separately. Select multiple items within or across sections.</p>
+                      </div>
+                    </details>
+                  </div>
                 <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
                   <summary className="vigil-dashboard-facet-heading">
                     <span>Classification</span>
@@ -466,27 +494,8 @@ export default function VigilCases() {
                 {indexedFacetCatalog.map(facet => <IndexFacet key={facet.id} id={facet.id} title={facet.title}
                   options={facet.options} total={records.length} selected={indexFacets[facet.id] ?? []}
                   onToggle={toggleIndexFacet} onClear={clearIndexFacet}/>)}
-                <p className="vigil-dashboard-facet-guidance">Counts reflect the full loaded index. Values not established in the index are shown separately. Select multiple items within or across sections.</p>
                 </div>
               </div>
-              {hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection">
-                <span className="vigil-dashboard-selection-caption">Current view</span>
-                <div className="vigil-dashboard-selection-chips">
-                  {search && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSearch("")} aria-label="Remove search filter">Search: {search}<X aria-hidden="true" size={13} /></button>}
-                  {classifications.map(key => <button type="button" key={key} className="vigil-dashboard-selection-chip" onClick={() => toggleClassification(key)} aria-label={`Remove ${classificationStates.find(entry => entry.key === key)?.label ?? key} classification filter`}>Classification: {classificationStates.find(entry => entry.key === key)?.label ?? key}<X aria-hidden="true" size={13} /></button>)}
-                  {severity && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setSeverity("")} aria-label="Remove severity filter">{severityLabel(severity)}<X aria-hidden="true" size={13} /></button>}
-                  {jurisdictions.map(code => <button type="button" key={code} className="vigil-dashboard-selection-chip" onClick={() => toggleJurisdiction(code)} aria-label={`Remove ${countryDisplayName(code)} jurisdiction filter`}>Jurisdiction: {countryDisplayName(code)}<X aria-hidden="true" size={13} /></button>)}
-                  {failureClass && <button type="button" className="vigil-dashboard-selection-chip" onClick={() => setFailureClass("")} aria-label="Remove fidelity class filter">{failureClass.replace("VIGIL-FC-", "FC-")}<X aria-hidden="true" size={13} /></button>}
-                  {Object.entries(indexFacets).flatMap(([id, keys]) => keys.map(key =>
-                    <button type="button" key={`${id}:${key}`} className="vigil-dashboard-selection-chip"
-                      onClick={() => toggleIndexFacet(id, key)} aria-label={`Remove ${INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: ${facetOptionLabel(id,key)} filter`}>
-                      {INDEX_FACETS.find(facet => facet.id === id)?.title ?? id}: {facetOptionLabel(id, key)}<X aria-hidden="true" size={13}/>
-                    </button>
-                  ))}
-                </div>
-                <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
-                <button type="button" className="vigil-dashboard-clear-all" onClick={clearFilters}>Clear filters</button>
-              </div>}
               {!hasActiveFilters && <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>}
             </section>
 

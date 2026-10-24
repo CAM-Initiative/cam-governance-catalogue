@@ -60,9 +60,10 @@
   box-sizing: border-box;
 }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-row > * { min-width: 0; }
-/* The donut owns severity selection; allocate its former column to search. */
+/* Search → selected filters → metadata: the order remains visible at every width.
+   The donut owns severity selection rather than a redundant dropdown. */
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-case-table-search {
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  grid-template-columns: minmax(0, 1fr);
 }
 @media (max-width: 820px) {
   .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-case-table-search {
@@ -80,10 +81,19 @@
   margin-top: .76rem;
   font-size: .72rem;
 }
+.vigil-case-library-page .vigil-dashboard-selection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: .35rem .65rem;
+}
 .vigil-case-library-page .vigil-dashboard-selection-caption {
   flex: 0 0 auto;
-  color: var(--vd-workspace-muted);
-  font-size: .67rem;
+  color: var(--vd-workspace-ink);
+  font-size: .81rem;
+  font-weight: 700;
 }
 .vigil-case-library-page .vigil-dashboard-selection-chips {
   display: flex;
@@ -394,8 +404,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
     font-size: .75rem;
   }
   .vigil-case-library-page .vigil-dashboard-clear-all {
-    margin-inline-start: 0;
-    align-self: flex-start;
+    margin-inline-start: auto;
+    align-self: center;
     padding: .25rem 0;
   }
   .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-layout {
@@ -723,6 +733,64 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 .vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-facet-heading {
   min-height: 26px;
 }
+
+/* On-demand facet count guidance uses native details/summary with keyboard focus. */
+.vigil-case-library-page .vigil-dashboard-facet-help-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 1.6rem;
+  margin: .15rem .1rem .05rem;
+}
+.vigil-case-library-page .vigil-dashboard-facet-help {
+  position: relative;
+  z-index: 6;
+}
+.vigil-case-library-page .vigil-dashboard-facet-help > summary {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border: 1px solid var(--vd-workspace-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--vd-workspace-ink);
+  font: 700 .79rem/1 var(--app-font-serif), Georgia, serif;
+  list-style: none;
+  text-transform: lowercase;
+  cursor: pointer;
+}
+.vigil-case-library-page .vigil-dashboard-facet-help > summary::-webkit-details-marker {
+  display: none;
+}
+.vigil-case-library-page .vigil-dashboard-facet-help > summary:hover,
+.vigil-case-library-page .vigil-dashboard-facet-help[open] > summary {
+  border-color: var(--vd-workspace-accent);
+  color: var(--vd-workspace-accent);
+}
+.vigil-case-library-page .vigil-dashboard-facet-help > summary:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+.vigil-case-library-page .vigil-dashboard-facet-help-body {
+  position: absolute;
+  z-index: 8;
+  top: calc(100% + .42rem);
+  right: 0;
+  box-sizing: border-box;
+  width: min(14.5rem, calc(100vw - 3rem));
+  padding: .75rem .85rem;
+  border: 1px solid var(--vd-workspace-border);
+  border-radius: 5px;
+  background: hsl(var(--card));
+  color: var(--vd-workspace-ink);
+  box-shadow: 0 8px 22px hsl(var(--foreground) / .13);
+}
+.vigil-case-library-page .vigil-dashboard-facet-help-body p {
+  margin: 0;
+  font-size: .79rem;
+  line-height: 1.55;
+}
 @media (min-width: 1320px) {
   .vigil-case-library-page .vigil-dashboard-metadata-facets {
     max-width: 100%;
@@ -922,4 +990,24 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control input {
   font-family: var(--app-font-serif), Georgia, serif;
   font-size: .87rem;
+}
+
+/* Make selected filters visibly actionable immediately beneath search. */
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-shared-selection {
+  flex-direction: column;
+  align-items: stretch;
+  gap: .48rem;
+  width: 100%;
+  margin: .2rem 0 0;
+  padding: .62rem 0 0;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-selection-chips {
+  width: 100%;
+  flex-basis: auto;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-clear-all {
+  margin-inline-start: auto;
+  align-self: center;
+  font-size: .81rem;
+  white-space: nowrap;
 }

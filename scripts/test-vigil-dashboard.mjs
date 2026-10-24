@@ -594,4 +594,34 @@ test("Harm severity ring grows modestly but retains accessible callouts and sele
   assert.ok(selected.radius + selected.strokeWidth / 2 > normal.radius + normal.strokeWidth / 2);
 });
 
+test("Current view and Clear filters sit directly below search and before facet choices", async () => {
+  const [page, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  const search = page.indexOf('placeholder="Describe the behaviour you’re seeing…"');
+  const active = page.indexOf('hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection"');
+  const facets = page.indexOf('className="vigil-dashboard-metadata-facets"');
+  assert.ok(search >= 0 && active > search && facets > active);
+  const selected = page.slice(active, facets);
+  assert.match(selected, /vigil-dashboard-selection-header[\s\S]*?Current view[\s\S]*?onClick=\{clearFilters\}>Clear filters/);
+  assert.match(selected, /vigil-dashboard-selection-chips/);
+  assert.equal((page.match(/onClick=\{clearFilters\}>Clear filters<\/button>/g) ?? []).length, 1);
+  assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-case-table-search \{\s*grid-template-columns: minmax\(0, 1fr\)/);
+  assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-shared-selection \{[\s\S]*?flex-direction: column/);
+});
+
+test("Facet count explanation is a keyboard-accessible information disclosure", async () => {
+  const [page, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.match(page, /<details className="vigil-dashboard-facet-help">/);
+  assert.match(page, /<summary aria-label="About filter counts" title="About filter counts">i<\/summary>/);
+  assert.match(page, /Counts reflect the full loaded index/);
+  assert.doesNotMatch(page, /<p className="vigil-dashboard-facet-guidance">/);
+  assert.match(css, /\.vigil-dashboard-facet-help > summary:focus-visible/);
+  assert.match(css, /\.vigil-dashboard-facet-help-body \{[\s\S]*?position: absolute/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.
