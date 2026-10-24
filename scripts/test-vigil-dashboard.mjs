@@ -194,7 +194,7 @@ test("Case Files search and classification filter have card-edge inset, and glob
     source("src/vigil-dashboard-workspace-experiment.css"),
   ]);
   assert.match(page, /<section className="vigil-library-toolbar vigil-dashboard-filter-hub"/);
-  assert.match(page, /className="vigil-library-toolbar vigil-dashboard-case-search" role="search"/);
+  assert.match(page, /className="vigil-dashboard-filter-search" role="search"/);
   assert.match(page, /<span>Classification<\/span>/);
   assert.doesNotMatch(page, /<span>Severity<\/span>/);
   assert.match(workspace, /\.vigil-case-library-page \.vigil-dashboard-filter-hub \{[\s\S]*?padding: clamp\(\.85rem, 1\.8vw, 1\.2rem\) clamp\(\.9rem, 2vw, 1\.35rem\)/);
@@ -261,7 +261,8 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   const filterPosition = page.indexOf('className="vigil-library-toolbar vigil-dashboard-filter-hub"');
   const layoutPosition = page.indexOf('className="vigil-dashboard-layout"');
   assert.ok(filterPosition >= 0 && layoutPosition > filterPosition, "Shared query hub must be above both columns");
-  assert.ok(page.includes('className="vigil-library-toolbar vigil-dashboard-case-search"'));
+  assert.ok(page.includes('className="vigil-dashboard-filter-search"'));
+  assert.equal((page.match(/className="vigil-dashboard-filter-search"/g) ?? []).length, 1, "One search control filters the whole dashboard");
   assert.ok(page.includes('<div className="vigil-result-summary vigil-dashboard-shared-selection"'));
   assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
   assert.ok(page.includes('onClick={() => toggleJurisdiction(code)}'));
@@ -564,7 +565,7 @@ test("Case Files mono sidebar title and sans navigation retain other typography 
   ]);
   assert.ok(css.includes("font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;"));
   assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
-  assert.match(css, /\.vigil-dashboard-case-column \.vigil-dashboard-case-search input \{[\s\S]*?font-family: var\(--app-font-sans\)/);
+  assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-search input \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /grid-template-columns: minmax\(0, 1fr\) 132px 72px 18px;/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-sort-heading \{[\s\S]*?white-space: nowrap;/);
@@ -601,9 +602,9 @@ test("Matching-case title, conditional clear action, chips and live total occupy
   const count = page.indexOf('className="vigil-dashboard-filter-match-count"');
   const facets = page.indexOf('className="vigil-dashboard-metadata-facets"');
   const cases = page.indexOf('className="vigil-dashboard-case-column"');
-  const search = page.indexOf('className="vigil-library-toolbar vigil-dashboard-case-search"');
+  const search = page.indexOf('className="vigil-dashboard-filter-search"');
   assert.ok(heading > 0 && chips > heading && count > chips && facets > count);
-  assert.ok(cases > facets && search > cases, "Wider case column owns the search field");
+  assert.ok(count < search && search < facets && facets < cases, "Search follows the filter summary and precedes Classification; Case Files align with the globe");
   assert.ok(page.includes('<h2 id="case-filter-heading">Filters</h2>'));
   assert.match(page, /\{hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all"/);
   assert.match(page, /\{hasActiveFilters && <div className="vigil-dashboard-selection-chips">/);
@@ -673,7 +674,7 @@ test("Narrow desktop search rail uses concise placeholder without losing the acc
   assert.match(page, /placeholder="Search Case Files…"/);
   assert.doesNotMatch(page, /placeholder="Describe the behaviour you’re seeing…"/);
   assert.match(css, /grid-template-columns: clamp\(225px, 17\.5vw, 250px\)/);
-  assert.match(css, /\.vigil-dashboard-case-column \.vigil-dashboard-case-search input \{[\s\S]*?min-width: 0;[\s\S]*?width: 0;[\s\S]*?flex: 1 1 0%/);
+  assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-search input \{[\s\S]*?min-width: 0;[\s\S]*?width: 0;[\s\S]*?flex: 1 1 0%/);
   assert.match(page, /onClick=\{\(\) => setSearch\(""\)\} aria-label="Clear search"/);
 });
 
@@ -839,4 +840,7 @@ test("Harm Types cross-filter every existing instrument but preserves its own ra
   assert.match(dashboard, /onHarmType\(harmType === entry\.id \? "" : entry\.id\)/);
   assert.match(dashboard, /S1 assessments are retained in the sparse index but excluded/);
   assert.match(styles, /\.vigil-dashboard-harm-type-choice:focus-visible/);
+  const workspace = await source("src/vigil-dashboard-workspace-experiment.css");
+  assert.ok(workspace.includes('html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-fill'));
+  assert.ok(workspace.includes("hsl(350 33% 42%), hsl(350 37% 52%)"), "Harm Type fill uses the blush palette, not amber");
 });
