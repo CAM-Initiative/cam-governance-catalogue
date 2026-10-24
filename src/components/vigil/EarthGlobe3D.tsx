@@ -6,7 +6,7 @@ import { globePosition, globeRotationForLongitude } from "@/lib/vigilGlobeCoordi
 type Location = { id: string; name: string; lat: number; lon: number; count: number };
 type GlobeProps = {
   locations: Location[];
-  selected: string;
+  selected: string[];
   onSelect: (country: string) => void;
   onClearFilters: () => void;
   onUnavailable: () => void;
@@ -169,7 +169,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
         state.earth.rotation.y += (state.targetSpin - state.earth.rotation.y) * smoothness;
         state.tilt.rotation.x += (state.targetTilt - state.tilt.rotation.x) * smoothness;
         // Gentle ambient motion, disabled entirely for reduced-motion users.
-        if (!prefersReducedMotion && !state.dragStart && !selectedRef.current &&
+        if (!prefersReducedMotion && !state.dragStart && !selectedRef.current.length &&
           Date.now() - state.lastInteraction > 7000) {
           state.targetSpin += 0.00048;
         }
@@ -254,7 +254,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
     state.lightMaterials = [];
     const maximum = Math.max(1, ...locations.map(location => location.count));
     for (const location of locations) {
-      const selectedLocation = selected === location.id;
+      const selectedLocation = selected.includes(location.id);
       // Logarithmic scaling prevents a high-volume jurisdiction from drowning
       // out smaller ones; these are source-field-derived COUNTRY anchors.
       const intensity = Math.log1p(location.count) / Math.log1p(maximum);
@@ -302,8 +302,8 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
 
   useEffect(() => {
     const state = sceneRef.current;
-    if (!state || !selected) return;
-    const marker = locations.find(location => location.id === selected);
+    if (!state || !selected.length) return;
+    const marker = locations.find(location => location.id === selected[selected.length - 1]);
     if (!marker) return;
     state.targetSpin = nearestAngle(state.earth.rotation.y, globeRotationForLongitude(marker.lon));
     state.targetTilt = THREE.MathUtils.clamp(marker.lat * RAD, -0.95, 0.95);
@@ -365,7 +365,7 @@ export default function EarthGlobe3D({ locations, selected, onSelect, onClearFil
     if (!drag || Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) return;
     const hit = hoveredBeacon(event);
     if (hit) {
-      callbackRef.current(selectedRef.current === hit.id ? "" : hit.id);
+      callbackRef.current(hit.id);
       setOverBeacon(false);
       setHoverLabel(null);
       hoverIdRef.current = null;
