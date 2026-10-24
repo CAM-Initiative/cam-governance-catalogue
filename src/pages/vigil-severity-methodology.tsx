@@ -3,13 +3,15 @@ import { Shell } from "@/components/layout/Shell";
 import { HarmImpactMatrix, highlightedThreshold } from "@/components/vigil/HarmImpactMatrix";
 import { VigilObservatoryMasthead } from "@/components/vigil/VigilObservatoryMasthead";
 import { VIGIL_MASTHEAD_ARTWORK } from "@/lib/vigilMastheadArtwork";
-import { HARM_PATHWAY_STEPS, aggregateHarmSections, aggregateHarmBandSummary } from "@/lib/vigilHarmPublic.mjs";
+import { HARM_PUBLIC_PATHWAY_COPY, HARM_PUBLIC_SEVERITY_LEVELS, aggregateHarmSections, aggregateHarmBandSummary } from "@/lib/vigilHarmPublic.mjs";
+import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
 import { HARM_BANDS, harmDimensions, harmMethodology, harmMethodologyUrl, harmReferences as methodologyReferences } from "@/lib/vigilHarmReference";
 
 const harmImpactRail = [
   { href: "#matrix", label: "Reference matrix" },
-  { href: "#method", label: "Method" },
+  { href: "#severity", label: "Severity" },
+  { href: "#method", label: "Evidence states" },
   { href: "#pathways", label: "Assessment pathways" },
   { href: "#aggregate", label: "Aggregate Harm" },
   { href: "#references", label: "References" },
@@ -52,10 +54,31 @@ export default function VigilSeverityMethodology() {
             <HarmImpactMatrix />
           </section>
 
+          <section id="severity" className="document-section vigil-severity-methodology-section" aria-labelledby="harm-severity-heading">
+            <div className="document-section-heading">
+              <p>Assessment scale</p>
+              <h2 id="harm-severity-heading">Severity</h2>
+            </div>
+            <div className="document-reading">
+              <p>VIGIL uses five severity bands. The highest band supported by the evidence within the selected assessment pathway determines the overall result. Different harm dimensions are not added or averaged, and taxonomy classifications do not increase a harm score.</p>
+              <ul className="vigil-severity-band-list" aria-label="Severity bands S1 to S5">
+                {HARM_PUBLIC_SEVERITY_LEVELS.map(level => <li key={level.code}>
+                  <VigilStatusChip value={level.code} />
+                  <span>{level.label}</span>
+                </li>)}
+              </ul>
+              <div className="vigil-severity-unassessed">
+                <VigilStatusChip value="SU" />
+                <p><strong>Unassessed.</strong> SU applies when the evidence cannot support a defensible S1–S5 band and does not positively establish no materialised downstream harm. SU records uncertainty; it is <strong>not a sixth severity band</strong> or a finding that no harm occurred.</p>
+              </div>
+              <p>S1 also requires affirmative support for minimal or no materialised harm within the relevant evidence. Missing reports of harm do not, by themselves, justify S1.</p>
+            </div>
+          </section>
+
           <section id="method" className="document-section vigil-about-section vigil-severity-methodology-section" aria-labelledby="severity-principles-heading">
             <div className="document-section-heading">
-              <p>Method</p>
-              <h2 id="severity-principles-heading">How the overall severity band is derived</h2>
+              <p>Assessment method</p>
+              <h2 id="severity-principles-heading">Evidence states</h2>
             </div>
             <div className="vigil-severity-principles">
               <div className="vigil-severity-evidence-states">
@@ -70,30 +93,34 @@ export default function VigilSeverityMethodology() {
               </div>
             </div>
 
-            <div className="vigil-severity-derivation-rows">
-              <div className="vigil-severity-method-row">
-                <h3>Overall severity</h3>
-                <p>Only dimensions with a defensible assessed band contribute to the overall severity. The highest defensible materialised-harm threshold controls the overall severity; dimensions are not averaged, summed or increased because an Incident has several Alignment Taxonomy mappings. For a modelled Aggregate Harm assessment, the highest supported aggregate dimension band controls instead. Never combine ordinary and aggregate bands within one assessment.</p>
-                <p>SU — Unassessed applies when no harm dimension has a defensible band and the evidence does not positively establish no materialised downstream harm. SU is an evidence state, not a sixth severity band.</p>
-              </div>
-            </div>
           </section>
 
           <section id="pathways" className="document-section vigil-severity-methodology-section" aria-labelledby="harm-pathways-heading">
             <div className="document-section-heading"><p>Assessment pathways</p><h2 id="harm-pathways-heading">Select the pathway before scoring</h2></div>
             <div className="document-reading">
-              <p><strong>Specific consequence.</strong> Assess materialised consequences to a bounded person, group, organisation or asset using the ordinary domain criteria above. One grave individual outcome can support a high band. Provider-wide user totals do not raise that score.</p>
-              <p><strong>Aggregate Harm — modelled from deployed evaluation.</strong> Use this separate pathway when an actually deployed feature shows a potentially generalisable mechanism and the assessment does not concern a particular actual harmed person, group, organisation or asset. A single observed interaction may warrant this screening; it does not establish reproducibility, cohort size or injury.</p>
-              <ol>{HARM_PATHWAY_STEPS.map(step => <li key={step}>{step}</li>)}</ol>
-              <p>The highest supported harm band on the selected pathway determines overall severity. Ordinary and Aggregate Harm bands are not combined. If evidence does not support a band, the result is SU rather than a guess.</p>
+              <p>{HARM_PUBLIC_PATHWAY_COPY.intro}</p>
+              <div className="vigil-harm-pathway-comparison">
+                <div>
+                  <h3>Specific consequence</h3>
+                  <p>{HARM_PUBLIC_PATHWAY_COPY.specific}</p>
+                </div>
+                <div>
+                  <h3>Aggregate Harm — modelled</h3>
+                  <p>{HARM_PUBLIC_PATHWAY_COPY.aggregate}</p>
+                </div>
+              </div>
+              <h3>What makes an Aggregate Harm assessment appropriate?</h3>
+              <p>{HARM_PUBLIC_PATHWAY_COPY.routing}</p>
+              <p>{HARM_PUBLIC_PATHWAY_COPY.banding}</p>
+              <p>{HARM_PUBLIC_PATHWAY_COPY.limits}</p>
             </div>
           </section>
           <section id="aggregate" className="document-section vigil-severity-methodology-section" aria-labelledby="harm-aggregate-heading">
             <div className="document-section-heading"><p>Aggregate Harm</p><h2 id="harm-aggregate-heading">Evidence gates and separate severity criteria</h2></div>
             <div className="document-reading">
-              <p>Aggregate Harm is an explicitly labelled, modelled estimate. Source-backed feature-specific eligible users or real decision opportunities are not a count of injured people. Population size alone cannot establish a band. Reproducibility, a supported consequence pathway, safeguards and uncertainty must also be assessed.</p>
-              <p>Five dimensions have Aggregate Harm criteria. Other dimensions retain their ordinary consequence criteria. If the correct aggregate pathway lacks the facts needed to score, retain that pathway and SU; do not switch pathways to obtain a score.</p>
-              <p>Every band also requires evidenced collective consequences, not only a qualifying population or number of decisions. The effects are modelled; eligible users are not counted as injured people. These operational brackets are VIGIL-defined and are not externally validated clinical severity conversions. Recovery durations in the ordinary matrix are illustrative, not automatic cut-offs.</p>
+              <p>For a qualifying deployed-feature finding, the tables below show the <strong>separate S1–S5 Aggregate Harm criteria</strong> available in five scale-sensitive dimensions. These thresholds describe what evidence would justify a modelled collective-impact band; they do not turn eligible users into confirmed victims.</p>
+              <p>Each band requires both a relevant, source-backed feature-specific population or real-decision denominator and evidence supporting the stated consequences. An observed behaviour or a large audience alone cannot establish the result. Other harm dimensions retain the ordinary consequence criteria in the matrix.</p>
+              <p>These operational brackets are defined by VIGIL and are <strong>not externally validated clinical severity conversions</strong>. Where the prerequisites for any band remain unproven, the aggregate assessment is SU. Ordinary recovery durations are illustrative rather than mandatory waiting periods.</p>
               {harmDimensions.filter(dimension => HARM_BANDS.some(band => dimension.thresholds[band].aggregate_harm_threshold)).map(dimension => {
                 const shared = aggregateHarmSections(dimension.thresholds.S1.aggregate_harm_threshold || "");
                 return <details className="vigil-harm-guidance-detail" key={dimension.dimension_id}>

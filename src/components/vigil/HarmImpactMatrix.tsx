@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { loadCurrentHarmMethodologyDefinition, type HarmMethodologyDefinition } from "@/lib/vigilHarmMethodology";
 import { harmThresholdParts } from "@/lib/vigilHarmEmphasis.mjs";
 import { HARM_BANDS, harmDimensions } from "@/lib/vigilHarmReference";
-import { publicHarmIndicatorLabel, publicHarmQuantificationNote, publicHarmInterpretiveNote } from "@/lib/vigilHarmPublic.mjs";
+import { publicHarmInterpretiveNote } from "@/lib/vigilHarmPublic.mjs";
 import type { UnknownRecord } from "@/lib/vigilRegistry";
 import { VigilStatusChip } from "@/components/vigil/VigilStatusChip";
 
@@ -147,17 +147,6 @@ function MethodologyMatrix({ compact }: { compact: boolean }) {
       {dimensions.flatMap((dimension) => dimension.adaptation_note
         ? [<p key={dimension.dimension_id}><strong>{dimension.label}:</strong> {publicHarmInterpretiveNote(dimension.adaptation_note)}</p>]
         : [])}
-    </section>
-    <section className="vigil-harm-interpretive-notes" aria-labelledby="harm-quantification-heading">
-      <h3 id="harm-quantification-heading">Quantification and recognition guidance</h3>
-      <p>Record the observed outcome, units, period, relevant denominator, uncertainty and source. Numerical indicators support the domain criteria; an audience count or elapsed time alone does not determine severity. Illustrative recovery periods are not mandatory waiting periods.</p>
-      {dimensions.map((dimension) => <details key={dimension.dimension_id} className="vigil-harm-guidance-detail">
-        <summary>{dimension.label}</summary>
-        {publicHarmQuantificationNote(dimension.quantification_note) ? <p>{publicHarmQuantificationNote(dimension.quantification_note)}</p> : null}
-        {dimension.interpretive_note ? <p>{publicHarmInterpretiveNote(dimension.interpretive_note)}</p> : null}
-        <p><strong>Relevant indicators</strong></p>
-        <ul>{(dimension.quantitative_indicators ?? []).map(indicator => <li key={indicator}>{publicHarmIndicatorLabel(indicator)}</li>)}</ul>
-      </details>)}
     </section>
   </div>;
 }
