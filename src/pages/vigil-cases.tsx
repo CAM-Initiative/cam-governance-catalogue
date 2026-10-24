@@ -413,9 +413,10 @@ export default function VigilCases() {
     && (!severity || severityCode(record) === severity)
     && matchesHarm(record)
   ), [rankingBaseCases, countryByCase, jurisdictions, severity, harmType, harmById]);
-  const mapRecords = useMemo(() => baseCases.filter(record =>
-    (!severity || severityCode(record) === severity) && matchesHarm(record)
-  ), [baseCases, severity, harmType, harmById]);
+  const mapRecords = useMemo(() => baseCases.filter(record => {
+    if (severity && severityCode(record) !== severity) return false;
+    return matchesHarm(record);
+  }), [baseCases, severity, harmType, harmById]);
   const distributionRecords = useMemo(() => baseCases.filter(record =>
     matchesSelectedCountries(countryByCase.get(record.id), jurisdictions) && matchesHarm(record)
   ), [baseCases, countryByCase, jurisdictions, harmType, harmById]);
