@@ -872,3 +872,33 @@ test("Harm Types cross-filter every existing instrument but preserves its own ra
   assert.ok(workspace.includes('html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-fill'));
   assert.ok(workspace.includes("hsl(350 33% 42%), hsl(350 37% 52%)"), "Harm Type fill uses the blush palette, not amber");
 });
+
+
+test("Case Files institutional hierarchy stays route scoped and preserves accessible filters", async () => {
+  const [page, dashboard, css, imports] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/vigil-case-files-editorial-20261024.css"),
+    source("src/main.tsx"),
+  ]);
+  assert.match(page, /className="vigil-dashboard-eyebrow">01 \/ Refine/);
+  assert.match(page, /className="vigil-dashboard-register-heading"/);
+  assert.match(page, /className="vigil-dashboard-eyebrow">02 \/ Incident register/);
+  assert.match(dashboard, /className="vigil-dashboard-signals-heading"/);
+  assert.match(dashboard, /className="vigil-dashboard-eyebrow">03 \/ Corpus signals/);
+  assert.match(dashboard, /aria-label="Case File dashboard"/);
+  assert.match(page, /aria-labelledby="case-filter-heading"/);
+  assert.match(page, /aria-label="AI Incident Case Files"/);
+  assert.match(page, /onClick=\{\(\) => updateSort/);
+  assert.match(dashboard, /onHarmType\(harmType === entry\.id \? "" : entry\.id\)/);
+  assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-register-heading/);
+  assert.match(css, /@media \(min-width: 1320px\)/);
+  assert.match(css, /@media \(max-width: 1140px\)/);
+  assert.match(css, /@media \(max-width: 720px\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /outline: 2px solid hsl\(var\(--ring\)\)/);
+  assert.match(css, /--case-gold: hsl\(var\(--primary\)\)/);
+  assert.doesNotMatch(css, /display:\s*none\s*;\s*\/\*?\s*hide.*(filter|chart|globe)/i);
+  assert.ok(imports.indexOf('import "./vigil-case-files-editorial-20261024.css";') >
+    imports.indexOf('import "./vigil-dashboard-workspace-experiment.css";'));
+});
