@@ -48,5 +48,6 @@ import "./vigil-observatory-masthead.css";
 import "./vigil-severity-chip.css";
 import "./mobile-responsive-polish.css";
 import "./vigil-dashboard-workspace-experiment.css";
+import "./vigil-case-files-editorial-20261024.css";
 
 createRoot(document.getElementById("root")!).render(<App />);
