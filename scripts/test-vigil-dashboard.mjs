@@ -370,15 +370,18 @@ test("Leader-line positions avoid overlapping at extreme proportions", () => {
   }
 });
 
-test("Light-mode analytical cards use distinct warm-stone contrast against the white case list", async () => {
+test("Light-mode analytic cards use pale neutrals distinct from the image-layered hero", async () => {
   const [styles, masthead] = await Promise.all([
     source("src/vigil-dashboard-workspace-experiment.css"),
     source("src/vigil-observatory-masthead.css"),
   ]);
   assert.match(masthead, /soft-grey/);
-  assert.match(styles, /Echo the blush \/ warm-grey artwork of the Case Files hero/);
-  assert.match(styles, /hsl\(26 15% 82%\)/);
-  assert.match(styles, /hsl\(27 16% 79%\)/);
+  assert.match(masthead, /hsl\(30 4% 88%\)/);
+  assert.match(masthead, /--masthead-artwork-opacity: 0\.82/);
+  assert.match(styles, /masthead's peach effect is composited from grey backing/);
+  assert.match(styles, /hsl\(27 7% 98%\)/);
+  assert.match(styles, /hsl\(28 10% 94%\)/);
+  assert.doesNotMatch(styles, /hsl\(26 15% 82%\)|hsl\(27 16% 79%\)/);
   assert.match(styles, /\.vigil-dashboard-severity-callout\.is-selected/);
   assert.ok(!styles.includes("grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr)"));
 });
@@ -692,6 +695,24 @@ test("Dashboard calm pass unifies case typography and compacts darker light-them
   assert.ok(!dashboard.includes("vigil-dashboard-donut-caption"));
   assert.ok(!dashboard.includes("vigil-dashboard-reset-rotation"));
   assert.ok(!globe.includes("vigil-dashboard-reset-rotation"));
+});
+
+test("Desktop Case File rows reserve a consistent readable left gutter and compact right-side columns", async () => {
+  const css = await source("src/vigil-dashboard-workspace-experiment.css");
+  const after = css.slice(css.indexOf("/* More even row balance:"));
+  assert.match(after, /@media \(min-width: 1320px\)/);
+  assert.match(after, /\.vigil-dashboard-case-column \.vigil-case-table-head,[\s\S]*?\.vigil-case-table-row-link/);
+  assert.match(after, /grid-template-columns: minmax\(0, 1fr\) 124px 68px 16px/);
+  assert.match(after, /padding-left: 1\.2rem;\s*padding-right: \.75rem/);
+});
+
+test("Light mode donut callouts and count are near-black while dark mode remains untouched", async () => {
+  const css = await source("src/vigil-dashboard-workspace-experiment.css");
+  const contrastRules = css.slice(css.indexOf("/* Near-black severity chart labels"));
+  assert.match(contrastRules, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page/);
+  assert.match(contrastRules, /\.vigil-dashboard-severity-label,[\s\S]*?\.vigil-dashboard-severity-name/);
+  assert.match(contrastRules, /\.vigil-dashboard-donut-count \{\s*fill: hsl\(0 0% 9%\)/);
+  assert.match(contrastRules, /\.vigil-dashboard-severity-callout\.is-muted \{\s*opacity: \.88/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.

@@ -193,21 +193,23 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-col
   background: linear-gradient(145deg, hsl(38 45% 99%), hsl(37 28% 97%));
   box-shadow: 0 .38rem 1.1rem hsl(28 25% 16% / .035);
 }
-/* Echo the blush / warm-grey artwork of the Case Files hero, rather than
-   the yellow parchment treatment used by the old right-hand widgets. */
+/* The masthead's peach effect is composited from grey backing, artwork and
+   a translucent veil. These light-mode instruments deliberately do NOT
+   imitate that image layering: quiet neutral paper contrasts with the hero
+   and gives dense analytical content a separate, accessible reading plane. */
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel {
-  --vd-ink: hsl(24 22% 22%);
-  --vd-muted: hsl(22 13% 39%);
-  --vd-accent: hsl(38 67% 34%);
-  --vd-rule: hsl(25 16% 67% / .9);
-  --vd-raised: hsl(27 18% 76%);
-  --vd-chart-line: hsl(23 15% 51%);
+  --vd-ink: hsl(25 10% 13%);
+  --vd-muted: hsl(26 8% 23%);
+  --vd-accent: hsl(38 67% 30%);
+  --vd-rule: hsl(26 11% 77% / .85);
+  --vd-raised: hsl(28 10% 91%);
+  --vd-chart-line: hsl(25 15% 44%);
   border-color: var(--vd-rule);
-  background: linear-gradient(150deg, hsl(29 19% 86%), hsl(26 15% 82%) 57%, hsl(27 16% 79%));
-  box-shadow: 0 .35rem 1.05rem hsl(22 20% 18% / .07), inset 0 1px hsl(0 0% 100% / .24);
+  background: linear-gradient(150deg, hsl(27 7% 98%), hsl(27 8% 96%) 54%, hsl(28 10% 94%));
+  box-shadow: 0 .25rem .75rem hsl(24 10% 18% / .05), inset 0 1px hsl(0 0% 100% / .45);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel::before {
-  background: linear-gradient(90deg, transparent, hsl(17 32% 62% / .32), hsl(38 70% 38% / .42), transparent);
+  background: linear-gradient(90deg, transparent, hsl(31 16% 65% / .22), transparent);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-case-table-head {
   background: hsl(37 32% 92% / .8);
@@ -217,7 +219,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-hea
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-failure-list button {
   border-color: var(--vd-rule);
-  background: hsl(18 27% 95%);
+  background: hsl(0 0% 100% / .52);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-selection-chip {
   border-color: hsl(34 26% 71% / .75);
@@ -227,13 +229,13 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-selectio
   background: hsl(40 48% 86% / .8);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-info > summary {
-  background: hsl(18 30% 97%);
-  border-color: hsl(19 23% 72% / .8);
-  color: hsl(24 19% 30%);
+  background: hsl(28 8% 98%);
+  border-color: hsl(28 11% 75% / .8);
+  color: hsl(25 10% 13%);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-info-body {
-  background: hsl(19 34% 98%);
-  border-color: hsl(19 23% 72% / .8);
+  background: hsl(28 8% 99%);
+  border-color: hsl(28 11% 75% / .8);
 }
 
 @media (max-width: 720px) {
@@ -1067,4 +1069,32 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-col
     width: min(100%, 250px);
     max-width: 250px;
   }
+}
+
+
+/* More even row balance: give the incident ID/title a true inner gutter,
+   reclaim surplus width from the trailing metadata cells and chevron.
+   Keep header and clickable rows on precisely the same column tracks. */
+@media (min-width: 1320px) {
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-head,
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-row-link {
+    grid-template-columns: minmax(0, 1fr) 124px 68px 16px;
+    column-gap: .55rem;
+    padding-left: 1.2rem;
+    padding-right: .75rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-primary {
+    column-gap: .65rem;
+  }
+}
+/* Near-black severity chart labels, including unselected slices, avoid low
+   contrast grey-on-grey in light mode. A selected filter is distinguished
+   by its size/weight and physical slice displacement, not greyed-out text. */
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-label,
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-name,
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-donut-count {
+  fill: hsl(0 0% 9%);
+}
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-callout.is-muted {
+  opacity: .88;
 }
