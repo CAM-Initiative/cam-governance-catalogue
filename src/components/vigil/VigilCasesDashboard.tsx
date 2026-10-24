@@ -382,6 +382,11 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
   const topHarmCount = harmTypes[0]?.count ?? 1;
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
+      <header className="vigil-dashboard-signals-heading">
+        <p className="vigil-dashboard-eyebrow">03 / Corpus signals</p>
+        <h2>Explore the evidence</h2>
+        <p>Linked views of geography, harm and taxonomy classifications.</p>
+      </header>
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
         <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-geography"><Globe2 size={19} aria-hidden="true" /> Geographic Profile</h2></div>
         <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdictions} onSelect={onJurisdiction}/>
