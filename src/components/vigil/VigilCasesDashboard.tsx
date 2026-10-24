@@ -221,54 +221,17 @@ const SEVERITIES = [
   { code: "S5", label: "Critical", color: "#e75c6e" },
   { code: "SU", label: "Unassessed", color: "#8b9cad" },
 ];
-type SeverityLabel = {
-  code: string; label: string; color: string; count: number;
-  midAngle: number; side: "left" | "right"; idealY: number; y: number;
-};
-// Place leader labels on either side of the actual coloured slice; make room
-// for even the small slices without allowing label text to collide.
-function severityCallouts(entries: Array<{ code: string; count: number }>, total: number): SeverityLabel[] {
-  let elapsed = 0;
-  const labels = entries.filter(item => item.count > 0).map(item => {
-    const midpoint = elapsed + item.count / 2;
-    elapsed += item.count;
-    const midAngle = -Math.PI / 2 + (midpoint / total) * 2 * Math.PI;
-    const definition = SEVERITIES.find(value => value.code === item.code);
-    return {
-      code: item.code, label: definition?.label ?? item.code, color: definition?.color ?? "#8b9cad",
-      count: item.count, midAngle, side: (Math.cos(midAngle) < 0 ? "left" : "right") as "left" | "right",
-      idealY: 128 + Math.sin(midAngle) * 94, y: 0,
-    };
-  });
-  for (const side of ["left", "right"] as const) {
-    const group = labels.filter(item => item.side === side).sort((a,b) => a.idealY - b.idealY);
-    if (!group.length) continue;
-    // Leave breathing space between adjacent two-line callouts (notably S4/S5).
-    // Adapt to the available vertical span if many severity bands share a side.
-    const lower = 25, upper = 233;
-    const gap = Math.min(47, (upper - lower) / Math.max(1, group.length - 1));
-    group.forEach((item, i) => { item.y = Math.max(item.idealY, i ? group[i-1].y + gap : lower); });
-    if (group[group.length-1].y > upper) {
-      const excess = group[group.length-1].y - upper;
-      group.forEach(item => { item.y -= excess; });
-    }
-    if (group[0].y < lower) {
-      const offset = lower - group[0].y;
-      group.forEach(item => { item.y += offset; });
-    }
-  }
-  return labels;
-}
+// Labels use a dedicated accessible key instead of SVG leader lines:
+// fixed SVG coordinates overlap as the card contracts or a slice expands.
 function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRecord[]; selected: string; onSelect: (code: string) => void }) {
   const distribution = severityDistribution(records);
   const total = distribution.reduce((sum, item) => sum + item.count, 0);
-  const labels = total ? severityCallouts(distribution, total) : [];
   const selectedCount = distribution.find(item => item.code === selected)?.count;
   let elapsed = 0;
   const activate = (code: string) => onSelect(selected === code ? "" : code);
   return <div className="vigil-dashboard-outcomes">
     <div className="vigil-dashboard-donut">
-      <svg viewBox="0 0 360 258" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or its connected label to filter.`}>
+      <svg viewBox="52 0 256 256" role="group" aria-label={`Harm severity for ${total} case files. Select a ring segment or the adjacent severity key to filter.`}>
         <defs>
           <filter id="vigil-donut-dimensional-shadow" x="-35%" y="-35%" width="170%" height="170%">
             <feDropShadow dx="0" dy="6" stdDeviation="5" floodColor="#001927" floodOpacity=".35"/>
@@ -308,22 +271,22 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
         <circle cx="180" cy="128" r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
         <text x="180" y="124" textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
         <text x="180" y="143" textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
-        {labels.map(item => {
-          const dx = Math.cos(item.midAngle), dy = Math.sin(item.midAngle);
-          const x0 = 180 + dx * (selected === item.code ? 105 : 84), y0 = 128 + dy * (selected === item.code ? 105 : 84);
-          const x1 = item.side === "left" ? 99 : 261;
-          const x2 = item.side === "left" ? 93 : 267;
-          const xText = item.side === "left" ? 88 : 272;
-          const anchor = item.side === "left" ? "end" : "start";
-          const calloutColor = selected === item.code ? item.color : "#99a9b8";
-          return <g key={item.code} className={`vigil-dashboard-severity-callout${selected === item.code ? " is-selected" : selected ? " is-muted" : ""}`} role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
-            <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={calloutColor} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
-            <circle cx={x0} cy={y0} r="2.7" fill={calloutColor}/>
-            <text x={xText} y={item.y-5} textAnchor={anchor} className="vigil-dashboard-severity-label" style={selected === item.code ? { fill: item.color } : undefined}>{item.code} ({item.count})</text>
-            <text x={xText} y={item.y+15} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
-          </g>;
-        })}
+
       </svg>
+    </div>
+    <div className="vigil-dashboard-severity-key" role="group" aria-label="Select harm severity">
+      {SEVERITIES.map(definition => {
+        const count = distribution.find(item => item.code === definition.code)?.count ?? 0;
+        const active = selected === definition.code;
+        return <button type="button" key={definition.code}
+          className={`vigil-dashboard-severity-item${active ? " is-selected" : selected ? " is-muted" : ""}`}
+          onClick={() => activate(definition.code)} disabled={!count}
+          aria-pressed={active} aria-label={`${definition.code} ${definition.label}: ${count} case files; ${active ? "clear severity filter" : "filter"}`}>
+          <span className="vigil-dashboard-severity-swatch" style={{ backgroundColor: definition.color }} aria-hidden="true" />
+          <span className="vigil-dashboard-severity-copy"><strong>{definition.code}</strong><span>{definition.label}</span></span>
+          <span className="vigil-dashboard-severity-quantity">{count}</span>
+        </button>;
+      })}
     </div>
   </div>;
 }
