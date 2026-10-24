@@ -1100,3 +1100,22 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-severity
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-severity-panel .vigil-dashboard-severity-callout.is-muted {
   opacity: .88;
 }
+
+/* Case Files: unbox ONLY the right-hand analytical widgets.
+   Keep the established layout, typography, 3D chart fills, light/dark
+   colours, filtering, and hover/focus behaviour unchanged. */
+.vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel,
+html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel::before {
+  display: none;
+}
+/* Fine rules between instruments, never an enclosing border. */
+.vigil-case-library-page .vigil-dashboard-sidebar > .vigil-dashboard-panel:not(.vigil-dashboard-failures-panel) {
+  border-bottom: 1px solid hsl(var(--border) / .62);
+  padding-bottom: 1.15rem;
+}

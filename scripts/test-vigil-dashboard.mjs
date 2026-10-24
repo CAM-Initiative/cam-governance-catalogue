@@ -877,3 +877,20 @@ test("Harm Types cross-filter every existing instrument but preserves its own ra
   assert.ok(workspace.includes('html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-harm-type-fill'));
   assert.ok(workspace.includes("hsl(350 33% 42%), hsl(350 37% 52%)"), "Harm Type fill uses the blush palette, not amber");
 });
+
+test("Case Files right-side widgets use only fine separators without losing 3D chart styling", async () => {
+  const [workspace, chart, dashboard] = await Promise.all([
+    source("src/vigil-dashboard-workspace-experiment.css"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+  ]);
+  assert.match(workspace, /\.vigil-dashboard-sidebar > \.vigil-dashboard-panel \{/);
+  assert.match(workspace, /\.vigil-dashboard-sidebar > \.vigil-dashboard-panel::before \{\s*display: none;/);
+  assert.match(workspace, /\.vigil-dashboard-sidebar > \.vigil-dashboard-panel:not\(\.vigil-dashboard-failures-panel\) \{/);
+  assert.match(workspace, /border-bottom: 1px solid hsl\(var\(--border\) \/ \.62\)/);
+  assert.match(workspace, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page \.vigil-dashboard-sidebar > \.vigil-dashboard-panel/);
+  assert.match(chart, /\.vigil-dashboard-bar-fill::after/);
+  assert.match(chart, /\.vigil-dashboard-harm-type-fill::before/);
+  assert.match(chart, /\.vigil-dashboard-failure-list button:hover \.vigil-dashboard-failure-bar/);
+  assert.match(dashboard, /showAllHarmTypes \? "Show top six" : "Show all"/);
+});
