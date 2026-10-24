@@ -413,7 +413,8 @@ test("Classification checklist combines outcomes by union and supports independe
   assert.match(page, /matchesClassificationSelection\(canonicalComparisonKey\(classificationStatusLabel\(record\)\), classifications\)/);
   assert.match(page, /setClassifications\(\[\]\)/);
   assert.doesNotMatch(page, /<select value=\{classification\}/);
-  assert.match(styles, /\.vigil-dashboard-classification-facet \{/);
+  assert.ok(styles.includes(".vigil-dashboard-classification-facet,"));
+  assert.ok(styles.includes(".vigil-dashboard-index-facet {"));
   assert.match(styles, /\.vigil-dashboard-facet-option input\[type="checkbox"\]/);
   assert.match(styles, /background: transparent;\s*box-shadow: none;/);
 });
