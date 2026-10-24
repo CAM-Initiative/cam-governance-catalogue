@@ -224,11 +224,28 @@ test("Insight panels stay compact while donut severity labels remain readable an
   assert.ok(!dashboard.includes("Number of case files with each explicitly evidenced failure occurrence;"));
   assert.match(dashboard, /aria-pressed=\{selected===item\.code\}/);
   assert.match(dashboard, /donutSegmentAppearance\(start, item\.count, total, isSelected, Boolean\(selected\)\)/);
-  assert.match(dashboard, /const gap = 39, lower = 30, upper = 225/);
-  assert.match(css, /\.vigil-dashboard-severity-label \{ font: 800 18\.5px/);
-  assert.match(css, /\.vigil-dashboard-severity-name \{\s*font: 650 16\.5px/);
+  assert.match(dashboard, /const gap = Math\.min\(47, \(upper - lower\) \/ Math\.max\(1, group\.length - 1\)\)/);
+  assert.match(css, /\.vigil-dashboard-severity-label \{\s*font: 480 19px/);
+  assert.match(css, /\.vigil-dashboard-severity-name \{\s*font: 460 17px/);
   assert.match(css, /\.vigil-dashboard-severity-callout\.is-muted \{ opacity: \.76/);
   assert.match(css, /\.vigil-dashboard-failures-panel \.vigil-dashboard-failure-list \{ margin-top: \.5rem/);
+});
+
+test("All three insight panels share a top-right information disclosure; typography is subdued until selection", async () => {
+  const [dashboard, css] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/components/vigil/VigilCasesDashboard.css"),
+  ]);
+  assert.equal((dashboard.match(/<details className="vigil-dashboard-[^"]*panel-info"/g) ?? []).length, 3);
+  assert.match(dashboard, /<summary aria-label="Globe data and imagery information"/);
+  assert.match(dashboard, /<summary aria-label="Harm severity chart information"/);
+  assert.match(dashboard, /<summary aria-label="Taxonomy intelligence counts information"/);
+  assert.equal((dashboard.match(/Counts are distinct incidents, not mentions or evidence-source citations\./g) ?? []).length, 1);
+  assert.doesNotMatch(dashboard, /<p className="vigil-dashboard-source-note">Counts are distinct incidents/);
+  assert.match(css, /\.vigil-case-library-page \.vigil-dashboard-panel-info \{\s*position: absolute;\s*z-index: 8;\s*top: \.55rem;\s*right: \.55rem;/);
+  assert.match(css, /\.vigil-dashboard-severity-callout\.is-selected \.vigil-dashboard-severity-label \{\s*font-size: 20\.5px;\s*font-weight: 750;/);
+  assert.match(dashboard, /const calloutColor = selected === item\.code \? item\.color : "#99a9b8"/);
+  assert.match(dashboard, /style=\{selected === item\.code \? \{ fill: item\.color \} : undefined\}/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.

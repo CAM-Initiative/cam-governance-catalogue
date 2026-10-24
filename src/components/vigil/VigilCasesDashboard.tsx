@@ -243,7 +243,10 @@ function severityCallouts(entries: Array<{ code: string; count: number }>, total
   for (const side of ["left", "right"] as const) {
     const group = labels.filter(item => item.side === side).sort((a,b) => a.idealY - b.idealY);
     if (!group.length) continue;
-    const gap = 39, lower = 30, upper = 225;
+    // Leave breathing space between adjacent two-line callouts (notably S4/S5).
+    // Adapt to the available vertical span if many severity bands share a side.
+    const lower = 25, upper = 233;
+    const gap = Math.min(47, (upper - lower) / Math.max(1, group.length - 1));
     group.forEach((item, i) => { item.y = Math.max(item.idealY, i ? group[i-1].y + gap : lower); });
     if (group[group.length-1].y > upper) {
       const excess = group[group.length-1].y - upper;
@@ -312,10 +315,11 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           const x2 = item.side === "left" ? 93 : 267;
           const xText = item.side === "left" ? 88 : 272;
           const anchor = item.side === "left" ? "end" : "start";
+          const calloutColor = selected === item.code ? item.color : "#99a9b8";
           return <g key={item.code} className={`vigil-dashboard-severity-callout${selected === item.code ? " is-selected" : selected ? " is-muted" : ""}`} role="button" tabIndex={0} aria-label={`Filter ${item.code} ${item.label}: ${item.count} case files`} aria-pressed={selected===item.code} onClick={()=>activate(item.code)} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();activate(item.code);}}}>
-            <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={item.color} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
-            <circle cx={x0} cy={y0} r="2.7" fill={item.color}/>
-            <text x={xText} y={item.y-5} textAnchor={anchor} className="vigil-dashboard-severity-label" fill={item.color}>{item.code} ({item.count})</text>
+            <path d={`M${x0.toFixed(1)},${y0.toFixed(1)} L${x1},${item.y.toFixed(1)} L${x2},${item.y.toFixed(1)}`} stroke={calloutColor} strokeWidth={selected===item.code?2.4:1.6} fill="none" strokeLinejoin="round"/>
+            <circle cx={x0} cy={y0} r="2.7" fill={calloutColor}/>
+            <text x={xText} y={item.y-5} textAnchor={anchor} className="vigil-dashboard-severity-label" style={selected === item.code ? { fill: item.color } : undefined}>{item.code} ({item.count})</text>
             <text x={xText} y={item.y+15} textAnchor={anchor} className="vigil-dashboard-severity-name">{item.label}</text>
           </g>;
         })}
@@ -365,9 +369,9 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
             {jurisdiction && !locations.regions.some(item=>item.id===jurisdiction)&&<option value={jurisdiction}>{byId.get(jurisdiction)?.name??jurisdiction}</option>}
           </select>
         </label>
-        <details className="vigil-dashboard-geo-disclosure">
+        <details className="vigil-dashboard-geo-disclosure vigil-dashboard-panel-info">
           <summary aria-label="Globe data and imagery information" title="Globe data information">i</summary>
-          <div className="vigil-dashboard-geo-disclosure-body">
+          <div className="vigil-dashboard-geo-disclosure-body vigil-dashboard-panel-info-body">
             <p>{geographyNote}</p>
             <p>Country beacons show relative case counts for reviewed jurisdiction associations, not incident coordinates. A cross-border case may contribute once to more than one country. Earth imagery: NASA Blue Marble.</p>
             {!geographyAvailable && <p>Geographic data is unavailable for the selected source. Case Files remain searchable.</p>}
@@ -376,10 +380,22 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-severity-panel" aria-labelledby="vigil-dashboard-severity">
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Risk profile</span><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} /> Harm severity</h2></div></div>
+        <details className="vigil-dashboard-panel-info">
+          <summary aria-label="Harm severity chart information" title="Harm severity information">i</summary>
+          <div className="vigil-dashboard-panel-info-body">
+            <p>Severity shows the overall recorded harm rating of the current Case Files. Select a segment or connected label to filter the list. SU means unassessed; it must not be treated as S1.</p>
+          </div>
+        </details>
         <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-failures-panel" aria-labelledby="vigil-dashboard-failures">
         <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Taxonomy intelligence</span><h2 id="vigil-dashboard-failures"><Layers3 size={19} /> Most frequent failures</h2></div></div>
+        <details className="vigil-dashboard-panel-info">
+          <summary aria-label="Taxonomy intelligence counts information" title="Taxonomy counts information">i</summary>
+          <div className="vigil-dashboard-panel-info-body">
+            <p>Counts are distinct incidents, not mentions or evidence-source citations.</p>
+          </div>
+        </details>
         <ol className="vigil-dashboard-failure-list">
           {failures.map((entry,index)=><li key={entry.id}>
             <button type="button" onClick={()=>onFailureClass(failureClass===entry.id?"":entry.id)} className={failureClass===entry.id?"is-selected":""} aria-pressed={failureClass===entry.id} title="Filter case files by this failure class">
@@ -391,7 +407,6 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
           </li>)}
           {!failures.length && <li className="vigil-dashboard-empty">No evidenced failure-role mappings in this selection.</li>}
         </ol>
-        <p className="vigil-dashboard-source-note">Counts are distinct incidents, not mentions or evidence-source citations.</p>
       </section>
       <div className="vigil-dashboard-ad"><AdSenseRail/></div>
     </aside>
