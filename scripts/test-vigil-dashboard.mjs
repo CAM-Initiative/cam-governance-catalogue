@@ -224,7 +224,7 @@ test("Insight panels stay compact while donut severity labels remain readable an
   assert.ok(!dashboard.includes("Select a coloured segment or label to filter cases."));
   assert.ok(!dashboard.includes("Incident-level assessments across the current selection."));
   assert.ok(!dashboard.includes("Number of case files with each explicitly evidenced failure occurrence;"));
-  assert.match(dashboard, /aria-pressed=\{selected===item\.code\}/);
+  assert.match(dashboard, /aria-pressed=\{active\}/);
   assert.match(dashboard, /donutSegmentAppearance\(start, item\.count, total, isSelected, Boolean\(selected\)\)/);
   assert.doesNotMatch(dashboard, /severityCallouts|vigil-dashboard-severity-callout/);
   assert.match(dashboard, /SEVERITIES\.map\(definition =>/);
