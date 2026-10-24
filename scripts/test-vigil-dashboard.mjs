@@ -5,6 +5,7 @@ const source = file => readFile(new URL(`../${file}`, import.meta.url), "utf8");
 import { globePosition, globeRotationForLongitude } from "../src/lib/vigilGlobeCoordinates.mjs";
 import { failureClassIds, topFailureClasses, severityDistribution } from "../src/lib/vigilDashboardMetrics.mjs";
 import { donutSegmentAppearance } from "../src/lib/vigilDonutSelection.mjs";
+import { matchesClassificationSelection, toggleClassificationSelection } from "../src/lib/vigilClassificationFilter.mjs";
 import { layoutSeverityCallouts, CALLOUT_GEOMETRY } from "../src/lib/vigilDonutCallouts.mjs";
 
 test("counts only explicitly failure-role mappings, once per Incident", () => {
@@ -67,10 +68,11 @@ test("Globe reset clears the same dashboard filters as the toolbar in both rende
     source("src/components/vigil/EarthGlobe3D.tsx"),
   ]);
   const clear = page.match(/const clearFilters = \(\) => \{([\s\S]*?)\};/)?.[1] ?? "";
-  for (const setter of ["setSearch", "setClassification", "setSeverity", "setFailureClass"]) {
+  for (const setter of ["setSearch", "setSeverity", "setFailureClass"]) {
     assert.ok(clear.includes(setter + '("");'), setter + " is cleared by the globe and toolbar");
   }
   assert.ok(clear.includes("setJurisdictions([]);"), "globe reset clears all selected jurisdictions");
+  assert.ok(clear.includes("setClassifications([]);"), "reset clears all classification checkboxes");
   assert.match(page, /onClick=\{clearFilters\}>Clear filters/);
   assert.match(page, /onClearFilters=\{clearFilters\}/);
   assert.match(dashboard, /<EarthGlobe3D[^>]*onClearFilters=\{onClearFilters\}/);
@@ -385,6 +387,34 @@ test("Experimental light mode uses blush-toned hero-compatible insight cards", a
   assert.match(styles, /hsl\(18 27% 91%\)/);
   assert.match(styles, /\.vigil-dashboard-severity-callout\.is-selected/);
   assert.ok(!styles.includes("grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr)"));
+});
+
+test("Classification checklist combines outcomes by union and supports independent chip removal", async () => {
+  const page = await source("src/pages/vigil-cases.tsx");
+  const styles = await source("src/vigil-dashboard-workspace-experiment.css");
+  let active = [];
+  active = toggleClassificationSelection(active, "failureevidenced");
+  active = toggleClassificationSelection(active, "adjudicationincomplete");
+  active = toggleClassificationSelection(active, "unclassified");
+  assert.deepEqual(active, ["failureevidenced", "adjudicationincomplete", "unclassified"]);
+  assert.equal(matchesClassificationSelection("failureevidenced", active), true);
+  assert.equal(matchesClassificationSelection("adjudicationincomplete", active), true);
+  assert.equal(matchesClassificationSelection("invariantheld", active), false);
+  active = toggleClassificationSelection(active, "adjudicationincomplete");
+  assert.deepEqual(active, ["failureevidenced", "unclassified"]);
+  assert.equal(matchesClassificationSelection("invariantheld", []), true);
+  assert.equal(toggleClassificationSelection(active, "").length, 2);
+  assert.match(page, /<details className="vigil-dashboard-classification-facet"/);
+  assert.match(page, /<summary className="vigil-dashboard-facet-heading">/);
+  assert.match(page, /type="checkbox" checked=\{classifications\.includes\(entry\.key\)\}/);
+  assert.match(page, /\{entry\.count\}/);
+  assert.match(page, /classifications\.map\(key => <button/);
+  assert.match(page, /matchesClassificationSelection\(canonicalComparisonKey\(classificationStatusLabel\(record\)\), classifications\)/);
+  assert.match(page, /setClassifications\(\[\]\)/);
+  assert.doesNotMatch(page, /<select value=\{classification\}/);
+  assert.match(styles, /\.vigil-dashboard-classification-facet \{/);
+  assert.match(styles, /\.vigil-dashboard-facet-option input\[type="checkbox"\]/);
+  assert.match(styles, /background: transparent;\s*box-shadow: none;/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
