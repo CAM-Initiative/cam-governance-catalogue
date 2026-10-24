@@ -338,7 +338,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Geographic Profile</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-geography"><Globe2 size={19} aria-hidden="true" /> Geographic Profile</h2></div>
         <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdictions} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
@@ -358,7 +358,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         </details>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-severity-panel" aria-labelledby="vigil-dashboard-severity">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Risk profile</span><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} /> Harm severity</h2></div></div>
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-severity"><ShieldAlert size={19} aria-hidden="true" /> Harm Severity</h2></div>
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Harm severity chart information" title="Harm severity information">i</summary>
           <div className="vigil-dashboard-panel-info-body">
@@ -368,7 +368,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,taxo
         <SeverityDonut records={distributionRecords} selected={severity} onSelect={onSeverity}/>
       </section>
       <section className="vigil-dashboard-panel vigil-dashboard-failures-panel" aria-labelledby="vigil-dashboard-failures">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Taxonomy intelligence</span><h2 id="vigil-dashboard-failures"><Layers3 size={19} /> Most frequent failures</h2></div></div>
+        <div className="vigil-dashboard-panel-heading"><h2 id="vigil-dashboard-failures"><Layers3 size={19} aria-hidden="true" /> Taxonomy Frequent Failures</h2></div>
         <details className="vigil-dashboard-panel-info">
           <summary aria-label="Taxonomy intelligence counts information" title="Taxonomy counts information">i</summary>
           <div className="vigil-dashboard-panel-info-body">

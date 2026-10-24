@@ -608,7 +608,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   display: inline-flex;
   align-items: center;
   gap: .32rem;
-  font: 520 .75rem/1.4 var(--app-font-serif), Georgia, serif;
+  font: 550 .7rem/1.4 var(--app-font-sans), sans-serif;
   letter-spacing: 0;
   text-transform: none;
   color: var(--vd-workspace-muted);
@@ -640,9 +640,9 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   border-radius: 4px;
   cursor: pointer;
   color: var(--vd-workspace-ink);
-  font-family: var(--app-font-serif), Georgia, serif;
-  font-size: .87rem;
-  line-height: 1.42;
+  font-family: var(--app-font-sans), sans-serif;
+  font-size: .82rem;
+  line-height: 1.4;
 }
 .vigil-case-library-page .vigil-dashboard-facet-option:hover {
   background: hsl(var(--primary) / .08);
@@ -698,10 +698,10 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 }
 
 /* Experimental Case Files typography contract:
-   Playfair Display = editorial titles AND the experimental left filter panel;
-   Space Grotesk = classification values, case descriptions and Case File stages;
-   IBM Plex Mono = identifiers, sortable table headings and technical counters.
-   The filter-rail change is intentionally scoped; case rows stay readable. */
+   Playfair Display = editorial titles and left filter-rail headings;
+   Space Grotesk = expanded filter options, counts, classification values,
+   case descriptions and Case File stages; IBM Plex Mono = identifiers,
+   sortable table headings and technical counters. */
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-text {
   font-family: var(--app-font-sans);
   font-size: .82rem;
@@ -724,73 +724,10 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 .vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-index-facet:last-of-type {
   border-bottom: 1px solid var(--vd-workspace-border);
 }
-.vigil-case-library-page .vigil-dashboard-facet-guidance {
-  margin: .7rem .1rem 0;
-  color: var(--vd-workspace-muted);
-  font-size: .7rem;
-  line-height: 1.5;
-}
 .vigil-case-library-page .vigil-dashboard-metadata-facets .vigil-dashboard-facet-heading {
   min-height: 26px;
 }
 
-/* On-demand facet count guidance uses native details/summary with keyboard focus. */
-.vigil-case-library-page .vigil-dashboard-facet-help-row {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  min-height: 1.6rem;
-  margin: .15rem .1rem .05rem;
-}
-.vigil-case-library-page .vigil-dashboard-facet-help {
-  position: relative;
-  z-index: 6;
-}
-.vigil-case-library-page .vigil-dashboard-facet-help > summary {
-  display: grid;
-  place-items: center;
-  width: 23px;
-  height: 23px;
-  border: 1px solid var(--vd-workspace-border);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--vd-workspace-ink);
-  font: 700 .79rem/1 var(--app-font-serif), Georgia, serif;
-  list-style: none;
-  text-transform: lowercase;
-  cursor: pointer;
-}
-.vigil-case-library-page .vigil-dashboard-facet-help > summary::-webkit-details-marker {
-  display: none;
-}
-.vigil-case-library-page .vigil-dashboard-facet-help > summary:hover,
-.vigil-case-library-page .vigil-dashboard-facet-help[open] > summary {
-  border-color: var(--vd-workspace-accent);
-  color: var(--vd-workspace-accent);
-}
-.vigil-case-library-page .vigil-dashboard-facet-help > summary:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 3px;
-}
-.vigil-case-library-page .vigil-dashboard-facet-help-body {
-  position: absolute;
-  z-index: 8;
-  top: calc(100% + .42rem);
-  right: 0;
-  box-sizing: border-box;
-  width: min(14.5rem, calc(100vw - 3rem));
-  padding: .75rem .85rem;
-  border: 1px solid var(--vd-workspace-border);
-  border-radius: 5px;
-  background: hsl(var(--card));
-  color: var(--vd-workspace-ink);
-  box-shadow: 0 8px 22px hsl(var(--foreground) / .13);
-}
-.vigil-case-library-page .vigil-dashboard-facet-help-body p {
-  margin: 0;
-  font-size: .79rem;
-  line-height: 1.55;
-}
 @media (min-width: 1320px) {
   .vigil-case-library-page .vigil-dashboard-metadata-facets {
     max-width: 100%;
@@ -851,7 +788,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   outline: none;
   background: transparent;
   color: var(--vd-workspace-ink);
-  font: 500 .83rem/1.4 var(--app-font-serif), Georgia, serif;
+  font: 500 .78rem/1.4 var(--app-font-sans), sans-serif;
 }
 .vigil-case-library-page .vigil-dashboard-vendor-search input::placeholder {
   color: var(--vd-workspace-muted);
@@ -966,30 +903,27 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   }
 }
 
-/* Playfair trial — every visible text control of the left filter rail uses the
-   same editorial family. No changes to results-table values or dossier rails. */
-.vigil-case-library-page .vigil-dashboard-filter-hub,
-.vigil-case-library-page .vigil-dashboard-filter-hub :is(
-  input, button, summary, h2,
-  .vigil-dashboard-facet-state, .vigil-dashboard-facet-count,
-  .vigil-dashboard-facet-guidance, .vigil-dashboard-facet-no-results,
-  .vigil-dashboard-vendor-scroll-caption, .vigil-dashboard-selection-caption,
-  .vigil-dashboard-facet-option-name
-) {
+/* Playfair is now reserved for the experimental left-rail headings and search.
+   Expanded choices, counts, and vendor tools return to their readable sans face. */
+.vigil-case-library-page .vigil-dashboard-filter-hub-header h2,
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading,
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-selection-caption {
   font-family: var(--app-font-serif), Georgia, serif;
 }
-.vigil-case-library-page .vigil-dashboard-filter-hub-header h2 {
-  font-family: var(--app-font-serif), Georgia, serif;
-  font-weight: 650;
-}
-.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading {
-  font-family: var(--app-font-serif), Georgia, serif;
-  letter-spacing: .025em;
-}
-/* Reserve the familiar search hit target, without clipping longer serif text. */
+.vigil-case-library-page .vigil-dashboard-filter-hub-header h2 { font-weight: 650; }
+.vigil-case-library-page .vigil-dashboard-filter-hub .vigil-dashboard-facet-heading { letter-spacing: .025em; }
 .vigil-case-library-page .vigil-dashboard-filter-hub .vigil-search-control input {
   font-family: var(--app-font-serif), Georgia, serif;
   font-size: .87rem;
+}
+.vigil-case-library-page .vigil-dashboard-filter-hub :is(
+  .vigil-dashboard-facet-option, .vigil-dashboard-facet-option-name,
+  .vigil-dashboard-facet-state, .vigil-dashboard-facet-count,
+  .vigil-dashboard-vendor-search input, .vigil-dashboard-facet-no-results,
+  .vigil-dashboard-vendor-scroll-caption, .vigil-dashboard-selection-chip,
+  .vigil-dashboard-clear-all
+) {
+  font-family: var(--app-font-sans), sans-serif;
 }
 
 /* Make selected filters visibly actionable immediately beneath search. */

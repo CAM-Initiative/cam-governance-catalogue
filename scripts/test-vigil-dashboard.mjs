@@ -271,7 +271,7 @@ test("Experimental shared filter hub spans list and all dashboard instruments", 
   assert.ok(page.includes('onClick={() => toggleJurisdiction(code)}'));
   assert.match(styles, /html:not\(\[data-theme="dark"\]\) \.vigil-case-library-page \.vigil-dashboard-panel \{/);
   assert.match(styles, /\.vigil-dashboard-selection-chip:focus-visible/);
-  assert.match(dashboard, /<Globe2 size=\{19\} \/> Jurisdiction coverage/);
+  assert.match(dashboard, /<Globe2 size=\{19\} aria-hidden="true" \/> Geographic Profile/);
   assert.match(dashboard, /Geographic Profile/);
   assert.doesNotMatch(dashboard, /Geographic intelligence/);
   assert.doesNotMatch(page, /One connected evidence set/);
@@ -567,7 +567,7 @@ test("Experimental Case Files Playfair filter rail stays distinct from Case File
     source("src/vigil-observatory-instrument-experiment.css"),
   ]);
   assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 660 \.85rem\/1\.45 var\(--app-font-serif\)/);
-  assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-serif\)/);
+  assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-search-control input \{[\s\S]*?font-family: var\(--app-font-serif\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /grid-template-columns: minmax\(0, 1fr\) 132px 72px 18px;/);
@@ -612,17 +612,24 @@ test("Current view and Clear filters sit directly below search and before facet 
   assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-shared-selection \{[\s\S]*?flex-direction: column/);
 });
 
-test("Facet count explanation is a keyboard-accessible information disclosure", async () => {
+test("Filter rail removes counts tooltip and retains sans dropdown choices", async () => {
   const [page, css] = await Promise.all([
     source("src/pages/vigil-cases.tsx"),
     source("src/vigil-dashboard-workspace-experiment.css"),
   ]);
-  assert.match(page, /<details className="vigil-dashboard-facet-help">/);
-  assert.match(page, /<summary aria-label="About filter counts" title="About filter counts">i<\/summary>/);
-  assert.match(page, /Counts reflect the full loaded index/);
-  assert.doesNotMatch(page, /<p className="vigil-dashboard-facet-guidance">/);
-  assert.match(css, /\.vigil-dashboard-facet-help > summary:focus-visible/);
-  assert.match(css, /\.vigil-dashboard-facet-help-body \{[\s\S]*?position: absolute/);
+  assert.doesNotMatch(page, /vigil-dashboard-facet-help|About filter counts|Counts reflect the full loaded index/);
+  assert.doesNotMatch(css, /vigil-dashboard-facet-help|vigil-dashboard-facet-guidance/);
+  assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
+  assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 660 \.85rem\/1\.45 var\(--app-font-serif\)/);
+  assert.match(css, /\.vigil-dashboard-vendor-search input \{[\s\S]*?var\(--app-font-sans\)/);
+});
+
+test("Three insight widgets have a single icon-bearing title with no kicker", async () => {
+  const dashboard = await source("src/components/vigil/VigilCasesDashboard.tsx");
+  assert.match(dashboard, /<h2 id="vigil-dashboard-geography"><Globe2 size=\{19\} aria-hidden="true" \/> Geographic Profile<\/h2>/);
+  assert.match(dashboard, /<h2 id="vigil-dashboard-severity"><ShieldAlert size=\{19\} aria-hidden="true" \/> Harm Severity<\/h2>/);
+  assert.match(dashboard, /<h2 id="vigil-dashboard-failures"><Layers3 size=\{19\} aria-hidden="true" \/> Taxonomy Frequent Failures<\/h2>/);
+  assert.doesNotMatch(dashboard, /vigil-dashboard-kicker|Jurisdiction coverage<\/h2>|Risk profile<\/span>|Most frequent failures<\/h2>/);
 });
 
 test("Taxonomy ranking excludes its own active class so clicking a failure does not reorder the list", async () => {

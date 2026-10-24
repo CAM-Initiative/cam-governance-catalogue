@@ -466,14 +466,6 @@ export default function VigilCases() {
                 <a className="vigil-dashboard-mobile-insights-link" href="#vigil-dashboard-geography">Explore the globe &amp; insights ↓</a>
               </div>}
                 <div className="vigil-dashboard-metadata-facets">
-                  <div className="vigil-dashboard-facet-help-row">
-                    <details className="vigil-dashboard-facet-help">
-                      <summary aria-label="About filter counts" title="About filter counts">i</summary>
-                      <div className="vigil-dashboard-facet-help-body">
-                        <p>Counts reflect the full loaded index. Values not established in the index are shown separately. Select multiple items within or across sections.</p>
-                      </div>
-                    </details>
-                  </div>
                 <details className="vigil-dashboard-classification-facet" aria-label="Classification filters">
                   <summary className="vigil-dashboard-facet-heading">
                     <span>Classification</span>
