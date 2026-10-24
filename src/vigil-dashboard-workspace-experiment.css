@@ -183,18 +183,21 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-col
   background: linear-gradient(145deg, hsl(38 45% 99%), hsl(37 28% 97%));
   box-shadow: 0 .38rem 1.1rem hsl(28 25% 16% / .035);
 }
+/* Echo the blush / warm-grey artwork of the Case Files hero, rather than
+   the yellow parchment treatment used by the old right-hand widgets. */
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel {
-  --vd-ink: hsl(30 18% 23%);
-  --vd-muted: hsl(32 12% 41%);
-  --vd-accent: hsl(38 67% 35%);
-  --vd-rule: hsl(34 27% 70% / .67);
-  --vd-raised: hsl(37 30% 92%);
+  --vd-ink: hsl(24 22% 22%);
+  --vd-muted: hsl(22 13% 39%);
+  --vd-accent: hsl(38 67% 34%);
+  --vd-rule: hsl(19 23% 72% / .8);
+  --vd-raised: hsl(17 30% 91%);
+  --vd-chart-line: hsl(19 18% 58%);
   border-color: var(--vd-rule);
-  background: linear-gradient(150deg, hsl(39 42% 98%), hsl(36 28% 94%));
-  box-shadow: 0 .35rem 1.05rem hsl(28 25% 16% / .045), inset 0 1px hsl(0 0% 100% / .8);
+  background: linear-gradient(146deg, hsl(23 34% 98%), hsl(16 30% 94%) 56%, hsl(18 27% 91%));
+  box-shadow: 0 .35rem 1.05rem hsl(22 20% 18% / .055), inset 0 1px hsl(0 0% 100% / .76);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel::before {
-  background: linear-gradient(90deg, transparent, hsl(38 70% 38% / .42), transparent);
+  background: linear-gradient(90deg, transparent, hsl(17 32% 62% / .32), hsl(38 70% 38% / .42), transparent);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-case-table-head {
   background: hsl(37 32% 92% / .8);
@@ -204,7 +207,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-case-hea
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-failure-list button {
   border-color: var(--vd-rule);
-  background: hsl(38 29% 96%);
+  background: hsl(18 27% 95%);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-selection-chip {
   border-color: hsl(34 26% 71% / .75);
@@ -214,13 +217,13 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-selectio
   background: hsl(40 48% 86% / .8);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-info > summary {
-  background: hsl(38 42% 97%);
-  border-color: hsl(34 25% 70% / .8);
-  color: hsl(31 16% 35%);
+  background: hsl(18 30% 97%);
+  border-color: hsl(19 23% 72% / .8);
+  color: hsl(24 19% 30%);
 }
 html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-info-body {
-  background: hsl(39 38% 98%);
-  border-color: hsl(34 25% 70% / .8);
+  background: hsl(19 34% 98%);
+  border-color: hsl(19 23% 72% / .8);
 }
 
 @media (max-width: 720px) {
@@ -252,89 +255,50 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   }
 }
 
-/* SVG leader-line labels overlapped at narrow sidebar widths. Give each of
-   the six severities its own predictable, keyboard-operable row instead. */
+/* Restore editorial leader lines and callout labels. All callouts occupy
+   nonoverlapping viewBox slots; the SVG scales as one coherent instrument. */
 .vigil-case-library-page .vigil-dashboard-outcomes {
-  display: grid;
-  grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr);
-  align-items: center;
-  gap: .35rem;
+  display: block;
+  min-width: 0;
 }
 .vigil-case-library-page .vigil-dashboard-donut {
   width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
+  max-width: 440px;
   min-width: 0;
+  margin: .15rem auto 0;
 }
-.vigil-case-library-page .vigil-dashboard-severity-key {
-  min-width: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: .2rem;
-}
-.vigil-case-library-page .vigil-dashboard-severity-item {
-  display: grid;
-  grid-template-columns: 8px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: .4rem;
+.vigil-case-library-page .vigil-dashboard-donut svg {
+  display: block;
   width: 100%;
-  min-width: 0;
-  min-height: 36px;
-  padding: .24rem .3rem;
-  border: 1px solid transparent;
-  border-radius: .4rem;
-  background: transparent;
-  color: var(--vd-ink);
-  text-align: left;
-  cursor: pointer;
-  transition: background .15s ease, border-color .15s ease;
+  height: auto;
+  overflow: visible;
 }
-.vigil-case-library-page .vigil-dashboard-severity-item:hover,
-.vigil-case-library-page .vigil-dashboard-severity-item.is-selected {
-  background: hsl(var(--primary) / .09);
-  border-color: hsl(var(--primary) / .42);
+.vigil-case-library-page .vigil-dashboard-severity-label {
+  font: 600 21px var(--app-font-sans), sans-serif;
+  fill: var(--vd-muted);
 }
-.vigil-case-library-page .vigil-dashboard-severity-item.is-selected {
-  box-shadow: inset 3px 0 0 hsl(var(--primary) / .72);
+.vigil-case-library-page .vigil-dashboard-severity-name {
+  font: 510 18.5px var(--app-font-sans), sans-serif;
+  fill: var(--vd-muted);
 }
-.vigil-case-library-page .vigil-dashboard-severity-item.is-muted { opacity: .65; }
-.vigil-case-library-page .vigil-dashboard-severity-item:disabled { opacity: .48; cursor: default; }
-.vigil-case-library-page .vigil-dashboard-severity-item:focus-visible {
-  outline: 2px solid hsl(var(--ring));
-  outline-offset: 2px;
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-label {
+  font-size: 22px;
+  font-weight: 770;
+  fill: var(--vd-ink);
 }
-.vigil-case-library-page .vigil-dashboard-severity-swatch {
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-selected .vigil-dashboard-severity-name {
+  font-size: 19px;
+  font-weight: 690;
+  fill: var(--vd-ink);
 }
-.vigil-case-library-page .vigil-dashboard-severity-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  min-width: 0;
-  line-height: 1.2;
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-muted { opacity: .68; }
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-muted:hover,
+.vigil-case-library-page .vigil-dashboard-severity-callout.is-muted:focus-visible { opacity: 1; }
+.vigil-case-library-page .vigil-dashboard-severity-callout:focus-visible {
+  filter: drop-shadow(0 0 3px hsl(var(--primary) / .45));
 }
-.vigil-case-library-page .vigil-dashboard-severity-copy strong {
-  font-size: .88rem;
-  font-weight: 760;
-}
-.vigil-case-library-page .vigil-dashboard-severity-copy span {
-  font-size: .8rem;
-  color: var(--vd-muted);
-  overflow-wrap: anywhere;
-}
-.vigil-case-library-page .vigil-dashboard-severity-quantity {
-  font-size: .9rem;
-  font-weight: 730;
-  font-variant-numeric: tabular-nums;
-}
-@media (min-width: 721px) and (max-width: 1140px) {
-  .vigil-case-library-page .vigil-dashboard-donut { max-width: 220px; }
-}
-@media (max-width: 360px) {
-  .vigil-case-library-page .vigil-dashboard-outcomes { gap: .2rem; }
-  .vigil-case-library-page .vigil-dashboard-severity-item { gap: .22rem; padding-inline: .15rem; }
+@media (max-width: 380px) {
+  .vigil-case-library-page .vigil-dashboard-donut { margin-inline: auto; }
 }
 
 /* When filters are empty the selection band is absent, not an empty spacer. */
@@ -579,20 +543,9 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   }
 }
 @media (max-width: 640px) {
-  .vigil-case-library-page .vigil-dashboard-outcomes {
-    grid-template-columns: minmax(0, 1fr);
-    gap: .6rem;
-  }
   .vigil-case-library-page .vigil-dashboard-donut {
-    max-width: 200px;
+    max-width: 440px;
     margin-inline: auto;
-  }
-  .vigil-case-library-page .vigil-dashboard-severity-key {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: .25rem;
-  }
-  .vigil-case-library-page .vigil-dashboard-severity-item {
-    min-height: 42px;
   }
   .vigil-case-library-page .vigil-dashboard-selection-chip {
     min-height: 36px;
