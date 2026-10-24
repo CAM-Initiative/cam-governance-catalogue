@@ -560,17 +560,38 @@ test("Collapsed facets hide All, and vendor list is searchable, scrollable and m
   assert.match(css, /max-height: none;\s*overflow-y: visible/);
 });
 
-test("Experimental Case Files typography and table headings align with dossier navigation", async () => {
+test("Experimental Case Files Playfair filter rail stays distinct from Case File typography", async () => {
   const [css, dossier] = await Promise.all([
     source("src/vigil-dashboard-workspace-experiment.css"),
     source("src/vigil-observatory-instrument-experiment.css"),
   ]);
-  assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 700 \.8rem\/1\.45 var\(--app-font-sans\)/);
+  assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 660 \.85rem\/1\.45 var\(--app-font-serif\)/);
+  assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-serif\)/);
+  assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-search-control input \{[\s\S]*?font-family: var\(--app-font-serif\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /grid-template-columns: minmax\(0, 1fr\) 132px 72px 18px;/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-sort-heading \{[\s\S]*?white-space: nowrap;/);
   assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs button \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs button span \{[\s\S]*?font-family: var\(--app-font-mono\)/);
+});
+
+test("Harm severity ring grows modestly but retains accessible callouts and selected expansion", async () => {
+  const [dashboard, ring, workspace] = await Promise.all([
+    source("src/components/vigil/VigilCasesDashboard.tsx"),
+    source("src/lib/vigilDonutSelection.mjs"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  const normal = donutSegmentAppearance(0, 20, 100, false, false);
+  const selected = donutSegmentAppearance(0, 20, 100, true, true);
+  assert.equal(normal.radius, 75);
+  assert.equal(selected.radius, 78);
+  assert.equal(normal.strokeWidth, 25);
+  assert.ok(normal.radius > 70 && normal.radius < 80, "ring enlargement remains modest");
+  assert.match(dashboard, /r="75" fill="none" className="vigil-dashboard-donut-track"/);
+  assert.match(dashboard, /const x0 = cx \+ dx \* \(active \? 106 : 91\)/);
+  assert.match(dashboard, /role="button" tabIndex=\{0\} aria-label=\{`Filter/);
+  assert.match(workspace, /\.vigil-dashboard-donut \{[\s\S]*?max-width: 440px;/);
+  assert.ok(selected.radius + selected.strokeWidth / 2 > normal.radius + normal.strokeWidth / 2);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.

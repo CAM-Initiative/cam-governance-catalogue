@@ -255,8 +255,8 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
           </linearGradient>)}
         </defs>
         <g filter="url(#vigil-donut-dimensional-shadow)">
-          <circle cx={cx} cy={cy} r="70" fill="none" className="vigil-dashboard-donut-track" strokeWidth="28"/>
-          <circle cx={cx} cy={cy} r="57" fill="url(#vigil-donut-face)"/>
+          <circle cx={cx} cy={cy} r="75" fill="none" className="vigil-dashboard-donut-track" strokeWidth="29"/>
+          <circle cx={cx} cy={cy} r="62" fill="url(#vigil-donut-face)"/>
         </g>
         {distribution.map(item => {
           const start = elapsed; elapsed += item.count;
@@ -274,16 +274,16 @@ function SeverityDonut({ records, selected, onSelect }: { records: VigilIndexRec
             </circle>
           </g> : null;
         })}
-        <circle cx={cx} cy={cy} r="57.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
-        <circle cx={cx} cy={cy} r="81.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
+        <circle cx={cx} cy={cy} r="62.5" fill="none" stroke="#ffffff" strokeOpacity=".2" strokeWidth="1.4" pointerEvents="none"/>
+        <circle cx={cx} cy={cy} r="87.5" fill="none" stroke="#081d32" strokeOpacity=".27" strokeWidth="1" pointerEvents="none"/>
         <text x={cx} y={cy-4} textAnchor="middle" className="vigil-dashboard-donut-count">{selectedCount ?? total}</text>
         <text x={cx} y={cy+15} textAnchor="middle" className="vigil-dashboard-donut-caption">{selected ? `${selected} SELECTED` : "CASE FILES"}</text>
         {labels.map(item => {
           const active = selected === item.code;
           const dim = selected && !active;
           const dx = Math.cos(item.midAngle), dy = Math.sin(item.midAngle);
-          const x0 = cx + dx * (active ? 100 : 85);
-          const y0 = cy + dy * (active ? 100 : 85);
+          const x0 = cx + dx * (active ? 106 : 91);
+          const y0 = cy + dy * (active ? 106 : 91);
           const left = item.side === "left";
           const joinX = left ? 112 : 328;
           const endX = left ? 106 : 334;
