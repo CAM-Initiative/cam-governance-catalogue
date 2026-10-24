@@ -370,15 +370,15 @@ test("Leader-line positions avoid overlapping at extreme proportions", () => {
   }
 });
 
-test("Experimental light mode uses blush-toned hero-compatible insight cards", async () => {
+test("Light-mode analytical cards use distinct warm-stone contrast against the white case list", async () => {
   const [styles, masthead] = await Promise.all([
     source("src/vigil-dashboard-workspace-experiment.css"),
     source("src/vigil-observatory-masthead.css"),
   ]);
   assert.match(masthead, /soft-grey/);
   assert.match(styles, /Echo the blush \/ warm-grey artwork of the Case Files hero/);
-  assert.match(styles, /hsl\(16 30% 94%\)/);
-  assert.match(styles, /hsl\(18 27% 91%\)/);
+  assert.match(styles, /hsl\(26 15% 82%\)/);
+  assert.match(styles, /hsl\(27 16% 79%\)/);
   assert.match(styles, /\.vigil-dashboard-severity-callout\.is-selected/);
   assert.ok(!styles.includes("grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr)"));
 });
@@ -600,7 +600,7 @@ test("Matching-case title, conditional clear action, chips and live total occupy
   const search = page.indexOf('className="vigil-library-toolbar vigil-dashboard-case-search"');
   assert.ok(heading > 0 && chips > heading && count > chips && facets > count);
   assert.ok(cases > facets && search > cases, "Wider case column owns the search field");
-  assert.ok(page.includes('<h2 id="case-filter-heading">Case File Filters</h2>'));
+  assert.ok(page.includes('<h2 id="case-filter-heading">Filters</h2>'));
   assert.match(page, /\{hasActiveFilters && <button type="button" className="vigil-dashboard-clear-all"/);
   assert.match(page, /\{hasActiveFilters && <div className="vigil-dashboard-selection-chips">/);
   assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-controls/);
@@ -680,7 +680,7 @@ test("Dashboard calm pass unifies case typography and compacts darker light-them
     source("src/components/vigil/EarthGlobe3D.tsx"),
     source("src/vigil-dashboard-workspace-experiment.css"),
   ]);
-  assert.ok(page.includes('<h2 id="case-filter-heading">Case File Filters</h2>'));
+  assert.ok(page.includes('<h2 id="case-filter-heading">Filters</h2>'));
   assert.equal((page.match(/className="vigil-dashboard-clear-all"/g) ?? []).length, 1);
   assert.ok(css.includes("font-family: var(--app-font-mono), monospace;"));
   assert.ok(css.includes("font-weight: 700;"));
