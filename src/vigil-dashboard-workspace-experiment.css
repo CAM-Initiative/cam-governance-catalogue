@@ -702,3 +702,15 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
     max-width: 100%;
   }
 }
+
+/* Expanded index facets can exceed the viewport. The sticky desktop rail
+   scrolls independently instead of trapping controls below the fold. */
+@media (min-width: 1320px) {
+  .vigil-case-library-page .vigil-dashboard-workspace > .vigil-dashboard-filter-hub {
+    max-height: calc(100dvh - 6.2rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--vd-workspace-border) transparent;
+  }
+}
