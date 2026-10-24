@@ -359,7 +359,7 @@ export default function VigilCasesDashboard({mapRecords,distributionRecords,filt
   return (
     <aside className="vigil-dashboard-sidebar" aria-label="Case File dashboard">
       <section className="vigil-dashboard-panel vigil-dashboard-location-panel" aria-labelledby="vigil-dashboard-geography">
-        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Geographic intelligence</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
+        <div className="vigil-dashboard-panel-heading"><div><span className="vigil-dashboard-kicker">Geographic Profile</span><h2 id="vigil-dashboard-geography"><Globe2 size={19} /> Jurisdiction coverage</h2></div></div>
         <GlobeView locations={geographyAvailable ? locations.regions : []} selected={jurisdiction} onSelect={onJurisdiction} onClearFilters={onClearFilters}/>
         <label className="vigil-dashboard-country-keyboard">
           <span className="sr-only">Choose country using a keyboard-accessible list</span>
