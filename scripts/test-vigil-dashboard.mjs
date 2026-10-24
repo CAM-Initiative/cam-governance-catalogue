@@ -545,7 +545,7 @@ test("Collapsed facets hide All, and vendor list is searchable, scrollable and m
   assert.match(css, /\.vigil-dashboard-vendor-show-more/);
   assert.match(css, /min\(15rem, 38dvh\)/);
   assert.match(page, /const vendorListRef = useRef<HTMLDivElement \| null>\(null\)/);
-  assert.match(page, /vendorListRef\.current\.scrollBy\(/);
+  assert.match(page, /element\.scrollBy\(\{ top: direction/);
   assert.match(page, /onScroll=\{isVendor \? refreshVendorScroll : undefined\}/);
   assert.match(page, /Scroll vendor list up/);
   assert.match(page, /Scroll vendor list down/);
