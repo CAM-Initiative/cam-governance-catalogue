@@ -450,13 +450,10 @@ test("Index-backed facets preserve year provenance, explicit unknowns and absenc
   assert.deepEqual(indexFacetValues(b, "year"), [NOT_INDEXED], "recorded date must not substitute for occurrence date");
   assert.deepEqual(indexFacetValues(c, "year"), [NOT_INDEXED], "invalid dates must not be silently interpreted");
   assert.deepEqual(indexFacetValues(a, "activity"), ["evaluation", "research"]);
-  assert.deepEqual(indexFacetValues(a, "sourceRole"), ["incident-evidence", "harm-evidence"]);
-  assert.deepEqual(indexFacetValues(a, "mappedClass"), ["VIGIL-FC-000042", "VIGIL-FC-000075"]);
-  assert.deepEqual(indexFacetValues(a, "requirements"), ["present"]);
   assert.deepEqual(indexFacetValues(a, "externalAssessments"), ["none"]);
-  assert.deepEqual(indexFacetValues(b, "requirements"), ["none"]);
-  assert.deepEqual(indexFacetValues(c, "requirements"), [NOT_INDEXED]);
-  assert.equal(facetOptionLabel("requirements","present"),"One or more assessments");
+  assert.deepEqual(indexFacetValues(a, "requirements"), [], "retired facets are not offered");
+  assert.deepEqual(indexFacetValues(a, "sourceRole"), [], "source roles are not selectable here");
+  assert.deepEqual(indexFacetValues(a, "mappedClass"), [], "taxonomy ranking remains a separate instrument");
   assert.equal(facetOptionLabel("year",NOT_INDEXED),"Not established in index");
   assert.deepEqual(indexFacetOptions([a,b,c], "agentic").map(x => x.count), [2,1]);
   assert.deepEqual(indexFacetOptions([a,b,c], "year").map(x => [x.key,x.count]), [["2026",1],[NOT_INDEXED,2]]);
@@ -490,9 +487,12 @@ test("Indexed facet UI is disclosure-based, resettable, and uses only the publis
     source("src/pages/vigil-cases.tsx"),
     source("src/vigil-dashboard-workspace-experiment.css"),
   ]);
-  for (const id of ["year","agentic","deployment","externalReach","activity","vendor",
-    "adjudication","sourceRole","requirements","externalAssessments","mappedClass"]) {
+  for (const id of ["year","agentic","deployment","activity","vendor",
+    "adjudication","externalAssessments"]) {
     assert.ok(INDEX_FACETS.some(f=>f.id===id), `${id} exists in index facet registry`);
+  }
+  for (const id of ["mappedClass","requirements","sourceRole","externalReach"]) {
+    assert.ok(!INDEX_FACETS.some(f=>f.id===id), `${id} was removed from the left filter rail`);
   }
   assert.match(page, /indexFacetOptions\(records, facet\.id\)/);
   assert.match(page, /matchesIndexFacets\(record, indexFacets\)/);
@@ -504,6 +504,46 @@ test("Indexed facet UI is disclosure-based, resettable, and uses only the publis
   assert.match(css, /max-height: calc\(100dvh - 6\.2rem\)/);
   assert.match(css, /\.vigil-dashboard-index-facet\[open\]/);
   assert.match(css, /\.vigil-dashboard-metadata-facets \{/);
+});
+
+test("Donut gives S4 a long lower-left leader line without displacing S3", () => {
+  const fixture = [
+    {code:"S1",count:23},{code:"S2",count:39},{code:"S3",count:68},
+    {code:"S4",count:21},{code:"S5",count:4},{code:"SU",count:45},
+  ];
+  const labels = layoutSeverityCallouts(fixture, fixture.reduce((sum,item)=>sum+item.count,0));
+  const s3 = labels.find(item=>item.code==="S3");
+  const s4 = labels.find(item=>item.code==="S4");
+  const s5 = labels.find(item=>item.code==="S5");
+  assert.equal(s3.side,"right");
+  assert.equal(s4.side,"left");
+  assert.ok(s4.y >= 248, "S4 callout extends into lower-left blank space");
+  assert.ok(Math.abs(s4.y-s3.y) < 23, "S4 label mirrors S3's lower-right line");
+  assert.ok(s4.y - s5.y >= CALLOUT_GEOMETRY.minGap, "S4 does not overlap S5");
+  const naturalS4Y = CALLOUT_GEOMETRY.centerY + Math.sin(s4.midAngle)*100;
+  assert.ok(s4.y-naturalS4Y >= 60, "S4 line is visibly lengthened");
+});
+
+test("Collapsed facets hide All, and vendor list is searchable, scrollable and mobile-limited", async () => {
+  const [page, css] = await Promise.all([
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.doesNotMatch(page, /selected\.length \? `\$\{selected\.length\} selected` : "All"/);
+  assert.doesNotMatch(page, /classifications\.length \? `\$\{classifications\.length\} selected` : "All"/);
+  assert.match(page, /selected\.length > 0 && <span>/);
+  assert.match(page, /classifications\.length > 0 && <span>/);
+  assert.match(page, /id === "vendor"/);
+  assert.match(page, /Search platform and vendor options/);
+  assert.match(page, /setVendorQuery\(event\.target\.value\)/);
+  assert.match(page, /vendorExpanded \? "Show fewer vendors"/);
+  assert.match(page, /aria-expanded=\{vendorExpanded\}/);
+  assert.match(css, /\.vigil-dashboard-index-facet\.is-vendor \.vigil-dashboard-facet-options/);
+  assert.match(css, /overflow-y: auto;/);
+  assert.match(css, /nth-of-type\(n\+8\)/);
+  assert.match(css, /@media \(max-width: 1140px\)/);
+  assert.match(css, /\.vigil-dashboard-vendor-show-more/);
+  assert.match(css, /min\(15rem, 38dvh\)/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
