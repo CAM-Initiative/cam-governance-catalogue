@@ -563,7 +563,7 @@ test("Case Files mono sidebar title and sans navigation retain other typography 
     source("src/vigil-dashboard-workspace-experiment.css"),
     source("src/vigil-observatory-instrument-experiment.css"),
   ]);
-  assert.ok(css.includes("font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;"));
+  assert.ok(css.includes("font: 600 .94rem/1.45 var(--app-font-sans), sans-serif;"));
   assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-search input \{[\s\S]*?font-family: var\(--app-font-sans\)/);
   assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-family: var\(--app-font-sans\)/);
@@ -620,7 +620,7 @@ test("Filter rail removes counts tooltip and retains sans dropdown choices", asy
   assert.doesNotMatch(page, /vigil-dashboard-facet-help|About filter counts|Counts reflect the full loaded index/);
   assert.doesNotMatch(css, /vigil-dashboard-facet-help|vigil-dashboard-facet-guidance/);
   assert.match(css, /\.vigil-dashboard-facet-option \{[\s\S]*?font-family: var\(--app-font-sans\)/);
-  assert.ok(css.includes("font: 600 .77rem/1.5 var(--app-font-sans), sans-serif;"));
+  assert.ok(css.includes("font: 600 .94rem/1.45 var(--app-font-sans), sans-serif;"));
   assert.match(css, /\.vigil-dashboard-vendor-search input \{[\s\S]*?var\(--app-font-sans\)/);
 });
 
@@ -835,10 +835,18 @@ test("Severity and Case Files use a restrained common type scale, and harm count
   assert.match(chartStyles, /\.vigil-dashboard-bar-code \{[\s\S]*?font: 700 \.84rem\/1\.25/);
   assert.match(chartStyles, /\.vigil-dashboard-bar-value \{[\s\S]*?font: 700 \.82rem\/1\.2/);
   assert.match(chartStyles, /\.vigil-dashboard-severity-view-switch \{[\s\S]*?margin: \.65rem auto 0;/);
-  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy h2 \{[\s\S]*?font-size: \.94rem/);
-  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy p \{[\s\S]*?font-size: \.84rem/);
-  assert.match(chartStyles, /\.vigil-dashboard-harm-type-label \{[\s\S]*?font-size: \.82rem/);
+  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy h2 \{[\s\S]*?font-size: 1\.12rem/);
+  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-copy p \{[\s\S]*?font-size: 1rem/);
+  assert.match(chartStyles, /\.vigil-dashboard-harm-type-label \{[\s\S]*?font-size: \.97rem/);
   assert.match(dashboard, /\x60Show all \$\{harmTypes\.length\} with S2–S5 findings \(\$\{harmDimensions\.length\} defined\)\x60/);
+  assert.match(caseStyles, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-size: 1rem/);
+  assert.match(caseStyles, /\.vigil-dashboard-filter-hub \.vigil-dashboard-filter-match-count \{[\s\S]*?font-size: \.94rem/);
+  assert.match(chartStyles, /\.vigil-dashboard-failure-name strong \{[\s\S]*?font-size: \.96rem/);
+  assert.match(caseStyles, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 600 \.94rem\/1\.45/);
+  assert.ok(caseStyles.includes("color: hsl(var(--foreground) / .8);"), "The descriptions must not inherit faded microtext");
+  assert.ok(caseStyles.includes("hsl(350 33% 42%), hsl(350 37% 52%)"), "Light mode retains blush bars");
+  assert.doesNotMatch(caseStyles, /html\[data-theme="dark"\] \.vigil-case-library-page \.vigil-dashboard-harm-type-fill/, "Dark mode restores the existing gold bar token");
+  assert.match(chartStyles, /\.vigil-case-library-page \.vigil-dashboard-harm-type-fill \{[\s\S]*?background: var\(--vd-accent\)/);
 });
 
 test("Harm Types cross-filter every existing instrument but preserves its own ranking order", async () => {
