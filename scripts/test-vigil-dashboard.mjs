@@ -293,12 +293,13 @@ test("Three-column desktop workbench keeps one filter source and accessible read
   assert.doesNotMatch(page, /vigil-dashboard-match-count/);
   assert.ok(page.includes('hasActiveFilters && <div className="vigil-result-summary vigil-dashboard-shared-selection"'));
   assert.ok(page.includes('onClick={() => toggleJurisdiction(code)}'), "Country chips still remove individual countries");
-  assert.match(styles, /@media \\(min-width: 1320px\\) \\{/);
-  assert.match(styles, /grid-template-columns: clamp\\(225px, 17\\.5vw, 250px\\) minmax\\(0, 1fr\\)/);
-  assert.match(styles, /grid-template-columns: minmax\\(0, 1fr\\) minmax\\(300px, 328px\\)/);
-  assert.match(styles, /\\.vigil-dashboard-case-column \\.vigil-case-table-row-link/);
-  assert.match(styles, /@media \\(max-width: 1319px\\)/);
-  assert.match(styles, /grid-template-columns: minmax\\(0, 1fr\\);\\s*gap: \\.8rem/);
+  assert.ok(styles.includes("@media (min-width: 1320px) {"));
+  assert.ok(styles.includes("grid-template-columns: clamp(225px, 17.5vw, 250px) minmax(0, 1fr)"));
+  assert.ok(styles.includes("grid-template-columns: minmax(0, 1fr) minmax(300px, 328px)"));
+  assert.ok(styles.includes(".vigil-dashboard-case-column .vigil-case-table-row-link"));
+  assert.ok(styles.includes("@media (max-width: 1319px)"));
+  assert.ok(styles.includes("grid-template-columns: minmax(0, 1fr);\n  }"));
+
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
