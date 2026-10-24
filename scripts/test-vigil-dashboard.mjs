@@ -560,4 +560,17 @@ test("Collapsed facets hide All, and vendor list is searchable, scrollable and m
   assert.match(css, /max-height: none;\s*overflow-y: visible/);
 });
 
+test("Experimental Case Files typography and table headings align with dossier navigation", async () => {
+  const [css, dossier] = await Promise.all([
+    source("src/vigil-dashboard-workspace-experiment.css"),
+    source("src/vigil-observatory-instrument-experiment.css"),
+  ]);
+  assert.match(css, /\.vigil-dashboard-facet-heading \{[\s\S]*?font: 700 \.8rem\/1\.45 var\(--app-font-sans\)/);
+  assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-table-text \{[\s\S]*?font-family: var\(--app-font-sans\)/);
+  assert.match(css, /grid-template-columns: minmax\(0, 1fr\) 132px 72px 18px;/);
+  assert.match(css, /\.vigil-dashboard-case-column \.vigil-case-sort-heading \{[\s\S]*?white-space: nowrap;/);
+  assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs button \{[\s\S]*?font-family: var\(--app-font-sans\)/);
+  assert.match(dossier, /\.vigil-case-file-page \.vigil-case-stage-tabs button span \{[\s\S]*?font-family: var\(--app-font-mono\)/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.

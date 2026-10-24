@@ -410,9 +410,20 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
      minimum for the first table column within a narrower centre workspace. */
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-head,
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-row-link {
-    grid-template-columns: minmax(0, 1fr) minmax(94px, 119px) minmax(57px, 67px) 18px;
-    gap: .48rem;
+    /* Reserve enough room for complete sortable headings and arrows. */
+    grid-template-columns: minmax(0, 1fr) 132px 72px 18px;
+    gap: .65rem;
     padding-inline: .7rem;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-sort-heading {
+    gap: .3rem;
+    font: 700 .68rem/1.35 var(--app-font-mono), monospace;
+    letter-spacing: .035em;
+    white-space: nowrap;
+  }
+  .vigil-case-library-page .vigil-dashboard-case-column .vigil-sort-indicator {
+    min-width: .72rem;
+    font-size: .78rem;
   }
   .vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-primary {
     grid-template-columns: 54px minmax(0, 1fr);
@@ -572,8 +583,9 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   list-style: none;
   cursor: pointer;
   color: var(--vd-workspace-ink);
-  font: 730 .73rem/1.5 var(--app-font-mono), monospace;
-  letter-spacing: .075em;
+  /* Filter navigation follows the same sans face as opened Case File navigation. */
+  font: 700 .8rem/1.45 var(--app-font-sans), sans-serif;
+  letter-spacing: .055em;
   text-transform: uppercase;
 }
 .vigil-case-library-page .vigil-dashboard-facet-heading::-webkit-details-marker { display: none; }
@@ -618,7 +630,8 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   border-radius: 4px;
   cursor: pointer;
   color: var(--vd-workspace-ink);
-  font-size: .78rem;
+  font-family: var(--app-font-sans);
+  font-size: .82rem;
   line-height: 1.4;
 }
 .vigil-case-library-page .vigil-dashboard-facet-option:hover {
@@ -672,6 +685,19 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
 }
 @media (prefers-reduced-motion: reduce) {
   .vigil-case-library-page .vigil-dashboard-facet-state svg { transition: none; }
+}
+
+/* Experimental Case Files typography contract:
+   Playfair Display = editorial titles; Space Grotesk = navigational labels,
+   filter choices, classification values, summaries and Case File stage labels;
+   IBM Plex Mono = identifiers, sortable column headers and technical counters.
+   The three existing typefaces are intentional; their roles must not drift. */
+.vigil-case-library-page .vigil-dashboard-case-column .vigil-case-table-text {
+  font-family: var(--app-font-sans);
+  font-size: .82rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0;
 }
 
 /* Each index-backed facet uses the same hairline disclosure. Only one toolbar
