@@ -544,6 +544,20 @@ test("Collapsed facets hide All, and vendor list is searchable, scrollable and m
   assert.match(css, /@media \(max-width: 1140px\)/);
   assert.match(css, /\.vigil-dashboard-vendor-show-more/);
   assert.match(css, /min\(15rem, 38dvh\)/);
+  assert.match(page, /const vendorListRef = useRef<HTMLDivElement \| null>\(null\)/);
+  assert.match(page, /vendorListRef\.current\.scrollBy\(/);
+  assert.match(page, /onScroll=\{isVendor \? refreshVendorScroll : undefined\}/);
+  assert.match(page, /Scroll vendor list up/);
+  assert.match(page, /Scroll vendor list down/);
+  assert.match(page, /disabled=\{!vendorScroll\.up\}/);
+  assert.match(page, /disabled=\{!vendorScroll\.down\}/);
+  assert.match(page, /vendorScroll\.up|vendorScroll\.down/);
+  assert.match(css, /scrollbar-gutter: stable/);
+  assert.match(css, /scrollbar-width: auto/);
+  assert.match(css, /::-webkit-scrollbar-thumb/);
+  assert.match(css, /\.vigil-dashboard-vendor-scroll-buttons button:focus-visible/);
+  assert.match(css, /\.vigil-dashboard-index-facet\.is-vendor\.is-expanded/);
+  assert.match(css, /max-height: none;\s*overflow-y: visible/);
 });
 
 // Touch this regression test to regenerate publication assets from the final review branch head.
