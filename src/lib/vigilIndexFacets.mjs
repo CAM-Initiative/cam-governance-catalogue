@@ -4,7 +4,7 @@
 export const NOT_INDEXED = "__not_established_in_index__";
 
 export const INDEX_FACETS = [
-  { id: "year", title: "Year of occurrence" },
+  { id: "year", title: "Year" },
   { id: "agentic", title: "Agentic status" },
   { id: "deployment", title: "Deployment state" },
   { id: "activity", title: "Activity context" },

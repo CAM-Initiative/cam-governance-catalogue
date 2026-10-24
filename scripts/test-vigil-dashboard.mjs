@@ -715,4 +715,19 @@ test("Light mode donut callouts and count are near-black while dark mode remains
   assert.match(contrastRules, /\.vigil-dashboard-severity-callout\.is-muted \{\s*opacity: \.88/);
 });
 
+test("Filter Year label and matching count visual weight are concise while index semantics remain unchanged", async () => {
+  const [facetSource, page, styles] = await Promise.all([
+    source("src/lib/vigilIndexFacets.mjs"),
+    source("src/pages/vigil-cases.tsx"),
+    source("src/vigil-dashboard-workspace-experiment.css"),
+  ]);
+  assert.ok(INDEX_FACETS.some(facet => facet.id === "year" && facet.title === "Year"));
+  assert.match(facetSource, /id: "year", title: "Year"/);
+  assert.doesNotMatch(facetSource, /title: "Year of occurrence"/);
+  assert.match(facetSource, /raw\?\.occurred_from/);
+  assert.match(page, /className="vigil-dashboard-filter-match-count"/);
+  assert.match(styles, /\.vigil-dashboard-filter-match-count strong \{ font-weight: 550; \}/);
+  assert.match(page, /\{sorted.length\} matching \{sorted.length === 1 \? "case file" : "case files"\}/);
+});
+
 // Touch this regression test to regenerate publication assets from the final review branch head.

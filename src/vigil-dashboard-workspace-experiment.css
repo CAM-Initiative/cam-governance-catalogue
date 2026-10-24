@@ -983,7 +983,7 @@ html:not([data-theme="dark"]) .vigil-case-library-page .vigil-dashboard-panel-in
   line-height: 1.45;
   font-variant-numeric: tabular-nums;
 }
-.vigil-case-library-page .vigil-dashboard-filter-match-count strong { font-weight: 700; }
+.vigil-case-library-page .vigil-dashboard-filter-match-count strong { font-weight: 550; }
 .vigil-case-library-page .vigil-dashboard-case-column .vigil-dashboard-case-search {
   display: block;
   box-sizing: border-box;
